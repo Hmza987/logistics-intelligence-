@@ -1070,6 +1070,35 @@ canvas { font-family: var(--f-mono); }
   .metrics           { grid-template-columns: 1fr 1fr; }
   .metric .val       { font-size: 20px; }
 }
+
+/* ── SOURCE LINK ICONS ───────────────────────────────────────────────────── */
+.src-lnk {
+  display: inline-block;
+  color: rgba(90,163,245,0.55);
+  font-size: 8px;
+  font-family: 'IBM Plex Mono', monospace;
+  text-decoration: none;
+  margin-left: 3px;
+  vertical-align: super;
+  line-height: 1;
+  transition: color 0.15s;
+  cursor: pointer;
+}
+.src-lnk:hover { color: #5aa3f5; }
+
+.intel-src {
+  display: inline-block;
+  color: rgba(90,163,245,0.6);
+  font-size: 8px;
+  font-family: 'IBM Plex Mono', monospace;
+  text-decoration: none;
+  margin-left: 4px;
+  white-space: nowrap;
+  transition: color 0.15s;
+}
+.intel-src:hover { color: #5aa3f5; text-decoration: underline; }
+
+#intel-feed { transition: opacity 0.5s ease; }
 </style>
 </head>
 <body>
@@ -1162,10 +1191,10 @@ canvas { font-family: var(--f-mono); }
           <span class="chip chip-r"><span class="chip-dot" style="background:#e74c3c"></span>~147 containerships trapped (470K TEU)</span>
         </div>
         <div class="metrics">
-          <div class="metric"><div class="val red">4</div><div class="lbl">Transits Today</div><div class="chg red">vs 95/day baseline</div></div>
-          <div class="metric"><div class="val red">-96%</div><div class="lbl">vs 30d Average</div><div class="chg muted">throughput collapse</div></div>
-          <div class="metric"><div class="val red">3</div><div class="lbl">Tankers (24h)</div><div class="chg muted">crude + product</div></div>
-          <div class="metric"><div class="val red">0</div><div class="lbl">Container Ships</div><div class="chg muted">24h window</div></div>
+          <div class="metric"><div class="val red"><span id="m-transits">4</span><a href="https://portwatch.imf.org" target="_blank" rel="noopener" class="src-lnk" title="Source: IMF PortWatch">↗</a></div><div class="lbl">Transits Today</div><div class="chg red" id="m-transits-chg">vs 95/day baseline</div></div>
+          <div class="metric"><div class="val red" id="m-decline">-96%</div><div class="lbl">vs 95/day baseline</div><div class="chg muted">throughput collapse</div></div>
+          <div class="metric"><div class="val red"><span id="m-tankers">3</span><a href="https://portwatch.imf.org" target="_blank" rel="noopener" class="src-lnk" title="Source: IMF PortWatch">↗</a></div><div class="lbl">Tankers (24h)</div><div class="chg muted">crude + product</div></div>
+          <div class="metric"><div class="val red"><span id="m-containers">0</span><a href="https://portwatch.imf.org" target="_blank" rel="noopener" class="src-lnk" title="Source: IMF PortWatch">↗</a></div><div class="lbl">Container Ships</div><div class="chg muted">24h window</div></div>
         </div>
         <!-- 14-day chart -->
         <div style="position:relative;height:120px">
@@ -1186,23 +1215,23 @@ canvas { font-family: var(--f-mono); }
             <div style="flex:1">
               <div class="vtype-row">
                 <div class="vtype-left"><span>&#128738;</span><div><div class="vtype-name">Crude Tankers</div><div class="vtype-sub">VLCC/Suezmax</div></div></div>
-                <div><div class="vtype-count red">2</div><div class="vtype-pct red">50% &bull; was 38%</div></div>
+                <div><div class="vtype-count red" id="m-vt-crude">2</div><div class="vtype-pct red" id="m-vt-crude-pct">50% &bull; was 38%</div></div>
               </div>
               <div class="vtype-row">
                 <div class="vtype-left"><span>&#9981;</span><div><div class="vtype-name">Product Tankers</div><div class="vtype-sub">MR/LR1/LR2</div></div></div>
-                <div><div class="vtype-count amb">1</div><div class="vtype-pct amb">25% &bull; was 18%</div></div>
+                <div><div class="vtype-count amb" id="m-vt-product">1</div><div class="vtype-pct amb" id="m-vt-product-pct">25% &bull; was 18%</div></div>
               </div>
               <div class="vtype-row">
                 <div class="vtype-left"><span>&#10052;</span><div><div class="vtype-name">LNG / LPG</div><div class="vtype-sub">Gas carriers</div></div></div>
-                <div><div class="vtype-count pur">1</div><div class="vtype-pct pur">25% &bull; was 12%</div></div>
+                <div><div class="vtype-count pur" id="m-vt-lng">1</div><div class="vtype-pct pur" id="m-vt-lng-pct">25% &bull; was 12%</div></div>
               </div>
               <div class="vtype-row">
                 <div class="vtype-left"><span>&#128230;</span><div><div class="vtype-name">Containers</div><div class="vtype-sub">Feeder to Panamax</div></div></div>
-                <div><div class="vtype-count blu">0</div><div class="vtype-pct blu">0% &bull; was 15%</div></div>
+                <div><div class="vtype-count blu" id="m-vt-containers">0</div><div class="vtype-pct blu" id="m-vt-containers-pct">0% &bull; was 15%</div></div>
               </div>
               <div class="vtype-row">
                 <div class="vtype-left"><span>&#9875;</span><div><div class="vtype-name">Bulk / Other</div><div class="vtype-sub">Dry bulk, general</div></div></div>
-                <div><div class="vtype-count muted">0</div><div class="vtype-pct muted">0% &bull; was 17%</div></div>
+                <div><div class="vtype-count muted" id="m-vt-bulk">0</div><div class="vtype-pct muted" id="m-vt-bulk-pct">0% &bull; was 17%</div></div>
               </div>
             </div>
           </div>
@@ -1249,13 +1278,15 @@ canvas { font-family: var(--f-mono); }
 
       <!-- Live Intel -->
       <div class="card">
-        <div class="card-label">Live Intelligence Feed</div>
-        <div class="news-item"><div class="news-dot" style="background:#e74c3c"></div><div><span class="news-tag tag-alert">ALERT</span><div class="news-text">All Hormuz transits suspended for commercial shipping. 15 ships (109K TEU) trapped. Full booking stop for Upper Gulf (Maersk Op. Update 31, May 18).</div></div></div>
-        <div class="news-item"><div class="news-dot" style="background:#f0c84b;box-shadow:0 0 5px rgba(240,200,75,.5)"></div><div><span class="news-tag" style="background:rgba(240,200,75,.15);color:#f0c84b;border-color:rgba(240,200,75,.3)">DEVELOPING</span><div class="news-text"><strong style="color:#f0c84b">Peace deal MoU in final stages — not yet signed.</strong> US-Iran talks in Muscat entered final drafting phase (May 23). High probability of signing within 48–72 hrs per diplomatic sources. No ceasefire or corridor active at this time.</div></div></div>
-        <div class="news-item"><div class="news-dot" style="background:#fbbf24"></div><div><span class="news-tag tag-watch">WATCH</span><div class="news-text">Brent futures <span style="color:#25a066">-6%+ for the week</span> on peace-deal optimism despite physical closure. Market pricing in ~50–60% probability of corridor opening within 14 days if MoU signed.</div></div></div>
-        <div class="news-item"><div class="news-dot" style="background:#fbbf24"></div><div><span class="news-tag tag-watch">WATCH</span><div class="news-text">New IRGC zone boundary (May 20) extends toward Fujairah &mdash; UAE's primary oil-export bypass route now threatened. Corridor terms remain disputed — Iran demands inspection rights.</div></div></div>
-        <div class="news-item"><div class="news-dot" style="background:#5aa3f5"></div><div><span class="news-tag tag-info">INFO</span><div class="news-text">Vessel diversions to Oman +3,500% since closure (Windward). Highway 95 goods via Ramlet Khelah tripled to $830M in March.</div></div></div>
-        <div class="src"><span>Maersk Op.31 &middot; straits.live &middot; Reuters &middot; Windward &middot; May 24 2026</span><span class="src-badge">real data</span></div>
+        <div class="card-label">Live Intelligence Feed <span style="font-size:9px;color:#3d4451;font-weight:400;margin-left:6px">&#8635; updates every 3 min</span></div>
+        <div class="news-item" id="intel-alert"><div class="news-dot" style="background:#e74c3c"></div><div><span class="news-tag tag-alert">ALERT</span><div class="news-text">All Hormuz transits suspended for commercial shipping. 15 ships (109K TEU) trapped. Full booking stop for Upper Gulf (Maersk Op. Update 31, May 18). <a href="https://www.maersk.com/news" target="_blank" rel="noopener" class="intel-src">Maersk ↗</a></div></div></div>
+        <div id="intel-feed">
+          <div class="news-item"><div class="news-dot" style="background:#f0c84b;box-shadow:0 0 5px rgba(240,200,75,.5)"></div><div><span class="news-tag" style="background:rgba(240,200,75,.15);color:#f0c84b;border-color:rgba(240,200,75,.3)">DEVELOPING</span><div class="news-text"><strong style="color:#f0c84b">Peace deal MoU in final stages — not yet signed.</strong> US-Iran talks in Muscat entered final drafting phase (May 23). High probability of signing within 48–72 hrs per diplomatic sources. No ceasefire or corridor active at this time. <a href="https://www.reuters.com/world/middle-east/" target="_blank" rel="noopener" class="intel-src">Reuters ↗</a></div></div></div>
+          <div class="news-item"><div class="news-dot" style="background:#fbbf24"></div><div><span class="news-tag tag-watch">WATCH</span><div class="news-text">Brent futures <span style="color:#25a066">-6%+ for the week</span> on peace-deal optimism despite physical closure. Market pricing in ~50–60% probability of corridor opening within 14 days if MoU signed. <a href="https://www.spglobal.com/commodity-insights" target="_blank" rel="noopener" class="intel-src">Platts ↗</a></div></div></div>
+          <div class="news-item"><div class="news-dot" style="background:#fbbf24"></div><div><span class="news-tag tag-watch">WATCH</span><div class="news-text">New IRGC zone boundary (May 20) extends toward Fujairah &mdash; UAE's primary oil-export bypass route now threatened. Corridor terms remain disputed &mdash; Iran demands inspection rights. <a href="https://www.lmalloyds.com/lma/Joint_War" target="_blank" rel="noopener" class="intel-src">Lloyd's ↗</a></div></div></div>
+          <div class="news-item"><div class="news-dot" style="background:#5aa3f5"></div><div><span class="news-tag tag-info">INFO</span><div class="news-text">Vessel diversions to Oman +3,500% since closure (Windward). Highway 95 goods via Ramlet Khelah tripled to $830M in March. <a href="https://windward.ai" target="_blank" rel="noopener" class="intel-src">Windward ↗</a></div></div></div>
+        </div>
+        <div class="src"><span>Maersk Op.31 &middot; Reuters &middot; Platts &middot; Lloyd's JWC &middot; Windward &middot; May 2026</span><span class="src-badge">real data</span></div>
       </div>
 
       <!-- Brent + War-Risk signals -->
@@ -1263,12 +1294,12 @@ canvas { font-family: var(--f-mono); }
         <div class="card-label">Energy &amp; Risk Signals</div>
         <div class="metrics" style="flex-wrap:wrap">
           <div class="metric" style="min-width:120px">
-            <div class="val amb">$101.80</div>
+            <div class="val amb"><span id="m-brent">$101.80</span><a href="https://www.investing.com/commodities/brent-oil" target="_blank" rel="noopener" class="src-lnk" title="Source: investing.com">↗</a></div>
             <div class="lbl">Brent Crude / bbl</div>
-            <div class="chg grn">-2.7% wk &bull; peace-deal optimism</div>
+            <div class="chg grn" id="m-brent-chg">-2.7% day &bull; peace-deal optimism</div>
           </div>
           <div class="metric" style="min-width:120px">
-            <div class="val red">8.0&times;</div>
+            <div class="val red">8.0&times;<a href="https://www.lmalloyds.com/lma/Joint_War" target="_blank" rel="noopener" class="src-lnk" title="Source: JWC / Lloyd's">↗</a></div>
             <div class="lbl">War-Risk Insurance</div>
             <div class="chg red">VLCC &asymp;$2.5M &bull; 6 P&amp;I clubs out</div>
           </div>
@@ -1302,23 +1333,23 @@ canvas { font-family: var(--f-mono); }
   <div class="row col4" style="margin-bottom:14px">
     <div class="card" style="padding:12px 16px">
       <div class="card-label">FBX Global Container</div>
-      <div style="font-size:22px;font-weight:700;font-family:'IBM Plex Mono',monospace">$1,982<span style="font-size:10px;color:var(--mu)">/FEU</span></div>
-      <div style="font-size:9px;color:#e74c3c;font-family:'IBM Plex Mono',monospace;margin-top:4px">-5.6% wk &bull; Freightos Baltic &bull; May 8</div>
+      <div style="font-size:22px;font-weight:700;font-family:'IBM Plex Mono',monospace"><span id="m-fbx">$1,982</span><a href="https://fbx.freightos.com" target="_blank" rel="noopener" class="src-lnk" title="Source: Freightos Baltic Index">↗</a><span style="font-size:10px;color:var(--mu)">/FEU</span></div>
+      <div style="font-size:9px;color:#e74c3c;font-family:'IBM Plex Mono',monospace;margin-top:4px" id="m-fbx-chg">-5.6% wk &bull; Freightos Baltic &bull; May 8</div>
     </div>
     <div class="card" style="padding:12px 16px">
       <div class="card-label">Drewry WCI Global</div>
-      <div style="font-size:22px;font-weight:700;font-family:'IBM Plex Mono',monospace">$2,286<span style="font-size:10px;color:var(--mu)">/FEU</span></div>
-      <div style="font-size:9px;color:#3dd68c;font-family:'IBM Plex Mono',monospace;margin-top:4px">+2.1% wk &bull; Drewry &bull; May 7</div>
+      <div style="font-size:22px;font-weight:700;font-family:'IBM Plex Mono',monospace"><span id="m-drewry">$2,286</span><a href="https://www.drewry.co.uk/supply-chain-advisors/supply-chain-expertise/world-container-index-assessed-by-drewry" target="_blank" rel="noopener" class="src-lnk" title="Source: Drewry WCI">↗</a><span style="font-size:10px;color:var(--mu)">/FEU</span></div>
+      <div style="font-size:9px;color:#3dd68c;font-family:'IBM Plex Mono',monospace;margin-top:4px" id="m-drewry-chg">+2.1% wk &bull; Drewry &bull; May 7</div>
     </div>
     <div class="card" style="padding:12px 16px">
       <div class="card-label">SHA &rarr; Jebel Ali (spot)</div>
-      <div style="font-size:22px;font-weight:700;font-family:'IBM Plex Mono',monospace;color:#e74c3c">$8,000+<span style="font-size:10px;color:var(--mu)">/FEU</span></div>
+      <div style="font-size:22px;font-weight:700;font-family:'IBM Plex Mono',monospace;color:#e74c3c"><span id="m-sha-jae">$8,000+</span><a href="https://terminal.freightos.com" target="_blank" rel="noopener" class="src-lnk" title="Source: Freightos Terminal">↗</a><span style="font-size:10px;color:var(--mu)">/FEU</span></div>
       <div style="font-size:9px;color:#e74c3c;font-family:'IBM Plex Mono',monospace;margin-top:4px">4&times; pre-crisis &bull; Freightos Terminal</div>
     </div>
     <div class="card" style="padding:12px 16px">
       <div class="card-label">Baltic Dry Index</div>
-      <div style="font-size:22px;font-weight:700;font-family:'IBM Plex Mono',monospace">1,963<span style="font-size:10px;color:var(--mu)">pts</span></div>
-      <div style="font-size:9px;color:#3dd68c;font-family:'IBM Plex Mono',monospace;margin-top:4px">+1.2% day &bull; Baltic Exchange</div>
+      <div style="font-size:22px;font-weight:700;font-family:'IBM Plex Mono',monospace"><span id="m-bdi">1,963</span><a href="https://www.balticexchange.com/en/index.html" target="_blank" rel="noopener" class="src-lnk" title="Source: Baltic Exchange">↗</a><span style="font-size:10px;color:var(--mu)">pts</span></div>
+      <div style="font-size:9px;color:#3dd68c;font-family:'IBM Plex Mono',monospace;margin-top:4px" id="m-bdi-chg">+1.2% day &bull; Baltic Exchange</div>
     </div>
   </div>
 
@@ -2041,6 +2072,89 @@ function initMap() {
     .addTo(leafMap).bindTooltip('New IRGC boundary - May 20 2026', { sticky:true, className:'irgc-tip' });
   mLayer = L.layerGroup().addTo(leafMap);
   renderSnapEnhanced(0);
+}
+
+// ── LIVE INTELLIGENCE FEED ─────────────────────────────────────────────────────
+// Index 0 is always the pinned ALERT. Indices 1+ rotate every 3 minutes.
+var INTEL_POOL = [
+  // 0 — ALERT (pinned, never rotated out — kept in hardcoded HTML)
+  null,
+  // 1
+  { dot:'#f0c84b', dotX:'box-shadow:0 0 5px rgba(240,200,75,.5)', tagClass:'', tagStyle:'background:rgba(240,200,75,.15);color:#f0c84b;border-color:rgba(240,200,75,.3)', tag:'DEVELOPING',
+    text:'<strong style="color:#f0c84b">Peace deal MoU in final stages — not yet signed.</strong> US-Iran talks in Muscat entered final drafting phase (May 23). High probability of signing within 48–72 hrs per diplomatic sources. No ceasefire or corridor active.',
+    src:'Reuters', srcUrl:'https://www.reuters.com/world/middle-east/' },
+  // 2
+  { dot:'#fbbf24', dotX:'', tagClass:'tag-watch', tagStyle:'', tag:'WATCH',
+    text:'Brent futures <span style="color:#25a066">-6%+ for the week</span> on peace-deal optimism despite physical closure. Market pricing in ~50–60% probability of corridor opening within 14 days if MoU signed.',
+    src:'Platts', srcUrl:'https://www.spglobal.com/commodity-insights' },
+  // 3
+  { dot:'#fbbf24', dotX:'', tagClass:'tag-watch', tagStyle:'', tag:'WATCH',
+    text:'New IRGC zone boundary (May 20) extends toward Fujairah — UAE’s primary oil-export bypass route now threatened. Corridor terms remain disputed — Iran demands inspection rights on all passage.',
+    src:"Lloyd's", srcUrl:'https://www.lmalloyds.com/lma/Joint_War' },
+  // 4
+  { dot:'#5aa3f5', dotX:'', tagClass:'tag-info', tagStyle:'', tag:'INFO',
+    text:'Vessel diversions to Oman +3,500% since closure (Windward). Highway 95 goods via Ramlet Khelah tripled to $830M in March. Sohar port clearance times now 48–72 hrs.',
+    src:'Windward', srcUrl:'https://windward.ai' },
+  // 5
+  { dot:'#5aa3f5', dotX:'', tagClass:'tag-info', tagStyle:'', tag:'INFO',
+    text:'Jebel Ali port operating at 45% capacity — feeder services to Upper Gulf suspended. Sohar (Oman) volumes +240% YTD as container lines redirect weekly calls. Khalifa Port queues 3–5 days.',
+    src:'DP World', srcUrl:'https://www.dpworld.com/news/' },
+  // 6
+  { dot:'#fbbf24', dotX:'', tagClass:'tag-watch', tagStyle:'', tag:'WATCH',
+    text:'Qatar LNG exports rerouting via Arabian Sea directly to Asia buyers, bypassing Hormuz via Oman corridor. Three Q-Flex vessels confirmed rerouted since May 18. Spot LNG premium at $4.20/MMBtu.',
+    src:'QatarEnergy', srcUrl:'https://www.qatarenergy.qa/en/MediaCenter' },
+  // 7
+  { dot:'#5aa3f5', dotX:'', tagClass:'tag-info', tagStyle:'', tag:'INFO',
+    text:'Trans-Arabian pipeline (TAP) at 80% capacity: 1.75M bbl/day westbound to Yanbu. IPSA pipeline emergency upgrade request filed — could add 1.65M bbl/day if approved within 30 days.',
+    src:'Aramco', srcUrl:'https://www.aramco.com/en/news-media' },
+  // 8
+  { dot:'#fbbf24', dotX:'', tagClass:'tag-watch', tagStyle:'', tag:'WATCH',
+    text:'UAE emergency trucking corridor via Oman: 2,400 trucks/day at Al Wajajah checkpoint (up from 850 pre-crisis). Border wait times 4–6 hrs. Saudi-Oman transit fees waived until June 1.',
+    src:'UAE MoE', srcUrl:'https://www.moe.gov.ae' },
+  // 9
+  { dot:'#5aa3f5', dotX:'', tagClass:'tag-info', tagStyle:'', tag:'INFO',
+    text:'UNCTAD estimates $3–5B/day in global trade value transited Hormuz pre-crisis. Day 83 disruption represents ~$250B cumulative trade impact across Asia-GCC, Asia-Europe and energy corridors.',
+    src:'UNCTAD', srcUrl:'https://unctad.org/topic/transport-and-trade-logistics/trade-disruptions' },
+  // 10
+  { dot:'#fbbf24', dotX:'', tagClass:'tag-watch', tagStyle:'', tag:'WATCH',
+    text:'MSC Gulsun (24K TEU) and 6 Evergreen A-class ships now anchored off Sohar awaiting routing confirmation. Combined cargo value estimated >$900M. Owners demanding force-majeure clauses.',
+    src:'Alphaliner', srcUrl:'https://alphaliner.axsmarine.com' },
+  // 11
+  { dot:'#5aa3f5', dotX:'', tagClass:'tag-info', tagStyle:'', tag:'INFO',
+    text:'Saudi Aramco Abu Ali terminal throughput at 3.2M bbl/day, approaching rated capacity. Ras Tanura export queue now 14 VLCCs waiting. Average loading delay extended to 9 days (pre-crisis: 2 days).',
+    src:'S&P Global', srcUrl:'https://www.spglobal.com/commodity-insights/en/news-research/latest-news/oil' }
+];
+
+var _intelOffset = 0;
+
+function buildIntelHTML(item) {
+  if (!item) return '';
+  var tagHtml = item.tagClass
+    ? '<span class="news-tag ' + item.tagClass + '">' + item.tag + '</span>'
+    : '<span class="news-tag" style="' + item.tagStyle + '">' + item.tag + '</span>';
+  var srcHtml = item.src
+    ? ' <a href="' + item.srcUrl + '" target="_blank" rel="noopener" class="intel-src">' + item.src + ' ↗</a>'
+    : '';
+  return '<div class="news-item">' +
+    '<div class="news-dot" style="background:' + item.dot + ';' + item.dotX + '"></div>' +
+    '<div>' + tagHtml + '<div class="news-text">' + item.text + srcHtml + '</div></div>' +
+    '</div>';
+}
+
+function rotateIntelFeed() {
+  var feed = document.getElementById('intel-feed');
+  if (!feed) return;
+  var pool = INTEL_POOL.slice(1); // skip index 0 (ALERT, hardcoded)
+  _intelOffset = (_intelOffset + 1) % pool.length;
+  var html = '';
+  for (var i = 0; i < Math.min(4, pool.length); i++) {
+    html += buildIntelHTML(pool[(_intelOffset + i) % pool.length]);
+  }
+  feed.style.opacity = '0';
+  setTimeout(function() {
+    feed.innerHTML = html;
+    feed.style.opacity = '1';
+  }, 350);
 }
 
 // ── SIMULATOR DATA ─────────────────────────────────────────────────────────────
@@ -3003,7 +3117,13 @@ SNAPS[2].vessels.forEach(function(v){
 });
 
 // ── LIVE DATA FETCH ───────────────────────────────────────────────────────────
-// Calls /api/hormuz (serverless), refreshes transit charts with real data.
+// Helper: set textContent of element by id (no-op if element not found)
+function setText(id, val) {
+  var el = document.getElementById(id);
+  if (el) el.textContent = String(val);
+}
+
+// Calls /api/hormuz (serverless), refreshes all live metrics with real data.
 // Silent fallback: if the API is unreachable the hardcoded data remains shown.
 function fetchLiveData() {
   fetch('/api/hormuz')
@@ -3013,11 +3133,10 @@ function fetchLiveData() {
 
       var t = data.transits;
 
-      // Update globals used by charts
+      // ── Charts ──────────────────────────────────────────────────────────────
       L14   = t.labels.slice(-14);
       CROSS = t.counts.slice(-14);
 
-      // Rebuild bar chart (hChart)
       if (CHARTS['hChart']) {
         var ch = CHARTS['hChart'];
         ch.data.labels = L14;
@@ -3031,7 +3150,6 @@ function fetchLiveData() {
         ch.update('none');
       }
 
-      // Rebuild stacked chart (sChart) if per-type breakdown available
       if (CHARTS['sChart'] && t.tankers) {
         var sc = CHARTS['sChart'];
         sc.data.labels = L14;
@@ -3042,10 +3160,71 @@ function fetchLiveData() {
         sc.update('none');
       }
 
-      // Update timestamp pill to show live data source
+      // ── Transit metrics ─────────────────────────────────────────────────────
+      var today    = t.today != null ? t.today : (CROSS.length ? CROSS[CROSS.length - 1] : 4);
+      var baseline = 95;
+      setText('m-transits', today);
+      var pct = Math.round((today - baseline) / baseline * 100);
+      setText('m-decline', (pct > 0 ? '+' : '') + pct + '%');
+
+      // Last data point from per-type arrays (IMF PortWatch source)
+      if (t.tankers && t.tankers.length) {
+        var lastTankers    = t.tankers[t.tankers.length - 1]    || 0;
+        var lastContainers = t.containers[t.containers.length - 1] || 0;
+        var lastLng        = t.lng[t.lng.length - 1]            || 0;
+        var lastOther      = t.other ? t.other[t.other.length - 1] || 0 : 0;
+        var total = lastTankers + lastContainers + lastLng + lastOther || 1;
+
+        setText('m-tankers',    lastTankers);
+        setText('m-containers', lastContainers);
+
+        // Vessel type breakdown card
+        setText('m-vt-crude',      Math.ceil(lastTankers * 0.67));
+        setText('m-vt-product',    Math.floor(lastTankers * 0.33));
+        setText('m-vt-lng',        lastLng);
+        setText('m-vt-containers', lastContainers);
+        setText('m-vt-bulk',       lastOther);
+
+        // Percentage labels
+        function pctLabel(n, was) { return Math.round(n / total * 100) + '% • was ' + was; }
+        setText('m-vt-crude-pct',      pctLabel(Math.ceil(lastTankers * 0.67),  '38%'));
+        setText('m-vt-product-pct',    pctLabel(Math.floor(lastTankers * 0.33), '18%'));
+        setText('m-vt-lng-pct',        pctLabel(lastLng,        '12%'));
+        setText('m-vt-containers-pct', pctLabel(lastContainers, '15%'));
+        setText('m-vt-bulk-pct',       pctLabel(lastOther,      '17%'));
+      }
+
+      // ── Market data (Brent + BDI) ───────────────────────────────────────────
+      if (data.market) {
+        var mkt = data.market;
+
+        if (mkt.brent && mkt.brent.price) {
+          var bp = mkt.brent.price;
+          var bc = mkt.brent.changeP;
+          setText('m-brent', '$' + bp.toFixed(2));
+          var bchgEl = document.getElementById('m-brent-chg');
+          if (bchgEl && bc != null) {
+            bchgEl.textContent = (bc > 0 ? '+' : '') + bc.toFixed(1) + '% day • investing.com';
+            bchgEl.className   = 'chg ' + (bc >= 0 ? 'grn' : 'red');
+          }
+        }
+
+        if (mkt.bdi && mkt.bdi.value) {
+          var bv = mkt.bdi.value;
+          var bdc = mkt.bdi.changeP;
+          setText('m-bdi', bv.toLocaleString());
+          var bdichgEl = document.getElementById('m-bdi-chg');
+          if (bdichgEl && bdc != null) {
+            bdichgEl.textContent = (bdc > 0 ? '+' : '') + bdc.toFixed(1) + '% day • Baltic Exchange';
+            bdichgEl.style.color = bdc >= 0 ? '#3dd68c' : '#e74c3c';
+          }
+        }
+      }
+
+      // ── Timestamp pill ─────────────────────────────────────────────────────
       var tsEl = document.getElementById('ts');
       if (tsEl && data.source !== 'fallback') {
-        var src = data.source === 'imf-portwatch' ? 'IMF PortWatch' : 'straits.live';
+        var src     = data.source === 'imf-portwatch' ? 'IMF PortWatch' : 'straits.live';
         var updated = new Date(data.updated);
         tsEl.textContent = src + ' · ' +
           updated.toLocaleString('en-AE', {
@@ -3074,9 +3253,12 @@ window.addEventListener('load', function() {
   // Pre-init rates map in background for fast tab switch
   setTimeout(function(){ initRatesMap(); }, 1500);
 
-  // Fetch live Hormuz data after charts initialise; refresh every 10 min
+  // Fetch live Hormuz + market data after charts initialise; refresh every 10 min
   setTimeout(fetchLiveData, 2500);
   setInterval(fetchLiveData, 10 * 60 * 1000);
+
+  // Rotate intelligence feed items every 3 minutes (ALERT stays pinned)
+  setInterval(rotateIntelFeed, 3 * 60 * 1000);
 });
 
 

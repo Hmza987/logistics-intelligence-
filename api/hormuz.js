@@ -61,6 +61,36 @@ function rawFetch(url, maxRedirects = 4) {
   });
 }
 
+// ─── Source: Yahoo Finance (Brent crude futures BZ=F, free, no key) ──────────
+async function fetchBrent() {
+  const url = 'https://query1.finance.yahoo.com/v8/finance/chart/BZ=F?interval=1d&range=5d';
+  const { status, body } = await rawFetch(url);
+  if (status !== 200) throw new Error(`Yahoo Finance HTTP ${status}`);
+  const json = JSON.parse(body);
+  const res  = json.chart && json.chart.result && json.chart.result[0];
+  if (!res || !res.meta) throw new Error('Yahoo Finance: no result');
+  const price   = res.meta.regularMarketPrice;
+  const prev    = res.meta.chartPreviousClose;
+  const changeP = prev ? +((price - prev) / prev * 100).toFixed(2) : null;
+  return { price: +price.toFixed(2), changeP, updated: new Date().toISOString() };
+}
+
+// ─── Source: Stooq (Baltic Dry Index, free, no key) ──────────────────────────
+async function fetchBDI() {
+  const url = 'https://stooq.com/q/d/l/?s=bdi.i&i=d';
+  const { status, body } = await rawFetch(url);
+  if (status !== 200) throw new Error(`Stooq HTTP ${status}`);
+  const lines = body.trim().split('\n').filter(l => l && !l.startsWith('Date'));
+  if (lines.length === 0) throw new Error('Stooq: no data rows');
+  const last    = lines[lines.length - 1].split(',');
+  const prev    = lines.length > 1 ? lines[lines.length - 2].split(',') : null;
+  const value   = parseFloat(last[4]);
+  const prevV   = prev ? parseFloat(prev[4]) : null;
+  const changeP = prevV ? +((value - prevV) / prevV * 100).toFixed(2) : null;
+  if (isNaN(value)) throw new Error('Stooq: invalid value');
+  return { value, changeP, updated: new Date().toISOString() };
+}
+
 // ─── Source 1: IMF PortWatch public ArcGIS REST API ──────────────────────────
 // Chokepoint 6 = Strait of Hormuz
 // Docs: https://portwatch.imf.org  (ArcGIS FeatureService, open access)
@@ -183,6 +213,15 @@ async function getLiveData() {
       console.log('[hormuz] source: fallback');
     }
   }
+
+  // Fetch market data concurrently — failures don't break the transit response
+  const [brentResult, bdiResult] = await Promise.allSettled([fetchBrent(), fetchBDI()]);
+  data.market = {
+    brent: brentResult.status === 'fulfilled' ? brentResult.value : null,
+    bdi:   bdiResult.status   === 'fulfilled' ? bdiResult.value   : null,
+  };
+  if (brentResult.status === 'rejected') console.warn('[hormuz] Brent fetch failed:', brentResult.reason.message);
+  if (bdiResult.status   === 'rejected') console.warn('[hormuz] BDI fetch failed:',   bdiResult.reason.message);
 
   _cache   = data;
   _cacheAt = Date.now();

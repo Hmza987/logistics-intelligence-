@@ -1,0 +1,220 @@
+<!-- ============================================================ TAB 4: SIMULATOR -->
+<div class="page" id="page-simulator">
+  <div style="margin-bottom:12px;display:flex;align-items:baseline;justify-content:space-between;flex-wrap:wrap;gap:8px">
+    <div>
+      <div style="font-size:10px;font-weight:700;color:#a78bfa;letter-spacing:.1em;text-transform:uppercase;margin-bottom:3px">&#9670; Global Corridor Stress Simulator</div>
+      <div style="font-size:10px;color:#7a8494">Set chokepoint status and shipping variables — the platform models real-time corridor stress, trade fragmentation, and GCC logistics impact.</div>
+    </div>
+    <div id="gcss-last-run" style="font-family:'IBM Plex Mono',monospace;font-size:8px;color:#4a5568">Ready</div>
+  </div>
+
+  <div class="gcss-wrap">
+
+    <!-- ── LEFT: CONTROLS ──────────────────────────────────── -->
+    <div class="gcss-left">
+
+      <!-- Preset Scenarios -->
+      <div class="gcss-section">
+        <div class="gcss-section-title">&#9670; Preset Scenarios</div>
+        <div class="gcss-presets">
+          <button class="gcss-preset-btn active" id="gcss-pre-0" onclick="loadPreset(0)">Hormuz Closed<br><span style="color:#e74c3c">Current Reality</span></button>
+          <button class="gcss-preset-btn" id="gcss-pre-1" onclick="loadPreset(1)">Dual Closure<br><span style="color:#e74c3c">Worst Case</span></button>
+          <button class="gcss-preset-btn" id="gcss-pre-2" onclick="loadPreset(2)">Houthi Surge<br><span style="color:#fbbf24">Red Sea Crisis</span></button>
+          <button class="gcss-preset-btn" id="gcss-pre-3" onclick="loadPreset(3)">Suez Blockage<br><span style="color:#fbbf24">Med Disruption</span></button>
+          <button class="gcss-preset-btn" id="gcss-pre-4" onclick="loadPreset(4)">Partial Recovery<br><span style="color:#f0c84b">De-escalation</span></button>
+          <button class="gcss-preset-btn" id="gcss-pre-5" onclick="loadPreset(5)">All Clear<br><span style="color:#3dd68c">Pre-Crisis</span></button>
+        </div>
+      </div>
+
+      <!-- Chokepoint Status -->
+      <div class="gcss-section">
+        <div class="gcss-section-title">&#9651; Chokepoint Status</div>
+        <div class="gcss-cp-list">
+
+          <div class="gcss-cp-row">
+            <div class="gcss-cp-name"><span class="cp-label">Strait of Hormuz</span><span id="cp-lbl-hormuz">CLOSED</span></div>
+            <div class="gcss-cp-btns" data-cp="hormuz">
+              <button class="gcss-cp-btn" data-s="1" onclick="setCp('hormuz',1)">Open</button>
+              <button class="gcss-cp-btn" data-s="2" onclick="setCp('hormuz',2)">Partial</button>
+              <button class="gcss-cp-btn" data-s="3" onclick="setCp('hormuz',3)">Escort</button>
+              <button class="gcss-cp-btn" data-s="4" onclick="setCp('hormuz',4)">Blockade</button>
+              <button class="gcss-cp-btn sel" data-s="5" onclick="setCp('hormuz',5)">Closed</button>
+            </div>
+          </div>
+
+          <div class="gcss-cp-row">
+            <div class="gcss-cp-name"><span class="cp-label">Bab el-Mandeb</span><span id="cp-lbl-bab">OPEN</span></div>
+            <div class="gcss-cp-btns" data-cp="bab">
+              <button class="gcss-cp-btn sel" data-s="1" onclick="setCp('bab',1)">Open</button>
+              <button class="gcss-cp-btn" data-s="2" onclick="setCp('bab',2)">Partial</button>
+              <button class="gcss-cp-btn" data-s="3" onclick="setCp('bab',3)">Escort</button>
+              <button class="gcss-cp-btn" data-s="4" onclick="setCp('bab',4)">Blockade</button>
+              <button class="gcss-cp-btn" data-s="5" onclick="setCp('bab',5)">Closed</button>
+            </div>
+          </div>
+
+          <div class="gcss-cp-row">
+            <div class="gcss-cp-name"><span class="cp-label">Suez Canal</span><span id="cp-lbl-suez">OPEN</span></div>
+            <div class="gcss-cp-btns" data-cp="suez">
+              <button class="gcss-cp-btn sel" data-s="1" onclick="setCp('suez',1)">Open</button>
+              <button class="gcss-cp-btn" data-s="2" onclick="setCp('suez',2)">Partial</button>
+              <button class="gcss-cp-btn" data-s="3" onclick="setCp('suez',3)">Escort</button>
+              <button class="gcss-cp-btn" data-s="4" onclick="setCp('suez',4)">Blockade</button>
+              <button class="gcss-cp-btn" data-s="5" onclick="setCp('suez',5)">Closed</button>
+            </div>
+          </div>
+
+          <div class="gcss-cp-row">
+            <div class="gcss-cp-name"><span class="cp-label">Black Sea Exits</span><span id="cp-lbl-blacksea">OPEN</span></div>
+            <div class="gcss-cp-btns" data-cp="blacksea">
+              <button class="gcss-cp-btn sel" data-s="1" onclick="setCp('blacksea',1)">Open</button>
+              <button class="gcss-cp-btn" data-s="2" onclick="setCp('blacksea',2)">Partial</button>
+              <button class="gcss-cp-btn" data-s="3" onclick="setCp('blacksea',3)">Escort</button>
+              <button class="gcss-cp-btn" data-s="4" onclick="setCp('blacksea',4)">Blockade</button>
+              <button class="gcss-cp-btn" data-s="5" onclick="setCp('blacksea',5)">Closed</button>
+            </div>
+          </div>
+
+          <div class="gcss-cp-row">
+            <div class="gcss-cp-name"><span class="cp-label">Malacca Strait</span><span id="cp-lbl-malacca">OPEN</span></div>
+            <div class="gcss-cp-btns" data-cp="malacca">
+              <button class="gcss-cp-btn sel" data-s="1" onclick="setCp('malacca',1)">Open</button>
+              <button class="gcss-cp-btn" data-s="2" onclick="setCp('malacca',2)">Partial</button>
+              <button class="gcss-cp-btn" data-s="3" onclick="setCp('malacca',3)">Escort</button>
+              <button class="gcss-cp-btn" data-s="4" onclick="setCp('malacca',4)">Blockade</button>
+              <button class="gcss-cp-btn" data-s="5" onclick="setCp('malacca',5)">Closed</button>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- Escalation Slider -->
+      <div class="gcss-section">
+        <div class="gcss-section-title">&#9650; Geopolitical Escalation</div>
+        <div class="gcss-slider-row">
+          <div class="gcss-slider-label">Level <span id="gcss-esc-lbl">Level 5 — Active Conflict</span></div>
+          <input type="range" class="gcss-slider" id="gcss-esc" min="1" max="6" value="5"
+            oninput="gcssSliderInput(this,'gcss-esc-lbl',ESC_LABELS)">
+        </div>
+      </div>
+
+      <!-- Shipping Variables -->
+      <div class="gcss-section">
+        <div class="gcss-section-title">&#9672; Shipping Variables</div>
+        <div class="gcss-slider-row">
+          <div class="gcss-slider-label">Freight Rate Index <span id="gcss-freight-lbl">38</span></div>
+          <input type="range" class="gcss-slider" id="gcss-freight" min="10" max="60" value="38" oninput="gcssRawLabel(this,'gcss-freight-lbl')">
+        </div>
+        <div class="gcss-slider-row">
+          <div class="gcss-slider-label">War-Risk Insurance <span id="gcss-ins-lbl">72</span></div>
+          <input type="range" class="gcss-slider" id="gcss-ins" min="10" max="100" value="72" oninput="gcssRawLabel(this,'gcss-ins-lbl')">
+        </div>
+        <div class="gcss-slider-row">
+          <div class="gcss-slider-label">Port Congestion % <span id="gcss-cong-lbl">55</span></div>
+          <input type="range" class="gcss-slider" id="gcss-cong" min="0" max="100" value="55" oninput="gcssRawLabel(this,'gcss-cong-lbl')">
+        </div>
+        <div class="gcss-slider-row">
+          <div class="gcss-slider-label">Market Confidence % <span id="gcss-conf-lbl">32</span></div>
+          <input type="range" class="gcss-slider" id="gcss-conf" min="0" max="100" value="32" oninput="gcssRawLabel(this,'gcss-conf-lbl')">
+        </div>
+        <div class="gcss-slider-row">
+          <div class="gcss-slider-label">Trucking Cost Index <span id="gcss-truck-lbl">118</span></div>
+          <input type="range" class="gcss-slider" id="gcss-truck" min="50" max="150" value="118" oninput="gcssRawLabel(this,'gcss-truck-lbl')">
+        </div>
+        <div class="gcss-slider-row">
+          <div class="gcss-slider-label">Oil Price $/bbl <span id="gcss-oil-lbl">104</span></div>
+          <input type="range" class="gcss-slider" id="gcss-oil" min="60" max="150" value="104" oninput="gcssRawLabel(this,'gcss-oil-lbl')">
+        </div>
+        <div class="gcss-slider-row">
+          <div class="gcss-slider-label">LNG Demand Index <span id="gcss-lng-lbl">68</span></div>
+          <input type="range" class="gcss-slider" id="gcss-lng" min="0" max="100" value="68" oninput="gcssRawLabel(this,'gcss-lng-lbl')">
+        </div>
+      </div>
+
+      <!-- Timeframe -->
+      <div class="gcss-section">
+        <div class="gcss-section-title">&#9711; Projection Timeframe</div>
+        <div class="gcss-tf-btns">
+          <button class="gcss-tf-btn active" id="gcss-tf-72h" onclick="setTf('72h',this)">72h</button>
+          <button class="gcss-tf-btn" id="gcss-tf-1W" onclick="setTf('1W',this)">1W</button>
+          <button class="gcss-tf-btn" id="gcss-tf-1M" onclick="setTf('1M',this)">1M</button>
+          <button class="gcss-tf-btn" id="gcss-tf-3M" onclick="setTf('3M',this)">3M</button>
+          <button class="gcss-tf-btn" id="gcss-tf-1Y" onclick="setTf('1Y',this)">1Y</button>
+        </div>
+      </div>
+
+    </div><!-- /gcss-left -->
+
+    <!-- ── CENTER: TACTICAL MAP ────────────────────────────── -->
+    <div class="gcss-center">
+      <div class="gcss-map-wrap">
+        <div id="gcss-map"></div>
+      </div>
+      <div class="gcss-kpi-bar">
+        <div class="gcss-kpi">
+          <div class="gcss-kpi-lbl">Corridor Stress</div>
+          <div class="gcss-kpi-val" id="gcss-kv-stress" style="color:#e74c3c">—</div>
+          <div class="gcss-kpi-sub" id="gcss-ks-stress">—</div>
+        </div>
+        <div class="gcss-kpi">
+          <div class="gcss-kpi-lbl">Trade Fragmentation</div>
+          <div class="gcss-kpi-val" id="gcss-kv-frag" style="color:#fbbf24">—</div>
+          <div class="gcss-kpi-sub" id="gcss-ks-frag">—</div>
+        </div>
+        <div class="gcss-kpi">
+          <div class="gcss-kpi-lbl">Maritime Risk</div>
+          <div class="gcss-kpi-val" id="gcss-kv-risk" style="color:#f0c84b">—</div>
+          <div class="gcss-kpi-sub" id="gcss-ks-risk">—</div>
+        </div>
+      </div>
+    </div><!-- /gcss-center -->
+
+    <!-- ── RIGHT: IMPACT INTELLIGENCE ─────────────────────── -->
+    <div class="gcss-right">
+
+      <!-- Risk Gauges -->
+      <div class="gcss-section">
+        <div class="gcss-section-title">&#9726; Risk Gauges</div>
+        <div class="gcss-gauges">
+          <div class="gcss-gauge-row">
+            <div class="gcss-gauge-header"><span>Energy Security</span><span class="gcss-gauge-val" id="g-energy-val" style="color:#e74c3c">—</span></div>
+            <div class="gcss-gauge-track"><div class="gcss-gauge-fill" id="g-energy-fill" style="width:0%;background:#e74c3c"></div></div>
+          </div>
+          <div class="gcss-gauge-row">
+            <div class="gcss-gauge-header"><span>Supply Chain Disruption</span><span class="gcss-gauge-val" id="g-supply-val" style="color:#fbbf24">—</span></div>
+            <div class="gcss-gauge-track"><div class="gcss-gauge-fill" id="g-supply-fill" style="width:0%;background:#fbbf24"></div></div>
+          </div>
+          <div class="gcss-gauge-row">
+            <div class="gcss-gauge-header"><span>Port Capacity Stress</span><span class="gcss-gauge-val" id="g-port-val" style="color:#f0c84b">—</span></div>
+            <div class="gcss-gauge-track"><div class="gcss-gauge-fill" id="g-port-fill" style="width:0%;background:#f0c84b"></div></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Global Trade Impact -->
+      <div class="gcss-section">
+        <div class="gcss-section-title">&#9670; Global Trade Impact</div>
+        <div class="gcss-impact-list" id="gcss-global-impact"></div>
+      </div>
+
+      <!-- GCC Logistics Impact -->
+      <div class="gcss-section">
+        <div class="gcss-section-title">&#9651; GCC Logistics Impact</div>
+        <div class="gcss-impact-list" id="gcss-gcc-impact"></div>
+      </div>
+
+      <!-- Corridor Resilience -->
+      <div class="gcss-section">
+        <div class="gcss-section-title">&#9711; Corridor Resilience Index</div>
+        <div class="gcss-resilience">
+          <div class="gcss-res-row">
+            <div class="gcss-res-header"><span>Asia–GCC direct</span><span id="r-asia-gcc">—</span></div>
+            <div class="gcss-res-bar"><div class="gcss-res-fill" id="r-asia-gcc-bar" style="width:0%;background:#5aa3f5"></div></div>
+          </div>
+          <div class="gcss-res-row">
+            <div class="gcss-res-header"><span>Asia–Europe via Suez</span><span id="r-asia-eu">—</span></div>
+            <div class="gcss-res-bar"><div class="gcss-res-fill" id="r-asia-eu-bar" style="width:0%;background:#3dd68c"></div></div>
+          </div>
+          <div class="gcss-res-row">
+            <div class="gcss-res-header"><span>Gulf–Europe energy</span><span id="r-gulf-eu">—</span></div>

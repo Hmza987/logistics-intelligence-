@@ -2289,52 +2289,81 @@ var ROUTES = {
     label: 'Asia → Europe via CoGH (crisis)'
   },
 
-  // ── ASIA → GCC via CAPE OF GOOD HOPE (crisis reroute for Gulf ports) ────
+  // ── ASIA → GCC via CAPE OF GOOD HOPE → ATLANTIC → GIBRALTAR → MED → SUEZ ─
   // ~5M TEU/yr → weight 4
-  // Same path as Asia-Europe but branches at Cape → Indian Ocean → Arabian Sea → Gulf
+  // Correct crisis route: same as Asia-Europe CoGH up to Gibraltar, then
+  // Med → Suez Canal → Red Sea (south) → Bab el-Mandeb → Arabian Sea → Gulf of Oman
   asia_gcc_cgh: {
     pts: [
-      [31.2,121.5],
+      [31.2,121.5],   // Shanghai
       [28.0,122.0],
       [22.0,120.5],
       [18.0,117.0],
       [10.0,110.0],
       [5.0,105.0],
-      [1.2,103.8],    // Singapore
+      [1.2,103.8],    // Singapore / Malacca
       [-0.5,101.0],
       [-2.5,98.5],
       [-5.5,96.0],
-      [-8.0,90.0],
-      [-10.0,82.0],
+      [-8.0,90.0],    // Bay of Bengal
+      [-10.0,82.0],   // Indian Ocean
       [-12.0,72.0],
       [-18.0,60.0],
       [-25.0,45.0],
-      [-33.0,27.0],
-      [-34.2,18.5],   // Cape of Good Hope
-      [-34.5,22.0],
-      [-32.0,30.0],
-      [-28.0,38.0],   // South Indian Ocean east of Cape
-      [-20.0,48.0],
-      [-10.0,55.0],
-      [-5.0,55.0],    // Southern Arabian Sea
-      [0.0,52.0],
-      [5.0,48.0],     // Gulf of Aden approach
-      [8.5,50.0],
-      [11.5,45.0],    // Gulf of Aden
-      [14.0,49.0],
-      [16.0,54.0],
-      [18.0,57.0],    // Arabian Sea NW
-      [20.0,58.5],
-      [22.0,59.5],
-      [22.5,58.5],    // Gulf of Oman
+      [-33.0,27.0],   // Approaching Cape
+      [-34.2,18.5],   // Cape of Good Hope ← south tip
+      [-34.5,16.0],   // Cape Town / Atlantic side
+      [-33.0,13.0],
+      [-28.0,8.0],    // South Atlantic
+      [-20.0,5.0],
+      [-10.0,-2.0],
+      [-2.0,-6.0],
+      [5.0,-8.0],     // Gulf of Guinea
+      [10.0,-12.0],
+      [15.0,-18.0],   // West Africa
+      [20.0,-22.0],
+      [28.0,-16.0],   // Canary Islands latitude
+      [35.0,-12.0],
+      [36.1,-5.4],    // Strait of Gibraltar ← into Mediterranean
+      [36.5,-2.0],
+      [37.0,1.0],     // Western Med
+      [37.5,6.0],     // Algeria coast
+      [37.5,10.5],    // Tunisia
+      [37.0,12.5],    // Sicily approach (south of island)
+      [36.0,14.5],    // Sicily south
+      [35.5,18.0],    // Central Med
+      [34.5,22.0],    // South of Crete
+      [33.5,26.0],    // Eastern Med
+      [33.0,29.5],    // Eastern Med (south of Cyprus)
+      [32.0,31.5],    // Off Egyptian coast
+      [31.5,32.3],    // Port Said ← Suez Canal north (Mediterranean end)
+      [30.7,32.4],    // Suez Canal
+      [30.0,32.5],    // Suez town ← Red Sea begins
+      [28.5,33.5],    // Red Sea north
+      [27.0,34.5],    // Red Sea
+      [25.0,36.0],    // Red Sea central
+      [22.5,37.5],
+      [20.0,38.5],
+      [18.0,39.5],    // Red Sea south
+      [16.0,41.0],
+      [14.0,42.5],
+      [11.5,43.5],    // Bab el-Mandeb ← exits Red Sea into Gulf of Aden
+      [12.0,47.0],    // Gulf of Aden (north of Somalia coast)
+      [12.5,51.5],    // Past Horn of Africa (Cape Guardafui ~11.8°N 51.3°E)
+      [11.0,55.0],    // Arabian Sea
+      [8.0,58.5],     // Arabian Sea
+      [12.0,58.5],    // Arabian Sea NW
+      [16.0,57.5],    // Oman coast approach
+      [19.0,57.5],
+      [21.0,58.0],
+      [22.5,58.5],    // Gulf of Oman mouth
       [23.5,57.5],
-      [24.5,56.5],
-      [25.0,55.1]     // Jebel Ali
+      [24.3,56.7]     // Sohar / Khor Fakkan (outside Hormuz)
     ],
     color: '#e74c3c',
     weight: 4,
     dashArray: '8,5',
-    label: 'Asia → GCC via CoGH (crisis)'
+    label: 'Asia → GCC via CoGH → Gibraltar → Suez → Red Sea (crisis)'
   },
 
   // ── HAMBURG → JEDDAH via MED → SUEZ → RED SEA ────────────────────────────

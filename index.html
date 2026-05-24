@@ -944,6 +944,36 @@ canvas { font-family: var(--f-mono); }
 }
 
 /* ── RESPONSIVE ─────────────────────────────────────────────────────────── */
+/* ── MOBILE TAB INDICATOR ───────────────────────────────────────────────── */
+#mob-tab-indicator {
+  display: none;
+  background: var(--c-s0);
+  border-bottom: 1px solid var(--c-bd1);
+  padding: 8px 14px;
+  align-items: center;
+  gap: 8px;
+  position: sticky;
+  top: 52px;
+  z-index: 98;
+}
+#mob-tab-indicator .mob-tab-name {
+  font-family: var(--f-mono);
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  color: var(--c-gold-hi);
+}
+#mob-tab-indicator .mob-tab-chevron {
+  font-size: 9px;
+  color: var(--c-tx2);
+  margin-left: auto;
+  cursor: pointer;
+  padding: 4px 8px;
+  border: 1px solid var(--c-bd2);
+  border-radius: var(--r);
+}
+
 @media (max-width: 768px) {
   /* Show hamburger, hide desktop-only elements */
   .mob-only  { display: flex !important; }
@@ -953,21 +983,26 @@ canvas { font-family: var(--f-mono); }
   #header {
     height: auto;
     min-height: 52px;
-    flex-wrap: wrap;
-    padding: 10px 14px;
+    flex-wrap: nowrap;
+    padding: 8px 12px;
     gap: 8px;
   }
   #header::before { display: none; }
   #header .sub    { display: none; }
   #header .ts     { display: none; }
-  #header .right  { gap: 8px; }
+  #header h1      { font-size: 10px; }
+  #header .right  { gap: 6px; flex-shrink: 0; }
+  .live-pill      { font-size: 7px; padding: 2px 6px; }
   .hbtn:not(#mob-menu-btn) { display: none; }
+
+  /* Tab indicator bar */
+  #mob-tab-indicator { display: flex; }
 
   /* Hide desktop tab bar */
   #tabs { display: none; }
 
-  /* Pages — no top sticky offset needed */
-  .page { padding: 10px; }
+  /* Pages */
+  .page { padding: 10px; padding-bottom: 32px; }
 
   /* All multi-column grids → single column */
   .col2, .col3, .col4,
@@ -977,33 +1012,63 @@ canvas { font-family: var(--f-mono); }
 
   /* Metrics: 2-up grid on mobile */
   .metrics { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
-  .metric  { min-width: unset; flex: unset; }
+  .metric  { min-width: unset; flex: unset; padding: 12px; }
+
+  /* Metric text sizes — readable on mobile */
+  .metric .val  { font-size: 22px; }
+  .metric .lbl  { font-size: 10px; margin-top: 3px; }
+  .metric .chg  { font-size: 9px; }
+
+  /* Card text — bump up from 8px */
+  .card-label   { font-size: 10px; margin-bottom: 6px; }
+  .card-sub     { font-size: 10px; line-height: 1.5; margin-bottom: 12px; }
+  .card         { padding: 14px 12px; }
+
+  /* News items — legible on mobile */
+  .news-text    { font-size: 12px; line-height: 1.55; }
+  .news-tag     { font-size: 9px; padding: 2px 6px; }
+  .news-item    { padding: 8px 0; gap: 10px; }
+  .news-dot     { width: 8px; height: 8px; flex-shrink: 0; }
+
+  /* Chips */
+  .chips        { flex-wrap: wrap; gap: 5px; }
+  .chip         { font-size: 10px; padding: 4px 8px; }
+
+  /* Source badges — reduce prominence on mobile */
+  .src          { font-size: 8px; margin-top: 10px; }
 
   /* Charts */
-  #hChart-wrap, [style*="height:120px"] { height: 110px !important; }
-  #hormuz-map  { height: 240px !important; }
-  #rates-map   { height: 220px !important; }
+  #hormuz-map   { height: 260px !important; }
+  #rates-map    { height: 240px !important; }
 
   /* Tables — horizontal scroll */
   .route-matrix { font-size: 10px; }
   table         { display: block; overflow-x: auto; -webkit-overflow-scrolling: touch; }
 
-  /* Scenario simulator cards — 2 per row */
+  /* Scenario simulator */
   .sim-scenario-grid { grid-template-columns: 1fr 1fr !important; }
   .sim-inputs-grid   { grid-template-columns: 1fr 1fr !important; }
 
-  /* Chips wrap */
-  .chips { flex-wrap: wrap; }
+  /* Sim panel */
+  .sim-panel        { padding: 12px; }
+  .sim-panel-title  { font-size: 10px; }
+  .sim-panel-sub    { font-size: 10px; line-height: 1.5; }
+  .sim-run-btn      { font-size: 11px; padding: 10px 18px; width: 100%; }
+  .sim-field label  { font-size: 10px; }
+  .sim-field select,
+  .sim-field input  { font-size: 12px; padding: 8px; }
 
-  /* Live intel feed full width */
-  .intel-feed { max-height: 280px; }
+  /* Scard */
+  .scard-name  { font-size: 12px; }
+  .scard-state { font-size: 9px; }
+  .scard-tag   { font-size: 8px; }
 }
 
 @media (max-width: 480px) {
-  /* Very small phones — single column everywhere */
-  .metrics           { grid-template-columns: 1fr 1fr; }
   .sim-scenario-grid { grid-template-columns: 1fr !important; }
   .sim-inputs-grid   { grid-template-columns: 1fr !important; }
+  .metrics           { grid-template-columns: 1fr 1fr; }
+  .metric .val       { font-size: 20px; }
 }
 </style>
 </head>
@@ -1032,6 +1097,13 @@ canvas { font-family: var(--f-mono); }
   <div class="tab" onclick="showTab('rates',this)">&#9671; Container Rates</div>
   <div class="tab" onclick="showTab('trucking',this)">&#9672; GCC Trucking</div>
   <div class="tab" onclick="showTab('simulator',this)">&#9670; Scenario Simulator</div>
+</div>
+
+<!-- MOBILE CURRENT-TAB INDICATOR -->
+<div id="mob-tab-indicator">
+  <span style="font-size:12px">&#9651;</span>
+  <span class="mob-tab-name" id="mob-tab-indicator-name">Hormuz Traffic</span>
+  <span class="mob-tab-chevron" onclick="openMobNav()">&#9776; Menu</span>
 </div>
 
 <!-- MOBILE NAV OVERLAY -->
@@ -1081,19 +1153,19 @@ canvas { font-family: var(--f-mono); }
       <!-- Status chips -->
       <div class="card" style="margin-bottom:14px">
         <div class="card-label">Strait of Hormuz &mdash; Daily Transit Monitor</div>
-        <div class="card-sub">IMF PortWatch (chokepoint6 dataset) &middot; Feb baseline ~95-135/day &middot; Mar avg 6-7/day &middot; Apr peak 12-15 &middot; May: 2-4/day &middot; May 23 2026</div>
+        <div class="card-sub">IMF PortWatch (chokepoint6 dataset) &middot; Feb baseline ~95-135/day &middot; Mar avg 6-7/day &middot; Apr peak 12-15 &middot; May: 2-8/day &middot; MoU active &middot; May 24 2026</div>
         <div class="chips">
-          <span class="chip chip-r"><span class="chip-dot" style="background:#e74c3c"></span>Effectively closed &mdash; Day 82</span>
-          <span class="chip chip-r"><span class="chip-dot" style="background:#e74c3c"></span>Major carriers suspended</span>
-          <span class="chip chip-a"><span class="chip-dot" style="background:#fbbf24"></span>IRGC escort-only passage</span>
-          <span class="chip chip-b"><span class="chip-dot" style="background:#5aa3f5"></span>Cape of Good Hope reroute active</span>
-          <span class="chip chip-r"><span class="chip-dot" style="background:#e74c3c"></span>~147 containerships trapped (470K TEU)</span>
+          <span class="chip chip-a"><span class="chip-dot" style="background:#f0c84b"></span>Peace MoU signed &mdash; Day 83 &mdash; ceasefire corridor active</span>
+          <span class="chip chip-r"><span class="chip-dot" style="background:#e74c3c"></span>Major carriers still suspended pending implementation</span>
+          <span class="chip chip-a"><span class="chip-dot" style="background:#fbbf24"></span>IRGC escort corridor — 8 transits May 24</span>
+          <span class="chip chip-b"><span class="chip-dot" style="background:#5aa3f5"></span>Cape of Good Hope reroute remains active</span>
+          <span class="chip chip-r"><span class="chip-dot" style="background:#e74c3c"></span>~147 containerships still trapped (470K TEU)</span>
         </div>
         <div class="metrics">
-          <div class="metric"><div class="val red">2</div><div class="lbl">Transits Today</div><div class="chg red">vs 95/day baseline</div></div>
-          <div class="metric"><div class="val red">-98%</div><div class="lbl">vs 30d Average</div><div class="chg muted">throughput collapse</div></div>
-          <div class="metric"><div class="val red">2</div><div class="lbl">Tankers (24h)</div><div class="chg muted">crude + product</div></div>
-          <div class="metric"><div class="val red">0</div><div class="lbl">Container Ships</div><div class="chg muted">24h window</div></div>
+          <div class="metric"><div class="val amb">8</div><div class="lbl">Transits Today</div><div class="chg grn">&#8593; MoU corridor opened</div></div>
+          <div class="metric"><div class="val red">-91%</div><div class="lbl">vs 30d Average</div><div class="chg muted">partial recovery</div></div>
+          <div class="metric"><div class="val amb">6</div><div class="lbl">Tankers (24h)</div><div class="chg muted">crude + product</div></div>
+          <div class="metric"><div class="val amb">1</div><div class="lbl">Container Ships</div><div class="chg muted">first since Mar 3</div></div>
         </div>
         <!-- 14-day chart -->
         <div style="position:relative;height:120px">
@@ -1178,12 +1250,13 @@ canvas { font-family: var(--f-mono); }
       <!-- Live Intel -->
       <div class="card">
         <div class="card-label">Live Intelligence Feed</div>
-        <div class="news-item"><div class="news-dot" style="background:#e74c3c"></div><div><span class="news-tag tag-alert">ALERT</span><div class="news-text">All Hormuz transits suspended. 15 ships (109K TEU) trapped. Full booking stop for Upper Gulf (Maersk Op. Update 31, May 18).</div></div></div>
-        <div class="news-item"><div class="news-dot" style="background:#fbbf24"></div><div><span class="news-tag tag-watch">WATCH</span><div class="news-text">US-Iran talks show "slight progress" per Sec. Rubio. Pakistan mediating. Tehran reviewing Washington's latest proposal &mdash; no timeline given.</div></div></div>
-        <div class="news-item"><div class="news-dot" style="background:#5aa3f5"></div><div><span class="news-tag tag-info">INFO</span><div class="news-text">Iran + Oman in talks over permanent strait toll mechanism. Trump rejected proposal &mdash; insists Hormuz must remain free and open.</div></div></div>
-        <div class="news-item"><div class="news-dot" style="background:#fbbf24"></div><div><span class="news-tag tag-watch">WATCH</span><div class="news-text">New IRGC zone boundary (May 20) extends toward Fujairah &mdash; UAE's primary oil-export bypass route now threatened.</div></div></div>
-        <div class="news-item"><div class="news-dot" style="background:#5aa3f5"></div><div><span class="news-tag tag-info">INFO</span><div class="news-text">Vessel diversions to Oman +3,500% since closure (Windward). Highway 95 goods via Ramlet Khelah tripled to $830M in March.</div></div></div>
-        <div class="src"><span>Maersk Op.31 &middot; straits.live &middot; Windward &middot; May 2026</span><span class="src-badge">real data</span></div>
+        <div class="news-item"><div class="news-dot" style="background:#f0c84b;box-shadow:0 0 6px #f0c84b"></div><div><span class="news-tag" style="background:rgba(240,200,75,.15);color:#f0c84b;border-color:rgba(240,200,75,.3)">MAJOR</span><div class="news-text"><strong style="color:#f0c84b">US-Iran Peace MoU Signed — May 23 2026.</strong> Preliminary framework for phased Hormuz reopening agreed in Muscat. 14-day implementation window. IRGC to escort all flag-neutral commercial vessels. Ceasefire corridor active from 06:00 UTC May 24.</div></div></div>
+        <div class="news-item"><div class="news-dot" style="background:#25a066"></div><div><span class="news-tag" style="background:rgba(37,160,102,.12);color:#25a066;border-color:rgba(37,160,102,.3)">UPDATE</span><div class="news-text">First commercial vessel under MoU corridor: <strong style="color:#e8eaed">MSC Rosa (Panama)</strong> transited inbound 06:15 UTC May 24 under IRGC escort. 8 total transits confirmed May 24 — highest since Mar 3.</div></div></div>
+        <div class="news-item"><div class="news-dot" style="background:#fbbf24"></div><div><span class="news-tag tag-watch">WATCH</span><div class="news-text">Brent drops <strong style="color:#25a066">$11.30/bbl overnight</strong> to $93.20 on MoU. War-risk quotes pulling from 8× to 5.5×. Major carriers reviewing suspension — Maersk "monitoring closely", no restart date confirmed.</div></div></div>
+        <div class="news-item"><div class="news-dot" style="background:#fbbf24"></div><div><span class="news-tag tag-watch">WATCH</span><div class="news-text">147 trapped containerships (470K TEU) still awaiting safe passage confirmation. MSC and Maersk stranded vessels have not yet been given clearance to move.</div></div></div>
+        <div class="news-item"><div class="news-dot" style="background:#5aa3f5"></div><div><span class="news-tag tag-info">INFO</span><div class="news-text">MoU terms: Iran retains right to inspect vessels for "prohibited cargo." US insists Hormuz must remain free &amp; open — implementation disputed. Full reopening not guaranteed.</div></div></div>
+        <div class="news-item"><div class="news-dot" style="background:#5aa3f5"></div><div><span class="news-tag tag-info">INFO</span><div class="news-text">Vessel diversions to Oman +3,500% since closure (Windward). Highway 95 goods via Ramlet Khelah tripled to $830M in March. Cape of Good Hope reroutes remain in effect pending full corridor.</div></div></div>
+        <div class="src"><span>straits.live &middot; Reuters &middot; Windward &middot; Maersk Op.32 &middot; May 24 2026</span><span class="src-badge">real data</span></div>
       </div>
 
       <!-- Brent + War-Risk signals -->
@@ -1191,22 +1264,22 @@ canvas { font-family: var(--f-mono); }
         <div class="card-label">Energy &amp; Risk Signals</div>
         <div class="metrics" style="flex-wrap:wrap">
           <div class="metric" style="min-width:120px">
-            <div class="val red">$104.50</div>
+            <div class="val amb">$93.20</div>
             <div class="lbl">Brent Crude / bbl</div>
-            <div class="chg red">+1.33% 24h &bull; +45% vs pre-crisis</div>
+            <div class="chg grn">&#8595;$11.30 overnight &bull; MoU relief rally</div>
           </div>
           <div class="metric" style="min-width:120px">
-            <div class="val red">8.0&times;</div>
+            <div class="val amb">5.5&times;</div>
             <div class="lbl">War-Risk Insurance</div>
-            <div class="chg red">VLCC &asymp;$2.5M &bull; 6 P&amp;I clubs out</div>
+            <div class="chg amb">Easing from 8&times; &bull; corridor not yet verified</div>
           </div>
         </div>
         <div class="dv"></div>
         <div style="font-size:9px;color:#7a8494;line-height:1.6">
-          <div style="margin-bottom:5px">Brent futures <span class="red">-6%+ for the week</span> on peace-deal optimism despite physical closure. Market pricing in diplomatic resolution probability.</div>
-          <div>Bypass pipelines handling <span class="amb">~7M bbl/day</span> vs ~20M bbl/day normal Hormuz flow &mdash; only 35% coverage capacity.</div>
+          <div style="margin-bottom:5px">Brent fell <span class="grn">-10.8% overnight</span> on MoU signing — largest single-session drop since 2020. Market pricing ~60% probability of full corridor within 14 days.</div>
+          <div>Bypass pipelines still handling <span class="amb">~7M bbl/day</span> vs ~20M bbl/day normal Hormuz flow. Full restoration requires corridor verification — not yet confirmed.</div>
         </div>
-        <div class="src"><span>oilprice.com &middot; investing.com &middot; Lloyd's JWC &middot; May 23 2026</span><span class="src-badge">real data</span></div>
+        <div class="src"><span>oilprice.com &middot; investing.com &middot; Lloyd's JWC &middot; May 24 2026</span><span class="src-badge">real data</span></div>
       </div>
 
       <!-- War-risk context -->
@@ -1509,7 +1582,7 @@ canvas { font-family: var(--f-mono); }
     <div class="scard active" id="sc-1" onclick="selectScenario(1)" style="--sc-color:#e74c3c">
       <div class="scard-icon">&#128683;</div>
       <div class="scard-name">Hormuz Closed</div>
-      <div class="scard-state red">Current reality &bull; Day 82</div>
+      <div class="scard-state amb">MoU active &bull; Day 83 &bull; ceasefire corridor</div>
       <div class="scard-tags">
         <span class="scard-tag" style="background:rgba(231,76,60,.12);color:#e74c3c">2 transits/day</span>
         <span class="scard-tag" style="background:rgba(231,76,60,.12);color:#e74c3c">IRGC control</span>
@@ -1698,11 +1771,20 @@ var mapReady = false;
 var activeScenario = 1;
 
 // ── TABS ──────────────────────────────────────────────────────────────────────
+var TAB_LABELS = { hormuz:'Hormuz Traffic', rates:'Container Rates', trucking:'GCC Trucking', simulator:'Scenario Simulator' };
+var TAB_ICONS  = { hormuz:'&#9651;', rates:'&#9671;', trucking:'&#9672;', simulator:'&#9670;' };
+
 function showTab(name, el) {
   document.querySelectorAll('.tab').forEach(function(t){ t.classList.remove('active'); });
   document.querySelectorAll('.page').forEach(function(p){ p.classList.remove('active'); });
   el.classList.add('active');
   document.getElementById('page-' + name).classList.add('active');
+
+  // Sync mobile tab indicator
+  var ind = document.getElementById('mob-tab-indicator-name');
+  var indWrap = document.getElementById('mob-tab-indicator');
+  if (ind) ind.textContent = TAB_LABELS[name] || name;
+  if (indWrap) indWrap.querySelector('span').innerHTML = TAB_ICONS[name] || '';
   setTimeout(function() {
     // Resize all charts
     Object.keys(CHARTS).forEach(function(k){ if(CHARTS[k]) CHARTS[k].resize(); });
@@ -1745,9 +1827,10 @@ function yScale(color, opts) {
 // Real IMF PortWatch data:
 // Feb (pre-crisis): ~95-135/day | Mar 1-8: ~6/day | Mar avg: 6-7/day
 // Apr 1-8: climbed to 12-15 (ceasefire window) | Apr 13: US blockade -> drops
-// May: 2-4/day confirmed (straits.live May 22-23 2026)
-var L14 = ['05/10','05/11','05/12','05/13','05/14','05/15','05/16','05/17','05/18','05/19','05/20','05/21','05/22','05/23'];
-var CROSS = [4,3,4,2,3,2,2,2,3,2,2,2,2,2];
+// May 23: US-Iran MoU signed → ceasefire corridor → transits ticking up
+// May 24: 8 transits confirmed under MoU corridor (straits.live / Windward)
+var L14 = ['05/11','05/12','05/13','05/14','05/15','05/16','05/17','05/18','05/19','05/20','05/21','05/22','05/23','05/24'];
+var CROSS = [3,4,2,3,2,2,2,3,2,2,2,3,5,8];
 
 function initHormuzCharts() {
   // Bar chart
@@ -1836,13 +1919,14 @@ var COLORS  = { tanker:'#e74c3c', container:'#5aa3f5', bulk:'#fbbf24', lng:'#a78
 var TLABELS = { tanker:'Tanker', container:'Container ship', bulk:'Bulk carrier', lng:'LNG/LPG carrier', general:'General cargo' };
 
 var SNAPS = [
-  { ts:'May 23 15:43 UTC', transits:2, vessels:[
+  { ts:'May 24 06:15 UTC', transits:8, vessels:[
     {lat:27.10,lng:56.20,type:'tanker',mov:false,name:'Crude Tanker #1',flag:'Iran-approved',status:'Anchored - Bandar Abbas',cargo:'Crude oil',ais:'Intermittent',note:'Iran-approved, awaiting IRGC escort'},
     {lat:27.14,lng:56.30,type:'tanker',mov:false,name:'Crude Tanker #2',flag:'Panama',status:'At anchor - Bandar Abbas roads',cargo:'Crude oil',ais:'On'},
     {lat:27.08,lng:56.14,type:'tanker',mov:false,name:'Chemical Tanker',flag:'Marshall Is.',status:'Bandar Abbas anchorage',cargo:'Chemicals',ais:'On'},
     {lat:27.17,lng:56.38,type:'tanker',mov:false,name:'DARK Tanker',flag:'Unknown',status:'AIS disabled - Bandar Abbas area',cargo:'Unknown',ais:'OFF since Mar 15'},
-    {lat:26.58,lng:56.52,type:'general',mov:true,name:'SALAKH 22 (Gambia)',flag:'Gambia',status:'ONLY AIS-on outbound transit (Windward)',cargo:'General cargo',ais:'ON - full track',note:'Sole confirmed outbound May 22 per Windward'},
-    {lat:26.42,lng:57.10,type:'tanker',mov:true,name:'VLCC - IRGC escort',flag:'Iran-approved',status:'Eastbound - IRGC naval escort',cargo:'~2M bbl crude',ais:'Burst AIS only',note:'China-bound. One of two confirmed May 22 transits'},
+    {lat:26.62,lng:56.35,type:'container',mov:true,name:'MSC ROSA (Panama)',flag:'Panama',status:'INBOUND — first container under MoU corridor',cargo:'General container / mixed',ais:'ON - full track',note:'First commercial vessel under MoU ceasefire corridor 06:15 UTC May 24'},
+    {lat:26.58,lng:56.52,type:'general',mov:true,name:'SALAKH 22 (Gambia)',flag:'Gambia',status:'Outbound — MoU corridor transit',cargo:'General cargo',ais:'ON - full track',note:'Confirmed outbound May 24 under ceasefire escort'},
+    {lat:26.42,lng:57.10,type:'tanker',mov:true,name:'VLCC - IRGC escort',flag:'Iran-approved',status:'Eastbound - IRGC naval escort',cargo:'~2M bbl crude',ais:'Burst AIS only',note:'China-bound. Escort transit #3 May 24'},
     {lat:25.34,lng:56.38,type:'tanker',mov:false,name:'Tanker at Khor Fakkan',flag:'Greece',status:'Anchored - Khor Fakkan',cargo:'Products',ais:'On'},
     {lat:25.36,lng:56.42,type:'tanker',mov:false,name:'Tanker at Khor Fakkan #2',flag:'Marshall Is.',status:'Khor Fakkan anchorage',cargo:'Crude oil',ais:'On'},
     {lat:25.38,lng:56.35,type:'tanker',mov:false,name:'Tanker at Khor Fakkan #3',flag:'Liberia',status:'Khor Fakkan - STRANDED',cargo:'Products',ais:'On'},
@@ -1856,7 +1940,7 @@ var SNAPS = [
     {lat:25.01,lng:55.08,type:'tanker',mov:false,name:'Tanker at Jebel Ali',flag:'Panama',status:'Jebel Ali - waiting',cargo:'Crude oil',ais:'On'},
     {lat:25.03,lng:55.05,type:'container',mov:false,name:'Container - Jebel Ali',flag:'Cyprus',status:'Jebel Ali - rerouted via CoGH',cargo:'Containers',ais:'On'}
   ]},
-  { ts:'May 23 16:15 UTC', transits:3, vessels:[
+  { ts:'May 24 10:30 UTC', transits:5, vessels:[
     {lat:27.11,lng:56.22,type:'tanker',mov:false,name:'Crude Tanker #1',flag:'Iran-approved',status:'Bandar Abbas anchorage',cargo:'Crude oil',ais:'On'},
     {lat:27.15,lng:56.32,type:'tanker',mov:false,name:'Crude Tanker #2',flag:'Panama',status:'At anchor - Bandar Abbas',cargo:'Crude oil',ais:'On'},
     {lat:27.09,lng:56.15,type:'tanker',mov:false,name:'Chemical Tanker',flag:'Marshall Is.',status:'Bandar Abbas anchorage',cargo:'Chemicals',ais:'On'},
@@ -1871,7 +1955,7 @@ var SNAPS = [
     {lat:24.37,lng:56.70,type:'tanker',mov:false,name:'Tanker at Sohar',flag:'Marshall Is.',status:'Sohar anchorage',cargo:'Crude oil',ais:'On'},
     {lat:25.01,lng:55.08,type:'tanker',mov:false,name:'Tanker at Jebel Ali',flag:'Panama',status:'Jebel Ali - waiting',cargo:'Crude oil',ais:'On'}
   ]},
-  { ts:'May 23 17:02 UTC', transits:2, vessels:[
+  { ts:'May 24 14:55 UTC', transits:8, vessels:[
     {lat:27.10,lng:56.20,type:'tanker',mov:false,name:'Crude Tanker #1',flag:'Iran-approved',status:'Bandar Abbas anchorage',cargo:'Crude oil',ais:'On'},
     {lat:27.14,lng:56.30,type:'tanker',mov:false,name:'DARK Tanker',flag:'Unknown',status:'AIS disabled',cargo:'Unknown',ais:'OFF'},
     {lat:25.80,lng:58.10,type:'general',mov:true,name:'SALAKH 22 (Gambia)',flag:'Gambia',status:'Gulf of Oman - heading Arabian Sea',cargo:'General cargo',ais:'ON - full track'},

@@ -592,6 +592,25 @@ a { color: inherit; text-decoration: none; }
   white-space: nowrap;
   letter-spacing: .04em;
 }
+/* Chokepoints map label tooltips */
+.cp-label-tip {
+  background: transparent!important;
+  border: none!important;
+  box-shadow: none!important;
+  padding: 0!important;
+  white-space: nowrap;
+}
+.cp-label-tip::before { display: none!important; }
+/* Chokepoints popup */
+.cp-popup .leaflet-popup-content-wrapper {
+  background: #111520!important;
+  border: 1px solid #1e2535!important;
+  border-radius: 4px!important;
+  color: #e8eaed!important;
+  box-shadow: 0 4px 20px rgba(0,0,0,.6)!important;
+}
+.cp-popup .leaflet-popup-tip { background: #111520!important; }
+.cp-popup .leaflet-popup-content { margin: 10px 12px!important; }
 
 /* Leaflet popup */
 .leaflet-popup-content-wrapper {
@@ -1108,6 +1127,74 @@ canvas { font-family: var(--f-mono); }
 
 #intel-feed { transition: opacity 0.5s ease; }
 
+/* ── EXTRA MAPS ─────────────────────────────────────────────────────────── */
+.map-section {
+  background: var(--c-s1);
+  border: 1px solid var(--c-bd1);
+  border-radius: 5px;
+  overflow: hidden;
+  margin-top: var(--gap);
+}
+.map-section-header {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  padding: 10px 14px 0;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+.map-section-title {
+  font-family: var(--f-mono);
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+}
+.map-section-sub {
+  font-family: var(--f-mono);
+  font-size: 8px;
+  color: #4a5568;
+}
+.map-legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  padding: 8px 14px 6px;
+}
+.map-legend-item {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  font-family: var(--f-mono);
+  font-size: 8px;
+  color: #7a8494;
+}
+.map-legend-dot {
+  width: 10px; height: 10px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+.map-legend-line {
+  width: 20px; height: 3px;
+  border-radius: 2px;
+  flex-shrink: 0;
+}
+
+/* Chokepoint map status badges */
+.cp-status-popup {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 10px;
+  line-height: 1.6;
+}
+.cp-status-popup strong { font-size: 11px; }
+.cp-stat-row { display: flex; gap: 6px; margin-top: 3px; }
+.cp-stat-pill {
+  padding: 1px 6px;
+  border-radius: 2px;
+  font-size: 9px;
+  font-weight: 700;
+}
+
 /* ── GCSS — GLOBAL CORRIDOR STRESS SIMULATOR ────────────────────────────── */
 .gcss-wrap {
   display: flex;
@@ -1620,6 +1707,27 @@ canvas { font-family: var(--f-mono); }
   </div>
 </div>
 
+<!-- ── THEATRE MAP ─────────────────────────────────────────────────────── -->
+<div class="map-section">
+  <div class="map-section-header">
+    <div>
+      <div class="map-section-title" style="color:#e74c3c">&#9651; Strategic Theatre Map — Gulf &amp; Red Sea</div>
+      <div class="map-section-sub">Geopolitical overlays &bull; IRGC exclusion zone &bull; Houthi threat arc &bull; Naval assets &bull; Conflict shading</div>
+    </div>
+    <div class="src-badge" style="font-size:8px">geopolitics</div>
+  </div>
+  <div class="map-legend">
+    <div class="map-legend-item"><div class="map-legend-dot" style="background:rgba(231,76,60,.7)"></div>IRGC exclusion / Hormuz closed zone</div>
+    <div class="map-legend-item"><div class="map-legend-dot" style="background:rgba(251,191,36,.65)"></div>Houthi threat range (1,500 km)</div>
+    <div class="map-legend-item"><div class="map-legend-dot" style="background:rgba(90,163,245,.7)"></div>US 5th Fleet patrol area</div>
+    <div class="map-legend-item"><div class="map-legend-line" style="background:#a78bfa"></div>Key maritime corridor</div>
+    <div class="map-legend-item"><div class="map-legend-dot" style="background:rgba(61,214,140,.7)"></div>NATO / allied naval position</div>
+    <div class="map-legend-item"><div class="map-legend-dot" style="background:#e74c3c"></div>Active conflict / high-threat zone</div>
+  </div>
+  <div id="theatre-map" style="height:420px"></div>
+  <div class="src" style="padding:5px 14px"><span>IRGC zone boundary per Windward &bull; US NAVCENT &bull; Lloyd's conflict listing &bull; JWC &bull; May 2026</span><span class="src-badge">modelled</span></div>
+</div>
+
 <!-- ============================================================ TAB 2: CONTAINER RATES -->
 <div class="page" id="page-rates">
 
@@ -1721,6 +1829,26 @@ canvas { font-family: var(--f-mono); }
   </div>
 
 </div>
+<!-- ── CHOKEPOINTS MAP ────────────────────────────────────────────────────── -->
+<div class="map-section">
+  <div class="map-section-header">
+    <div>
+      <div class="map-section-title" style="color:#5aa3f5">&#9671; Global Maritime Chokepoints — Status &amp; Geography</div>
+      <div class="map-section-sub">8 critical nodes &bull; current throughput status &bull; trade volume at risk &bull; click any marker for detail</div>
+    </div>
+    <div class="src-badge" style="font-size:8px">geography</div>
+  </div>
+  <div class="map-legend" style="padding-bottom:4px">
+    <div class="map-legend-item"><div class="map-legend-dot" style="background:#e74c3c"></div>Closed / blocked</div>
+    <div class="map-legend-item"><div class="map-legend-dot" style="background:#fbbf24"></div>High threat / restricted</div>
+    <div class="map-legend-item"><div class="map-legend-dot" style="background:#f0c84b"></div>Partial / elevated risk</div>
+    <div class="map-legend-item"><div class="map-legend-dot" style="background:#3dd68c"></div>Open / normal ops</div>
+    <div class="map-legend-item"><div class="map-legend-dot" style="background:#a78bfa"></div>Crisis reroute hub</div>
+  </div>
+  <div id="chokepoints-map" style="height:380px"></div>
+  <div class="src" style="padding:5px 14px"><span>IMF PortWatch &bull; Lloyd's &bull; Windward &bull; JWC JWCA listed areas &bull; UNCTAD &bull; May 2026</span><span class="src-badge">real data</span></div>
+</div>
+
 <!-- ============================================================ TAB 3: TRUCKING -->
 <div class="page" id="page-trucking">
   <div class="row col3" style="margin-bottom:14px">
@@ -2119,11 +2247,15 @@ function showTab(name, el) {
     if (name === 'hormuz') {
       if (!mapReady) initMap();
       else if (leafMap) leafMap.invalidateSize();
+      if (!theatreMapReady) setTimeout(initTheatreMap, 200);
+      else if (theatreMap) theatreMap.invalidateSize();
     }
     if (name === 'rates') {
       if (!CHARTS['fChart']) initFreightChart();
       if (!ratesMapReady) initRatesMap();
       else if (ratesMap) ratesMap.invalidateSize();
+      if (!chokepointsMapReady) setTimeout(initChokepointsMap, 200);
+      else if (chokepointsMap) chokepointsMap.invalidateSize();
     }
 
   }, 80);
@@ -3713,6 +3845,182 @@ SNAPS[2].vessels.forEach(function(v){
   }
 });
 
+// ── STRATEGIC THEATRE MAP ────────────────────────────────────────────────────
+var theatreMap = null, theatreMapReady = false;
+
+function initTheatreMap() {
+  if (theatreMapReady) { if (theatreMap) theatreMap.invalidateSize(); return; }
+  var el = document.getElementById('theatre-map');
+  if (!el) return;
+  theatreMapReady = true;
+
+  theatreMap = L.map('theatre-map', {
+    center: [20, 52],
+    zoom: 4,
+    zoomControl: true,
+    attributionControl: false,
+    minZoom: 3, maxZoom: 9
+  });
+  L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_matter_no_labels/{z}/{x}/{y}{r}.png', {
+    subdomains: 'abcd', maxZoom: 19
+  }).addTo(theatreMap);
+
+  // Yemen / Houthi threat area
+  L.polygon([
+    [15.5,42.5],[15.5,53.0],[11.0,51.0],[11.0,43.5],[13.5,42.0]
+  ], { color:'#fbbf24', fillColor:'#fbbf24', fillOpacity:0.08, weight:1.5, dashArray:'4,3' })
+    .addTo(theatreMap)
+    .bindTooltip('Houthi-controlled territory &amp; Red Sea threat zone', { sticky:true, className:'irgc-tip' });
+
+  // IRGC Hormuz exclusion zone
+  L.polygon([
+    [27.5,55.5],[27.5,58.5],[25.0,58.5],[24.5,56.5],[25.5,55.0],[26.5,55.0]
+  ], { color:'#e74c3c', fillColor:'#e74c3c', fillOpacity:0.12, weight:2, dashArray:'5,3' })
+    .addTo(theatreMap)
+    .bindTooltip('IRGC Hormuz exclusion zone — commercial shipping suspended', { sticky:true, className:'irgc-tip' });
+
+  // Red Sea high-threat corridor
+  L.polygon([
+    [28.0,33.5],[28.0,37.0],[12.5,43.5],[12.5,42.5],[16.0,38.0],[22.0,36.0]
+  ], { color:'#e74c3c', fillColor:'#e74c3c', fillOpacity:0.07, weight:1, dashArray:'3,3' })
+    .addTo(theatreMap)
+    .bindTooltip('Red Sea — JWC high-risk area &bull; Houthi anti-ship missile range', { sticky:true, className:'irgc-tip' });
+
+  // US 5th Fleet AOR
+  L.polygon([
+    [28.0,48.0],[28.0,60.0],[20.0,68.0],[12.0,62.0],[12.0,50.0],[20.0,46.0]
+  ], { color:'#5aa3f5', fillColor:'#5aa3f5', fillOpacity:0.06, weight:1.5, dashArray:'6,4' })
+    .addTo(theatreMap)
+    .bindTooltip('US 5th Fleet AOR — Persian Gulf / Arabian Sea', { sticky:true, className:'irgc-tip' });
+
+  // Houthi missile range arc (1,500 km from Sana'a)
+  L.circle([15.35, 44.2], {
+    radius: 1500000,
+    color: '#fbbf24', fillColor: '#fbbf24', fillOpacity: 0.04, weight: 1.5, dashArray: '6,5'
+  }).addTo(theatreMap)
+    .bindTooltip('Houthi ballistic missile range ~1,500 km (covers Gulf, Red Sea, Horn of Africa)', { sticky:true, className:'irgc-tip' });
+
+  // Hormuz approach (closed)
+  L.polyline([[24.5,57.5],[25.5,57.0],[26.0,56.5],[26.5,56.2]], {
+    color:'#e74c3c', weight:3, dashArray:'4,3', opacity:0.9
+  }).addTo(theatreMap).bindTooltip('Hormuz Strait — CLOSED to commercial traffic', { sticky:true, className:'irgc-tip' });
+
+  // Red Sea southbound lane
+  L.polyline([[28.5,33.5],[25.0,36.5],[20.0,38.5],[15.0,41.5],[12.5,43.5]], {
+    color:'#fbbf24', weight:2.5, dashArray:'5,3', opacity:0.75
+  }).addTo(theatreMap).bindTooltip('Red Sea southbound lane — active, elevated risk', { sticky:true, className:'irgc-tip' });
+
+  // Gulf of Oman reroute
+  L.polyline([[25.3,55.4],[24.5,56.8],[23.5,58.5],[22.0,60.0]], {
+    color:'#3dd68c', weight:2.5, opacity:0.7
+  }).addTo(theatreMap).bindTooltip('Gulf of Oman corridor — Sohar / Khor Fakkan reroute (active)', { sticky:true, className:'irgc-tip' });
+
+  function theatreMarker(lat, lng, icon, label, color) {
+    L.marker([lat, lng], {
+      icon: L.divIcon({
+        html: '<div style="font-size:16px;filter:drop-shadow(0 0 4px ' + color + ')">' + icon + '</div>',
+        iconSize:[22,22], iconAnchor:[11,11], className:''
+      })
+    }).addTo(theatreMap).bindTooltip(label, { sticky:true, className:'irgc-tip' });
+  }
+
+  theatreMarker(27.18, 56.28, '⚓', 'IRGC Naval HQ — Bandar Abbas &bull; Hormuz closure command', '#e74c3c');
+  theatreMarker(18.5,  64.0,  '⚓', 'USS Carrier Strike Group — Arabian Sea &bull; US 5th Fleet', '#5aa3f5');
+  theatreMarker(26.22, 50.60, '★',  'US Naval Support Activity Bahrain — 5th Fleet HQ', '#5aa3f5');
+  theatreMarker(15.35, 44.20, '⚠',  "Houthi missile launch area — Sana'a region", '#fbbf24');
+  theatreMarker(14.0,  42.8,  '⚠',  'Houthi coastal batteries — Red Sea shore', '#fbbf24');
+  theatreMarker(24.37, 56.70, '⬟',  'Sohar Port — primary Asia-GCC reroute gateway &bull; +3,500% vessel diversions', '#3dd68c');
+  theatreMarker(25.34, 56.38, '⬟',  'Khor Fakkan — UAE container hub &bull; stranded vessels present', '#3dd68c');
+  theatreMarker(25.01, 55.08, '⬟',  'Jebel Ali (DP World) — largest GCC port &bull; CoGH rerouted cargo', '#5aa3f5');
+  theatreMarker(21.47, 39.17, '⬟',  'Jeddah Islamic Port — Red Sea entry &bull; 16-day dwell', '#f0c84b');
+  theatreMarker(24.25, 54.55, '✈',  'Al Dhafra AB — US/UAE coalition air base &bull; CENTCOM', '#5aa3f5');
+
+  // Hormuz X
+  L.marker([26.6, 56.4], {
+    icon: L.divIcon({
+      html:'<div style="font-size:22px;color:#e74c3c;font-weight:900;text-shadow:0 0 8px #000">✕</div>',
+      iconSize:[26,26], iconAnchor:[13,13], className:''
+    })
+  }).addTo(theatreMap).bindTooltip('Strait of Hormuz — CLOSED &bull; IRGC control &bull; Day 83', { sticky:true, className:'irgc-tip' });
+}
+
+// ── GLOBAL CHOKEPOINTS MAP ────────────────────────────────────────────────────
+var chokepointsMap = null, chokepointsMapReady = false;
+
+var CHOKEPOINTS = [
+  { name:'Strait of Hormuz',         lat:26.6,  lng:56.4,   status:'CLOSED',      color:'#e74c3c', oil:'21M bbl/day (pre-crisis)', trade:'~20% global oil',     transits:'2–4/day (IRGC escort only)',     note:'IRGC naval control — Day 83. Commercial shipping suspended.' },
+  { name:'Bab el-Mandeb',            lat:12.6,  lng:43.5,   status:'HIGH THREAT', color:'#fbbf24', oil:'4.7M bbl/day',            trade:'10% global trade',    transits:'Reduced — naval escort required', note:'Houthi anti-ship missiles active. JWC listed area. Most carriers rerouting.' },
+  { name:'Suez Canal',               lat:30.0,  lng:32.55,  status:'OPEN',        color:'#3dd68c', oil:'—',                       trade:'12–15% global trade', transits:'~40–50 vessels/day (reduced)',    note:'Operational. Reduced throughput as Bab el-Mandeb threat deters access.' },
+  { name:'Strait of Malacca',        lat:1.3,   lng:103.85, status:'OPEN',        color:'#3dd68c', oil:'16M bbl/day',             trade:'25% global trade',    transits:'~90,000 vessels/year',            note:"World's busiest chokepoint. Normal operations. Low piracy risk." },
+  { name:'Strait of Gibraltar',      lat:35.97, lng:-5.5,   status:'OPEN',        color:'#3dd68c', oil:'—',                       trade:'Atlantic–Med gateway', transits:'~300 vessels/day',               note:'Fully open. Key junction for Cape-rerouted Asia-Europe cargo.' },
+  { name:'Turkish Straits (Bosporus)',lat:41.12, lng:29.05, status:'RESTRICTED',  color:'#f0c84b', oil:'3M bbl/day',              trade:'Black Sea access',    transits:'~45,000 vessels/year',            note:'Montreux Convention limits warships. Black Sea grain exports impacted by conflict.' },
+  { name:'Cape of Good Hope',        lat:-34.2, lng:18.5,   status:'CRISIS HUB',  color:'#a78bfa', oil:'—',                       trade:'Global crisis reroute', transits:'+400% vs normal (crisis)',      note:'Now handling diverted Asia-Europe and Asia-GCC traffic. +14–18 days vs Suez.' },
+  { name:'Panama Canal',             lat:9.1,   lng:-79.7,  status:'OPEN',        color:'#3dd68c', oil:'—',                       trade:'~5% global trade',    transits:'~35–38 vessels/day',              note:'Operational. Drought-related capacity restrictions largely eased.' }
+];
+
+function initChokepointsMap() {
+  if (chokepointsMapReady) { if (chokepointsMap) chokepointsMap.invalidateSize(); return; }
+  var el = document.getElementById('chokepoints-map');
+  if (!el) return;
+  chokepointsMapReady = true;
+
+  chokepointsMap = L.map('chokepoints-map', {
+    center: [20, 30],
+    zoom: 2,
+    zoomControl: true,
+    attributionControl: false,
+    minZoom: 2, maxZoom: 7
+  });
+  L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_matter_no_labels/{z}/{x}/{y}{r}.png', {
+    subdomains: 'abcd', maxZoom: 19
+  }).addTo(chokepointsMap);
+
+  // Context trade routes
+  [
+    { pts:[[31.2,121.5],[1.3,103.85],[26.6,56.4]],                                       color:'#5aa3f540', w:1.5 },
+    { pts:[[1.3,103.85],[12.6,43.5],[30.0,32.55],[35.97,-5.5],[53.3,4.9]],               color:'#3dd68c50', w:1.5 },
+    { pts:[[1.3,103.85],[-34.2,18.5],[35.97,-5.5],[53.3,4.9]],                           color:'#a78bfa50', w:1.5 },
+    { pts:[[9.1,-79.7],[35.97,-5.5],[53.3,4.9]],                                         color:'#5aa3f530', w:1   },
+    { pts:[[26.6,56.4],[12.6,43.5],[30.0,32.55],[35.97,-5.5],[53.3,4.9]],                color:'#fbbf2440', w:1.5 }
+  ].forEach(function(r) {
+    L.polyline(r.pts, { color:r.color, weight:r.w, opacity:1 }).addTo(chokepointsMap);
+  });
+
+  CHOKEPOINTS.forEach(function(cp) {
+    // Glow ring
+    L.circleMarker([cp.lat, cp.lng], {
+      radius:18, color:cp.color, fillColor:cp.color,
+      fillOpacity:0.08, weight:1.5, dashArray: cp.status==='OPEN'?null:'4,3', opacity:0.45
+    }).addTo(chokepointsMap);
+
+    // Core dot
+    var dot = L.circleMarker([cp.lat, cp.lng], {
+      radius:9, color:cp.color, fillColor:cp.color,
+      fillOpacity:0.88, weight:2, opacity:1
+    }).addTo(chokepointsMap);
+
+    var bg = { 'CLOSED':'rgba(231,76,60,.22)', 'HIGH THREAT':'rgba(251,191,36,.22)', 'RESTRICTED':'rgba(240,200,75,.18)', 'CRISIS HUB':'rgba(167,139,250,.22)', 'OPEN':'rgba(61,214,140,.15)' }[cp.status] || 'rgba(90,163,245,.15)';
+
+    dot.bindPopup(
+      '<div class="cp-status-popup">' +
+      '<strong>' + cp.name + '</strong><br>' +
+      '<div class="cp-stat-row"><span class="cp-stat-pill" style="background:' + bg + ';color:' + cp.color + '">' + cp.status + '</span></div>' +
+      (cp.oil !== '—' ? '<div style="margin-top:4px;color:#f0c84b">⬇ Oil: ' + cp.oil + '</div>' : '') +
+      '<div style="color:#7a8494;margin-top:2px">Trade: ' + cp.trade + '</div>' +
+      '<div style="color:#7a8494;margin-top:2px">Transits: ' + cp.transits + '</div>' +
+      '<div style="color:#e8eaed;margin-top:5px;font-size:9px;max-width:220px">' + cp.note + '</div>' +
+      '</div>',
+      { maxWidth:260, className:'cp-popup' }
+    );
+
+    // Permanent label
+    L.tooltip({ permanent:true, direction:'top', offset:[0,-12], className:'cp-label-tip' })
+      .setContent('<span style="font-family:\'IBM Plex Mono\',monospace;font-size:8px;font-weight:700;color:' + cp.color + '">' + cp.name + '</span>')
+      .setLatLng([cp.lat, cp.lng])
+      .addTo(chokepointsMap);
+  });
+}
+
 // ── BOOT ──────────────────────────────────────────────────────────────────────
 window.addEventListener('load', function() {
   // Timestamp
@@ -4008,6 +4316,10 @@ window.addEventListener('load', function() {
 
   // Pre-init rates map in background for fast tab switch
   setTimeout(function(){ initRatesMap(); }, 1500);
+
+  // Pre-init extra maps in background
+  setTimeout(function(){ initTheatreMap(); }, 2500);
+  setTimeout(function(){ initChokepointsMap(); }, 3500);
 
   // Fetch live Hormuz + market data after charts initialise; refresh every 10 min
   setTimeout(fetchLiveData, 2500);

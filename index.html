@@ -2667,15 +2667,6 @@ function initRatesMap() {
   L.circleMarker([11.5,43.5], { radius:5, color:'#748494', fillColor:'#748494', fillOpacity:0.8, weight:1.5 })
     .addTo(ratesMap).bindTooltip('Bab el-Mandeb', { sticky:true, className:'irgc-tip' });
 
-  // Legend
-  addLegend(ratesMap, [
-    { color:'#e74c3c', label:'Asia → Europe via CoGH   24M TEU/yr',  avail:true  },
-    { color:'#e74c3c', label:'Asia → GCC via CoGH       5M TEU/yr',  avail:true  },
-    { color:'#f0c84b', label:'HAM → Jeddah  Med+Suez   3M TEU/yr',  avail:true  },
-    { color:'#f0c84b', label:'Asia → Jeddah  Red Sea    2M TEU/yr',  avail:true  },
-    { color:'#a78bfa', label:'Asia → Sohar  direct      2M TEU/yr',  avail:true  },
-    { color:'#5aa3f5', label:'Hormuz direct    CLOSED',                    avail:false }
-  ]);
 }
 
 // ── SIMULATOR MAP ─────────────────────────────────────────────────────────────

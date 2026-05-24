@@ -8,8 +8,8 @@
 <style>body{visibility:hidden}</style>
 <script>
   fetch('/api/auth').then(function(r){
-    if(r.ok){ document.body.style.visibility='visible'; }
-    else { location.replace('/login'); }
+    if(r.status===401){ location.replace('/login'); }
+    else { document.body.style.visibility='visible'; }
   }).catch(function(){ document.body.style.visibility='visible'; });
 </script>
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>

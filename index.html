@@ -1107,6 +1107,291 @@ canvas { font-family: var(--f-mono); }
 .intel-src:hover { color: #5aa3f5; text-decoration: underline; }
 
 #intel-feed { transition: opacity 0.5s ease; }
+
+/* ── GCSS — GLOBAL CORRIDOR STRESS SIMULATOR ────────────────────────────── */
+.gcss-wrap {
+  display: flex;
+  gap: 10px;
+  height: calc(100vh - 160px);
+  min-height: 600px;
+}
+@media (max-width: 1100px) {
+  .gcss-wrap { flex-direction: column; height: auto; min-height: unset; }
+}
+
+/* ── Left panel ── */
+.gcss-left {
+  width: 270px;
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  overflow-y: auto;
+}
+@media (max-width: 1100px) { .gcss-left { width: 100%; overflow-y: visible; } }
+
+.gcss-section {
+  background: var(--c-s1);
+  border: 1px solid var(--c-bd1);
+  border-radius: 5px;
+  padding: 10px 12px;
+}
+.gcss-section-title {
+  font-family: var(--f-mono);
+  font-size: 8px;
+  font-weight: 700;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  color: #5aa3f5;
+  margin-bottom: 8px;
+}
+
+/* Preset buttons */
+.gcss-presets { display: grid; grid-template-columns: 1fr 1fr; gap: 4px; }
+.gcss-preset-btn {
+  background: #0d1017;
+  border: 1px solid var(--c-bd1);
+  border-radius: 3px;
+  padding: 5px 6px;
+  font-family: var(--f-mono);
+  font-size: 8px;
+  color: #7a8494;
+  cursor: pointer;
+  text-align: left;
+  line-height: 1.4;
+  transition: border-color .15s, color .15s;
+}
+.gcss-preset-btn:hover { border-color: #5aa3f5; color: #e8eaed; }
+.gcss-preset-btn.active { border-color: #a78bfa; color: #a78bfa; background: rgba(167,139,250,.07); }
+
+/* Chokepoint status */
+.gcss-cp-list { display: flex; flex-direction: column; gap: 6px; }
+.gcss-cp-row { display: flex; flex-direction: column; gap: 3px; }
+.gcss-cp-name {
+  font-family: var(--f-mono);
+  font-size: 8px;
+  color: #7a8494;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.gcss-cp-name .cp-label { color: #e8eaed; font-weight: 600; }
+.gcss-cp-btns { display: flex; gap: 2px; }
+.gcss-cp-btn {
+  flex: 1;
+  padding: 3px 0;
+  font-family: var(--f-mono);
+  font-size: 7px;
+  border: 1px solid var(--c-bd1);
+  border-radius: 2px;
+  background: #0d1017;
+  cursor: pointer;
+  color: #4a5568;
+  text-align: center;
+  transition: all .12s;
+}
+.gcss-cp-btn:hover { color: #e8eaed; border-color: #4a5568; }
+.gcss-cp-btn[data-s="1"].sel { background: rgba(61,214,140,.18); border-color: #3dd68c; color: #3dd68c; }
+.gcss-cp-btn[data-s="2"].sel { background: rgba(240,200,75,.18); border-color: #f0c84b; color: #f0c84b; }
+.gcss-cp-btn[data-s="3"].sel { background: rgba(251,191,36,.18); border-color: #fbbf24; color: #fbbf24; }
+.gcss-cp-btn[data-s="4"].sel { background: rgba(231,76,60,.18); border-color: #e74c3c; color: #e74c3c; }
+.gcss-cp-btn[data-s="5"].sel { background: rgba(192,57,43,.25); border-color: #c0392b; color: #c0392b; }
+
+/* Sliders */
+.gcss-slider-row { margin-bottom: 7px; }
+.gcss-slider-label {
+  display: flex;
+  justify-content: space-between;
+  font-family: var(--f-mono);
+  font-size: 8px;
+  color: #7a8494;
+  margin-bottom: 3px;
+}
+.gcss-slider-label span { color: #f0c84b; font-weight: 700; }
+.gcss-slider {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 100%;
+  height: 3px;
+  background: linear-gradient(to right, #5aa3f5 0%, #5aa3f5 var(--pct, 50%), #1e2535 var(--pct, 50%));
+  border-radius: 2px;
+  outline: none;
+  cursor: pointer;
+}
+.gcss-slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  width: 11px; height: 11px;
+  border-radius: 50%;
+  background: #5aa3f5;
+  border: 2px solid #0d1017;
+  cursor: pointer;
+}
+.gcss-slider::-moz-range-thumb {
+  width: 11px; height: 11px;
+  border-radius: 50%;
+  background: #5aa3f5;
+  border: 2px solid #0d1017;
+  cursor: pointer;
+}
+
+/* Timeframe */
+.gcss-tf-btns { display: flex; gap: 3px; }
+.gcss-tf-btn {
+  flex: 1;
+  padding: 4px 0;
+  font-family: var(--f-mono);
+  font-size: 8px;
+  font-weight: 700;
+  border: 1px solid var(--c-bd1);
+  border-radius: 2px;
+  background: #0d1017;
+  cursor: pointer;
+  color: #4a5568;
+  text-align: center;
+  transition: all .12s;
+}
+.gcss-tf-btn:hover { color: #e8eaed; border-color: #4a5568; }
+.gcss-tf-btn.active { background: rgba(90,163,245,.12); border-color: #5aa3f5; color: #5aa3f5; }
+
+/* ── Center panel ── */
+.gcss-center {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  min-width: 0;
+}
+.gcss-map-wrap {
+  flex: 1;
+  background: var(--c-s1);
+  border: 1px solid var(--c-bd1);
+  border-radius: 5px;
+  position: relative;
+  overflow: hidden;
+  min-height: 320px;
+}
+#gcss-map { width: 100%; height: 100%; }
+
+/* KPI bar */
+.gcss-kpi-bar {
+  display: flex;
+  gap: 6px;
+}
+.gcss-kpi {
+  flex: 1;
+  background: var(--c-s1);
+  border: 1px solid var(--c-bd1);
+  border-radius: 5px;
+  padding: 8px 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+.gcss-kpi-lbl { font-family: var(--f-mono); font-size: 8px; color: #7a8494; text-transform: uppercase; letter-spacing: .1em; }
+.gcss-kpi-val { font-family: var(--f-mono); font-size: 20px; font-weight: 700; line-height: 1; }
+.gcss-kpi-sub { font-family: var(--f-mono); font-size: 8px; color: #4a5568; }
+
+/* ── Right panel ── */
+.gcss-right {
+  width: 300px;
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  overflow-y: auto;
+}
+@media (max-width: 1100px) { .gcss-right { width: 100%; overflow-y: visible; } }
+
+/* Risk gauges */
+.gcss-gauges { display: flex; flex-direction: column; gap: 8px; }
+.gcss-gauge-row {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+.gcss-gauge-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-family: var(--f-mono);
+  font-size: 8px;
+  color: #7a8494;
+}
+.gcss-gauge-val { font-weight: 700; font-size: 11px; }
+.gcss-gauge-track {
+  height: 5px;
+  background: #1e2535;
+  border-radius: 3px;
+  overflow: hidden;
+}
+.gcss-gauge-fill {
+  height: 100%;
+  border-radius: 3px;
+  transition: width .6s ease, background .6s ease;
+}
+
+/* Impact lists */
+.gcss-impact-list { display: flex; flex-direction: column; gap: 4px; }
+.gcss-impact-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 5px 8px;
+  background: #0d1017;
+  border-radius: 3px;
+  border-left: 2px solid transparent;
+}
+.gcss-impact-item-name { font-family: var(--f-mono); font-size: 8px; color: #7a8494; }
+.gcss-impact-item-val { font-family: var(--f-mono); font-size: 10px; font-weight: 700; }
+
+/* Resilience bars */
+.gcss-resilience { display: flex; flex-direction: column; gap: 5px; }
+.gcss-res-row { display: flex; flex-direction: column; gap: 2px; }
+.gcss-res-header { display: flex; justify-content: space-between; font-family: var(--f-mono); font-size: 8px; color: #7a8494; }
+.gcss-res-bar { height: 3px; background: #1e2535; border-radius: 2px; overflow: hidden; }
+.gcss-res-fill { height: 100%; border-radius: 2px; transition: width .6s ease; }
+
+/* AI Summary */
+.gcss-summary {
+  font-family: var(--f-mono);
+  font-size: 9px;
+  color: #7a8494;
+  line-height: 1.7;
+  padding: 10px;
+  background: #0d1017;
+  border-radius: 4px;
+  border: 1px solid #1e2535;
+}
+.gcss-summary .gcss-sum-line {
+  margin-bottom: 4px;
+  color: #e8eaed;
+}
+.gcss-summary .gcss-sum-em { color: #a78bfa; font-weight: 700; }
+
+/* Chokepoint pulse markers on GCSS map */
+@keyframes gcss-pulse {
+  0%   { transform: scale(1); opacity: .9; }
+  60%  { transform: scale(1.7); opacity: 0; }
+  100% { transform: scale(1); opacity: 0; }
+}
+.gcss-cp-marker {
+  position: relative;
+  width: 14px;
+  height: 14px;
+}
+.gcss-cp-marker-dot {
+  position: absolute;
+  inset: 3px;
+  border-radius: 50%;
+  background: var(--cp-c, #fbbf24);
+}
+.gcss-cp-marker-ring {
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  border: 2px solid var(--cp-c, #fbbf24);
+  animation: gcss-pulse 2s infinite;
+}
 </style>
 </head>
 <body>
@@ -1134,7 +1419,7 @@ canvas { font-family: var(--f-mono); }
   <div class="tab active" onclick="showTab('hormuz',this)">&#9651; Hormuz Traffic <span class="tab-badge">LIVE</span></div>
   <div class="tab" onclick="showTab('rates',this)">&#9671; Container Rates</div>
   <div class="tab" onclick="showTab('trucking',this)">&#9672; GCC Trucking</div>
-  <div class="tab" onclick="showTab('simulator',this)">&#9670; Scenario Simulator</div>
+  <div class="tab" onclick="showTab('simulator',this)">&#9670; Corridor Simulator</div>
 </div>
 
 <!-- MOBILE CURRENT-TAB INDICATOR -->
@@ -1171,7 +1456,7 @@ canvas { font-family: var(--f-mono); }
       </button>
       <button class="mob-nav-item" id="mob-tab-simulator" onclick="mobShowTab('simulator')">
         <span class="mob-nav-icon">&#9670;</span>
-        <span class="mob-nav-label">Scenario Simulator</span>
+        <span class="mob-nav-label">Corridor Simulator</span>
       </button>
     </div>
     <div id="mob-nav-footer">
@@ -1609,194 +1894,247 @@ canvas { font-family: var(--f-mono); }
 
 <!-- ============================================================ TAB 4: SIMULATOR -->
 <div class="page" id="page-simulator">
-  <div style="margin-bottom:16px">
-    <div style="font-size:10px;font-weight:700;color:#a78bfa;letter-spacing:.1em;text-transform:uppercase;margin-bottom:4px">&#9670; Supply Chain Scenario Simulator</div>
-    <div style="font-size:10px;color:#7a8494">Select a world state, enter your shipment parameters, and get end-to-end landed cost from port of origin to final GCC destination — including sea freight, port handling, and inland trucking.</div>
+  <div style="margin-bottom:12px;display:flex;align-items:baseline;justify-content:space-between;flex-wrap:wrap;gap:8px">
+    <div>
+      <div style="font-size:10px;font-weight:700;color:#a78bfa;letter-spacing:.1em;text-transform:uppercase;margin-bottom:3px">&#9670; Global Corridor Stress Simulator</div>
+      <div style="font-size:10px;color:#7a8494">Set chokepoint status and shipping variables — the platform models real-time corridor stress, trade fragmentation, and GCC logistics impact.</div>
+    </div>
+    <div id="gcss-last-run" style="font-family:'IBM Plex Mono',monospace;font-size:8px;color:#4a5568">Ready</div>
   </div>
 
-  <!-- STEP 1: SCENARIO SELECTION -->
-  <div style="font-size:8px;color:#7a8494;letter-spacing:.12em;text-transform:uppercase;margin-bottom:10px;font-family:'IBM Plex Mono',monospace">Step 1 — Select World State</div>
-  <div class="sim-scenario-grid">
+  <div class="gcss-wrap">
 
-    <div class="scard active" id="sc-1" onclick="selectScenario(1)" style="--sc-color:#e74c3c">
-      <div class="scard-icon">&#128683;</div>
-      <div class="scard-name">Hormuz Closed</div>
-      <div class="scard-state red">Current reality &bull; Day 83 &bull; MoU not yet signed</div>
-      <div class="scard-tags">
-        <span class="scard-tag" style="background:rgba(231,76,60,.12);color:#e74c3c">2 transits/day</span>
-        <span class="scard-tag" style="background:rgba(231,76,60,.12);color:#e74c3c">IRGC control</span>
-        <span class="scard-tag" style="background:rgba(231,76,60,.12);color:#e74c3c">US blockade</span>
-      </div>
-    </div>
+    <!-- ── LEFT: CONTROLS ──────────────────────────────────── -->
+    <div class="gcss-left">
 
-    <div class="scard" id="sc-2" onclick="selectScenario(2)" style="--sc-color:#fbbf24">
-      <div class="scard-icon">&#9875;</div>
-      <div class="scard-name">Hormuz: IRGC Escort Only</div>
-      <div class="scard-state amb">Friendly-flag passage &bull; ~25 transits/day</div>
-      <div class="scard-tags">
-        <span class="scard-tag" style="background:rgba(251,191,36,.12);color:#fbbf24">China/India/Turkey</span>
-        <span class="scard-tag" style="background:rgba(251,191,36,.12);color:#fbbf24">War-risk 5&times;</span>
-      </div>
-    </div>
-
-    <div class="scard" id="sc-3" onclick="selectScenario(3)" style="--sc-color:#f0c84b">
-      <div class="scard-icon">&#9868;</div>
-      <div class="scard-name">Hormuz: Negotiated Partial</div>
-      <div class="scard-state gld">Ceasefire &bull; neutral corridor &bull; ~50 transits/day</div>
-      <div class="scard-tags">
-        <span class="scard-tag" style="background:rgba(240,200,75,.12);color:#f0c84b">All flags allowed</span>
-        <span class="scard-tag" style="background:rgba(240,200,75,.12);color:#f0c84b">War-risk 3&times;</span>
-      </div>
-    </div>
-
-    <div class="scard" id="sc-4" onclick="selectScenario(4)" style="--sc-color:#3dd68c">
-      <div class="scard-icon">&#9989;</div>
-      <div class="scard-name">Hormuz Fully Open</div>
-      <div class="scard-state grn">Crisis resolved &bull; pre-war conditions &bull; ~95 transits/day</div>
-      <div class="scard-tags">
-        <span class="scard-tag" style="background:rgba(61,214,140,.12);color:#3dd68c">Normal rates</span>
-        <span class="scard-tag" style="background:rgba(61,214,140,.12);color:#3dd68c">War-risk 1&times;</span>
-      </div>
-    </div>
-
-    <div class="scard" id="sc-5" onclick="selectScenario(5)" style="--sc-color:#e74c3c">
-      <div class="scard-icon">&#128683;</div>
-      <div class="scard-name">Bab el-Mandeb Closed</div>
-      <div class="scard-state red">Hormuz open &bull; Houthis escalate &bull; Red Sea blocked</div>
-      <div class="scard-tags">
-        <span class="scard-tag" style="background:rgba(231,76,60,.12);color:#e74c3c">Jeddah loses bypass</span>
-        <span class="scard-tag" style="background:rgba(231,76,60,.12);color:#e74c3c">All via CoGH</span>
-      </div>
-    </div>
-
-    <div class="scard" id="sc-6" onclick="selectScenario(6)" style="--sc-color:#e74c3c">
-      <div class="scard-icon">&#9888;</div>
-      <div class="scard-name">Dual Closure</div>
-      <div class="scard-state red">Hormuz + Bab el-Mandeb both closed &bull; worst case</div>
-      <div class="scard-tags">
-        <span class="scard-tag" style="background:rgba(231,76,60,.12);color:#e74c3c">All CoGH</span>
-        <span class="scard-tag" style="background:rgba(231,76,60,.12);color:#e74c3c">Land only viable</span>
-        <span class="scard-tag" style="background:rgba(231,76,60,.12);color:#e74c3c">Extreme cost</span>
-      </div>
-    </div>
-
-  </div>
-
-  <!-- STEP 2: SHIPMENT INPUTS -->
-  <div style="font-size:8px;color:#7a8494;letter-spacing:.12em;text-transform:uppercase;margin-bottom:10px;font-family:'IBM Plex Mono',monospace">Step 2 — Shipment Parameters</div>
-  <div class="sim-inputs">
-    <div class="sim-inputs-grid">
-      <div class="sim-field">
-        <label>Origin Port</label>
-        <select id="inp-origin">
-          <option value="SHA">Shanghai (SHA)</option>
-          <option value="HAM">Hamburg (HAM)</option>
-          <option value="ROT">Rotterdam (ROT)</option>
-          <option value="SIN">Singapore (SIN)</option>
-          <option value="ICD">Mundra / Nhava Sheva</option>
-        </select>
-      </div>
-      <div class="sim-field">
-        <label>Final Destination (GCC)</label>
-        <select id="inp-dest">
-          <option value="DXB">Dubai / Jebel Ali</option>
-          <option value="RUH">Riyadh</option>
-          <option value="DMM">Dammam / Khobar</option>
-          <option value="DOH">Doha</option>
-          <option value="BAH">Manama (Bahrain)</option>
-          <option value="KWI">Kuwait City</option>
-          <option value="MCT">Muscat</option>
-        </select>
-      </div>
-      <div class="sim-field">
-        <label>Volume (TEU / month)</label>
-        <input type="number" id="inp-teu" value="50" min="1" max="10000"/>
-      </div>
-      <div class="sim-field">
-        <label>Commodity Type</label>
-        <select id="inp-commodity">
-          <option value="general">General / mixed cargo</option>
-          <option value="consumer">Consumer goods / FMCG</option>
-          <option value="auto">Automotive parts</option>
-          <option value="pharma">Pharmaceuticals</option>
-          <option value="food">Food &amp; perishables (reefer)</option>
-          <option value="industrial">Industrial / machinery</option>
-          <option value="chemical">Chemicals / hazmat</option>
-        </select>
-      </div>
-    </div>
-    <div style="display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin-top:4px">
-      <button class="sim-run-btn" onclick="runSimulator()">&#9654; Run Simulation</button>
-      <span style="font-size:9px;color:#7a8494;font-family:'IBM Plex Mono',monospace" id="sim-status"></span>
-    </div>
-  </div>
-
-  <!-- RESULTS -->
-  <div class="sim-results" id="sim-results">
-
-    <!-- Active scenario banner -->
-    <div class="scenario-bar" id="sc-banner">
-      <div>
-        <div class="scenario-bar-name" id="scb-name">—</div>
-        <div class="scenario-bar-state" id="scb-state">—</div>
-      </div>
-      <div class="scenario-bar-metrics">
-        <div class="sbm"><div class="sbm-val" id="scb-transits">—</div><div class="sbm-lbl">Transits/day</div></div>
-        <div class="sbm"><div class="sbm-val" id="scb-brent">—</div><div class="sbm-lbl">Brent $/bbl</div></div>
-        <div class="sbm"><div class="sbm-val" id="scb-warrisk">—</div><div class="sbm-lbl">War-risk</div></div>
-        <div class="sbm"><div class="sbm-val" id="scb-reroute">—</div><div class="sbm-lbl">Primary route</div></div>
-      </div>
-    </div>
-
-    <!-- VIEW 1 + VIEW 2 side by side -->
-    <div class="sim-views">
-
-      <!-- VIEW 1: Route Cost Matrix -->
-      <div class="sim-panel">
-        <div class="sim-panel-title">&#9671; View 1 — Route Cost Matrix</div>
-        <div class="sim-panel-sub" id="v1-sub">Routing options ranked by total sea freight cost per FEU &bull; origin to GCC entry port</div>
-        <table class="route-matrix" id="route-matrix-table">
-          <thead>
-            <tr>
-              <th></th>
-              <th>Route</th>
-              <th>Via</th>
-              <th>$/FEU</th>
-              <th>Days</th>
-              <th>vs Pre-crisis</th>
-              <th>Available</th>
-            </tr>
-          </thead>
-          <tbody id="route-matrix-body"></tbody>
-        </table>
-        <div class="src" style="margin-top:8px"><span>Freightos Terminal &middot; Drewry WCI &middot; Maersk Op. updates &middot; scenario-adjusted</span><span class="src-badge">modelled</span></div>
+      <!-- Preset Scenarios -->
+      <div class="gcss-section">
+        <div class="gcss-section-title">&#9670; Preset Scenarios</div>
+        <div class="gcss-presets">
+          <button class="gcss-preset-btn active" id="gcss-pre-0" onclick="loadPreset(0)">Hormuz Closed<br><span style="color:#e74c3c">Current Reality</span></button>
+          <button class="gcss-preset-btn" id="gcss-pre-1" onclick="loadPreset(1)">Dual Closure<br><span style="color:#e74c3c">Worst Case</span></button>
+          <button class="gcss-preset-btn" id="gcss-pre-2" onclick="loadPreset(2)">Houthi Surge<br><span style="color:#fbbf24">Red Sea Crisis</span></button>
+          <button class="gcss-preset-btn" id="gcss-pre-3" onclick="loadPreset(3)">Suez Blockage<br><span style="color:#fbbf24">Med Disruption</span></button>
+          <button class="gcss-preset-btn" id="gcss-pre-4" onclick="loadPreset(4)">Partial Recovery<br><span style="color:#f0c84b">De-escalation</span></button>
+          <button class="gcss-preset-btn" id="gcss-pre-5" onclick="loadPreset(5)">All Clear<br><span style="color:#3dd68c">Pre-Crisis</span></button>
+        </div>
       </div>
 
-      <!-- VIEW 2: End-to-End Cost Calculator -->
-      <div class="sim-panel">
-        <div class="sim-panel-title">&#9672; View 2 — End-to-End Landed Cost</div>
-        <div class="sim-panel-sub" id="v2-sub">Port of origin &rarr; final GCC city including sea + port + inland trucking</div>
-        <div class="cost-breakdown" id="cost-breakdown"></div>
-        <div class="src" style="margin-top:8px"><span>Sea: Freightos Terminal &middot; Port: DP World/DPMC &middot; Trucking: ZATCA/TruKKer benchmarks</span><span class="src-badge">modelled</span></div>
+      <!-- Chokepoint Status -->
+      <div class="gcss-section">
+        <div class="gcss-section-title">&#9651; Chokepoint Status</div>
+        <div class="gcss-cp-list">
+
+          <div class="gcss-cp-row">
+            <div class="gcss-cp-name"><span class="cp-label">Strait of Hormuz</span><span id="cp-lbl-hormuz">CLOSED</span></div>
+            <div class="gcss-cp-btns" data-cp="hormuz">
+              <button class="gcss-cp-btn" data-s="1" onclick="setCp('hormuz',1)">Open</button>
+              <button class="gcss-cp-btn" data-s="2" onclick="setCp('hormuz',2)">Partial</button>
+              <button class="gcss-cp-btn" data-s="3" onclick="setCp('hormuz',3)">Escort</button>
+              <button class="gcss-cp-btn" data-s="4" onclick="setCp('hormuz',4)">Blockade</button>
+              <button class="gcss-cp-btn sel" data-s="5" onclick="setCp('hormuz',5)">Closed</button>
+            </div>
+          </div>
+
+          <div class="gcss-cp-row">
+            <div class="gcss-cp-name"><span class="cp-label">Bab el-Mandeb</span><span id="cp-lbl-bab">OPEN</span></div>
+            <div class="gcss-cp-btns" data-cp="bab">
+              <button class="gcss-cp-btn sel" data-s="1" onclick="setCp('bab',1)">Open</button>
+              <button class="gcss-cp-btn" data-s="2" onclick="setCp('bab',2)">Partial</button>
+              <button class="gcss-cp-btn" data-s="3" onclick="setCp('bab',3)">Escort</button>
+              <button class="gcss-cp-btn" data-s="4" onclick="setCp('bab',4)">Blockade</button>
+              <button class="gcss-cp-btn" data-s="5" onclick="setCp('bab',5)">Closed</button>
+            </div>
+          </div>
+
+          <div class="gcss-cp-row">
+            <div class="gcss-cp-name"><span class="cp-label">Suez Canal</span><span id="cp-lbl-suez">OPEN</span></div>
+            <div class="gcss-cp-btns" data-cp="suez">
+              <button class="gcss-cp-btn sel" data-s="1" onclick="setCp('suez',1)">Open</button>
+              <button class="gcss-cp-btn" data-s="2" onclick="setCp('suez',2)">Partial</button>
+              <button class="gcss-cp-btn" data-s="3" onclick="setCp('suez',3)">Escort</button>
+              <button class="gcss-cp-btn" data-s="4" onclick="setCp('suez',4)">Blockade</button>
+              <button class="gcss-cp-btn" data-s="5" onclick="setCp('suez',5)">Closed</button>
+            </div>
+          </div>
+
+          <div class="gcss-cp-row">
+            <div class="gcss-cp-name"><span class="cp-label">Black Sea Exits</span><span id="cp-lbl-blacksea">OPEN</span></div>
+            <div class="gcss-cp-btns" data-cp="blacksea">
+              <button class="gcss-cp-btn sel" data-s="1" onclick="setCp('blacksea',1)">Open</button>
+              <button class="gcss-cp-btn" data-s="2" onclick="setCp('blacksea',2)">Partial</button>
+              <button class="gcss-cp-btn" data-s="3" onclick="setCp('blacksea',3)">Escort</button>
+              <button class="gcss-cp-btn" data-s="4" onclick="setCp('blacksea',4)">Blockade</button>
+              <button class="gcss-cp-btn" data-s="5" onclick="setCp('blacksea',5)">Closed</button>
+            </div>
+          </div>
+
+          <div class="gcss-cp-row">
+            <div class="gcss-cp-name"><span class="cp-label">Malacca Strait</span><span id="cp-lbl-malacca">OPEN</span></div>
+            <div class="gcss-cp-btns" data-cp="malacca">
+              <button class="gcss-cp-btn sel" data-s="1" onclick="setCp('malacca',1)">Open</button>
+              <button class="gcss-cp-btn" data-s="2" onclick="setCp('malacca',2)">Partial</button>
+              <button class="gcss-cp-btn" data-s="3" onclick="setCp('malacca',3)">Escort</button>
+              <button class="gcss-cp-btn" data-s="4" onclick="setCp('malacca',4)">Blockade</button>
+              <button class="gcss-cp-btn" data-s="5" onclick="setCp('malacca',5)">Closed</button>
+            </div>
+          </div>
+
+        </div>
       </div>
 
-    </div>
+      <!-- Escalation Slider -->
+      <div class="gcss-section">
+        <div class="gcss-section-title">&#9650; Geopolitical Escalation</div>
+        <div class="gcss-slider-row">
+          <div class="gcss-slider-label">Level <span id="gcss-esc-lbl">Level 5 — Active Conflict</span></div>
+          <input type="range" class="gcss-slider" id="gcss-esc" min="1" max="6" value="5"
+            oninput="gcssSliderInput(this,'gcss-esc-lbl',ESC_LABELS)">
+        </div>
+      </div>
 
-    <!-- VIEW 3: Annual impact + implications -->
-    <div class="sim-annual" style="margin-bottom:14px">
-      <div style="font-size:8px;letter-spacing:.14em;text-transform:uppercase;color:#a78bfa;font-weight:700">&#9670; Annual Impact Summary</div>
-      <div class="annual-grid" id="annual-grid"></div>
-    </div>
+      <!-- Shipping Variables -->
+      <div class="gcss-section">
+        <div class="gcss-section-title">&#9672; Shipping Variables</div>
+        <div class="gcss-slider-row">
+          <div class="gcss-slider-label">Freight Rate Index <span id="gcss-freight-lbl">38</span></div>
+          <input type="range" class="gcss-slider" id="gcss-freight" min="10" max="60" value="38" oninput="gcssRawLabel(this,'gcss-freight-lbl')">
+        </div>
+        <div class="gcss-slider-row">
+          <div class="gcss-slider-label">War-Risk Insurance <span id="gcss-ins-lbl">72</span></div>
+          <input type="range" class="gcss-slider" id="gcss-ins" min="10" max="100" value="72" oninput="gcssRawLabel(this,'gcss-ins-lbl')">
+        </div>
+        <div class="gcss-slider-row">
+          <div class="gcss-slider-label">Port Congestion % <span id="gcss-cong-lbl">55</span></div>
+          <input type="range" class="gcss-slider" id="gcss-cong" min="0" max="100" value="55" oninput="gcssRawLabel(this,'gcss-cong-lbl')">
+        </div>
+        <div class="gcss-slider-row">
+          <div class="gcss-slider-label">Market Confidence % <span id="gcss-conf-lbl">32</span></div>
+          <input type="range" class="gcss-slider" id="gcss-conf" min="0" max="100" value="32" oninput="gcssRawLabel(this,'gcss-conf-lbl')">
+        </div>
+        <div class="gcss-slider-row">
+          <div class="gcss-slider-label">Trucking Cost Index <span id="gcss-truck-lbl">118</span></div>
+          <input type="range" class="gcss-slider" id="gcss-truck" min="50" max="150" value="118" oninput="gcssRawLabel(this,'gcss-truck-lbl')">
+        </div>
+        <div class="gcss-slider-row">
+          <div class="gcss-slider-label">Oil Price $/bbl <span id="gcss-oil-lbl">104</span></div>
+          <input type="range" class="gcss-slider" id="gcss-oil" min="60" max="150" value="104" oninput="gcssRawLabel(this,'gcss-oil-lbl')">
+        </div>
+        <div class="gcss-slider-row">
+          <div class="gcss-slider-label">LNG Demand Index <span id="gcss-lng-lbl">68</span></div>
+          <input type="range" class="gcss-slider" id="gcss-lng" min="0" max="100" value="68" oninput="gcssRawLabel(this,'gcss-lng-lbl')">
+        </div>
+      </div>
 
-    <div class="sim-panel">
-      <div class="sim-panel-title">&#9651; View 3 — Strategic Implications</div>
-      <div class="sim-panel-sub" id="v3-sub">What this scenario means for GCC logistics, ports, trucking demand and key operators</div>
-      <div class="impl-grid" id="impl-grid"></div>
-      <div class="src" style="margin-top:10px"><span>AGBI &middot; straits.live &middot; DP World &middot; ZATCA &middot; scenario-modelled</span><span class="src-badge">modelled</span></div>
-    </div>
+      <!-- Timeframe -->
+      <div class="gcss-section">
+        <div class="gcss-section-title">&#9711; Projection Timeframe</div>
+        <div class="gcss-tf-btns">
+          <button class="gcss-tf-btn active" id="gcss-tf-72h" onclick="setTf('72h',this)">72h</button>
+          <button class="gcss-tf-btn" id="gcss-tf-1W" onclick="setTf('1W',this)">1W</button>
+          <button class="gcss-tf-btn" id="gcss-tf-1M" onclick="setTf('1M',this)">1M</button>
+          <button class="gcss-tf-btn" id="gcss-tf-3M" onclick="setTf('3M',this)">3M</button>
+          <button class="gcss-tf-btn" id="gcss-tf-1Y" onclick="setTf('1Y',this)">1Y</button>
+        </div>
+      </div>
 
-  </div>
+    </div><!-- /gcss-left -->
+
+    <!-- ── CENTER: TACTICAL MAP ────────────────────────────── -->
+    <div class="gcss-center">
+      <div class="gcss-map-wrap">
+        <div id="gcss-map"></div>
+      </div>
+      <div class="gcss-kpi-bar">
+        <div class="gcss-kpi">
+          <div class="gcss-kpi-lbl">Corridor Stress</div>
+          <div class="gcss-kpi-val" id="gcss-kv-stress" style="color:#e74c3c">—</div>
+          <div class="gcss-kpi-sub" id="gcss-ks-stress">—</div>
+        </div>
+        <div class="gcss-kpi">
+          <div class="gcss-kpi-lbl">Trade Fragmentation</div>
+          <div class="gcss-kpi-val" id="gcss-kv-frag" style="color:#fbbf24">—</div>
+          <div class="gcss-kpi-sub" id="gcss-ks-frag">—</div>
+        </div>
+        <div class="gcss-kpi">
+          <div class="gcss-kpi-lbl">Maritime Risk</div>
+          <div class="gcss-kpi-val" id="gcss-kv-risk" style="color:#f0c84b">—</div>
+          <div class="gcss-kpi-sub" id="gcss-ks-risk">—</div>
+        </div>
+      </div>
+    </div><!-- /gcss-center -->
+
+    <!-- ── RIGHT: IMPACT INTELLIGENCE ─────────────────────── -->
+    <div class="gcss-right">
+
+      <!-- Risk Gauges -->
+      <div class="gcss-section">
+        <div class="gcss-section-title">&#9726; Risk Gauges</div>
+        <div class="gcss-gauges">
+          <div class="gcss-gauge-row">
+            <div class="gcss-gauge-header"><span>Energy Security</span><span class="gcss-gauge-val" id="g-energy-val" style="color:#e74c3c">—</span></div>
+            <div class="gcss-gauge-track"><div class="gcss-gauge-fill" id="g-energy-fill" style="width:0%;background:#e74c3c"></div></div>
+          </div>
+          <div class="gcss-gauge-row">
+            <div class="gcss-gauge-header"><span>Supply Chain Disruption</span><span class="gcss-gauge-val" id="g-supply-val" style="color:#fbbf24">—</span></div>
+            <div class="gcss-gauge-track"><div class="gcss-gauge-fill" id="g-supply-fill" style="width:0%;background:#fbbf24"></div></div>
+          </div>
+          <div class="gcss-gauge-row">
+            <div class="gcss-gauge-header"><span>Port Capacity Stress</span><span class="gcss-gauge-val" id="g-port-val" style="color:#f0c84b">—</span></div>
+            <div class="gcss-gauge-track"><div class="gcss-gauge-fill" id="g-port-fill" style="width:0%;background:#f0c84b"></div></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Global Trade Impact -->
+      <div class="gcss-section">
+        <div class="gcss-section-title">&#9670; Global Trade Impact</div>
+        <div class="gcss-impact-list" id="gcss-global-impact"></div>
+      </div>
+
+      <!-- GCC Logistics Impact -->
+      <div class="gcss-section">
+        <div class="gcss-section-title">&#9651; GCC Logistics Impact</div>
+        <div class="gcss-impact-list" id="gcss-gcc-impact"></div>
+      </div>
+
+      <!-- Corridor Resilience -->
+      <div class="gcss-section">
+        <div class="gcss-section-title">&#9711; Corridor Resilience Index</div>
+        <div class="gcss-resilience">
+          <div class="gcss-res-row">
+            <div class="gcss-res-header"><span>Asia–GCC direct</span><span id="r-asia-gcc">—</span></div>
+            <div class="gcss-res-bar"><div class="gcss-res-fill" id="r-asia-gcc-bar" style="width:0%;background:#5aa3f5"></div></div>
+          </div>
+          <div class="gcss-res-row">
+            <div class="gcss-res-header"><span>Asia–Europe via Suez</span><span id="r-asia-eu">—</span></div>
+            <div class="gcss-res-bar"><div class="gcss-res-fill" id="r-asia-eu-bar" style="width:0%;background:#3dd68c"></div></div>
+          </div>
+          <div class="gcss-res-row">
+            <div class="gcss-res-header"><span>Gulf–Europe energy</span><span id="r-gulf-eu">—</span></div>
+            <div class="gcss-res-bar"><div class="gcss-res-fill" id="r-gulf-eu-bar" style="width:0%;background:#fbbf24"></div></div>
+          </div>
+          <div class="gcss-res-row">
+            <div class="gcss-res-header"><span>Black Sea grain</span><span id="r-bs-grain">—</span></div>
+            <div class="gcss-res-bar"><div class="gcss-res-fill" id="r-bs-grain-bar" style="width:0%;background:#a78bfa"></div></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- AI Strategic Summary -->
+      <div class="gcss-section">
+        <div class="gcss-section-title">&#9670; AI Strategic Assessment</div>
+        <div class="gcss-summary" id="gcss-ai-summary">
+          <div style="color:#4a5568">Adjust chokepoint status and variables to generate assessment…</div>
+        </div>
+        <div style="font-family:'IBM Plex Mono',monospace;font-size:7px;color:#2d3748;margin-top:6px">Model-driven synthesis · not real-time AI · scenario-based logic</div>
+      </div>
+
+    </div><!-- /gcss-right -->
+
+  </div><!-- /gcss-wrap -->
 </div>
+
 
 
 
@@ -1810,7 +2148,7 @@ var mapReady = false;
 var activeScenario = 1;
 
 // ── TABS ──────────────────────────────────────────────────────────────────────
-var TAB_LABELS = { hormuz:'Hormuz Traffic', rates:'Container Rates', trucking:'GCC Trucking', simulator:'Scenario Simulator' };
+var TAB_LABELS = { hormuz:'Hormuz Traffic', rates:'Container Rates', trucking:'GCC Trucking', simulator:'Corridor Simulator' };
 var TAB_ICONS  = { hormuz:'&#9651;', rates:'&#9671;', trucking:'&#9672;', simulator:'&#9670;' };
 
 function showTab(name, el) {
@@ -1836,6 +2174,10 @@ function showTab(name, el) {
       if (!CHARTS['fChart']) initFreightChart();
       if (!ratesMapReady) initRatesMap();
       else if (ratesMap) ratesMap.invalidateSize();
+    }
+    if (name === 'simulator') {
+      if (!gcssMapReady) { setTimeout(initGCSSMap, 120); }
+      else if (gcssMap) gcssMap.invalidateSize();
     }
 
   }, 80);
@@ -2166,7 +2508,466 @@ function rotateIntelFeed() {
   }, 350);
 }
 
-// ── SIMULATOR DATA ─────────────────────────────────────────────────────────────
+// ── GLOBAL CORRIDOR STRESS SIMULATOR (GCSS) ──────────────────────────────────
+
+var gcssMapReady = false;
+var gcssMap = null;
+var gcssRouteLayers = {};
+var gcssCpMarkers  = {};
+var gcssTimeframe  = '72h';
+
+// Chokepoint state: 1=Open 2=Partial 3=Escort-only 4=Blockade 5=Closed
+var GCSS_CP = { hormuz:5, bab:1, suez:1, blacksea:1, malacca:1 };
+
+var CP_LABELS = {
+  1:'OPEN', 2:'PARTIAL', 3:'ESCORT', 4:'BLOCKADE', 5:'CLOSED'
+};
+var CP_COLORS = {
+  1:'#3dd68c', 2:'#f0c84b', 3:'#fbbf24', 4:'#e74c3c', 5:'#c0392b'
+};
+
+// Chokepoint geographic positions for map markers
+var CP_LATLNG = {
+  hormuz:   [26.55, 56.45],
+  bab:      [12.60, 43.50],
+  suez:     [30.00, 32.55],
+  blacksea: [41.15, 29.05],
+  malacca:  [ 1.30,103.85]
+};
+
+var ESC_LABELS = [
+  '', 'Level 1 — Diplomatic Tension',
+  'Level 2 — Sanctions / Economic',
+  'Level 3 — Proxy Escalation',
+  'Level 4 — Limited Military',
+  'Level 5 — Active Conflict',
+  'Level 6 — Existential / WMD Risk'
+];
+
+// Timeframe multipliers for trade disruption projection
+var TF_MULT = { '72h':0.15, '1W':0.4, '1M':1.0, '3M':2.2, '1Y':4.5 };
+
+// Preset scenarios
+var GCSS_PRESETS = [
+  // 0: Hormuz Closed (current reality)
+  { cp:{ hormuz:5, bab:1, suez:1, blacksea:1, malacca:1 }, esc:5, freight:38, ins:72, cong:55, conf:32, truck:118, oil:104, lng:68 },
+  // 1: Dual Closure
+  { cp:{ hormuz:5, bab:5, suez:1, blacksea:1, malacca:1 }, esc:6, freight:55, ins:95, cong:80, conf:15, truck:145, oil:133, lng:88 },
+  // 2: Houthi Surge (Red Sea / Bab crisis, Hormuz open)
+  { cp:{ hormuz:1, bab:4, suez:2, blacksea:1, malacca:1 }, esc:4, freight:32, ins:55, cong:42, conf:48, truck:105, oil:91, lng:72 },
+  // 3: Suez blockage
+  { cp:{ hormuz:1, bab:1, suez:5, blacksea:1, malacca:1 }, esc:2, freight:28, ins:30, cong:35, conf:62, truck:100, oil:80, lng:58 },
+  // 4: Partial recovery
+  { cp:{ hormuz:3, bab:2, suez:1, blacksea:1, malacca:1 }, esc:3, freight:22, ins:40, cong:30, conf:58, truck:95, oil:84, lng:60 },
+  // 5: All clear
+  { cp:{ hormuz:1, bab:1, suez:1, blacksea:1, malacca:1 }, esc:1, freight:12, ins:10, cong:10, conf:88, truck:72, oil:72, lng:44 }
+];
+
+// ── GCSS Helpers ──────────────────────────────────────────────────────────────
+function setCp(name, val) {
+  GCSS_CP[name] = val;
+  // Update button selection
+  var row = document.querySelector('.gcss-cp-btns[data-cp="' + name + '"]');
+  if (row) {
+    row.querySelectorAll('.gcss-cp-btn').forEach(function(b) {
+      b.classList.toggle('sel', +b.dataset.s === val);
+    });
+  }
+  // Update label
+  var lbl = document.getElementById('cp-lbl-' + name);
+  if (lbl) { lbl.textContent = CP_LABELS[val]; lbl.style.color = CP_COLORS[val]; }
+  applyGCSS();
+}
+
+function gcssSliderInput(el, lblId, labelArr) {
+  var v = +el.value;
+  var lbl = document.getElementById(lblId);
+  if (lbl) lbl.textContent = labelArr[v] || v;
+  el.style.setProperty('--pct', Math.round((v - el.min) / (el.max - el.min) * 100) + '%');
+  applyGCSS();
+}
+
+function gcssRawLabel(el, lblId) {
+  var lbl = document.getElementById(lblId);
+  if (lbl) lbl.textContent = el.value;
+  el.style.setProperty('--pct', Math.round((+el.value - +el.min) / (+el.max - +el.min) * 100) + '%');
+  applyGCSS();
+}
+
+function setTf(tf, btn) {
+  gcssTimeframe = tf;
+  document.querySelectorAll('.gcss-tf-btn').forEach(function(b){ b.classList.remove('active'); });
+  btn.classList.add('active');
+  applyGCSS();
+}
+
+function loadPreset(idx) {
+  var p = GCSS_PRESETS[idx];
+  if (!p) return;
+  // Mark buttons
+  document.querySelectorAll('.gcss-preset-btn').forEach(function(b,i){ b.classList.toggle('active', i===idx); });
+  // Apply chokepoints
+  ['hormuz','bab','suez','blacksea','malacca'].forEach(function(cp){ setCp(cp, p.cp[cp]); });
+  // Sliders
+  function setSlider(id, lblId, val, labelArr) {
+    var el = document.getElementById(id);
+    if (!el) return;
+    el.value = val;
+    el.style.setProperty('--pct', Math.round((val - +el.min) / (+el.max - +el.min) * 100) + '%');
+    var lbl = document.getElementById(lblId);
+    if (lbl) lbl.textContent = labelArr ? labelArr[val] || val : val;
+  }
+  setSlider('gcss-esc',    'gcss-esc-lbl',    p.esc,    ESC_LABELS);
+  setSlider('gcss-freight','gcss-freight-lbl', p.freight);
+  setSlider('gcss-ins',    'gcss-ins-lbl',    p.ins);
+  setSlider('gcss-cong',   'gcss-cong-lbl',   p.cong);
+  setSlider('gcss-conf',   'gcss-conf-lbl',   p.conf);
+  setSlider('gcss-truck',  'gcss-truck-lbl',  p.truck);
+  setSlider('gcss-oil',    'gcss-oil-lbl',    p.oil);
+  setSlider('gcss-lng',    'gcss-lng-lbl',    p.lng);
+  applyGCSS();
+}
+
+function syncGCSSSliderTracks() {
+  ['gcss-esc','gcss-freight','gcss-ins','gcss-cong','gcss-conf','gcss-truck','gcss-oil','gcss-lng'].forEach(function(id) {
+    var el = document.getElementById(id);
+    if (el) el.style.setProperty('--pct', Math.round((+el.value - +el.min) / (+el.max - +el.min) * 100) + '%');
+  });
+}
+
+// ── GCSS Simulation Engine ────────────────────────────────────────────────────
+function computeGCSS() {
+  var cp = GCSS_CP;
+  var esc    = +(document.getElementById('gcss-esc')    || {value:5}).value;
+  var freight= +(document.getElementById('gcss-freight')|| {value:38}).value;
+  var ins    = +(document.getElementById('gcss-ins')    || {value:72}).value;
+  var cong   = +(document.getElementById('gcss-cong')   || {value:55}).value;
+  var conf   = +(document.getElementById('gcss-conf')   || {value:32}).value;
+  var truck  = +(document.getElementById('gcss-truck')  || {value:118}).value;
+  var oil    = +(document.getElementById('gcss-oil')    || {value:104}).value;
+  var lng    = +(document.getElementById('gcss-lng')    || {value:68}).value;
+
+  // Normalise chokepoints to 0–1 stress
+  function cpS(v) { return (v - 1) / 4; }
+  var hs = cpS(cp.hormuz);  // Hormuz stress
+  var bs = cpS(cp.bab);
+  var ss = cpS(cp.suez);
+  var bks= cpS(cp.blacksea);
+  var ms = cpS(cp.malacca);
+
+  // Escalation contribution (0.0–1.0)
+  var escContrib = (esc - 1) / 5 * 20;
+
+  // Corridor stress (0–100) — weighted by trade volume
+  var cpStress = hs*38 + bs*25 + ss*20 + bks*10 + ms*7;
+  var corridorStress = Math.min(98, cpStress + escContrib + cong*0.08);
+
+  // Trade fragmentation
+  var tradeFrag = Math.min(97, corridorStress*0.68 + (1 - conf/100)*32);
+
+  // Maritime risk
+  var maritimeRisk = Math.min(99, hs*40 + bs*28 + ss*18 + (ins/100)*20 + (esc-1)*2.5);
+
+  // Time-horizon scaling
+  var tfm = TF_MULT[gcssTimeframe] || 1.0;
+  var scaledFrag = Math.min(99, tradeFrag * tfm * 0.8 + tradeFrag * 0.2);
+
+  // Gauge values
+  var energyRisk   = Math.min(99, hs*55 + bs*25 + (oil - 72)/78*20);
+  var supplyDisrupt= Math.min(99, (corridorStress*0.55 + tradeFrag*0.30 + cong*0.15));
+  var portCapacity = Math.min(99, cong*0.6 + corridorStress*0.28 + freight/60*12);
+
+  // Resilience scores (inverted — how viable is each corridor)
+  var resAsiaGcc  = Math.max(2, 100 - hs*70 - ms*15 - freight/60*15);
+  var resAsiaEu   = Math.max(2, 100 - ss*45 - bs*35 - hs*10 - tradeFrag*0.10);
+  var resGulfEu   = Math.max(2, 100 - hs*40 - bs*30 - ss*20 - energyRisk*0.10);
+  var resBsGrain  = Math.max(2, 100 - bks*80 - tradeFrag*0.20);
+
+  // Oil price impact
+  var oilDelta = Math.round((oil - 72) / 72 * 100);
+  // Shipping cost multiplier vs pre-crisis
+  var freightMult = +(freight / 12).toFixed(1);
+  // Annual trade loss estimate ($B)
+  var tradeLossB  = +(corridorStress * 0.65 * tfm).toFixed(1);
+  // GCC port diversions %
+  var portDiv     = Math.min(99, Math.round(hs*62 + bs*28 + cong*0.10));
+
+  return {
+    corridorStress: Math.round(corridorStress),
+    tradeFrag:      Math.round(scaledFrag),
+    maritimeRisk:   Math.round(maritimeRisk),
+    energyRisk:     Math.round(energyRisk),
+    supplyDisrupt:  Math.round(supplyDisrupt),
+    portCapacity:   Math.round(portCapacity),
+    resAsiaGcc:     Math.round(resAsiaGcc),
+    resAsiaEu:      Math.round(resAsiaEu),
+    resGulfEu:      Math.round(resGulfEu),
+    resBsGrain:     Math.round(resBsGrain),
+    oilDelta:       oilDelta,
+    freightMult:    freightMult,
+    tradeLossB:     tradeLossB,
+    portDiv:        portDiv,
+    oil:            oil,
+    lng:            lng,
+    truck:          truck,
+    hs: hs, bs: bs, ss: ss, bks: bks, ms: ms,
+    esc: esc, cong: cong, conf: conf, freight: freight
+  };
+}
+
+function riskColor(v) {
+  return v >= 75 ? '#e74c3c' : v >= 55 ? '#fbbf24' : v >= 35 ? '#f0c84b' : '#3dd68c';
+}
+
+function el(id) { return document.getElementById(id); }
+
+function applyGCSS() {
+  var r = computeGCSS();
+
+  // KPI bar
+  function setKpi(vid, sid, val, sub, color) {
+    var ve = el(vid), se = el(sid);
+    if (ve) { ve.textContent = val + '%'; ve.style.color = color; }
+    if (se) se.textContent = sub;
+  }
+  setKpi('gcss-kv-stress','gcss-ks-stress', r.corridorStress,
+    r.corridorStress >= 75 ? 'Critical' : r.corridorStress >= 50 ? 'Severe' : r.corridorStress >= 25 ? 'Elevated' : 'Normal',
+    riskColor(r.corridorStress));
+  setKpi('gcss-kv-frag','gcss-ks-frag', r.tradeFrag,
+    gcssTimeframe + ' projection · ' + (r.tradeFrag >= 70 ? 'Fragmented' : r.tradeFrag >= 40 ? 'Stressed' : 'Resilient'),
+    riskColor(r.tradeFrag));
+  setKpi('gcss-kv-risk','gcss-ks-risk', r.maritimeRisk,
+    r.maritimeRisk >= 70 ? 'War-risk active' : r.maritimeRisk >= 45 ? 'Elevated threat' : 'Manageable',
+    riskColor(r.maritimeRisk));
+
+  // Gauges
+  function setGauge(vid, fid, val) {
+    var ve = el(vid), fe = el(fid);
+    var c = riskColor(val);
+    if (ve) { ve.textContent = val + '%'; ve.style.color = c; }
+    if (fe) { fe.style.width = val + '%'; fe.style.background = c; }
+  }
+  setGauge('g-energy-val',  'g-energy-fill',  r.energyRisk);
+  setGauge('g-supply-val',  'g-supply-fill',  r.supplyDisrupt);
+  setGauge('g-port-val',    'g-port-fill',    r.portCapacity);
+
+  // Resilience bars
+  function setRes(id, barId, val) {
+    var ve = el(id), be = el(barId);
+    var c = riskColor(100 - val);  // resilience: high=good
+    if (ve) { ve.textContent = val + '%'; ve.style.color = val > 60 ? '#3dd68c' : val > 35 ? '#f0c84b' : '#e74c3c'; }
+    if (be) { be.style.width = val + '%'; }
+  }
+  setRes('r-asia-gcc',   'r-asia-gcc-bar',  r.resAsiaGcc);
+  setRes('r-asia-eu',    'r-asia-eu-bar',   r.resAsiaEu);
+  setRes('r-gulf-eu',    'r-gulf-eu-bar',   r.resGulfEu);
+  setRes('r-bs-grain',   'r-bs-grain-bar',  r.resBsGrain);
+
+  // Global trade impact items
+  var gi = el('gcss-global-impact');
+  if (gi) {
+    var gItems = [
+      { name:'Global Freight Rates', val: r.freightMult + 'x pre-crisis', c: riskColor((r.freightMult-1)/4.5*100) },
+      { name:'Oil Price', val: '$' + r.oil + '/bbl (' + (r.oilDelta >= 0 ? '+' : '') + r.oilDelta + '%)', c: riskColor(Math.abs(r.oilDelta)) },
+      { name:'Trade Route Disruption', val: r.tradeFrag + '% fragmented', c: riskColor(r.tradeFrag) },
+      { name:'Estimated Trade Loss', val: '$' + r.tradeLossB + 'B / ' + gcssTimeframe, c: r.tradeLossB > 50 ? '#e74c3c' : r.tradeLossB > 20 ? '#fbbf24' : '#3dd68c' },
+      { name:'LNG Flow Impact', val: (r.lng > 70 ? 'High demand' : r.lng > 40 ? 'Moderate' : 'Low') + ' · index ' + r.lng, c: riskColor(r.lng) }
+    ];
+    gi.innerHTML = gItems.map(function(it) {
+      return '<div class="gcss-impact-item" style="border-left-color:' + it.c + '">' +
+        '<span class="gcss-impact-item-name">' + it.name + '</span>' +
+        '<span class="gcss-impact-item-val" style="color:' + it.c + '">' + it.val + '</span></div>';
+    }).join('');
+  }
+
+  // GCC logistics impact
+  var li = el('gcss-gcc-impact');
+  if (li) {
+    var lItems = [
+      { name:'Jebel Ali / Sohar', val: r.portDiv + '% diverted volume', c: riskColor(r.portDiv) },
+      { name:'Inland Trucking', val: 'Index ' + r.truck + (r.truck > 110 ? ' ▲ surge' : ' stable'), c: riskColor((r.truck-50)/100*100) },
+      { name:'GCC Port Dwell Time', val: r.portCapacity >= 70 ? '12–18 days' : r.portCapacity >= 40 ? '6–10 days' : '3–5 days', c: riskColor(r.portCapacity) },
+      { name:'Saudi Landbridge', val: r.hs >= 0.75 ? 'Saturated' : r.hs >= 0.5 ? 'High demand' : 'Normal', c: riskColor(r.hs*100) },
+      { name:'Market Confidence', val: r.conf + '%', c: r.conf > 60 ? '#3dd68c' : r.conf > 35 ? '#f0c84b' : '#e74c3c' }
+    ];
+    li.innerHTML = lItems.map(function(it) {
+      return '<div class="gcss-impact-item" style="border-left-color:' + it.c + '">' +
+        '<span class="gcss-impact-item-name">' + it.name + '</span>' +
+        '<span class="gcss-impact-item-val" style="color:' + it.c + '">' + it.val + '</span></div>';
+    }).join('');
+  }
+
+  // Update GCSS map routes and markers
+  updateGCSSMap(r);
+
+  // AI Summary
+  generateSummary(r);
+
+  // Timestamp
+  var ts = el('gcss-last-run');
+  if (ts) ts.textContent = 'Updated ' + new Date().toLocaleTimeString('en-AE', {hour:'2-digit',minute:'2-digit'});
+}
+
+function generateSummary(r) {
+  var sumEl = el('gcss-ai-summary');
+  if (!sumEl) return;
+
+  var lines = [];
+  // Opening assessment
+  if (r.corridorStress >= 75) {
+    lines.push('<span class="gcss-sum-em">CRITICAL:</span> Global corridor stress at ' + r.corridorStress + '% — multi-chokepoint crisis scenario active.');
+  } else if (r.corridorStress >= 50) {
+    lines.push('<span class="gcss-sum-em">SEVERE:</span> Corridor stress at ' + r.corridorStress + '%, significant trade route disruption.');
+  } else if (r.corridorStress >= 25) {
+    lines.push('<span class="gcss-sum-em">ELEVATED:</span> Moderate corridor stress (' + r.corridorStress + '%), targeted disruption in affected lanes.');
+  } else {
+    lines.push('<span class="gcss-sum-em">STABLE:</span> Corridor stress at ' + r.corridorStress + '% — near pre-crisis operational baseline.');
+  }
+
+  // Hormuz-specific
+  if (GCSS_CP.hormuz >= 4) lines.push('Hormuz closure diverts ~' + Math.round(r.hs*21) + 'M bbl/day oil flow. GCC export capacity severely constrained.');
+  else if (GCSS_CP.hormuz === 3) lines.push('Hormuz escort-only regime restricts ~60% of pre-crisis traffic. Western carriers avoided.');
+
+  // Bab/Suez
+  if (GCSS_CP.bab >= 4 && GCSS_CP.suez >= 4) lines.push('Both Red Sea and Suez choked. Asia–Europe trade routed via Cape (+14-18 days, +' + Math.round(r.freightMult*100-100) + '% cost).');
+  else if (GCSS_CP.bab >= 3) lines.push('Bab el-Mandeb disruption isolates Jeddah from seaborne supply. Saudi Landbridge demand up ~' + Math.round(r.bs*180) + '%.');
+
+  // GCC logistics
+  lines.push('GCC trucking index at ' + r.truck + '. Jebel Ali / Sohar absorbing ' + r.portDiv + '% diverted cargo — dwell risk ' + (r.portCapacity >= 70 ? 'critical' : r.portCapacity >= 40 ? 'elevated' : 'manageable') + '.');
+
+  // Oil
+  if (r.oilDelta > 30) lines.push('Brent at $' + r.oil + '/bbl (+' + r.oilDelta + '% vs pre-crisis). War-risk insurance eroding carrier profitability.');
+
+  // Outlook
+  if (r.conf < 35) lines.push('<span class="gcss-sum-em">Outlook:</span> Low market confidence (' + r.conf + '%) signals prolonged disruption. Strategic inventory build recommended.');
+  else if (r.conf > 65) lines.push('<span class="gcss-sum-em">Outlook:</span> Market confidence at ' + r.conf + '% — routes normalising, rate stabilisation likely within ' + gcssTimeframe + '.');
+
+  sumEl.innerHTML = lines.map(function(l){ return '<div class="gcss-sum-line">' + l + '</div>'; }).join('');
+}
+
+// ── GCSS Map ──────────────────────────────────────────────────────────────────
+var GCSS_ROUTE_DEFS = {
+  // Asia → GCC via Hormuz (normal, strait open)
+  asia_gcc_hormuz: {
+    pts: [[31.2,121.5],[22.0,120.5],[10.0,110.0],[1.3,104.0],[-0.5,101.0],[-2.5,98.5],
+          [5.0,80.0],[8.0,68.0],[12.0,58.0],[15.0,52.0],[17.0,54.0],[22.0,60.0],
+          [24.0,58.0],[24.5,56.8],[25.3,55.4]],
+    color:'#5aa3f5', weight:3, dash:null
+  },
+  // Asia → GCC via Cape (Hormuz closed)
+  asia_gcc_cape: {
+    pts: [[31.2,121.5],[22.0,120.5],[1.3,104.0],[-0.5,101.0],[-10.0,82.0],
+          [-25.0,45.0],[-34.2,18.5],[-28.0,8.0],[-10.0,-2.0],[5.0,-8.0],
+          [15.0,0.0],[20.0,10.0],[12.0,43.5],[15.0,42.5],[17.0,45.0],[22.0,59.0],[25.3,55.4]],
+    color:'#a78bfa', weight:3, dash:[6,4]
+  },
+  // Asia → Europe via Suez (Bab+Suez open)
+  asia_europe_suez: {
+    pts: [[31.2,121.5],[22.0,120.5],[1.3,104.0],[-0.5,101.0],[8.0,68.0],
+          [12.0,44.0],[15.0,42.5],[22.0,38.0],[27.0,34.5],[30.0,32.5],
+          [31.5,32.0],[33.0,31.0],[36.5,28.0],[37.0,22.0],[36.0,14.0],
+          [36.1,-5.4],[43.0,-9.5],[48.5,2.0],[51.5,3.5],[53.3,4.9]],
+    color:'#3dd68c', weight:3, dash:null
+  },
+  // Asia → Europe via Cape (Bab/Suez closed)
+  asia_europe_cape: {
+    pts: [[31.2,121.5],[1.3,104.0],[-10.0,82.0],[-34.2,18.5],
+          [-10.0,-2.0],[5.0,-8.0],[15.0,-18.0],[25.0,-25.0],
+          [36.0,-9.0],[36.1,-5.4],[40.0,-2.0],[48.5,2.0],[53.3,4.9]],
+    color:'#f0c84b', weight:3, dash:[6,4]
+  },
+  // Gulf → Europe energy corridor
+  gulf_europe: {
+    pts: [[26.0,56.3],[22.0,60.0],[15.0,52.0],[12.0,44.0],[15.0,42.5],
+          [22.0,38.0],[30.0,32.5],[32.0,31.5],[36.1,-5.4],[43.0,-9.5],[53.3,4.9]],
+    color:'#fbbf24', weight:2.5, dash:[4,3]
+  },
+  // Black Sea exits (grain/energy)
+  blacksea_routes: {
+    pts: [[43.0,31.5],[41.8,30.0],[41.0,29.0],[40.0,27.5],[39.0,26.5],
+          [37.5,24.0],[36.5,21.0],[36.0,18.0],[37.0,14.5],[38.0,10.0],
+          [38.5,5.0],[43.0,-9.5],[53.3,4.9]],
+    color:'#5aa3f5', weight:2, dash:[3,3]
+  }
+};
+
+function initGCSSMap() {
+  if (gcssMapReady) { if (gcssMap) gcssMap.invalidateSize(); return; }
+  var mapEl = document.getElementById('gcss-map');
+  if (!mapEl) return;
+  gcssMap = L.map('gcss-map', {
+    center: [20, 55],
+    zoom: 3,
+    zoomControl: true,
+    attributionControl: false,
+    minZoom: 2, maxZoom: 7
+  });
+  L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_matter_no_labels/{z}/{x}/{y}{r}.png', {
+    subdomains: 'abcd', maxZoom: 19
+  }).addTo(gcssMap);
+  gcssMapReady = true;
+
+  // Draw initial routes and markers
+  Object.keys(GCSS_ROUTE_DEFS).forEach(function(key) {
+    var def = GCSS_ROUTE_DEFS[key];
+    var layer = L.polyline(def.pts, {
+      color: def.color,
+      weight: def.weight || 2,
+      opacity: 0.7,
+      dashArray: def.dash ? def.dash.join(' ') : null
+    }).addTo(gcssMap);
+    gcssRouteLayers[key] = layer;
+  });
+
+  // Chokepoint markers
+  ['hormuz','bab','suez','blacksea','malacca'].forEach(function(cp) {
+    var pos = CP_LATLNG[cp];
+    if (!pos) return;
+    var icon = makeCpIcon(GCSS_CP[cp]);
+    var m = L.marker(pos, { icon: icon }).addTo(gcssMap);
+    var cpNames = { hormuz:'Strait of Hormuz', bab:'Bab el-Mandeb', suez:'Suez Canal', blacksea:'Black Sea Exit', malacca:'Malacca Strait' };
+    m.bindTooltip(cpNames[cp] + ': ' + CP_LABELS[GCSS_CP[cp]], { className:'', direction:'top', permanent:false });
+    gcssCpMarkers[cp] = m;
+  });
+
+  updateGCSSMap(computeGCSS());
+}
+
+function makeCpIcon(state) {
+  var c = CP_COLORS[state] || '#fbbf24';
+  return L.divIcon({
+    html: '<div class="gcss-cp-marker" style="--cp-c:' + c + '"><div class="gcss-cp-marker-ring"></div><div class="gcss-cp-marker-dot"></div></div>',
+    iconSize: [14,14], iconAnchor: [7,7], className: ''
+  });
+}
+
+function updateGCSSMap(r) {
+  if (!gcssMapReady || !gcssMap) return;
+  var cp = GCSS_CP;
+
+  // Route visibility and opacity
+  function showRoute(key, show, opacity) {
+    var layer = gcssRouteLayers[key];
+    if (!layer) return;
+    if (show) { layer.setStyle({ opacity: opacity || 0.75 }); }
+    else       { layer.setStyle({ opacity: 0.08 }); }
+  }
+
+  showRoute('asia_gcc_hormuz', cp.hormuz <= 2, cp.hormuz === 1 ? 0.85 : 0.5);
+  showRoute('asia_gcc_cape',   cp.hormuz >= 3, cp.hormuz >= 4 ? 0.85 : 0.55);
+  showRoute('asia_europe_suez', cp.bab <= 2 && cp.suez <= 2, 0.75);
+  showRoute('asia_europe_cape', cp.bab >= 3 || cp.suez >= 3, 0.8);
+  showRoute('gulf_europe', cp.hormuz <= 3, 0.65);
+  showRoute('blacksea_routes', cp.blacksea <= 2, cp.blacksea === 1 ? 0.65 : 0.3);
+
+  // Update chokepoint marker icons
+  ['hormuz','bab','suez','blacksea','malacca'].forEach(function(cpName) {
+    var m = gcssCpMarkers[cpName];
+    if (m) m.setIcon(makeCpIcon(cp[cpName]));
+  });
+}
+
+// ── Old SCENARIOS preserved as reference (not used by GCSS UI) ───────────────
 var SCENARIOS = {
   1:{name:'Hormuz Closed',emoji:'&#128683;',state:'Current reality - IRGC control zone - US naval blockade - Day 82',transits:2,brent:104.50,warrisk:'8.0x',reroute:'Cape of GH',color:'#e74c3c',routeMults:{cgh:{mult:4.5,days:35,tag:'rt-cgh',label:'Cape of GH',avail:true},redsea:{mult:2.8,days:22,tag:'rt-rs',label:'Red Sea',avail:true,note:'Jeddah entry only'},direct:{mult:null,days:null,tag:'rt-na',label:'Hormuz direct',avail:false,note:'CLOSED'},oman:{mult:3.2,days:20,tag:'rt-dir',label:'Sohar/KF land',avail:true}},implications:[{title:'Jeddah Port',color:'#e74c3c',metric:'16-day dwell',text:'Absorbing all Hormuz-displaced cargo. Terminal at capacity.'},{title:'Brent Crude',color:'#e74c3c',metric:'$104.50/bbl',text:'+45% vs pre-crisis. 1.4M bbl/day Iran exports via shadow fleet.'},{title:'GCC Trucking',color:'#fbbf24',metric:'+47% fleet',text:'Al Bat\'ha 1,649 trucks/day. TruKKer scaling to 500 moves/day from Khorfakkan.'},{title:'Khor Fakkan/Sohar',color:'#3dd68c',metric:'+3,500% diversions',text:'Windward: vessel diversions to Oman up 3,500%. Sohar emerging as primary Asia-GCC gateway.'},{title:'Stranded Vessels',color:'#e74c3c',metric:'~2,000 ships',text:'~20,000 mariners trapped in Persian Gulf. 109K TEU confirmed stranded.'},{title:'War-Risk Insurance',color:'#e74c3c',metric:'8.0x premium',text:'VLCC approx $2.5M per voyage. 6 P&I clubs withdrew cover.'}]},
   2:{name:'Hormuz: IRGC Escort Only',emoji:'&#9875;',state:'Friendly-flag passage - China India Turkey - ~25 transits/day',transits:25,brent:92.00,warrisk:'5.0x',reroute:'Mixed',color:'#fbbf24',routeMults:{cgh:{mult:3.0,days:35,tag:'rt-cgh',label:'Cape of GH',avail:true},redsea:{mult:2.0,days:22,tag:'rt-rs',label:'Red Sea',avail:true,note:'Jeddah entry only'},direct:{mult:2.5,days:18,tag:'rt-dir',label:'Hormuz direct',avail:true,note:'IRGC escort - flag dependent'},oman:{mult:2.2,days:20,tag:'rt-dir',label:'Sohar/KF land',avail:true}},implications:[{title:'Jeddah Port',color:'#fbbf24',metric:'10-day dwell',text:'Easing slightly as some Hormuz traffic resumes for friendly flags.'},{title:'Brent Crude',color:'#fbbf24',metric:'~$92/bbl',text:'+28% vs pre-crisis. Flag-state discrimination persists.'},{title:'GCC Trucking',color:'#fbbf24',metric:'+25% fleet',text:'Land routes remain elevated. Jebel Ali handling Asia cargo for Chinese/Indian flag vessels.'},{title:'Khor Fakkan/Sohar',color:'#3dd68c',metric:'Still elevated',text:'Oman ports retain volume as flag-neutral entry. Preferred by EU/US carriers avoiding Hormuz.'},{title:'Carrier Posture',color:'#fbbf24',metric:'Split market',text:'Chinese carriers (COSCO) resume direct. Western majors (Maersk/MSC) stay Cape of Good Hope.'},{title:'War-Risk Insurance',color:'#fbbf24',metric:'5.0x premium',text:'Reduced but elevated. Escort availability uncertain. JWC maintaining listed area.'}]},
@@ -3268,6 +4069,10 @@ window.addEventListener('load', function() {
 
   // Rotate intelligence feed items every 3 minutes (ALERT stays pinned)
   setInterval(rotateIntelFeed, 3 * 60 * 1000);
+
+  // Init GCSS slider track fills and run first computation
+  syncGCSSSliderTracks();
+  applyGCSS();
 });
 
 

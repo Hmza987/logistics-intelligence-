@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>GCC Logistics Intelligence — Access</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600;700&family=IBM+Plex+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      background: #0a0d14;
+      color: #e8eaed;
+      font-family: 'IBM Plex Sans', sans-serif;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+
+    /* Subtle grid background */
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background-image:
+        linear-gradient(rgba(45,125,210,0.03) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(45,125,210,0.03) 1px, transparent 1px);
+      background-size: 40px 40px;
+      pointer-events: none;
+    }
+
+    .login-wrap {
+      width: 100%;
+      max-width: 400px;
+      position: relative;
+      z-index: 1;
+    }
+
+    .login-header {
+      text-align: center;
+      margin-bottom: 32px;
+    }
+
+    .login-logo {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.2em;
+      color: #5aa3f5;
+      text-transform: uppercase;
+      margin-bottom: 6px;
+    }
+
+    .login-subtitle {
+      font-size: 10px;
+      color: #4a5568;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      font-family: 'IBM Plex Mono', monospace;
+    }
+
+    .login-card {
+      background: #111520;
+      border: 1px solid #1e2535;
+      border-radius: 6px;
+      padding: 32px;
+    }
+
+    .login-card-title {
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: #7a8494;
+      font-family: 'IBM Plex Mono', monospace;
+      margin-bottom: 24px;
+    }
+
+    .field {
+      margin-bottom: 20px;
+    }
+
+    .field label {
+      display: block;
+      font-size: 10px;
+      font-weight: 600;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: #4a5568;
+      font-family: 'IBM Plex Mono', monospace;
+      margin-bottom: 8px;
+    }
+
+    .field input {
+      width: 100%;
+      background: #0d1017;
+      border: 1px solid #1e2535;
+      border-radius: 4px;
+      padding: 10px 14px;
+      font-size: 14px;
+      font-family: 'IBM Plex Mono', monospace;
+      color: #e8eaed;
+      outline: none;
+      transition: border-color 0.15s;
+      letter-spacing: 0.05em;
+    }
+
+    .field input:focus {
+      border-color: #2d7dd2;
+    }
+
+    .field input::placeholder {
+      color: #2d3748;
+      letter-spacing: 0.1em;
+    }
+
+    .btn-login {
+      width: 100%;
+      background: #2d7dd2;
+      color: #fff;
+      border: none;
+      border-radius: 4px;
+      padding: 11px 20px;
+      font-size: 11px;
+      font-weight: 700;
+      font-family: 'IBM Plex Mono', monospace;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      cursor: pointer;
+      transition: background 0.15s;
+      margin-top: 4px;
+    }
+
+    .btn-login:hover  { background: #3b8de0; }
+    .btn-login:active { background: #1a6abf; }
+
+    .error-msg {
+      display: none;
+      background: rgba(231,76,60,0.1);
+      border: 1px solid rgba(231,76,60,0.3);
+      border-radius: 4px;
+      padding: 10px 14px;
+      font-size: 10px;
+      font-family: 'IBM Plex Mono', monospace;
+      color: #e74c3c;
+      letter-spacing: 0.05em;
+      margin-bottom: 20px;
+    }
+
+    .error-msg.visible { display: block; }
+
+    .config-msg {
+      display: none;
+      background: rgba(251,191,36,0.08);
+      border: 1px solid rgba(251,191,36,0.25);
+      border-radius: 4px;
+      padding: 10px 14px;
+      font-size: 10px;
+      font-family: 'IBM Plex Mono', monospace;
+      color: #fbbf24;
+      letter-spacing: 0.05em;
+      margin-bottom: 20px;
+      line-height: 1.6;
+    }
+
+    .config-msg.visible { display: block; }
+
+    .login-footer {
+      text-align: center;
+      margin-top: 20px;
+      font-size: 9px;
+      color: #2d3748;
+      font-family: 'IBM Plex Mono', monospace;
+      letter-spacing: 0.08em;
+    }
+
+    /* Spinner on submit */
+    .btn-login.loading {
+      opacity: 0.7;
+      pointer-events: none;
+    }
+  </style>
+</head>
+<body>
+  <div class="login-wrap">
+    <div class="login-header">
+      <div class="login-logo">&#9651; Gulf Logistics Intelligence</div>
+      <div class="login-subtitle">Maritime &bull; Freight &bull; GCC Strategic Assessment</div>
+    </div>
+
+    <div class="login-card">
+      <div class="login-card-title">Restricted Access</div>
+
+      <div class="error-msg" id="err-msg">
+        &#9888; &nbsp;Incorrect access code. Please try again.
+      </div>
+      <div class="config-msg" id="cfg-msg">
+        &#9888; &nbsp;DASHBOARD_PASSWORD env var not configured.<br>
+        Set it in your Vercel project &rarr; Settings &rarr; Environment Variables.
+      </div>
+
+      <form method="POST" action="/api/login" id="login-form">
+        <div class="field">
+          <label for="password">Access Code</label>
+          <input
+            type="password"
+            id="password"
+            name="password"
+            placeholder="&#x2022;&#x2022;&#x2022;&#x2022;&#x2022;&#x2022;&#x2022;&#x2022;"
+            autocomplete="current-password"
+            autofocus
+            required
+          />
+        </div>
+        <button type="submit" class="btn-login" id="submit-btn">
+          Authenticate &rarr;
+        </button>
+      </form>
+    </div>
+
+    <div class="login-footer">
+      GCC Logistics Intelligence &bull; May 2026 &bull; Confidential
+    </div>
+  </div>
+
+  <script>
+    (function() {
+      var params = new URLSearchParams(window.location.search);
+      if (params.get('error') === '1') {
+        document.getElementById('err-msg').classList.add('visible');
+      }
+      if (params.get('error') === 'config') {
+        document.getElementById('cfg-msg').classList.add('visible');
+      }
+
+      document.getElementById('login-form').addEventListener('submit', function() {
+        var btn = document.getElementById('submit-btn');
+        btn.classList.add('loading');
+        btn.textContent = 'Authenticating…';
+      });
+    })();
+  </script>
+</body>
+</html>

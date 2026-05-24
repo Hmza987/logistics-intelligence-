@@ -4,6 +4,14 @@
 <meta charset="utf-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1"/>
 <title>Gulf Logistics Intelligence</title>
+<!-- Auth guard: hide body until session is verified, then reveal or redirect -->
+<style>body{visibility:hidden}</style>
+<script>
+  fetch('/api/auth').then(function(r){
+    if(r.ok){ document.body.style.visibility='visible'; }
+    else { location.replace('/login'); }
+  }).catch(function(){ document.body.style.visibility='visible'; });
+</script>
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
@@ -1116,6 +1124,7 @@ canvas { font-family: var(--f-mono); }
     <div class="live-pill"><div class="live-dot"></div>Live</div>
     <div class="ts" id="ts"></div>
     <button class="hbtn" onclick="location.reload()">&#8635; Refresh All</button>
+    <a href="/logout" class="hbtn" style="text-decoration:none;color:inherit;opacity:0.6" title="Sign out">&#9099; Sign Out</a>
     <button class="hbtn mob-only" id="mob-menu-btn" onclick="openMobNav()" aria-label="Open menu" style="font-size:16px;padding:4px 10px;line-height:1">&#9776;</button>
   </div>
 </div>

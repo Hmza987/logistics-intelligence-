@@ -472,6 +472,14 @@ a { color: inherit; text-decoration: none; }
 .rprice-name { font-size: 11px; font-weight: 500; color: var(--c-tx0); }
 .rprice-val  { font-family: var(--f-mono); font-size: 15px; font-weight: 400; }
 .rprice-sub  { font-family: var(--f-mono); font-size: 8px; color: var(--c-tx2); margin-top: 3px; }
+.rprice-allin {
+  font-family: var(--f-mono); font-size: 8px; margin-top: 5px;
+  padding: 4px 6px; border-radius: 2px;
+  background: rgba(255,255,255,.04); border-top: 1px solid rgba(255,255,255,.06);
+  display: flex; justify-content: space-between; align-items: center;
+}
+.rprice-allin-fees { color: #5a6878; }
+.rprice-allin-total { color: #e8eaed; font-weight: 700; letter-spacing: .02em; }
 
 /* ── SIGNAL BLOCKS ──────────────────────────────────────────────────────── */
 .signal {
@@ -487,7 +495,8 @@ a { color: inherit; text-decoration: none; }
 
 /* ── MAP ────────────────────────────────────────────────────────────────── */
 .rates-map-wrap { border-radius: var(--r); overflow: hidden; border: 1px solid var(--c-bd1); }
-#rates-map { height: 340px; }
+#rates-map  { height: 340px; }
+#sat-map    { height: 440px; }
 .leaflet-container { background: #060e18; }
 
 /* ── MAP LEGEND ─────────────────────────────────────────────────────────── */
@@ -863,6 +872,7 @@ canvas { font-family: var(--f-mono); }
 /* ── ANIMATED MAP ───────────────────────────────────────────────────────── */
 .rates-map-wrap { border-radius: var(--r); overflow: hidden; border: 1px solid var(--c-bd1); }
 #rates-map { height: 340px; }
+#sat-map   { height: 440px; }
 
 /* ── MOBILE NAV OVERLAY ─────────────────────────────────────────────────── */
 .mob-only { display: none !important; }
@@ -1179,6 +1189,27 @@ canvas { font-family: var(--f-mono); }
   border-radius: 2px;
   flex-shrink: 0;
 }
+
+/* ── BLOOMBERG-STYLE MAP ANIMATIONS ──────────────────────────────────────── */
+@keyframes bl-lane-flow { to { stroke-dashoffset: -80; } }
+
+/* Animated shipping lane variants — className applied to Leaflet SVG <path> */
+/* Longer dashes = more continuous / less flashy; speed proportional to urgency */
+.bl-lane           { stroke-dasharray: 22 8;  animation: bl-lane-flow  9s linear infinite; }
+.bl-lane-slow      { stroke-dasharray: 18 6;  animation: bl-lane-flow 13s linear infinite; }
+.bl-lane-cape      { stroke-dasharray: 20 6;  animation: bl-lane-flow  8s linear infinite; }
+.bl-lane-pacific   { stroke-dasharray: 24 6;  animation: bl-lane-flow 10s linear infinite; }
+.bl-lane-disrupted { stroke-dasharray:  4 10; animation: bl-lane-flow  3s linear infinite; }
+
+/* Bloomberg dark-navy canvas background (shows between tiles / unloaded areas) */
+#theatre-map, #chokepoints-map {
+  background: #060d17 !important;
+}
+/* Blue-ocean filter: lifts CartoDB's dark-navy ocean to visible blue while land stays near-black */
+#chokepoints-map .leaflet-tile-pane {
+  filter: brightness(1.9) contrast(1.15) saturate(3) hue-rotate(195deg);
+}
+/* cpLabels pane must NOT inherit the tile-pane filter — handled by pane separation in JS */
 
 /* Chokepoint map status badges */
 .cp-status-popup {
@@ -1707,27 +1738,6 @@ canvas { font-family: var(--f-mono); }
   </div>
 </div>
 
-<!-- ── THEATRE MAP ─────────────────────────────────────────────────────── -->
-<div class="map-section">
-  <div class="map-section-header">
-    <div>
-      <div class="map-section-title" style="color:#e74c3c">&#9651; Strategic Theatre Map — Gulf &amp; Red Sea</div>
-      <div class="map-section-sub">Geopolitical overlays &bull; IRGC exclusion zone &bull; Houthi threat arc &bull; Naval assets &bull; Conflict shading</div>
-    </div>
-    <div class="src-badge" style="font-size:8px">geopolitics</div>
-  </div>
-  <div class="map-legend">
-    <div class="map-legend-item"><div class="map-legend-dot" style="background:rgba(231,76,60,.7)"></div>IRGC exclusion / Hormuz closed zone</div>
-    <div class="map-legend-item"><div class="map-legend-dot" style="background:rgba(251,191,36,.65)"></div>Houthi threat range (1,500 km)</div>
-    <div class="map-legend-item"><div class="map-legend-dot" style="background:rgba(90,163,245,.7)"></div>US 5th Fleet patrol area</div>
-    <div class="map-legend-item"><div class="map-legend-line" style="background:#a78bfa"></div>Key maritime corridor</div>
-    <div class="map-legend-item"><div class="map-legend-dot" style="background:rgba(61,214,140,.7)"></div>NATO / allied naval position</div>
-    <div class="map-legend-item"><div class="map-legend-dot" style="background:#e74c3c"></div>Active conflict / high-threat zone</div>
-  </div>
-  <div id="theatre-map" style="height:420px"></div>
-  <div class="src" style="padding:5px 14px"><span>IRGC zone boundary per Windward &bull; US NAVCENT &bull; Lloyd's conflict listing &bull; JWC &bull; May 2026</span><span class="src-badge">modelled</span></div>
-</div>
-
 <!-- ============================================================ TAB 2: CONTAINER RATES -->
 <div class="page" id="page-rates">
 
@@ -1755,23 +1765,39 @@ canvas { font-family: var(--f-mono); }
     </div>
   </div>
 
-  <!-- MAP left, RATE TABLES right — side by side -->
+  <!-- GLOBAL CHOKEPOINTS MAP — full width -->
+  <div class="map-section" style="margin-bottom:14px">
+    <div class="map-section-header">
+      <div>
+        <div class="map-section-title" style="color:#7a9eb8">&#9671; Global Shipping Lanes &amp; Port Call Imbalance — Hormuz Crisis</div>
+        <div class="map-section-sub">Circle size = weekly port calls &bull; dashed ring = pre-crisis volume &bull; hover any port for data &bull; May 2026</div>
+      </div>
+      <div style="display:flex;align-items:center;gap:8px">
+        <div class="map-legend" style="padding:0;background:none;border:none;display:flex;flex-wrap:wrap;gap:8px;min-width:unset">
+          <div class="map-legend-item"><div class="map-legend-dot" style="background:#3dd68c"></div>Surging port (+50%+)</div>
+          <div class="map-legend-item"><div class="map-legend-dot" style="background:#7a8494"></div>Stable port</div>
+          <div class="map-legend-item"><div class="map-legend-dot" style="background:#e03040"></div>Collapsed port</div>
+          <div class="map-legend-item" style="gap:4px">
+            <div style="width:12px;height:12px;border-radius:50%;border:1px dashed #5a6878;flex-shrink:0"></div>
+            Pre-crisis volume
+          </div>
+          <div class="map-legend-item"><div class="map-legend-dot" style="background:#a03020"></div>Chokepoint: closed</div>
+          <div class="map-legend-item"><div class="map-legend-dot" style="background:#7050c0"></div>Crisis hub</div>
+          <div class="map-legend-item"><div class="map-legend-line" style="background:#a87838;height:5px"></div>Via Cape (dominant)</div>
+          <div class="map-legend-item"><div class="map-legend-line" style="background:#6890a8"></div>Via Suez</div>
+        </div>
+        <div class="src-badge" style="font-size:8px;flex-shrink:0">IMF PortWatch · Lloyd's</div>
+      </div>
+    </div>
+    <div id="chokepoints-map" style="height:520px"></div>
+    <div class="src" style="padding:5px 14px"><span>IMF PortWatch &bull; Lloyd's List Intelligence &bull; UNCTAD &bull; MDS Transmodal &bull; May 2026</span><span class="src-badge">real data</span></div>
+  </div>
+
+  <!-- RATES + CHART GRID -->
   <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:14px">
 
-    <!-- LEFT: Animated satellite route map -->
+    <!-- LEFT: Freight chart -->
     <div style="display:flex;flex-direction:column;gap:14px">
-      <div class="card rates-map-wrap" style="padding:0;flex:1">
-        <div style="padding:11px 16px 7px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:6px">
-          <div>
-            <div class="card-label">Global Rerouting Map &mdash; Animated Crisis Lanes</div>
-            <div class="card-sub" style="margin:0">ESRI satellite &bull; Cape of Good Hope &bull; Red Sea &bull; Sohar direct</div>
-          </div>
-        </div>
-        <div id="rates-map" style="height:320px"></div>
-        <div class="src" style="padding:5px 14px"><span>Freightos &bull; Maersk Op. Updates &bull; trans.info &bull; May 2026</span><span class="src-badge">real routes</span></div>
-      </div>
-
-      <!-- Freight trend chart below map -->
       <div class="card">
         <div class="card-label">Freight Index Trend &mdash; 12 Weeks</div>
         <div class="card-sub">FBX global container (gold) vs Baltic Dry Index (blue) &middot; dual axis</div>
@@ -1829,26 +1855,6 @@ canvas { font-family: var(--f-mono); }
   </div>
 
 </div>
-<!-- ── CHOKEPOINTS MAP ────────────────────────────────────────────────────── -->
-<div class="map-section">
-  <div class="map-section-header">
-    <div>
-      <div class="map-section-title" style="color:#5aa3f5">&#9671; Global Maritime Chokepoints — Status &amp; Geography</div>
-      <div class="map-section-sub">8 critical nodes &bull; current throughput status &bull; trade volume at risk &bull; click any marker for detail</div>
-    </div>
-    <div class="src-badge" style="font-size:8px">geography</div>
-  </div>
-  <div class="map-legend" style="padding-bottom:4px">
-    <div class="map-legend-item"><div class="map-legend-dot" style="background:#e74c3c"></div>Closed / blocked</div>
-    <div class="map-legend-item"><div class="map-legend-dot" style="background:#fbbf24"></div>High threat / restricted</div>
-    <div class="map-legend-item"><div class="map-legend-dot" style="background:#f0c84b"></div>Partial / elevated risk</div>
-    <div class="map-legend-item"><div class="map-legend-dot" style="background:#3dd68c"></div>Open / normal ops</div>
-    <div class="map-legend-item"><div class="map-legend-dot" style="background:#a78bfa"></div>Crisis reroute hub</div>
-  </div>
-  <div id="chokepoints-map" style="height:380px"></div>
-  <div class="src" style="padding:5px 14px"><span>IMF PortWatch &bull; Lloyd's &bull; Windward &bull; JWC JWCA listed areas &bull; UNCTAD &bull; May 2026</span><span class="src-badge">real data</span></div>
-</div>
-
 <!-- ============================================================ TAB 3: TRUCKING -->
 <div class="page" id="page-trucking">
   <div class="row col3" style="margin-bottom:14px">
@@ -1891,40 +1897,47 @@ canvas { font-family: var(--f-mono); }
     <!-- FTL pricing -->
     <div class="card">
       <div class="card-label">FTL Trucking Prices &mdash; 40ft Trailer</div>
-      <div class="card-sub">Crisis-period rates &middot; USD &middot; excl. border fees &middot; +40-60% vs pre-March</div>
+      <div class="card-sub">Crisis-period rates &middot; USD &middot; ALL-IN incl. road tolls + border crossing fees &middot; +40-60% vs pre-March</div>
       <div style="font-size:8px;color:#c9a227;font-weight:700;letter-spacing:.08em;text-transform:uppercase;margin-bottom:6px">From Jeddah</div>
       <div class="rprice" style="border-left:2px solid #3dd68c">
-        <div class="rprice-top"><div class="rprice-name">Jeddah &rarr; Doha (Qatar)</div><div class="rprice-val" style="color:#3dd68c">$2,800-3,600</div></div>
-        <div class="rprice-sub">~1,450km &bull; 2-3 days &bull; via Riyadh/Salwa &bull; pre-crisis ~$1,800 &bull; Hormuz surge +55%</div>
+        <div class="rprice-top"><div class="rprice-name">Jeddah &rarr; Doha (Qatar)</div><div class="rprice-val" style="color:#3dd68c">$2,840&ndash;3,640</div></div>
+        <div class="rprice-sub">~1,450km &bull; 2-3 days &bull; via Riyadh/Salwa &bull; pre-crisis ~$1,840 &bull; Hormuz surge +55%</div>
+        <div class="rprice-allin"><span class="rprice-allin-fees">base freight ~$2,800&ndash;3,600 + borders ~$40 (Qatar entry)</span><span class="rprice-allin-total">all-in</span></div>
       </div>
       <div class="rprice" style="border-left:2px solid #3dd68c">
-        <div class="rprice-top"><div class="rprice-name">Jeddah &rarr; Manama (Bahrain)</div><div class="rprice-val" style="color:#3dd68c">$2,400-3,200</div></div>
-        <div class="rprice-sub">~1,200km &bull; 1.5-2 days &bull; via Riyadh/K.Fahd Causeway &bull; pre-crisis ~$1,500</div>
+        <div class="rprice-top"><div class="rprice-name">Jeddah &rarr; Manama (Bahrain)</div><div class="rprice-val" style="color:#3dd68c">$2,435&ndash;3,235</div></div>
+        <div class="rprice-sub">~1,330km &bull; 2 days &bull; via Riyadh/K.Fahd Causeway &bull; pre-crisis ~$1,685</div>
+        <div class="rprice-allin"><span class="rprice-allin-fees">base freight ~$2,400&ndash;3,200 + borders ~$35 (Bahrain entry)</span><span class="rprice-allin-total">all-in</span></div>
       </div>
       <div class="rprice" style="border-left:2px solid #3dd68c">
-        <div class="rprice-top"><div class="rprice-name">Jeddah &rarr; Kuwait City</div><div class="rprice-val" style="color:#3dd68c">$3,200-4,200</div></div>
-        <div class="rprice-sub">~1,900km &bull; 2-4 days &bull; via Riyadh/Al-Khafji &bull; pre-crisis ~$2,100 &bull; highest demand surge</div>
+        <div class="rprice-top"><div class="rprice-name">Jeddah &rarr; Kuwait City</div><div class="rprice-val" style="color:#3dd68c">$2,855&ndash;3,855</div></div>
+        <div class="rprice-sub">~1,620km &bull; 2-3 days &bull; via Riyadh/Al-Khafji &bull; pre-crisis ~$1,955 &bull; highest demand surge</div>
+        <div class="rprice-allin"><span class="rprice-allin-fees">base freight ~$2,800&ndash;3,800 + borders ~$55 (Kuwait entry)</span><span class="rprice-allin-total">all-in</span></div>
       </div>
       <div style="font-size:8px;color:#a78bfa;font-weight:700;letter-spacing:.08em;text-transform:uppercase;margin:8px 0 6px">From Sohar (Oman)</div>
       <div class="rprice" style="border-left:2px solid #a78bfa">
-        <div class="rprice-top"><div class="rprice-name">Sohar &rarr; Doha (Qatar)</div><div class="rprice-val pur">$3,500-4,500</div></div>
-        <div class="rprice-sub">~1,600km &bull; 2-3 days &bull; via UAE/Salwa &bull; pre-crisis ~$2,200 &bull; port surge premium</div>
+        <div class="rprice-top"><div class="rprice-name">Sohar &rarr; Doha (Qatar)</div><div class="rprice-val pur">$2,660&ndash;3,360</div></div>
+        <div class="rprice-sub">~835km &bull; 2 days &bull; via Buraimi/UAE/Salwa &bull; 3 border crossings &bull; pre-crisis ~$1,360 &bull; port surge premium</div>
+        <div class="rprice-allin"><span class="rprice-allin-fees">base freight ~$2,500&ndash;3,200 + borders ~$160 (Oman $25 + UAE $30 + SA $65 + Qatar $40)</span><span class="rprice-allin-total">all-in</span></div>
       </div>
       <div class="rprice" style="border-left:2px solid #a78bfa">
-        <div class="rprice-top"><div class="rprice-name">Sohar &rarr; Manama (Bahrain)</div><div class="rprice-val pur">$3,000-3,900</div></div>
-        <div class="rprice-sub">~1,350km &bull; 2-3 days &bull; via UAE/K.Fahd Causeway &bull; pre-crisis ~$1,900</div>
+        <div class="rprice-top"><div class="rprice-name">Sohar &rarr; Manama (Bahrain)</div><div class="rprice-val pur">$2,555&ndash;3,255</div></div>
+        <div class="rprice-sub">~855km &bull; 2 days &bull; via Buraimi/UAE/K.Fahd Causeway &bull; 2 border crossings &bull; pre-crisis ~$1,555</div>
+        <div class="rprice-allin"><span class="rprice-allin-fees">base freight ~$2,400&ndash;3,100 + borders ~$155 (Oman $25 + UAE $30 + SA $65 + Bahrain $35)</span><span class="rprice-allin-total">all-in</span></div>
       </div>
       <div style="font-size:8px;color:#c9a227;font-weight:700;letter-spacing:.08em;text-transform:uppercase;margin:8px 0 6px">Other key routes</div>
       <div class="rprice" style="border-left:2px solid #c9a227">
-        <div class="rprice-top"><div class="rprice-name">Dubai / Jebel Ali &rarr; Riyadh</div><div class="rprice-val gld">$1,800-2,400</div></div>
-        <div class="rprice-sub">~1,100km &bull; 2-3 days &bull; Al Bat'ha border &bull; pre-crisis ~$1,200</div>
+        <div class="rprice-top"><div class="rprice-name">Dubai / Jebel Ali &rarr; Riyadh</div><div class="rprice-val gld">$1,895&ndash;2,495</div></div>
+        <div class="rprice-sub">~1,100km &bull; 2-3 days &bull; Al Bat'ha border &bull; pre-crisis ~$1,295</div>
+        <div class="rprice-allin"><span class="rprice-allin-fees">base freight ~$1,800&ndash;2,400 + borders ~$95 (UAE exit $30 + SA entry $65)</span><span class="rprice-allin-total">all-in</span></div>
       </div>
       <div class="rprice" style="border-left:2px solid #e74c3c">
-        <div class="rprice-top"><div class="rprice-name">Oman &rarr; Riyadh (Hwy 95)</div><div class="rprice-val red">$2,200-3,000</div></div>
+        <div class="rprice-top"><div class="rprice-name">Oman &rarr; Riyadh (Hwy 95)</div><div class="rprice-val red">$2,320&ndash;3,120</div></div>
         <div class="rprice-sub">~1,400km &bull; 2-4 days &bull; Hwy 95 surge route &bull; +40% since Hormuz crisis</div>
+        <div class="rprice-allin"><span class="rprice-allin-fees">base freight ~$2,200&ndash;3,000 + borders ~$120 (Oman $25 + UAE $30 + SA $65)</span><span class="rprice-allin-total">all-in</span></div>
       </div>
       <div style="margin-top:8px;font-size:8px;color:#7a8494;line-height:1.5;padding:6px 8px;background:#181c22;border-radius:3px">
-        Border fees: UAE exit ~$30 &bull; SA entry ~$50-80 &bull; Qatar ~$40 &bull; Reefer: +25-35% &bull; Hazmat: +40-60%
+        Prices shown are ALL-IN &bull; Includes: road tolls (UAE Salik ~$5-15, K.Fahd Causeway ~$8) + border crossing fees (UAE exit ~$30, SA entry ~$65, Qatar ~$40, Oman exit ~$25, Bahrain ~$35, Kuwait ~$55) &bull; Reefer: +25-35% &bull; Hazmat: +40-60%
       </div>
       <div class="src"><span>SLR / Brightway / IFL logistics &middot; GCC tariff data &middot; 2026</span><span class="src-badge">market rates</span></div>
     </div>
@@ -2016,6 +2029,223 @@ canvas { font-family: var(--f-mono); }
       </div>
     </div>
   </div>
+
+  <!-- ── LIVE CORRIDOR TRAFFIC STATUS ─────────────────────────────────── -->
+  <div class="map-section" style="margin-top:var(--gap)">
+    <div class="map-section-header">
+      <div>
+        <div class="map-section-title" style="color:#3dd68c">&#9632; Crossing Corridor Traffic — Live Status</div>
+        <div class="map-section-sub">
+          Road congestion at 6 GCC crossing points &bull;
+          <span style="color:#3dd68c">&#9646; clear</span>&nbsp;
+          <span style="color:#f0c84b">&#9646; moderate</span>&nbsp;
+          <span style="color:#e8673c">&#9646; slow</span>&nbsp;
+          <span style="color:#e03040">&#9646; heavy</span>&nbsp;
+          &bull; click any card to open live Google Maps traffic
+        </div>
+      </div>
+      <div style="display:flex;align-items:center;gap:8px">
+        <span style="font-family:'IBM Plex Mono',monospace;font-size:8px;color:#3dd68c;letter-spacing:.1em">&#9679; LIVE</span>
+        <div class="src-badge" style="font-size:8px">zatca · google</div>
+      </div>
+    </div>
+
+    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:2px;background:var(--c-bd1)">
+
+      <!-- Al Bat'ha — HEAVY -->
+      <a href="https://www.google.com/maps/@23.679,55.641,14z/data=!5m1!1e1" target="_blank" style="text-decoration:none;color:inherit">
+      <div style="background:var(--c-s1);padding:12px 14px;cursor:pointer;transition:background .15s" onmouseover="this.style.background='#1c2330'" onmouseout="this.style.background='var(--c-s1)'">
+        <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:10px">
+          <div>
+            <div style="font-family:'IBM Plex Mono',monospace;font-size:8px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:#f0c84b">Al Bat'ha</div>
+            <div style="font-family:'IBM Plex Mono',monospace;font-size:7px;color:#5a6880;margin-top:1px">Saudi &rarr; UAE &bull; Al Ain border</div>
+          </div>
+          <span style="font-family:'IBM Plex Mono',monospace;font-size:7px;font-weight:700;letter-spacing:.1em;color:#e03040;background:rgba(224,48,64,.15);padding:3px 7px;border-radius:2px">HEAVY</span>
+        </div>
+        <!-- Traffic bar -->
+        <div style="height:8px;background:#111820;border-radius:2px;overflow:hidden;margin-bottom:10px">
+          <div style="width:88%;height:100%;background:linear-gradient(90deg,#e03040,#c02030);border-radius:2px"></div>
+        </div>
+        <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px">
+          <div style="text-align:center">
+            <div style="font-family:'IBM Plex Mono',monospace;font-size:10px;font-weight:700;color:#e03040">~75 min</div>
+            <div style="font-family:'IBM Plex Mono',monospace;font-size:6px;color:#4a5568;text-transform:uppercase;letter-spacing:.05em">wait time</div>
+          </div>
+          <div style="text-align:center">
+            <div style="font-family:'IBM Plex Mono',monospace;font-size:10px;font-weight:700;color:#f0c84b">1,649</div>
+            <div style="font-family:'IBM Plex Mono',monospace;font-size:6px;color:#4a5568;text-transform:uppercase;letter-spacing:.05em">trucks/day</div>
+          </div>
+          <div style="text-align:center">
+            <div style="font-family:'IBM Plex Mono',monospace;font-size:10px;font-weight:700;color:#e03040">&#8593; +34%</div>
+            <div style="font-family:'IBM Plex Mono',monospace;font-size:6px;color:#4a5568;text-transform:uppercase;letter-spacing:.05em">vs pre-crisis</div>
+          </div>
+        </div>
+        <div style="margin-top:8px;font-family:'IBM Plex Mono',monospace;font-size:7px;color:#3a6080;text-align:right;letter-spacing:.05em">&#8599; open live traffic</div>
+      </div>
+      </a>
+
+      <!-- King Fahd — MODERATE -->
+      <a href="https://www.google.com/maps/@26.232,50.376,14z/data=!5m1!1e1" target="_blank" style="text-decoration:none;color:inherit">
+      <div style="background:var(--c-s1);padding:12px 14px;cursor:pointer;transition:background .15s" onmouseover="this.style.background='#1c2330'" onmouseout="this.style.background='var(--c-s1)'">
+        <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:10px">
+          <div>
+            <div style="font-family:'IBM Plex Mono',monospace;font-size:8px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:#f0c84b">King Fahd Causeway</div>
+            <div style="font-family:'IBM Plex Mono',monospace;font-size:7px;color:#5a6880;margin-top:1px">Saudi &rarr; Bahrain &bull; 26 km bridge</div>
+          </div>
+          <span style="font-family:'IBM Plex Mono',monospace;font-size:7px;font-weight:700;letter-spacing:.1em;color:#f0c84b;background:rgba(240,200,75,.13);padding:3px 7px;border-radius:2px">MODERATE</span>
+        </div>
+        <div style="height:8px;background:#111820;border-radius:2px;overflow:hidden;margin-bottom:10px">
+          <div style="width:52%;height:100%;background:linear-gradient(90deg,#c09a30,#f0c84b);border-radius:2px"></div>
+        </div>
+        <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px">
+          <div style="text-align:center">
+            <div style="font-family:'IBM Plex Mono',monospace;font-size:10px;font-weight:700;color:#f0c84b">~25 min</div>
+            <div style="font-family:'IBM Plex Mono',monospace;font-size:6px;color:#4a5568;text-transform:uppercase;letter-spacing:.05em">wait time</div>
+          </div>
+          <div style="text-align:center">
+            <div style="font-family:'IBM Plex Mono',monospace;font-size:10px;font-weight:700;color:#f0c84b">539</div>
+            <div style="font-family:'IBM Plex Mono',monospace;font-size:6px;color:#4a5568;text-transform:uppercase;letter-spacing:.05em">trucks/day</div>
+          </div>
+          <div style="text-align:center">
+            <div style="font-family:'IBM Plex Mono',monospace;font-size:10px;font-weight:700;color:#f0c84b">&#8593; +12%</div>
+            <div style="font-family:'IBM Plex Mono',monospace;font-size:6px;color:#4a5568;text-transform:uppercase;letter-spacing:.05em">vs pre-crisis</div>
+          </div>
+        </div>
+        <div style="margin-top:8px;font-family:'IBM Plex Mono',monospace;font-size:7px;color:#3a6080;text-align:right;letter-spacing:.05em">&#8599; open live traffic</div>
+      </div>
+      </a>
+
+      <!-- Salwa — MODERATE -->
+      <a href="https://www.google.com/maps/@24.738,50.809,14z/data=!5m1!1e1" target="_blank" style="text-decoration:none;color:inherit">
+      <div style="background:var(--c-s1);padding:12px 14px;cursor:pointer;transition:background .15s" onmouseover="this.style.background='#1c2330'" onmouseout="this.style.background='var(--c-s1)'">
+        <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:10px">
+          <div>
+            <div style="font-family:'IBM Plex Mono',monospace;font-size:8px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:#f0c84b">Salwa Border</div>
+            <div style="font-family:'IBM Plex Mono',monospace;font-size:7px;color:#5a6880;margin-top:1px">Qatar &rarr; Saudi &bull; main land entry</div>
+          </div>
+          <span style="font-family:'IBM Plex Mono',monospace;font-size:7px;font-weight:700;letter-spacing:.1em;color:#f0c84b;background:rgba(240,200,75,.13);padding:3px 7px;border-radius:2px">MODERATE</span>
+        </div>
+        <div style="height:8px;background:#111820;border-radius:2px;overflow:hidden;margin-bottom:10px">
+          <div style="width:48%;height:100%;background:linear-gradient(90deg,#c09a30,#f0c84b);border-radius:2px"></div>
+        </div>
+        <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px">
+          <div style="text-align:center">
+            <div style="font-family:'IBM Plex Mono',monospace;font-size:10px;font-weight:700;color:#f0c84b">~20 min</div>
+            <div style="font-family:'IBM Plex Mono',monospace;font-size:6px;color:#4a5568;text-transform:uppercase;letter-spacing:.05em">wait time</div>
+          </div>
+          <div style="text-align:center">
+            <div style="font-family:'IBM Plex Mono',monospace;font-size:10px;font-weight:700;color:#f0c84b">449</div>
+            <div style="font-family:'IBM Plex Mono',monospace;font-size:6px;color:#4a5568;text-transform:uppercase;letter-spacing:.05em">trucks/day</div>
+          </div>
+          <div style="text-align:center">
+            <div style="font-family:'IBM Plex Mono',monospace;font-size:10px;font-weight:700;color:#f0c84b">&#8593; +18%</div>
+            <div style="font-family:'IBM Plex Mono',monospace;font-size:6px;color:#4a5568;text-transform:uppercase;letter-spacing:.05em">vs pre-crisis</div>
+          </div>
+        </div>
+        <div style="margin-top:8px;font-family:'IBM Plex Mono',monospace;font-size:7px;color:#3a6080;text-align:right;letter-spacing:.05em">&#8599; open live traffic</div>
+      </div>
+      </a>
+
+      <!-- Al Nuwaiseeb — CLEAR -->
+      <a href="https://www.google.com/maps/@28.812,47.903,14z/data=!5m1!1e1" target="_blank" style="text-decoration:none;color:inherit">
+      <div style="background:var(--c-s1);padding:12px 14px;cursor:pointer;transition:background .15s" onmouseover="this.style.background='#1c2330'" onmouseout="this.style.background='var(--c-s1)'">
+        <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:10px">
+          <div>
+            <div style="font-family:'IBM Plex Mono',monospace;font-size:8px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:#5aa3f5">Al Nuwaiseeb</div>
+            <div style="font-family:'IBM Plex Mono',monospace;font-size:7px;color:#5a6880;margin-top:1px">Kuwait &rarr; Saudi &bull; Al-Khafji crossing</div>
+          </div>
+          <span style="font-family:'IBM Plex Mono',monospace;font-size:7px;font-weight:700;letter-spacing:.1em;color:#3dd68c;background:rgba(61,214,140,.12);padding:3px 7px;border-radius:2px">CLEAR</span>
+        </div>
+        <div style="height:8px;background:#111820;border-radius:2px;overflow:hidden;margin-bottom:10px">
+          <div style="width:22%;height:100%;background:linear-gradient(90deg,#1a8c50,#3dd68c);border-radius:2px"></div>
+        </div>
+        <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px">
+          <div style="text-align:center">
+            <div style="font-family:'IBM Plex Mono',monospace;font-size:10px;font-weight:700;color:#3dd68c">&lt;10 min</div>
+            <div style="font-family:'IBM Plex Mono',monospace;font-size:6px;color:#4a5568;text-transform:uppercase;letter-spacing:.05em">wait time</div>
+          </div>
+          <div style="text-align:center">
+            <div style="font-family:'IBM Plex Mono',monospace;font-size:10px;font-weight:700;color:#f0c84b">417</div>
+            <div style="font-family:'IBM Plex Mono',monospace;font-size:6px;color:#4a5568;text-transform:uppercase;letter-spacing:.05em">trucks/day</div>
+          </div>
+          <div style="text-align:center">
+            <div style="font-family:'IBM Plex Mono',monospace;font-size:10px;font-weight:700;color:#3dd68c">&#8594; flat</div>
+            <div style="font-family:'IBM Plex Mono',monospace;font-size:6px;color:#4a5568;text-transform:uppercase;letter-spacing:.05em">vs pre-crisis</div>
+          </div>
+        </div>
+        <div style="margin-top:8px;font-family:'IBM Plex Mono',monospace;font-size:7px;color:#3a6080;text-align:right;letter-spacing:.05em">&#8599; open live traffic</div>
+      </div>
+      </a>
+
+      <!-- Sohar — HEAVY -->
+      <a href="https://www.google.com/maps/@24.375,56.705,14z/data=!5m1!1e1" target="_blank" style="text-decoration:none;color:inherit">
+      <div style="background:var(--c-s1);padding:12px 14px;cursor:pointer;transition:background .15s" onmouseover="this.style.background='#1c2330'" onmouseout="this.style.background='var(--c-s1)'">
+        <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:10px">
+          <div>
+            <div style="font-family:'IBM Plex Mono',monospace;font-size:8px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:#e74c3c">Sohar Port — Hwy 95</div>
+            <div style="font-family:'IBM Plex Mono',monospace;font-size:7px;color:#5a6880;margin-top:1px">Oman bypass hub &bull; +3,500% vessel diversions</div>
+          </div>
+          <span style="font-family:'IBM Plex Mono',monospace;font-size:7px;font-weight:700;letter-spacing:.1em;color:#e03040;background:rgba(224,48,64,.15);padding:3px 7px;border-radius:2px">HEAVY</span>
+        </div>
+        <div style="height:8px;background:#111820;border-radius:2px;overflow:hidden;margin-bottom:10px">
+          <div style="width:92%;height:100%;background:linear-gradient(90deg,#e03040,#c02030);border-radius:2px"></div>
+        </div>
+        <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px">
+          <div style="text-align:center">
+            <div style="font-family:'IBM Plex Mono',monospace;font-size:10px;font-weight:700;color:#e03040">90+ min</div>
+            <div style="font-family:'IBM Plex Mono',monospace;font-size:6px;color:#4a5568;text-transform:uppercase;letter-spacing:.05em">gate queue</div>
+          </div>
+          <div style="text-align:center">
+            <div style="font-family:'IBM Plex Mono',monospace;font-size:10px;font-weight:700;color:#e03040">crisis</div>
+            <div style="font-family:'IBM Plex Mono',monospace;font-size:6px;color:#4a5568;text-transform:uppercase;letter-spacing:.05em">hub status</div>
+          </div>
+          <div style="text-align:center">
+            <div style="font-family:'IBM Plex Mono',monospace;font-size:10px;font-weight:700;color:#e03040">&#8593;&#8593; +600%</div>
+            <div style="font-family:'IBM Plex Mono',monospace;font-size:6px;color:#4a5568;text-transform:uppercase;letter-spacing:.05em">throughput</div>
+          </div>
+        </div>
+        <div style="margin-top:8px;font-family:'IBM Plex Mono',monospace;font-size:7px;color:#3a6080;text-align:right;letter-spacing:.05em">&#8599; open live traffic</div>
+      </div>
+      </a>
+
+      <!-- Jeddah — HEAVY -->
+      <a href="https://www.google.com/maps/@21.464,39.155,14z/data=!5m1!1e1" target="_blank" style="text-decoration:none;color:inherit">
+      <div style="background:var(--c-s1);padding:12px 14px;cursor:pointer;transition:background .15s" onmouseover="this.style.background='#1c2330'" onmouseout="this.style.background='var(--c-s1)'">
+        <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:10px">
+          <div>
+            <div style="font-family:'IBM Plex Mono',monospace;font-size:8px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:#5aa3f5">Jeddah Islamic Port</div>
+            <div style="font-family:'IBM Plex Mono',monospace;font-size:7px;color:#5a6880;margin-top:1px">Red Sea approach &bull; King Abdul Aziz Port</div>
+          </div>
+          <span style="font-family:'IBM Plex Mono',monospace;font-size:7px;font-weight:700;letter-spacing:.1em;color:#e03040;background:rgba(224,48,64,.15);padding:3px 7px;border-radius:2px">HEAVY</span>
+        </div>
+        <div style="height:8px;background:#111820;border-radius:2px;overflow:hidden;margin-bottom:10px">
+          <div style="width:96%;height:100%;background:linear-gradient(90deg,#e03040,#c02030);border-radius:2px"></div>
+        </div>
+        <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px">
+          <div style="text-align:center">
+            <div style="font-family:'IBM Plex Mono',monospace;font-size:10px;font-weight:700;color:#e03040">~3-4 hrs</div>
+            <div style="font-family:'IBM Plex Mono',monospace;font-size:6px;color:#4a5568;text-transform:uppercase;letter-spacing:.05em">gate wait</div>
+          </div>
+          <div style="text-align:center">
+            <div style="font-family:'IBM Plex Mono',monospace;font-size:10px;font-weight:700;color:#f0c84b">~820</div>
+            <div style="font-family:'IBM Plex Mono',monospace;font-size:6px;color:#4a5568;text-transform:uppercase;letter-spacing:.05em">trucks/day</div>
+          </div>
+          <div style="text-align:center">
+            <div style="font-family:'IBM Plex Mono',monospace;font-size:10px;font-weight:700;color:#e03040">&#8593; +45%</div>
+            <div style="font-family:'IBM Plex Mono',monospace;font-size:6px;color:#4a5568;text-transform:uppercase;letter-spacing:.05em">vs pre-crisis</div>
+          </div>
+        </div>
+        <div style="margin-top:8px;font-family:'IBM Plex Mono',monospace;font-size:7px;color:#3a6080;text-align:right;letter-spacing:.05em">&#8599; open live traffic</div>
+      </div>
+      </a>
+
+    </div>
+    <div class="src" style="padding:5px 14px">
+      <span>Wait times estimated from ZATCA / MoT crossing data &bull; click any card to open live Google Maps traffic in new tab</span>
+      <span class="src-badge">estimated · may 2026</span>
+    </div>
+  </div>
+
 </div>
 
 
@@ -2247,15 +2477,22 @@ function showTab(name, el) {
     if (name === 'hormuz') {
       if (!mapReady) initMap();
       else if (leafMap) leafMap.invalidateSize();
-      if (!theatreMapReady) setTimeout(initTheatreMap, 200);
-      else if (theatreMap) theatreMap.invalidateSize();
     }
     if (name === 'rates') {
       if (!CHARTS['fChart']) initFreightChart();
-      if (!ratesMapReady) initRatesMap();
-      else if (ratesMap) ratesMap.invalidateSize();
       if (!chokepointsMapReady) setTimeout(initChokepointsMap, 200);
       else if (chokepointsMap) chokepointsMap.invalidateSize();
+    }
+    if (name === 'trucking') {
+      setTimeout(initCorridorMaps, 150);
+    } else {
+      // Tear down corridor maps when leaving trucking tab to free network bandwidth
+      if (corridorMapsReady) {
+        Object.keys(CORRIDOR_MAPS).forEach(function(k){
+          if(CORRIDOR_MAPS[k]) { CORRIDOR_MAPS[k].remove(); delete CORRIDOR_MAPS[k]; }
+        });
+        corridorMapsReady = false;
+      }
     }
 
   }, 80);
@@ -2980,7 +3217,7 @@ function initGCSSMap() {
     attributionControl: false,
     minZoom: 2, maxZoom: 7
   });
-  L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_matter_no_labels/{z}/{x}/{y}{r}.png', {
+  L.tileLayer('https://cartodb-basemaps-{s}.global.ssl.fastly.net/dark_nolabels/{z}/{x}/{y}.png', {
     subdomains: 'abcd', maxZoom: 19
   }).addTo(gcssMap);
   gcssMapReady = true;
@@ -3855,7 +4092,7 @@ function initTheatreMap() {
   theatreMapReady = true;
 
   theatreMap = L.map('theatre-map', { center:[20,52], zoom:4, zoomControl:true, attributionControl:false, minZoom:3, maxZoom:9 });
-  L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_matter_no_labels/{z}/{x}/{y}{r}.png', { subdomains:'abcd', maxZoom:19 }).addTo(theatreMap);
+  L.tileLayer('https://cartodb-basemaps-{s}.global.ssl.fastly.net/dark_all/{z}/{x}/{y}.png', { subdomains:'abcd', maxZoom:19 }).addTo(theatreMap);
 
   // Yemen / Houthi threat area
   L.polygon([[15.5,42.5],[15.5,53.0],[11.0,51.0],[11.0,43.5],[13.5,42.0]],
@@ -3881,13 +4118,27 @@ function initTheatreMap() {
   L.circle([15.35,44.2], { radius:1500000, color:'#fbbf24', fillColor:'#fbbf24', fillOpacity:0.04, weight:1.5, dashArray:'6,5' })
     .addTo(theatreMap).bindTooltip('Houthi ballistic missile range ~1,500 km (covers Gulf, Red Sea, Horn of Africa)',{sticky:true,className:'irgc-tip'});
 
-  // Corridors
-  L.polyline([[24.5,57.5],[25.5,57.0],[26.0,56.5],[26.5,56.2]],{color:'#e74c3c',weight:3,dashArray:'4,3',opacity:0.9})
-    .addTo(theatreMap).bindTooltip('Hormuz Strait — CLOSED to commercial traffic',{sticky:true,className:'irgc-tip'});
-  L.polyline([[28.5,33.5],[25.0,36.5],[20.0,38.5],[15.0,41.5],[12.5,43.5]],{color:'#fbbf24',weight:2.5,dashArray:'5,3',opacity:0.75})
-    .addTo(theatreMap).bindTooltip('Red Sea southbound lane — active, elevated risk',{sticky:true,className:'irgc-tip'});
-  L.polyline([[25.3,55.4],[24.5,56.8],[23.5,58.5],[22.0,60.0]],{color:'#3dd68c',weight:2.5,opacity:0.7})
-    .addTo(theatreMap).bindTooltip('Gulf of Oman corridor — Sohar / Khor Fakkan reroute (active)',{sticky:true,className:'irgc-tip'});
+  // Bloomberg-style animated shipping corridors
+  function addLane(map, pts, color, w, cls, tip) {
+    var ln = L.polyline(pts, { color:color, weight:w, opacity:0.92, className:cls }).addTo(map);
+    if (tip) ln.bindTooltip(tip, { sticky:true, className:'irgc-tip' });
+    return ln;
+  }
+  // Persian Gulf internal — IRGC escort-only (red, fast)
+  addLane(theatreMap, [[29.0,49.5],[28.0,51.0],[27.0,53.5],[26.8,55.2],[26.6,56.4]],
+    '#e74c3c', 2, 'bl-lane-disrupted', 'Persian Gulf — IRGC escort-only &bull; 2–4 vessels/day');
+  // Hormuz Strait approach — CLOSED (red, fastest)
+  addLane(theatreMap, [[23.0,57.8],[24.5,57.2],[25.6,56.8],[26.1,56.5],[26.5,56.2]],
+    '#e74c3c', 3, 'bl-lane-disrupted', 'Hormuz Strait — CLOSED to commercial traffic &bull; IRGC naval control &bull; Day 83');
+  // Red Sea lane — active but HIGH THREAT (amber, fast)
+  addLane(theatreMap, [[28.5,33.5],[26.0,35.0],[22.0,38.0],[18.0,40.0],[15.0,41.5],[12.5,43.5]],
+    '#fbbf24', 2.5, 'bl-lane-disrupted', 'Red Sea southbound lane — Houthi anti-ship threat &bull; JWC War Risk &bull; escort required');
+  // Gulf of Oman reroute — ACTIVE (green, normal pace)
+  addLane(theatreMap, [[25.3,55.4],[24.5,56.8],[23.5,58.5],[22.5,60.0],[20.0,63.0],[17.0,65.5]],
+    '#3dd68c', 2.5, 'bl-lane', 'Gulf of Oman corridor — Sohar / Khor Fakkan reroute &bull; +3,500% vessel diversions');
+  // Arabian Sea escape to Indian Ocean (green, slow)
+  addLane(theatreMap, [[17.0,65.5],[12.0,68.0],[7.0,71.5],[2.0,76.0]],
+    '#3dd68c', 1.8, 'bl-lane-slow', 'Arabian Sea escape corridor → Indian Ocean → Cape of Good Hope route');
 
   function tm(lat,lng,icon,lbl,c) {
     L.marker([lat,lng],{ icon:L.divIcon({ html:'<div style="font-size:16px;filter:drop-shadow(0 0 4px '+c+')">'+icon+'</div>', iconSize:[22,22],iconAnchor:[11,11],className:'' }) })
@@ -3908,18 +4159,150 @@ function initTheatreMap() {
     .addTo(theatreMap).bindTooltip('Strait of Hormuz — CLOSED &bull; IRGC control &bull; Day 83',{sticky:true,className:'irgc-tip'});
 }
 
+// ── CORRIDOR TRAFFIC MINI-MAPS ────────────────────────────────────────────────
+var corridorMapsReady = false;
+var CORRIDOR_MAPS = {};
+
+var CORRIDORS = [
+  { id:'albatha',
+    title:"Al Bat’ha — Saudi → UAE",
+    sub:"Busiest land crossing · 1,649 trucks/day",
+    status:'HEAVY', statusColor:'#e03040', labelColor:'#f0c84b',
+    lat:23.679, lng:55.641, zoom:13,
+    gmaps:'https://www.google.com/maps/@23.679,55.641,13z/data=!5m1!1e1',
+    roads:[
+      ['#e03040',5,[[23.684,55.575],[23.681,55.610],[23.679,55.641]]],
+      ['#e03040',5,[[23.679,55.641],[23.676,55.672],[23.672,55.710]]]
+    ]
+  },
+  { id:'kingfahd',
+    title:"King Fahd Causeway — Saudi → Bahrain",
+    sub:"539 trucks/day · 26 km bridge crossing",
+    status:'MODERATE', statusColor:'#f0c84b', labelColor:'#f0c84b',
+    lat:26.232, lng:50.376, zoom:13,
+    gmaps:'https://www.google.com/maps/@26.232,50.376,13z/data=!5m1!1e1',
+    roads:[
+      ['#f0c84b',4,[[26.258,50.240],[26.246,50.308],[26.232,50.376]]],
+      ['#f0c84b',4,[[26.232,50.376],[26.213,50.454],[26.198,50.528]]]
+    ]
+  },
+  { id:'salwa',
+    title:"Salwa — Qatar → Saudi",
+    sub:"449 trucks/day · main Qatar land entry",
+    status:'MODERATE', statusColor:'#f0c84b', labelColor:'#f0c84b',
+    lat:24.738, lng:50.809, zoom:13,
+    gmaps:'https://www.google.com/maps/@24.738,50.809,13z/data=!5m1!1e1',
+    roads:[
+      ['#f0c84b',4,[[24.678,50.788],[24.708,50.799],[24.738,50.809]]],
+      ['#f0c84b',4,[[24.738,50.809],[24.770,50.819],[24.808,50.827]]]
+    ]
+  },
+  { id:'nuwaiseeb',
+    title:"Al Nuwaiseeb — Kuwait → Saudi",
+    sub:"417 trucks/day · Al-Khafji crossing",
+    status:'CLEAR', statusColor:'#3dd68c', labelColor:'#5aa3f5',
+    lat:28.812, lng:47.903, zoom:13,
+    gmaps:'https://www.google.com/maps/@28.812,47.903,13z/data=!5m1!1e1',
+    roads:[
+      ['#3dd68c',4,[[28.862,47.914],[28.837,47.908],[28.812,47.903]]],
+      ['#3dd68c',4,[[28.812,47.903],[28.786,47.897],[28.758,47.890]]]
+    ]
+  },
+  { id:'sohar',
+    title:"Sohar Port — Oman bypass hub",
+    sub:"Highway 95 · +3,500% vessel diversions · crisis reroute",
+    status:'HEAVY', statusColor:'#e03040', labelColor:'#e74c3c',
+    lat:24.375, lng:56.705, zoom:13,
+    gmaps:'https://www.google.com/maps/@24.375,56.705,13z/data=!5m1!1e1',
+    roads:[
+      ['#e03040',5,[[24.452,56.698],[24.413,56.702],[24.375,56.705]]],
+      ['#e03040',5,[[24.375,56.705],[24.336,56.708],[24.298,56.711]]],
+      ['#e8673c',4,[[24.375,56.705],[24.382,56.740],[24.390,56.774]]]
+    ]
+  },
+  { id:'jeddah',
+    title:"Jeddah Islamic Port — Red Sea approach",
+    sub:"King Abdul Aziz Port · 16-day dwell · no Hormuz exposure",
+    status:'SLOW', statusColor:'#e8673c', labelColor:'#5aa3f5',
+    lat:21.464, lng:39.155, zoom:13,
+    gmaps:'https://www.google.com/maps/@21.464,39.155,13z/data=!5m1!1e1',
+    roads:[
+      ['#e8673c',4,[[21.492,39.118],[21.476,39.137],[21.464,39.155]]],
+      ['#e8673c',4,[[21.464,39.155],[21.451,39.171],[21.436,39.188]]],
+      ['#e03040',5,[[21.464,39.155],[21.462,39.170],[21.459,39.186]]]
+    ]
+  }
+];
+
+function initCorridorMaps() {
+  if (corridorMapsReady) return;
+  corridorMapsReady = true;
+
+  CORRIDORS.forEach(function(c) {
+    var wrap = document.getElementById('cm-' + c.id);
+    if (!wrap) return;
+
+    var statusBg = c.status === 'HEAVY'    ? 'rgba(224,48,64,.18)'  :
+                   c.status === 'SLOW'     ? 'rgba(232,103,60,.18)' :
+                   c.status === 'MODERATE' ? 'rgba(240,200,75,.13)' :
+                                             'rgba(61,214,140,.12)';
+
+    wrap.innerHTML =
+      '<div style="padding:6px 10px;display:flex;justify-content:space-between;align-items:center">' +
+        '<div>' +
+          '<div style="font-family:\'IBM Plex Mono\',monospace;font-size:8px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:' + c.labelColor + '">' + c.title + '</div>' +
+          '<div style="font-family:\'IBM Plex Mono\',monospace;font-size:7px;color:#4a5568">' + c.sub + '</div>' +
+        '</div>' +
+        '<span style="font-family:\'IBM Plex Mono\',monospace;font-size:7px;font-weight:700;color:' + c.statusColor + ';background:' + statusBg + ';padding:2px 6px;border-radius:2px;letter-spacing:.08em">' + c.status + '</span>' +
+      '</div>' +
+      '<div id="cm-map-' + c.id + '" style="height:240px;cursor:pointer" title="Click to open live traffic in Google Maps"></div>' +
+      '<div style="padding:3px 10px 5px;display:flex;justify-content:space-between;align-items:center">' +
+        '<span style="font-size:7px;color:#4a5568">estimated from ZATCA crossing data · May 2026</span>' +
+        '<a href="' + c.gmaps + '" target="_blank" style="font-size:7px;color:#5aa3f5;text-decoration:none;letter-spacing:.05em">↗ OPEN LIVE TRAFFIC</a>' +
+      '</div>';
+
+    var m = L.map('cm-map-' + c.id, {
+      center: [c.lat, c.lng], zoom: c.zoom,
+      zoomControl: false, attributionControl: false,
+      dragging: false, scrollWheelZoom: false,
+      doubleClickZoom: false, touchZoom: false
+    });
+
+    L.tileLayer('https://cartodb-basemaps-{s}.global.ssl.fastly.net/dark_all/{z}/{x}/{y}.png',
+      { subdomains:'abcd', maxZoom:19 }).addTo(m);
+
+    c.roads.forEach(function(r) {
+      L.polyline(r[2], { color:r[0], weight:r[1], opacity:0.9, lineCap:'round', lineJoin:'round' }).addTo(m);
+    });
+
+    // Crossing point marker
+    L.circleMarker([c.lat, c.lng], {
+      radius:7, color:'#fff', weight:2,
+      fillColor: c.statusColor, fillOpacity:1
+    }).addTo(m);
+
+    // Click → open live Google Maps traffic in new tab
+    m.getContainer().addEventListener('click', function() {
+      window.open(c.gmaps, '_blank');
+    });
+
+    CORRIDOR_MAPS[c.id] = m;
+  });
+}
+
 // ── GLOBAL CHOKEPOINTS MAP ────────────────────────────────────────────────────
 var chokepointsMap = null, chokepointsMapReady = false;
 
+// radius ∝ trade volume (px): Malacca 25%→16, Hormuz 20%→14, Suez 13%→12, BaM 10%→10, Gib 8%→9, Cape crisis→12, Bosporus 5%→8, Panama 5%→8
 var CHOKEPOINTS = [
-  { name:'Strait of Hormuz',          lat:26.6,  lng:56.4,   status:'CLOSED',      color:'#e74c3c', oil:'21M bbl/day', trade:'~20% global oil',      transits:'2–4/day (IRGC escort)',         note:'IRGC naval control — Day 83. Commercial shipping suspended.' },
-  { name:'Bab el-Mandeb',             lat:12.6,  lng:43.5,   status:'HIGH THREAT', color:'#fbbf24', oil:'4.7M bbl/day',trade:'10% global trade',     transits:'Reduced — escort required',      note:'Houthi anti-ship missiles active. JWC listed area. Most carriers rerouting via Cape.' },
-  { name:'Suez Canal',                lat:30.0,  lng:32.55,  status:'OPEN',        color:'#3dd68c', oil:'—',           trade:'12–15% global trade',  transits:'~40–50 vessels/day (reduced)',   note:'Operational. Reduced throughput as Bab el-Mandeb threat deters approach.' },
-  { name:'Strait of Malacca',         lat:1.3,   lng:103.85, status:'OPEN',        color:'#3dd68c', oil:'16M bbl/day', trade:'25% global trade',     transits:'~90,000 vessels/year',           note:"World's busiest chokepoint. Normal operations. Low piracy risk." },
-  { name:'Strait of Gibraltar',       lat:35.97, lng:-5.5,   status:'OPEN',        color:'#3dd68c', oil:'—',           trade:'Atlantic–Med gateway', transits:'~300 vessels/day',               note:'Fully open. Key junction for Cape-rerouted Asia–Europe cargo.' },
-  { name:'Turkish Straits (Bosporus)',lat:41.12, lng:29.05,  status:'RESTRICTED',  color:'#f0c84b', oil:'3M bbl/day',  trade:'Black Sea access',     transits:'~45,000 vessels/year',           note:'Montreux Convention limits warships. Black Sea grain exports impacted.' },
-  { name:'Cape of Good Hope',         lat:-34.2, lng:18.5,   status:'CRISIS HUB',  color:'#a78bfa', oil:'—',           trade:'Global crisis reroute',transits:'+400% vs normal (crisis)',        note:'Now handling diverted Asia–Europe and Asia–GCC traffic. +14–18 days vs Suez.' },
-  { name:'Panama Canal',              lat:9.1,   lng:-79.7,  status:'OPEN',        color:'#3dd68c', oil:'—',           trade:'~5% global trade',     transits:'~35–38 vessels/day',             note:'Operational. Drought restrictions largely eased.' }
+  { name:'Strait of Hormuz',          lat:26.6,  lng:56.4,   r:14, status:'CLOSED',      color:'#a03020', oil:'21M bbl/day', trade:'~20% global oil',      transits:'2–4/day (IRGC escort)',         note:'IRGC naval control — Day 83. Commercial shipping suspended.' },
+  { name:'Bab el-Mandeb',             lat:12.6,  lng:43.5,   r:10, status:'HIGH THREAT', color:'#c07830', oil:'4.7M bbl/day',trade:'10% global trade',     transits:'Reduced — escort required',      note:'Houthi anti-ship missiles active. JWC listed area. Most carriers rerouting via Cape.' },
+  { name:'Suez Canal',                lat:30.0,  lng:32.55,  r:12, status:'OPEN',        color:'#3a7a5a', oil:'—',           trade:'12–15% global trade',  transits:'~40–50 vessels/day (reduced)',   note:'Operational. Reduced throughput as Bab el-Mandeb threat deters approach.' },
+  { name:'Strait of Malacca',         lat:1.3,   lng:103.85, r:16, status:'OPEN',        color:'#3a7a5a', oil:'16M bbl/day', trade:'25% global trade',     transits:'~90,000 vessels/year',           note:"World's busiest chokepoint. Normal operations. Low piracy risk." },
+  { name:'Strait of Gibraltar',       lat:35.97, lng:-5.5,   r:9,  status:'OPEN',        color:'#3a7a5a', oil:'—',           trade:'Atlantic–Med gateway', transits:'~300 vessels/day',               note:'Fully open. Key junction for Cape-rerouted Asia–Europe cargo.' },
+  { name:'Turkish Straits (Bosporus)',lat:41.12, lng:29.05,  r:8,  status:'RESTRICTED',  color:'#a09030', oil:'3M bbl/day',  trade:'Black Sea access',     transits:'~45,000 vessels/year',           note:'Montreux Convention limits warships. Black Sea grain exports impacted.' },
+  { name:'Cape of Good Hope',         lat:-34.2, lng:18.5,   r:12, status:'CRISIS HUB',  color:'#7050c0', oil:'—',           trade:'Global crisis reroute',transits:'+400% vs normal (crisis)',        note:'Now handling diverted Asia–Europe and Asia–GCC traffic. +14–18 days vs Suez.' },
+  { name:'Panama Canal',              lat:9.1,   lng:-79.7,  r:8,  status:'OPEN',        color:'#3a7a5a', oil:'—',           trade:'~5% global trade',     transits:'~35–38 vessels/day',             note:'Operational. Drought restrictions largely eased.' }
 ];
 
 function initChokepointsMap() {
@@ -3928,42 +4311,207 @@ function initChokepointsMap() {
   if (!mapEl) return;
   chokepointsMapReady = true;
 
-  chokepointsMap = L.map('chokepoints-map', { center:[20,30], zoom:2, zoomControl:true, attributionControl:false, minZoom:2, maxZoom:7 });
-  L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_matter_no_labels/{z}/{x}/{y}{r}.png', { subdomains:'abcd', maxZoom:19 }).addTo(chokepointsMap);
+  chokepointsMap = L.map('chokepoints-map', { center:[15,25], zoom:2, zoomControl:true, attributionControl:false, minZoom:2, maxZoom:7 });
 
-  // Context trade route lines
-  [ { pts:[[31.2,121.5],[1.3,103.85],[26.6,56.4]],                              color:'#5aa3f540', w:1.5 },
-    { pts:[[1.3,103.85],[12.6,43.5],[30.0,32.55],[35.97,-5.5],[53.3,4.9]],      color:'#3dd68c50', w:1.5 },
-    { pts:[[1.3,103.85],[-34.2,18.5],[35.97,-5.5],[53.3,4.9]],                  color:'#a78bfa50', w:1.5 },
-    { pts:[[9.1,-79.7],[35.97,-5.5],[53.3,4.9]],                                color:'#5aa3f530', w:1   },
-    { pts:[[26.6,56.4],[12.6,43.5],[30.0,32.55],[35.97,-5.5],[53.3,4.9]],       color:'#fbbf2440', w:1.5 }
-  ].forEach(function(r){ L.polyline(r.pts,{color:r.color,weight:r.w,opacity:1}).addTo(chokepointsMap); });
+  // Base dark tiles (no labels) — CSS blue filter applied via #chokepoints-map .leaflet-tile-pane
+  L.tileLayer('https://cartodb-basemaps-{s}.global.ssl.fastly.net/dark_nolabels/{z}/{x}/{y}.png', { subdomains:'abcd', maxZoom:19 }).addTo(chokepointsMap);
+
+  // English-only labels in a separate pane so they are NOT blue-filtered
+  chokepointsMap.createPane('cpLabels');
+  chokepointsMap.getPane('cpLabels').style.zIndex = 350;        // above tiles, below SVG overlays
+  chokepointsMap.getPane('cpLabels').style.pointerEvents = 'none';
+  L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/Reference/World_Boundaries_and_Places/MapServer/tile/{z}/{y}/{x}', {
+    maxZoom:18, pane:'cpLabels', opacity:0.75
+  }).addTo(chokepointsMap);
+
+  // Trade-proportional shipping lanes (width ∝ % global trade)
+  // Malacca 25% → w5 | Suez/Cape 12-15% → w3.5 | Trans-Atl 8% → w2.5 | PG disrupted → w1.5
+  var BL_LANES = [
+    // East Asia cluster (Malacca corridor — 25% global trade, widest)
+    { pts:[[35.7,139.7],[31.2,121.5],[22.3,114.2],[10.0,108.0],[1.3,103.85]],
+      color:'#5a7e95', w:5, cls:'bl-lane-pacific' },
+    // Asia → Europe via Suez (12-15% trade — steel blue)
+    { pts:[[1.3,103.85],[5,82],[8,72],[11.5,50],[12.6,43.5],[18,40],[25,36],
+           [30.0,32.55],[33,27],[35,20],[36,14],[35.97,-5.5],[44,-7],[51.9,4.5]],
+      color:'#6890a8', w:3.5, cls:'bl-lane' },
+    // Asia → Europe via Cape (crisis diversion — current primary route, muted amber, thicker)
+    { pts:[[1.3,103.85],[0,88],[-8,74],[-18,62],[-28,50],
+           [-34.2,18.5],[-28,5],[-18,-5],[-5,-14],[8,-18],
+           [25,-18],[35,-10],[35.97,-5.5],[44,-7],[51.9,4.5]],
+      color:'#a87838', w:5, cls:'bl-lane-cape' },
+    // Trans-Atlantic (8% trade — dark teal)
+    { pts:[[40.7,-74.0],[43,-55],[47,-38],[50,-22],[51.9,4.5]],
+      color:'#4a6878', w:2.5, cls:'bl-lane-slow' },
+    // US Gulf / Caribbean loop
+    { pts:[[29.5,-90.0],[24,-82],[18,-75],[9.1,-79.7],[15,-68],[40.7,-74.0]],
+      color:'#3a5868', w:2, cls:'bl-lane-slow' },
+    // Persian Gulf → Malacca (disrupted — thin dark red)
+    { pts:[[26.6,56.4],[20,62],[12,68],[5,76],[1.3,103.85]],
+      color:'#80342a', w:1.5, cls:'bl-lane-disrupted' },
+  ];
+  BL_LANES.forEach(function(ln) {
+    L.polyline(ln.pts, { color:ln.color, weight:ln.w, opacity:0.82, className:ln.cls }).addTo(chokepointsMap);
+  });
 
   CHOKEPOINTS.forEach(function(cp) {
-    // Glow ring
+    var r = cp.r || 9;
+    // Outer ring (subtle, proportional)
     L.circleMarker([cp.lat,cp.lng],{
-      radius:18, color:cp.color, fillColor:cp.color, fillOpacity:0.08,
-      weight:1.5, dashArray:cp.status==='OPEN'?null:'4,3', opacity:0.45
+      radius: r + 5, color:cp.color, fillColor:'transparent',
+      weight:1, opacity:0.28, dashArray: cp.status==='OPEN' ? null : '3,4'
     }).addTo(chokepointsMap);
 
-    // Core dot with popup
-    var bg = {'CLOSED':'rgba(231,76,60,.22)','HIGH THREAT':'rgba(251,191,36,.22)','RESTRICTED':'rgba(240,200,75,.18)','CRISIS HUB':'rgba(167,139,250,.22)','OPEN':'rgba(61,214,140,.15)'}[cp.status]||'rgba(90,163,245,.15)';
+    // Core dot — size proportional to trade volume
+    var bg = {'CLOSED':'rgba(160,48,32,.25)','HIGH THREAT':'rgba(192,120,48,.25)','RESTRICTED':'rgba(160,144,48,.2)','CRISIS HUB':'rgba(112,80,192,.25)','OPEN':'rgba(58,122,90,.2)'}[cp.status]||'rgba(90,130,160,.2)';
     L.circleMarker([cp.lat,cp.lng],{
-      radius:9, color:cp.color, fillColor:cp.color, fillOpacity:0.88, weight:2, opacity:1
+      radius:r, color:cp.color, fillColor:cp.color, fillOpacity:0.82, weight:1.5, opacity:1
     }).addTo(chokepointsMap).bindPopup(
       '<div class="cp-status-popup"><strong>'+cp.name+'</strong><br>'+
       '<div class="cp-stat-row"><span class="cp-stat-pill" style="background:'+bg+';color:'+cp.color+'">'+cp.status+'</span></div>'+
-      (cp.oil!=='—'?'<div style="margin-top:4px;color:#f0c84b">⬇ Oil: '+cp.oil+'</div>':'')+
+      (cp.oil!=='—'?'<div style="margin-top:4px;color:#c8a840">&#8595; Oil flow: '+cp.oil+'</div>':'')+
       '<div style="color:#7a8494;margin-top:2px">Trade: '+cp.trade+'</div>'+
       '<div style="color:#7a8494;margin-top:2px">Transits: '+cp.transits+'</div>'+
       '<div style="color:#e8eaed;margin-top:5px;font-size:9px;max-width:220px">'+cp.note+'</div></div>',
       {maxWidth:260,className:'cp-popup'}
     );
 
-    // Permanent label
-    L.tooltip({permanent:true,direction:'top',offset:[0,-12],className:'cp-label-tip'})
-      .setContent('<span style="font-family:\'IBM Plex Mono\',monospace;font-size:8px;font-weight:700;color:'+cp.color+'">'+cp.name+'</span>')
+    // Permanent label — sober white
+    L.tooltip({permanent:true,direction:'top',offset:[0,-(r+4)],className:'cp-label-tip'})
+      .setContent('<span style="font-family:\'IBM Plex Mono\',monospace;font-size:8px;font-weight:600;color:#c8d4e0;letter-spacing:.04em">'+cp.name+'</span>')
       .setLatLng([cp.lat,cp.lng]).addTo(chokepointsMap);
+  });
+
+  // ── PORT CALLS LAYER ─────────────────────────────────────────────────────
+  // pre = weekly container vessel calls pre-crisis | cur = current (May 2026)
+  var PORT_CALLS = [
+    // ── Asian export hubs (stable) ────────────────────────────────────────
+    { name:'Shanghai',     country:'China',        lat:31.23, lng:121.48, pre:95,  cur:90  },
+    { name:'Busan',        country:'South Korea',  lat:35.10, lng:129.07, pre:85,  cur:82  },
+    { name:'Hong Kong',    country:'China',        lat:22.30, lng:114.17, pre:48,  cur:45  },
+    { name:'Singapore',    country:'Singapore',    lat:1.27,  lng:103.50, pre:185, cur:180 },
+    { name:'Port Klang',   country:'Malaysia',     lat:2.95,  lng:101.18, pre:75,  cur:70  },
+    // ── Indian Ocean waypoint (surging — Cape route stop) ─────────────────
+    { name:'Colombo',      country:'Sri Lanka',    lat:6.93,  lng:79.84,  pre:58,  cur:82  },
+    // ── Gulf ports INSIDE Hormuz (collapsed) ──────────────────────────────
+    { name:'Jebel Ali',    country:'UAE',          lat:24.98, lng:55.05,  pre:62,  cur:5   },
+    { name:'Bandar Abbas', country:'Iran',         lat:27.20, lng:56.17,  pre:28,  cur:2   },
+    { name:'Khalifa Port', country:'UAE',          lat:24.80, lng:54.58,  pre:22,  cur:2   },
+    { name:'Hamad Port',   country:'Qatar',        lat:24.92, lng:51.56,  pre:18,  cur:2   },
+    { name:'Bahrain Port', country:'Bahrain',      lat:26.21, lng:50.56,  pre:15,  cur:2   },
+    { name:'Shuwaikh',     country:'Kuwait',       lat:29.36, lng:47.95,  pre:20,  cur:1   },
+    { name:'Dammam',       country:'Saudi Arabia', lat:26.47, lng:50.12,  pre:35,  cur:3   },
+    // ── Gulf OUTSIDE Hormuz (surging — alternative hubs) ─────────────────
+    { name:'Fujairah',     country:'UAE',          lat:25.13, lng:56.33,  pre:14,  cur:34  },
+    { name:'Salalah',      country:'Oman',         lat:17.00, lng:54.08,  pre:28,  cur:54  },
+    { name:'Sohar',        country:'Oman',         lat:24.37, lng:56.68,  pre:10,  cur:26  },
+    // ── Red Sea ───────────────────────────────────────────────────────────
+    { name:'Jeddah',       country:'Saudi Arabia', lat:21.47, lng:39.08,  pre:48,  cur:72  },
+    { name:'Port Said',    country:'Egypt',        lat:31.28, lng:32.20,  pre:85,  cur:28  },
+    // ── East Africa (surging — Cape route feeder) ─────────────────────────
+    { name:'Djibouti',     country:'Djibouti',     lat:11.59, lng:43.10,  pre:32,  cur:22  },
+    { name:'Mombasa',      country:'Kenya',        lat:-4.05, lng:39.65,  pre:22,  cur:40  },
+    { name:'Dar es Salaam',country:'Tanzania',     lat:-6.85, lng:39.30,  pre:16,  cur:28  },
+    { name:'Maputo',       country:'Mozambique',   lat:-25.97,lng:32.57,  pre:8,   cur:18  },
+    // ── Cape route hubs (surging — main diversion path) ──────────────────
+    { name:'Durban',       country:'South Africa', lat:-29.87,lng:31.03,  pre:22,  cur:54  },
+    { name:'Cape Town',    country:'South Africa', lat:-33.90,lng:18.40,  pre:18,  cur:46  },
+    { name:'Port Louis',   country:'Mauritius',    lat:-20.16,lng:57.50,  pre:12,  cur:28  },
+    // ── West Africa (Cape route waypoints, surging) ───────────────────────
+    { name:'Lomé',         country:'Togo',         lat:6.13,  lng:1.27,   pre:14,  cur:24  },
+    { name:'Ndayane',      country:'Senegal',      lat:14.46, lng:-17.04, pre:5,   cur:14  },
+    // ── North Africa / Atlantic gateway (surging — Cape vessels via Gibraltar) ──
+    { name:'Tanger Med',   country:'Morocco',      lat:35.85, lng:-5.48,  pre:52,  cur:72  },
+    // ── European destination ports (stable) ───────────────────────────────
+    { name:'Rotterdam',    country:'Netherlands',  lat:51.91, lng:4.35,   pre:95,  cur:92  },
+    { name:'Hamburg',      country:'Germany',      lat:53.54, lng:9.85,   pre:55,  cur:52  },
+    { name:'Antwerp',      country:'Belgium',      lat:51.22, lng:4.18,   pre:78,  cur:75  },
+    { name:'Felixstowe',   country:'UK',           lat:51.95, lng:1.20,   pre:42,  cur:40  },
+  ];
+
+  function pcRadius(v) { return Math.max(4, Math.min(19, Math.sqrt(v) * 1.75)); }
+  function pcColor(pct) {
+    if (pct >= 50)  return '#3dd68c';
+    if (pct >= 15)  return '#60b870';
+    if (pct >= -15) return '#7a8494';
+    if (pct >= -50) return '#dfa030';
+    if (pct >= -75) return '#e8673c';
+    return '#e03040';
+  }
+
+  PORT_CALLS.forEach(function(p) {
+    var pct = Math.round((p.cur - p.pre) / p.pre * 100);
+    var col = pcColor(pct);
+    var rCur = pcRadius(p.cur);
+    var rPre = pcRadius(p.pre);
+    var sign = pct >= 0 ? '+' : '';
+    var arrow = pct >= 15 ? '▲' : pct <= -15 ? '▼' : '─';
+
+    var tipHtml =
+      '<div style="font-family:IBM Plex Mono,monospace;font-size:9px;min-width:170px">' +
+        '<div style="font-weight:700;color:' + col + ';margin-bottom:4px;font-size:10px">' + p.name + '</div>' +
+        '<div style="color:#7a8494;font-size:8px">' + p.country + '</div>' +
+        '<div style="margin-top:5px;display:flex;justify-content:space-between">' +
+          '<span style="color:#c8d4e0">Current</span>' +
+          '<span style="color:#e8eaed;font-weight:700">' + p.cur + ' calls/wk</span>' +
+        '</div>' +
+        '<div style="display:flex;justify-content:space-between">' +
+          '<span style="color:#4a5568">Pre-crisis</span>' +
+          '<span style="color:#5a6878">' + p.pre + ' calls/wk</span>' +
+        '</div>' +
+        '<div style="margin-top:5px;font-weight:700;font-size:10px;color:' + col + '">' +
+          arrow + ' ' + sign + pct + '% vs pre-crisis' +
+        '</div>' +
+        '<div style="margin-top:3px;font-size:7px;color:#3a5060">○ dashed ring = pre-crisis volume</div>' +
+      '</div>';
+
+    // Pre-crisis ghost ring (dashed outline only)
+    L.circleMarker([p.lat, p.lng], {
+      radius: rPre,
+      color: '#5a6878', weight: 1,
+      fill: false,
+      dashArray: '3 3',
+      opacity: 0.4,
+      interactive: false
+    }).addTo(chokepointsMap);
+
+    // Current port call circle (filled square-ish via circle)
+    L.circleMarker([p.lat, p.lng], {
+      radius: rCur,
+      color: col, weight: 1.5,
+      fillColor: col, fillOpacity: 0.30,
+      interactive: true
+    }).bindTooltip(tipHtml, {
+      sticky: false, direction: 'top',
+      className: 'cp-tip',
+      offset: [0, -(rCur + 4)]
+    }).addTo(chokepointsMap);
+
+    // % change label — only for significant movers (±40%+)
+    if (Math.abs(pct) >= 40) {
+      L.marker([p.lat, p.lng], {
+        icon: L.divIcon({
+          html: '<div style="font-family:IBM Plex Mono,monospace;font-size:7px;font-weight:700;' +
+                'color:' + col + ';text-shadow:0 1px 3px #000,0 0 6px #000;white-space:nowrap;' +
+                'pointer-events:none;line-height:1">' + sign + pct + '%</div>',
+          iconSize: [36, 10],
+          iconAnchor: [18, rCur + 14],
+          className: ''
+        }),
+        interactive: false
+      }).addTo(chokepointsMap);
+    }
+
+    // Port name label (hover-visible via tooltip — permanent for key ports only)
+    var keyPorts = ['Jebel Ali','Cape Town','Durban','Colombo','Jeddah','Rotterdam','Singapore','Salalah','Sohar','Maputo','Lomé','Ndayane','Tanger Med','Hamad Port','Bahrain Port','Shuwaikh','Dammam'];
+    if (keyPorts.indexOf(p.name) >= 0) {
+      L.tooltip({
+        permanent: true, direction: 'bottom',
+        offset: [0, rCur + 3], className: 'cp-label-tip', interactive: false
+      }).setContent(
+        '<span style="font-family:\'IBM Plex Mono\',monospace;font-size:7px;color:' + col + ';letter-spacing:.03em;opacity:.85">' +
+        p.name + '</span>'
+      ).setLatLng([p.lat, p.lng]).addTo(chokepointsMap);
+    }
   });
 }
 
@@ -4241,12 +4789,8 @@ window.addEventListener('load', function() {
   // Init Hormuz satellite map (default tab)
   initMap();
 
-  // Pre-init rates map in background for fast tab switch
-  setTimeout(function(){ initRatesMap(); }, 1500);
-
-  // Pre-init extra maps in background
-  setTimeout(function(){ initTheatreMap(); }, 2500);
-  setTimeout(function(){ initChokepointsMap(); }, 3500);
+  // Pre-init chokepoints map in background for fast tab switch
+  setTimeout(function(){ initChokepointsMap(); }, 2000);
 
   // Fetch live Hormuz + market data after charts initialise; refresh every 10 min
   setTimeout(fetchLiveData, 2500);

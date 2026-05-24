@@ -836,6 +836,175 @@ canvas { font-family: var(--f-mono); }
 /* ── ANIMATED MAP ───────────────────────────────────────────────────────── */
 .rates-map-wrap { border-radius: var(--r); overflow: hidden; border: 1px solid var(--c-bd1); }
 #rates-map { height: 340px; }
+
+/* ── MOBILE NAV OVERLAY ─────────────────────────────────────────────────── */
+.mob-only { display: none !important; }
+
+#mob-nav {
+  display: none;
+  position: fixed;
+  inset: 0;
+  z-index: 999;
+}
+#mob-nav.open { display: flex; }
+
+#mob-nav-backdrop {
+  position: absolute;
+  inset: 0;
+  background: rgba(0,0,0,.7);
+  backdrop-filter: blur(2px);
+}
+
+#mob-nav-panel {
+  position: relative;
+  z-index: 1;
+  width: 280px;
+  max-width: 85vw;
+  height: 100%;
+  background: var(--c-s0);
+  border-right: 1px solid var(--c-bd1);
+  display: flex;
+  flex-direction: column;
+  animation: slideIn 220ms ease;
+}
+@keyframes slideIn {
+  from { transform: translateX(-100%); opacity: 0; }
+  to   { transform: translateX(0);     opacity: 1; }
+}
+
+#mob-nav-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 18px 16px 14px;
+  border-bottom: 1px solid var(--c-bd1);
+}
+#mob-nav-close {
+  background: transparent;
+  border: 1px solid var(--c-bd2);
+  color: var(--c-tx2);
+  width: 28px; height: 28px;
+  border-radius: var(--r);
+  cursor: pointer;
+  font-size: 12px;
+  display: flex; align-items: center; justify-content: center;
+}
+#mob-nav-close:hover { border-color: var(--c-gold); color: var(--c-gold-hi); }
+
+#mob-nav-items {
+  flex: 1;
+  padding: 10px 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  overflow-y: auto;
+}
+
+.mob-nav-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+  padding: 14px 14px;
+  background: transparent;
+  border: 1px solid transparent;
+  border-radius: var(--r);
+  color: var(--c-tx1);
+  cursor: pointer;
+  text-align: left;
+  transition: var(--t);
+}
+.mob-nav-item:hover {
+  background: var(--c-s2);
+  border-color: var(--c-bd1);
+  color: var(--c-tx0);
+}
+.mob-nav-item.active {
+  background: rgba(184,149,42,.08);
+  border-color: var(--c-gold-dim);
+  color: var(--c-gold-hi);
+}
+.mob-nav-icon {
+  font-size: 14px;
+  width: 20px;
+  text-align: center;
+  flex-shrink: 0;
+}
+.mob-nav-label {
+  font-family: var(--f-mono);
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+}
+
+#mob-nav-footer {
+  padding: 16px;
+  border-top: 1px solid var(--c-bd1);
+}
+
+/* ── RESPONSIVE ─────────────────────────────────────────────────────────── */
+@media (max-width: 768px) {
+  /* Show hamburger, hide desktop-only elements */
+  .mob-only  { display: flex !important; }
+  .desk-only { display: none !important; }
+
+  /* Header */
+  #header {
+    height: auto;
+    min-height: 52px;
+    flex-wrap: wrap;
+    padding: 10px 14px;
+    gap: 8px;
+  }
+  #header::before { display: none; }
+  #header .sub    { display: none; }
+  #header .ts     { display: none; }
+  #header .right  { gap: 8px; }
+  .hbtn:not(#mob-menu-btn) { display: none; }
+
+  /* Hide desktop tab bar */
+  #tabs { display: none; }
+
+  /* Pages — no top sticky offset needed */
+  .page { padding: 10px; }
+
+  /* All multi-column grids → single column */
+  .col2, .col3, .col4,
+  .col21, .col12, .col32 {
+    grid-template-columns: 1fr !important;
+  }
+
+  /* Metrics: 2-up grid on mobile */
+  .metrics { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+  .metric  { min-width: unset; flex: unset; }
+
+  /* Charts */
+  #hChart-wrap, [style*="height:120px"] { height: 110px !important; }
+  #hormuz-map  { height: 240px !important; }
+  #rates-map   { height: 220px !important; }
+
+  /* Tables — horizontal scroll */
+  .route-matrix { font-size: 10px; }
+  table         { display: block; overflow-x: auto; -webkit-overflow-scrolling: touch; }
+
+  /* Scenario simulator cards — 2 per row */
+  .sim-scenario-grid { grid-template-columns: 1fr 1fr !important; }
+  .sim-inputs-grid   { grid-template-columns: 1fr 1fr !important; }
+
+  /* Chips wrap */
+  .chips { flex-wrap: wrap; }
+
+  /* Live intel feed full width */
+  .intel-feed { max-height: 280px; }
+}
+
+@media (max-width: 480px) {
+  /* Very small phones — single column everywhere */
+  .metrics           { grid-template-columns: 1fr 1fr; }
+  .sim-scenario-grid { grid-template-columns: 1fr !important; }
+  .sim-inputs-grid   { grid-template-columns: 1fr !important; }
+}
 </style>
 </head>
 <body>
@@ -853,15 +1022,53 @@ canvas { font-family: var(--f-mono); }
     <div class="live-pill"><div class="live-dot"></div>Live</div>
     <div class="ts" id="ts"></div>
     <button class="hbtn" onclick="location.reload()">&#8635; Refresh All</button>
+    <button class="hbtn mob-only" id="mob-menu-btn" onclick="openMobNav()" aria-label="Open menu" style="font-size:16px;padding:4px 10px;line-height:1">&#9776;</button>
   </div>
 </div>
 
-<!-- TABS -->
+<!-- TABS (desktop) -->
 <div id="tabs">
   <div class="tab active" onclick="showTab('hormuz',this)">&#9651; Hormuz Traffic <span class="tab-badge">LIVE</span></div>
   <div class="tab" onclick="showTab('rates',this)">&#9671; Container Rates</div>
   <div class="tab" onclick="showTab('trucking',this)">&#9672; GCC Trucking</div>
   <div class="tab" onclick="showTab('simulator',this)">&#9670; Scenario Simulator</div>
+</div>
+
+<!-- MOBILE NAV OVERLAY -->
+<div id="mob-nav" role="dialog" aria-modal="true" aria-label="Navigation menu">
+  <div id="mob-nav-backdrop" onclick="closeMobNav()"></div>
+  <div id="mob-nav-panel">
+    <div id="mob-nav-header">
+      <div style="display:flex;align-items:center;gap:10px">
+        <div class="dot" style="width:8px;height:8px"></div>
+        <span style="font-family:var(--f-mono);font-size:10px;letter-spacing:.16em;text-transform:uppercase;color:var(--c-gold)">Navigation</span>
+      </div>
+      <button onclick="closeMobNav()" id="mob-nav-close" aria-label="Close menu">&#10005;</button>
+    </div>
+    <div id="mob-nav-items">
+      <button class="mob-nav-item active" id="mob-tab-hormuz" onclick="mobShowTab('hormuz')">
+        <span class="mob-nav-icon">&#9651;</span>
+        <span class="mob-nav-label">Hormuz Traffic</span>
+        <span class="tab-badge" style="margin-left:auto">LIVE</span>
+      </button>
+      <button class="mob-nav-item" id="mob-tab-rates" onclick="mobShowTab('rates')">
+        <span class="mob-nav-icon">&#9671;</span>
+        <span class="mob-nav-label">Container Rates</span>
+      </button>
+      <button class="mob-nav-item" id="mob-tab-trucking" onclick="mobShowTab('trucking')">
+        <span class="mob-nav-icon">&#9672;</span>
+        <span class="mob-nav-label">GCC Trucking</span>
+      </button>
+      <button class="mob-nav-item" id="mob-tab-simulator" onclick="mobShowTab('simulator')">
+        <span class="mob-nav-icon">&#9670;</span>
+        <span class="mob-nav-label">Scenario Simulator</span>
+      </button>
+    </div>
+    <div id="mob-nav-footer">
+      <div style="font-family:var(--f-mono);font-size:8px;color:var(--c-tx2);letter-spacing:.08em;text-transform:uppercase">Gulf Logistics Intelligence &middot; May 2026</div>
+      <div style="font-family:var(--f-mono);font-size:8px;color:var(--c-tx3);margin-top:4px">Strategic · Confidential · Ministerial Use Only</div>
+    </div>
+  </div>
 </div>
 
 <!-- ============================================================ TAB 1: HORMUZ -->
@@ -2787,6 +2994,38 @@ window.addEventListener('load', function() {
     { pts: ROUTES.direct.sha_to_jea_hormuz,             color: ROUTES.direct.color,            dash: ROUTES.direct.dashArray,           w: ROUTES.direct.weight,            speed: 0,   label:'Hormuz Direct (CLOSED — pre-crisis)', avail:false }
   ];
 
+// ── MOBILE NAV ────────────────────────────────────────────────────────────────
+function openMobNav() {
+  document.getElementById('mob-nav').classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+
+function closeMobNav() {
+  document.getElementById('mob-nav').classList.remove('open');
+  document.body.style.overflow = '';
+}
+
+function mobShowTab(name) {
+  // Delegate to the main showTab function using the matching desktop tab element
+  var desktopTabs = document.querySelectorAll('#tabs .tab');
+  var tabNames = ['hormuz', 'rates', 'trucking', 'simulator'];
+  var idx = tabNames.indexOf(name);
+  if (idx !== -1) showTab(name, desktopTabs[idx]);
+
+  // Update active state on mobile nav items
+  document.querySelectorAll('.mob-nav-item').forEach(function(el) {
+    el.classList.remove('active');
+  });
+  var activeBtn = document.getElementById('mob-tab-' + name);
+  if (activeBtn) activeBtn.classList.add('active');
+
+  closeMobNav();
+}
+
+// Close mobile nav on Escape key
+document.addEventListener('keydown', function(e) {
+  if (e.key === 'Escape') closeMobNav();
+});
 
 </script>
 </body>

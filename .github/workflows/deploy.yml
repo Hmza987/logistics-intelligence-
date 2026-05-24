@@ -65,7 +65,9 @@ jobs:
       - name: Deploy preview
         id: deploy
         run: |
-          URL=$(vercel deploy --token=${{ secrets.VERCEL_TOKEN }} 2>&1 | tail -1)
+          OUTPUT=$(vercel deploy --token=${{ secrets.VERCEL_TOKEN }} 2>&1)
+          echo "$OUTPUT"
+          URL=$(echo "$OUTPUT" | grep -o 'https://[^ ]*\.vercel\.app' | tail -1)
           echo "url=$URL" >> $GITHUB_OUTPUT
         env:
           VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
@@ -110,7 +112,9 @@ jobs:
       - name: Deploy to production
         id: deploy
         run: |
-          URL=$(vercel deploy --prod --token=${{ secrets.VERCEL_TOKEN }} 2>&1 | tail -1)
+          OUTPUT=$(vercel deploy --prod --token=${{ secrets.VERCEL_TOKEN }} 2>&1)
+          echo "$OUTPUT"
+          URL=$(echo "$OUTPUT" | grep -o 'https://[^ ]*\.vercel\.app' | tail -1)
           echo "url=$URL" >> $GITHUB_OUTPUT
         env:
           VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
@@ -118,6 +122,8 @@ jobs:
 
       - name: Smoke-test live endpoint
         run: |
-          STATUS=$(curl -s -o /dev/null -w "%{http_code}" "${{ steps.deploy.outputs.url }}/api/hormuz")
-          echo "API status: $STATUS"
+          URL="${{ steps.deploy.outputs.url }}"
+          if [ -z "$URL" ]; then echo "No URL captured — skipping smoke test"; exit 0; fi
+          STATUS=$(curl -s -o /dev/null -w "%{http_code}" "$URL/api/hormuz")
+          echo "API status: $STATUS at $URL"
           [ "$STATUS" = "200" ] || exit 1

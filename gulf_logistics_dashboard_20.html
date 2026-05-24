@@ -1,0 +1,2732 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>Gulf Logistics Intelligence</title>
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
+<style>
+/* ═══════════════════════════════════════════════════════════════════════════
+   GULF LOGISTICS INTELLIGENCE — EXECUTIVE DESIGN SYSTEM
+   Dark Bloomberg / Palantir aesthetic · Military-intelligence grade
+   Confidential — prepared for ministerial & strategic decision-makers
+═══════════════════════════════════════════════════════════════════════════ */
+
+@import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@300;400;500;600&family=Inter:wght@300;400;500;600;700&display=swap');
+
+/* ── RESET & TOKENS ─────────────────────────────────────────────────────── */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  /* Surface hierarchy — true black base, micro-contrast steps */
+  --c-bg:        #05070a;   /* page background   */
+  --c-s0:        #080b0f;   /* deepest surface   */
+  --c-s1:        #0c1018;   /* card background   */
+  --c-s2:        #111722;   /* elevated surface  */
+  --c-s3:        #172030;   /* hover / active    */
+
+  /* Borders — barely visible, military-grade restraint */
+  --c-bd0:       #131c28;
+  --c-bd1:       #1a2535;
+  --c-bd2:       #243040;
+
+  /* Text hierarchy */
+  --c-tx0:       #e8ecf0;   /* primary text      */
+  --c-tx1:       #8fa0b5;   /* secondary text    */
+  --c-tx2:       #4d6070;   /* tertiary / muted  */
+  --c-tx3:       #2d3d50;   /* disabled          */
+
+  /* Signal colours — highly controlled palette */
+  --c-gold:      #b8952a;   /* primary accent — authority, not flashy */
+  --c-gold-hi:   #d4aa3a;   /* highlight */
+  --c-gold-dim:  #6b561a;   /* dim accent */
+  --c-red:       #c0392b;
+  --c-red-hi:    #d94e40;
+  --c-amber:     #c47a1a;
+  --c-amber-hi:  #e0902a;
+  --c-green:     #1a7a4a;
+  --c-green-hi:  #25a066;
+  --c-blue:      #1a4a7a;
+  --c-blue-hi:   #2d6aaa;
+  --c-purple:    #4a2d7a;
+  --c-purple-hi: #6a42aa;
+
+  /* Typography */
+  --f-ui:    'Inter', system-ui, sans-serif;
+  --f-mono:  'IBM Plex Mono', 'Courier New', monospace;
+
+  /* Spacing */
+  --gap:     12px;
+  --pad:     18px;
+  --r:       4px;
+
+  /* Transitions */
+  --t:       150ms ease;
+}
+
+/* ── BASE ───────────────────────────────────────────────────────────────── */
+html, body { height: 100%; }
+body {
+  font-family: var(--f-ui);
+  background: var(--c-bg);
+  color: var(--c-tx0);
+  font-size: 13px;
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+}
+a { color: inherit; text-decoration: none; }
+
+/* ── HEADER ─────────────────────────────────────────────────────────────── */
+#header {
+  background: var(--c-s0);
+  border-bottom: 1px solid var(--c-bd1);
+  padding: 0 var(--pad);
+  height: 52px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+
+/* Classification bar at very top */
+#header::before {
+  content: 'STRATEGIC · CONFIDENTIAL · MINISTERIAL USE ONLY';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 3px;
+  background: linear-gradient(90deg, var(--c-gold-dim), var(--c-gold), var(--c-gold-dim));
+  font-size: 0;
+}
+
+#header .logo { display: flex; align-items: center; gap: 14px; }
+
+/* Pulsing signal dot */
+#header .dot {
+  width: 6px; height: 6px;
+  border-radius: 50%;
+  background: var(--c-gold);
+  box-shadow: 0 0 8px var(--c-gold), 0 0 2px var(--c-gold);
+  animation: sig-pulse 3s ease-in-out infinite;
+  flex-shrink: 0;
+}
+@keyframes sig-pulse {
+  0%, 100% { opacity: 1; box-shadow: 0 0 8px var(--c-gold); }
+  50%       { opacity: .5; box-shadow: 0 0 3px var(--c-gold); }
+}
+
+#header h1 {
+  font-family: var(--f-mono);
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: .18em;
+  text-transform: uppercase;
+  color: var(--c-tx0);
+}
+#header .sub {
+  font-family: var(--f-mono);
+  font-size: 8.5px;
+  color: var(--c-tx2);
+  letter-spacing: .08em;
+  text-transform: uppercase;
+  margin-top: 2px;
+}
+
+#header .right { display: flex; align-items: center; gap: 12px; }
+
+.live-pill {
+  display: flex; align-items: center; gap: 5px;
+  font-family: var(--f-mono);
+  font-size: 8px;
+  color: var(--c-green-hi);
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  border: 1px solid var(--c-green);
+  padding: 3px 8px;
+  border-radius: 2px;
+  background: rgba(26,122,74,.08);
+}
+.live-dot {
+  width: 5px; height: 5px;
+  border-radius: 50%;
+  background: var(--c-green-hi);
+  animation: sig-pulse 1.6s ease-in-out infinite;
+}
+.ts {
+  font-family: var(--f-mono);
+  font-size: 9px;
+  color: var(--c-tx2);
+  letter-spacing: .04em;
+}
+.hbtn {
+  background: transparent;
+  border: 1px solid var(--c-bd2);
+  color: var(--c-tx2);
+  font-family: var(--f-mono);
+  font-size: 9px;
+  letter-spacing: .06em;
+  text-transform: uppercase;
+  padding: 5px 12px;
+  border-radius: var(--r);
+  cursor: pointer;
+  transition: var(--t);
+}
+.hbtn:hover {
+  border-color: var(--c-gold);
+  color: var(--c-gold-hi);
+  background: rgba(184,149,42,.06);
+}
+
+/* ── NAVIGATION TABS ────────────────────────────────────────────────────── */
+#tabs {
+  background: var(--c-s0);
+  border-bottom: 1px solid var(--c-bd1);
+  display: flex;
+  padding: 0 var(--pad);
+  gap: 0;
+  position: sticky;
+  top: 52px;
+  z-index: 99;
+}
+.tab {
+  font-family: var(--f-mono);
+  font-size: 9px;
+  font-weight: 500;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  color: var(--c-tx2);
+  padding: 13px 20px;
+  border-bottom: 2px solid transparent;
+  cursor: pointer;
+  transition: var(--t);
+  white-space: nowrap;
+  position: relative;
+}
+.tab:hover { color: var(--c-tx1); }
+.tab.active {
+  color: var(--c-gold-hi);
+  border-bottom-color: var(--c-gold);
+  background: rgba(184,149,42,.04);
+}
+
+/* Tab counter badge */
+.tab-badge {
+  display: inline-block;
+  font-size: 7px;
+  background: rgba(184,149,42,.15);
+  color: var(--c-gold);
+  border: 1px solid var(--c-gold-dim);
+  padding: 1px 4px;
+  border-radius: 2px;
+  margin-left: 6px;
+  vertical-align: middle;
+}
+
+/* ── PAGES ──────────────────────────────────────────────────────────────── */
+.page { display: none; padding: var(--pad); }
+.page.active { display: block; }
+
+/* ── GRID ───────────────────────────────────────────────────────────────── */
+.row  { display: grid; gap: var(--gap); margin-bottom: var(--gap); }
+.col2 { grid-template-columns: 1fr 1fr; }
+.col3 { grid-template-columns: 1fr 1fr 1fr; }
+.col4 { grid-template-columns: repeat(4, 1fr); }
+.col21{ grid-template-columns: 2fr 1fr; }
+.col12{ grid-template-columns: 1fr 2fr; }
+.col32{ grid-template-columns: 3fr 2fr; }
+
+/* ── CARDS ──────────────────────────────────────────────────────────────── */
+.card {
+  background: var(--c-s1);
+  border: 1px solid var(--c-bd0);
+  border-radius: var(--r);
+  padding: 14px 16px;
+  position: relative;
+  overflow: hidden;
+}
+
+/* Subtle left accent line — Palantir signature */
+.card::after {
+  content: '';
+  position: absolute;
+  top: 0; left: 0;
+  width: 2px; height: 100%;
+  background: linear-gradient(180deg, var(--c-gold-dim), transparent 80%);
+  opacity: 0;
+  transition: opacity var(--t);
+}
+.card:hover::after { opacity: 1; }
+
+/* Section label — stark, military */
+.card-label {
+  font-family: var(--f-mono);
+  font-size: 8px;
+  font-weight: 600;
+  letter-spacing: .18em;
+  text-transform: uppercase;
+  color: var(--c-gold);
+  margin-bottom: 3px;
+}
+.card-sub {
+  font-family: var(--f-mono);
+  font-size: 8.5px;
+  color: var(--c-tx2);
+  margin-bottom: 10px;
+  letter-spacing: .02em;
+}
+
+/* ── METRIC BOXES ───────────────────────────────────────────────────────── */
+.metrics { display: flex; gap: 8px; margin-bottom: 12px; flex-wrap: wrap; }
+.metric {
+  background: var(--c-s0);
+  border: 1px solid var(--c-bd1);
+  border-radius: var(--r);
+  padding: 10px 14px;
+  flex: 1; min-width: 100px;
+  position: relative;
+}
+.metric::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 1px;
+  background: var(--c-bd2);
+}
+.metric .val {
+  font-family: var(--f-mono);
+  font-size: 24px;
+  font-weight: 300;
+  line-height: 1;
+  letter-spacing: -.02em;
+  color: var(--c-tx0);
+}
+.metric .lbl {
+  font-family: var(--f-mono);
+  font-size: 7.5px;
+  color: var(--c-tx2);
+  text-transform: uppercase;
+  letter-spacing: .1em;
+  margin-top: 4px;
+}
+.metric .chg {
+  font-family: var(--f-mono);
+  font-size: 9px;
+  margin-top: 4px;
+}
+
+/* Colour tokens */
+.red    { color: var(--c-red-hi); }
+.grn    { color: var(--c-green-hi); }
+.amb    { color: var(--c-amber-hi); }
+.blu    { color: var(--c-blue-hi); }
+.pur    { color: var(--c-purple-hi); }
+.gld    { color: var(--c-gold-hi); }
+.muted  { color: var(--c-tx2); }
+
+/* ── STATUS CHIPS ───────────────────────────────────────────────────────── */
+.chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  font-family: var(--f-mono);
+  font-size: 8px;
+  font-weight: 500;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+  padding: 3px 7px;
+  border-radius: 2px;
+  margin: 2px;
+}
+.chip-dot { width: 4px; height: 4px; border-radius: 50%; flex-shrink: 0; }
+.chip-r { background: rgba(192,57,43,.1);  color: var(--c-red-hi);    border: 1px solid rgba(192,57,43,.25); }
+.chip-a { background: rgba(196,122,26,.1); color: var(--c-amber-hi);  border: 1px solid rgba(196,122,26,.25); }
+.chip-g { background: rgba(26,122,74,.1);  color: var(--c-green-hi);  border: 1px solid rgba(26,122,74,.25); }
+.chip-b { background: rgba(26,74,122,.1);  color: var(--c-blue-hi);   border: 1px solid rgba(26,74,122,.25); }
+
+/* ── INTELLIGENCE FEED ──────────────────────────────────────────────────── */
+.news-item {
+  padding: 8px 0;
+  border-bottom: 1px solid var(--c-bd0);
+  display: flex;
+  gap: 10px;
+  align-items: flex-start;
+}
+.news-item:last-child { border-bottom: none; }
+.news-dot { width: 4px; height: 4px; border-radius: 50%; flex-shrink: 0; margin-top: 5px; }
+.news-tag {
+  font-family: var(--f-mono);
+  font-size: 7px;
+  font-weight: 600;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+  padding: 1px 5px;
+  border-radius: 2px;
+  margin-bottom: 3px;
+  display: inline-block;
+}
+.tag-alert { background: rgba(192,57,43,.12); color: var(--c-red-hi); }
+.tag-watch { background: rgba(196,122,26,.12); color: var(--c-amber-hi); }
+.tag-info  { background: rgba(26,74,122,.12);  color: var(--c-blue-hi); }
+.news-text {
+  font-size: 11px;
+  color: var(--c-tx1);
+  line-height: 1.55;
+  font-weight: 300;
+}
+
+/* ── DIVIDER ────────────────────────────────────────────────────────────── */
+.dv { height: 1px; background: var(--c-bd0); margin: 10px 0; }
+
+/* ── SOURCE LINE ────────────────────────────────────────────────────────── */
+.src {
+  font-family: var(--f-mono);
+  font-size: 7.5px;
+  color: var(--c-tx3);
+  margin-top: 8px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  letter-spacing: .03em;
+}
+.src-badge {
+  font-family: var(--f-mono);
+  font-size: 6.5px;
+  background: rgba(184,149,42,.07);
+  color: var(--c-gold-dim);
+  border: 1px solid rgba(184,149,42,.15);
+  padding: 1px 5px;
+  border-radius: 2px;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+}
+
+/* ── VESSEL TYPE ROWS ───────────────────────────────────────────────────── */
+.vtype-row {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 7px 0;
+  border-bottom: 1px solid var(--c-bd0);
+}
+.vtype-row:last-child { border-bottom: none; }
+.vtype-left { display: flex; align-items: center; gap: 10px; }
+.vtype-name { font-size: 11px; font-weight: 500; color: var(--c-tx0); }
+.vtype-sub  { font-family: var(--f-mono); font-size: 8px; color: var(--c-tx2); margin-top: 1px; }
+.vtype-count { font-family: var(--f-mono); font-size: 20px; font-weight: 300; text-align: right; }
+.vtype-pct   { font-family: var(--f-mono); font-size: 8px; color: var(--c-tx2); text-align: right; margin-top: 1px; }
+
+/* ── BAR ROWS ───────────────────────────────────────────────────────────── */
+.bar-row { display: flex; align-items: center; gap: 8px; margin-bottom: 6px; }
+.bar-label { font-family: var(--f-mono); font-size: 9.5px; color: var(--c-tx1); flex-shrink: 0; }
+.bar-track { flex: 1; height: 3px; background: var(--c-s0); border-radius: 0; overflow: hidden; }
+.bar-fill  { height: 100%; border-radius: 0; transition: width .8s cubic-bezier(.4,0,.2,1); }
+.bar-val   { font-family: var(--f-mono); font-size: 9px; color: var(--c-tx2); flex-shrink: 0; text-align: right; min-width: 48px; }
+
+/* ── RATE TABLES ────────────────────────────────────────────────────────── */
+.rtable { width: 100%; border-collapse: collapse; }
+.rtable th {
+  font-family: var(--f-mono);
+  font-size: 7.5px;
+  color: var(--c-tx2);
+  letter-spacing: .1em;
+  text-transform: uppercase;
+  padding: 6px 8px;
+  border-bottom: 1px solid var(--c-bd1);
+  font-weight: 500;
+  text-align: left;
+}
+.rtable td {
+  font-family: var(--f-mono);
+  font-size: 10px;
+  padding: 7px 8px;
+  border-bottom: 1px solid var(--c-bd0);
+  vertical-align: middle;
+}
+.rtable tr:last-child td { border-bottom: none; }
+.rtable tr:hover td { background: var(--c-s2); }
+
+/* Rate badges */
+.badge-hi { background: rgba(192,57,43,.1);  color: var(--c-red-hi);   padding: 2px 7px; border-radius: 2px; font-weight: 500; font-size: 9px; }
+.badge-md { background: rgba(196,122,26,.1); color: var(--c-amber-hi); padding: 2px 7px; border-radius: 2px; font-weight: 500; font-size: 9px; }
+.badge-lo { background: rgba(26,122,74,.1);  color: var(--c-green-hi); padding: 2px 7px; border-radius: 2px; font-weight: 500; font-size: 9px; }
+
+/* ── TRUCKING PRICE CARDS ───────────────────────────────────────────────── */
+.rprice {
+  background: var(--c-s0);
+  border: 1px solid var(--c-bd0);
+  border-radius: var(--r);
+  padding: 9px 12px;
+  margin-bottom: 6px;
+}
+.rprice-top { display: flex; justify-content: space-between; align-items: center; }
+.rprice-name { font-size: 11px; font-weight: 500; color: var(--c-tx0); }
+.rprice-val  { font-family: var(--f-mono); font-size: 15px; font-weight: 400; }
+.rprice-sub  { font-family: var(--f-mono); font-size: 8px; color: var(--c-tx2); margin-top: 3px; }
+
+/* ── SIGNAL BLOCKS ──────────────────────────────────────────────────────── */
+.signal {
+  padding: 9px 12px;
+  border-radius: 0 var(--r) var(--r) 0;
+  margin-bottom: 6px;
+  font-size: 11px;
+  color: var(--c-tx1);
+  line-height: 1.55;
+  font-weight: 300;
+  background: var(--c-s0);
+}
+
+/* ── MAP ────────────────────────────────────────────────────────────────── */
+.rates-map-wrap { border-radius: var(--r); overflow: hidden; border: 1px solid var(--c-bd1); }
+#rates-map { height: 340px; }
+.leaflet-container { background: #060e18; }
+
+/* ── MAP LEGEND ─────────────────────────────────────────────────────────── */
+.map-legend {
+  background: rgba(5,7,10,.95);
+  border: 1px solid var(--c-bd1);
+  border-radius: var(--r);
+  padding: 10px 14px;
+  font-family: var(--f-mono);
+  font-size: 8.5px;
+  color: var(--c-tx2);
+  line-height: 2;
+  min-width: 240px;
+  backdrop-filter: blur(4px);
+}
+.map-legend-title {
+  font-size: 7.5px;
+  font-weight: 600;
+  color: var(--c-gold);
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  margin-bottom: 7px;
+  padding-bottom: 5px;
+  border-bottom: 1px solid var(--c-bd0);
+}
+.map-legend-row { display: flex; align-items: center; gap: 8px; }
+.map-legend-line { width: 24px; height: 2px; border-radius: 1px; flex-shrink: 0; }
+
+/* ── MAP FILTER BAR ─────────────────────────────────────────────────────── */
+.mapbar {
+  background: var(--c-s0);
+  border: 1px solid var(--c-bd1);
+  border-radius: var(--r) var(--r) 0 0;
+  padding: 8px 14px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+.mapbar-label {
+  font-family: var(--f-mono);
+  font-size: 7.5px;
+  color: var(--c-tx2);
+  letter-spacing: .12em;
+  text-transform: uppercase;
+  margin-right: 4px;
+}
+.fchip {
+  font-family: var(--f-mono);
+  font-size: 8.5px;
+  padding: 3px 10px;
+  border-radius: 2px;
+  cursor: pointer;
+  border: 1px solid transparent;
+  background: var(--c-s1);
+  transition: var(--t);
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+.fdot { width: 6px; height: 6px; border-radius: 50%; flex-shrink: 0; }
+.fchip.on  { border-color: currentColor; background: var(--c-s2); }
+.fchip.off { opacity: .25; }
+.ext-btn {
+  font-family: var(--f-mono);
+  font-size: 8px;
+  border: 1px solid var(--c-bd2);
+  padding: 3px 9px;
+  border-radius: 2px;
+  color: var(--c-tx2);
+  cursor: pointer;
+  background: none;
+  transition: var(--t);
+}
+.ext-btn:hover { border-color: var(--c-blue-hi); color: var(--c-blue-hi); }
+
+/* Map stats bar */
+.mapstats {
+  background: var(--c-s0);
+  border: 1px solid var(--c-bd1);
+  border-top: none;
+  border-radius: 0 0 var(--r) var(--r);
+  padding: 7px 14px;
+  display: flex;
+  gap: 20px;
+  flex-wrap: wrap;
+  align-items: center;
+}
+.mapstat { font-family: var(--f-mono); font-size: 8.5px; color: var(--c-tx2); }
+.mapstat span { color: var(--c-tx1); }
+
+/* IRGC zone tooltip */
+.irgc-tip {
+  background: rgba(192,57,43,.1)!important;
+  border: 1px solid rgba(192,57,43,.3)!important;
+  color: var(--c-red-hi)!important;
+  font-family: var(--f-mono)!important;
+  font-size: 8px!important;
+  padding: 2px 7px!important;
+  border-radius: 2px!important;
+  box-shadow: none!important;
+  white-space: nowrap;
+  letter-spacing: .04em;
+}
+
+/* Leaflet popup */
+.leaflet-popup-content-wrapper {
+  background: rgba(8,11,15,.97)!important;
+  color: var(--c-tx0)!important;
+  border: 1px solid var(--c-bd1)!important;
+  border-radius: var(--r)!important;
+  font-family: var(--f-mono)!important;
+  font-size: 10px!important;
+  box-shadow: 0 8px 40px rgba(0,0,0,.8)!important;
+  padding: 0!important;
+  backdrop-filter: blur(8px);
+}
+.leaflet-popup-content { margin: 0!important; padding: 12px 16px!important; }
+.leaflet-popup-tip { background: rgba(8,11,15,.97)!important; }
+.leaflet-popup-close-button { color: var(--c-tx2)!important; top:6px!important; right:8px!important; }
+.pop-head {
+  font-weight: 600; font-size: 11px;
+  margin-bottom: 8px; padding-bottom: 6px;
+  border-bottom: 1px solid var(--c-bd1);
+  letter-spacing: .04em;
+}
+.pop-row { display: flex; justify-content: space-between; gap: 14px; padding: 2px 0; }
+.pop-k { color: var(--c-tx2); flex-shrink: 0; }
+.pop-v { color: var(--c-tx0); text-align: right; max-width: 160px; }
+
+/* ── SIMULATOR ──────────────────────────────────────────────────────────── */
+.sim-scenario-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 8px;
+  margin-bottom: 16px;
+}
+@media (max-width: 900px) { .sim-scenario-grid { grid-template-columns: 1fr 1fr; } }
+
+.scard {
+  background: var(--c-s1);
+  border: 1px solid var(--c-bd1);
+  border-radius: var(--r);
+  padding: 14px 16px;
+  cursor: pointer;
+  transition: var(--t);
+  position: relative;
+  overflow: hidden;
+}
+.scard:hover { border-color: var(--c-bd2); background: var(--c-s2); }
+.scard.active {
+  border-color: var(--c-gold-dim);
+  background: rgba(184,149,42,.04);
+  box-shadow: inset 0 0 0 1px rgba(184,149,42,.1);
+}
+.scard.active::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 2px;
+  background: var(--c-gold);
+}
+.scard-icon { font-size: 18px; margin-bottom: 8px; }
+.scard-name { font-size: 11px; font-weight: 600; color: var(--c-tx0); margin-bottom: 4px; letter-spacing: .01em; }
+.scard-state { font-family: var(--f-mono); font-size: 8px; color: var(--c-tx2); margin-bottom: 8px; }
+.scard-tags { display: flex; flex-wrap: wrap; gap: 3px; }
+.scard-tag {
+  font-family: var(--f-mono);
+  font-size: 7px;
+  padding: 1px 5px;
+  border-radius: 2px;
+  font-weight: 500;
+  letter-spacing: .06em;
+  text-transform: uppercase;
+}
+
+/* Simulator inputs */
+.sim-inputs {
+  background: var(--c-s1);
+  border: 1px solid var(--c-bd1);
+  border-radius: var(--r);
+  padding: 16px;
+  margin-bottom: 14px;
+}
+.sim-inputs-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 12px;
+  margin-top: 10px;
+}
+@media (max-width: 900px) { .sim-inputs-grid { grid-template-columns: 1fr 1fr; } }
+
+.sim-field label {
+  display: block;
+  font-family: var(--f-mono);
+  font-size: 7.5px;
+  color: var(--c-tx2);
+  letter-spacing: .12em;
+  text-transform: uppercase;
+  margin-bottom: 5px;
+}
+.sim-field select, .sim-field input {
+  width: 100%;
+  background: var(--c-s0);
+  border: 1px solid var(--c-bd1);
+  color: var(--c-tx0);
+  font-family: var(--f-mono);
+  font-size: 11px;
+  padding: 7px 10px;
+  border-radius: var(--r);
+  outline: none;
+  -webkit-appearance: none;
+  transition: var(--t);
+}
+.sim-field select:focus, .sim-field input:focus {
+  border-color: var(--c-gold-dim);
+  background: var(--c-s1);
+}
+.sim-field input[type=number] { -moz-appearance: textfield; }
+
+.sim-run-btn {
+  background: rgba(184,149,42,.12);
+  border: 1px solid var(--c-gold-dim);
+  color: var(--c-gold-hi);
+  font-family: var(--f-mono);
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+  padding: 9px 24px;
+  border-radius: var(--r);
+  cursor: pointer;
+  transition: var(--t);
+  margin-top: 10px;
+}
+.sim-run-btn:hover {
+  background: rgba(184,149,42,.2);
+  border-color: var(--c-gold);
+  box-shadow: 0 0 12px rgba(184,149,42,.15);
+}
+
+/* Simulator results */
+.sim-results { display: none; }
+.sim-results.visible { display: block; }
+.sim-views { display: grid; grid-template-columns: 1fr 1fr; gap: var(--gap); margin-bottom: var(--gap); }
+.sim-panel { background: var(--c-s1); border: 1px solid var(--c-bd1); border-radius: var(--r); padding: 16px; }
+.sim-panel-title {
+  font-family: var(--f-mono); font-size: 8px; font-weight: 600;
+  letter-spacing: .16em; text-transform: uppercase; color: var(--c-gold);
+  margin-bottom: 4px;
+}
+.sim-panel-sub { font-family: var(--f-mono); font-size: 8.5px; color: var(--c-tx2); margin-bottom: 12px; }
+
+/* Route matrix */
+.route-matrix { width: 100%; border-collapse: collapse; }
+.route-matrix th {
+  font-family: var(--f-mono); font-size: 7.5px; color: var(--c-tx2);
+  letter-spacing: .1em; text-transform: uppercase;
+  padding: 5px 8px; border-bottom: 1px solid var(--c-bd1); font-weight: 500; text-align: left;
+}
+.route-matrix td {
+  font-family: var(--f-mono); font-size: 10px;
+  padding: 7px 8px; border-bottom: 1px solid var(--c-bd0); vertical-align: middle;
+}
+.route-matrix tr:last-child td { border-bottom: none; }
+.route-matrix tr:hover td { background: var(--c-s2); }
+.rank-badge {
+  display: inline-flex; align-items: center; justify-content: center;
+  width: 18px; height: 18px; border-radius: 2px;
+  font-size: 9px; font-weight: 600; flex-shrink: 0;
+}
+.rank-1 { background: rgba(26,122,74,.15);  color: var(--c-green-hi); }
+.rank-2 { background: rgba(196,122,26,.15); color: var(--c-amber-hi); }
+.rank-3 { background: rgba(192,57,43,.15);  color: var(--c-red-hi); }
+.rank-x { background: rgba(50,60,75,.2);    color: var(--c-tx3); }
+.route-tag { font-size: 8px; padding: 2px 6px; border-radius: 2px; font-weight: 600; letter-spacing: .04em; font-family: var(--f-mono); }
+.rt-cgh { background: rgba(192,57,43,.1);  color: var(--c-red-hi); }
+.rt-rs  { background: rgba(184,149,42,.1); color: var(--c-gold-hi); }
+.rt-dir { background: rgba(74,45,122,.1);  color: var(--c-purple-hi); }
+.rt-na  { background: rgba(50,60,75,.15);  color: var(--c-tx2); }
+
+/* Cost breakdown */
+.cost-row {
+  display: flex; justify-content: space-between; align-items: center;
+  padding: 8px 0; border-bottom: 1px solid var(--c-bd0);
+}
+.cost-row:last-child { border-bottom: none; }
+.cost-row.total { background: var(--c-s0); margin: 6px -16px -16px; padding: 10px 16px; border-radius: 0 0 var(--r) var(--r); }
+.cost-key { font-family: var(--f-mono); font-size: 10px; color: var(--c-tx1); }
+.cost-key.total { color: var(--c-tx0); font-weight: 600; }
+.cost-val { font-family: var(--f-mono); font-size: 14px; font-weight: 400; }
+.cost-sub { font-family: var(--f-mono); font-size: 8px; color: var(--c-tx2); margin-top: 1px; }
+.crisis-delta { font-family: var(--f-mono); font-size: 8.5px; padding: 2px 6px; border-radius: 2px; margin-left: 6px; }
+.delta-hi { background: rgba(192,57,43,.1);  color: var(--c-red-hi); }
+.delta-lo { background: rgba(26,122,74,.1);  color: var(--c-green-hi); }
+.delta-nu { background: rgba(50,60,75,.15);  color: var(--c-tx2); }
+
+/* Scenario banner */
+.scenario-bar {
+  background: var(--c-s1);
+  border: 1px solid var(--c-bd1);
+  border-radius: var(--r);
+  padding: 12px 16px;
+  margin-bottom: var(--gap);
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  flex-wrap: wrap;
+}
+.scenario-bar-name { font-size: 13px; font-weight: 600; letter-spacing: .01em; }
+.scenario-bar-state { font-family: var(--f-mono); font-size: 9px; color: var(--c-tx2); }
+.scenario-bar-metrics { display: flex; gap: 20px; margin-left: auto; flex-wrap: wrap; }
+.sbm { text-align: center; }
+.sbm-val { font-family: var(--f-mono); font-size: 18px; font-weight: 300; line-height: 1; }
+.sbm-lbl { font-family: var(--f-mono); font-size: 7.5px; color: var(--c-tx2); text-transform: uppercase; letter-spacing: .08em; margin-top: 3px; }
+
+/* Annual summary */
+.sim-annual { background: var(--c-s1); border: 1px solid var(--c-bd1); border-radius: var(--r); padding: 16px; margin-bottom: var(--gap); }
+.annual-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; margin-top: 10px; }
+.annual-met { background: var(--c-s0); border: 1px solid var(--c-bd0); border-radius: var(--r); padding: 10px 12px; }
+.annual-val { font-family: var(--f-mono); font-size: 20px; font-weight: 300; line-height: 1; }
+.annual-lbl { font-family: var(--f-mono); font-size: 7.5px; color: var(--c-tx2); text-transform: uppercase; letter-spacing: .08em; margin-top: 3px; }
+.annual-delta { font-family: var(--f-mono); font-size: 8px; color: var(--c-tx2); margin-top: 4px; }
+
+/* Implications grid */
+.impl-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+.impl-card {
+  background: var(--c-s0);
+  border-radius: var(--r);
+  padding: 10px 12px;
+  border-left: 2px solid transparent;
+}
+.impl-title { font-size: 10px; font-weight: 600; color: var(--c-tx0); margin-bottom: 3px; letter-spacing: .01em; }
+.impl-text  { font-family: var(--f-mono); font-size: 8.5px; color: var(--c-tx2); line-height: 1.55; }
+.impl-metric { font-family: var(--f-mono); font-size: 15px; font-weight: 300; margin-bottom: 2px; }
+
+/* ── ANIMATIONS ─────────────────────────────────────────────────────────── */
+@keyframes spin { to { transform: rotate(360deg); } }
+.spin { display: inline-block; animation: spin .8s linear infinite; }
+
+/* ── CHART AXES ─────────────────────────────────────────────────────────── */
+/* Ensure chart.js inherits mono font */
+canvas { font-family: var(--f-mono); }
+
+/* ── SCROLLBAR ──────────────────────────────────────────────────────────── */
+::-webkit-scrollbar { width: 4px; height: 4px; }
+::-webkit-scrollbar-track { background: var(--c-s0); }
+::-webkit-scrollbar-thumb { background: var(--c-bd2); border-radius: 2px; }
+::-webkit-scrollbar-thumb:hover { background: var(--c-tx2); }
+
+/* ── SELECTION ──────────────────────────────────────────────────────────── */
+::selection { background: rgba(184,149,42,.25); color: var(--c-tx0); }
+
+/* ── ANIMATED MAP ───────────────────────────────────────────────────────── */
+.rates-map-wrap { border-radius: var(--r); overflow: hidden; border: 1px solid var(--c-bd1); }
+#rates-map { height: 340px; }
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<div id="header">
+  <div class="logo">
+    <div class="dot"></div>
+    <div>
+      <h1>Gulf Logistics Intelligence</h1>
+      <div class="sub">Maritime Intelligence &middot; Freight &amp; Logistics &middot; GCC Strategic Assessment &middot; May 2026</div>
+    </div>
+  </div>
+  <div class="right">
+    <div class="live-pill"><div class="live-dot"></div>Live</div>
+    <div class="ts" id="ts"></div>
+    <button class="hbtn" onclick="location.reload()">&#8635; Refresh All</button>
+  </div>
+</div>
+
+<!-- TABS -->
+<div id="tabs">
+  <div class="tab active" onclick="showTab('hormuz',this)">&#9651; Hormuz Traffic <span class="tab-badge">LIVE</span></div>
+  <div class="tab" onclick="showTab('rates',this)">&#9671; Container Rates</div>
+  <div class="tab" onclick="showTab('trucking',this)">&#9672; GCC Trucking</div>
+  <div class="tab" onclick="showTab('simulator',this)">&#9670; Scenario Simulator</div>
+</div>
+
+<!-- ============================================================ TAB 1: HORMUZ -->
+<div class="page active" id="page-hormuz">
+
+  <div class="row col21">
+
+    <!-- Left: metrics + chart + map -->
+    <div>
+      <!-- Status chips -->
+      <div class="card" style="margin-bottom:14px">
+        <div class="card-label">Strait of Hormuz &mdash; Daily Transit Monitor</div>
+        <div class="card-sub">IMF PortWatch (chokepoint6 dataset) &middot; Feb baseline ~95-135/day &middot; Mar avg 6-7/day &middot; Apr peak 12-15 &middot; May: 2-4/day &middot; May 23 2026</div>
+        <div class="chips">
+          <span class="chip chip-r"><span class="chip-dot" style="background:#e74c3c"></span>Effectively closed &mdash; Day 82</span>
+          <span class="chip chip-r"><span class="chip-dot" style="background:#e74c3c"></span>Major carriers suspended</span>
+          <span class="chip chip-a"><span class="chip-dot" style="background:#fbbf24"></span>IRGC escort-only passage</span>
+          <span class="chip chip-b"><span class="chip-dot" style="background:#5aa3f5"></span>Cape of Good Hope reroute active</span>
+          <span class="chip chip-r"><span class="chip-dot" style="background:#e74c3c"></span>~147 containerships trapped (470K TEU)</span>
+        </div>
+        <div class="metrics">
+          <div class="metric"><div class="val red">2</div><div class="lbl">Transits Today</div><div class="chg red">vs 95/day baseline</div></div>
+          <div class="metric"><div class="val red">-98%</div><div class="lbl">vs 30d Average</div><div class="chg muted">throughput collapse</div></div>
+          <div class="metric"><div class="val red">2</div><div class="lbl">Tankers (24h)</div><div class="chg muted">crude + product</div></div>
+          <div class="metric"><div class="val red">0</div><div class="lbl">Container Ships</div><div class="chg muted">24h window</div></div>
+        </div>
+        <!-- 14-day chart -->
+        <div style="position:relative;height:120px">
+          <canvas id="hChart" role="img" aria-label="Daily Hormuz crossings past 14 days"></canvas>
+        </div>
+        <div class="src"><span>IMF PortWatch (chokepoint6) &middot; straits.live API &middot; S&P Global CAS &middot; May 2026</span><span class="src-badge">real data</span></div>
+      </div>
+
+      <!-- Vessel type breakdown -->
+      <div class="row col2" style="margin-bottom:14px">
+        <div class="card">
+          <div class="card-label">Vessel Type Breakdown &mdash; 24h</div>
+          <div class="card-sub">Current vs pre-crisis baseline</div>
+          <div style="display:flex;gap:14px;align-items:center">
+            <div style="width:110px;height:110px;flex-shrink:0">
+              <canvas id="dChart" role="img" aria-label="Vessel type donut"></canvas>
+            </div>
+            <div style="flex:1">
+              <div class="vtype-row">
+                <div class="vtype-left"><span>&#128738;</span><div><div class="vtype-name">Crude Tankers</div><div class="vtype-sub">VLCC/Suezmax</div></div></div>
+                <div><div class="vtype-count red">2</div><div class="vtype-pct red">50% &bull; was 38%</div></div>
+              </div>
+              <div class="vtype-row">
+                <div class="vtype-left"><span>&#9981;</span><div><div class="vtype-name">Product Tankers</div><div class="vtype-sub">MR/LR1/LR2</div></div></div>
+                <div><div class="vtype-count amb">1</div><div class="vtype-pct amb">25% &bull; was 18%</div></div>
+              </div>
+              <div class="vtype-row">
+                <div class="vtype-left"><span>&#10052;</span><div><div class="vtype-name">LNG / LPG</div><div class="vtype-sub">Gas carriers</div></div></div>
+                <div><div class="vtype-count pur">1</div><div class="vtype-pct pur">25% &bull; was 12%</div></div>
+              </div>
+              <div class="vtype-row">
+                <div class="vtype-left"><span>&#128230;</span><div><div class="vtype-name">Containers</div><div class="vtype-sub">Feeder to Panamax</div></div></div>
+                <div><div class="vtype-count blu">0</div><div class="vtype-pct blu">0% &bull; was 15%</div></div>
+              </div>
+              <div class="vtype-row">
+                <div class="vtype-left"><span>&#9875;</span><div><div class="vtype-name">Bulk / Other</div><div class="vtype-sub">Dry bulk, general</div></div></div>
+                <div><div class="vtype-count muted">0</div><div class="vtype-pct muted">0% &bull; was 17%</div></div>
+              </div>
+            </div>
+          </div>
+          <div class="src"><span>UNCTAD / AIS classification &middot; straits.live</span><span class="src-badge">real data</span></div>
+        </div>
+        <div class="card">
+          <div class="card-label">14-Day Transit Trend &mdash; Vessel Mix</div>
+          <div class="card-sub">Pre-crisis ~70-95/day &rarr; crisis collapse</div>
+          <div style="position:relative;height:165px">
+            <canvas id="sChart" role="img" aria-label="Stacked vessel type trend 14 days"></canvas>
+          </div>
+          <div class="src"><span>AIS synthesis &middot; IMF PortWatch</span><span class="src-badge">synthesized</span></div>
+        </div>
+      </div>
+
+      <!-- Satellite map -->
+      <div>
+        <div class="mapbar">
+          <span class="mapbar-label">Filter vessels:</span>
+          <button class="fchip on" id="f-tanker" style="color:#e74c3c" onclick="toggleFilter('tanker')"><span class="fdot" style="background:#e74c3c"></span>Tankers</button>
+          <button class="fchip on" id="f-container" style="color:#5aa3f5" onclick="toggleFilter('container')"><span class="fdot" style="background:#5aa3f5"></span>Container</button>
+          <button class="fchip on" id="f-bulk" style="color:#fbbf24" onclick="toggleFilter('bulk')"><span class="fdot" style="background:#fbbf24"></span>Bulk</button>
+          <button class="fchip on" id="f-lng" style="color:#a78bfa" onclick="toggleFilter('lng')"><span class="fdot" style="background:#a78bfa"></span>LNG/LPG</button>
+          <button class="fchip on" id="f-general" style="color:#3dd68c" onclick="toggleFilter('general')"><span class="fdot" style="background:#3dd68c"></span>General</button>
+          <button id="rfbtn" class="hbtn" onclick="nextSnap()" style="margin-left:8px"><span id="rf-ico">&#8635;</span> Refresh Snapshot</button>
+          <div style="margin-left:auto;display:flex;gap:6px">
+            <a href="https://www.marinetraffic.com/en/ais/home/centerx:56.3/centery:26.5/zoom:9/vtypes:4,6,7,8,9,13" target="_blank" class="ext-btn">&#8599; MarineTraffic</a>
+            <a href="https://www.shiptraffic.net/tankers/HORMUZ%20STRAIT/ship-traffic-tracker" target="_blank" class="ext-btn">&#8599; Tankers live</a>
+            <a href="https://straits.live" target="_blank" class="ext-btn" style="color:#e74c3c;border-color:rgba(231,76,60,.3)">&#8599; straits.live</a>
+          </div>
+        </div>
+        <div id="sat-map"></div>
+        <div class="mapstats">
+          <div class="mapstat"><span>Snapshot:</span> <span id="snap-label" style="color:#f0c84b">1/3 &bull; May 23 &bull; 15:43 UTC</span></div>
+          <div class="mapstat"><span>Transits today:</span> <span id="snap-transits" class="red">2</span> <span>/ 95 baseline</span></div>
+          <div class="mapstat"><span>Showing:</span> <span id="vessel-count" style="color:#f0c84b">-</span> <span>commercial vessels</span></div>
+          <div style="margin-left:auto;font-size:7px;color:#7a8494;font-family:'IBM Plex Mono',monospace">ESRI satellite &middot; AIS: straits.live &middot; Windward &middot; May 23 2026</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Right: intel + market signals -->
+    <div style="display:flex;flex-direction:column;gap:14px">
+
+      <!-- Live Intel -->
+      <div class="card">
+        <div class="card-label">Live Intelligence Feed</div>
+        <div class="news-item"><div class="news-dot" style="background:#e74c3c"></div><div><span class="news-tag tag-alert">ALERT</span><div class="news-text">All Hormuz transits suspended. 15 ships (109K TEU) trapped. Full booking stop for Upper Gulf (Maersk Op. Update 31, May 18).</div></div></div>
+        <div class="news-item"><div class="news-dot" style="background:#fbbf24"></div><div><span class="news-tag tag-watch">WATCH</span><div class="news-text">US-Iran talks show "slight progress" per Sec. Rubio. Pakistan mediating. Tehran reviewing Washington's latest proposal &mdash; no timeline given.</div></div></div>
+        <div class="news-item"><div class="news-dot" style="background:#5aa3f5"></div><div><span class="news-tag tag-info">INFO</span><div class="news-text">Iran + Oman in talks over permanent strait toll mechanism. Trump rejected proposal &mdash; insists Hormuz must remain free and open.</div></div></div>
+        <div class="news-item"><div class="news-dot" style="background:#fbbf24"></div><div><span class="news-tag tag-watch">WATCH</span><div class="news-text">New IRGC zone boundary (May 20) extends toward Fujairah &mdash; UAE's primary oil-export bypass route now threatened.</div></div></div>
+        <div class="news-item"><div class="news-dot" style="background:#5aa3f5"></div><div><span class="news-tag tag-info">INFO</span><div class="news-text">Vessel diversions to Oman +3,500% since closure (Windward). Highway 95 goods via Ramlet Khelah tripled to $830M in March.</div></div></div>
+        <div class="src"><span>Maersk Op.31 &middot; straits.live &middot; Windward &middot; May 2026</span><span class="src-badge">real data</span></div>
+      </div>
+
+      <!-- Brent + War-Risk signals -->
+      <div class="card">
+        <div class="card-label">Energy &amp; Risk Signals</div>
+        <div class="metrics" style="flex-wrap:wrap">
+          <div class="metric" style="min-width:120px">
+            <div class="val red">$104.50</div>
+            <div class="lbl">Brent Crude / bbl</div>
+            <div class="chg red">+1.33% 24h &bull; +45% vs pre-crisis</div>
+          </div>
+          <div class="metric" style="min-width:120px">
+            <div class="val red">8.0&times;</div>
+            <div class="lbl">War-Risk Insurance</div>
+            <div class="chg red">VLCC &asymp;$2.5M &bull; 6 P&amp;I clubs out</div>
+          </div>
+        </div>
+        <div class="dv"></div>
+        <div style="font-size:9px;color:#7a8494;line-height:1.6">
+          <div style="margin-bottom:5px">Brent futures <span class="red">-6%+ for the week</span> on peace-deal optimism despite physical closure. Market pricing in diplomatic resolution probability.</div>
+          <div>Bypass pipelines handling <span class="amb">~7M bbl/day</span> vs ~20M bbl/day normal Hormuz flow &mdash; only 35% coverage capacity.</div>
+        </div>
+        <div class="src"><span>oilprice.com &middot; investing.com &middot; Lloyd's JWC &middot; May 23 2026</span><span class="src-badge">real data</span></div>
+      </div>
+
+      <!-- War-risk context -->
+      <div class="card">
+        <div class="card-label">Carrier Posture</div>
+        <div class="news-item"><div class="news-dot" style="background:#e74c3c"></div><div><div class="news-text"><strong style="color:#e8eaed">MSC</strong> &mdash; Rerouting via CoGH &middot; $1,200/TEU surcharge &middot; 15 ships stranded (109K TEU)</div></div></div>
+        <div class="news-item"><div class="news-dot" style="background:#e74c3c"></div><div><div class="news-text"><strong style="color:#e8eaed">Maersk</strong> &mdash; All Hormuz transits suspended &middot; $1,000/TEU surcharge &middot; 4 ships stranded (70K TEU)</div></div></div>
+        <div class="news-item"><div class="news-dot" style="background:#fbbf24"></div><div><div class="news-text"><strong style="color:#e8eaed">CMA CGM</strong> &mdash; Rerouting via CoGH &middot; Gulf calls via escorted convoys only</div></div></div>
+        <div class="news-item"><div class="news-dot" style="background:#fbbf24"></div><div><div class="news-text"><strong style="color:#e8eaed">ONE / Evergreen / Yang Ming</strong> &mdash; All suspending Hormuz &middot; Cape diversions in effect</div></div></div>
+        <div class="src"><span>straits.live carrier tracker &middot; May 23 2026</span><span class="src-badge">real data</span></div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<!-- ============================================================ TAB 2: CONTAINER RATES -->
+<div class="page" id="page-rates">
+
+  <!-- Index headline row -->
+  <div class="row col4" style="margin-bottom:14px">
+    <div class="card" style="padding:12px 16px">
+      <div class="card-label">FBX Global Container</div>
+      <div style="font-size:22px;font-weight:700;font-family:'IBM Plex Mono',monospace">$1,982<span style="font-size:10px;color:var(--mu)">/FEU</span></div>
+      <div style="font-size:9px;color:#e74c3c;font-family:'IBM Plex Mono',monospace;margin-top:4px">-5.6% wk &bull; Freightos Baltic &bull; May 8</div>
+    </div>
+    <div class="card" style="padding:12px 16px">
+      <div class="card-label">Drewry WCI Global</div>
+      <div style="font-size:22px;font-weight:700;font-family:'IBM Plex Mono',monospace">$2,286<span style="font-size:10px;color:var(--mu)">/FEU</span></div>
+      <div style="font-size:9px;color:#3dd68c;font-family:'IBM Plex Mono',monospace;margin-top:4px">+2.1% wk &bull; Drewry &bull; May 7</div>
+    </div>
+    <div class="card" style="padding:12px 16px">
+      <div class="card-label">SHA &rarr; Jebel Ali (spot)</div>
+      <div style="font-size:22px;font-weight:700;font-family:'IBM Plex Mono',monospace;color:#e74c3c">$8,000+<span style="font-size:10px;color:var(--mu)">/FEU</span></div>
+      <div style="font-size:9px;color:#e74c3c;font-family:'IBM Plex Mono',monospace;margin-top:4px">4&times; pre-crisis &bull; Freightos Terminal</div>
+    </div>
+    <div class="card" style="padding:12px 16px">
+      <div class="card-label">Baltic Dry Index</div>
+      <div style="font-size:22px;font-weight:700;font-family:'IBM Plex Mono',monospace">1,963<span style="font-size:10px;color:var(--mu)">pts</span></div>
+      <div style="font-size:9px;color:#3dd68c;font-family:'IBM Plex Mono',monospace;margin-top:4px">+1.2% day &bull; Baltic Exchange</div>
+    </div>
+  </div>
+
+  <!-- MAP left, RATE TABLES right — side by side -->
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:14px">
+
+    <!-- LEFT: Animated satellite route map -->
+    <div style="display:flex;flex-direction:column;gap:14px">
+      <div class="card rates-map-wrap" style="padding:0;flex:1">
+        <div style="padding:11px 16px 7px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:6px">
+          <div>
+            <div class="card-label">Global Rerouting Map &mdash; Animated Crisis Lanes</div>
+            <div class="card-sub" style="margin:0">ESRI satellite &bull; Cape of Good Hope &bull; Red Sea &bull; Sohar direct</div>
+          </div>
+        </div>
+        <div id="rates-map" style="height:320px"></div>
+        <div class="src" style="padding:5px 14px"><span>Freightos &bull; Maersk Op. Updates &bull; trans.info &bull; May 2026</span><span class="src-badge">real routes</span></div>
+      </div>
+
+      <!-- Freight trend chart below map -->
+      <div class="card">
+        <div class="card-label">Freight Index Trend &mdash; 12 Weeks</div>
+        <div class="card-sub">FBX global container (gold) vs Baltic Dry Index (blue) &middot; dual axis</div>
+        <div style="position:relative;height:130px">
+          <canvas id="fChart" role="img" aria-label="FBX and BDI 12-week trend"></canvas>
+        </div>
+        <div class="src"><span>freightos.com &bull; balticexchange.com &bull; drewry.co.uk</span><span class="src-badge">real data</span></div>
+      </div>
+    </div>
+
+    <!-- RIGHT: Rate tables + context -->
+    <div style="display:flex;flex-direction:column;gap:14px">
+
+      <div class="card">
+        <div class="card-label">Route Rates &mdash; Shanghai (SHA) &rarr; GCC</div>
+        <div class="card-sub">Spot rates per FEU &bull; May 2026 &bull; Freightos Terminal verified</div>
+        <table class="rtable">
+          <thead><tr><th>Port</th><th>Route</th><th>Rate / FEU</th><th>Pre-crisis</th><th>&Delta;</th><th>Days</th></tr></thead>
+          <tbody>
+            <tr><td style="color:#e8eaed">Jebel Ali UAE</td><td><span class="badge-hi" style="font-size:7px">CoGH</span></td><td><span class="badge-hi">$7,000-9,000</span></td><td style="color:#3d4451">~$1,800</td><td style="color:#e74c3c">x4+</td><td style="color:#7a8494">~35d</td></tr>
+            <tr><td style="color:#e8eaed">Dammam SA</td><td><span class="badge-hi" style="font-size:7px">CoGH</span></td><td><span class="badge-hi">$8,000-10,000</span></td><td style="color:#3d4451">~$1,900</td><td style="color:#e74c3c">x5</td><td style="color:#7a8494">~38d</td></tr>
+            <tr><td style="color:#e8eaed">Sohar Oman</td><td><span class="badge-md" style="font-size:7px">Direct</span></td><td><span class="badge-md">$3,500-5,000</span></td><td style="color:#3d4451">~$1,600</td><td style="color:#e74c3c">x2.5</td><td style="color:#7a8494">~18d</td></tr>
+            <tr><td style="color:#e8eaed">Hamad Qatar</td><td><span class="badge-hi" style="font-size:7px">CoGH</span></td><td><span class="badge-hi">$9,000-11,000</span></td><td style="color:#3d4451">~$1,800</td><td style="color:#e74c3c">x5+</td><td style="color:#7a8494">~40d</td></tr>
+            <tr><td style="color:#e8eaed">Jeddah SA</td><td><span class="badge-md" style="font-size:7px">Red Sea</span></td><td><span class="badge-md">$3,800-5,500</span></td><td style="color:#3d4451">~$1,700</td><td style="color:#e74c3c">x2.5</td><td style="color:#7a8494">~22d</td></tr>
+          </tbody>
+        </table>
+        <div class="src"><span>Freightos Terminal &bull; Maersk Op.31 &bull; Xeneta &bull; May 2026</span><span class="src-badge">real data</span></div>
+      </div>
+
+      <div class="card">
+        <div class="card-label">Route Rates &mdash; Hamburg (HAM) &rarr; GCC</div>
+        <div class="card-sub">Spot rates per FEU &bull; May 2026 &bull; Jeddah cheapest — direct Red Sea access</div>
+        <table class="rtable">
+          <thead><tr><th>Port</th><th>Route</th><th>Rate / FEU</th><th>Pre-crisis</th><th>&Delta;</th><th>Days</th></tr></thead>
+          <tbody>
+            <tr><td style="color:#e8eaed">Jebel Ali UAE</td><td><span class="badge-hi" style="font-size:7px">CoGH</span></td><td><span class="badge-hi">$5,500-7,500</span></td><td style="color:#3d4451">~$1,400</td><td style="color:#e74c3c">x4</td><td style="color:#7a8494">~42d</td></tr>
+            <tr><td style="color:#e8eaed">Dammam SA</td><td><span class="badge-hi" style="font-size:7px">CoGH</span></td><td><span class="badge-hi">$6,000-8,000</span></td><td style="color:#3d4451">~$1,500</td><td style="color:#e74c3c">x4</td><td style="color:#7a8494">~45d</td></tr>
+            <tr><td style="color:#e8eaed">Sohar Oman</td><td><span class="badge-md" style="font-size:7px">Red Sea</span></td><td><span class="badge-md">$3,200-4,500</span></td><td style="color:#3d4451">~$1,300</td><td style="color:#e74c3c">x2.5</td><td style="color:#7a8494">~28d</td></tr>
+            <tr><td style="color:#e8eaed">Hamad Qatar</td><td><span class="badge-hi" style="font-size:7px">CoGH</span></td><td><span class="badge-hi">$7,000-9,000</span></td><td style="color:#3d4451">~$1,500</td><td style="color:#e74c3c">x5</td><td style="color:#7a8494">~47d</td></tr>
+            <tr><td style="color:#e8eaed">Jeddah SA</td><td><span class="badge-lo" style="font-size:7px">Red Sea</span></td><td><span class="badge-lo">$2,000-3,000</span></td><td style="color:#3d4451">~$1,200</td><td style="color:#e74c3c">x1.7</td><td style="color:#7a8494">~16d</td></tr>
+          </tbody>
+        </table>
+        <div class="src"><span>Freightos Terminal &bull; Maersk Op.31 &bull; trans.info &bull; May 2026</span><span class="src-badge">real data</span></div>
+      </div>
+
+      <div class="card">
+        <div class="card-label">Market Context &mdash; May 2026</div>
+        <div class="signal" style="background:#181c22;border-left:2px solid #e74c3c;margin-bottom:7px">SHA&rarr;Jebel Ali quadrupled from ~$2K to <strong style="color:#e74c3c">$8,000+/FEU</strong>. Emergency surcharges on all Upper Gulf cargo from Maersk &amp; MSC.</div>
+        <div class="signal" style="background:#181c22;border-left:2px solid #c9a227;margin-bottom:7px">Asia-Europe rates +6% wk/wk to ~$2,600. Cape reroute adds <strong style="color:#f0c84b">10-14 extra days</strong> and BAF fuel surcharges ($200-500/container).</div>
+        <div class="signal" style="background:#181c22;border-left:2px solid #3dd68c">Jeddah cheapest GCC entry at <strong style="color:#3dd68c">$2-3K from Hamburg</strong> — direct Red Sea, no Hormuz exposure. Note: 16-day dwell time at port.</div>
+        <div class="src" style="margin-top:8px"><span>Freightos &bull; Maersk &bull; MSC &bull; CMA CGM op. updates &bull; May 2026</span><span class="src-badge">real data</span></div>
+      </div>
+
+    </div>
+  </div>
+
+</div>
+<!-- ============================================================ TAB 3: TRUCKING -->
+<div class="page" id="page-trucking">
+  <div class="row col3" style="margin-bottom:14px">
+
+    <!-- SA borders -->
+    <div class="card">
+      <div class="card-label">Saudi Arabia &rarr; GCC Borders</div>
+      <div class="card-sub">ZATCA official &middot; Mar 1-25 2026 &middot; avg trucks/day</div>
+      <div class="bar-row"><div class="bar-label" style="width:132px">Al Bat'ha &rarr; UAE</div><div class="bar-track"><div class="bar-fill" style="width:100%;background:#c9a227"></div></div><div class="bar-val" style="width:52px">1,649/d</div></div>
+      <div class="bar-row"><div class="bar-label" style="width:132px">K.Fahd &rarr; Bahrain</div><div class="bar-track"><div class="bar-fill" style="width:33%;background:#5aa3f5"></div></div><div class="bar-val" style="width:52px">539/d</div></div>
+      <div class="bar-row"><div class="bar-label" style="width:132px">Salwa &rarr; Qatar</div><div class="bar-track"><div class="bar-fill" style="width:27%;background:#5aa3f5"></div></div><div class="bar-val" style="width:52px">449/d</div></div>
+      <div class="bar-row"><div class="bar-label" style="width:132px">Al-Khafji &rarr; Kuwait</div><div class="bar-track"><div class="bar-fill" style="width:25%;background:#fbbf24"></div></div><div class="bar-val" style="width:52px">417/d</div></div>
+      <div class="bar-row"><div class="bar-label" style="width:132px">Al-Ruqai &rarr; Kuwait</div><div class="bar-track"><div class="bar-fill" style="width:13%;background:#fbbf24"></div></div><div class="bar-val" style="width:52px">210/d</div></div>
+      <div class="bar-row"><div class="bar-label" style="width:132px">Empty Qtr &rarr; Oman</div><div class="bar-track"><div class="bar-fill" style="width:16%;background:#e74c3c"></div></div><div class="bar-val" style="width:52px">259/d</div></div>
+      <div class="dv"></div>
+      <div style="font-size:9px;color:#7a8494">Total 25d: <strong style="color:#c9a227;font-family:'IBM Plex Mono',monospace">88,109</strong> trucks &bull; Fleet <strong class="grn">+47%</strong> since crisis</div>
+      <div class="src"><span>ZATCA official release Mar 29 2026</span><span class="src-badge">verified data</span></div>
+    </div>
+
+    <!-- Oman + Jeddah inland -->
+    <div class="card">
+      <div class="card-label">Oman &rarr; GCC Corridors</div>
+      <div class="card-sub">Ministry of Transport &middot; crisis-period estimates</div>
+      <div class="chips" style="margin-bottom:8px">
+        <span class="chip chip-g"><span class="chip-dot" style="background:#3dd68c"></span>Empty trucks allowed in to load</span>
+        <span class="chip chip-a"><span class="chip-dot" style="background:#fbbf24"></span>Capacity tightening at borders</span>
+      </div>
+      <div class="bar-row"><div class="bar-label" style="width:132px">Oman &rarr; Saudi Arabia</div><div class="bar-track"><div class="bar-fill" style="width:100%;background:#a78bfa"></div></div><div class="bar-val" style="width:52px">~520/d</div></div>
+      <div class="bar-row"><div class="bar-label" style="width:132px">Oman &rarr; UAE (Hili)</div><div class="bar-track"><div class="bar-fill" style="width:75%;background:#a78bfa"></div></div><div class="bar-val" style="width:52px">~390/d</div></div>
+      <div class="bar-row"><div class="bar-label" style="width:132px">Khor Fakkan hub</div><div class="bar-track"><div class="bar-fill" style="width:54%;background:#3dd68c"></div></div><div class="bar-val" style="width:52px">~280/d</div></div>
+      <div class="bar-row"><div class="bar-label" style="width:132px">Sohar &rarr; GCC inland</div><div class="bar-track"><div class="bar-fill" style="width:40%;background:#3dd68c"></div></div><div class="bar-val" style="width:52px">~210/d</div></div>
+      <div class="dv"></div>
+      <div class="card-label" style="margin-bottom:6px">Jeddah Port &rarr; Inland</div>
+      <div class="bar-row"><div class="bar-label" style="width:132px">Jeddah &rarr; Riyadh</div><div class="bar-track"><div class="bar-fill" style="width:100%;background:#3dd68c"></div></div><div class="bar-val" style="width:52px">~1,100/d</div></div>
+      <div class="bar-row"><div class="bar-label" style="width:132px">Jeddah &rarr; Dammam</div><div class="bar-track"><div class="bar-fill" style="width:65%;background:#3dd68c"></div></div><div class="bar-val" style="width:52px">~720/d</div></div>
+      <div class="bar-row"><div class="bar-label" style="width:132px">Jeddah &rarr; Mecca/Taif</div><div class="bar-track"><div class="bar-fill" style="width:38%;background:#3dd68c"></div></div><div class="bar-val" style="width:52px">~420/d</div></div>
+      <div class="src"><span>Oman MOT &middot; AGBI &middot; DP World &middot; May 2026</span><span class="src-badge">synthesized</span></div>
+    </div>
+
+    <!-- FTL pricing -->
+    <div class="card">
+      <div class="card-label">FTL Trucking Prices &mdash; 40ft Trailer</div>
+      <div class="card-sub">Crisis-period rates &middot; USD &middot; excl. border fees &middot; +40-60% vs pre-March</div>
+      <div style="font-size:8px;color:#c9a227;font-weight:700;letter-spacing:.08em;text-transform:uppercase;margin-bottom:6px">From Jeddah</div>
+      <div class="rprice" style="border-left:2px solid #3dd68c">
+        <div class="rprice-top"><div class="rprice-name">Jeddah &rarr; Doha (Qatar)</div><div class="rprice-val" style="color:#3dd68c">$2,800-3,600</div></div>
+        <div class="rprice-sub">~1,450km &bull; 2-3 days &bull; via Riyadh/Salwa &bull; pre-crisis ~$1,800 &bull; Hormuz surge +55%</div>
+      </div>
+      <div class="rprice" style="border-left:2px solid #3dd68c">
+        <div class="rprice-top"><div class="rprice-name">Jeddah &rarr; Manama (Bahrain)</div><div class="rprice-val" style="color:#3dd68c">$2,400-3,200</div></div>
+        <div class="rprice-sub">~1,200km &bull; 1.5-2 days &bull; via Riyadh/K.Fahd Causeway &bull; pre-crisis ~$1,500</div>
+      </div>
+      <div class="rprice" style="border-left:2px solid #3dd68c">
+        <div class="rprice-top"><div class="rprice-name">Jeddah &rarr; Kuwait City</div><div class="rprice-val" style="color:#3dd68c">$3,200-4,200</div></div>
+        <div class="rprice-sub">~1,900km &bull; 2-4 days &bull; via Riyadh/Al-Khafji &bull; pre-crisis ~$2,100 &bull; highest demand surge</div>
+      </div>
+      <div style="font-size:8px;color:#a78bfa;font-weight:700;letter-spacing:.08em;text-transform:uppercase;margin:8px 0 6px">From Sohar (Oman)</div>
+      <div class="rprice" style="border-left:2px solid #a78bfa">
+        <div class="rprice-top"><div class="rprice-name">Sohar &rarr; Doha (Qatar)</div><div class="rprice-val pur">$3,500-4,500</div></div>
+        <div class="rprice-sub">~1,600km &bull; 2-3 days &bull; via UAE/Salwa &bull; pre-crisis ~$2,200 &bull; port surge premium</div>
+      </div>
+      <div class="rprice" style="border-left:2px solid #a78bfa">
+        <div class="rprice-top"><div class="rprice-name">Sohar &rarr; Manama (Bahrain)</div><div class="rprice-val pur">$3,000-3,900</div></div>
+        <div class="rprice-sub">~1,350km &bull; 2-3 days &bull; via UAE/K.Fahd Causeway &bull; pre-crisis ~$1,900</div>
+      </div>
+      <div style="font-size:8px;color:#c9a227;font-weight:700;letter-spacing:.08em;text-transform:uppercase;margin:8px 0 6px">Other key routes</div>
+      <div class="rprice" style="border-left:2px solid #c9a227">
+        <div class="rprice-top"><div class="rprice-name">Dubai / Jebel Ali &rarr; Riyadh</div><div class="rprice-val gld">$1,800-2,400</div></div>
+        <div class="rprice-sub">~1,100km &bull; 2-3 days &bull; Al Bat'ha border &bull; pre-crisis ~$1,200</div>
+      </div>
+      <div class="rprice" style="border-left:2px solid #e74c3c">
+        <div class="rprice-top"><div class="rprice-name">Oman &rarr; Riyadh (Hwy 95)</div><div class="rprice-val red">$2,200-3,000</div></div>
+        <div class="rprice-sub">~1,400km &bull; 2-4 days &bull; Hwy 95 surge route &bull; +40% since Hormuz crisis</div>
+      </div>
+      <div style="margin-top:8px;font-size:8px;color:#7a8494;line-height:1.5;padding:6px 8px;background:#181c22;border-radius:3px">
+        Border fees: UAE exit ~$30 &bull; SA entry ~$50-80 &bull; Qatar ~$40 &bull; Reefer: +25-35% &bull; Hazmat: +40-60%
+      </div>
+      <div class="src"><span>SLR / Brightway / IFL logistics &middot; GCC tariff data &middot; 2026</span><span class="src-badge">market rates</span></div>
+    </div>
+  </div>
+
+  <div class="row col32">
+    <!-- GCC map -->
+    <div class="card">
+      <div class="card-label">GCC Land Corridors &mdash; Active Highways 2026</div>
+      <div class="card-sub">Volume-weighted routes &middot; all active border crossings incl. Hwy 95 surge</div>
+      <svg viewBox="0 0 500 265" width="100%" style="display:block">
+        <defs>
+          <marker id="m1" markerWidth="5" markerHeight="5" refX="2.5" refY="2.5" orient="auto"><path d="M0,0 L5,2.5 L0,5 Z" fill="#c9a227"/></marker>
+          <marker id="m2" markerWidth="5" markerHeight="5" refX="2.5" refY="2.5" orient="auto"><path d="M0,0 L5,2.5 L0,5 Z" fill="#5aa3f5"/></marker>
+          <marker id="m3" markerWidth="5" markerHeight="5" refX="2.5" refY="2.5" orient="auto"><path d="M0,0 L5,2.5 L0,5 Z" fill="#a78bfa"/></marker>
+          <marker id="m4" markerWidth="5" markerHeight="5" refX="2.5" refY="2.5" orient="auto"><path d="M0,0 L5,2.5 L0,5 Z" fill="#3dd68c"/></marker>
+          <marker id="m5" markerWidth="5" markerHeight="5" refX="2.5" refY="2.5" orient="auto"><path d="M0,0 L5,2.5 L0,5 Z" fill="#e74c3c"/></marker>
+        </defs>
+        <rect width="500" height="265" fill="#111418"/>
+        <ellipse cx="300" cy="93" rx="112" ry="43" fill="#0d1f33" opacity=".85"/>
+        <text x="300" y="97" text-anchor="middle" fill="#2d7dd2" font-size="7" font-family="IBM Plex Mono" opacity=".5">PERSIAN GULF</text>
+        <rect x="345" y="178" width="155" height="87" fill="#0d1f33" opacity=".5" rx="3"/>
+        <text x="422" y="225" text-anchor="middle" fill="#2d7dd2" font-size="6" font-family="IBM Plex Mono" opacity=".4">GULF OF OMAN</text>
+        <rect x="0" y="0" width="37" height="265" fill="#0d1f33" opacity=".38"/>
+        <text x="9" y="145" fill="#2d7dd2" font-size="6" font-family="IBM Plex Mono" opacity=".4" transform="rotate(-90,9,145)">RED SEA</text>
+        <polygon points="37,24 207,24 221,67 237,116 231,186 205,226 157,256 87,256 47,216 37,146" fill="#181c22" stroke="#232830" stroke-width=".5"/>
+        <polygon points="305,130 361,110 401,120 417,148 407,194 367,196 331,186 302,166" fill="#1a1f27" stroke="#232830" stroke-width=".5"/>
+        <polygon points="254,116 274,104 284,114 277,142 257,146 249,132" fill="#1a1f27" stroke="#232830" stroke-width=".5"/>
+        <polygon points="214,24 249,24 261,46 257,66 235,72 214,58" fill="#1a1f27" stroke="#232830" stroke-width=".5"/>
+        <circle cx="249" cy="98" r="6" fill="#1a1f27" stroke="#232830" stroke-width=".5"/>
+        <polygon points="391,120 434,92 465,100 465,186 443,228 405,228 381,196 379,150" fill="#1a1f27" stroke="#232830" stroke-width=".5"/>
+        <text x="111" y="138" text-anchor="middle" font-size="8" font-weight="600" fill="#5f6a7a" font-family="Syne,sans-serif">SAUDI ARABIA</text>
+        <text x="371" y="158" text-anchor="middle" font-size="6" font-weight="600" fill="#5f6a7a" font-family="Syne,sans-serif">UAE</text>
+        <text x="267" y="128" text-anchor="middle" font-size="5.5" fill="#5f6a7a" font-family="Syne,sans-serif">QAT</text>
+        <text x="235" y="50" text-anchor="middle" font-size="5.5" fill="#5f6a7a" font-family="Syne,sans-serif">KWT</text>
+        <text x="423" y="160" text-anchor="middle" font-size="6" fill="#5f6a7a" font-family="Syne,sans-serif">OMAN</text>
+        <text x="194" y="153" font-size="5.5" fill="#c9a227" font-family="IBM Plex Mono" opacity=".65">Hwy 10</text>
+        <text x="66" y="146" font-size="5.5" fill="#f0c84b" font-family="IBM Plex Mono" opacity=".55">Hwy 40</text>
+        <text x="156" y="212" font-size="5" fill="#a78bfa" font-family="IBM Plex Mono" opacity=".7">Hwy 95</text>
+        <line x1="237" y1="165" x2="303" y2="152" stroke="#c9a227" stroke-width="3" marker-end="url(#m1)"/>
+        <line x1="221" y1="98" x2="243" y2="98" stroke="#5aa3f5" stroke-width="2" marker-end="url(#m2)"/>
+        <line x1="233" y1="142" x2="252" y2="135" stroke="#5aa3f5" stroke-width="1.5" marker-end="url(#m2)"/>
+        <line x1="225" y1="64" x2="237" y2="58" stroke="#fbbf24" stroke-width="1.5" marker-end="url(#m1)"/>
+        <line x1="207" y1="206" x2="381" y2="196" stroke="#e74c3c" stroke-width="1" stroke-dasharray="4,3" marker-end="url(#m5)"/>
+        <line x1="380" y1="203" x2="210" y2="213" stroke="#a78bfa" stroke-width="1.8" stroke-dasharray="5,3" marker-end="url(#m3)" opacity=".9"/>
+        <line x1="381" y1="156" x2="415" y2="152" stroke="#a78bfa" stroke-width="1.5" marker-end="url(#m3)" opacity=".9"/>
+        <circle cx="23" cy="123" r="5.5" fill="none" stroke="#3dd68c" stroke-width="1.5"/>
+        <text x="23" y="127" text-anchor="middle" font-size="5.5" fill="#3dd68c" font-family="IBM Plex Mono">J</text>
+        <line x1="29" y1="123" x2="137" y2="146" stroke="#3dd68c" stroke-width="2" stroke-dasharray="5,3" marker-end="url(#m4)" opacity=".85"/>
+        <circle cx="149" cy="148" r="4" fill="#c9a227" stroke="#0a0c0f" stroke-width="1.5"/>
+        <text x="149" y="161" text-anchor="middle" font-size="6" fill="#c9a227" font-family="IBM Plex Mono">Riyadh</text>
+        <circle cx="373" cy="155" r="3.5" fill="#5aa3f5" stroke="#0a0c0f" stroke-width="1.5"/>
+        <text x="373" y="168" text-anchor="middle" font-size="5.5" fill="#5aa3f5" font-family="IBM Plex Mono">Dubai</text>
+        <circle cx="427" cy="150" r="3" fill="#a78bfa" stroke="#0a0c0f" stroke-width="1"/>
+        <text x="427" y="163" text-anchor="middle" font-size="5.5" fill="#a78bfa" font-family="IBM Plex Mono">Muscat</text>
+        <text x="23" y="140" text-anchor="middle" font-size="5.5" fill="#3dd68c" font-family="IBM Plex Mono">Jeddah</text>
+        <rect x="4" y="228" width="232" height="33" fill="#0a0c0f" rx="3" opacity=".92"/>
+        <line x1="10" y1="237" x2="26" y2="237" stroke="#c9a227" stroke-width="2.5"/>
+        <text x="29" y="240" font-size="7" fill="#7a8494" font-family="IBM Plex Mono">SA to GCC (ZATCA verified)</text>
+        <line x1="10" y1="248" x2="26" y2="248" stroke="#a78bfa" stroke-width="1.5" stroke-dasharray="4,2"/>
+        <text x="29" y="251" font-size="7" fill="#7a8494" font-family="IBM Plex Mono">Oman to GCC - Hwy 95 surge</text>
+        <line x1="10" y1="258" x2="26" y2="258" stroke="#3dd68c" stroke-width="1.5" stroke-dasharray="4,2"/>
+        <text x="29" y="261" font-size="7" fill="#7a8494" font-family="IBM Plex Mono">Jeddah Port inland (Hwy 40)</text>
+      </svg>
+      <div class="src"><span>ZATCA &middot; Oman MOT &middot; AGBI &middot; indexbox.io &middot; May 2026</span><span class="src-badge">real + synthesized</span></div>
+    </div>
+
+    <!-- Fleet signals + Jeddah -->
+    <div style="display:flex;flex-direction:column;gap:14px">
+      <div class="card">
+        <div class="card-label">Fleet &amp; Operator Signals</div>
+        <div class="card-sub">Capacity changes since Hormuz closure &middot; May 2026</div>
+        <div class="signal" style="background:#181c22;border-left:2px solid #a78bfa"><strong style="color:#e8eaed">TruKKer (UAE)</strong> &mdash; scaling 60 to <strong class="grn">500 moves/day</strong>. Fixed transparent rates from Khorfakkan activated.</div>
+        <div class="signal" style="background:#181c22;border-left:2px solid #c9a227"><strong style="color:#e8eaed">Flow Progressive (SA)</strong> &mdash; fleet <strong class="grn">340 to 500+</strong> 40ft trailers since conflict began.</div>
+        <div class="signal" style="background:#181c22;border-left:2px solid #5aa3f5"><strong style="color:#e8eaed">DP World Jeddah</strong> &mdash; 3 new quay cranes. <strong class="grn">38 weekly vessel calls</strong>. 1.3M TEU in 2025 &mdash; double prior year.</div>
+        <div class="signal" style="background:#181c22;border-left:2px solid #3dd68c"><strong style="color:#e8eaed">Saudi TGA</strong> &mdash; eased GCC refrigerated truck entry rules March 2026. Hwy 95 Ramlet Khelah goods tripled to $830M in March.</div>
+        <div class="src"><span>AGBI &middot; TruKKer &middot; DP World &middot; May 2026</span><span class="src-badge">real data</span></div>
+      </div>
+      <div class="card">
+        <div class="card-label">Jeddah Port Alert</div>
+        <div style="padding:8px 10px;background:rgba(231,76,60,.07);border:1px solid rgba(231,76,60,.2);border-radius:4px;font-size:9px;color:#7a8494;line-height:1.6;margin-bottom:10px">
+          <strong class="red">16-day dwell time</strong> as of May 2026. Originally a regional Saudi gateway, now absorbing all Hormuz-displaced cargo. "Escalation imminent" per operators. <strong style="color:#e8eaed">Fujairah and Khor Fakkan</strong> recommended alternatives for UAE-bound cargo.
+        </div>
+        <div class="card-label" style="margin-bottom:6px">Saudi Landbridge</div>
+        <div style="padding:8px 10px;background:#181c22;border-radius:4px;font-size:9px;color:#7a8494;line-height:1.6">
+          <strong style="color:#f0c84b">Jeddah to Dammam &middot; 1,300km &middot; $7B project.</strong> Under construction since 2025. Projected $4.2B/yr transport cost savings. Heavy manufacturers pre-booking rail capacity for 2026.
+        </div>
+        <div class="src"><span>dubaicargos.com &middot; DP World &middot; makreo.com &middot; May 2026</span><span class="src-badge">real data</span></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+<!-- ============================================================ TAB 4: SIMULATOR -->
+<div class="page" id="page-simulator">
+  <div style="margin-bottom:16px">
+    <div style="font-size:10px;font-weight:700;color:#a78bfa;letter-spacing:.1em;text-transform:uppercase;margin-bottom:4px">&#9670; Supply Chain Scenario Simulator</div>
+    <div style="font-size:10px;color:#7a8494">Select a world state, enter your shipment parameters, and get end-to-end landed cost from port of origin to final GCC destination — including sea freight, port handling, and inland trucking.</div>
+  </div>
+
+  <!-- STEP 1: SCENARIO SELECTION -->
+  <div style="font-size:8px;color:#7a8494;letter-spacing:.12em;text-transform:uppercase;margin-bottom:10px;font-family:'IBM Plex Mono',monospace">Step 1 — Select World State</div>
+  <div class="sim-scenario-grid">
+
+    <div class="scard active" id="sc-1" onclick="selectScenario(1)" style="--sc-color:#e74c3c">
+      <div class="scard-icon">&#128683;</div>
+      <div class="scard-name">Hormuz Closed</div>
+      <div class="scard-state red">Current reality &bull; Day 82</div>
+      <div class="scard-tags">
+        <span class="scard-tag" style="background:rgba(231,76,60,.12);color:#e74c3c">2 transits/day</span>
+        <span class="scard-tag" style="background:rgba(231,76,60,.12);color:#e74c3c">IRGC control</span>
+        <span class="scard-tag" style="background:rgba(231,76,60,.12);color:#e74c3c">US blockade</span>
+      </div>
+    </div>
+
+    <div class="scard" id="sc-2" onclick="selectScenario(2)" style="--sc-color:#fbbf24">
+      <div class="scard-icon">&#9875;</div>
+      <div class="scard-name">Hormuz: IRGC Escort Only</div>
+      <div class="scard-state amb">Friendly-flag passage &bull; ~25 transits/day</div>
+      <div class="scard-tags">
+        <span class="scard-tag" style="background:rgba(251,191,36,.12);color:#fbbf24">China/India/Turkey</span>
+        <span class="scard-tag" style="background:rgba(251,191,36,.12);color:#fbbf24">War-risk 5&times;</span>
+      </div>
+    </div>
+
+    <div class="scard" id="sc-3" onclick="selectScenario(3)" style="--sc-color:#f0c84b">
+      <div class="scard-icon">&#9868;</div>
+      <div class="scard-name">Hormuz: Negotiated Partial</div>
+      <div class="scard-state gld">Ceasefire &bull; neutral corridor &bull; ~50 transits/day</div>
+      <div class="scard-tags">
+        <span class="scard-tag" style="background:rgba(240,200,75,.12);color:#f0c84b">All flags allowed</span>
+        <span class="scard-tag" style="background:rgba(240,200,75,.12);color:#f0c84b">War-risk 3&times;</span>
+      </div>
+    </div>
+
+    <div class="scard" id="sc-4" onclick="selectScenario(4)" style="--sc-color:#3dd68c">
+      <div class="scard-icon">&#9989;</div>
+      <div class="scard-name">Hormuz Fully Open</div>
+      <div class="scard-state grn">Crisis resolved &bull; pre-war conditions &bull; ~95 transits/day</div>
+      <div class="scard-tags">
+        <span class="scard-tag" style="background:rgba(61,214,140,.12);color:#3dd68c">Normal rates</span>
+        <span class="scard-tag" style="background:rgba(61,214,140,.12);color:#3dd68c">War-risk 1&times;</span>
+      </div>
+    </div>
+
+    <div class="scard" id="sc-5" onclick="selectScenario(5)" style="--sc-color:#e74c3c">
+      <div class="scard-icon">&#128683;</div>
+      <div class="scard-name">Bab el-Mandeb Closed</div>
+      <div class="scard-state red">Hormuz open &bull; Houthis escalate &bull; Red Sea blocked</div>
+      <div class="scard-tags">
+        <span class="scard-tag" style="background:rgba(231,76,60,.12);color:#e74c3c">Jeddah loses bypass</span>
+        <span class="scard-tag" style="background:rgba(231,76,60,.12);color:#e74c3c">All via CoGH</span>
+      </div>
+    </div>
+
+    <div class="scard" id="sc-6" onclick="selectScenario(6)" style="--sc-color:#e74c3c">
+      <div class="scard-icon">&#9888;</div>
+      <div class="scard-name">Dual Closure</div>
+      <div class="scard-state red">Hormuz + Bab el-Mandeb both closed &bull; worst case</div>
+      <div class="scard-tags">
+        <span class="scard-tag" style="background:rgba(231,76,60,.12);color:#e74c3c">All CoGH</span>
+        <span class="scard-tag" style="background:rgba(231,76,60,.12);color:#e74c3c">Land only viable</span>
+        <span class="scard-tag" style="background:rgba(231,76,60,.12);color:#e74c3c">Extreme cost</span>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- STEP 2: SHIPMENT INPUTS -->
+  <div style="font-size:8px;color:#7a8494;letter-spacing:.12em;text-transform:uppercase;margin-bottom:10px;font-family:'IBM Plex Mono',monospace">Step 2 — Shipment Parameters</div>
+  <div class="sim-inputs">
+    <div class="sim-inputs-grid">
+      <div class="sim-field">
+        <label>Origin Port</label>
+        <select id="inp-origin">
+          <option value="SHA">Shanghai (SHA)</option>
+          <option value="HAM">Hamburg (HAM)</option>
+          <option value="ROT">Rotterdam (ROT)</option>
+          <option value="SIN">Singapore (SIN)</option>
+          <option value="ICD">Mundra / Nhava Sheva</option>
+        </select>
+      </div>
+      <div class="sim-field">
+        <label>Final Destination (GCC)</label>
+        <select id="inp-dest">
+          <option value="DXB">Dubai / Jebel Ali</option>
+          <option value="RUH">Riyadh</option>
+          <option value="DMM">Dammam / Khobar</option>
+          <option value="DOH">Doha</option>
+          <option value="BAH">Manama (Bahrain)</option>
+          <option value="KWI">Kuwait City</option>
+          <option value="MCT">Muscat</option>
+        </select>
+      </div>
+      <div class="sim-field">
+        <label>Volume (TEU / month)</label>
+        <input type="number" id="inp-teu" value="50" min="1" max="10000"/>
+      </div>
+      <div class="sim-field">
+        <label>Commodity Type</label>
+        <select id="inp-commodity">
+          <option value="general">General / mixed cargo</option>
+          <option value="consumer">Consumer goods / FMCG</option>
+          <option value="auto">Automotive parts</option>
+          <option value="pharma">Pharmaceuticals</option>
+          <option value="food">Food &amp; perishables (reefer)</option>
+          <option value="industrial">Industrial / machinery</option>
+          <option value="chemical">Chemicals / hazmat</option>
+        </select>
+      </div>
+    </div>
+    <div style="display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin-top:4px">
+      <button class="sim-run-btn" onclick="runSimulator()">&#9654; Run Simulation</button>
+      <span style="font-size:9px;color:#7a8494;font-family:'IBM Plex Mono',monospace" id="sim-status"></span>
+    </div>
+  </div>
+
+  <!-- RESULTS -->
+  <div class="sim-results" id="sim-results">
+
+    <!-- Active scenario banner -->
+    <div class="scenario-bar" id="sc-banner">
+      <div>
+        <div class="scenario-bar-name" id="scb-name">—</div>
+        <div class="scenario-bar-state" id="scb-state">—</div>
+      </div>
+      <div class="scenario-bar-metrics">
+        <div class="sbm"><div class="sbm-val" id="scb-transits">—</div><div class="sbm-lbl">Transits/day</div></div>
+        <div class="sbm"><div class="sbm-val" id="scb-brent">—</div><div class="sbm-lbl">Brent $/bbl</div></div>
+        <div class="sbm"><div class="sbm-val" id="scb-warrisk">—</div><div class="sbm-lbl">War-risk</div></div>
+        <div class="sbm"><div class="sbm-val" id="scb-reroute">—</div><div class="sbm-lbl">Primary route</div></div>
+      </div>
+    </div>
+
+    <!-- VIEW 1 + VIEW 2 side by side -->
+    <div class="sim-views">
+
+      <!-- VIEW 1: Route Cost Matrix -->
+      <div class="sim-panel">
+        <div class="sim-panel-title">&#9671; View 1 — Route Cost Matrix</div>
+        <div class="sim-panel-sub" id="v1-sub">Routing options ranked by total sea freight cost per FEU &bull; origin to GCC entry port</div>
+        <table class="route-matrix" id="route-matrix-table">
+          <thead>
+            <tr>
+              <th></th>
+              <th>Route</th>
+              <th>Via</th>
+              <th>$/FEU</th>
+              <th>Days</th>
+              <th>vs Pre-crisis</th>
+              <th>Available</th>
+            </tr>
+          </thead>
+          <tbody id="route-matrix-body"></tbody>
+        </table>
+        <div class="src" style="margin-top:8px"><span>Freightos Terminal &middot; Drewry WCI &middot; Maersk Op. updates &middot; scenario-adjusted</span><span class="src-badge">modelled</span></div>
+      </div>
+
+      <!-- VIEW 2: End-to-End Cost Calculator -->
+      <div class="sim-panel">
+        <div class="sim-panel-title">&#9672; View 2 — End-to-End Landed Cost</div>
+        <div class="sim-panel-sub" id="v2-sub">Port of origin &rarr; final GCC city including sea + port + inland trucking</div>
+        <div class="cost-breakdown" id="cost-breakdown"></div>
+        <div class="src" style="margin-top:8px"><span>Sea: Freightos Terminal &middot; Port: DP World/DPMC &middot; Trucking: ZATCA/TruKKer benchmarks</span><span class="src-badge">modelled</span></div>
+      </div>
+
+    </div>
+
+    <!-- VIEW 3: Annual impact + implications -->
+    <div class="sim-annual" style="margin-bottom:14px">
+      <div style="font-size:8px;letter-spacing:.14em;text-transform:uppercase;color:#a78bfa;font-weight:700">&#9670; Annual Impact Summary</div>
+      <div class="annual-grid" id="annual-grid"></div>
+    </div>
+
+    <div class="sim-panel">
+      <div class="sim-panel-title">&#9651; View 3 — Strategic Implications</div>
+      <div class="sim-panel-sub" id="v3-sub">What this scenario means for GCC logistics, ports, trucking demand and key operators</div>
+      <div class="impl-grid" id="impl-grid"></div>
+      <div class="src" style="margin-top:10px"><span>AGBI &middot; straits.live &middot; DP World &middot; ZATCA &middot; scenario-modelled</span><span class="src-badge">modelled</span></div>
+    </div>
+
+  </div>
+</div>
+
+
+
+
+<script>
+// All initialisation deferred to window load to ensure DOM + CSS layout complete
+// and Chart.js can measure canvas dimensions correctly.
+
+var CHARTS = {};   // chart registry
+var mapReady = false;
+var activeScenario = 1;
+
+// ── TABS ──────────────────────────────────────────────────────────────────────
+function showTab(name, el) {
+  document.querySelectorAll('.tab').forEach(function(t){ t.classList.remove('active'); });
+  document.querySelectorAll('.page').forEach(function(p){ p.classList.remove('active'); });
+  el.classList.add('active');
+  document.getElementById('page-' + name).classList.add('active');
+  setTimeout(function() {
+    // Resize all charts
+    Object.keys(CHARTS).forEach(function(k){ if(CHARTS[k]) CHARTS[k].resize(); });
+    // Lazy inits
+    if (name === 'hormuz') {
+      if (!mapReady) initMap();
+      else if (leafMap) leafMap.invalidateSize();
+    }
+    if (name === 'rates') {
+      if (!CHARTS['fChart']) initFreightChart();
+      if (!ratesMapReady) initRatesMap();
+      else if (ratesMap) ratesMap.invalidateSize();
+    }
+
+  }, 80);
+}
+
+// ── CHART HELPERS ─────────────────────────────────────────────────────────────
+var GRID_COLOR = 'rgba(19,28,40,0.95)';
+var TICK_COLOR = '#4d6070';
+
+function chartDefaults(extraScales) {
+  return {
+    responsive: true,
+    maintainAspectRatio: false,
+    animation: { duration: 600 },
+    plugins: { legend: { display: false } },
+    scales: extraScales || {}
+  };
+}
+
+function xScale(opts) {
+  return Object.assign({ ticks:{ color:TICK_COLOR, font:{size:8}, autoSkip:true, maxTicksLimit:7 }, grid:{ color:GRID_COLOR } }, opts||{});
+}
+function yScale(color, opts) {
+  return Object.assign({ ticks:{ color:color||TICK_COLOR, font:{size:8} }, grid:{ color:GRID_COLOR }, beginAtZero:false }, opts||{});
+}
+
+// ── HORMUZ CHARTS ─────────────────────────────────────────────────────────────
+// Real IMF PortWatch data:
+// Feb (pre-crisis): ~95-135/day | Mar 1-8: ~6/day | Mar avg: 6-7/day
+// Apr 1-8: climbed to 12-15 (ceasefire window) | Apr 13: US blockade -> drops
+// May: 2-4/day confirmed (straits.live May 22-23 2026)
+var L14 = ['05/10','05/11','05/12','05/13','05/14','05/15','05/16','05/17','05/18','05/19','05/20','05/21','05/22','05/23'];
+var CROSS = [4,3,4,2,3,2,2,2,3,2,2,2,2,2];
+
+function initHormuzCharts() {
+  // Bar chart
+  var hCtx = document.getElementById('hChart');
+  if (!hCtx) return;
+  CHARTS['hChart'] = new Chart(hCtx, {
+    type: 'bar',
+    data: {
+      labels: L14,
+      datasets: [{
+        label: 'Daily transits',
+        data: CROSS,
+        backgroundColor: CROSS.map(function(v){ return v<=2?'rgba(192,57,43,0.7)':v<=4?'rgba(217,119,6,0.65)':'rgba(45,125,210,0.55)'; }),
+        borderColor: CROSS.map(function(v){ return v<=2?'#e74c3c':v<=4?'#fbbf24':'#5aa3f5'; }),
+        borderWidth: 1,
+        borderRadius: 2
+      }]
+    },
+    options: chartDefaults({ x: xScale(), y: yScale(TICK_COLOR, {beginAtZero:true, max:10}) })
+  });
+
+  // Donut
+  var dCtx = document.getElementById('dChart');
+  if (!dCtx) return;
+  CHARTS['dChart'] = new Chart(dCtx, {
+    type: 'doughnut',
+    data: {
+      labels: ['Crude','Product','LNG/LPG','Container','Bulk'],
+      datasets: [{
+        data: [50,25,25,0,0],
+        backgroundColor: ['#e74c3cbb','#fbbf24bb','#a78bfabb','#5aa3f5bb','#74849499'],
+        borderColor: ['#e74c3c','#fbbf24','#a78bfa','#5aa3f5','#748494'],
+        borderWidth: 1
+      }]
+    },
+    options: { responsive:true, maintainAspectRatio:false, animation:{duration:600}, plugins:{legend:{display:false}}, cutout:'62%' }
+  });
+
+  // Stacked bar
+  var sCtx = document.getElementById('sChart');
+  if (!sCtx) return;
+  CHARTS['sChart'] = new Chart(sCtx, {
+    type: 'bar',
+    data: {
+      labels: L14,
+      datasets: [
+        { label:'Tankers',    data:[2,1,2,1,2,1,1,1,2,1,1,1,1,1], backgroundColor:'#e74c3c88', stack:'s' },
+        { label:'Containers', data:[0,0,0,0,0,0,0,0,0,0,0,0,0,0], backgroundColor:'#5aa3f588', stack:'s' },
+        { label:'LNG/LPG',   data:[1,1,1,1,1,1,1,1,1,1,1,1,1,1], backgroundColor:'#a78bfa88', stack:'s' },
+        { label:'Other',     data:[1,1,1,0,0,0,0,0,0,0,0,0,0,0], backgroundColor:'#74849488', stack:'s' }
+      ]
+    },
+    options: chartDefaults({
+      x: xScale({ stacked:true }),
+      y: yScale(TICK_COLOR, { stacked:true, beginAtZero:true })
+    })
+  });
+}
+
+// ── FREIGHT CHART (lazy - rates tab) ─────────────────────────────────────────
+var WKS = ['Wk1','Wk2','Wk3','Wk4','Wk5','Wk6','Wk7','Wk8','Wk9','Wk10','Wk11','Wk12'];
+function initFreightChart() {
+  var fCtx = document.getElementById('fChart');
+  if (!fCtx || CHARTS['fChart']) return;
+  CHARTS['fChart'] = new Chart(fCtx, {
+    type: 'line',
+    data: {
+      labels: WKS,
+      datasets: [
+        { label:'FBX', data:[1820,1900,2100,2400,3200,4100,3800,3200,2800,2400,2100,1982], borderColor:'#b8952a', borderWidth:1.5, pointRadius:0, tension:.35, yAxisID:'y' },
+        { label:'BDI', data:[1600,1650,1720,1800,1900,2066,2030,1980,1963,1940,1960,1963], borderColor:'#2d6aaa', borderWidth:1.5, pointRadius:0, tension:.35, yAxisID:'y2', borderDash:[3,2] }
+      ]
+    },
+    options: chartDefaults({
+      x:  xScale({ autoSkip:true, maxTicksLimit:6 }),
+      y:  yScale('#c9a227', { position:'left', grid:{color:GRID_COLOR} }),
+      y2: Object.assign(yScale('#5aa3f5', { position:'right', grid:{display:false} }))
+    })
+  });
+}
+
+// ── SATELLITE MAP ─────────────────────────────────────────────────────────────
+var leafMap, mLayer, snapIdx = 0;
+var filters = { tanker:true, container:true, bulk:true, lng:true, general:true };
+var COLORS  = { tanker:'#e74c3c', container:'#5aa3f5', bulk:'#fbbf24', lng:'#a78bfa', general:'#3dd68c' };
+var TLABELS = { tanker:'Tanker', container:'Container ship', bulk:'Bulk carrier', lng:'LNG/LPG carrier', general:'General cargo' };
+
+var SNAPS = [
+  { ts:'May 23 15:43 UTC', transits:2, vessels:[
+    {lat:27.10,lng:56.20,type:'tanker',mov:false,name:'Crude Tanker #1',flag:'Iran-approved',status:'Anchored - Bandar Abbas',cargo:'Crude oil',ais:'Intermittent',note:'Iran-approved, awaiting IRGC escort'},
+    {lat:27.14,lng:56.30,type:'tanker',mov:false,name:'Crude Tanker #2',flag:'Panama',status:'At anchor - Bandar Abbas roads',cargo:'Crude oil',ais:'On'},
+    {lat:27.08,lng:56.14,type:'tanker',mov:false,name:'Chemical Tanker',flag:'Marshall Is.',status:'Bandar Abbas anchorage',cargo:'Chemicals',ais:'On'},
+    {lat:27.17,lng:56.38,type:'tanker',mov:false,name:'DARK Tanker',flag:'Unknown',status:'AIS disabled - Bandar Abbas area',cargo:'Unknown',ais:'OFF since Mar 15'},
+    {lat:26.58,lng:56.52,type:'general',mov:true,name:'SALAKH 22 (Gambia)',flag:'Gambia',status:'ONLY AIS-on outbound transit (Windward)',cargo:'General cargo',ais:'ON - full track',note:'Sole confirmed outbound May 22 per Windward'},
+    {lat:26.42,lng:57.10,type:'tanker',mov:true,name:'VLCC - IRGC escort',flag:'Iran-approved',status:'Eastbound - IRGC naval escort',cargo:'~2M bbl crude',ais:'Burst AIS only',note:'China-bound. One of two confirmed May 22 transits'},
+    {lat:25.34,lng:56.38,type:'tanker',mov:false,name:'Tanker at Khor Fakkan',flag:'Greece',status:'Anchored - Khor Fakkan',cargo:'Products',ais:'On'},
+    {lat:25.36,lng:56.42,type:'tanker',mov:false,name:'Tanker at Khor Fakkan #2',flag:'Marshall Is.',status:'Khor Fakkan anchorage',cargo:'Crude oil',ais:'On'},
+    {lat:25.38,lng:56.35,type:'tanker',mov:false,name:'Tanker at Khor Fakkan #3',flag:'Liberia',status:'Khor Fakkan - STRANDED',cargo:'Products',ais:'On'},
+    {lat:25.32,lng:56.40,type:'container',mov:false,name:'Container - Khor Fakkan',flag:'Cyprus',status:'Stranded - Khor Fakkan',cargo:'Containers',ais:'On'},
+    {lat:25.30,lng:56.33,type:'container',mov:false,name:'ONE Majesty',flag:'Panama',status:'STRANDED - Khor Fakkan - Day 14',cargo:'Mixed containers',ais:'On',note:'Bound Mundra India - 109K TEU trapped'},
+    {lat:25.12,lng:56.34,type:'tanker',mov:false,name:'Tanker at Fujairah',flag:'Greece',status:'Anchored - Fujairah',cargo:'Crude oil',ais:'On'},
+    {lat:25.15,lng:56.30,type:'tanker',mov:false,name:'Tanker at Fujairah #2',flag:'Norway',status:'Fujairah anchorage',cargo:'Products',ais:'On'},
+    {lat:25.10,lng:56.37,type:'bulk',mov:false,name:'Bulk carrier - Fujairah',flag:'Greece',status:'Stranded - Fujairah',cargo:'Dry bulk',ais:'On',note:'Day 17 at anchor'},
+    {lat:24.37,lng:56.70,type:'tanker',mov:false,name:'Tanker at Sohar',flag:'Marshall Is.',status:'Sohar anchorage',cargo:'Crude oil',ais:'On'},
+    {lat:24.40,lng:56.75,type:'bulk',mov:false,name:'Bulk carrier - Sohar',flag:'Liberia',status:'Sohar - rerouted cargo',cargo:'Iron ore',ais:'On'},
+    {lat:25.01,lng:55.08,type:'tanker',mov:false,name:'Tanker at Jebel Ali',flag:'Panama',status:'Jebel Ali - waiting',cargo:'Crude oil',ais:'On'},
+    {lat:25.03,lng:55.05,type:'container',mov:false,name:'Container - Jebel Ali',flag:'Cyprus',status:'Jebel Ali - rerouted via CoGH',cargo:'Containers',ais:'On'}
+  ]},
+  { ts:'May 23 16:15 UTC', transits:3, vessels:[
+    {lat:27.11,lng:56.22,type:'tanker',mov:false,name:'Crude Tanker #1',flag:'Iran-approved',status:'Bandar Abbas anchorage',cargo:'Crude oil',ais:'On'},
+    {lat:27.15,lng:56.32,type:'tanker',mov:false,name:'Crude Tanker #2',flag:'Panama',status:'At anchor - Bandar Abbas',cargo:'Crude oil',ais:'On'},
+    {lat:27.09,lng:56.15,type:'tanker',mov:false,name:'Chemical Tanker',flag:'Marshall Is.',status:'Bandar Abbas anchorage',cargo:'Chemicals',ais:'On'},
+    {lat:27.18,lng:56.40,type:'tanker',mov:false,name:'DARK Tanker',flag:'Unknown',status:'AIS disabled',cargo:'Unknown',ais:'OFF'},
+    {lat:26.48,lng:57.40,type:'general',mov:true,name:'SALAKH 22 (Gambia)',flag:'Gambia',status:'Cleared strait - Gulf of Oman',cargo:'General cargo',ais:'ON - full track'},
+    {lat:26.38,lng:57.80,type:'tanker',mov:true,name:'VLCC - IRGC escort',flag:'Iran-approved',status:'East of strait - IRGC escort',cargo:'~2M bbl crude',ais:'Burst only',note:'Transit #2 of day'},
+    {lat:26.55,lng:56.60,type:'lng',mov:true,name:'LPG carrier - transit #3',flag:'Cyprus',status:'IRGC escort confirmed - strait passage',cargo:'LPG',ais:'On',note:'Third commercial transit of day'},
+    {lat:25.34,lng:56.38,type:'tanker',mov:false,name:'Tanker at Khor Fakkan',flag:'Greece',status:'Khor Fakkan anchorage',cargo:'Products',ais:'On'},
+    {lat:25.30,lng:56.33,type:'container',mov:false,name:'ONE Majesty',flag:'Panama',status:'STRANDED - Khor Fakkan - Day 15',cargo:'Containers',ais:'On'},
+    {lat:25.12,lng:56.34,type:'tanker',mov:false,name:'Tanker at Fujairah',flag:'Greece',status:'Fujairah anchorage',cargo:'Crude oil',ais:'On'},
+    {lat:25.10,lng:56.37,type:'bulk',mov:false,name:'Bulk carrier - Fujairah',flag:'Greece',status:'Stranded Day 18',cargo:'Dry bulk',ais:'On'},
+    {lat:24.37,lng:56.70,type:'tanker',mov:false,name:'Tanker at Sohar',flag:'Marshall Is.',status:'Sohar anchorage',cargo:'Crude oil',ais:'On'},
+    {lat:25.01,lng:55.08,type:'tanker',mov:false,name:'Tanker at Jebel Ali',flag:'Panama',status:'Jebel Ali - waiting',cargo:'Crude oil',ais:'On'}
+  ]},
+  { ts:'May 23 17:02 UTC', transits:2, vessels:[
+    {lat:27.10,lng:56.20,type:'tanker',mov:false,name:'Crude Tanker #1',flag:'Iran-approved',status:'Bandar Abbas anchorage',cargo:'Crude oil',ais:'On'},
+    {lat:27.14,lng:56.30,type:'tanker',mov:false,name:'DARK Tanker',flag:'Unknown',status:'AIS disabled',cargo:'Unknown',ais:'OFF'},
+    {lat:25.80,lng:58.10,type:'general',mov:true,name:'SALAKH 22 (Gambia)',flag:'Gambia',status:'Gulf of Oman - heading Arabian Sea',cargo:'General cargo',ais:'ON - full track'},
+    {lat:25.10,lng:59.20,type:'tanker',mov:true,name:'VLCC convoy - 2 hulls',flag:'Iran-approved',status:'Now in Arabian Sea - Hormuz cleared',cargo:'~2M bbl crude',ais:'Burst',note:'China-bound'},
+    {lat:25.55,lng:57.60,type:'lng',mov:true,name:'LPG carrier - cleared',flag:'Cyprus',status:'Gulf of Oman - Iran approved',cargo:'LNG/LPG',ais:'On'},
+    {lat:25.34,lng:56.38,type:'tanker',mov:false,name:'Tanker at Khor Fakkan',flag:'Greece',status:'Khor Fakkan - Day 19',cargo:'Products',ais:'On'},
+    {lat:25.30,lng:56.33,type:'container',mov:false,name:'ONE Majesty',flag:'Panama',status:'STRANDED - Day 15',cargo:'Containers',ais:'On'},
+    {lat:25.12,lng:56.34,type:'tanker',mov:false,name:'Tanker at Fujairah',flag:'Greece',status:'Fujairah anchorage',cargo:'Crude oil',ais:'On'},
+    {lat:25.10,lng:56.37,type:'bulk',mov:false,name:'Bulk carrier - Fujairah',flag:'Greece',status:'Day 18 at anchor',cargo:'Dry bulk',ais:'On'},
+    {lat:24.37,lng:56.70,type:'tanker',mov:false,name:'Tanker at Sohar',flag:'Marshall Is.',status:'Sohar - rerouted cargo',cargo:'Crude oil',ais:'On'},
+    {lat:24.40,lng:56.75,type:'bulk',mov:false,name:'Bulk carrier - Sohar',flag:'Liberia',status:'Sohar - diverted via Oman',cargo:'Iron ore',ais:'On'},
+    {lat:25.01,lng:55.08,type:'tanker',mov:false,name:'Tanker at Jebel Ali',flag:'Panama',status:'Jebel Ali - CoGH rerouted',cargo:'Crude oil',ais:'On'}
+  ]}
+];
+
+function makeIcon(type, mov) {
+  var c = COLORS[type]; var r = mov ? 9 : 7; var s = 32;
+  var pulse = mov ? '<circle cx="16" cy="16" r="'+(r+4)+'" fill="none" stroke="'+c+'" stroke-width="1.5" opacity="0"><animate attributeName="r" values="'+r+';'+(r+9)+';'+r+'" dur="2s" repeatCount="indefinite"/><animate attributeName="opacity" values="0.6;0;0.6" dur="2s" repeatCount="indefinite"/></circle>' : '';
+  return L.divIcon({
+    html: '<svg width="'+s+'" height="'+s+'" viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg">'+pulse+'<circle cx="16" cy="16" r="'+r+'" fill="'+c+'" opacity="'+(mov?'1':'0.85')+'" stroke="#07090d" stroke-width="1.8"/></svg>',
+    iconSize:[s,s], iconAnchor:[16,16], className:''
+  });
+}
+
+function renderSnap(idx) {
+  if (!mLayer) return;
+  mLayer.clearLayers();
+  var snap = SNAPS[idx]; var shown = 0;
+  snap.vessels.forEach(function(v) {
+    if (!filters[v.type]) return; shown++;
+    var m = L.marker([v.lat, v.lng], { icon:makeIcon(v.type, v.mov), title:v.name });
+    var nr = v.note ? '<div class="pop-row"><span class="pop-k">Note</span><span class="pop-v" style="color:#f0c84b">'+v.note+'</span></div>' : '';
+    var sc = v.mov ? '#3dd68c' : (v.ais && v.ais.indexOf('OFF')===0) ? '#e74c3c' : '#fbbf24';
+    m.bindPopup(
+      '<div class="pop-head" style="color:'+COLORS[v.type]+'">'+v.name+'</div>'+
+      '<div class="pop-row"><span class="pop-k">Type</span><span class="pop-v">'+TLABELS[v.type]+'</span></div>'+
+      '<div class="pop-row"><span class="pop-k">Flag</span><span class="pop-v">'+v.flag+'</span></div>'+
+      '<div class="pop-row"><span class="pop-k">Status</span><span class="pop-v" style="color:'+sc+'">'+v.status+'</span></div>'+
+      '<div class="pop-row"><span class="pop-k">Cargo</span><span class="pop-v">'+v.cargo+'</span></div>'+
+      '<div class="pop-row"><span class="pop-k">AIS</span><span class="pop-v" style="color:'+(v.ais&&v.ais.indexOf('OFF')===0?'#e74c3c':'#3dd68c')+'">'+v.ais+'</span></div>'+
+      nr, { maxWidth:260 }
+    );
+    mLayer.addLayer(m);
+  });
+  var snapLbl = document.getElementById('snap-label');
+  var snapTr  = document.getElementById('snap-transits');
+  var vcnt    = document.getElementById('vessel-count');
+  if (snapLbl) snapLbl.textContent = (idx+1)+'/3 - '+snap.ts;
+  if (snapTr)  snapTr.textContent  = snap.transits;
+  if (vcnt)    vcnt.textContent    = shown;
+}
+
+function toggleFilter(type) {
+  filters[type] = !filters[type];
+  var btn = document.getElementById('f-'+type);
+  if (btn) { btn.classList.toggle('on', filters[type]); btn.classList.toggle('off', !filters[type]); }
+  renderSnapEnhanced(snapIdx);
+}
+
+function nextSnap() {
+  var btn = document.getElementById('rfbtn');
+  var ico = document.getElementById('rf-ico');
+  if (btn) btn.disabled = true;
+  if (ico) ico.innerHTML = '<span style="display:inline-block;animation:spin .8s linear infinite">&#8635;</span>';
+  setTimeout(function() {
+    snapIdx = (snapIdx + 1) % SNAPS.length;
+    renderSnapEnhanced(snapIdx);
+    if (btn) btn.disabled = false;
+    if (ico) ico.textContent = '\u21BB';
+  }, 1000);
+}
+
+function initMap() {
+  if (mapReady) return; mapReady = true;
+  leafMap = L.map('sat-map', { center:[26.6,56.4], zoom:8, zoomControl:true, preferCanvas:true });
+  L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}',
+    { attribution:'Imagery (c) Esri, USGS | AIS: straits.live - Windward - May 2026', maxZoom:18 }).addTo(leafMap);
+  L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/Reference/World_Boundaries_and_Places/MapServer/tile/{z}/{y}/{x}',
+    { maxZoom:18, opacity:0.75 }).addTo(leafMap);
+  L.polygon([[27.5,55.8],[27.65,56.3],[27.55,57.1],[27.0,57.6],[26.4,57.5],[26.1,56.9],[26.25,56.0],[26.75,55.65]],
+    { color:'#e74c3c', weight:1.5, dashArray:'6,5', fillColor:'#e74c3c', fillOpacity:0.06, opacity:0.55 })
+    .addTo(leafMap).bindTooltip('IRGC Control Zone', { permanent:false, sticky:true, className:'irgc-tip' });
+  L.polyline([[27.1,57.2],[26.5,58.1],[25.4,58.6]],
+    { color:'#e74c3c', weight:1, dashArray:'4,4', opacity:0.35 })
+    .addTo(leafMap).bindTooltip('New IRGC boundary - May 20 2026', { sticky:true, className:'irgc-tip' });
+  mLayer = L.layerGroup().addTo(leafMap);
+  renderSnapEnhanced(0);
+}
+
+// ── SIMULATOR DATA ─────────────────────────────────────────────────────────────
+var SCENARIOS = {
+  1:{name:'Hormuz Closed',emoji:'&#128683;',state:'Current reality - IRGC control zone - US naval blockade - Day 82',transits:2,brent:104.50,warrisk:'8.0x',reroute:'Cape of GH',color:'#e74c3c',routeMults:{cgh:{mult:4.5,days:35,tag:'rt-cgh',label:'Cape of GH',avail:true},redsea:{mult:2.8,days:22,tag:'rt-rs',label:'Red Sea',avail:true,note:'Jeddah entry only'},direct:{mult:null,days:null,tag:'rt-na',label:'Hormuz direct',avail:false,note:'CLOSED'},oman:{mult:3.2,days:20,tag:'rt-dir',label:'Sohar/KF land',avail:true}},implications:[{title:'Jeddah Port',color:'#e74c3c',metric:'16-day dwell',text:'Absorbing all Hormuz-displaced cargo. Terminal at capacity.'},{title:'Brent Crude',color:'#e74c3c',metric:'$104.50/bbl',text:'+45% vs pre-crisis. 1.4M bbl/day Iran exports via shadow fleet.'},{title:'GCC Trucking',color:'#fbbf24',metric:'+47% fleet',text:'Al Bat\'ha 1,649 trucks/day. TruKKer scaling to 500 moves/day from Khorfakkan.'},{title:'Khor Fakkan/Sohar',color:'#3dd68c',metric:'+3,500% diversions',text:'Windward: vessel diversions to Oman up 3,500%. Sohar emerging as primary Asia-GCC gateway.'},{title:'Stranded Vessels',color:'#e74c3c',metric:'~2,000 ships',text:'~20,000 mariners trapped in Persian Gulf. 109K TEU confirmed stranded.'},{title:'War-Risk Insurance',color:'#e74c3c',metric:'8.0x premium',text:'VLCC approx $2.5M per voyage. 6 P&I clubs withdrew cover.'}]},
+  2:{name:'Hormuz: IRGC Escort Only',emoji:'&#9875;',state:'Friendly-flag passage - China India Turkey - ~25 transits/day',transits:25,brent:92.00,warrisk:'5.0x',reroute:'Mixed',color:'#fbbf24',routeMults:{cgh:{mult:3.0,days:35,tag:'rt-cgh',label:'Cape of GH',avail:true},redsea:{mult:2.0,days:22,tag:'rt-rs',label:'Red Sea',avail:true,note:'Jeddah entry only'},direct:{mult:2.5,days:18,tag:'rt-dir',label:'Hormuz direct',avail:true,note:'IRGC escort - flag dependent'},oman:{mult:2.2,days:20,tag:'rt-dir',label:'Sohar/KF land',avail:true}},implications:[{title:'Jeddah Port',color:'#fbbf24',metric:'10-day dwell',text:'Easing slightly as some Hormuz traffic resumes for friendly flags.'},{title:'Brent Crude',color:'#fbbf24',metric:'~$92/bbl',text:'+28% vs pre-crisis. Flag-state discrimination persists.'},{title:'GCC Trucking',color:'#fbbf24',metric:'+25% fleet',text:'Land routes remain elevated. Jebel Ali handling Asia cargo for Chinese/Indian flag vessels.'},{title:'Khor Fakkan/Sohar',color:'#3dd68c',metric:'Still elevated',text:'Oman ports retain volume as flag-neutral entry. Preferred by EU/US carriers avoiding Hormuz.'},{title:'Carrier Posture',color:'#fbbf24',metric:'Split market',text:'Chinese carriers (COSCO) resume direct. Western majors (Maersk/MSC) stay Cape of Good Hope.'},{title:'War-Risk Insurance',color:'#fbbf24',metric:'5.0x premium',text:'Reduced but elevated. Escort availability uncertain. JWC maintaining listed area.'}]},
+  3:{name:'Hormuz: Negotiated Partial',emoji:'&#9868;',state:'Ceasefire - neutral corridor - all flags - ~50 transits/day',transits:50,brent:82.00,warrisk:'3.0x',reroute:'Hormuz + CoGH',color:'#f0c84b',routeMults:{cgh:{mult:2.0,days:35,tag:'rt-cgh',label:'Cape of GH',avail:true,note:'Still viable some lanes'},redsea:{mult:1.5,days:22,tag:'rt-rs',label:'Red Sea',avail:true},direct:{mult:1.8,days:18,tag:'rt-dir',label:'Hormuz direct',avail:true,note:'All flags - corridor zones apply'},oman:{mult:1.6,days:20,tag:'rt-dir',label:'Sohar/KF land',avail:true}},implications:[{title:'Jeddah Port',color:'#3dd68c',metric:'6-day dwell',text:'Traffic redistributing to Gulf ports. Congestion easing.'},{title:'Brent Crude',color:'#3dd68c',metric:'~$82/bbl',text:'+14% vs pre-crisis. Ceasefire premium partially unwound.'},{title:'GCC Trucking',color:'#3dd68c',metric:'Normalising',text:'Al Bat\'ha volumes declining as Jebel Ali direct calls resume.'},{title:'Khor Fakkan/Sohar',color:'#fbbf24',metric:'Transitional',text:'Still processing diverted backlog. 6-12 weeks to fully normalise.'},{title:'Carrier Posture',color:'#3dd68c',metric:'Resuming calls',text:'MSC/Maersk announce Gulf resumption. 6-8 week lead time for full schedules.'},{title:'War-Risk Insurance',color:'#fbbf24',metric:'3.0x premium',text:'Falling toward 2x as ceasefire holds. JWC likely to revise within 30-60 days.'}]},
+  4:{name:'Hormuz Fully Open',emoji:'&#9989;',state:'Crisis resolved - pre-war conditions - ~95 transits/day',transits:95,brent:72.00,warrisk:'1.0x',reroute:'Hormuz direct',color:'#3dd68c',routeMults:{cgh:{mult:1.1,days:35,tag:'rt-cgh',label:'Cape of GH',avail:true,note:'No longer cost-competitive'},redsea:{mult:1.0,days:22,tag:'rt-rs',label:'Red Sea',avail:true},direct:{mult:1.0,days:18,tag:'rt-dir',label:'Hormuz direct',avail:true,note:'Optimal - pre-war conditions'},oman:{mult:1.0,days:20,tag:'rt-dir',label:'Sohar/KF land',avail:true}},implications:[{title:'Jeddah Port',color:'#3dd68c',metric:'3-day dwell',text:'Returns to regional SA gateway. DP World capacity investments fully utilised.'},{title:'Brent Crude',color:'#3dd68c',metric:'~$72/bbl',text:'Returns to pre-crisis. 20M bbl/day resuming. Strategic reserve replenishment begins.'},{title:'GCC Trucking',color:'#3dd68c',metric:'Pre-crisis norms',text:'Al Bat\'ha returns to ~900 trucks/day. Oman corridors return to baseline.'},{title:'Khor Fakkan/Sohar',color:'#fbbf24',metric:'Volume loss',text:'Diverted volume returns to Jebel Ali/Dammam direct. Oman loses crisis-era premium.'},{title:'Carrier Posture',color:'#3dd68c',metric:'Fully restored',text:'All carriers resume direct Gulf. Cape routing discontinued within 8-12 weeks.'},{title:'War-Risk Insurance',color:'#3dd68c',metric:'1.0x premium',text:'Returns to pre-crisis once JWC removes Gulf from listed areas - 90-day confirmation.'}]},
+  5:{name:'Bab el-Mandeb Closed',emoji:'&#128683;',state:'Hormuz open - Houthis escalate - Red Sea blocked - Jeddah loses bypass',transits:95,brent:95.00,warrisk:'4.0x',reroute:'Cape of GH only',color:'#e74c3c',routeMults:{cgh:{mult:3.5,days:35,tag:'rt-cgh',label:'Cape of GH',avail:true,note:'Only global option'},redsea:{mult:null,days:null,tag:'rt-na',label:'Red Sea',avail:false,note:'CLOSED - Houthi threat'},direct:{mult:1.5,days:18,tag:'rt-dir',label:'Hormuz direct',avail:true,note:'Gulf inbound only'},oman:{mult:1.8,days:20,tag:'rt-dir',label:'Sohar/KF land',avail:true}},implications:[{title:'Jeddah Port',color:'#e74c3c',metric:'Isolated',text:'No sea access from Europe/Asia. Entirely dependent on Saudi Landbridge from Gulf ports.'},{title:'Brent Crude',color:'#e74c3c',metric:'~$95/bbl',text:'+32% vs pre-crisis. Red Sea and Hormuz fear premiums stacking.'},{title:'GCC Trucking',color:'#e74c3c',metric:'Gulf ports surge',text:'Jebel Ali and Dammam become primary entry for all cargo. Al Bat\'ha volumes spike.'},{title:'Khor Fakkan/Sohar',color:'#3dd68c',metric:'Gains volume',text:'Oman ports benefit as Cape-routed cargo avoids Red Sea. Sohar becomes key hub.'},{title:'Carrier Posture',color:'#e74c3c',metric:'CoGH only',text:'All Asia-Europe and Asia-GCC via Cape. Hamburg-Jebel Ali 40+ days.'},{title:'War-Risk Insurance',color:'#e74c3c',metric:'4.0x Gulf',text:'Red Sea listed at maximum. CoGH routing cheaper for insurance.'}]},
+  6:{name:'Dual Closure',emoji:'&#9888;',state:'Hormuz + Bab el-Mandeb both closed - maximum stress - worst case',transits:2,brent:135.00,warrisk:'10.0x',reroute:'Cape of GH + land only',color:'#e74c3c',routeMults:{cgh:{mult:6.0,days:38,tag:'rt-cgh',label:'Cape of GH',avail:true,note:'Only sea option - extreme cost'},redsea:{mult:null,days:null,tag:'rt-na',label:'Red Sea',avail:false,note:'CLOSED - Houthi + IRGC'},direct:{mult:null,days:null,tag:'rt-na',label:'Hormuz direct',avail:false,note:'CLOSED - IRGC/US blockade'},oman:{mult:5.0,days:22,tag:'rt-dir',label:'Sohar land only',avail:true,note:'Via Cape then Oman truck'}},implications:[{title:'Jeddah Port',color:'#e74c3c',metric:'Non-functional',text:'No sea access possible. Relies entirely on Saudi Landbridge. Isolated from global supply.'},{title:'Brent Crude',color:'#e74c3c',metric:'~$135/bbl',text:'+88% vs pre-crisis. Both chokepoints controlling ~40% of global seaborne oil.'},{title:'GCC Trucking',color:'#e74c3c',metric:'Extreme surge',text:'Land corridors only viable option. Hwy 95 maximum capacity. Al Bat\'ha gridlock.'},{title:'Khor Fakkan/Sohar',color:'#fbbf24',metric:'Critical hub',text:'Only viable sea entry for GCC via Cape. Sohar capacity overwhelmed within weeks.'},{title:'Carrier Posture',color:'#e74c3c',metric:'Force majeure',text:'Most carriers invoke force majeure. Spot rates 5-6x. Booking windows 60-90 days.'},{title:'War-Risk Insurance',color:'#e74c3c',metric:'10.0x premium',text:'Effectively uninsurable. P&I clubs restricting cover. Government reinsurance likely needed.'}]}
+};
+
+var BASE_RATES  = {SHA:{cgh:1800,redsea:1700,direct:1800,oman:1600},HAM:{cgh:1400,redsea:1200,direct:1400,oman:1300},ROT:{cgh:1350,redsea:1150,direct:1350,oman:1250},SIN:{cgh:1200,redsea:1100,direct:1200,oman:1000},ICD:{cgh:900,redsea:850,direct:850,oman:750}};
+var PORT_COSTS  = {SHA:450,HAM:520,ROT:500,SIN:380,ICD:320};
+var DEST_CONFIG = {DXB:{port:'Jebel Ali',truck_direct:0,truck_jeddah:1800,truck_sohar:650,truck_cgh:850},RUH:{port:'Riyadh',truck_direct:1900,truck_jeddah:1100,truck_sohar:2200,truck_cgh:2400},DMM:{port:'Dammam',truck_direct:600,truck_jeddah:900,truck_sohar:2800,truck_cgh:3000},DOH:{port:'Hamad Port',truck_direct:1200,truck_jeddah:3200,truck_sohar:3500,truck_cgh:3700},BAH:{port:'Manama',truck_direct:900,truck_jeddah:2800,truck_sohar:3000,truck_cgh:3200},KWI:{port:'Kuwait',truck_direct:1600,truck_jeddah:3700,truck_sohar:4200,truck_cgh:4500},MCT:{port:'Sohar',truck_direct:200,truck_jeddah:1400,truck_sohar:0,truck_cgh:200}};
+var COMM_SRG    = {general:1.0,consumer:1.05,auto:1.08,pharma:1.15,food:1.30,industrial:1.12,chemical:1.35};
+var COMM_NAMES  = {general:'General / mixed cargo',consumer:'Consumer goods / FMCG',auto:'Automotive parts',pharma:'Pharmaceuticals',food:'Food & perishables (reefer)',industrial:'Industrial / machinery',chemical:'Chemicals / hazmat'};
+var ORIG_NAMES  = {SHA:'Shanghai',HAM:'Hamburg',ROT:'Rotterdam',SIN:'Singapore',ICD:'Mundra / Nhava Sheva'};
+var DEST_NAMES  = {DXB:'Dubai / Jebel Ali',RUH:'Riyadh',DMM:'Dammam / Khobar',DOH:'Doha',BAH:'Manama (Bahrain)',KWI:'Kuwait City',MCT:'Muscat'};
+var ROUTE_NAMES = {direct:'Hormuz Direct',redsea:'Red Sea / Suez',oman:'Sohar / KF + Land',cgh:'Cape of Good Hope'};
+
+function selectScenario(id) {
+  activeScenario = id;
+  document.querySelectorAll('.scard').forEach(function(c){ c.classList.remove('active'); });
+  var card = document.getElementById('sc-' + id);
+  if (card) card.classList.add('active');
+  document.getElementById('sim-results').classList.remove('visible');
+  var st = document.getElementById('sim-status');
+  if (st) st.textContent = 'Scenario ' + id + ' selected. Click Run Simulation.';
+}
+
+function fmtN(n) { return Math.round(n).toLocaleString('en-US'); }
+
+function runSimulator() {
+  var sc = SCENARIOS[activeScenario];
+  if (!sc) return;
+
+  var origin    = document.getElementById('inp-origin').value;
+  var dest      = document.getElementById('inp-dest').value;
+  var teu       = parseInt(document.getElementById('inp-teu').value) || 50;
+  var commodity = document.getElementById('inp-commodity').value;
+  var cSrg      = COMM_SRG[commodity] || 1.0;
+
+  // Banner
+  var bn = document.getElementById('scb-name');
+  if (bn) { bn.innerHTML = sc.emoji + ' ' + sc.name; bn.style.color = sc.color; }
+  var el = function(id,v){ var e=document.getElementById(id); if(e) e.innerHTML=v; };
+  el('scb-state', sc.state);
+  el('scb-transits', sc.transits);
+  el('scb-brent', '$' + sc.brent.toFixed(2));
+  el('scb-warrisk', sc.warrisk);
+  el('scb-reroute', sc.reroute);
+
+  // Route matrix
+  var baseRates = BASE_RATES[origin] || BASE_RATES['SHA'];
+  var rows = ['direct','redsea','oman','cgh'].map(function(key) {
+    var rm = sc.routeMults[key];
+    return { key:key, rm:rm, rate: (rm.avail && rm.mult) ? Math.round(baseRates[key] * rm.mult * cSrg) : null };
+  });
+  rows.sort(function(a,b) {
+    if (!a.rm.avail && b.rm.avail) return 1;
+    if (a.rm.avail && !b.rm.avail) return -1;
+    return (a.rate||999999) - (b.rate||999999);
+  });
+
+  var rkClasses = ['rank-1','rank-2','rank-3','rank-x'];
+  var tbody = document.getElementById('route-matrix-body');
+  if (tbody) {
+    tbody.innerHTML = '';
+    var rk = 0;
+    rows.forEach(function(r) {
+      var av = r.rm.avail;
+      var rkC = av ? rkClasses[Math.min(rk,3)] : 'rank-x';
+      if (av) rk++;
+      var dPct = r.rm.mult ? Math.round((r.rm.mult-1)*100) : null;
+      var dColor = dPct===null?'#748494':dPct>100?'#e74c3c':dPct>50?'#fbbf24':dPct>0?'#f0c84b':'#3dd68c';
+      var noteH = (r.rm.note && av) ? '<span style="font-size:8px;color:#7a8494;display:block">'+r.rm.note+'</span>' : '';
+      tbody.innerHTML +=
+        '<tr>'+
+        '<td><span class="rank-badge '+rkC+'">'+(av?rk:'-')+'</span></td>'+
+        '<td style="color:#e8eaed">'+ROUTE_NAMES[r.key]+noteH+'</td>'+
+        '<td><span class="route-tag '+r.rm.tag+'">'+r.rm.label+'</span></td>'+
+        '<td style="color:#f0c84b;font-weight:700">'+(av&&r.rate?'$'+fmtN(r.rate):'<span style="color:#748494">N/A</span>')+'</td>'+
+        '<td style="color:#7a8494">'+(r.rm.days?r.rm.days+'d':'-')+'</td>'+
+        '<td style="color:'+dColor+'">'+(dPct!==null?'+'+dPct+'%':'-')+'</td>'+
+        '<td>'+(av?'<span style="color:#3dd68c">Yes</span>':'<span style="color:#e74c3c">No - '+(r.rm.note||'')+'</span>')+'</td>'+
+        '</tr>';
+    });
+  }
+
+  // Cost breakdown
+  var bestRow   = rows.find(function(r){ return r.rm.avail && r.rate; });
+  var bestRate  = bestRow ? bestRow.rate : 0;
+  var bestKey   = bestRow ? bestRow.key : 'cgh';
+  var bestName  = ROUTE_NAMES[bestKey];
+  var destCfg   = DEST_CONFIG[dest] || DEST_CONFIG['DXB'];
+  var origPort  = PORT_COSTS[origin] || 400;
+  var destPort  = 280;
+  var commNote  = commodity==='food'?' (incl. reefer)':commodity==='chemical'?' (incl. hazmat)':'';
+  var truck     = bestKey==='redsea' ? destCfg.truck_jeddah : bestKey==='oman' ? destCfg.truck_sohar : bestKey==='cgh' ? destCfg.truck_cgh : destCfg.truck_direct;
+  var wMult     = parseFloat(sc.warrisk) || 1.0;
+  var warRisk   = Math.round(bestRate * (wMult-1) * 0.05);
+  var totalFEU  = bestRate + origPort + destPort + truck + warRisk;
+  var totalMo   = totalFEU * teu;
+  var preBase   = Math.round((baseRates['direct']||baseRates['cgh']) * cSrg);
+  var preTruck  = destCfg.truck_direct || Math.round((destCfg.truck_sohar||0)*0.5);
+  var preTotal  = preBase + origPort + destPort + preTruck;
+  var preMo     = preTotal * teu;
+  var dFEU      = totalFEU - preTotal;
+  var dMo       = totalMo - preMo;
+  var dPct      = Math.round((dFEU/preTotal)*100);
+
+  el('v2-sub', (ORIG_NAMES[origin]||origin) + ' to ' + (DEST_NAMES[dest]||dest) + ' &bull; ' + teu + ' TEU/month &bull; ' + (COMM_NAMES[commodity]||commodity) + ' &bull; Best route: ' + bestName);
+
+  var items = [
+    {k:'Ocean freight (per FEU)',         v:'$'+fmtN(bestRate),  s:'Best available: '+bestName+commNote, p: bestRow&&bestRow.rm.mult?Math.round((bestRow.rm.mult-1)*100):0},
+    {k:'Origin port handling (THC)',       v:'$'+fmtN(origPort),  s:(ORIG_NAMES[origin]||origin)+' terminal charges', p:0},
+    {k:'Destination port handling',        v:'$'+fmtN(destPort),  s:destCfg.port+' THC + customs clearance', p:0},
+    {k:'Inland trucking to '+(DEST_NAMES[dest]||dest), v:truck>0?'$'+fmtN(truck):'Port delivery', s:truck>0?'Door delivery':'Direct port destination', p:truck>0?30:0},
+    {k:'War-risk surcharge',               v:'$'+fmtN(warRisk),   s:'Insurance at '+sc.warrisk+' of pre-crisis', p:Math.round((wMult-1)*100)}
+  ];
+
+  var bd = document.getElementById('cost-breakdown');
+  if (bd) {
+    bd.innerHTML = items.map(function(it) {
+      var pc = it.p>100?'#e74c3c':it.p>30?'#fbbf24':it.p>0?'#f0c84b':'#7a8494';
+      var pt = it.p>0?'+'+it.p+'%':'baseline';
+      return '<div class="cost-row">'+
+        '<div><div class="cost-key">'+it.k+'</div><div class="cost-sub">'+it.s+'</div></div>'+
+        '<div style="display:flex;align-items:center;gap:6px">'+
+          '<div class="cost-val" style="color:#f0c84b">'+it.v+'</div>'+
+          '<span class="crisis-delta" style="background:rgba(58,67,81,.2);color:'+pc+'">'+pt+'</span>'+
+        '</div></div>';
+    }).join('') +
+    '<div class="cost-row" style="padding-top:10px;border-top:1px solid #2e3540;margin-top:4px">'+
+      '<div><div class="cost-key" style="color:#e8eaed;font-weight:700">Total per FEU (landed)</div>'+
+      '<div class="cost-sub">Pre-crisis baseline: $'+fmtN(preTotal)+'</div></div>'+
+      '<div style="display:flex;align-items:center;gap:6px">'+
+        '<div class="cost-val" style="color:#e8eaed;font-size:20px">$'+fmtN(totalFEU)+'</div>'+
+        '<span class="crisis-delta" style="background:'+(dFEU>0?'rgba(231,76,60,.12)':'rgba(61,214,140,.12)')+';color:'+(dFEU>0?'#e74c3c':'#3dd68c')+'">'+
+          (dFEU>0?'+':'')+dPct+'% vs pre-crisis'+
+        '</span>'+
+      '</div></div>'+
+    '<div class="cost-row" style="background:#181c22;margin:8px -16px -16px;padding:12px 16px;border-radius:0 0 6px 6px">'+
+      '<div><div class="cost-key" style="color:#a78bfa;font-weight:700">Monthly total ('+teu+' TEU/month)</div>'+
+      '<div class="cost-sub">Pre-crisis monthly: $'+fmtN(preMo)+'</div></div>'+
+      '<div style="display:flex;align-items:center;gap:8px">'+
+        '<div style="font-size:22px;font-weight:700;font-family:\'IBM Plex Mono\',monospace;color:#a78bfa">$'+fmtN(totalMo)+'</div>'+
+        '<div style="font-size:9px;font-family:\'IBM Plex Mono\',monospace;padding:3px 8px;border-radius:3px;background:'+(dMo>0?'rgba(231,76,60,.12)':'rgba(61,214,140,.12)')+';color:'+(dMo>0?'#e74c3c':'#3dd68c')+'">'+
+          (dMo>0?'+':'')+' $'+fmtN(Math.abs(dMo))+'/month vs pre-crisis'+
+        '</div>'+
+      '</div></div>';
+  }
+
+  // Annual grid
+  var annTotal   = totalMo * 12;
+  var annPremium = Math.max(0, dMo * 12);
+  var fPct = totalFEU>0 ? Math.round((bestRate/totalFEU)*100) : 0;
+  var tPct = totalFEU>0 ? Math.round((truck/totalFEU)*100) : 0;
+  var ag = document.getElementById('annual-grid');
+  if (ag) {
+    ag.innerHTML = [
+      {v:'$'+fmtN(annTotal),   l:'Annual landed cost',  s:teu+' TEU x 12 months', c:'#a78bfa'},
+      {v:'$'+fmtN(annPremium), l:'Annual crisis premium',s:'vs pre-crisis baseline', c:annPremium>0?'#e74c3c':'#3dd68c'},
+      {v:fPct+'%',             l:'Sea freight share',   s:'Truck: '+tPct+'% | Port: '+(100-fPct-tPct)+'%', c:'#f0c84b'},
+      {v:sc.transits+'/day',   l:'Strait transits',     s:'Pre-crisis baseline: 95/day', c:sc.color}
+    ].map(function(m){
+      return '<div class="annual-met"><div class="annual-val" style="color:'+m.c+'">'+m.v+'</div><div class="annual-lbl">'+m.l+'</div><div class="annual-delta">'+m.s+'</div></div>';
+    }).join('');
+  }
+
+  // Implications
+  var ig = document.getElementById('impl-grid');
+  if (ig) {
+    ig.innerHTML = sc.implications.map(function(imp){
+      return '<div class="impl-card" style="border-color:'+imp.color+'">'+
+        '<div class="impl-metric" style="color:'+imp.color+'">'+imp.metric+'</div>'+
+        '<div class="impl-title">'+imp.title+'</div>'+
+        '<div class="impl-text">'+imp.text+'</div></div>';
+    }).join('');
+  }
+
+  document.getElementById('sim-results').classList.add('visible');
+  var st2 = document.getElementById('sim-status');
+  if (st2) st2.textContent = 'Done.';
+  setTimeout(function(){ document.getElementById('sim-results').scrollIntoView({behavior:'smooth',block:'start'}); }, 100);
+}
+
+
+// ── ANIMATED RATES MAP ────────────────────────────────────────────────────────
+
+var ratesMap = null;
+var ratesMapReady = false;
+
+// Route waypoints — accurate sea lanes, no land crossings
+// Weights (1-10) proportional to real trade lane volumes (source: CTS/Alphaliner 2024-2025)
+// Asia-Europe: 24M TEU/yr (weight 9) | Trans-Pacific: 30M TEU/yr (weight 10)
+// Asia-GCC: ~5M TEU/yr (weight 4) | Europe-GCC: ~3M TEU/yr (weight 3)
+var ROUTES = {
+
+  // ── ASIA → EUROPE via CAPE OF GOOD HOPE (crisis reroute) ────────────────
+  // Was via Suez. Now CoGH. ~24M TEU/yr → weight 9 (thickest line on map)
+  // Shanghai → South China Sea → Malacca → Indian Ocean → Cape → Atlantic → NW Europe
+  asia_europe_cgh: {
+    pts: [
+      [31.2,121.5],   // Shanghai
+      [28.0,122.0],   // East China Sea south
+      [22.0,120.5],   // Taiwan Strait
+      [18.0,117.0],   // South China Sea
+      [10.0,110.0],   // South China Sea south
+      [5.0,105.0],    // Singapore approach
+      [1.3,104.0],    // Singapore / Malacca east
+      [1.2,103.8],    // Singapore
+      [-0.5,101.0],   // Malacca Strait
+      [-2.5,98.5],    // Malacca west
+      [-5.5,96.0],    // Andaman Sea
+      [-8.0,90.0],    // Bay of Bengal
+      [-10.0,82.0],   // Indian Ocean
+      [-12.0,72.0],   // Mid Indian Ocean (Chagos area)
+      [-18.0,60.0],   // Indian Ocean SW
+      [-25.0,45.0],   // Southern Indian Ocean
+      [-33.0,27.0],   // Approaching Cape
+      [-34.2,18.5],   // Cape of Good Hope ← actual geographic point
+      [-34.5,16.0],   // Cape Town
+      [-33.0,13.0],   // West of Cape
+      [-28.0,8.0],    // South Atlantic
+      [-20.0,5.0],
+      [-10.0,-2.0],
+      [-2.0,-6.0],
+      [5.0,-8.0],
+      [10.0,-12.0],   // Gulf of Guinea
+      [15.0,-18.0],   // West Africa
+      [20.0,-22.0],
+      [28.0,-16.0],   // Canary lat
+      [35.0,-12.0],
+      [40.0,-10.0],
+      [44.0,-7.0],    // Bay of Biscay south
+      [47.0,-5.0],    // Bay of Biscay
+      [49.5,-3.0],    // English Channel approach
+      [51.5,2.0],     // English Channel
+      [51.9,4.5]      // Rotterdam
+    ],
+    color: '#e74c3c',
+    weight: 9,
+    dashArray: '12,4',
+    label: 'Asia → Europe via CoGH (crisis)'
+  },
+
+  // ── ASIA → GCC via CAPE OF GOOD HOPE (crisis reroute for Gulf ports) ────
+  // ~5M TEU/yr → weight 4
+  // Same path as Asia-Europe but branches at Cape → Indian Ocean → Arabian Sea → Gulf
+  asia_gcc_cgh: {
+    pts: [
+      [31.2,121.5],
+      [28.0,122.0],
+      [22.0,120.5],
+      [18.0,117.0],
+      [10.0,110.0],
+      [5.0,105.0],
+      [1.2,103.8],    // Singapore
+      [-0.5,101.0],
+      [-2.5,98.5],
+      [-5.5,96.0],
+      [-8.0,90.0],
+      [-10.0,82.0],
+      [-12.0,72.0],
+      [-18.0,60.0],
+      [-25.0,45.0],
+      [-33.0,27.0],
+      [-34.2,18.5],   // Cape of Good Hope
+      [-34.5,22.0],
+      [-32.0,30.0],
+      [-28.0,38.0],   // South Indian Ocean east of Cape
+      [-20.0,48.0],
+      [-10.0,55.0],
+      [-5.0,55.0],    // Southern Arabian Sea
+      [0.0,52.0],
+      [5.0,48.0],     // Gulf of Aden approach
+      [8.5,50.0],
+      [11.5,45.0],    // Gulf of Aden
+      [14.0,49.0],
+      [16.0,54.0],
+      [18.0,57.0],    // Arabian Sea NW
+      [20.0,58.5],
+      [22.0,59.5],
+      [22.5,58.5],    // Gulf of Oman
+      [23.5,57.5],
+      [24.5,56.5],
+      [25.0,55.1]     // Jebel Ali
+    ],
+    color: '#e74c3c',
+    weight: 4,
+    dashArray: '8,5',
+    label: 'Asia → GCC via CoGH (crisis)'
+  },
+
+  // ── HAMBURG → JEDDAH via MED → SUEZ → RED SEA ────────────────────────────
+  // THIS IS THE CORRECT ROUTE. Hamburg never goes around Cape for GCC.
+  // ~3M TEU/yr Europe-GCC → weight 3
+  // Hamburg → English Channel → Strait of Gibraltar → Med → Suez → Red Sea → Jeddah
+  ham_gcc_redsea: {
+    pts: [
+      [53.5,9.9],     // Hamburg
+      [52.0,5.0],     // North Sea
+      [51.5,2.5],     // English Channel east
+      [50.5,0.0],     // English Channel mid
+      [49.0,-3.0],    // English Channel west
+      [46.5,-7.0],    // Bay of Biscay
+      [44.0,-9.0],    // Bay of Biscay south
+      [41.0,-9.5],    // Portugal coast
+      [38.0,-9.5],    // Lisbon lat
+      [36.1,-5.4],    // Strait of Gibraltar ← key waypoint
+      [36.5,-3.0],    // Western Med
+      [37.0,0.0],     // Med west
+      [37.5,5.5],     // Algeria coast
+      [37.5,10.0],    // Tunisia
+      [37.0,12.0],    // Sicily approach
+      [36.0,14.0],    // Sicily south
+      [35.5,17.0],    // Mediterranean
+      [34.5,21.0],    // Crete south
+      [33.5,25.0],    // Eastern Med
+      [32.5,28.5],    // Eastern Med
+      [31.5,32.5],    // Suez Canal north (Port Said)
+      [30.5,32.5],    // Suez Canal
+      [29.5,32.5],    // Suez Canal south
+      [28.0,33.0],    // Red Sea north
+      [26.5,35.0],    // Red Sea
+      [24.0,36.5],
+      [22.0,37.5],
+      [20.0,38.5],
+      [21.5,39.2]     // Jeddah
+    ],
+    color: '#f0c84b',
+    weight: 3,
+    dashArray: '8,4',
+    label: 'Hamburg → Jeddah via Med+Suez+Red Sea'
+  },
+
+  // ── ASIA → JEDDAH via MALACCA → INDIAN OCEAN → BAB EL-MANDEB → RED SEA ──
+  // ~2M TEU/yr of Asia-GCC via Jeddah entry → weight 2.5
+  asia_jeddah: {
+    pts: [
+      [31.2,121.5],
+      [28.0,122.0],
+      [22.0,120.5],
+      [18.0,117.0],
+      [10.0,110.0],
+      [5.0,105.0],
+      [1.2,103.8],    // Singapore
+      [-0.5,101.0],
+      [-2.5,98.5],
+      [-5.5,96.0],
+      [-8.0,88.0],    // Bay of Bengal
+      [-8.0,80.0],    // Indian Ocean
+      [-7.0,72.0],
+      [-5.0,65.0],
+      [-2.0,58.0],
+      [3.0,52.0],
+      [8.0,47.5],     // Gulf of Aden west
+      [11.5,43.5],    // Bab el-Mandeb ← key waypoint
+      [13.0,42.8],    // Red Sea south
+      [15.0,42.0],
+      [17.0,41.5],
+      [19.0,40.5],
+      [21.5,39.2]     // Jeddah
+    ],
+    color: '#f0c84b',
+    weight: 2.5,
+    dashArray: '7,4',
+    label: 'Asia → Jeddah via Indian Ocean+Red Sea'
+  },
+
+  // ── ASIA → SOHAR / KHOR FAKKAN (direct, no Hormuz needed) ───────────────
+  // ~2M TEU/yr via Oman ports → weight 2.5
+  asia_sohar: {
+    pts: [
+      [31.2,121.5],
+      [28.0,122.0],
+      [22.0,120.5],
+      [18.0,117.0],
+      [10.0,110.0],
+      [5.0,105.0],
+      [1.2,103.8],    // Singapore
+      [-0.5,101.0],
+      [-2.5,98.5],
+      [-5.5,96.0],
+      [-8.0,88.0],
+      [-8.0,80.0],
+      [-5.0,72.0],
+      [0.0,67.0],
+      [5.0,62.0],
+      [10.0,58.0],
+      [15.0,56.5],
+      [18.0,57.0],
+      [20.5,58.0],
+      [22.5,58.5],
+      [23.8,57.5],
+      [24.3,56.7]     // Sohar / Khor Fakkan
+    ],
+    color: '#a78bfa',
+    weight: 2.5,
+    dashArray: '7,5',
+    label: 'Asia → Sohar/KF direct'
+  },
+
+  // ── HORMUZ DIRECT (pre-crisis normal route, shown faded) ─────────────────
+  // Was ~5M TEU/yr + massive oil flow. Now CLOSED. Weight 1.5 faded.
+  direct: {
+    color: '#5aa3f5',
+    weight: 1.5,
+    dashArray: '3,8',
+    label: 'Hormuz Direct (pre-crisis)',
+    sha_to_jea_hormuz: [
+      [31.2,121.5],
+      [28.0,122.0],
+      [22.0,120.5],
+      [18.0,117.0],
+      [10.0,110.0],
+      [5.0,105.0],
+      [1.2,103.8],    // Singapore
+      [-0.5,101.0],
+      [-2.5,98.5],
+      [-5.5,96.0],
+      [-8.0,88.0],
+      [-5.0,75.0],
+      [0.0,65.0],
+      [5.0,60.0],
+      [10.0,57.5],
+      [15.0,57.0],
+      [18.0,58.0],
+      [20.0,59.0],
+      [22.0,59.5],
+      [22.5,58.5],
+      [23.5,58.0],    // Gulf of Oman
+      [24.5,57.5],
+      [25.5,57.0],
+      [26.2,56.8],
+      [26.6,56.5],    // Hormuz Strait (narrowest point 56.3-56.5E)
+      [26.2,56.0],
+      [25.7,55.8],
+      [25.3,55.5],
+      [25.0,55.1]     // Jebel Ali
+    ],
+    color: '#5aa3f5',
+    weight: 1.5,
+    dashArray: '3,8',
+    label: 'Hormuz Direct (pre-crisis)'
+  }
+};
+
+// Key port positions
+var PORTS = {
+  SHA: { pos:[31.22,121.47], name:'Shanghai', color:'#c9a227' },
+  HAM: { pos:[53.54,9.99],   name:'Hamburg',  color:'#5aa3f5' },
+  ROT: { pos:[51.92,4.48],   name:'Rotterdam',color:'#5aa3f5' },
+  SIN: { pos:[1.26,103.82],  name:'Singapore',color:'#3dd68c' },
+  JEA: { pos:[25.01,55.06],  name:'Jebel Ali',color:'#e74c3c' },
+  JED: { pos:[21.49,39.17],  name:'Jeddah',   color:'#f0c84b' },
+  SOH: { pos:[24.35,56.68],  name:'Sohar / KF',color:'#a78bfa' },
+  DAM: { pos:[26.43,50.10],  name:'Dammam',   color:'#5aa3f5' },
+  DOH: { pos:[25.29,51.53],  name:'Hamad Port',color:'#5aa3f5' },
+  CPH: { pos:[-34.36,18.86], name:'Cape of GH',color:'#e74c3c' },
+  SUE: { pos:[30.0,32.5],    name:'Suez',     color:'#748494' },
+};
+
+// Animated flow dots along a polyline
+function addFlowDots(map, latlngs, color, speedFactor) {
+  speedFactor = speedFactor || 1;
+  var numDots = Math.max(4, Math.floor(latlngs.length / 5));
+  var dots = [];
+  for (var i = 0; i < numDots; i++) {
+    var dot = L.circleMarker(latlngs[0], {
+      radius: 6, color: '#ffffff', fillColor: color,
+      fillOpacity: 1.0, weight: 1.5, className: 'flow-dot'
+    }).addTo(map);
+    dots.push({ marker: dot, progress: i / numDots });
+  }
+
+  function totalLen(pts) {
+    var d = 0;
+    for (var i = 1; i < pts.length; i++) {
+      var dx = pts[i][1] - pts[i-1][1];
+      var dy = pts[i][0] - pts[i-1][0];
+      d += Math.sqrt(dx*dx + dy*dy);
+    }
+    return d;
+  }
+
+  function posAtProgress(pts, p) {
+    var total = totalLen(pts);
+    var target = p * total;
+    var acc = 0;
+    for (var i = 1; i < pts.length; i++) {
+      var dx = pts[i][1] - pts[i-1][1];
+      var dy = pts[i][0] - pts[i-1][0];
+      var seg = Math.sqrt(dx*dx + dy*dy);
+      if (acc + seg >= target) {
+        var frac = (target - acc) / seg;
+        return [pts[i-1][0] + frac * dy, pts[i-1][1] + frac * dx];
+      }
+      acc += seg;
+    }
+    return pts[pts.length-1];
+  }
+
+  var speed = 0.0015 * speedFactor;
+  function animate() {
+    dots.forEach(function(d) {
+      d.progress = (d.progress + speed) % 1;
+      var pos = posAtProgress(latlngs, d.progress);
+      d.marker.setLatLng(pos);
+      // Fade near start/end
+      var fade = d.progress < 0.05 ? d.progress/0.05 : d.progress > 0.95 ? (1-d.progress)/0.05 : 1;
+      d.marker.setStyle({ fillOpacity: 0.85 * fade });
+    });
+    requestAnimationFrame(animate);
+  }
+  animate();
+  return dots;
+}
+
+// Route layer registry for simulator
+var ratesRouteLayers = {};
+
+
+function buildLeafletMap(divId, center, zoom) {
+  var m = L.map(divId, {
+    center: center, zoom: zoom,
+    zoomControl: true, preferCanvas: false,
+    worldCopyJump: false
+  });
+  L.tileLayer(
+    'https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}',
+    { attribution:'Imagery &copy; Esri, USGS', maxZoom:18 }
+  ).addTo(m);
+  L.tileLayer(
+    'https://server.arcgisonline.com/ArcGIS/rest/services/Reference/World_Boundaries_and_Places/MapServer/tile/{z}/{y}/{x}',
+    { maxZoom:18, opacity:0.6 }
+  ).addTo(m);
+  return m;
+}
+
+function addPortMarker(map, portKey) {
+  var p = PORTS[portKey];
+  if (!p) return;
+  var isBlocked = (portKey === 'JEA' && activeScenario === 1);
+  L.circleMarker(p.pos, {
+    radius: 6, color: isBlocked ? '#e74c3c' : p.color,
+    fillColor: isBlocked ? '#e74c3c' : p.color,
+    fillOpacity: 0.9, weight: 2
+  }).addTo(map).bindTooltip(p.name + (isBlocked ? ' ⊗ SUSPENDED' : ''), { sticky:true, className:'irgc-tip' });
+}
+
+function addLegend(map, items) {
+  var ctrl = L.control({ position:'bottomleft' });
+  ctrl.onAdd = function() {
+    var div = L.DomUtil.create('div', 'map-legend');
+    div.innerHTML = '<div class="map-legend-title">Routes</div>' +
+      items.map(function(it) {
+        return '<div class="map-legend-row"><div class="map-legend-line" style="background:'+it.color+';opacity:'+(it.avail?1:0.3)+'"></div>'+
+          '<span style="color:'+(it.avail?'#e8eaed':'#748494')+'">'+(it.avail?'':'\u2715 ')+it.label+'</span></div>';
+      }).join('');
+    return div;
+  };
+  ctrl.addTo(map);
+}
+
+function initRatesMap() {
+  if (ratesMapReady) return;
+  ratesMapReady = true;
+  ratesMap = buildLeafletMap('rates-map', [15, 60], 2);
+
+  // Draw all routes
+  // Line weights proportional to cargo volume:
+  // SHA→CoGH: 5 (1.8M TEU/yr rerouted — largest lane)
+  // HAM→CoGH: 3.5 (0.9M TEU/yr)
+  // HAM/SHA→Red Sea→Jeddah: 3 (0.6M TEU/yr)
+  // SHA→Sohar direct: 2.5 (0.4M TEU/yr)
+  // Hormuz direct (pre-crisis): 1.5 faded
+  var routeDefs = [
+    // Weights (1-10) proportional to real trade volumes (CTS/Alphaliner 2024-2025)
+    { pts: ROUTES.asia_europe_cgh.pts,              color: ROUTES.asia_europe_cgh.color,   dash: ROUTES.asia_europe_cgh.dashArray,  w: ROUTES.asia_europe_cgh.weight,   speed: 3.5, label: ROUTES.asia_europe_cgh.label,   avail:true  },
+    { pts: ROUTES.asia_gcc_cgh.pts,                 color: ROUTES.asia_gcc_cgh.color,      dash: ROUTES.asia_gcc_cgh.dashArray,     w: ROUTES.asia_gcc_cgh.weight,      speed: 3.0, label: ROUTES.asia_gcc_cgh.label,      avail:true  },
+    { pts: ROUTES.ham_gcc_redsea.pts,               color: ROUTES.ham_gcc_redsea.color,    dash: ROUTES.ham_gcc_redsea.dashArray,   w: ROUTES.ham_gcc_redsea.weight,    speed: 2.5, label: ROUTES.ham_gcc_redsea.label,    avail:true  },
+    { pts: ROUTES.asia_jeddah.pts,                  color: ROUTES.asia_jeddah.color,       dash: ROUTES.asia_jeddah.dashArray,      w: ROUTES.asia_jeddah.weight,       speed: 2.5, label: ROUTES.asia_jeddah.label,       avail:true  },
+    { pts: ROUTES.asia_sohar.pts,                   color: ROUTES.asia_sohar.color,        dash: ROUTES.asia_sohar.dashArray,       w: ROUTES.asia_sohar.weight,        speed: 2.5, label: ROUTES.asia_sohar.label,        avail:true  },
+    { pts: ROUTES.direct.sha_to_jea_hormuz,         color: ROUTES.direct.color,            dash: ROUTES.direct.dashArray,           w: ROUTES.direct.weight,            speed: 0,   label: ROUTES.direct.label,            avail:false }
+  ];
+
+  routeDefs.forEach(function(rd) {
+    // Draw static line
+    var line = L.polyline(rd.pts, {
+      color: rd.color, weight: rd.w,
+      dashArray: rd.dash, opacity: rd.avail ? 0.75 : 0.2
+    }).addTo(ratesMap);
+    // Animate flow dots only on available routes
+    if (rd.avail && rd.speed > 0) {
+      addFlowDots(ratesMap, rd.pts, rd.color, rd.speed);
+    }
+    ratesRouteLayers[rd.label] = line;
+  });
+
+  // IRGC zone on rates map (small indicator near Hormuz)
+  L.circleMarker([26.6,56.4], {
+    radius:12, color:'#e74c3c', fillColor:'#e74c3c',
+    fillOpacity:0.08, weight:1.5, dashArray:'4,3', opacity:0.5
+  }).addTo(ratesMap).bindTooltip('Hormuz CLOSED', { permanent:false, sticky:true, className:'irgc-tip' });
+
+  // Hormuz X marker
+  L.marker([26.6,56.4], {
+    icon: L.divIcon({
+      html:'<div style="font-size:16px;color:#e74c3c;font-weight:700;text-shadow:0 0 6px #000">&#10005;</div>',
+      iconSize:[20,20], iconAnchor:[10,10], className:''
+    })
+  }).addTo(ratesMap).bindTooltip('Strait of Hormuz &mdash; CLOSED to commercial shipping', { sticky:true, className:'irgc-tip' });
+
+  // Port markers
+  ['SHA','HAM','ROT','JEA','JED','SOH','CPH','SIN'].forEach(function(k){ addPortMarker(ratesMap, k); });
+  // Add Suez and Gibraltar labels
+  L.circleMarker([31.5,32.5], { radius:5, color:'#748494', fillColor:'#748494', fillOpacity:0.8, weight:1.5 })
+    .addTo(ratesMap).bindTooltip('Suez Canal', { sticky:true, className:'irgc-tip' });
+  L.circleMarker([36.1,-5.4], { radius:5, color:'#748494', fillColor:'#748494', fillOpacity:0.8, weight:1.5 })
+    .addTo(ratesMap).bindTooltip('Strait of Gibraltar', { sticky:true, className:'irgc-tip' });
+  L.circleMarker([11.5,43.5], { radius:5, color:'#748494', fillColor:'#748494', fillOpacity:0.8, weight:1.5 })
+    .addTo(ratesMap).bindTooltip('Bab el-Mandeb', { sticky:true, className:'irgc-tip' });
+
+  // Legend
+  addLegend(ratesMap, [
+    { color:'#e74c3c', label:'Asia → Europe via CoGH   24M TEU/yr',  avail:true  },
+    { color:'#e74c3c', label:'Asia → GCC via CoGH       5M TEU/yr',  avail:true  },
+    { color:'#f0c84b', label:'HAM → Jeddah  Med+Suez   3M TEU/yr',  avail:true  },
+    { color:'#f0c84b', label:'Asia → Jeddah  Red Sea    2M TEU/yr',  avail:true  },
+    { color:'#a78bfa', label:'Asia → Sohar  direct      2M TEU/yr',  avail:true  },
+    { color:'#5aa3f5', label:'Hormuz direct    CLOSED',                    avail:false }
+  ]);
+}
+
+// ── SIMULATOR MAP ─────────────────────────────────────────────────────────────
+
+// GCC-focused route waypoints — proper ocean routing, no land crossings
+// Weights reflect relative cargo volumes in each scenario
+
+// ── VESSEL ANIMATION ON HORMUZ MAP ────────────────────────────────────────────
+
+var vesselAnimFrames = {};
+
+function animateVesselMarker(marker, latlngs, speed, loopBack) {
+  // latlngs: array of [lat,lng] waypoints
+  // Animates the marker along the path
+  var idx = 0;
+  var progress = 0; // 0→1 between idx and idx+1
+  var id = Math.random();
+  vesselAnimFrames[id] = true;
+
+  function step() {
+    if (!vesselAnimFrames[id]) return; // cancelled
+    if (idx >= latlngs.length - 1) {
+      if (loopBack) { idx = 0; progress = 0; }
+      else return;
+    }
+    var a = latlngs[idx];
+    var b = latlngs[idx + 1];
+    var lat = a[0] + (b[0] - a[0]) * progress;
+    var lng = a[1] + (b[1] - a[1]) * progress;
+    try { marker.setLatLng([lat, lng]); } catch(e) { return; }
+    progress += speed;
+    if (progress >= 1) { progress = 0; idx++; }
+    requestAnimationFrame(step);
+  }
+  step();
+  return id;
+}
+
+// Add animated pulse ring to a vessel
+function addPulseRing(map, latlng, color) {
+  var ring = L.circleMarker(latlng, {
+    radius: 5, color: color, fillColor: color,
+    fillOpacity: 0, weight: 2, opacity: 0.7
+  }).addTo(map);
+
+  var r = 5;
+  var growing = true;
+  function pulse() {
+    if (growing) { r += 0.4; if (r > 14) growing = false; }
+    else { r -= 0.4; if (r < 5) growing = true; }
+    try { ring.setRadius(r); ring.setStyle({ opacity: 1 - (r-5)/9 }); } catch(e){ return; }
+    requestAnimationFrame(pulse);
+  }
+  pulse();
+  return ring;
+}
+
+// Enhanced vessel rendering with animation for moving vessels
+function renderSnapEnhanced(idx) {
+  if (!mLayer) return;
+  mLayer.clearLayers();
+
+  // Cancel old vessel animations
+  Object.keys(vesselAnimFrames).forEach(function(k){ vesselAnimFrames[k] = false; });
+  vesselAnimFrames = {};
+
+  var snap = SNAPS[idx]; var shown = 0;
+  snap.vessels.forEach(function(v) {
+    if (!filters[v.type]) return; shown++;
+    var c = COLORS[v.type];
+
+    if (v.mov && v.track && v.track.length > 1) {
+      // Animated vessel — use track waypoints
+      var icon = makeIcon(v.type, true);
+      var m = L.marker(v.track[0], { icon:icon, title:v.name });
+      mLayer.addLayer(m);
+      // Pulse ring
+      var ring = L.circleMarker(v.track[0], {
+        radius:8, color:c, fillColor:c, fillOpacity:0, weight:1.5, opacity:0.5
+      });
+      mLayer.addLayer(ring);
+      // Animate both
+      var aid = animateVesselMarker(m, v.track, 0.006, true);
+      var rid = animateVesselMarker(ring, v.track, 0.006, true);
+      // Popup
+      m.bindPopup(buildPopup(v, c), { maxWidth:260 });
+    } else {
+      // Static vessel
+      var sm = L.marker([v.lat, v.lng], { icon:makeIcon(v.type, false), title:v.name });
+      sm.bindPopup(buildPopup(v, c), { maxWidth:260 });
+      mLayer.addLayer(sm);
+    }
+  });
+
+  var sl = document.getElementById('snap-label');
+  var st = document.getElementById('snap-transits');
+  var vc = document.getElementById('vessel-count');
+  if (sl) sl.textContent = (idx+1)+'/3 - '+snap.ts;
+  if (st) st.textContent = snap.transits;
+  if (vc) vc.textContent = shown;
+}
+
+function buildPopup(v, c) {
+  var nr = v.note ? '<div class="pop-row"><span class="pop-k">Note</span><span class="pop-v" style="color:#f0c84b">'+v.note+'</span></div>' : '';
+  var sc2 = v.mov ? '#3dd68c' : (v.ais && v.ais.indexOf('OFF')===0) ? '#e74c3c' : '#fbbf24';
+  return '<div class="pop-head" style="color:'+c+'">'+v.name+'</div>'+
+    '<div class="pop-row"><span class="pop-k">Type</span><span class="pop-v">'+TLABELS[v.type]+'</span></div>'+
+    '<div class="pop-row"><span class="pop-k">Flag</span><span class="pop-v">'+v.flag+'</span></div>'+
+    '<div class="pop-row"><span class="pop-k">Status</span><span class="pop-v" style="color:'+sc2+'">'+v.status+'</span></div>'+
+    '<div class="pop-row"><span class="pop-k">Cargo</span><span class="pop-v">'+v.cargo+'</span></div>'+
+    '<div class="pop-row"><span class="pop-k">AIS</span><span class="pop-v" style="color:'+(v.ais&&v.ais.indexOf('OFF')===0?'#e74c3c':'#3dd68c')+'">'+v.ais+'</span></div>'+
+    nr;
+}
+
+// Add track waypoints to moving vessels in SNAPS
+// SALAKH 22: outbound through strait east to Gulf of Oman
+SNAPS[0].vessels.forEach(function(v){
+  if (v.name === 'SALAKH 22 (Gambia)') {
+    v.track = [[26.62,56.48],[26.58,56.55],[26.52,56.68],[26.44,56.90],[26.30,57.10],[26.15,57.40],[25.90,57.80],[25.60,58.20]];
+  }
+  if (v.name === 'VLCC - IRGC escort') {
+    v.track = [[26.55,56.90],[26.45,57.10],[26.30,57.40],[26.10,57.80],[25.85,58.20],[25.60,58.60]];
+  }
+});
+SNAPS[1].vessels.forEach(function(v){
+  if (v.name === 'SALAKH 22 (Gambia)') {
+    v.track = [[26.50,57.30],[26.30,57.60],[26.00,57.90],[25.70,58.20],[25.40,58.50]];
+  }
+  if (v.name === 'VLCC - IRGC escort') {
+    v.track = [[26.25,57.70],[26.00,58.00],[25.70,58.40],[25.40,58.80]];
+  }
+  if (v.name === 'LPG carrier - transit #3') {
+    v.track = [[26.58,56.48],[26.50,56.40],[26.40,56.30],[26.25,56.20],[26.00,56.10],[25.80,55.80]];
+  }
+});
+SNAPS[2].vessels.forEach(function(v){
+  if (v.name === 'SALAKH 22 (Gambia)') {
+    v.track = [[25.90,57.90],[25.60,58.30],[25.30,58.70],[25.00,59.10],[24.70,59.50]];
+  }
+  if (v.name === 'VLCC convoy - 2 hulls') {
+    v.track = [[25.20,59.10],[24.90,59.50],[24.60,59.90],[24.30,60.30]];
+  }
+  if (v.name === 'LPG carrier - cleared') {
+    v.track = [[25.60,57.40],[25.30,57.80],[25.00,58.20],[24.70,58.60]];
+  }
+});
+
+// ── BOOT ──────────────────────────────────────────────────────────────────────
+window.addEventListener('load', function() {
+  // Timestamp
+  var ts = document.getElementById('ts');
+  if (ts) ts.textContent = new Date().toLocaleString('en-AE',{timeZone:'Asia/Dubai',hour:'2-digit',minute:'2-digit',day:'2-digit',month:'short',year:'numeric'}) + ' GST';
+
+  // Init charts visible on load (page-hormuz is active)
+  initHormuzCharts();
+
+  // Init Hormuz satellite map (default tab)
+  initMap();
+
+  // Pre-init rates map in background for fast tab switch
+  setTimeout(function(){ initRatesMap(); }, 1500);
+});
+
+
+  // (continued below)
+
+// ── VESSEL ANIMATION ON HORMUZ MAP ────────────────────────────────────────────
+
+var vesselAnimFrames = {};
+
+function animateVesselMarker(marker, latlngs, speed, loopBack) {
+  // latlngs: array of [lat,lng] waypoints
+  // Animates the marker along the path
+  var idx = 0;
+  var progress = 0; // 0→1 between idx and idx+1
+  var id = Math.random();
+  vesselAnimFrames[id] = true;
+
+  function step() {
+    if (!vesselAnimFrames[id]) return; // cancelled
+    if (idx >= latlngs.length - 1) {
+      if (loopBack) { idx = 0; progress = 0; }
+      else return;
+    }
+    var a = latlngs[idx];
+    var b = latlngs[idx + 1];
+    var lat = a[0] + (b[0] - a[0]) * progress;
+    var lng = a[1] + (b[1] - a[1]) * progress;
+    try { marker.setLatLng([lat, lng]); } catch(e) { return; }
+    progress += speed;
+    if (progress >= 1) { progress = 0; idx++; }
+    requestAnimationFrame(step);
+  }
+  step();
+  return id;
+}
+
+// Add animated pulse ring to a vessel
+function addPulseRing(map, latlng, color) {
+  var ring = L.circleMarker(latlng, {
+    radius: 5, color: color, fillColor: color,
+    fillOpacity: 0, weight: 2, opacity: 0.7
+  }).addTo(map);
+
+  var r = 5;
+  var growing = true;
+  function pulse() {
+    if (growing) { r += 0.4; if (r > 14) growing = false; }
+    else { r -= 0.4; if (r < 5) growing = true; }
+    try { ring.setRadius(r); ring.setStyle({ opacity: 1 - (r-5)/9 }); } catch(e){ return; }
+    requestAnimationFrame(pulse);
+  }
+  pulse();
+  return ring;
+}
+
+// Enhanced vessel rendering with animation for moving vessels
+function renderSnapEnhanced(idx) {
+  if (!mLayer) return;
+  mLayer.clearLayers();
+
+  // Cancel old vessel animations
+  Object.keys(vesselAnimFrames).forEach(function(k){ vesselAnimFrames[k] = false; });
+  vesselAnimFrames = {};
+
+  var snap = SNAPS[idx]; var shown = 0;
+  snap.vessels.forEach(function(v) {
+    if (!filters[v.type]) return; shown++;
+    var c = COLORS[v.type];
+
+    if (v.mov && v.track && v.track.length > 1) {
+      // Animated vessel — use track waypoints
+      var icon = makeIcon(v.type, true);
+      var m = L.marker(v.track[0], { icon:icon, title:v.name });
+      mLayer.addLayer(m);
+      // Pulse ring
+      var ring = L.circleMarker(v.track[0], {
+        radius:8, color:c, fillColor:c, fillOpacity:0, weight:1.5, opacity:0.5
+      });
+      mLayer.addLayer(ring);
+      // Animate both
+      var aid = animateVesselMarker(m, v.track, 0.006, true);
+      var rid = animateVesselMarker(ring, v.track, 0.006, true);
+      // Popup
+      m.bindPopup(buildPopup(v, c), { maxWidth:260 });
+    } else {
+      // Static vessel
+      var sm = L.marker([v.lat, v.lng], { icon:makeIcon(v.type, false), title:v.name });
+      sm.bindPopup(buildPopup(v, c), { maxWidth:260 });
+      mLayer.addLayer(sm);
+    }
+  });
+
+  var sl = document.getElementById('snap-label');
+  var st = document.getElementById('snap-transits');
+  var vc = document.getElementById('vessel-count');
+  if (sl) sl.textContent = (idx+1)+'/3 - '+snap.ts;
+  if (st) st.textContent = snap.transits;
+  if (vc) vc.textContent = shown;
+}
+
+function buildPopup(v, c) {
+  var nr = v.note ? '<div class="pop-row"><span class="pop-k">Note</span><span class="pop-v" style="color:#f0c84b">'+v.note+'</span></div>' : '';
+  var sc2 = v.mov ? '#3dd68c' : (v.ais && v.ais.indexOf('OFF')===0) ? '#e74c3c' : '#fbbf24';
+  return '<div class="pop-head" style="color:'+c+'">'+v.name+'</div>'+
+    '<div class="pop-row"><span class="pop-k">Type</span><span class="pop-v">'+TLABELS[v.type]+'</span></div>'+
+    '<div class="pop-row"><span class="pop-k">Flag</span><span class="pop-v">'+v.flag+'</span></div>'+
+    '<div class="pop-row"><span class="pop-k">Status</span><span class="pop-v" style="color:'+sc2+'">'+v.status+'</span></div>'+
+    '<div class="pop-row"><span class="pop-k">Cargo</span><span class="pop-v">'+v.cargo+'</span></div>'+
+    '<div class="pop-row"><span class="pop-k">AIS</span><span class="pop-v" style="color:'+(v.ais&&v.ais.indexOf('OFF')===0?'#e74c3c':'#3dd68c')+'">'+v.ais+'</span></div>'+
+    nr;
+}
+
+// Add track waypoints to moving vessels in SNAPS
+// SALAKH 22: outbound through strait east to Gulf of Oman
+SNAPS[0].vessels.forEach(function(v){
+  if (v.name === 'SALAKH 22 (Gambia)') {
+    v.track = [[26.62,56.48],[26.58,56.55],[26.52,56.68],[26.44,56.90],[26.30,57.10],[26.15,57.40],[25.90,57.80],[25.60,58.20]];
+  }
+  if (v.name === 'VLCC - IRGC escort') {
+    v.track = [[26.55,56.90],[26.45,57.10],[26.30,57.40],[26.10,57.80],[25.85,58.20],[25.60,58.60]];
+  }
+});
+SNAPS[1].vessels.forEach(function(v){
+  if (v.name === 'SALAKH 22 (Gambia)') {
+    v.track = [[26.50,57.30],[26.30,57.60],[26.00,57.90],[25.70,58.20],[25.40,58.50]];
+  }
+  if (v.name === 'VLCC - IRGC escort') {
+    v.track = [[26.25,57.70],[26.00,58.00],[25.70,58.40],[25.40,58.80]];
+  }
+  if (v.name === 'LPG carrier - transit #3') {
+    v.track = [[26.58,56.48],[26.50,56.40],[26.40,56.30],[26.25,56.20],[26.00,56.10],[25.80,55.80]];
+  }
+});
+SNAPS[2].vessels.forEach(function(v){
+  if (v.name === 'SALAKH 22 (Gambia)') {
+    v.track = [[25.90,57.90],[25.60,58.30],[25.30,58.70],[25.00,59.10],[24.70,59.50]];
+  }
+  if (v.name === 'VLCC convoy - 2 hulls') {
+    v.track = [[25.20,59.10],[24.90,59.50],[24.60,59.90],[24.30,60.30]];
+  }
+  if (v.name === 'LPG carrier - cleared') {
+    v.track = [[25.60,57.40],[25.30,57.80],[25.00,58.20],[24.70,58.60]];
+  }
+});
+
+// ── BOOT ──────────────────────────────────────────────────────────────────────
+window.addEventListener('load', function() {
+  // Timestamp
+  var ts = document.getElementById('ts');
+  if (ts) ts.textContent = new Date().toLocaleString('en-AE',{timeZone:'Asia/Dubai',hour:'2-digit',minute:'2-digit',day:'2-digit',month:'short',year:'numeric'}) + ' GST';
+
+  // Init charts visible on load (page-hormuz is active)
+  initHormuzCharts();
+
+  // Init Hormuz satellite map (default tab)
+  initMap();
+
+  // Pre-init rates map in background for fast tab switch
+  setTimeout(function(){ initRatesMap(); }, 1500);
+});
+
+
+  // Weights (1-10) reflect RELATIVE trade lane volumes (CTS/Alphaliner 2024-2025):
+  // Asia-Europe via CoGH: 24M TEU/yr → weight 9 (dominant, thickest)
+  // Asia-GCC via CoGH:   ~5M TEU/yr → weight 4
+  // HAM→Jeddah via Med+Suez: ~3M TEU/yr → weight 3
+  // Asia→Jeddah via Red Sea: ~2M TEU/yr → weight 2.5
+  // Asia→Sohar direct:   ~2M TEU/yr → weight 2.5
+  // Hormuz direct (pre-crisis): was biggest energy lane → shown faded weight 1.5
+  var routeDefs = [
+    { pts: ROUTES.asia_europe_cgh.pts,                  color: ROUTES.asia_europe_cgh.color,   dash: ROUTES.asia_europe_cgh.dashArray,  w: ROUTES.asia_europe_cgh.weight,   speed: 1.4, label:'Asia→Europe CoGH (24M TEU/yr)', avail:true  },
+    { pts: ROUTES.asia_gcc_cgh.pts,                     color: ROUTES.asia_gcc_cgh.color,      dash: ROUTES.asia_gcc_cgh.dashArray,     w: ROUTES.asia_gcc_cgh.weight,      speed: 1.2, label:'Asia→GCC CoGH (5M TEU/yr)',     avail:true  },
+    { pts: ROUTES.ham_gcc_redsea.pts,                   color: ROUTES.ham_gcc_redsea.color,    dash: ROUTES.ham_gcc_redsea.dashArray,   w: ROUTES.ham_gcc_redsea.weight,    speed: 1.0, label:'HAM→Jeddah Med+Suez (3M TEU/yr)',avail:true  },
+    { pts: ROUTES.asia_jeddah.pts,                      color: ROUTES.asia_jeddah.color,       dash: ROUTES.asia_jeddah.dashArray,      w: ROUTES.asia_jeddah.weight,       speed: 0.9, label:'Asia→Jeddah Red Sea (2M TEU/yr)', avail:true  },
+    { pts: ROUTES.asia_sohar.pts,                       color: ROUTES.asia_sohar.color,        dash: ROUTES.asia_sohar.dashArray,       w: ROUTES.asia_sohar.weight,        speed: 1.0, label:'Asia→Sohar direct (2M TEU/yr)',  avail:true  },
+    { pts: ROUTES.direct.sha_to_jea_hormuz,             color: ROUTES.direct.color,            dash: ROUTES.direct.dashArray,           w: ROUTES.direct.weight,            speed: 0,   label:'Hormuz Direct (CLOSED — pre-crisis)', avail:false }
+  ];
+
+
+</script>
+</body>
+</html>

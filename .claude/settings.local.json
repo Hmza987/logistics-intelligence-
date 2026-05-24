@@ -1,0 +1,10 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(wc -l \"/mnt/c/Users/Hamza/OneDrive/Desktop/GCC Logistics Dashboard/index.html\")",
+      "PowerShell(\\(Get-Content \"C:\\\\Users\\\\Hamza\\\\OneDrive\\\\Desktop\\\\GCC Logistics Dashboard\\\\index.html\" | Measure-Object -Line\\).Lines)",
+      "PowerShell(New-Item -ItemType Directory -Force -Path \"C:\\\\Users\\\\Hamza\\\\OneDrive\\\\Desktop\\\\GCC Logistics Dashboard\\\\api\")",
+      "mcp__Claude_Preview__preview_start"
+    ]
+  }
+}

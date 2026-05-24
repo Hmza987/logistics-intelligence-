@@ -1,0 +1,219 @@
+'use strict';
+// Hormuz live-data endpoint
+// Priority: 1) IMF PortWatch (public REST API) → 2) straits.live scrape → 3) hardcoded fallback
+
+const https = require('https');
+const http  = require('http');
+
+// ─── Cache (serverless warm-instance cache, TTL 10 min) ───────────────────────
+let _cache   = null;
+let _cacheAt = 0;
+const CACHE_TTL = 10 * 60 * 1000;
+
+// ─── Hardcoded fallback (mirrors what index.html uses) ────────────────────────
+// Kept in sync manually; scraper/API results replace these when available.
+const FALLBACK_COUNTS = [4,3,4,2,3,2,2,2,3,2,2,2,2,2];
+
+function buildFallback() {
+  const today  = new Date();
+  const labels = [];
+  for (let i = 13; i >= 0; i--) {
+    const d = new Date(today);
+    d.setDate(d.getDate() - i);
+    labels.push(
+      (d.getMonth() + 1).toString().padStart(2, '0') + '/' +
+      d.getDate().toString().padStart(2, '0')
+    );
+  }
+  return {
+    source:   'fallback',
+    updated:  new Date().toISOString(),
+    transits: { labels, counts: FALLBACK_COUNTS, today: FALLBACK_COUNTS[FALLBACK_COUNTS.length - 1] },
+    vessels:  { tankers: 1, containers: 0, lng: 1, other: 0 },
+    status:   'Hormuz restricted — IRGC escort only · ~2 transits/day',
+  };
+}
+
+// ─── Minimal HTTP fetch (no external deps beyond Node built-ins) ──────────────
+function rawFetch(url, maxRedirects = 4) {
+  return new Promise((resolve, reject) => {
+    const lib = url.startsWith('https') ? https : http;
+    const req = lib.get(url, {
+      headers: {
+        'User-Agent': 'GCC-Logistics-Dashboard/1.0 (open-source; maritime data aggregation)',
+        'Accept':     'text/html,application/json,*/*',
+      },
+    }, (res) => {
+      // Follow redirects
+      if ([301,302,303,307,308].includes(res.statusCode) && res.headers.location && maxRedirects > 0) {
+        const next = res.headers.location.startsWith('http')
+          ? res.headers.location
+          : new URL(res.headers.location, url).href;
+        return rawFetch(next, maxRedirects - 1).then(resolve).catch(reject);
+      }
+      let body = '';
+      res.setEncoding('utf8');
+      res.on('data', (chunk) => body += chunk);
+      res.on('end', () => resolve({ status: res.statusCode, body }));
+    });
+    req.setTimeout(9000, () => { req.destroy(new Error('timeout')); });
+    req.on('error', reject);
+  });
+}
+
+// ─── Source 1: IMF PortWatch public ArcGIS REST API ──────────────────────────
+// Chokepoint 6 = Strait of Hormuz
+// Docs: https://portwatch.imf.org  (ArcGIS FeatureService, open access)
+async function fetchIMFPortWatch() {
+  const base   = 'https://services8.arcgis.com/RoXJobLkqBWynurN/arcgis/rest/services/portwatch_chokepoints_daily/FeatureServer/0/query';
+  const params = new URLSearchParams({
+    where:            "chokepoint_id='6'",
+    outFields:        'date,n_total,n_tanker,n_container,n_bulk,n_other',
+    orderByFields:    'date DESC',
+    resultRecordCount: '21',
+    f:                'json',
+  });
+  const url = `${base}?${params}`;
+
+  const { status, body } = await rawFetch(url);
+  if (status !== 200) throw new Error(`PortWatch HTTP ${status}`);
+
+  const json = JSON.parse(body);
+  if (!json.features || json.features.length === 0) throw new Error('PortWatch: no features');
+
+  // Features come in newest-first; we want oldest-first for the chart
+  const rows = json.features
+    .map((f) => f.attributes)
+    .sort((a, b) => a.date - b.date)
+    .slice(-14);
+
+  const labels = rows.map((r) => {
+    const d = new Date(r.date);
+    return (d.getUTCMonth() + 1).toString().padStart(2, '0') + '/' +
+           d.getUTCDate().toString().padStart(2, '0');
+  });
+  const counts   = rows.map((r) => r.n_total  ?? 0);
+  const tankers  = rows.map((r) => r.n_tanker  ?? 0);
+  const containers = rows.map((r) => r.n_container ?? 0);
+  const lng      = rows.map((r) => r.n_bulk   ?? 0);
+  const other    = rows.map((r) => r.n_other  ?? 0);
+
+  const lastRow = rows[rows.length - 1];
+
+  return {
+    source:   'imf-portwatch',
+    updated:  new Date().toISOString(),
+    transits: {
+      labels,
+      counts,
+      today:    counts[counts.length - 1],
+      tankers,
+      containers,
+      lng,
+      other,
+    },
+    vessels: {
+      tankers:    lastRow.n_tanker    ?? 1,
+      containers: lastRow.n_container ?? 0,
+      lng:        lastRow.n_bulk      ?? 1,
+      other:      lastRow.n_other     ?? 0,
+    },
+    status: `Hormuz live · ${counts[counts.length - 1]} transits today (IMF PortWatch)`,
+  };
+}
+
+// ─── Source 2: straits.live HTML scrape ──────────────────────────────────────
+// straits.live shows vessel events per strait. We look for transit-count patterns.
+// Selectors/regex here may need updating if their HTML structure changes.
+async function fetchStraitsLive() {
+  const { status, body } = await rawFetch('https://straits.live');
+  if (status !== 200) throw new Error(`straits.live HTTP ${status}`);
+
+  const lines = body
+    .replace(/<script[\s\S]*?<\/script>/gi, '')
+    .replace(/<style[\s\S]*?<\/style>/gi, '')
+    .replace(/<[^>]+>/g, ' ')
+    .replace(/&nbsp;/g, ' ')
+    .replace(/\s+/g, ' ');
+
+  // Look for patterns like "3 vessels", "5 transits", "2/day" near "Hormuz"
+  const hormuzIdx = lines.toLowerCase().indexOf('hormuz');
+  if (hormuzIdx === -1) throw new Error('straits.live: Hormuz not found on page');
+
+  // Grab ±800 chars around the first "Hormuz" mention
+  const snippet = lines.slice(Math.max(0, hormuzIdx - 200), hormuzIdx + 600);
+
+  // Try to pull a daily count: "N transits" or "N vessels"
+  const countMatch = snippet.match(/(\d+)\s*(?:vessel|transit|crossing|ship)/i);
+  if (!countMatch) throw new Error('straits.live: no transit count found in snippet');
+
+  const today = parseInt(countMatch[1], 10);
+
+  // Build a rolling 14-day array — we only have today's number from this scrape,
+  // so we blend it into the fallback series
+  const fb     = buildFallback();
+  const counts = [...fb.transits.counts.slice(0, 13), today];
+
+  return {
+    source:   'straits-live',
+    updated:  new Date().toISOString(),
+    transits: { labels: fb.transits.labels, counts, today },
+    vessels:  fb.vessels,
+    status:   `Hormuz live · ${today} transits today (straits.live)`,
+  };
+}
+
+// ─── Main resolver (waterfall) ────────────────────────────────────────────────
+async function getLiveData() {
+  if (_cache && Date.now() - _cacheAt < CACHE_TTL) return _cache;
+
+  let data = null;
+
+  try {
+    data = await fetchIMFPortWatch();
+    console.log('[hormuz] source: imf-portwatch');
+  } catch (e1) {
+    console.warn('[hormuz] IMF PortWatch failed:', e1.message);
+    try {
+      data = await fetchStraitsLive();
+      console.log('[hormuz] source: straits-live');
+    } catch (e2) {
+      console.warn('[hormuz] straits.live failed:', e2.message);
+      data = buildFallback();
+      console.log('[hormuz] source: fallback');
+    }
+  }
+
+  _cache   = data;
+  _cacheAt = Date.now();
+  return data;
+}
+
+// ─── Vercel serverless handler ────────────────────────────────────────────────
+module.exports = async (req, res) => {
+  if (req.method === 'OPTIONS') {
+    res.setHeader('Access-Control-Allow-Origin', '*');
+    res.setHeader('Access-Control-Allow-Methods', 'GET, OPTIONS');
+    return res.status(200).end();
+  }
+  if (req.method !== 'GET') {
+    return res.status(405).json({ error: 'Method not allowed' });
+  }
+
+  // Allow forced cache-bust via ?refresh=1 (useful during development)
+  if (req.query && req.query.refresh === '1') {
+    _cache   = null;
+    _cacheAt = 0;
+  }
+
+  try {
+    const data = await getLiveData();
+    res.setHeader('Content-Type', 'application/json; charset=utf-8');
+    res.setHeader('Access-Control-Allow-Origin', '*');
+    res.setHeader('Cache-Control', 's-maxage=600, stale-while-revalidate=300');
+    return res.status(200).json(data);
+  } catch (err) {
+    console.error('[hormuz] fatal:', err);
+    return res.status(500).json({ error: 'Internal server error', fallback: buildFallback() });
+  }
+};

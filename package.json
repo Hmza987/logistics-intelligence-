@@ -1,0 +1,20 @@
+{
+  "name": "gcc-logistics-dashboard",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Gulf Logistics Intelligence — live Hormuz/chokepoint data dashboard",
+  "engines": {
+    "node": ">=18"
+  },
+  "dependencies": {
+    "node-fetch": "2.7.0"
+  },
+  "devDependencies": {
+    "html-validate": "^9.0.0"
+  },
+  "scripts": {
+    "validate": "node --check api/hormuz.js && echo 'Syntax OK'",
+    "dev": "vercel dev",
+    "deploy": "vercel --prod"
+  }
+}

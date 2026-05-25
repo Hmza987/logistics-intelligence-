@@ -849,9 +849,17 @@ a { color: inherit; text-decoration: none; }
   padding: 10px 12px;
   border-left: 2px solid transparent;
 }
+.impl-cat   { font-size: 7px; font-weight: 700; letter-spacing: .12em; text-transform: uppercase; color: var(--c-tx2); margin-bottom: 4px; }
 .impl-title { font-size: 10px; font-weight: 600; color: var(--c-tx0); margin-bottom: 3px; letter-spacing: .01em; }
-.impl-text  { font-family: var(--f-mono); font-size: 8.5px; color: var(--c-tx2); line-height: 1.55; }
-.impl-metric { font-family: var(--f-mono); font-size: 15px; font-weight: 300; margin-bottom: 2px; }
+.impl-text  { font-family: var(--f-mono); font-size: 8.5px; color: var(--c-tx1); line-height: 1.60; }
+.impl-metric { font-family: var(--f-mono); font-size: 14px; font-weight: 500; margin-bottom: 3px; letter-spacing: .01em; }
+/* GDP projection block inside Economic Risk card */
+.impl-gdp      { margin-top: 10px; padding-top: 9px; border-top: 1px solid #1e2730; }
+.impl-gdp-hdr  { font-size: 7px; font-weight: 700; letter-spacing: .10em; text-transform: uppercase; color: var(--c-tx2); margin-bottom: 6px; }
+.impl-gdp-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; }
+.impl-gdp-cell { background: var(--c-s2); border-radius: 3px; padding: 7px 10px; }
+.impl-gdp-val  { font-family: var(--f-mono); font-size: 16px; font-weight: 600; line-height: 1.2; }
+.impl-gdp-lbl  { font-size: 7px; color: var(--c-tx2); margin-top: 3px; letter-spacing: .01em; }
 
 /* ── ANIMATIONS ─────────────────────────────────────────────────────────── */
 @keyframes spin { to { transform: rotate(360deg); } }
@@ -1511,9 +1519,315 @@ canvas { font-family: var(--f-mono); }
   border: 2px solid var(--cp-c, #fbbf24);
   animation: gcss-pulse 2s infinite;
 }
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   COVER / LANDING PAGE
+   Shows once per browser session. Session-gated via sessionStorage.
+   Bloomberg-dark aesthetic — no video dependency, CSS-animated.
+═══════════════════════════════════════════════════════════════════════════ */
+#cover {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  background: #030609;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+#cover.cv-out {
+  animation: cv-fadeout .5s ease forwards;
+  pointer-events: none;
+}
+@keyframes cv-fadeout { to { opacity: 0; } }
+
+/* ── Perspective grid ── */
+#cv-grid {
+  position: absolute;
+  inset: -20%;
+  background-image:
+    linear-gradient(rgba(184,149,42,.07) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(184,149,42,.07) 1px, transparent 1px);
+  background-size: 56px 56px;
+  transform: perspective(900px) rotateX(12deg);
+  transform-origin: center 60%;
+  animation: cv-grid-breathe 5s ease-in-out infinite alternate;
+}
+@keyframes cv-grid-breathe {
+  from { opacity: .6; background-size: 54px 54px; }
+  to   { opacity: 1;  background-size: 58px 58px; }
+}
+
+/* ── Radar sweep ── */
+#cv-radar {
+  position: absolute;
+  width: min(110vw, 1000px);
+  height: min(110vw, 1000px);
+  top: 50%; left: 50%;
+  transform: translate(-50%, -50%);
+  border-radius: 50%;
+  background: conic-gradient(
+    from 0deg,
+    transparent 0deg,
+    rgba(184,149,42,.22) 28deg,
+    rgba(184,149,42,.04) 55deg,
+    transparent 70deg
+  );
+  animation: cv-spin 7s linear infinite;
+}
+#cv-radar::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  border: 1px solid rgba(184,149,42,.08);
+  box-shadow:
+    inset 0 0 80px rgba(184,149,42,.04),
+    0 0 0 200px rgba(184,149,42,.015),
+    0 0 0 400px rgba(184,149,42,.008);
+}
+@keyframes cv-spin {
+  from { transform: translate(-50%,-50%) rotate(0deg); }
+  to   { transform: translate(-50%,-50%) rotate(360deg); }
+}
+
+/* ── Horizontal scan line ── */
+#cv-scan {
+  position: absolute;
+  left: 0; right: 0;
+  height: 1px;
+  background: linear-gradient(90deg,
+    transparent 0%,
+    transparent 10%,
+    rgba(184,149,42,.6) 50%,
+    transparent 90%,
+    transparent 100%
+  );
+  box-shadow: 0 0 18px 4px rgba(184,149,42,.12);
+  animation: cv-scanline 4s cubic-bezier(.4,0,.6,1) infinite;
+}
+@keyframes cv-scanline {
+  0%   { top: 0%;   opacity: 0; }
+  4%   { opacity: 1; }
+  96%  { opacity: .6; }
+  100% { top: 100%; opacity: 0; }
+}
+
+/* ── Dark vignette ── */
+#cv-vignette {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(ellipse 80% 80% at 50% 50%, transparent 20%, #030609 85%);
+  pointer-events: none;
+}
+
+/* ── Port / node glows ── */
+.cv-node {
+  position: absolute;
+  width: 5px; height: 5px;
+  border-radius: 50%;
+  background: var(--c-gold);
+  box-shadow: 0 0 10px 3px rgba(184,149,42,.45);
+  animation: cv-npulse 3s ease-in-out infinite;
+}
+.cv-node::after {
+  content: '';
+  position: absolute;
+  inset: -7px;
+  border-radius: 50%;
+  border: 1px solid rgba(184,149,42,.5);
+  animation: cv-nring 3s ease-out infinite;
+}
+@keyframes cv-npulse {
+  0%,100% { opacity:1; transform:scale(1); }
+  50%     { opacity:.6; transform:scale(1.4); }
+}
+@keyframes cv-nring {
+  0%   { transform:scale(1); opacity:.5; }
+  100% { transform:scale(4); opacity:0; }
+}
+
+/* ── Main content ── */
+#cv-content {
+  position: relative;
+  z-index: 10;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  animation: cv-rise 1.4s cubic-bezier(.16,1,.3,1) .1s both;
+}
+@keyframes cv-rise {
+  from { opacity:0; transform:translateY(28px); }
+  to   { opacity:1; transform:translateY(0); }
+}
+
+#cv-badge {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 8.5px;
+  font-weight: 500;
+  letter-spacing: .22em;
+  text-transform: uppercase;
+  color: var(--c-gold);
+  border: 1px solid rgba(184,149,42,.28);
+  background: rgba(184,149,42,.06);
+  padding: 5px 16px;
+  border-radius: 2px;
+  margin-bottom: 30px;
+}
+
+#cv-title {
+  font-family: 'Inter', sans-serif;
+  font-size: clamp(34px, 5.5vw, 68px);
+  font-weight: 300;
+  color: #d8dde3;
+  line-height: 1.12;
+  letter-spacing: -.025em;
+  margin-bottom: 4px;
+}
+#cv-title strong {
+  font-weight: 700;
+  color: #f0f4f8;
+  display: block;
+}
+
+#cv-divider {
+  width: 40px;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--c-gold), transparent);
+  margin: 22px auto 20px;
+}
+
+#cv-sub {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 9.5px;
+  color: var(--c-tx2);
+  letter-spacing: .10em;
+  line-height: 2.0;
+  text-transform: uppercase;
+  margin-bottom: 44px;
+}
+
+#cv-enter {
+  font-family: 'Inter', sans-serif;
+  font-size: 10.5px;
+  font-weight: 700;
+  letter-spacing: .16em;
+  text-transform: uppercase;
+  color: #030609;
+  background: var(--c-gold);
+  border: none;
+  border-radius: 2px;
+  padding: 14px 40px;
+  cursor: pointer;
+  box-shadow: 0 0 30px rgba(184,149,42,.4), 0 2px 8px rgba(0,0,0,.5);
+  transition: background .2s, box-shadow .2s, transform .15s;
+  outline: none;
+}
+#cv-enter:hover {
+  background: var(--c-gold-hi);
+  box-shadow: 0 0 50px rgba(184,149,42,.65), 0 2px 12px rgba(0,0,0,.5);
+  transform: translateY(-2px);
+}
+#cv-enter:active { transform: translateY(0); box-shadow: 0 0 20px rgba(184,149,42,.3); }
+
+#cv-skip {
+  display: none;
+  margin-top: 20px;
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 8.5px;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  color: var(--c-tx3);
+  text-decoration: none;
+  opacity: 0;
+  transition: opacity .5s ease, color .2s;
+  cursor: pointer;
+  border: none;
+  background: none;
+  padding: 4px 8px;
+}
+#cv-skip.cv-skip-vis { opacity: 1; }
+#cv-skip:hover { color: var(--c-tx2); }
+
+/* ── Bottom status bar ── */
+#cv-footer {
+  position: absolute;
+  bottom: 0; left: 0; right: 0;
+  padding: 13px 28px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-top: 1px solid rgba(184,149,42,.07);
+  z-index: 10;
+}
+.cv-fi {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 7.5px;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  color: var(--c-tx3);
+}
+.cv-fi-live::before {
+  content: '● ';
+  color: #25a066;
+  animation: cv-blink 2s step-end infinite;
+}
+@keyframes cv-blink {
+  0%,100% { opacity:1; }
+  50%     { opacity:.15; }
+}
 </style>
 </head>
 <body>
+
+<!-- ═══════════════════════════════════════════════════════════════════════════
+     COVER / LANDING PAGE
+     Session-gated: sessionStorage 'cv_seen' bypasses on repeat visits.
+     All visuals are CSS-animated — no video file dependency.
+═══════════════════════════════════════════════════════════════════════════ -->
+<div id="cover">
+
+  <!-- Animated background layers -->
+  <div id="cv-grid"></div>
+  <div id="cv-radar"></div>
+  <div id="cv-scan"></div>
+  <div id="cv-vignette"></div>
+
+  <!-- Scattered port/node indicators — loosely mirror GCC geography -->
+  <div class="cv-node" style="top:30%;left:63%;animation-delay:0s"></div>
+  <div class="cv-node" style="top:52%;left:59%;animation-delay:.7s"></div>
+  <div class="cv-node" style="top:40%;left:74%;animation-delay:1.4s"></div>
+  <div class="cv-node" style="top:34%;left:46%;animation-delay:.35s"></div>
+  <div class="cv-node" style="top:62%;left:43%;animation-delay:1.1s"></div>
+  <div class="cv-node" style="top:20%;left:55%;animation-delay:1.8s"></div>
+  <div class="cv-node" style="top:70%;left:68%;animation-delay:.55s"></div>
+
+  <!-- Central content -->
+  <div id="cv-content">
+    <div id="cv-badge">GCC Maritime Intelligence Platform</div>
+    <div id="cv-title">
+      Gulf Logistics
+      <strong>Intelligence</strong>
+    </div>
+    <div id="cv-divider"></div>
+    <div id="cv-sub">
+      Strait of Hormuz &nbsp;&middot;&nbsp; Red Sea &nbsp;&middot;&nbsp; Suez Canal<br>
+      Scenario Simulation &nbsp;&middot;&nbsp; Live Freight Rates &nbsp;&middot;&nbsp; Executive Briefing
+    </div>
+    <button id="cv-enter">Enter Dashboard &nbsp;&rarr;</button>
+    <button id="cv-skip">Skip intro</button>
+  </div>
+
+  <!-- Bottom status strip -->
+  <div id="cv-footer">
+    <span class="cv-fi cv-fi-live">Live feed active</span>
+    <span class="cv-fi">Scenario Engine v2.0 &nbsp;&middot;&nbsp; May 2026</span>
+    <span class="cv-fi">Ministerial Grade &nbsp;&bull;&nbsp; Restricted</span>
+  </div>
+
+</div>
 
 <!-- HEADER -->
 <div id="header">
@@ -3363,12 +3677,10 @@ function updateGCSSMap(r) {
 }
 
 // ── DESTINATION-SPECIFIC STRATEGIC IMPLICATIONS ───────────────────────────────
-// Port and trucking cards are replaced at render time with destination-aware
-// content. The 'Jeddah Port', 'GCC Trucking', and 'Khor Fakkan/Sohar' cards
-// in SCENARIOS are placeholder titles — they are swapped out by getDestImpl().
-// Generic cards (Brent Crude, Carrier Posture, War-Risk Insurance, Stranded
-// Vessels) are kept as-is from the scenario definition.
+// Destination-specific port and inland logistics cards.
 // Indexed as: DEST_IMPL[destCode].port[scenarioId] / .truck[scenarioId]
+// Rendered as the first two cards in the Strategic Implications section.
+// The remaining 4 cards are generated dynamically by buildStratImpl().
 var DEST_IMPL = {
   DXB:{portName:'Jebel Ali (DP World)',
     port:[null,
@@ -3489,8 +3801,8 @@ function getDestImpl(scenarioId, dest, bestKey) {
   var port  = di.port[scenarioId]  || di.port[1];
   var truck = di.truck[scenarioId] || di.truck[1];
   return {
-    port:  { title: di.portName,       color: port.color,  metric: port.metric,  text: port.text  },
-    truck: { title: 'GCC Trucking — ' + (DEST_NAMES[dest]||dest), color: truck.color, metric: truck.metric, text: truck.text }
+    port:  { cat:'PORT OPERATIONS',  title: di.portName,       color: port.color,  metric: port.metric,  text: port.text  },
+    truck: { cat:'INLAND LOGISTICS', title: 'GCC Trucking — ' + (DEST_NAMES[dest]||dest), color: truck.color, metric: truck.metric, text: truck.text }
   };
 }
 // ─────────────────────────────────────────────────────────────────────────────
@@ -3613,6 +3925,123 @@ function updateSeasonalBadge() {
     '<span style="background:' + s.color + '22;color:' + s.color + ';padding:2px 7px;border-radius:3px;font-size:8px">' +
     s.label + ' &nbsp;<strong>' + pctStr + '</strong></span>';
   if (dsc) dsc.textContent = s.desc;
+}
+
+// ── IMF GDP PROJECTIONS — GCC DESTINATIONS ───────────────────────────────────
+// Source: IMF World Economic Outlook, April 2026 (Middle East Economy / IMF)
+// gdp2026f = original IMF projection (pre-disruption revision)
+// gdp2026a = IMF revised projection (April 2026, post-disruption)
+// variance = gdp2026a - gdp2026f (shown in source table)
+var GDP_PROJ = {
+  DXB:{ country:'UAE',          src:'IMF WEO Apr 2026', gdp2026f: 5.0, gdp2026a: 3.1  },  // var: -1.9
+  RUH:{ country:'Saudi Arabia', src:'IMF WEO Apr 2026', gdp2026f: 4.5, gdp2026a: 3.1  },  // var: -1.4
+  DMM:{ country:'Saudi Arabia', src:'IMF WEO Apr 2026', gdp2026f: 4.5, gdp2026a: 3.1  },  // var: -1.4
+  DOH:{ country:'Qatar',        src:'IMF WEO Apr 2026', gdp2026f: 6.1, gdp2026a: -8.6 },  // var: -14.7
+  BAH:{ country:'Bahrain',      src:'IMF WEO Apr 2026', gdp2026f: 3.3, gdp2026a: -0.5 },  // var: -3.8
+  KWI:{ country:'Kuwait',       src:'IMF WEO Apr 2026', gdp2026f: 3.9, gdp2026a: -0.6 },  // var: -4.5
+  MCT:{ country:'Oman',         src:'IMF WEO Apr 2026', gdp2026f: 4.0, gdp2026a:  3.5 }   // var: -0.5
+};
+
+// ── STRATEGIC IMPLICATIONS BUILDER ──────────────────────────────────────────
+// Generates 4 ministerial-grade strategic intelligence cards from simulation KPIs.
+// Covers: trade economics, energy security, corridor resilience, economic risk.
+// Returns array of card objects: { cat, color, metric, title, text }
+function buildStratImpl(p) {
+  var sid  = p.sid;
+  var dPct = p.dPct;
+  var fSign = dPct > 0 ? '+' : '';
+
+  // ── 1. Trade Cost Impact ────────────────────────────────────────
+  var fColor = dPct > 150 ? '#e74c3c' : dPct > 60 ? '#fbbf24' : dPct > 15 ? '#f0c84b' : dPct < -5 ? '#3dd68c' : '#7a8494';
+  var fMetric = dPct > 0 ? fSign+dPct+'% import cost inflation' : dPct < 0 ? dPct+'% below baseline' : 'At pre-crisis baseline';
+  var fTexts = {
+    1:'A structural '+fSign+dPct+'% import cost inflation is now embedded across GCC non-oil trade. Extended transit times are increasing working capital requirements and compressing distributor margins. Sectors with low inventory buffers — pharmaceuticals, retail, industrial inputs — face accelerated cost pass-through. Sustained at this level, the premium represents a material drag on non-oil GDP growth and competitiveness of import-dependent industries.',
+    2:'A dual-tier freight market is emerging at '+fSign+dPct+'% above pre-crisis for Western-flag cargo, with flag-state access creating structural cost asymmetry. National importers face differentiated landed costs depending on carrier nationality. Procurement strategy — including flag exposure and contract terms — has become a direct variable in trade cost management.',
+    3:'Import cost inflation moderating to '+fSign+dPct+'% as corridor access stabilises. The fiscal and commercial impact of the disruption is progressively unwinding. However, full normalisation remains contingent on durable corridor security — premature reallocation of logistics contingency budgets is not recommended until JWC delists the area.',
+    4:'A residual '+fSign+dPct+'% above pre-crisis reflects carrier risk memory and insurance inertia rather than active physical disruption. Trade cost normalisation is expected over 6–18 months as market mechanisms adjust. Policy attention should focus on accelerating JWC delistment engagement and bilateral shipping lane security assurances to hasten rate recovery.',
+    5:'Red Sea closure is embedding a structural '+fSign+dPct+'% import cost premium across all GCC-bound trade. Europe-origin cargo is disproportionately affected — extended Cape routing adds 10–14 days transit and compresses distributor replenishment cycles. National food security and essential goods import programmes warrant elevated cost provisioning.',
+    6:'Dual-chokepoint closure is driving maximum import cost stress at '+fSign+dPct+'% above pre-crisis. The economic exposure extends beyond freight — air freight substitution for essential goods is generating secondary cost pressures. National strategic reserve activation and import prioritisation frameworks should be reviewed immediately.'
+  };
+
+  // ── 2. Energy Security & Insurance ─────────────────────────────
+  var eColor  = p.brent > 100 ? '#e74c3c' : p.brent > 85 ? '#fbbf24' : '#3dd68c';
+  var eMetric = '$'+p.brent.toFixed(0)+'/bbl · '+p.sc.warrisk+' war-risk';
+  var eTexts  = {
+    1:'Brent at $'+p.brent.toFixed(0)+'/bbl is sustaining elevated energy import costs and embedded bunker surcharges across all trade lanes. At war-risk '+p.sc.warrisk+', six P&I clubs have restricted Gulf cover, effectively narrowing the insurable carrier base. This creates structural exposure for national strategic oil imports and refinery feedstock procurement. Government-backed reinsurance mechanisms or state tanker fleet utilisation may be required to maintain supply continuity.',
+    2:'Brent at $'+p.brent.toFixed(0)+'/bbl with flag-selective Hormuz access is creating a stratified energy insurance market. War-risk at '+p.sc.warrisk+' applies differentially — state-affiliated or neutral-flag carriers retain cost advantages unavailable to Western-flag operators. National energy procurement strategies should factor carrier flag exposure as a cost and availability variable.',
+    3:'Brent moderating to $'+p.brent.toFixed(0)+'/bbl signals partial confidence restoration in corridor security. War-risk declining to '+p.sc.warrisk+' — JWC listed area revision expected within 30–60 days of sustained ceasefire. Strategic energy reserves should be maintained at current elevated levels until JWC delists and P&I premiums normalise.',
+    4:'A residual Brent geopolitical premium of $3–5/bbl above equilibrium persists despite physical corridor reopening. War-risk at '+p.sc.warrisk+' reflects insurance market inertia — Lloyd\'s syndicates and P&I clubs historically require 6–12 months post-resolution to fully delist. National energy cost models should provision for continued elevated bunker costs through the forward planning period.',
+    5:'Compounding risk premium — Red Sea and Hormuz uncertainties stacking at $'+p.brent.toFixed(0)+'/bbl. Strategic energy supply for GCC states faces dual-corridor exposure. LNG imports and refined product trades are disproportionately affected. Regional energy security planning should review the adequacy of strategic petroleum reserves and alternative supply routes.',
+    6:'Brent at $'+p.brent.toFixed(0)+'/bbl with dual-chokepoint closure is constraining ~40% of global seaborne oil movement. War-risk at '+p.sc.warrisk+' renders commercial insurance effectively prohibitive. Government reinsurance backstops for national carriers and direct state-to-state energy supply agreements should be activated to maintain strategic reserve continuity.'
+  };
+
+  // ── 3. Trade Corridor Resilience ────────────────────────────────
+  var rLabels = {direct:'Hormuz Direct',redsea:'Red Sea / Suez',oman:'Sohar / Oman',cgh:'Cape of Good Hope'};
+  var cColor  = p.bestKey==='cgh' ? '#e74c3c' : p.bestKey==='redsea' ? '#fbbf24' : p.bestKey==='direct' ? '#3dd68c' : '#fbbf24';
+  var cMetric = rLabels[p.bestKey] || p.sc.reroute;
+  var cTexts  = {
+    1:'Full Hormuz closure has eliminated the primary Asia–GCC trade corridor, forcing Cape rerouting (+4,200nm, +10–14 transit days) as the structural alternative. This disruption exposes the degree of GCC import dependency on a single chokepoint. The crisis represents a strategic accelerant for multi-corridor infrastructure investment — Oman\'s Sohar, Saudi rail, and UAE inland logistics are gaining strategic relevance beyond their pre-crisis commercial roles.',
+    2:'Corridor bifurcation by flag state is creating a two-tier trade architecture with unequal access and cost profiles. This structural asymmetry — where Chinese and Indian-flag vessels transit direct while Western majors route via Cape — has long-term implications for GCC trade partner diversification and carrier base resilience. National shipping policy should address flag exposure as a strategic logistics variable.',
+    3:'Progressive corridor normalisation is underway but remains fragile. The speed of full recovery will depend on the durability of security arrangements and the pace of JWC revision. This transition period is strategically significant — the corridor adaptation investments made during disruption (Oman hub expansion, Saudi Landbridge capacity, UAE inland logistics) will define GCC trade resilience architecture for the next decade.',
+    4:'Post-crisis corridor normalisation is following the established risk-memory pattern — Bab al-Mandab 2024 and Suez 1956 precedents both show 12–18 months before full routing restoration. GCC trade planners should treat this period as a strategic window to institutionalise multi-corridor dependency rather than reverting entirely to pre-crisis single-route models. Oman\'s sustained elevated throughput represents a structural logistics diversification gain.',
+    5:'Red Sea closure eliminates the primary Europe–GCC import corridor, restructuring Western trade flows through the Gulf. This is not a temporary rerouting — it is a trade architecture shift that revalues Gulf entry infrastructure relative to Red Sea-dependent logistics. Gulf ports (Jebel Ali, Dammam, Hamad) gain structural advantage; Jeddah and Red Sea entry infrastructure loses strategic positioning until the corridor reopens.',
+    6:'Simultaneous closure of both Hormuz and Bab al-Mandab removes ~25% of global seaborne trade capacity from the GCC accessible corridor network. This is the maximum stress scenario for GCC trade architecture — the region is entirely dependent on Cape routing and overland corridors. Strategic infrastructure resilience planning should treat this scenario as a design-basis event for future logistics diversification investment.'
+  };
+
+  // ── 4. Economic Risk Assessment ─────────────────────────────────
+  var oColors  = {1:'#e74c3c',2:'#fbbf24',3:'#fbbf24',4:'#3dd68c',5:'#e74c3c',6:'#e74c3c'};
+  var oMetrics = {1:'Elevated — active disruption',2:'Moderate — selective access',3:'Declining — stabilising',4:'Residual — post-crisis',5:'Elevated — active disruption',6:'Critical — maximum stress'};
+  var destEcon = {
+    DXB:'UAE\'s import-intensive non-oil economy (~90% of goods seaborne) means freight cost inflation transmits rapidly into consumer prices and industrial input costs, with direct implications for CPI and the competitiveness of free zone manufacturing and re-export activity.',
+    RUH:'Saudi Arabia\'s Vision 2030 industrial diversification programme is exposed to sustained import cost inflation for capital goods, machinery, and industrial inputs. Prolonged disruption constrains non-oil GDP growth targets and raises the cost of infrastructure project delivery.',
+    DMM:'The Eastern Province industrial cluster — including petrochemicals, manufacturing, and logistics hubs — faces direct supply chain cost pressure. KAPP clearance delays add to the cost base of industries that depend on imported intermediate goods and components.',
+    DOH:'Qatar\'s concentrated import dependency through Hamad Port, combined with limited overland alternative depth, creates heightened economic vulnerability to corridor disruption. Consumer goods inflation and construction material cost exposure are the primary near-term transmission channels.',
+    BAH:'Bahrain\'s open economy and financial services orientation mean freight cost inflation passes through to consumer prices relatively quickly. The Causeway as primary logistics artery creates structural exposure to Saudi corridor congestion as a secondary risk multiplier.',
+    KWI:'Kuwait\'s geographic position and deep overland dependency from Gulf ports mean disruption has a disproportionate economic impact relative to the size of the freight premium. Food security and essential goods affordability are the priority risk vectors requiring policy attention.',
+    MCT:'Oman is uniquely positioned in this scenario as a neutral logistics hub — corridor disruption generates throughput revenue and infrastructure utilisation gains. The strategic question is how to institutionalise this advantage in post-crisis GCC trade architecture.'
+  };
+  var dEcon = destEcon[p.dest] || 'GCC economies face elevated trade cost exposure with direct implications for import-dependent sectors and consumer price stability.';
+  var oBases = {
+    1:'The current disruption represents a sustained trade cost shock with second-order economic consequences beyond freight rates. Extended lead times are increasing working capital requirements, inventory financing costs, and air freight substitution expenditure across GCC importers. The cumulative economic cost compounds with disruption duration — every additional month at current freight levels increases the structural adjustment required. ',
+    2:'The selective access regime creates asymmetric economic exposure across GCC trading partners and import categories. The primary strategic risk is corridor dependency normalisation — if flag-selective access persists beyond 6 months, it may structurally embed a bifurcated trade architecture. Policy engagement on neutral corridor guarantees and flag-neutral passage protocols is the priority lever. ',
+    3:'The economic recovery trajectory is positive but lagged. Trade cost normalisation typically follows physical corridor restoration by 4–8 weeks. Supply chain restocking demand will create a temporary positive trade volume surge as buffers rebuild — this should be anticipated in port capacity planning and customs resource allocation. ',
+    4:'The post-crisis period carries a strategic risk of complacency. Rate normalisation will be gradual, but the structural lesson — that single-corridor dependency creates acute economic vulnerability — should drive durable policy responses: corridor diversification investment, strategic reserve adequacy review, and logistics infrastructure resilience standards. ',
+    5:'The structural economic impact of Red Sea closure is asymmetric across GCC states — those with direct Gulf port access (UAE, Qatar, Kuwait) are better insulated than those dependent on Jeddah entry for European imports (Saudi Arabia, to some degree). This asymmetry has implications for national food security and essential goods pricing policies. ',
+    6:'The dual-closure scenario represents the maximum economic stress case. Beyond immediate trade cost impact, the deeper risk is strategic reserve depletion across food, energy, and pharmaceutical categories. Economic policy response should focus on import prioritisation, strategic stock activation, and trade corridor diplomacy to accelerate one corridor reopening as the immediate priority. '
+  };
+
+  // ── GDP projection block for Economic Risk card ─────────────────
+  var gdp    = GDP_PROJ[p.dest];
+  var gdpHtml = '';
+  if (gdp) {
+    var f      = gdp.gdp2026f;
+    var a      = gdp.gdp2026a;
+    var delta  = a - f;
+    var fStr   = (f >= 0 ? '+' : '') + f.toFixed(1) + '%';
+    var aStr   = (a >= 0 ? '+' : '') + a.toFixed(1) + '%';
+    var aColor = delta > 0 ? '#3dd68c' : delta < -1.5 ? '#e74c3c' : '#fbbf24';
+    gdpHtml =
+      '<div class="impl-gdp">'+
+        '<div class="impl-gdp-hdr">'+gdp.src+' &mdash; '+gdp.country+'</div>'+
+        '<div class="impl-gdp-grid">'+
+          '<div class="impl-gdp-cell">'+
+            '<div class="impl-gdp-val" style="color:#f0c84b">'+fStr+'</div>'+
+            '<div class="impl-gdp-lbl">2026 IMF Projection</div>'+
+          '</div>'+
+          '<div class="impl-gdp-cell">'+
+            '<div class="impl-gdp-val" style="color:'+aColor+'">'+aStr+'</div>'+
+            '<div class="impl-gdp-lbl">2026 IMF Revised</div>'+
+          '</div>'+
+        '</div>'+
+      '</div>';
+  }
+
+  return [
+    { cat:'TRADE ECONOMICS',    color:fColor,                    metric:fMetric,                    title:'Trade Cost Impact',           text:fTexts[sid]||fTexts[1]                         },
+    { cat:'ENERGY SECURITY',    color:eColor,                    metric:eMetric,                    title:'Energy & Strategic Insurance', text:eTexts[sid]||eTexts[1]                         },
+    { cat:'CORRIDOR RESILIENCE', color:cColor,                   metric:cMetric,                    title:'Trade Corridor Architecture',  text:cTexts[sid]||cTexts[1]                         },
+    { cat:'ECONOMIC RISK',      color:oColors[sid]||'#fbbf24',  metric:oMetrics[sid]||'Assessment', title:'Economic Risk Assessment',     text:(oBases[sid]||'')+dEcon, gdpHtml:gdpHtml       }
+  ];
 }
 
 function runSimulator() {
@@ -3870,28 +4299,35 @@ function runSimulator() {
     }).join('');
   }
 
-  // Implications — merge destination-specific port+trucking with generic scenario cards
+  // Implications — 4 strategic intelligence cards (trade, energy, corridor, economic risk)
   var ig = document.getElementById('impl-grid');
   if (ig) {
-    var di = getDestImpl(activeScenario, dest, bestKey);
-    // Titles that are replaced by destination-specific versions
-    var REPLACED = ['Jeddah Port','GCC Trucking','Khor Fakkan/Sohar'];
-    // 'Khor Fakkan/Sohar' is only relevant when destination IS Muscat or Sohar is the best route
-    var showSohar = (dest === 'MCT' || bestKey === 'oman');
-    var generic = sc.implications.filter(function(imp) {
-      if (REPLACED.indexOf(imp.title) !== -1) return false; // always strip port/truck/sohar placeholders
-      return true;
+    var dynCards = buildStratImpl({
+      sc:sc, sid:activeScenario, dest:dest,
+      bestKey:bestKey, bestName:bestName,
+      bestRate:bestRate, totalFEU:totalFEU, preTotal:preTotal,
+      dFEU:dFEU, dPct:dPct, dMo:dMo,
+      warNum:warNum, brent:effectiveBrent, teu:teu
     });
-    // Optionally re-add Sohar card for MCT / Sohar-routed destinations
-    var soharCard = sc.implications.find(function(imp){ return imp.title === 'Khor Fakkan/Sohar'; });
-    var cards = [di.port, di.truck].concat(generic);
-    if (showSohar && soharCard) cards.push(soharCard);
-    ig.innerHTML = cards.map(function(imp){
+    var cards = dynCards;
+    ig.innerHTML = cards.map(function(imp) {
+      var catHtml = imp.cat ? '<div class="impl-cat">'+imp.cat+'</div>' : '';
       return '<div class="impl-card" style="border-color:'+imp.color+'">'+
+        catHtml+
         '<div class="impl-metric" style="color:'+imp.color+'">'+imp.metric+'</div>'+
         '<div class="impl-title">'+imp.title+'</div>'+
-        '<div class="impl-text">'+imp.text+'</div></div>';
+        '<div class="impl-text">'+imp.text+'</div>'+
+        (imp.gdpHtml||'')+
+        '</div>';
     }).join('');
+    // Dynamic briefing subtitle — reflects the live simulation state
+    el('v3-sub',
+      (ORIG_NAMES[origin]||origin)+' &rarr; '+(DEST_NAMES[dest]||dest)+
+      ' &nbsp;&bull;&nbsp; '+bestName+' optimal'+
+      ' &nbsp;&bull;&nbsp; '+(dFEU>=0?'+':'')+dPct+'% landed cost vs pre-crisis'+
+      ' &nbsp;&bull;&nbsp; Brent $'+effectiveBrent.toFixed(0)+'/bbl'+
+      ' &nbsp;&bull;&nbsp; '+sc.transits+' strait transits/day'
+    );
   }
 
   document.getElementById('sim-results').classList.add('visible');
@@ -5586,6 +6022,48 @@ function mobShowTab(name) {
 document.addEventListener('keydown', function(e) {
   if (e.key === 'Escape') closeMobNav();
 });
+
+// ── Cover / Landing Page ──────────────────────────────────────────────────────
+// Shows once per browser session (sessionStorage flag).
+// Dismissed by: Enter button, Skip button, or Escape key.
+(function() {
+  var cover = document.getElementById('cover');
+  if (!cover) return;
+
+  // Already visited this session — skip immediately
+  if (sessionStorage.getItem('cv_seen')) {
+    cover.style.display = 'none';
+    return;
+  }
+
+  // Reveal skip button after 2.5 s
+  var skipBtn = document.getElementById('cv-skip');
+  setTimeout(function() {
+    if (!skipBtn) return;
+    skipBtn.style.display = 'block';
+    // Trigger CSS transition on next frame
+    requestAnimationFrame(function() {
+      requestAnimationFrame(function() { skipBtn.classList.add('cv-skip-vis'); });
+    });
+  }, 2500);
+
+  function dismissCover() {
+    sessionStorage.setItem('cv_seen', '1');
+    cover.classList.add('cv-out');
+    setTimeout(function() { cover.style.display = 'none'; }, 540);
+  }
+
+  document.getElementById('cv-enter').addEventListener('click', dismissCover);
+  if (skipBtn) skipBtn.addEventListener('click', dismissCover);
+
+  // Escape key dismisses cover (handled separately from mob-nav Escape listener)
+  document.addEventListener('keydown', function cvKey(e) {
+    if (e.key === 'Escape' && cover.style.display !== 'none') {
+      dismissCover();
+      document.removeEventListener('keydown', cvKey);
+    }
+  });
+})();
 
 </script>
 </body>

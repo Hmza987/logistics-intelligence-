@@ -2391,6 +2391,15 @@ canvas { font-family: var(--f-mono); }
       </div>
     </div>
 
+    <!-- REGRESSION MODEL PANEL -->
+    <div class="sim-panel" id="reg-panel" style="margin-bottom:14px">
+      <div class="sim-panel-title">&#402; Spot Index Regression — Model Variables</div>
+      <div class="sim-panel-sub" style="font-family:'IBM Plex Mono',monospace;letter-spacing:.01em">
+        Rate = Base &times; [ 1 + &beta;&#8321;(B&minus;72) + &beta;&#8322;(U&minus;72%) + &beta;&#8323;(D&divide;100) + &beta;&#8324;(W&minus;1) + &beta;&#8325;&middot;C ] &times; CommoditySurcharge
+      </div>
+      <div id="reg-vars-table" style="margin-top:10px"></div>
+    </div>
+
     <!-- VIEW 1 + VIEW 2 side by side -->
     <div class="sim-views">
 
@@ -3284,12 +3293,12 @@ function updateGCSSMap(r) {
 
 // ── Old SCENARIOS preserved as reference (not used by GCSS UI) ───────────────
 var SCENARIOS = {
-  1:{name:'Hormuz Closed',emoji:'&#128683;',state:'Current reality - IRGC control zone - US naval blockade - Day 82',transits:2,brent:104.50,warrisk:'8.0x',reroute:'Cape of GH',color:'#e74c3c',routeMults:{cgh:{mult:4.5,days:35,tag:'rt-cgh',label:'Cape of GH',avail:true},redsea:{mult:2.8,days:22,tag:'rt-rs',label:'Red Sea',avail:true,note:'Jeddah entry only'},direct:{mult:null,days:null,tag:'rt-na',label:'Hormuz direct',avail:false,note:'CLOSED'},oman:{mult:3.2,days:20,tag:'rt-dir',label:'Sohar/KF land',avail:true}},implications:[{title:'Jeddah Port',color:'#e74c3c',metric:'16-day dwell',text:'Absorbing all Hormuz-displaced cargo. Terminal at capacity.'},{title:'Brent Crude',color:'#e74c3c',metric:'$104.50/bbl',text:'+45% vs pre-crisis. 1.4M bbl/day Iran exports via shadow fleet.'},{title:'GCC Trucking',color:'#fbbf24',metric:'+47% fleet',text:'Al Bat\'ha 1,649 trucks/day. TruKKer scaling to 500 moves/day from Khorfakkan.'},{title:'Khor Fakkan/Sohar',color:'#3dd68c',metric:'+3,500% diversions',text:'Windward: vessel diversions to Oman up 3,500%. Sohar emerging as primary Asia-GCC gateway.'},{title:'Stranded Vessels',color:'#e74c3c',metric:'~2,000 ships',text:'~20,000 mariners trapped in Persian Gulf. 109K TEU confirmed stranded.'},{title:'War-Risk Insurance',color:'#e74c3c',metric:'8.0x premium',text:'VLCC approx $2.5M per voyage. 6 P&I clubs withdrew cover.'}]},
-  2:{name:'Hormuz: IRGC Escort Only',emoji:'&#9875;',state:'Friendly-flag passage - China India Turkey - ~25 transits/day',transits:25,brent:92.00,warrisk:'5.0x',reroute:'Mixed',color:'#fbbf24',routeMults:{cgh:{mult:3.0,days:35,tag:'rt-cgh',label:'Cape of GH',avail:true},redsea:{mult:2.0,days:22,tag:'rt-rs',label:'Red Sea',avail:true,note:'Jeddah entry only'},direct:{mult:2.5,days:18,tag:'rt-dir',label:'Hormuz direct',avail:true,note:'IRGC escort - flag dependent'},oman:{mult:2.2,days:20,tag:'rt-dir',label:'Sohar/KF land',avail:true}},implications:[{title:'Jeddah Port',color:'#fbbf24',metric:'10-day dwell',text:'Easing slightly as some Hormuz traffic resumes for friendly flags.'},{title:'Brent Crude',color:'#fbbf24',metric:'~$92/bbl',text:'+28% vs pre-crisis. Flag-state discrimination persists.'},{title:'GCC Trucking',color:'#fbbf24',metric:'+25% fleet',text:'Land routes remain elevated. Jebel Ali handling Asia cargo for Chinese/Indian flag vessels.'},{title:'Khor Fakkan/Sohar',color:'#3dd68c',metric:'Still elevated',text:'Oman ports retain volume as flag-neutral entry. Preferred by EU/US carriers avoiding Hormuz.'},{title:'Carrier Posture',color:'#fbbf24',metric:'Split market',text:'Chinese carriers (COSCO) resume direct. Western majors (Maersk/MSC) stay Cape of Good Hope.'},{title:'War-Risk Insurance',color:'#fbbf24',metric:'5.0x premium',text:'Reduced but elevated. Escort availability uncertain. JWC maintaining listed area.'}]},
-  3:{name:'Hormuz: Negotiated Partial',emoji:'&#9868;',state:'Ceasefire - neutral corridor - all flags - ~50 transits/day',transits:50,brent:82.00,warrisk:'3.0x',reroute:'Hormuz + CoGH',color:'#f0c84b',routeMults:{cgh:{mult:2.0,days:35,tag:'rt-cgh',label:'Cape of GH',avail:true,note:'Still viable some lanes'},redsea:{mult:1.5,days:22,tag:'rt-rs',label:'Red Sea',avail:true},direct:{mult:1.8,days:18,tag:'rt-dir',label:'Hormuz direct',avail:true,note:'All flags - corridor zones apply'},oman:{mult:1.6,days:20,tag:'rt-dir',label:'Sohar/KF land',avail:true}},implications:[{title:'Jeddah Port',color:'#3dd68c',metric:'6-day dwell',text:'Traffic redistributing to Gulf ports. Congestion easing.'},{title:'Brent Crude',color:'#3dd68c',metric:'~$82/bbl',text:'+14% vs pre-crisis. Ceasefire premium partially unwound.'},{title:'GCC Trucking',color:'#3dd68c',metric:'Normalising',text:'Al Bat\'ha volumes declining as Jebel Ali direct calls resume.'},{title:'Khor Fakkan/Sohar',color:'#fbbf24',metric:'Transitional',text:'Still processing diverted backlog. 6-12 weeks to fully normalise.'},{title:'Carrier Posture',color:'#3dd68c',metric:'Resuming calls',text:'MSC/Maersk announce Gulf resumption. 6-8 week lead time for full schedules.'},{title:'War-Risk Insurance',color:'#fbbf24',metric:'3.0x premium',text:'Falling toward 2x as ceasefire holds. JWC likely to revise within 30-60 days.'}]},
-  4:{name:'Hormuz Fully Open',emoji:'&#9989;',state:'Crisis resolved - pre-war conditions - ~95 transits/day',transits:95,brent:72.00,warrisk:'1.0x',reroute:'Hormuz direct',color:'#3dd68c',routeMults:{cgh:{mult:1.1,days:35,tag:'rt-cgh',label:'Cape of GH',avail:true,note:'No longer cost-competitive'},redsea:{mult:1.0,days:22,tag:'rt-rs',label:'Red Sea',avail:true},direct:{mult:1.0,days:18,tag:'rt-dir',label:'Hormuz direct',avail:true,note:'Optimal - pre-war conditions'},oman:{mult:1.0,days:20,tag:'rt-dir',label:'Sohar/KF land',avail:true}},implications:[{title:'Jeddah Port',color:'#3dd68c',metric:'3-day dwell',text:'Returns to regional SA gateway. DP World capacity investments fully utilised.'},{title:'Brent Crude',color:'#3dd68c',metric:'~$72/bbl',text:'Returns to pre-crisis. 20M bbl/day resuming. Strategic reserve replenishment begins.'},{title:'GCC Trucking',color:'#3dd68c',metric:'Pre-crisis norms',text:'Al Bat\'ha returns to ~900 trucks/day. Oman corridors return to baseline.'},{title:'Khor Fakkan/Sohar',color:'#fbbf24',metric:'Volume loss',text:'Diverted volume returns to Jebel Ali/Dammam direct. Oman loses crisis-era premium.'},{title:'Carrier Posture',color:'#3dd68c',metric:'Fully restored',text:'All carriers resume direct Gulf. Cape routing discontinued within 8-12 weeks.'},{title:'War-Risk Insurance',color:'#3dd68c',metric:'1.0x premium',text:'Returns to pre-crisis once JWC removes Gulf from listed areas - 90-day confirmation.'}]},
-  5:{name:'Bab el-Mandeb Closed',emoji:'&#128683;',state:'Hormuz open - Houthis escalate - Red Sea blocked - Jeddah loses bypass',transits:95,brent:95.00,warrisk:'4.0x',reroute:'Cape of GH only',color:'#e74c3c',routeMults:{cgh:{mult:3.5,days:35,tag:'rt-cgh',label:'Cape of GH',avail:true,note:'Only global option'},redsea:{mult:null,days:null,tag:'rt-na',label:'Red Sea',avail:false,note:'CLOSED - Houthi threat'},direct:{mult:1.5,days:18,tag:'rt-dir',label:'Hormuz direct',avail:true,note:'Gulf inbound only'},oman:{mult:1.8,days:20,tag:'rt-dir',label:'Sohar/KF land',avail:true}},implications:[{title:'Jeddah Port',color:'#e74c3c',metric:'Isolated',text:'No sea access from Europe/Asia. Entirely dependent on Saudi Landbridge from Gulf ports.'},{title:'Brent Crude',color:'#e74c3c',metric:'~$95/bbl',text:'+32% vs pre-crisis. Red Sea and Hormuz fear premiums stacking.'},{title:'GCC Trucking',color:'#e74c3c',metric:'Gulf ports surge',text:'Jebel Ali and Dammam become primary entry for all cargo. Al Bat\'ha volumes spike.'},{title:'Khor Fakkan/Sohar',color:'#3dd68c',metric:'Gains volume',text:'Oman ports benefit as Cape-routed cargo avoids Red Sea. Sohar becomes key hub.'},{title:'Carrier Posture',color:'#e74c3c',metric:'CoGH only',text:'All Asia-Europe and Asia-GCC via Cape. Hamburg-Jebel Ali 40+ days.'},{title:'War-Risk Insurance',color:'#e74c3c',metric:'4.0x Gulf',text:'Red Sea listed at maximum. CoGH routing cheaper for insurance.'}]},
-  6:{name:'Dual Closure',emoji:'&#9888;',state:'Hormuz + Bab el-Mandeb both closed - maximum stress - worst case',transits:2,brent:135.00,warrisk:'10.0x',reroute:'Cape of GH + land only',color:'#e74c3c',routeMults:{cgh:{mult:6.0,days:38,tag:'rt-cgh',label:'Cape of GH',avail:true,note:'Only sea option - extreme cost'},redsea:{mult:null,days:null,tag:'rt-na',label:'Red Sea',avail:false,note:'CLOSED - Houthi + IRGC'},direct:{mult:null,days:null,tag:'rt-na',label:'Hormuz direct',avail:false,note:'CLOSED - IRGC/US blockade'},oman:{mult:5.0,days:22,tag:'rt-dir',label:'Sohar land only',avail:true,note:'Via Cape then Oman truck'}},implications:[{title:'Jeddah Port',color:'#e74c3c',metric:'Non-functional',text:'No sea access possible. Relies entirely on Saudi Landbridge. Isolated from global supply.'},{title:'Brent Crude',color:'#e74c3c',metric:'~$135/bbl',text:'+88% vs pre-crisis. Both chokepoints controlling ~40% of global seaborne oil.'},{title:'GCC Trucking',color:'#e74c3c',metric:'Extreme surge',text:'Land corridors only viable option. Hwy 95 maximum capacity. Al Bat\'ha gridlock.'},{title:'Khor Fakkan/Sohar',color:'#fbbf24',metric:'Critical hub',text:'Only viable sea entry for GCC via Cape. Sohar capacity overwhelmed within weeks.'},{title:'Carrier Posture',color:'#e74c3c',metric:'Force majeure',text:'Most carriers invoke force majeure. Spot rates 5-6x. Booking windows 60-90 days.'},{title:'War-Risk Insurance',color:'#e74c3c',metric:'10.0x premium',text:'Effectively uninsurable. P&I clubs restricting cover. Government reinsurance likely needed.'}]}
+  1:{name:'Hormuz Closed',emoji:'&#128683;',state:'Current reality - IRGC control zone - US naval blockade - Day 82',transits:2,brent:104.50,warrisk:'8.0x',reg:{util:95,cong:4},reroute:'Cape of GH',color:'#e74c3c',routeMults:{cgh:{mult:4.5,days:35,tag:'rt-cgh',label:'Cape of GH',avail:true},redsea:{mult:2.8,days:22,tag:'rt-rs',label:'Red Sea',avail:true,note:'Jeddah entry only'},direct:{mult:null,days:null,tag:'rt-na',label:'Hormuz direct',avail:false,note:'CLOSED'},oman:{mult:3.2,days:20,tag:'rt-dir',label:'Sohar/KF land',avail:true}},implications:[{title:'Jeddah Port',color:'#e74c3c',metric:'16-day dwell',text:'Absorbing all Hormuz-displaced cargo. Terminal at capacity.'},{title:'Brent Crude',color:'#e74c3c',metric:'$104.50/bbl',text:'+45% vs pre-crisis. 1.4M bbl/day Iran exports via shadow fleet.'},{title:'GCC Trucking',color:'#fbbf24',metric:'+47% fleet',text:'Al Bat\'ha 1,649 trucks/day. TruKKer scaling to 500 moves/day from Khorfakkan.'},{title:'Khor Fakkan/Sohar',color:'#3dd68c',metric:'+3,500% diversions',text:'Windward: vessel diversions to Oman up 3,500%. Sohar emerging as primary Asia-GCC gateway.'},{title:'Stranded Vessels',color:'#e74c3c',metric:'~2,000 ships',text:'~20,000 mariners trapped in Persian Gulf. 109K TEU confirmed stranded.'},{title:'War-Risk Insurance',color:'#e74c3c',metric:'8.0x premium',text:'VLCC approx $2.5M per voyage. 6 P&I clubs withdrew cover.'}]},
+  2:{name:'Hormuz: IRGC Escort Only',emoji:'&#9875;',state:'Friendly-flag passage - China India Turkey - ~25 transits/day',transits:25,brent:92.00,warrisk:'5.0x',reg:{util:83,cong:2},reroute:'Mixed',color:'#fbbf24',routeMults:{cgh:{mult:3.0,days:35,tag:'rt-cgh',label:'Cape of GH',avail:true},redsea:{mult:2.0,days:22,tag:'rt-rs',label:'Red Sea',avail:true,note:'Jeddah entry only'},direct:{mult:2.5,days:18,tag:'rt-dir',label:'Hormuz direct',avail:true,note:'IRGC escort - flag dependent'},oman:{mult:2.2,days:20,tag:'rt-dir',label:'Sohar/KF land',avail:true}},implications:[{title:'Jeddah Port',color:'#fbbf24',metric:'10-day dwell',text:'Easing slightly as some Hormuz traffic resumes for friendly flags.'},{title:'Brent Crude',color:'#fbbf24',metric:'~$92/bbl',text:'+28% vs pre-crisis. Flag-state discrimination persists.'},{title:'GCC Trucking',color:'#fbbf24',metric:'+25% fleet',text:'Land routes remain elevated. Jebel Ali handling Asia cargo for Chinese/Indian flag vessels.'},{title:'Khor Fakkan/Sohar',color:'#3dd68c',metric:'Still elevated',text:'Oman ports retain volume as flag-neutral entry. Preferred by EU/US carriers avoiding Hormuz.'},{title:'Carrier Posture',color:'#fbbf24',metric:'Split market',text:'Chinese carriers (COSCO) resume direct. Western majors (Maersk/MSC) stay Cape of Good Hope.'},{title:'War-Risk Insurance',color:'#fbbf24',metric:'5.0x premium',text:'Reduced but elevated. Escort availability uncertain. JWC maintaining listed area.'}]},
+  3:{name:'Hormuz: Negotiated Partial',emoji:'&#9868;',state:'Ceasefire - neutral corridor - all flags - ~50 transits/day',transits:50,brent:82.00,warrisk:'3.0x',reg:{util:78,cong:1},reroute:'Hormuz + CoGH',color:'#f0c84b',routeMults:{cgh:{mult:2.0,days:35,tag:'rt-cgh',label:'Cape of GH',avail:true,note:'Still viable some lanes'},redsea:{mult:1.5,days:22,tag:'rt-rs',label:'Red Sea',avail:true},direct:{mult:1.8,days:18,tag:'rt-dir',label:'Hormuz direct',avail:true,note:'All flags - corridor zones apply'},oman:{mult:1.6,days:20,tag:'rt-dir',label:'Sohar/KF land',avail:true}},implications:[{title:'Jeddah Port',color:'#3dd68c',metric:'6-day dwell',text:'Traffic redistributing to Gulf ports. Congestion easing.'},{title:'Brent Crude',color:'#3dd68c',metric:'~$82/bbl',text:'+14% vs pre-crisis. Ceasefire premium partially unwound.'},{title:'GCC Trucking',color:'#3dd68c',metric:'Normalising',text:'Al Bat\'ha volumes declining as Jebel Ali direct calls resume.'},{title:'Khor Fakkan/Sohar',color:'#fbbf24',metric:'Transitional',text:'Still processing diverted backlog. 6-12 weeks to fully normalise.'},{title:'Carrier Posture',color:'#3dd68c',metric:'Resuming calls',text:'MSC/Maersk announce Gulf resumption. 6-8 week lead time for full schedules.'},{title:'War-Risk Insurance',color:'#fbbf24',metric:'3.0x premium',text:'Falling toward 2x as ceasefire holds. JWC likely to revise within 30-60 days.'}]},
+  4:{name:'Hormuz Fully Open',emoji:'&#9989;',state:'Crisis resolved - pre-war conditions - ~95 transits/day',transits:95,brent:72.00,warrisk:'1.0x',reg:{util:72,cong:0},reroute:'Hormuz direct',color:'#3dd68c',routeMults:{cgh:{mult:1.1,days:35,tag:'rt-cgh',label:'Cape of GH',avail:true,note:'No longer cost-competitive'},redsea:{mult:1.0,days:22,tag:'rt-rs',label:'Red Sea',avail:true},direct:{mult:1.0,days:18,tag:'rt-dir',label:'Hormuz direct',avail:true,note:'Optimal - pre-war conditions'},oman:{mult:1.0,days:20,tag:'rt-dir',label:'Sohar/KF land',avail:true}},implications:[{title:'Jeddah Port',color:'#3dd68c',metric:'3-day dwell',text:'Returns to regional SA gateway. DP World capacity investments fully utilised.'},{title:'Brent Crude',color:'#3dd68c',metric:'~$72/bbl',text:'Returns to pre-crisis. 20M bbl/day resuming. Strategic reserve replenishment begins.'},{title:'GCC Trucking',color:'#3dd68c',metric:'Pre-crisis norms',text:'Al Bat\'ha returns to ~900 trucks/day. Oman corridors return to baseline.'},{title:'Khor Fakkan/Sohar',color:'#fbbf24',metric:'Volume loss',text:'Diverted volume returns to Jebel Ali/Dammam direct. Oman loses crisis-era premium.'},{title:'Carrier Posture',color:'#3dd68c',metric:'Fully restored',text:'All carriers resume direct Gulf. Cape routing discontinued within 8-12 weeks.'},{title:'War-Risk Insurance',color:'#3dd68c',metric:'1.0x premium',text:'Returns to pre-crisis once JWC removes Gulf from listed areas - 90-day confirmation.'}]},
+  5:{name:'Bab el-Mandeb Closed',emoji:'&#128683;',state:'Hormuz open - Houthis escalate - Red Sea blocked - Jeddah loses bypass',transits:95,brent:95.00,warrisk:'4.0x',reg:{util:88,cong:3},reroute:'Cape of GH only',color:'#e74c3c',routeMults:{cgh:{mult:3.5,days:35,tag:'rt-cgh',label:'Cape of GH',avail:true,note:'Only global option'},redsea:{mult:null,days:null,tag:'rt-na',label:'Red Sea',avail:false,note:'CLOSED - Houthi threat'},direct:{mult:1.5,days:18,tag:'rt-dir',label:'Hormuz direct',avail:true,note:'Gulf inbound only'},oman:{mult:1.8,days:20,tag:'rt-dir',label:'Sohar/KF land',avail:true}},implications:[{title:'Jeddah Port',color:'#e74c3c',metric:'Isolated',text:'No sea access from Europe/Asia. Entirely dependent on Saudi Landbridge from Gulf ports.'},{title:'Brent Crude',color:'#e74c3c',metric:'~$95/bbl',text:'+32% vs pre-crisis. Red Sea and Hormuz fear premiums stacking.'},{title:'GCC Trucking',color:'#e74c3c',metric:'Gulf ports surge',text:'Jebel Ali and Dammam become primary entry for all cargo. Al Bat\'ha volumes spike.'},{title:'Khor Fakkan/Sohar',color:'#3dd68c',metric:'Gains volume',text:'Oman ports benefit as Cape-routed cargo avoids Red Sea. Sohar becomes key hub.'},{title:'Carrier Posture',color:'#e74c3c',metric:'CoGH only',text:'All Asia-Europe and Asia-GCC via Cape. Hamburg-Jebel Ali 40+ days.'},{title:'War-Risk Insurance',color:'#e74c3c',metric:'4.0x Gulf',text:'Red Sea listed at maximum. CoGH routing cheaper for insurance.'}]},
+  6:{name:'Dual Closure',emoji:'&#9888;',state:'Hormuz + Bab el-Mandeb both closed - maximum stress - worst case',transits:2,brent:135.00,warrisk:'10.0x',reg:{util:98,cong:6},reroute:'Cape of GH + land only',color:'#e74c3c',routeMults:{cgh:{mult:6.0,days:38,tag:'rt-cgh',label:'Cape of GH',avail:true,note:'Only sea option - extreme cost'},redsea:{mult:null,days:null,tag:'rt-na',label:'Red Sea',avail:false,note:'CLOSED - Houthi + IRGC'},direct:{mult:null,days:null,tag:'rt-na',label:'Hormuz direct',avail:false,note:'CLOSED - IRGC/US blockade'},oman:{mult:5.0,days:22,tag:'rt-dir',label:'Sohar land only',avail:true,note:'Via Cape then Oman truck'}},implications:[{title:'Jeddah Port',color:'#e74c3c',metric:'Non-functional',text:'No sea access possible. Relies entirely on Saudi Landbridge. Isolated from global supply.'},{title:'Brent Crude',color:'#e74c3c',metric:'~$135/bbl',text:'+88% vs pre-crisis. Both chokepoints controlling ~40% of global seaborne oil.'},{title:'GCC Trucking',color:'#e74c3c',metric:'Extreme surge',text:'Land corridors only viable option. Hwy 95 maximum capacity. Al Bat\'ha gridlock.'},{title:'Khor Fakkan/Sohar',color:'#fbbf24',metric:'Critical hub',text:'Only viable sea entry for GCC via Cape. Sohar capacity overwhelmed within weeks.'},{title:'Carrier Posture',color:'#e74c3c',metric:'Force majeure',text:'Most carriers invoke force majeure. Spot rates 5-6x. Booking windows 60-90 days.'},{title:'War-Risk Insurance',color:'#e74c3c',metric:'10.0x premium',text:'Effectively uninsurable. P&I clubs restricting cover. Government reinsurance likely needed.'}]}
 };
 
 var BASE_RATES  = {SHA:{cgh:1800,redsea:1700,direct:1800,oman:1600},HAM:{cgh:1400,redsea:1200,direct:1400,oman:1300},ROT:{cgh:1350,redsea:1150,direct:1350,oman:1250},SIN:{cgh:1200,redsea:1100,direct:1200,oman:1000},ICD:{cgh:900,redsea:850,direct:850,oman:750}};
@@ -3300,6 +3309,41 @@ var COMM_NAMES  = {general:'General / mixed cargo',consumer:'Consumer goods / FM
 var ORIG_NAMES  = {SHA:'Shanghai',HAM:'Hamburg',ROT:'Rotterdam',SIN:'Singapore',ICD:'Mundra / Nhava Sheva'};
 var DEST_NAMES  = {DXB:'Dubai / Jebel Ali',RUH:'Riyadh',DMM:'Dammam / Khobar',DOH:'Doha',BAH:'Manama (Bahrain)',KWI:'Kuwait City',MCT:'Muscat'};
 var ROUTE_NAMES = {direct:'Hormuz Direct',redsea:'Red Sea / Suez',oman:'Sohar / KF + Land',cgh:'Cape of Good Hope'};
+
+// ── SPOT INDEX REGRESSION MODEL ───────────────────────────────────────────────
+// Extra nautical miles per route vs Hormuz Direct baseline (GCC delivery frame)
+// Sources: SeaRates.com / Marine Traffic / Drewry 2024 routing analysis
+var ROUTE_NM = {
+  direct: 0,     // Hormuz Direct — pre-crisis optimal, 0 extra nm
+  redsea: 1400,  // Via Red Sea / Jeddah — +1,400nm vs Hormuz Direct
+  oman:   200,   // Sohar anchor — minimal detour outside Hormuz, +200nm
+  cgh:    4200   // Cape of Good Hope — +4,200nm vs Hormuz Direct
+};
+
+// Regression coefficients — calibrated against SCFI / Drewry WCI historical data
+// (2024 Red Sea crisis shock, COVID-peak elasticities, JWC war-risk loadings)
+var REG = {
+  brentBase: 72,    // Pre-crisis Brent baseline ($/bbl, Jan 2025)
+  utilBase:  72,    // Pre-crisis capacity utilisation baseline (%)
+  b1_bunker: 0.009, // β₁ — Brent: +0.9% of base rate per $1/bbl above baseline
+  b2_util:   0.050, // β₂ — Utilisation: +5.0% per 1 pp above 72%
+  b3_dist:   0.045, // β₃ — Detour: +4.5% per 100nm extra routing
+  b4_warrsk: 0.060, // β₄ — War-risk: +6.0% per 1× multiplier above 1×
+  b5_cong:   0.015  // β₅ — Port congestion: +1.5% per extra waiting day
+};
+
+// Rate = Base × regMult × commoditySurcharge
+function regMult(brent, util, extraNm, warRisk, cong) {
+  return Math.max(0.5,
+    1
+    + REG.b1_bunker * (brent   - REG.brentBase)
+    + REG.b2_util   * Math.max(0, util - REG.utilBase)
+    + REG.b3_dist   * (extraNm / 100)
+    + REG.b4_warrsk * Math.max(0, warRisk - 1)
+    + REG.b5_cong   * Math.max(0, cong)
+  );
+}
+// ─────────────────────────────────────────────────────────────────────────────
 
 function selectScenario(id) {
   activeScenario = id;
@@ -3333,11 +3377,15 @@ function runSimulator() {
   el('scb-warrisk', sc.warrisk);
   el('scb-reroute', sc.reroute);
 
-  // Route matrix
+  // Route matrix — rates driven by regression model
+  var warNum    = parseFloat(sc.warrisk) || 1.0;
+  var regUtil   = (sc.reg && sc.reg.util) || REG.utilBase;
+  var regCong   = (sc.reg && sc.reg.cong) || 0;
   var baseRates = BASE_RATES[origin] || BASE_RATES['SHA'];
   var rows = ['direct','redsea','oman','cgh'].map(function(key) {
-    var rm = sc.routeMults[key];
-    return { key:key, rm:rm, rate: (rm.avail && rm.mult) ? Math.round(baseRates[key] * rm.mult * cSrg) : null };
+    var rm   = sc.routeMults[key];
+    var mult = regMult(sc.brent, regUtil, ROUTE_NM[key], warNum, regCong);
+    return { key:key, rm:rm, mult:mult, rate: rm.avail ? Math.round(baseRates[key] * mult * cSrg) : null };
   });
   rows.sort(function(a,b) {
     if (!a.rm.avail && b.rm.avail) return 1;
@@ -3354,7 +3402,7 @@ function runSimulator() {
       var av = r.rm.avail;
       var rkC = av ? rkClasses[Math.min(rk,3)] : 'rank-x';
       if (av) rk++;
-      var dPct = r.rm.mult ? Math.round((r.rm.mult-1)*100) : null;
+      var dPct = r.rm.avail ? Math.round((r.mult - 1) * 100) : null;
       var dColor = dPct===null?'#748494':dPct>100?'#e74c3c':dPct>50?'#fbbf24':dPct>0?'#f0c84b':'#3dd68c';
       var noteH = (r.rm.note && av) ? '<span style="font-size:8px;color:#7a8494;display:block">'+r.rm.note+'</span>' : '';
       tbody.innerHTML +=
@@ -3370,6 +3418,66 @@ function runSimulator() {
     });
   }
 
+  // ── Regression model panel ──────────────────────────────────────────────────
+  var bestRow   = rows.find(function(r){ return r.rm.avail && r.rate; });
+  var _bestKey  = bestRow ? bestRow.key : 'cgh';
+  var _baseR    = baseRates[_bestKey] || baseRates['cgh'];
+  var _nm       = ROUTE_NM[_bestKey] || 0;
+  // Per-variable regression contributions (as fraction of base rate)
+  var _vB = REG.b1_bunker * (sc.brent   - REG.brentBase);
+  var _vU = REG.b2_util   * Math.max(0, regUtil - REG.utilBase);
+  var _vD = REG.b3_dist   * (_nm / 100);
+  var _vW = REG.b4_warrsk * Math.max(0, warNum - 1);
+  var _vC = REG.b5_cong   * Math.max(0, regCong);
+  var _totalMult = 1 + _vB + _vU + _vD + _vW + _vC;
+  var rp = document.getElementById('reg-vars-table');
+  if (rp) {
+    var _vars = [
+      { name:'Brent crude',          sym:'B', val:'$'+sc.brent.toFixed(2)+'/bbl',   coeff:'&beta;&#8321; = '+REG.b1_bunker, v:_vB, c: sc.brent>90?'#e74c3c':sc.brent>78?'#fbbf24':'#3dd68c' },
+      { name:'Capacity utilisation', sym:'U', val:regUtil+'%',                       coeff:'&beta;&#8322; = '+REG.b2_util,   v:_vU, c: regUtil>92?'#e74c3c':regUtil>82?'#fbbf24':'#3dd68c' },
+      { name:'Route detour',         sym:'D', val:(_nm?'+':'')+fmtN(_nm)+'&nbsp;nm',coeff:'&beta;&#8323; = '+REG.b3_dist+'/100nm', v:_vD, c: _nm>3000?'#e74c3c':_nm>1000?'#fbbf24':'#3dd68c' },
+      { name:'War-risk premium',     sym:'W', val:sc.warrisk+'&times;',              coeff:'&beta;&#8324; = '+REG.b4_warrsk, v:_vW, c: warNum>6?'#e74c3c':warNum>3?'#fbbf24':'#3dd68c' },
+      { name:'Port congestion',      sym:'C', val:regCong+' extra days',             coeff:'&beta;&#8325; = '+REG.b5_cong,   v:_vC, c: regCong>4?'#e74c3c':regCong>2?'#fbbf24':'#3dd68c' }
+    ];
+    rp.innerHTML =
+      '<table style="width:100%;border-collapse:collapse;font-family:\'IBM Plex Mono\',monospace;font-size:8.5px">'+
+      '<thead><tr style="border-bottom:1px solid #2a3340">'+
+      '<th style="text-align:left;padding:5px 8px;color:#5a6878;font-weight:400">Variable</th>'+
+      '<th style="text-align:center;padding:5px 6px;color:#5a6878;font-weight:400">Symbol</th>'+
+      '<th style="text-align:right;padding:5px 8px;color:#5a6878;font-weight:400">Scenario value</th>'+
+      '<th style="text-align:center;padding:5px 8px;color:#5a6878;font-weight:400">Coefficient</th>'+
+      '<th style="text-align:right;padding:5px 8px;color:#5a6878;font-weight:400">Rate impact</th>'+
+      '<th style="text-align:right;padding:5px 8px;color:#5a6878;font-weight:400">$/FEU add-on</th>'+
+      '</tr></thead><tbody>'+
+      _vars.map(function(v){
+        var pct = Math.round(v.v * 100);
+        var dol = Math.round(_baseR * v.v);
+        return '<tr style="border-bottom:1px solid #1a2130">'+
+          '<td style="padding:5px 8px;color:#cdd2da">'+v.name+'</td>'+
+          '<td style="padding:5px 6px;text-align:center;color:#a78bfa;font-weight:700">'+v.sym+'</td>'+
+          '<td style="padding:5px 8px;text-align:right;color:'+v.c+';font-weight:700">'+v.val+'</td>'+
+          '<td style="padding:5px 8px;text-align:center;color:#748494">'+v.coeff+'</td>'+
+          '<td style="padding:5px 8px;text-align:right;color:'+(pct>0?'#e8673c':'#3dd68c')+'">'+
+            (pct>0?'+':'')+pct+'%</td>'+
+          '<td style="padding:5px 8px;text-align:right;color:#f0c84b;font-weight:700">'+
+            (dol>0?'+$'+fmtN(dol):'&mdash;')+'</td>'+
+          '</tr>';
+      }).join('')+
+      '<tr style="border-top:2px solid #2a3340;background:#0e1318">'+
+      '<td colspan="2" style="padding:6px 8px;color:#e8eaed;font-weight:700">Total multiplier &nbsp;<span style="color:#748494;font-weight:400;font-size:8px">(best route: '+ROUTE_NAMES[_bestKey]+')</span></td>'+
+      '<td style="padding:6px 8px;text-align:right;color:#7a8494">Base: $'+fmtN(_baseR)+'</td>'+
+      '<td style="padding:6px 8px;text-align:center;color:#748494">&times; '+_totalMult.toFixed(3)+'</td>'+
+      '<td style="padding:6px 8px;text-align:right;color:#e03040;font-weight:700">+'+Math.round((_totalMult-1)*100)+'%</td>'+
+      '<td style="padding:6px 8px;text-align:right;color:#f0c84b;font-weight:700">= $'+fmtN(Math.round(_baseR * _totalMult * cSrg))+'</td>'+
+      '</tr></tbody></table>'+
+      '<div style="margin-top:7px;font-size:7.5px;color:#5a6878;line-height:1.6">'+
+      'Calibration: SCFI / Drewry WCI historical elasticities (2024 Red Sea crisis + COVID peak) &nbsp;&bull;&nbsp; '+
+      'War-risk coefficients: JWC &amp; P&amp;I club loadings &nbsp;&bull;&nbsp; '+
+      'Commodity surcharge &times;'+cSrg.toFixed(2)+' applied post-regression &nbsp;&bull;&nbsp; '+
+      'Baseline: Brent $72/bbl, utilisation 72%, pre-crisis Jan&nbsp;2025'+
+      '</div>';
+  }
+
   // Cost breakdown
   var bestRow   = rows.find(function(r){ return r.rm.avail && r.rate; });
   var bestRate  = bestRow ? bestRow.rate : 0;
@@ -3380,9 +3488,10 @@ function runSimulator() {
   var destPort  = 280;
   var commNote  = commodity==='food'?' (incl. reefer)':commodity==='chemical'?' (incl. hazmat)':'';
   var truck     = bestKey==='redsea' ? destCfg.truck_jeddah : bestKey==='oman' ? destCfg.truck_sohar : bestKey==='cgh' ? destCfg.truck_cgh : destCfg.truck_direct;
-  var wMult     = parseFloat(sc.warrisk) || 1.0;
-  var warRisk   = Math.round(bestRate * (wMult-1) * 0.05);
-  var totalFEU  = bestRate + origPort + destPort + truck + warRisk;
+  // War-risk is embedded in regression ocean freight; extract for display transparency
+  var warRiskPct = REG.b4_warrsk * Math.max(0, warNum - 1);
+  var warRisk    = Math.round((baseRates[bestKey]||baseRates['cgh']) * warRiskPct * cSrg);
+  var totalFEU  = bestRate + origPort + destPort + truck;
   var totalMo   = totalFEU * teu;
   var preBase   = Math.round((baseRates['direct']||baseRates['cgh']) * cSrg);
   var preTruck  = destCfg.truck_direct || Math.round((destCfg.truck_sohar||0)*0.5);
@@ -3394,12 +3503,12 @@ function runSimulator() {
 
   el('v2-sub', (ORIG_NAMES[origin]||origin) + ' to ' + (DEST_NAMES[dest]||dest) + ' &bull; ' + teu + ' TEU/month &bull; ' + (COMM_NAMES[commodity]||commodity) + ' &bull; Best route: ' + bestName);
 
+  var freightPct = bestRow ? Math.round((bestRow.mult - 1) * 100) : 0;
   var items = [
-    {k:'Ocean freight (per FEU)',         v:'$'+fmtN(bestRate),  s:'Best available: '+bestName+commNote, p: bestRow&&bestRow.rm.mult?Math.round((bestRow.rm.mult-1)*100):0},
+    {k:'Ocean freight (per FEU)',         v:'$'+fmtN(bestRate),  s:'Regression-based &bull; '+bestName+commNote+' &bull; incl. war-risk ~$'+fmtN(warRisk), p: freightPct},
     {k:'Origin port handling (THC)',       v:'$'+fmtN(origPort),  s:(ORIG_NAMES[origin]||origin)+' terminal charges', p:0},
     {k:'Destination port handling',        v:'$'+fmtN(destPort),  s:destCfg.port+' THC + customs clearance', p:0},
-    {k:'Inland trucking to '+(DEST_NAMES[dest]||dest), v:truck>0?'$'+fmtN(truck):'Port delivery', s:truck>0?'Door delivery':'Direct port destination', p:truck>0?30:0},
-    {k:'War-risk surcharge',               v:'$'+fmtN(warRisk),   s:'Insurance at '+sc.warrisk+' of pre-crisis', p:Math.round((wMult-1)*100)}
+    {k:'Inland trucking to '+(DEST_NAMES[dest]||dest), v:truck>0?'$'+fmtN(truck):'Port delivery', s:truck>0?'Door delivery':'Direct port destination', p:truck>0?30:0}
   ];
 
   var bd = document.getElementById('cost-breakdown');

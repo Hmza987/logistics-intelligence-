@@ -3575,7 +3575,9 @@ function runSimulator() {
   var totalFEU  = bestRate + origPort + destPort + truck;
   var totalMo   = totalFEU * teu;
   var preBase   = Math.round((baseRates['direct']||baseRates['cgh']) * cSrg);
-  var preTruck  = destCfg.truck_direct || Math.round((destCfg.truck_sohar||0)*0.5);
+  // truck_direct can legitimately be 0 (port-delivery destinations like DXB/Jebel Ali)
+  // Must use !== undefined check — NOT || fallback — to avoid 0 being treated as falsy
+  var preTruck  = destCfg.truck_direct !== undefined ? destCfg.truck_direct : 0;
   var preTotal  = preBase + origPort + destPort + preTruck;
   var preMo     = preTotal * teu;
   var dFEU      = totalFEU - preTotal;

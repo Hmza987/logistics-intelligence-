@@ -3450,10 +3450,17 @@ function runSimulator() {
   var regUtil   = (sc.reg && sc.reg.util) || REG.utilBase;
   var regCong   = (sc.reg && sc.reg.cong) || 0;
   var baseRates = BASE_RATES[origin] || BASE_RATES['SHA'];
+  var destCfg   = DEST_CONFIG[dest] || DEST_CONFIG['DXB']; // needed early for per-route truck calc
   var rows = ['direct','redsea','oman','cgh'].map(function(key) {
-    var rm   = sc.routeMults[key];
-    var mult = regMult(effectiveBrent, regUtil, ROUTE_NM[key], warNum, regCong);
-    return { key:key, rm:rm, mult:mult, rate: rm.avail ? Math.round(baseRates[key] * mult * cSrg) : null };
+    var rm        = sc.routeMults[key];
+    var mult      = regMult(effectiveBrent, regUtil, ROUTE_NM[key], warNum, regCong);
+    var rate      = rm.avail ? Math.round(baseRates[key] * mult * cSrg) : null;
+    var truckCost = key==='redsea' ? destCfg.truck_jeddah
+                  : key==='oman'   ? destCfg.truck_sohar
+                  : key==='cgh'    ? destCfg.truck_cgh
+                  : destCfg.truck_direct;
+    return { key:key, rm:rm, mult:mult, rate:rate, truckCost:truckCost,
+             landed: rate !== null ? rate + truckCost : null };
   });
   rows.sort(function(a,b) {
     if (!a.rm.avail && b.rm.avail) return 1;
@@ -3546,16 +3553,22 @@ function runSimulator() {
       '</div>';
   }
 
-  // Cost breakdown
-  var bestRow   = rows.find(function(r){ return r.rm.avail && r.rate; });
+  // Cost breakdown — best route chosen by TOTAL landed cost (sea + inland trucking)
+  // This correctly prefers Hormuz Direct when open, even if a feeder port has a
+  // lower sea-only rate, because the trucking leg makes it more expensive overall.
+  var rowsByLanded = rows.slice().sort(function(a,b) {
+    if (!a.rm.avail && b.rm.avail) return 1;
+    if (a.rm.avail && !b.rm.avail) return -1;
+    return (a.landed !== null ? a.landed : 999999) - (b.landed !== null ? b.landed : 999999);
+  });
+  var bestRow   = rowsByLanded.find(function(r){ return r.rm.avail && r.rate !== null; });
   var bestRate  = bestRow ? bestRow.rate : 0;
   var bestKey   = bestRow ? bestRow.key : 'cgh';
   var bestName  = ROUTE_NAMES[bestKey];
-  var destCfg   = DEST_CONFIG[dest] || DEST_CONFIG['DXB'];
   var origPort  = PORT_COSTS[origin] || 400;
   var destPort  = 280;
   var commNote  = commodity==='food'?' (incl. reefer)':commodity==='chemical'?' (incl. hazmat)':'';
-  var truck     = bestKey==='redsea' ? destCfg.truck_jeddah : bestKey==='oman' ? destCfg.truck_sohar : bestKey==='cgh' ? destCfg.truck_cgh : destCfg.truck_direct;
+  var truck     = bestRow ? bestRow.truckCost : 0;
   // War-risk is embedded in regression ocean freight; extract for display transparency
   var warRiskPct = REG.b4_warrsk * Math.max(0, warNum - 1);
   var warRisk    = Math.round((baseRates[bestKey]||baseRates['cgh']) * warRiskPct * cSrg);

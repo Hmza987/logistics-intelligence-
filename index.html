@@ -3430,13 +3430,18 @@ function runSimulator() {
   var commodity = document.getElementById('inp-commodity').value;
   var cSrg      = COMM_SRG[commodity] || 1.0;
 
+  // Use live Brent when available, otherwise fall back to scenario value
+  var effectiveBrent = (LIVE_BRENT !== null) ? LIVE_BRENT : sc.brent;
+
   // Banner
   var bn = document.getElementById('scb-name');
   if (bn) { bn.innerHTML = sc.emoji + ' ' + sc.name; bn.style.color = sc.color; }
   var el = function(id,v){ var e=document.getElementById(id); if(e) e.innerHTML=v; };
   el('scb-state', sc.state);
   el('scb-transits', sc.transits);
-  el('scb-brent', '$' + sc.brent.toFixed(2));
+  el('scb-brent', '$' + effectiveBrent.toFixed(2) + (LIVE_BRENT !== null
+    ? '&nbsp;<span style="font-size:7px;color:#3dd68c;font-family:\'IBM Plex Mono\',monospace;letter-spacing:.05em">LIVE</span>'
+    : ''));
   el('scb-warrisk', sc.warrisk);
   el('scb-reroute', sc.reroute);
 
@@ -3447,7 +3452,7 @@ function runSimulator() {
   var baseRates = BASE_RATES[origin] || BASE_RATES['SHA'];
   var rows = ['direct','redsea','oman','cgh'].map(function(key) {
     var rm   = sc.routeMults[key];
-    var mult = regMult(sc.brent, regUtil, ROUTE_NM[key], warNum, regCong);
+    var mult = regMult(effectiveBrent, regUtil, ROUTE_NM[key], warNum, regCong);
     return { key:key, rm:rm, mult:mult, rate: rm.avail ? Math.round(baseRates[key] * mult * cSrg) : null };
   });
   rows.sort(function(a,b) {
@@ -3487,7 +3492,7 @@ function runSimulator() {
   var _baseR    = baseRates[_bestKey] || baseRates['cgh'];
   var _nm       = ROUTE_NM[_bestKey] || 0;
   // Per-variable regression contributions (as fraction of base rate)
-  var _vB = REG.b1_bunker * (sc.brent   - REG.brentBase);
+  var _vB = REG.b1_bunker * (effectiveBrent - REG.brentBase);
   var _vU = REG.b2_util   * Math.max(0, regUtil - REG.utilBase);
   var _vD = REG.b3_dist   * (_nm / 100);
   var _vW = REG.b4_warrsk * Math.max(0, warNum - 1);
@@ -3496,7 +3501,7 @@ function runSimulator() {
   var rp = document.getElementById('reg-vars-table');
   if (rp) {
     var _vars = [
-      { name:'Brent crude',          sym:'B', val:'$'+sc.brent.toFixed(2)+'/bbl',   coeff:'&beta;&#8321; = '+REG.b1_bunker, v:_vB, c: sc.brent>90?'#e74c3c':sc.brent>78?'#fbbf24':'#3dd68c' },
+      { name:'Brent crude',          sym:'B', val:'$'+effectiveBrent.toFixed(2)+'/bbl' + (LIVE_BRENT!==null?' <span style="color:#3dd68c">&#9679;</span>':''),   coeff:'&beta;&#8321; = '+REG.b1_bunker, v:_vB, c: effectiveBrent>90?'#e74c3c':effectiveBrent>78?'#fbbf24':'#3dd68c' },
       { name:'Capacity utilisation', sym:'U', val:regUtil+'%',                       coeff:'&beta;&#8322; = '+REG.b2_util,   v:_vU, c: regUtil>92?'#e74c3c':regUtil>82?'#fbbf24':'#3dd68c' },
       { name:'Route detour',         sym:'D', val:(_nm?'+':'')+fmtN(_nm)+'&nbsp;nm',coeff:'&beta;&#8323; = '+REG.b3_dist+'/100nm', v:_vD, c: _nm>3000?'#e74c3c':_nm>1000?'#fbbf24':'#3dd68c' },
       { name:'War-risk premium',     sym:'W', val:sc.warrisk+'&times;',              coeff:'&beta;&#8324; = '+REG.b4_warrsk, v:_vW, c: warNum>6?'#e74c3c':warNum>3?'#fbbf24':'#3dd68c' },
@@ -3757,6 +3762,38 @@ function calibrateModel() {
 }
 // Run immediately — takes <10ms, coefficients are calibrated before first user click
 calibrateModel();
+
+// ── LIVE MARKET DATA ──────────────────────────────────────────────────────────
+// Fetches Brent crude (Yahoo Finance, no key) + FBX01 (optional Freightos key).
+// Called once on page load; result is CDN-cached for 1 hour server-side.
+function fetchLiveData() {
+  fetch('/api/live-data')
+    .then(function(r) { return r.ok ? r.json() : Promise.reject(r.status); })
+    .then(function(d) {
+      var st = document.getElementById('sim-status');
+      if (d.brent && d.brent > 20) {
+        LIVE_BRENT = d.brent;
+        if (d.fbx && d.fbx.rate) LIVE_FBX = d.fbx;
+        var fbxStr = (LIVE_FBX && LIVE_FBX.rate)
+          ? ' &nbsp;&bull;&nbsp; FBX01 <strong>$' + Math.round(LIVE_FBX.rate).toLocaleString('en-US') + '</strong>/TEU'
+          : '';
+        if (st) st.innerHTML =
+          '<span style="color:#3dd68c">&#9679; Live &mdash; Brent <strong>$' + d.brent.toFixed(2) + '</strong>/bbl' + fbxStr + '</span>';
+        // Re-run simulator silently if it has already been run once
+        if (document.getElementById('scb-name') &&
+            document.getElementById('scb-name').textContent.trim() !== '—') {
+          runSimulator();
+        }
+      } else {
+        if (st) st.innerHTML = '<span style="color:#748494">&#9675; Live data unavailable &mdash; using scenario defaults</span>';
+      }
+    })
+    .catch(function() {
+      var st = document.getElementById('sim-status');
+      if (st) st.innerHTML = '<span style="color:#748494">&#9675; Offline &mdash; scenario defaults</span>';
+    });
+}
+fetchLiveData();
 // ─────────────────────────────────────────────────────────────────────────────
 
 function runOptimizer() {
@@ -3869,6 +3906,8 @@ function runOptimizer() {
 
 var REG_ORIGINAL = null;
 var REG_POWER    = 1; // current power exponent for β₂ (1 = linear)
+var LIVE_BRENT   = null; // set by fetchLiveData() — overrides scenario default when live price is available
+var LIVE_FBX     = null; // set by fetchLiveData() when FREIGHTOS_API_KEY is configured
 
 function applyBestFit(mode) {
   if (!OPT_RESULT) return;

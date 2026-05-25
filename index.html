@@ -2369,7 +2369,20 @@ canvas { font-family: var(--f-mono); }
         </select>
       </div>
     </div>
-    <div style="display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin-top:4px">
+    <!-- Date row -->
+    <div style="display:flex;align-items:center;gap:14px;flex-wrap:wrap;margin-top:10px;padding-top:10px;border-top:1px solid #1e2730">
+      <div class="sim-field" style="flex:0 0 auto">
+        <label>Shipment Date</label>
+        <input type="date" id="inp-shipdate" onchange="updateSeasonalBadge()"
+               style="font-family:'IBM Plex Mono',monospace;font-size:9px;background:#0e1318;color:#e8eaed;border:1px solid #2a3340;border-radius:3px;padding:6px 8px;width:140px"/>
+      </div>
+      <div id="seasonal-badge-wrap" style="display:flex;flex-direction:column;gap:3px;padding-top:14px">
+        <span id="seasonal-label" style="font-size:8px;font-family:'IBM Plex Mono',monospace;font-weight:700;letter-spacing:.06em"></span>
+        <span id="seasonal-desc"  style="font-size:7.5px;color:#7a8494;max-width:320px;line-height:1.5"></span>
+      </div>
+    </div>
+
+    <div style="display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin-top:10px">
       <button class="sim-run-btn" onclick="runSimulator()">&#9654; Run Simulation</button>
       <span style="font-size:9px;color:#7a8494;font-family:'IBM Plex Mono',monospace" id="sim-status"></span>
     </div>
@@ -3349,6 +3362,41 @@ function updateGCSSMap(r) {
   });
 }
 
+// ── SEASONAL RATE ADJUSTMENTS ─────────────────────────────────────────────────
+// Applied as a multiplier on top of the regression model.
+// Sources: Drewry WCI seasonality index · Freightos FBX historical variance ·
+//          SCFI 2019-2024 monthly averages · GCC customs/port calendar
+// Applied to BOTH current rate and pre-crisis baseline so the crisis-premium
+// delta is preserved — the seasonal factor only affects absolute cost.
+var SEASONAL = {
+  1:  { mult:1.10, label:'Pre-CNY surge',     desc:'Asia factory pre-shutdown rush — peak booking demand ex-Asia ports',               color:'#e74c3c' },
+  2:  { mult:0.95, label:'CNY slack',          desc:'Chinese New Year — factories closed, excess capacity, softer spot rates ex-Asia',  color:'#3dd68c' },
+  3:  { mult:0.97, label:'Post-CNY recovery',  desc:'CNY restart ramp-up — gradual production recovery, softer spot market',           color:'#7a8494' },
+  4:  { mult:1.03, label:'Q2 spring pickup',   desc:'Easter + spring retail replenishment · pre-Eid GCC consumer surge',               color:'#7a8494' },
+  5:  { mult:1.05, label:'Q2 peak',            desc:'Pre-summer inventory build — strong booking demand, capacity tightening',         color:'#fbbf24' },
+  6:  { mult:1.03, label:'Early summer',       desc:'Pre-peak season acceleration — import bookings surge ahead of Q4',               color:'#7a8494' },
+  7:  { mult:0.97, label:'Summer doldrums',    desc:'European summer holidays — softer demand, more available spot capacity',          color:'#3dd68c' },
+  8:  { mult:0.95, label:'August lull',        desc:'Weakest demand month — European factories partially shut, capacity surplus',      color:'#3dd68c' },
+  9:  { mult:1.07, label:'Q4 pre-peak',        desc:'Holiday cargo buildup begins — booking surge, Diwali merchandise ex-Asia',        color:'#fbbf24' },
+  10: { mult:1.10, label:'Q4 peak',            desc:'Pre-holiday peak — highest demand period · Diwali + Christmas cargo flow',        color:'#e74c3c' },
+  11: { mult:1.12, label:'Q4 peak of peak',    desc:'Black Friday / Cyber Monday + Christmas inventory — extreme booking demand',      color:'#e74c3c' },
+  12: { mult:1.08, label:'Year-end rush',      desc:'Christmas delivery window closes · pre-CNY booking window opens ex-Asia',        color:'#fbbf24' }
+};
+
+function getSeasonalMult(date) {
+  return SEASONAL[date.getMonth() + 1] || { mult:1.0, label:'Baseline', desc:'No seasonal adjustment', color:'#7a8494' };
+}
+
+function fmtShipDate(d) {
+  return d.toLocaleDateString('en-GB', { day:'numeric', month:'short', year:'numeric' });
+}
+
+function addTransitDays(date, days) {
+  var d = new Date(date.getTime());
+  d.setDate(d.getDate() + (days || 0));
+  return d;
+}
+
 // ── Old SCENARIOS preserved as reference (not used by GCSS UI) ───────────────
 var SCENARIOS = {
   1:{name:'Hormuz Closed',emoji:'&#128683;',state:'Current reality - IRGC control zone - US naval blockade - Day 82',transits:2,brent:104.50,warrisk:'8.0x',reg:{util:95,cong:4},reroute:'Cape of GH',color:'#e74c3c',routeMults:{cgh:{mult:4.5,days:35,tag:'rt-cgh',label:'Cape of GH',avail:true},redsea:{mult:2.8,days:22,tag:'rt-rs',label:'Red Sea',avail:true,note:'Jeddah entry only'},direct:{mult:null,days:null,tag:'rt-na',label:'Hormuz direct',avail:false,note:'CLOSED'},oman:{mult:3.2,days:20,tag:'rt-dir',label:'Sohar/KF land',avail:true}},implications:[{title:'Jeddah Port',color:'#e74c3c',metric:'16-day dwell',text:'Absorbing all Hormuz-displaced cargo. Terminal at capacity.'},{title:'Brent Crude',color:'#e74c3c',metric:'$104.50/bbl',text:'+45% vs pre-crisis. 1.4M bbl/day Iran exports via shadow fleet.'},{title:'GCC Trucking',color:'#fbbf24',metric:'+47% fleet',text:'Al Bat\'ha 1,649 trucks/day. TruKKer scaling to 500 moves/day from Khorfakkan.'},{title:'Khor Fakkan/Sohar',color:'#3dd68c',metric:'+3,500% diversions',text:'Windward: vessel diversions to Oman up 3,500%. Sohar emerging as primary Asia-GCC gateway.'},{title:'Stranded Vessels',color:'#e74c3c',metric:'~2,000 ships',text:'~20,000 mariners trapped in Persian Gulf. 109K TEU confirmed stranded.'},{title:'War-Risk Insurance',color:'#e74c3c',metric:'8.0x premium',text:'VLCC approx $2.5M per voyage. 6 P&I clubs withdrew cover.'}]},
@@ -3420,6 +3468,20 @@ function selectScenario(id) {
 
 function fmtN(n) { return Math.round(n).toLocaleString('en-US'); }
 
+function updateSeasonalBadge() {
+  var sdEl = document.getElementById('inp-shipdate');
+  if (!sdEl || !sdEl.value) return;
+  var s = getSeasonalMult(new Date(sdEl.value + 'T12:00:00'));
+  var pct = Math.round((s.mult - 1) * 100);
+  var pctStr = pct > 0 ? '+' + pct + '%' : pct + '%';
+  var lbl = document.getElementById('seasonal-label');
+  var dsc = document.getElementById('seasonal-desc');
+  if (lbl) lbl.innerHTML =
+    '<span style="background:' + s.color + '22;color:' + s.color + ';padding:2px 7px;border-radius:3px;font-size:8px">' +
+    s.label + ' &nbsp;<strong>' + pctStr + '</strong></span>';
+  if (dsc) dsc.textContent = s.desc;
+}
+
 function runSimulator() {
   var sc = SCENARIOS[activeScenario];
   if (!sc) return;
@@ -3429,6 +3491,12 @@ function runSimulator() {
   var teu       = parseInt(document.getElementById('inp-teu').value) || 50;
   var commodity = document.getElementById('inp-commodity').value;
   var cSrg      = COMM_SRG[commodity] || 1.0;
+
+  // Shipment date + seasonal adjustment
+  var sdEl     = document.getElementById('inp-shipdate');
+  var shipDate = (sdEl && sdEl.value) ? new Date(sdEl.value + 'T12:00:00') : new Date();
+  var seasonal = getSeasonalMult(shipDate);
+  updateSeasonalBadge(); // keep badge in sync
 
   // Use live Brent when available, otherwise fall back to scenario value
   var effectiveBrent = (LIVE_BRENT !== null) ? LIVE_BRENT : sc.brent;
@@ -3454,7 +3522,7 @@ function runSimulator() {
   var rows = ['direct','redsea','oman','cgh'].map(function(key) {
     var rm        = sc.routeMults[key];
     var mult      = regMult(effectiveBrent, regUtil, ROUTE_NM[key], warNum, regCong);
-    var rate      = rm.avail ? Math.round(baseRates[key] * mult * cSrg) : null;
+    var rate      = rm.avail ? Math.round(baseRates[key] * mult * cSrg * seasonal.mult) : null;
     var truckCost = key==='redsea' ? destCfg.truck_jeddah
                   : key==='oman'   ? destCfg.truck_sohar
                   : key==='cgh'    ? destCfg.truck_cgh
@@ -3574,7 +3642,8 @@ function runSimulator() {
   var warRisk    = Math.round((baseRates[bestKey]||baseRates['cgh']) * warRiskPct * cSrg);
   var totalFEU  = bestRate + origPort + destPort + truck;
   var totalMo   = totalFEU * teu;
-  var preBase   = Math.round((baseRates['direct']||baseRates['cgh']) * cSrg);
+  // Pre-crisis baseline: same seasonal mult applied so delta shows crisis premium only (not seasonal noise)
+  var preBase   = Math.round((baseRates['direct']||baseRates['cgh']) * cSrg * seasonal.mult);
   // truck_direct can legitimately be 0 (port-delivery destinations like DXB/Jebel Ali)
   // Must use !== undefined check — NOT || fallback — to avoid 0 being treated as falsy
   var preTruck  = destCfg.truck_direct !== undefined ? destCfg.truck_direct : 0;
@@ -3584,11 +3653,20 @@ function runSimulator() {
   var dMo       = totalMo - preMo;
   var dPct      = Math.round((dFEU/preTotal)*100);
 
-  el('v2-sub', (ORIG_NAMES[origin]||origin) + ' to ' + (DEST_NAMES[dest]||dest) + ' &bull; ' + teu + ' TEU/month &bull; ' + (COMM_NAMES[commodity]||commodity) + ' &bull; Best route: ' + bestName);
+  // ETA: shipment date + best route transit days
+  var transitDays = bestRow && bestRow.rm.days ? bestRow.rm.days : 25;
+  var etaDate     = addTransitDays(shipDate, transitDays);
+  var etaStr      = fmtShipDate(shipDate) + ' &rarr; ETA ' + fmtShipDate(etaDate) + ' (' + transitDays + 'd via ' + bestName + ')';
+
+  var seasonPct  = Math.round((seasonal.mult - 1) * 100);
+  var seasonAdj  = Math.round(bestRate * (seasonal.mult - 1) / seasonal.mult); // additive component
+
+  el('v2-sub', (ORIG_NAMES[origin]||origin) + ' &rarr; ' + (DEST_NAMES[dest]||dest) + ' &nbsp;&bull;&nbsp; ' + teu + ' TEU/month &nbsp;&bull;&nbsp; ' + (COMM_NAMES[commodity]||commodity) + ' &nbsp;&bull;&nbsp; ' + etaStr);
 
   var freightPct = bestRow ? Math.round((bestRow.mult - 1) * 100) : 0;
   var items = [
     {k:'Ocean freight (per FEU)',         v:'$'+fmtN(bestRate),  s:'Regression-based &bull; '+bestName+commNote+' &bull; incl. war-risk ~$'+fmtN(warRisk), p: freightPct},
+    {k:'Seasonal adjustment',             v:(seasonPct>=0?'+':'')+seasonPct+'%', s:seasonal.label+' &bull; '+seasonal.desc, p: seasonPct, seasonal:true},
     {k:'Origin port handling (THC)',       v:'$'+fmtN(origPort),  s:(ORIG_NAMES[origin]||origin)+' terminal charges', p:0},
     {k:'Destination port handling',        v:'$'+fmtN(destPort),  s:destCfg.port+' THC + customs clearance', p:0},
     {k:'Inland trucking to '+(DEST_NAMES[dest]||dest), v:truck>0?'$'+fmtN(truck):'Port delivery', s:truck>0?'Door delivery':'Direct port destination', p:truck>0?30:0}
@@ -3597,6 +3675,17 @@ function runSimulator() {
   var bd = document.getElementById('cost-breakdown');
   if (bd) {
     bd.innerHTML = items.map(function(it) {
+      if (it.seasonal) {
+        // Seasonal row: percentage value, colour-coded by direction
+        var sColor = it.p > 0 ? seasonal.color : it.p < 0 ? '#3dd68c' : '#7a8494';
+        var sVal   = (it.p > 0 ? '+' : '') + it.p + '%';
+        return '<div class="cost-row" style="border-left:2px solid '+sColor+'22;padding-left:10px">'+
+          '<div><div class="cost-key" style="color:'+sColor+'">'+it.k+'</div><div class="cost-sub">'+it.s+'</div></div>'+
+          '<div style="display:flex;align-items:center;gap:6px">'+
+            '<div class="cost-val" style="color:'+sColor+';font-size:15px">'+sVal+'</div>'+
+            '<span class="crisis-delta" style="background:'+sColor+'22;color:'+sColor+'">on sea freight</span>'+
+          '</div></div>';
+      }
       var pc = it.p>100?'#e74c3c':it.p>30?'#fbbf24':it.p>0?'#f0c84b':'#7a8494';
       var pt = it.p>0?'+'+it.p+'%':'baseline';
       return '<div class="cost-row">'+
@@ -5288,6 +5377,14 @@ window.addEventListener('load', function() {
   // Fetch live Hormuz + market data after charts initialise; refresh every 10 min
   setTimeout(fetchLiveData, 2500);
   setInterval(fetchLiveData, 10 * 60 * 1000);
+
+  // Set shipment date to today and show initial seasonal badge
+  var sdInput = document.getElementById('inp-shipdate');
+  if (sdInput) {
+    var today = new Date();
+    sdInput.value = today.toISOString().split('T')[0]; // YYYY-MM-DD
+    updateSeasonalBadge();
+  }
 
   // Rotate intelligence feed items every 3 minutes (ALERT stays pinned)
   setInterval(rotateIntelFeed, 3 * 60 * 1000);

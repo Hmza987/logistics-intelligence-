@@ -2471,6 +2471,18 @@ canvas { font-family: var(--f-mono); }
 
       <div id="backtest-summary" style="margin-top:12px"></div>
 
+      <!-- Coefficient Optimizer -->
+      <div style="margin-top:14px;padding:10px 12px;background:#0e1318;border-radius:4px;border:1px solid #2a3340">
+        <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px">
+          <div>
+            <div style="font-size:8px;font-weight:700;color:#a78bfa;letter-spacing:.08em;text-transform:uppercase">&#9670; Coefficient Optimizer</div>
+            <div style="font-size:8px;color:#5a6878;margin-top:2px">Grid search over ~23,500 combinations &bull; Pass 1: best linear fit &bull; Pass 2: non-linear &beta;&#8322; power law &bull; runs in &lt;10ms</div>
+          </div>
+          <button onclick="runOptimizer()" style="background:#a78bfa;color:#0d1117;font-family:'IBM Plex Mono',monospace;font-size:8px;font-weight:700;border:none;padding:6px 14px;border-radius:3px;cursor:pointer;letter-spacing:.06em;text-transform:uppercase">&#9654; Run Optimizer</button>
+        </div>
+        <div id="optimizer-results" style="margin-top:10px"></div>
+      </div>
+
       <div style="margin-top:10px;padding:8px 10px;background:#0e1318;border-radius:3px;border-left:2px solid #e8673c">
         <div style="font-size:8px;color:#e8673c;font-weight:700;letter-spacing:.08em;text-transform:uppercase;margin-bottom:4px">&#9888; Key Model Limitation Identified</div>
         <div style="font-size:8px;color:#9aa8b8;line-height:1.6">
@@ -3378,11 +3390,16 @@ var REG = {
 };
 
 // Rate = Base × regMult × commoditySurcharge
+// REG_POWER controls the β₂ exponent: 1 = linear (default), >1 = convex / non-linear
 function regMult(brent, util, extraNm, warRisk, cong) {
+  var uExcess = Math.max(0, util - REG.utilBase);
+  var utilTerm = (typeof REG_POWER !== 'undefined' && REG_POWER !== 1)
+    ? REG.b2_util * Math.pow(uExcess, REG_POWER)
+    : REG.b2_util * uExcess;
   return Math.max(0.5,
     1
     + REG.b1_bunker * (brent   - REG.brentBase)
-    + REG.b2_util   * Math.max(0, util - REG.utilBase)
+    + utilTerm
     + REG.b3_dist   * (extraNm / 100)
     + REG.b4_warrsk * Math.max(0, warRisk - 1)
     + REG.b5_cong   * Math.max(0, cong)
@@ -3689,6 +3706,151 @@ function _bStat(label, val, color, note) {
     '<div style="font-size:8px;color:#e8eaed;margin-top:2px">'+label+'</div>' +
     '<div style="font-size:7.5px;color:#5a6878;margin-top:2px">'+note+'</div>' +
     '</div>';
+}
+
+// ── COEFFICIENT OPTIMIZER ─────────────────────────────────────────────────────
+var OPT_RESULT = null; // holds best-fit after optimization
+
+function runOptimizer() {
+  var el = document.getElementById('optimizer-results');
+  if (el) el.innerHTML = '<div style="font-size:8px;color:#7a8494;font-family:\'IBM Plex Mono\',monospace">Running&hellip;</div>';
+
+  // Ground-truth from backtest (midpoint of actual FBX01 ranges)
+  var BT_BASE = 1400;
+  var BT = [
+    { brent:85, util:73, nm:0,    war:1.0, cong:0, actual:1500 },
+    { brent:78, util:82, nm:3800, war:3.0, cong:1, actual:4150 },
+    { brent:80, util:88, nm:3800, war:4.0, cong:2, actual:6500 },
+    { brent:83, util:85, nm:3800, war:3.0, cong:2, actual:5250 }
+  ];
+
+  function mae(b1,b2,b3,b4,b5,power) {
+    var p = power || 1;
+    var tot = 0;
+    BT.forEach(function(d) {
+      var u = Math.max(0, d.util - 72);
+      var m = 1 + b1*(d.brent-72) + b2*Math.pow(u,p) + b3*(d.nm/100) + b4*Math.max(0,d.war-1) + b5*Math.max(0,d.cong);
+      m = Math.max(0.5, m);
+      tot += Math.abs(BT_BASE*m - d.actual) / d.actual;
+    });
+    return tot / BT.length;
+  }
+
+  // ── Pass 1: linear grid search (β₁–β₅, power=1) ──────────────────────────
+  var B1 = [0.005,0.006,0.007,0.008,0.009,0.010,0.011,0.012];
+  var B2 = [0.030,0.040,0.050,0.060,0.070,0.080,0.090,0.100,0.120,0.150];
+  var B3 = [0.030,0.035,0.040,0.045,0.050,0.055,0.060];
+  var B4 = [0.040,0.050,0.060,0.070,0.080,0.090];
+  var B5 = [0.008,0.010,0.012,0.015,0.018,0.020,0.025];
+  var totalCombos = B1.length*B2.length*B3.length*B4.length*B5.length;
+
+  var bestLinMAE = Infinity, bestLin = null;
+  var t0 = Date.now();
+
+  for (var i1=0;i1<B1.length;i1++)
+  for (var i2=0;i2<B2.length;i2++)
+  for (var i3=0;i3<B3.length;i3++)
+  for (var i4=0;i4<B4.length;i4++)
+  for (var i5=0;i5<B5.length;i5++) {
+    var m = mae(B1[i1],B2[i2],B3[i3],B4[i4],B5[i5],1);
+    if (m < bestLinMAE) { bestLinMAE=m; bestLin={b1:B1[i1],b2:B2[i2],b3:B3[i3],b4:B4[i4],b5:B5[i5]}; }
+  }
+
+  // ── Pass 2: non-linear β₂ power-law (fix b1,b3,b4,b5 from best linear) ──
+  var POWERS = [1.0,1.2,1.5,1.8,2.0,2.5,3.0];
+  var B2_NL  = [0.003,0.005,0.008,0.010,0.015,0.020,0.025,0.030,0.040,0.050];
+  var bestNLMAE = Infinity, bestNL = null;
+
+  POWERS.forEach(function(p) {
+    B2_NL.forEach(function(b2) {
+      var m = mae(bestLin.b1, b2, bestLin.b3, bestLin.b4, bestLin.b5, p);
+      if (m < bestNLMAE) { bestNLMAE=m; bestNL={b2:b2,power:p}; }
+    });
+  });
+
+  var elapsed = Date.now() - t0;
+  OPT_RESULT = { lin: bestLin, nl: bestNL, linMAE: bestLinMAE, nlMAE: bestNLMAE };
+
+  // ── Render results ────────────────────────────────────────────────────────
+  var currentMAE = mae(REG.b1_bunker,REG.b2_util,REG.b3_dist,REG.b4_warrsk,REG.b5_cong,1);
+
+  function pctFmt(v) { return (v*100).toFixed(1)+'%'; }
+  function coeffRow(name,sym,cur,lin,nl,nlLabel) {
+    var linBetter = (Math.abs(lin-cur)/cur*100).toFixed(0);
+    return '<tr style="border-bottom:1px solid #1a2130">'+
+      '<td style="padding:4px 8px;color:#cdd2da">'+name+'</td>'+
+      '<td style="padding:4px 6px;text-align:center;color:#a78bfa">'+sym+'</td>'+
+      '<td style="padding:4px 8px;text-align:right;color:#748494">'+cur+'</td>'+
+      '<td style="padding:4px 8px;text-align:right;color:#3dd68c;font-weight:700">'+lin+'</td>'+
+      '<td style="padding:4px 8px;text-align:right;color:#f0c84b">'+nlLabel+'</td>'+
+      '</tr>';
+  }
+
+  var html =
+    '<div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:10px">'+
+    _bStat('Current model MAE',  pctFmt(currentMAE), currentMAE<0.10?'#3dd68c':currentMAE<0.18?'#fbbf24':'#e74c3c', 'Hand-calibrated coefficients') +
+    _bStat('Best linear MAE',    pctFmt(bestLinMAE),  bestLinMAE<0.10?'#3dd68c':bestLinMAE<0.15?'#fbbf24':'#e74c3c', totalCombos.toLocaleString()+' combos · '+elapsed+'ms') +
+    _bStat('Best non-linear MAE',pctFmt(bestNLMAE),   bestNLMAE<0.08?'#3dd68c':bestNLMAE<0.12?'#fbbf24':'#e74c3c', 'β₂ power='+bestNL.power+' · β₂='+bestNL.b2) +
+    '</div>'+
+    '<table style="width:100%;border-collapse:collapse;font-family:\'IBM Plex Mono\',monospace;font-size:8.5px">'+
+    '<thead><tr style="border-bottom:1px solid #2a3340">'+
+    '<th style="text-align:left;padding:4px 8px;color:#5a6878;font-weight:400">Variable</th>'+
+    '<th style="text-align:center;padding:4px 6px;color:#5a6878;font-weight:400">Sym</th>'+
+    '<th style="text-align:right;padding:4px 8px;color:#5a6878;font-weight:400">Current</th>'+
+    '<th style="text-align:right;padding:4px 8px;color:#3dd68c;font-weight:400">Best linear</th>'+
+    '<th style="text-align:right;padding:4px 8px;color:#f0c84b;font-weight:400">Best non-linear</th>'+
+    '</tr></thead><tbody>'+
+    coeffRow('Brent crude',         'β₁', REG.b1_bunker, bestLin.b1, bestLin.b1,       bestLin.b1+' (unchanged)') +
+    coeffRow('Capacity utilisation','β₂', REG.b2_util,   bestLin.b2, bestNL.b2,        bestNL.b2+' · power='+bestNL.power) +
+    coeffRow('Route detour',        'β₃', REG.b3_dist,   bestLin.b3, bestLin.b3,       bestLin.b3+' (unchanged)') +
+    coeffRow('War-risk premium',    'β₄', REG.b4_warrsk, bestLin.b4, bestLin.b4,       bestLin.b4+' (unchanged)') +
+    coeffRow('Port congestion',     'β₅', REG.b5_cong,   bestLin.b5, bestLin.b5,       bestLin.b5+' (unchanged)') +
+    '</tbody></table>'+
+    '<div style="margin-top:10px;display:flex;gap:8px;flex-wrap:wrap">'+
+    '<button onclick="applyBestFit(\'linear\')" style="font-family:\'IBM Plex Mono\',monospace;font-size:8px;font-weight:700;padding:5px 12px;border-radius:3px;border:none;cursor:pointer;background:#3dd68c;color:#0d1117;letter-spacing:.05em">&#9654; Apply best linear fit</button>'+
+    '<button onclick="applyBestFit(\'nonlinear\')" style="font-family:\'IBM Plex Mono\',monospace;font-size:8px;font-weight:700;padding:5px 12px;border-radius:3px;border:none;cursor:pointer;background:#f0c84b;color:#0d1117;letter-spacing:.05em">&#9654; Apply non-linear β₂</button>'+
+    '<button onclick="applyBestFit(\'reset\')" style="font-family:\'IBM Plex Mono\',monospace;font-size:8px;font-weight:700;padding:5px 12px;border-radius:3px;border:none;cursor:pointer;background:#2a3340;color:#9aa8b8;letter-spacing:.05em">&#8635; Reset original</button>'+
+    '</div>'+
+    '<div style="margin-top:7px;font-size:7.5px;color:#5a6878">'+
+    'Non-linear form: Rate = Base &times; [1 + &beta;&#8321;&Delta;B + <strong style="color:#f0c84b">&beta;&#8322;&middot;(U&minus;72)^p</strong> + &beta;&#8323;D + &beta;&#8324;&Delta;W + &beta;&#8325;C] &nbsp;&bull;&nbsp; '+
+    'Power p&gt;1 amplifies rate response at high utilisation, matching convex market behaviour documented in Kalouptsidi (2014)'+
+    '</div>';
+
+  if (el) el.innerHTML = html;
+}
+
+var REG_ORIGINAL = null;
+var REG_POWER    = 1; // current power exponent for β₂ (1 = linear)
+
+function applyBestFit(mode) {
+  if (!OPT_RESULT) return;
+  if (!REG_ORIGINAL) REG_ORIGINAL = JSON.parse(JSON.stringify(REG)); // snapshot
+
+  if (mode === 'reset') {
+    Object.assign(REG, REG_ORIGINAL);
+    REG_POWER = 1;
+  } else if (mode === 'linear') {
+    REG.b1_bunker = OPT_RESULT.lin.b1;
+    REG.b2_util   = OPT_RESULT.lin.b2;
+    REG.b3_dist   = OPT_RESULT.lin.b3;
+    REG.b4_warrsk = OPT_RESULT.lin.b4;
+    REG.b5_cong   = OPT_RESULT.lin.b5;
+    REG_POWER = 1;
+  } else if (mode === 'nonlinear') {
+    REG.b1_bunker = OPT_RESULT.lin.b1;
+    REG.b2_util   = OPT_RESULT.nl.b2;
+    REG.b3_dist   = OPT_RESULT.lin.b3;
+    REG.b4_warrsk = OPT_RESULT.lin.b4;
+    REG.b5_cong   = OPT_RESULT.lin.b5;
+    REG_POWER = OPT_RESULT.nl.power;
+  }
+
+  // Patch regMult to use current power
+  // (re-run backtest so user sees updated errors immediately)
+  runBacktest();
+  var lbl = mode==='reset'?'Reset to original':mode==='linear'?'Best linear applied':'Non-linear β₂ applied';
+  var st = document.getElementById('sim-status');
+  if (st) st.textContent = lbl + ' — backtest updated.';
 }
 // ─────────────────────────────────────────────────────────────────────────────
 

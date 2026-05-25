@@ -3362,6 +3362,139 @@ function updateGCSSMap(r) {
   });
 }
 
+// ── DESTINATION-SPECIFIC STRATEGIC IMPLICATIONS ───────────────────────────────
+// Port and trucking cards are replaced at render time with destination-aware
+// content. The 'Jeddah Port', 'GCC Trucking', and 'Khor Fakkan/Sohar' cards
+// in SCENARIOS are placeholder titles — they are swapped out by getDestImpl().
+// Generic cards (Brent Crude, Carrier Posture, War-Risk Insurance, Stranded
+// Vessels) are kept as-is from the scenario definition.
+// Indexed as: DEST_IMPL[destCode].port[scenarioId] / .truck[scenarioId]
+var DEST_IMPL = {
+  DXB:{portName:'Jebel Ali (DP World)',
+    port:[null,
+      {metric:'14-day dwell',color:'#e74c3c',text:'Absorbing all displaced Asia-Gulf cargo. Berth utilisation 120%. DP World emergency berth allocation in effect.'},
+      {metric:'8-day dwell', color:'#fbbf24',text:'Easing as COSCO/CCCS resume direct Jebel Ali calls. Western carriers still routing via Sohar feeder.'},
+      {metric:'5-day dwell', color:'#fbbf24',text:'Recovering. All-flag Hormuz corridor restoring direct Jebel Ali calls. DP World T3 at ~80% capacity.'},
+      {metric:'3-day dwell', color:'#3dd68c',text:'Gradual recovery underway. ~70% of carriers resuming direct Jebel Ali calls. DP World capacity investments coming online.'},
+      {metric:'6-day dwell', color:'#e74c3c',text:'Gulf inbound surge — all Cape-routed Asia-GCC cargo now entering via Gulf ports. Berths at capacity.'},
+      {metric:'18-day dwell',color:'#e74c3c',text:'Critical overload. Only viable sea entry via Cape of Good Hope. Emergency anchorage declared at Dubai outer roads.'}],
+    truckName:'UAE direct (no haul)',
+    truck:[null,
+      {metric:'Port delivery',color:'#3dd68c',text:'Jebel Ali direct port delivery — no inland trucking required. UAE road network fully operational. Same-day gate release.'},
+      {metric:'Port delivery',color:'#3dd68c',text:'Jebel Ali direct. No inland haul. UAE road network at normal operations.'},
+      {metric:'Port delivery',color:'#3dd68c',text:'Jebel Ali direct port delivery. UAE last-mile normal. No border crossings.'},
+      {metric:'Port delivery',color:'#3dd68c',text:'Direct Jebel Ali delivery. No inland trucking required. UAE road network fully operational.'},
+      {metric:'Port delivery',color:'#3dd68c',text:'Jebel Ali direct. Gulf accessible. UAE road network normal — no inland haul.'},
+      {metric:'Port delivery',color:'#3dd68c',text:'Jebel Ali direct port delivery — road network normal, but port severely congested.'}]},
+  RUH:{portName:'Riyadh (via Dammam / ZATCA)',
+    port:[null,
+      {metric:'20-day clearance',color:'#e74c3c',text:'Jeddah absorbing all displaced cargo. Saudi Landbridge from Jeddah to Riyadh operating at full limit. ZATCA backlog critical.'},
+      {metric:'14-day clearance',color:'#fbbf24',text:'Split routing — COSCO via Dammam direct, Western carriers overland from Jeddah. Saudi customs easing.'},
+      {metric:'8-day clearance', color:'#fbbf24',text:'Dammam direct calls recovering. ZATCA digital clearance reducing processing time to 24–48hr.'},
+      {metric:'4-day clearance', color:'#3dd68c',text:'Dammam primary gateway recovering. ZATCA processing normalising to 12–24hr. Saudi Landbridge from Gulf entry resuming.'},
+      {metric:'12-day clearance',color:'#e74c3c',text:'Jeddah isolated — no Red Sea access. All Saudi cargo via Dammam overland. King Fahd Highway at surge capacity.'},
+      {metric:'No sea access',   color:'#e74c3c',text:'Both Jeddah and Dammam via Cape — 40+ day transit. Air freight the only viable fast option for Riyadh.'}],
+    truckName:'Saudi overland · Al Bat\'ha',
+    truck:[null,
+      {metric:'Al Bat\'ha surge',  color:'#e74c3c',text:'Al Bat\'ha crossing 1,649 trucks/day. Ghuwaifat border alternative active. 18–24hr Saudi customs clearance.'},
+      {metric:'Al Bat\'ha +25%',   color:'#fbbf24',text:'~1,100 trucks/day. 12–15hr ZATCA processing. Ghuwaifat overflow active.'},
+      {metric:'Normalising',       color:'#fbbf24',text:'Al Bat\'ha ~950 trucks/day. ZATCA digital improving clearance to 8–10hr.'},
+      {metric:'~750 trucks/day',   color:'#fbbf24',text:'Al Bat\'ha recovering to ~750 trucks/day (vs 1,649 peak / 900 pre-crisis). 8–12hr ZATCA processing.'},
+      {metric:'King Fahd surge',   color:'#e74c3c',text:'All Saudi cargo via Gulf overland only. Al Bat\'ha and Ghuwaifat at maximum capacity. Jeddah Landbridge inactive.'},
+      {metric:'Overland critical', color:'#e74c3c',text:'Hwy 95 gridlock. All land corridors at maximum. Emergency priority lanes for essential goods only.'}]},
+  DMM:{portName:'Dammam · King Abdulaziz Port',
+    port:[null,
+      {metric:'18-day dwell',color:'#e74c3c',text:'KAPP absorbing crisis volume from all Gulf origins. Saudi customs backlog severe. Terminal 3 emergency allocation.'},
+      {metric:'10-day dwell',color:'#fbbf24',text:'Easing as COSCO/CCCS resume direct calls. ZATCA digital clearance reducing.'},
+      {metric:'6-day dwell', color:'#fbbf24',text:'Recovering. Saudi ZATCA digital processing cutting clearance times. KAPP T3 at 85%.'},
+      {metric:'4-day dwell', color:'#3dd68c',text:'KAPP recovering to normal operations. ZATCA clearance back to 24–48hr. Terminal 3 at 80% utilisation.'},
+      {metric:'8-day dwell', color:'#e74c3c',text:'Gulf inbound surge as Red Sea closed. All Asia-Saudi cargo now via Gulf only. Terminal at capacity.'},
+      {metric:'18-day dwell',color:'#e74c3c',text:'Critical overload. Only access via Cape of Good Hope. Emergency anchorage at outer roads.'}],
+    truckName:'Dammam direct zone',
+    truck:[null,
+      {metric:'Short haul surge',color:'#fbbf24',text:'Dammam delivery zone 600km from Riyadh. Saudi customs backlog adding 2–3 days. Short-haul trucks diverted.'},
+      {metric:'Short haul',      color:'#fbbf24',text:'Direct port area delivery. Limited inland haul. Saudi customs easing to 48hr.'},
+      {metric:'Easing',          color:'#3dd68c',text:'Dammam port zone. ZATCA processing near normal at 24hr.'},
+      {metric:'Normal',          color:'#3dd68c',text:'Direct Dammam port delivery. Short overland only. ZATCA digital clearance at 12–24hr.'},
+      {metric:'Gulf surge',      color:'#e74c3c',text:'Dammam receiving all Gulf-routed cargo. Port area congested but short-haul delivery still functional.'},
+      {metric:'Surge',           color:'#e74c3c',text:'KAPP area congested. Emergency trucking allocation. Short-haul deliveries delayed 24–48hr.'}]},
+  DOH:{portName:'Hamad Port (Qatar)',
+    port:[null,
+      {metric:'22-day dwell',color:'#e74c3c',text:'Hamad Port overwhelmed. Qatar relying on Sohar feeder and overland from Dammam via Abu Samra.'},
+      {metric:'14-day dwell',color:'#fbbf24',text:'Limited direct calls resuming via IRGC escort. Sohar feeder remains primary entry for Qatar.'},
+      {metric:'8-day dwell', color:'#fbbf24',text:'Recovering. Mærsk/MSC announcing Hamad Port Gulf resumption within 4–6 weeks.'},
+      {metric:'5-day dwell', color:'#3dd68c',text:'Hamad Port recovering. Direct Gulf calls at ~65% of pre-crisis frequency. Jebel Ali feeder as supplement.'},
+      {metric:'10-day dwell',color:'#e74c3c',text:'Gulf accessible but all global cargo via Cape — 40-day transit. Hamad at surge capacity.'},
+      {metric:'20-day dwell',color:'#e74c3c',text:'Hamad Port last viable sea entry. Overland from Dammam via Abu Samra as emergency backup only.'}],
+    truckName:'Qatar · Abu Samra border',
+    truck:[null,
+      {metric:'Overland surge',  color:'#e74c3c',text:'Qatar-Saudi overland via Abu Samra border. 24hr+ wait. Qatar customs on emergency protocol. TIR-only priority.'},
+      {metric:'Overland elevated',color:'#fbbf24',text:'Sohar-to-Qatar primary. Abu Samra border easing to 12hr. Saudi-Qatar corridor at elevated capacity.'},
+      {metric:'Recovering',      color:'#fbbf24',text:'Abu Samra border reducing to 6hr. Doha direct calls resuming, overland declining.'},
+      {metric:'Recovering',      color:'#3dd68c',text:'Qatar-Saudi overland at Abu Samra recovering. 4–6hr clearance. Hamad Port direct supplement.'},
+      {metric:'Gulf overland',   color:'#e74c3c',text:'All Qatar cargo via Gulf ports + Saudi-Qatar overland. Abu Samra border at elevated capacity, 8–10hr.'},
+      {metric:'Overland only',   color:'#e74c3c',text:'Abu Samra overland sole option. Qatar-Saudi border at maximum. Emergency convoy protocols activated.'}]},
+  BAH:{portName:'Khalifa bin Salman Port · Bahrain',
+    port:[null,
+      {metric:'20-day dwell',color:'#e74c3c',text:'Bahrain relying on Dammam overland and King Fahd Causeway. Causeway at 3× normal volume. KBSP overwhelmed.'},
+      {metric:'12-day dwell',color:'#fbbf24',text:'Some direct calls resuming via IRGC escort. King Fahd Causeway handling overflow at 2× capacity.'},
+      {metric:'7-day dwell', color:'#fbbf24',text:'KBSP recovering. Direct Gulf calls resuming. Causeway traffic normalising to 1.5×.'},
+      {metric:'4-day dwell', color:'#3dd68c',text:'KBSP returning to normal. ~65% of carriers resuming direct Bahrain calls. King Fahd Causeway at normal capacity.'},
+      {metric:'9-day dwell', color:'#e74c3c',text:'Gulf surge. Bahrain accessible via Gulf but all global routes now via Cape. KBSP at surge capacity.'},
+      {metric:'18-day dwell',color:'#e74c3c',text:'Extreme. Only access via Cape. King Fahd Causeway sole land backup from Dammam.'}],
+    truckName:'King Fahd Causeway',
+    truck:[null,
+      {metric:'Causeway surge',  color:'#e74c3c',text:'King Fahd Causeway at 3× normal. 6–8hr crossing time. Bahrain customs emergency protocol. Commercial priority lanes only.'},
+      {metric:'Causeway 2×',     color:'#fbbf24',text:'Causeway still 2× normal. 3–4hr crossing. Bahrain customs processing easing.'},
+      {metric:'Causeway easing', color:'#fbbf24',text:'Causeway at 1.5× normal. 1–2hr crossing. Bahrain customs recovering to 4–6hr.'},
+      {metric:'Causeway normal', color:'#3dd68c',text:'King Fahd Causeway returning to normal. 45min–1hr crossing. Bahrain customs 4–6hr clearance.'},
+      {metric:'Causeway surge',  color:'#e74c3c',text:'All Bahrain cargo via Dammam overland + Causeway. 4–5hr crossing. Emergency toll protocol.'},
+      {metric:'Causeway critical',color:'#e74c3c',text:'King Fahd Causeway sole viable land route. 8–10hr crossing. Emergency commercial convoy only.'}]},
+  KWI:{portName:'Shuaiba / Shuwaikh Port',
+    port:[null,
+      {metric:'24-day dwell',color:'#e74c3c',text:'Kuwait severely impacted. Shuaiba at capacity. Overland from Basra sole alternative. Emergency food/pharma priority.'},
+      {metric:'16-day dwell',color:'#fbbf24',text:'Limited COSCO/CCCS direct calls resuming. Western carriers still avoid. Kuwait customs backlog.'},
+      {metric:'9-day dwell', color:'#fbbf24',text:'Recovering. Direct Gulf calls resuming, full schedule 6–8 weeks.'},
+      {metric:'6-day dwell', color:'#3dd68c',text:'Shuaiba recovering. ~60% of carriers resuming direct Kuwait calls. Shuwaikh commercial port normalising.'},
+      {metric:'12-day dwell',color:'#e74c3c',text:'Gulf accessible but all global cargo now via Cape — 40+ day transit. Shuaiba at surge capacity.'},
+      {metric:'22-day dwell',color:'#e74c3c',text:'Only access via Cape. Overland from Basra and Jordan as emergency supplement. Force majeure declared.'}],
+    truckName:'Kuwait overland · 1,600km',
+    truck:[null,
+      {metric:'Critical',         color:'#e74c3c',text:'Kuwait 1,600km overland from Gulf entry. Hwy 95 at maximum. 48–72hr delivery time. Emergency convoys only.'},
+      {metric:'Long haul elevated',color:'#fbbf24',text:'Kuwait overland 1,600km. 24–36hr delivery recovering. Kuwait border easing to 8hr.'},
+      {metric:'Normalising',      color:'#fbbf24',text:'Kuwait overland 1,600km, 18–24hr recovering. Shuaiba direct calls reducing overland demand.'},
+      {metric:'Recovering',       color:'#3dd68c',text:'Kuwait overland 1,600km, 16–20hr. Kuwait border recovering. Direct Shuaiba calls ~60% restored.'},
+      {metric:'Surge',            color:'#e74c3c',text:'All Kuwait cargo via Gulf overland only. 1,600km at maximum. Kuwait border elevated to 10hr.'},
+      {metric:'Overland critical',color:'#e74c3c',text:'Kuwait solely via 1,600km overland. Emergency convoy protocol. Priority: food, pharma, fuel.'}]},
+  MCT:{portName:'Sohar / Muscat Port (Oman)',
+    port:[null,
+      {metric:'+3,500% volume',color:'#3dd68c',text:'Sohar emerging as primary Asia-GCC gateway. All displaced Hormuz cargo routing via Oman. Rapid capacity expansion underway.'},
+      {metric:'Peak demand',   color:'#3dd68c',text:'Sohar maintaining premium volumes. Flag-neutral entry preferred by EU/US carriers avoiding Hormuz escort.'},
+      {metric:'Transitional',  color:'#fbbf24',text:'Sohar processing crisis-era backlog. 6–12 weeks to fully normalise. Still above pre-crisis baseline.'},
+      {metric:'Sustained vol.', color:'#3dd68c',text:'~30% of carriers maintaining Sohar routing 6–18 months post-resolution. Strategic window for Oman logistics.'},
+      {metric:'Critical hub',  color:'#3dd68c',text:'Sohar gains all Cape-routed cargo avoiding Red Sea. Oman benefits strongly from Bab al-Mandab closure scenario.'},
+      {metric:'Overwhelmed',   color:'#e74c3c',text:'Sohar capacity overwhelmed within weeks as last viable GCC sea entry via Cape. Emergency anchorage declared.'}],
+    truckName:'Oman direct (no border)',
+    truck:[null,
+      {metric:'Direct entry',color:'#3dd68c',text:'Sohar/Muscat direct port delivery. No border crossings, no inland haulage. Oman road network fully operational.'},
+      {metric:'Direct entry',color:'#3dd68c',text:'Sohar direct delivery. No border fees. Oman road network at normal operations.'},
+      {metric:'Direct entry',color:'#3dd68c',text:'Muscat/Sohar direct. Oman Customs normal. Minimal inland haul, no crossing fees.'},
+      {metric:'Direct entry',color:'#3dd68c',text:'Sohar/Muscat direct port delivery. No border crossings. Oman Customs 12–24hr.'},
+      {metric:'Direct entry',color:'#3dd68c',text:'Muscat direct. Cape-routed cargo landing at Sohar. Oman benefits. No inland trucking.'},
+      {metric:'Sohar surge',  color:'#fbbf24',text:'Sohar overwhelmed as last viable GCC entry via Cape. Direct delivery still possible but port congested.'}]}
+};
+
+function getDestImpl(scenarioId, dest, bestKey) {
+  var di   = DEST_IMPL[dest] || DEST_IMPL['DXB'];
+  var port  = di.port[scenarioId]  || di.port[1];
+  var truck = di.truck[scenarioId] || di.truck[1];
+  return {
+    port:  { title: di.portName,       color: port.color,  metric: port.metric,  text: port.text  },
+    truck: { title: 'GCC Trucking — ' + (DEST_NAMES[dest]||dest), color: truck.color, metric: truck.metric, text: truck.text }
+  };
+}
+// ─────────────────────────────────────────────────────────────────────────────
+
 // ── SEASONAL RATE ADJUSTMENTS ─────────────────────────────────────────────────
 // Applied as a multiplier on top of the regression model.
 // Sources: Drewry WCI seasonality index · Freightos FBX historical variance ·
@@ -3737,10 +3870,23 @@ function runSimulator() {
     }).join('');
   }
 
-  // Implications
+  // Implications — merge destination-specific port+trucking with generic scenario cards
   var ig = document.getElementById('impl-grid');
   if (ig) {
-    ig.innerHTML = sc.implications.map(function(imp){
+    var di = getDestImpl(activeScenario, dest, bestKey);
+    // Titles that are replaced by destination-specific versions
+    var REPLACED = ['Jeddah Port','GCC Trucking','Khor Fakkan/Sohar'];
+    // 'Khor Fakkan/Sohar' is only relevant when destination IS Muscat or Sohar is the best route
+    var showSohar = (dest === 'MCT' || bestKey === 'oman');
+    var generic = sc.implications.filter(function(imp) {
+      if (REPLACED.indexOf(imp.title) !== -1) return false; // always strip port/truck/sohar placeholders
+      return true;
+    });
+    // Optionally re-add Sohar card for MCT / Sohar-routed destinations
+    var soharCard = sc.implications.find(function(imp){ return imp.title === 'Khor Fakkan/Sohar'; });
+    var cards = [di.port, di.truck].concat(generic);
+    if (showSohar && soharCard) cards.push(soharCard);
+    ig.innerHTML = cards.map(function(imp){
       return '<div class="impl-card" style="border-color:'+imp.color+'">'+
         '<div class="impl-metric" style="color:'+imp.color+'">'+imp.metric+'</div>'+
         '<div class="impl-title">'+imp.title+'</div>'+

@@ -3619,21 +3619,26 @@ function runSimulator() {
       '<div style="display:flex;align-items:center;gap:8px">'+
         '<div style="font-size:22px;font-weight:700;font-family:\'IBM Plex Mono\',monospace;color:#a78bfa">$'+fmtN(totalMo)+'</div>'+
         '<div style="font-size:9px;font-family:\'IBM Plex Mono\',monospace;padding:3px 8px;border-radius:3px;background:'+(dMo>0?'rgba(231,76,60,.12)':'rgba(61,214,140,.12)')+';color:'+(dMo>0?'#e74c3c':'#3dd68c')+'">'+
-          (dMo>0?'+':'')+' $'+fmtN(Math.abs(dMo))+'/month vs pre-crisis'+
+          (dMo>0 ? '+$'+fmtN(dMo)+'/month vs pre-crisis' : dMo<0 ? '−$'+fmtN(Math.abs(dMo))+'/month saved vs pre-crisis' : 'at pre-crisis baseline')+
         '</div>'+
       '</div></div>';
   }
 
   // Annual grid
-  var annTotal   = totalMo * 12;
-  var annPremium = Math.max(0, dMo * 12);
+  var annTotal  = totalMo * 12;
+  var annDelta  = dMo * 12;  // negative = savings vs pre-crisis, positive = crisis premium
   var fPct = totalFEU>0 ? Math.round((bestRate/totalFEU)*100) : 0;
   var tPct = totalFEU>0 ? Math.round((truck/totalFEU)*100) : 0;
   var ag = document.getElementById('annual-grid');
   if (ag) {
+    var annMetric = annDelta > 0
+      ? { v:'$'+fmtN(annDelta),            l:'Annual crisis premium', s:'vs pre-crisis baseline',     c:'#e74c3c' }
+      : annDelta < 0
+      ? { v:'$'+fmtN(Math.abs(annDelta)),  l:'Annual savings',        s:'below pre-crisis baseline',  c:'#3dd68c' }
+      : { v:'$0',                           l:'No crisis premium',     s:'at pre-crisis baseline',     c:'#7a8494' };
     ag.innerHTML = [
-      {v:'$'+fmtN(annTotal),   l:'Annual landed cost',  s:teu+' TEU x 12 months', c:'#a78bfa'},
-      {v:'$'+fmtN(annPremium), l:'Annual crisis premium',s:'vs pre-crisis baseline', c:annPremium>0?'#e74c3c':'#3dd68c'},
+      {v:'$'+fmtN(annTotal), l:'Annual landed cost', s:teu+' TEU x 12 months', c:'#a78bfa'},
+      annMetric,
       {v:fPct+'%',             l:'Sea freight share',   s:'Truck: '+tPct+'% | Port: '+(100-fPct-tPct)+'%', c:'#f0c84b'},
       {v:sc.transits+'/day',   l:'Strait transits',     s:'Pre-crisis baseline: 95/day', c:sc.color}
     ].map(function(m){

@@ -403,10 +403,10 @@ a { color: inherit; text-decoration: none; }
 .src-badge {
   font-family: var(--f-mono);
   font-size: 6.5px;
-  background: rgba(184,149,42,.07);
-  color: var(--c-gold-dim);
-  border: 1px solid rgba(184,149,42,.15);
-  padding: 1px 5px;
+  background: rgba(184,149,42,.10);
+  color: var(--c-gold);
+  border: 1px solid rgba(184,149,42,.25);
+  padding: 2px 7px;
   border-radius: 2px;
   letter-spacing: .08em;
   text-transform: uppercase;
@@ -668,17 +668,13 @@ a { color: inherit; text-decoration: none; }
 }
 .scard:hover { border-color: var(--c-bd2); background: var(--c-s2); }
 .scard.active {
-  border-color: var(--c-gold-dim);
-  background: rgba(184,149,42,.04);
-  box-shadow: inset 0 0 0 1px rgba(184,149,42,.1);
+  border-color: var(--sc-color, var(--c-gold));
+  background: var(--c-s2);
+  box-shadow: inset 4px 0 0 var(--sc-color, var(--c-gold)),
+              0 0 28px -8px var(--sc-color, var(--c-gold));
 }
-.scard.active::before {
-  content: '';
-  position: absolute;
-  top: 0; left: 0; right: 0;
-  height: 2px;
-  background: var(--c-gold);
-}
+.scard.active::before { display: none; }
+.scard.active .scard-name { color: var(--sc-color, var(--c-tx0)); }
 .scard-icon { font-size: 18px; margin-bottom: 8px; }
 .scard-name { font-size: 11px; font-weight: 600; color: var(--c-tx0); margin-bottom: 4px; letter-spacing: .01em; }
 .scard-state { font-family: var(--f-mono); font-size: 8px; color: var(--c-tx2); margin-bottom: 8px; }
@@ -738,25 +734,30 @@ a { color: inherit; text-decoration: none; }
 .sim-field input[type=number] { -moz-appearance: textfield; }
 
 .sim-run-btn {
-  background: rgba(184,149,42,.12);
-  border: 1px solid var(--c-gold-dim);
-  color: var(--c-gold-hi);
+  background: var(--c-gold);
+  border: 1px solid var(--c-gold);
+  color: #060a0e;
   font-family: var(--f-mono);
   font-size: 10px;
-  font-weight: 600;
-  letter-spacing: .12em;
+  font-weight: 700;
+  letter-spacing: .14em;
   text-transform: uppercase;
-  padding: 9px 24px;
+  padding: 12px 24px;
   border-radius: var(--r);
   cursor: pointer;
   transition: var(--t);
   margin-top: 10px;
+  width: 100%;
+  display: block;
+  box-shadow: 0 0 20px -4px rgba(184,149,42,.35);
 }
 .sim-run-btn:hover {
-  background: rgba(184,149,42,.2);
-  border-color: var(--c-gold);
-  box-shadow: 0 0 12px rgba(184,149,42,.15);
+  background: var(--c-gold-hi);
+  border-color: var(--c-gold-hi);
+  box-shadow: 0 0 30px -2px rgba(184,149,42,.6);
+  transform: translateY(-1px);
 }
+.sim-run-btn:active { transform: none; box-shadow: none; }
 
 /* Simulator results */
 .sim-results { display: none; }
@@ -825,6 +826,8 @@ a { color: inherit; text-decoration: none; }
   align-items: center;
   gap: 20px;
   flex-wrap: wrap;
+  border-left: 4px solid var(--sb-color, var(--c-bd1));
+  transition: border-color .3s ease;
 }
 .scenario-bar-name { font-size: 13px; font-weight: 600; letter-spacing: .01em; }
 .scenario-bar-state { font-family: var(--f-mono); font-size: 9px; color: var(--c-tx2); }
@@ -836,8 +839,10 @@ a { color: inherit; text-decoration: none; }
 /* Annual summary */
 .sim-annual { background: var(--c-s1); border: 1px solid var(--c-bd1); border-radius: var(--r); padding: 16px; margin-bottom: var(--gap); }
 .annual-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; margin-top: 10px; }
-.annual-met { background: var(--c-s0); border: 1px solid var(--c-bd0); border-radius: var(--r); padding: 10px 12px; }
-.annual-val { font-family: var(--f-mono); font-size: 20px; font-weight: 300; line-height: 1; }
+.annual-met { background: var(--c-s0); border: 1px solid var(--c-bd0); border-radius: var(--r); padding: 10px 12px; transition: var(--t); }
+.annual-met-hl { border-color: var(--ahl-c, var(--c-bd1)) !important; background: var(--ahl-bg, var(--c-s0)) !important; }
+.annual-met-hl .annual-val { font-size: 26px; font-weight: 500; }
+.annual-val { font-family: var(--f-mono); font-size: 20px; font-weight: 400; line-height: 1; }
 .annual-lbl { font-family: var(--f-mono); font-size: 7.5px; color: var(--c-tx2); text-transform: uppercase; letter-spacing: .08em; margin-top: 3px; }
 .annual-delta { font-family: var(--f-mono); font-size: 8px; color: var(--c-tx2); margin-top: 4px; }
 
@@ -1519,6 +1524,13 @@ canvas { font-family: var(--f-mono); }
   border: 2px solid var(--cp-c, #fbbf24);
   animation: gcss-pulse 2s infinite;
 }
+
+/* ── Dashboard reveal animation (triggered when cover is dismissed) ── */
+@keyframes dash-rise {
+  from { opacity: 0; transform: translateY(8px); }
+  to   { opacity: 1; transform: none; }
+}
+.dash-reveal { animation: dash-rise .45s cubic-bezier(.16,1,.3,1) both; }
 
 /* ═══════════════════════════════════════════════════════════════════════════
    COVER / LANDING PAGE
@@ -3906,6 +3918,9 @@ function selectScenario(id) {
   document.querySelectorAll('.scard').forEach(function(c){ c.classList.remove('active'); });
   var card = document.getElementById('sc-' + id);
   if (card) card.classList.add('active');
+  // Thread scenario severity colour into the results banner
+  var banner = document.getElementById('sc-banner');
+  if (banner && SCENARIOS[id]) banner.style.setProperty('--sb-color', SCENARIOS[id].color);
   document.getElementById('sim-results').classList.remove('visible');
   var st = document.getElementById('sim-status');
   if (st) st.textContent = 'Scenario ' + id + ' selected. Click Run Simulation.';
@@ -4155,15 +4170,19 @@ function runSimulator() {
       '<th style="text-align:right;padding:5px 8px;color:#5a6878;font-weight:400">$/FEU add-on</th>'+
       '</tr></thead><tbody>'+
       _vars.map(function(v){
-        var pct = Math.round(v.v * 100);
-        var dol = Math.round(_baseR * v.v);
+        var pct    = Math.round(v.v * 100);
+        var dol    = Math.round(_baseR * v.v);
+        var barPct = Math.min(100, Math.round(Math.abs(pct) / 80 * 100)); // normalise to 80% max
+        var barCol = pct > 30 ? '#e8673c' : pct > 10 ? '#fbbf24' : pct > 0 ? '#f0c84b' : '#3dd68c';
+        var miniBar = '<span style="display:inline-block;vertical-align:middle;width:36px;height:3px;background:#1a2130;border-radius:1px;margin-left:5px;overflow:hidden">'+
+          '<span style="display:block;height:100%;width:'+barPct+'%;background:'+barCol+';border-radius:1px"></span></span>';
         return '<tr style="border-bottom:1px solid #1a2130">'+
           '<td style="padding:5px 8px;color:#cdd2da">'+v.name+'</td>'+
           '<td style="padding:5px 6px;text-align:center;color:#a78bfa;font-weight:700">'+v.sym+'</td>'+
           '<td style="padding:5px 8px;text-align:right;color:'+v.c+';font-weight:700">'+v.val+'</td>'+
           '<td style="padding:5px 8px;text-align:center;color:#748494">'+v.coeff+'</td>'+
           '<td style="padding:5px 8px;text-align:right;color:'+(pct>0?'#e8673c':'#3dd68c')+'">'+
-            (pct>0?'+':'')+pct+'%</td>'+
+            (pct>0?'+':'')+pct+'%'+miniBar+'</td>'+
           '<td style="padding:5px 8px;text-align:right;color:#f0c84b;font-weight:700">'+
             (dol>0?'+$'+fmtN(dol):'&mdash;')+'</td>'+
           '</tr>';
@@ -4289,13 +4308,22 @@ function runSimulator() {
       : annDelta < 0
       ? { v:'$'+fmtN(Math.abs(annDelta)),  l:'Annual savings',        s:'below pre-crisis baseline',  c:'#3dd68c' }
       : { v:'$0',                           l:'No crisis premium',     s:'at pre-crisis baseline',     c:'#7a8494' };
+    annMetric.h = true; // flag crisis premium card for visual highlight
     ag.innerHTML = [
-      {v:'$'+fmtN(annTotal), l:'Annual landed cost', s:teu+' TEU x 12 months', c:'#a78bfa'},
+      {v:'$'+fmtN(annTotal), l:'Annual landed cost', s:teu+' TEU × 12 months', c:'#a78bfa'},
       annMetric,
       {v:fPct+'%',             l:'Sea freight share',   s:'Truck: '+tPct+'% | Port: '+(100-fPct-tPct)+'%', c:'#f0c84b'},
       {v:sc.transits+'/day',   l:'Strait transits',     s:'Pre-crisis baseline: 95/day', c:sc.color}
     ].map(function(m){
-      return '<div class="annual-met"><div class="annual-val" style="color:'+m.c+'">'+m.v+'</div><div class="annual-lbl">'+m.l+'</div><div class="annual-delta">'+m.s+'</div></div>';
+      // Build inline style for highlighted card using hex alpha
+      var hlStyle = m.h
+        ? 'style="--ahl-c:'+m.c+'55;--ahl-bg:'+m.c+'12;border-color:'+m.c+'55 !important;background:'+m.c+'12 !important;"'
+        : '';
+      return '<div class="annual-met'+(m.h?' annual-met-hl':'')+'" '+hlStyle+'>'+
+        '<div class="annual-val" style="color:'+m.c+'">'+m.v+'</div>'+
+        '<div class="annual-lbl">'+m.l+'</div>'+
+        '<div class="annual-delta">'+m.s+'</div>'+
+        '</div>';
     }).join('');
   }
 
@@ -6050,7 +6078,16 @@ document.addEventListener('keydown', function(e) {
   function dismissCover() {
     sessionStorage.setItem('cv_seen', '1');
     cover.classList.add('cv-out');
-    setTimeout(function() { cover.style.display = 'none'; }, 540);
+    setTimeout(function() {
+      cover.style.display = 'none';
+      // Gently reveal the dashboard header and nav as the cover fades
+      ['header','tabs'].forEach(function(id, i) {
+        var el = document.getElementById(id);
+        if (!el) return;
+        el.style.animationDelay = (i * 0.08) + 's';
+        el.classList.add('dash-reveal');
+      });
+    }, 300);
   }
 
   document.getElementById('cv-enter').addEventListener('click', dismissCover);

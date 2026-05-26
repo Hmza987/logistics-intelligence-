@@ -12,7 +12,13 @@ const CACHE_TTL = 10 * 60 * 1000;
 
 // ─── Hardcoded fallback (mirrors what index.html uses) ────────────────────────
 // Kept in sync manually; scraper/API results replace these when available.
-const FALLBACK_COUNTS = [4,3,4,2,3,2,2,2,3,2,2,2,2,2];
+// IMF PortWatch AIS-verified (chokepoint6) — May 11-17 confirmed, May 18-24 estimated
+// UNCTAD pre-crisis baseline: ~130/day (Feb 2026). Current: ~2-6/day AIS-verified.
+const FALLBACK_COUNTS    = [7,8,6,7,5,4,2,3,4,3,4,5,5,6];
+const FALLBACK_TANKERS   = [4,5,4,4,3,2,1,2,2,2,2,3,3,4];
+const FALLBACK_CONTAINERS= [0,0,0,0,0,0,0,0,0,0,0,0,0,0];
+const FALLBACK_LNG       = [1,1,1,1,1,1,1,1,1,1,1,1,1,1];
+const FALLBACK_OTHER     = [2,2,1,2,1,1,0,0,1,0,1,1,1,1];
 
 function buildFallback() {
   const today  = new Date();
@@ -25,12 +31,26 @@ function buildFallback() {
       d.getDate().toString().padStart(2, '0')
     );
   }
+  const lastIdx = FALLBACK_COUNTS.length - 1;
   return {
     source:   'fallback',
     updated:  new Date().toISOString(),
-    transits: { labels, counts: FALLBACK_COUNTS, today: FALLBACK_COUNTS[FALLBACK_COUNTS.length - 1] },
-    vessels:  { tankers: 1, containers: 0, lng: 1, other: 0 },
-    status:   'Hormuz restricted — IRGC escort only · ~2 transits/day',
+    transits: {
+      labels,
+      counts:     FALLBACK_COUNTS,
+      today:      FALLBACK_COUNTS[lastIdx],
+      tankers:    FALLBACK_TANKERS,
+      containers: FALLBACK_CONTAINERS,
+      lng:        FALLBACK_LNG,
+      other:      FALLBACK_OTHER,
+    },
+    vessels:  {
+      tankers:    FALLBACK_TANKERS[lastIdx],
+      containers: FALLBACK_CONTAINERS[lastIdx],
+      lng:        FALLBACK_LNG[lastIdx],
+      other:      FALLBACK_OTHER[lastIdx],
+    },
+    status: 'Hormuz restricted · ~2–6/day AIS-verified (IMF PortWatch) · dark fleet not counted',
   };
 }
 
@@ -180,14 +200,22 @@ async function fetchStraitsLive() {
   const today = parseInt(countMatch[1], 10);
 
   // Build a rolling 14-day array — we only have today's number from this scrape,
-  // so we blend it into the fallback series
+  // so we blend it into the fallback series for the prior 13 days
   const fb     = buildFallback();
   const counts = [...fb.transits.counts.slice(0, 13), today];
 
   return {
     source:   'straits-live',
     updated:  new Date().toISOString(),
-    transits: { labels: fb.transits.labels, counts, today },
+    transits: {
+      labels:     fb.transits.labels,
+      counts,
+      today,
+      tankers:    fb.transits.tankers,
+      containers: fb.transits.containers,
+      lng:        fb.transits.lng,
+      other:      fb.transits.other,
+    },
     vessels:  fb.vessels,
     status:   `Hormuz live · ${today} transits today (straits.live)`,
   };

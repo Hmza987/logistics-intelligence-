@@ -868,6 +868,10 @@ a { color: inherit; text-decoration: none; }
 
 /* ── ANIMATIONS ─────────────────────────────────────────────────────────── */
 @keyframes spin { to { transform: rotate(360deg); } }
+@keyframes pulse-dot {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50%       { opacity: .4; transform: scale(.7); }
+}
 .spin { display: inline-block; animation: spin .8s linear infinite; }
 
 /* ── CHART AXES ─────────────────────────────────────────────────────────── */
@@ -1992,28 +1996,34 @@ canvas { font-family: var(--f-mono); }
         </div>
       </div>
 
-      <!-- Satellite map -->
+      <!-- Live MarineTraffic map -->
       <div>
         <div class="mapbar">
-          <span class="mapbar-label">Filter vessels:</span>
-          <button class="fchip on" id="f-tanker" style="color:#e74c3c" onclick="toggleFilter('tanker')"><span class="fdot" style="background:#e74c3c"></span>Tankers</button>
-          <button class="fchip on" id="f-container" style="color:#5aa3f5" onclick="toggleFilter('container')"><span class="fdot" style="background:#5aa3f5"></span>Container</button>
-          <button class="fchip on" id="f-bulk" style="color:#fbbf24" onclick="toggleFilter('bulk')"><span class="fdot" style="background:#fbbf24"></span>Bulk</button>
-          <button class="fchip on" id="f-lng" style="color:#a78bfa" onclick="toggleFilter('lng')"><span class="fdot" style="background:#a78bfa"></span>LNG/LPG</button>
-          <button class="fchip on" id="f-general" style="color:#3dd68c" onclick="toggleFilter('general')"><span class="fdot" style="background:#3dd68c"></span>General</button>
-          <button id="rfbtn" class="hbtn" onclick="nextSnap()" style="margin-left:8px"><span id="rf-ico">&#8635;</span> Refresh Snapshot</button>
+          <span class="mapbar-label">Live AIS &mdash; MarineTraffic</span>
+          <span style="display:flex;align-items:center;gap:5px;font-family:var(--f-mono);font-size:8px;color:#3dd68c">
+            <span style="width:6px;height:6px;border-radius:50%;background:#3dd68c;flex-shrink:0;animation:pulse-dot 1.8s ease-in-out infinite"></span>
+            Real-time vessel tracking
+          </span>
           <div style="margin-left:auto;display:flex;gap:6px">
-            <a href="https://www.marinetraffic.com/en/ais/home/centerx:56.3/centery:26.5/zoom:9/vtypes:4,6,7,8,9,13" target="_blank" class="ext-btn">&#8599; MarineTraffic</a>
+            <a href="https://www.marinetraffic.com/en/ais/home/centerx:56.4/centery:26.2/zoom:8" target="_blank" class="ext-btn">&#8599; Full screen</a>
             <a href="https://www.shiptraffic.net/tankers/HORMUZ%20STRAIT/ship-traffic-tracker" target="_blank" class="ext-btn">&#8599; Tankers live</a>
             <a href="https://straits.live" target="_blank" class="ext-btn" style="color:#e74c3c;border-color:rgba(231,76,60,.3)">&#8599; straits.live</a>
           </div>
         </div>
-        <div id="sat-map"></div>
+        <iframe
+          id="sat-map"
+          src="https://www.marinetraffic.com/en/ais/embed/zoom:8/centery:26.2/centerx:56.4/maptype:4/shownames:false/mmsi:0/shipid:0/fleet:/fleet_id:/showmenu:false/remember:false"
+          width="100%"
+          style="border:none;display:block"
+          loading="lazy"
+          allowfullscreen
+          referrerpolicy="no-referrer-when-downgrade"
+          title="MarineTraffic — Strait of Hormuz live AIS">
+        </iframe>
         <div class="mapstats">
-          <div class="mapstat"><span>Snapshot:</span> <span id="snap-label" style="color:#f0c84b">1/3 &bull; May 24 &bull; 09:15 UTC</span></div>
+          <div class="mapstat"><span>Source:</span> <span style="color:#3dd68c">MarineTraffic live AIS &bull; auto-refresh</span></div>
           <div class="mapstat"><span>AIS transits today:</span> <span id="snap-transits" class="red">2</span> <span>/ 130 baseline &nbsp;<span style="color:#7a8494;font-size:8px">(dark fleet excluded)</span></span></div>
-          <div class="mapstat"><span>Showing:</span> <span id="vessel-count" style="color:#f0c84b">-</span> <span>commercial vessels</span></div>
-          <div style="margin-left:auto;font-size:7px;color:#7a8494;font-family:'IBM Plex Mono',monospace">ESRI satellite &middot; AIS: straits.live &middot; Windward &middot; May 23 2026</div>
+          <div style="margin-left:auto;font-size:7px;color:#7a8494;font-family:'IBM Plex Mono',monospace">MarineTraffic &copy; &middot; AIS data &middot; May 2026</div>
         </div>
       </div>
     </div>

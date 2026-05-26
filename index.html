@@ -2020,12 +2020,9 @@ canvas { font-family: var(--f-mono); }
         <div class="card-label">Live Intelligence Feed <span style="font-size:9px;color:#3d4451;font-weight:400;margin-left:6px">&#8635; updates every 3 min</span></div>
         <div class="news-item" id="intel-alert"><div class="news-dot" style="background:#e74c3c"></div><div><span class="news-tag tag-alert">ALERT</span><div class="news-text">All Hormuz transits suspended for commercial shipping. 15 ships (109K TEU) trapped. Full booking stop for Upper Gulf (Maersk Op. Update 31, May 18). <a href="https://www.maersk.com/news" target="_blank" rel="noopener" class="intel-src">Maersk ↗</a></div></div></div>
         <div id="intel-feed">
-          <div class="news-item"><div class="news-dot" style="background:#f0c84b;box-shadow:0 0 5px rgba(240,200,75,.5)"></div><div><span class="news-tag" style="background:rgba(240,200,75,.15);color:#f0c84b;border-color:rgba(240,200,75,.3)">DEVELOPING</span><div class="news-text"><strong style="color:#f0c84b">Peace deal MoU in final stages — not yet signed.</strong> US-Iran talks in Muscat entered final drafting phase (May 23). High probability of signing within 48–72 hrs per diplomatic sources. No ceasefire or corridor active at this time. <a href="https://www.reuters.com/world/middle-east/" target="_blank" rel="noopener" class="intel-src">Reuters ↗</a></div></div></div>
-          <div class="news-item"><div class="news-dot" style="background:#fbbf24"></div><div><span class="news-tag tag-watch">WATCH</span><div class="news-text">Brent futures <span style="color:#25a066">-6%+ for the week</span> on peace-deal optimism despite physical closure. Market pricing in ~50–60% probability of corridor opening within 14 days if MoU signed. <a href="https://www.spglobal.com/commodity-insights" target="_blank" rel="noopener" class="intel-src">Platts ↗</a></div></div></div>
-          <div class="news-item"><div class="news-dot" style="background:#fbbf24"></div><div><span class="news-tag tag-watch">WATCH</span><div class="news-text">New IRGC zone boundary (May 20) extends toward Fujairah &mdash; UAE's primary oil-export bypass route now threatened. Corridor terms remain disputed &mdash; Iran demands inspection rights. <a href="https://www.lmalloyds.com/lma/Joint_War" target="_blank" rel="noopener" class="intel-src">Lloyd's ↗</a></div></div></div>
-          <div class="news-item"><div class="news-dot" style="background:#5aa3f5"></div><div><span class="news-tag tag-info">INFO</span><div class="news-text">Vessel diversions to Oman +3,500% since closure (Windward). Highway 95 goods via Ramlet Khelah tripled to $830M in March. <a href="https://windward.ai" target="_blank" rel="noopener" class="intel-src">Windward ↗</a></div></div></div>
+          <!-- populated by rotateIntelFeed() on load -->
         </div>
-        <div class="src"><span>Maersk Op.31 &middot; Reuters &middot; Platts &middot; Lloyd's JWC &middot; Windward &middot; May 2026</span><span class="src-badge">real data</span></div>
+        <div class="src"><span id="intel-src-line">GDELT &middot; NewsAPI &middot; live sources</span><span class="src-badge">live</span></div>
       </div>
 
       <!-- Brent + War-Risk signals -->
@@ -3153,7 +3150,7 @@ var INTEL_POOL = [
   null,
   // 1
   { dot:'#f0c84b', dotX:'box-shadow:0 0 5px rgba(240,200,75,.5)', tagClass:'', tagStyle:'background:rgba(240,200,75,.15);color:#f0c84b;border-color:rgba(240,200,75,.3)', tag:'DEVELOPING',
-    text:'<strong style="color:#f0c84b">Peace deal MoU in final stages — not yet signed.</strong> US-Iran talks in Muscat entered final drafting phase (May 23). High probability of signing within 48–72 hrs per diplomatic sources. No ceasefire or corridor active.',
+    text:'<strong style="color:#f0c84b">Day 86 — MoU framework agreed, implementation annex disputed.</strong> Muscat talks ongoing. Iran insisting on phased sanctions relief before corridor activation; US requires third-party inspection. No signing date confirmed. Corridor remains closed.',
     src:'Reuters', srcUrl:'https://www.reuters.com/world/middle-east/' },
   // 2
   { dot:'#fbbf24', dotX:'', tagClass:'tag-watch', tagStyle:'', tag:'WATCH',
@@ -3194,11 +3191,64 @@ var INTEL_POOL = [
   // 11
   { dot:'#5aa3f5', dotX:'', tagClass:'tag-info', tagStyle:'', tag:'INFO',
     text:'Saudi Aramco Abu Ali terminal throughput at 3.2M bbl/day, approaching rated capacity. Ras Tanura export queue now 14 VLCCs waiting. Average loading delay extended to 9 days (pre-crisis: 2 days).',
-    src:'S&P Global', srcUrl:'https://www.spglobal.com/commodity-insights/en/news-research/latest-news/oil' }
+    src:'S&P Global', srcUrl:'https://www.spglobal.com/commodity-insights/en/news-research/latest-news/oil' },
+  // 12
+  { dot:'#e74c3c', dotX:'', tagClass:'tag-alert', tagStyle:'', tag:'ALERT',
+    text:'<strong style="color:#e8eaed">JWC Area listing extended</strong> — Lloyd\'s Joint War Committee confirmed Hormuz remains listed through June 30 at minimum. War-risk premiums holding at 0.75–1.0% of hull value per voyage. Six P&I clubs restricting new Gulf cover.',
+    src:"Lloyd's JWC", srcUrl:'https://www.lmalloyds.com/lma/Joint_War' },
+  // 13
+  { dot:'#fbbf24', dotX:'', tagClass:'tag-watch', tagStyle:'', tag:'WATCH',
+    text:'UAE activating strategic reserves: ADNOC drawing down 12M bbl from Abu Dhabi strategic stockpile. UAE Energy Ministry confirmed domestic fuel supply secured for 90 days. Refinery input substitution underway at Ruwais.',
+    src:'ADNOC', srcUrl:'https://www.adnoc.ae/en/news-and-media' },
+  // 14
+  { dot:'#5aa3f5', dotX:'', tagClass:'tag-info', tagStyle:'', tag:'INFO',
+    text:'Air freight surge: Dubai–Shanghai rates hit $6.20/kg (pre-crisis: $2.10/kg). Emirates SkyCargo added 18 weekly freighter rotations. Pharma and semiconductor shipments prioritised — general cargo wait 10–14 days.',
+    src:'IATA', srcUrl:'https://www.iata.org/en/publications/economics/' }
 ];
 
 var _intelOffset = 0;
 
+// ── Relative-time helper ──────────────────────────────────────────────────────
+function fmtRelTime(iso) {
+  if (!iso) return '';
+  try {
+    var diff = Math.floor((Date.now() - new Date(iso).getTime()) / 60000);
+    if (diff < 1)   return 'just now';
+    if (diff < 60)  return diff + 'm ago';
+    if (diff < 1440) return Math.floor(diff / 60) + 'h ago';
+    return Math.floor(diff / 1440) + 'd ago';
+  } catch(e) { return ''; }
+}
+
+// ── Escape HTML for live news titles ─────────────────────────────────────────
+function escHtml(s) {
+  return (s || '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+}
+
+// ── Build one news-item div from a live API item ──────────────────────────────
+function buildLiveHTML(item) {
+  var tag     = item.tag || 'INFO';
+  var dotCol  = tag === 'ALERT' ? '#e74c3c' : tag === 'WATCH' ? '#fbbf24' : '#5aa3f5';
+  var tagCls  = tag === 'ALERT' ? 'tag-alert' : tag === 'WATCH' ? 'tag-watch' : 'tag-info';
+  var timeStr = item.publishedAt ? fmtRelTime(item.publishedAt) : '';
+  var srcHtml = item.url
+    ? ' <a href="' + escHtml(item.url) + '" target="_blank" rel="noopener" class="intel-src">' +
+      escHtml(item.source || 'Source') + ' ↗</a>'
+    : '';
+  var timeHtml = timeStr
+    ? ' <span style="font-family:\'IBM Plex Mono\',monospace;font-size:7px;color:#3d4a58">' + timeStr + '</span>'
+    : '';
+  var desc = item.description
+    ? '<span style="color:#6a7a8a"> — ' + escHtml(item.description.slice(0, 130)) + (item.description.length > 130 ? '…' : '') + '</span>'
+    : '';
+  return '<div class="news-item">' +
+    '<div class="news-dot" style="background:' + dotCol + '"></div>' +
+    '<div><span class="news-tag ' + tagCls + '">' + tag + '</span>' +
+    '<div class="news-text">' + escHtml(item.title) + desc + timeHtml + srcHtml + '</div>' +
+    '</div></div>';
+}
+
+// ── Static pool fallback (used when /api/news is unavailable) ────────────────
 function buildIntelHTML(item) {
   if (!item) return '';
   var tagHtml = item.tagClass
@@ -3216,7 +3266,7 @@ function buildIntelHTML(item) {
 function rotateIntelFeed() {
   var feed = document.getElementById('intel-feed');
   if (!feed) return;
-  var pool = INTEL_POOL.slice(1); // skip index 0 (ALERT, hardcoded)
+  var pool = INTEL_POOL.slice(1);
   _intelOffset = (_intelOffset + 1) % pool.length;
   var html = '';
   for (var i = 0; i < Math.min(4, pool.length); i++) {
@@ -5996,8 +6046,43 @@ window.addEventListener('load', function() {
     updateSeasonalBadge();
   }
 
-  // Rotate intelligence feed items every 3 minutes (ALERT stays pinned)
-  setInterval(rotateIntelFeed, 3 * 60 * 1000);
+  // ── Live intelligence feed ─────────────────────────────────────────────────
+  // Fetches breaking news from /api/news (GDELT + optionally NewsAPI).
+  // Falls back to the static INTEL_POOL if the API is unavailable.
+  function fetchLiveIntel() {
+    var feed = document.getElementById('intel-feed');
+    if (!feed) return;
+    var srcEl = document.getElementById('intel-src-line');
+
+    fetch('/api/news')
+      .then(function(r) { return r.ok ? r.json() : Promise.reject('HTTP ' + r.status); })
+      .then(function(data) {
+        if (!data.items || data.items.length === 0) {
+          rotateIntelFeed();
+          return;
+        }
+        var html = data.items.map(buildLiveHTML).join('');
+        feed.style.opacity = '0';
+        setTimeout(function() {
+          feed.innerHTML = html;
+          feed.style.opacity = '1';
+        }, 300);
+        // Update source badge to show live data source + timestamp
+        if (srcEl) {
+          var t = new Date(data.ts);
+          var hhmm = t.getHours().toString().padStart(2,'0') + ':' + t.getMinutes().toString().padStart(2,'0');
+          srcEl.innerHTML = (data.src || 'Live') + ' &middot; refreshed ' + hhmm + ' GST';
+        }
+      })
+      .catch(function() {
+        // API unavailable — fall back to static pool rotation
+        _intelOffset = Math.floor(Math.random() * (INTEL_POOL.length - 1));
+        rotateIntelFeed();
+      });
+  }
+
+  fetchLiveIntel();
+  setInterval(fetchLiveIntel, 3 * 60 * 1000);
 
 });
 

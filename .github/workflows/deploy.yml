@@ -29,12 +29,17 @@ jobs:
         run: npm ci
 
       - name: Check API syntax
-        run: node --check api/hormuz.js && echo "api/hormuz.js OK"
+        run: |
+          node --check api/hormuz.js   && echo "api/hormuz.js OK"
+          node --check api/live-data.js && echo "api/live-data.js OK"
+          node --check api/news.js      && echo "api/news.js OK"
 
-      - name: Smoke-test handler export
+      - name: Smoke-test handler exports
         run: |
           node -e "
-            const handler = require('./api/hormuz.js');
-            if (typeof handler !== 'function') process.exit(1);
-            console.log('handler export OK');
+            ['api/hormuz.js','api/live-data.js','api/news.js'].forEach(function(f){
+              var h = require('./'+f);
+              if (typeof h !== 'function') { console.error(f+' bad export'); process.exit(1); }
+              console.log(f+' handler OK');
+            });
           "

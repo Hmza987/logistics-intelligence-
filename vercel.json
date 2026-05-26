@@ -1,9 +1,25 @@
 {
   "version": 2,
+  "headers": [
+    {
+      "source": "/index.html",
+      "headers": [
+        { "key": "Cache-Control", "value": "no-cache, no-store, must-revalidate" },
+        { "key": "Pragma",        "value": "no-cache" },
+        { "key": "Expires",       "value": "0" }
+      ]
+    },
+    {
+      "source": "/(.*)",
+      "headers": [
+        { "key": "Cache-Control", "value": "no-cache, no-store, must-revalidate" }
+      ]
+    }
+  ],
   "routes": [
-    { "src": "/login",   "dest": "/login.html" },
-    { "src": "/logout",  "dest": "/api/logout" },
+    { "src": "/login",    "dest": "/login.html" },
+    { "src": "/logout",   "dest": "/api/logout" },
     { "src": "/api/(.*)", "dest": "/api/$1" },
-    { "src": "/(.*)",    "dest": "/index.html" }
+    { "src": "/(.*)",     "dest": "/index.html" }
   ]
 }

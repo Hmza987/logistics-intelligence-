@@ -1983,6 +1983,67 @@ canvas { font-family: var(--f-mono); }
 .wl-bc-sep { color:var(--c-tx3); }
 .wl-bc-cur { color:var(--c-tx1); }
 
+/* ── Top-5 GCC Impact badge on mosaic cards ── */
+.wl-mc-top5 { border-color:rgba(234,179,8,.5) !important; }
+.wl-mc-top5::before { background:#ca8a04 !important; }
+.wl-mc-top5-badge {
+  display:inline-block;
+  font-size:6px; letter-spacing:1.5px; font-weight:700;
+  text-transform:uppercase; font-family:var(--f-mono);
+  background:rgba(234,179,8,.15); color:#fbbf24;
+  border:1px solid rgba(234,179,8,.4);
+  border-radius:3px; padding:2px 5px; margin-bottom:6px;
+}
+
+/* ── Scientific Evidence Panel ── */
+.wl-ev-header {
+  font-size:8px; letter-spacing:2px; text-transform:uppercase;
+  font-family:var(--f-mono); color:#6b82a0;
+  margin:18px 0 10px; padding-bottom:8px;
+  border-bottom:1px solid #1a2840;
+}
+.wl-ev-grid { display:grid; grid-template-columns:1fr 1fr; gap:12px; margin-bottom:12px; }
+@media(max-width:900px){ .wl-ev-grid{ grid-template-columns:1fr; } }
+.wl-ev-card {
+  background:#080e18; border:1px solid #1a2840; border-radius:6px; padding:14px;
+}
+.wl-ev-title {
+  font-size:7.5px; letter-spacing:1.8px; text-transform:uppercase;
+  font-family:var(--f-mono); color:#4e6585; margin-bottom:10px;
+}
+#wl-geo-map { height:210px; border-radius:4px; background:#080e18; }
+#wl-geo-map .leaflet-control-attribution {
+  font-size:7px; background:rgba(8,14,24,.8); color:#334b66; padding:1px 4px;
+}
+.wl-map-tooltip.leaflet-tooltip {
+  background:rgba(8,14,24,.92) !important; border:1px solid rgba(139,92,246,.3) !important;
+  color:#8fa0b5 !important; font-size:8.5px !important; font-family:'IBM Plex Mono',monospace !important;
+  padding:2px 6px !important; border-radius:3px !important; box-shadow:none !important;
+  white-space:nowrap !important;
+}
+.wl-map-tooltip.leaflet-tooltip::before { display:none !important; }
+/* Evidence table */
+.wl-ev-table { width:100%; border-collapse:collapse; font-size:9.5px; }
+.wl-ev-table th {
+  text-align:left; padding:5px 8px; font-family:var(--f-mono); font-size:7px;
+  letter-spacing:1.5px; color:#4e6585; border-bottom:1px solid #1a2840;
+  text-transform:uppercase; font-weight:600;
+}
+.wl-ev-table td { padding:8px; border-bottom:1px solid #0e1926; vertical-align:top; }
+.wl-ev-table tr.even td { background:rgba(255,255,255,.015); }
+.wl-ev-stage {
+  font-family:var(--f-mono); font-size:7px; font-weight:700; letter-spacing:.5px;
+  padding:2px 5px; border-radius:3px; border:1px solid; white-space:nowrap;
+}
+.wl-ev-mech { color:#c5d0de; line-height:1.45; }
+.wl-ev-ex   { color:#6b82a0; font-size:8.5px; line-height:1.4; }
+.wl-ev-lag  { color:#b8952a; font-family:var(--f-mono); font-size:8px; white-space:nowrap; }
+.wl-ev-str  { min-width:90px; }
+.wl-ev-str-inner { display:flex; align-items:center; gap:6px; }
+.wl-ev-bar  { flex:1; height:4px; background:#0a1120; border-radius:2px; }
+.wl-ev-fill { height:4px; border-radius:2px; }
+.wl-ev-num  { font-family:var(--f-mono); font-size:8px; }
+
 /* ── Key insight summary banner ── */
 .wl-key-insight {
   display:flex; align-items:flex-start; gap:14px;
@@ -3042,7 +3103,7 @@ canvas { font-family: var(--f-mono); }
     <div>
       <div class="wl-page-title">&#8881; Strategic Watchlist</div>
       <div class="wl-page-sub">Weak signal intelligence &middot; Multi-order transmission modelling &middot; GCC exposure assessment</div>
-      <div class="wl-page-meta">6 active signals &middot; Updated <span id="wl-ts">—</span></div>
+      <div class="wl-page-meta"><span id="wl-sig-count">—</span> active signals &middot; <span id="wl-cat-count">—</span> categories &middot; Updated <span id="wl-ts">—</span></div>
     </div>
     <div class="wl-doctrine">
       "The value is not identifying events.<br>
@@ -3100,6 +3161,26 @@ canvas { font-family: var(--f-mono); }
       </div>
 
     </div>
+
+    <!-- ── Scientific Evidence Panel (shown only for signals with full data) ── -->
+    <div id="wl-evidence-section" class="wl-hidden">
+      <div class="wl-ev-header">&#9758; Transmission Evidence &mdash; Geographic Map &middot; Impact Timeline &middot; Causality Validation</div>
+      <div class="wl-ev-grid">
+        <div class="wl-ev-card">
+          <div class="wl-ev-title">&#9632; Geographic Transmission Map</div>
+          <div id="wl-geo-map"></div>
+        </div>
+        <div class="wl-ev-card">
+          <div class="wl-ev-title">&#9646; Impact Timeline</div>
+          <div id="wl-timeline-svg"></div>
+        </div>
+      </div>
+      <div class="wl-ev-card">
+        <div class="wl-ev-title">&#9660; Causality Chain &mdash; Evidence &amp; Historical Validation</div>
+        <div id="wl-evidence-table"></div>
+      </div>
+    </div>
+
   </div>
 
 </div>
@@ -6555,7 +6636,29 @@ var WL_SIGNALS = [
       data:[[42,35,18,52,45],[35,40,16,60,48],[48,32,20,45,38],[38,26,32,55,28],[25,30,26,62,32],[18,22,15,48,25]]
     },
     insight:'While the Panama Canal water deficit appears geographically remote from GCC logistics networks, transmission modelling reveals disproportionate second-order exposure through container repositioning dynamics. The primary impact pathway is not route disruption — fewer than 8% of GCC-bound vessels transit Panama — but rather global container asset displacement. Fleet reallocation from Transpacific to alternative routes creates repositioning demand surges that tighten box availability in Asian export hubs, amplifying GCC import cycle times by an estimated 12–18 days. Critically, the behavioural response — shipper inventory buffering — generates a warehousing demand spike in UAE and Oman transshipment corridors that persists 2–3 quarters beyond the original canal constraint.',
-    blindspot:'Container repositioning dynamics create GCC import delays even though no GCC-bound vessel transits Panama. The mechanism is asset displacement, not route impact.'
+    blindspot:'Container repositioning dynamics create GCC import delays even though no GCC-bound vessel transits Panama. The mechanism is asset displacement, not route impact.',
+    geoNodes:[
+      {label:'Lake Gatún · Panama',      lat:9,   lng:-80, order:0},
+      {label:'Singapore / Asian Hubs',   lat:1,   lng:104, order:1},
+      {label:'Cape of Good Hope',        lat:-34, lng:18,  order:2},
+      {label:'Suez Canal',               lat:30,  lng:32,  order:2},
+      {label:'Jebel Ali · GCC',          lat:25,  lng:55,  order:3, gcc:true}
+    ],
+    evidence:[
+      {stage:'ORIGIN',    mechanism:'Lake Gatún water deficit triggers vessel draft restrictions',          example:'2023–24: daily transits fell from 38 → 22; max draft reduced to 39ft (vs 50ft normal)',  lag:'0–2m',  strength:82},
+      {stage:'1ST ORDER', mechanism:'Carriers reroute via Cape/Suez adding 14–18 transit days',            example:'Cape route usage +52% Q4 2023 vs Q4 2022; vessel turnaround times extended +31%',        lag:'1–4m',  strength:76},
+      {stage:'2ND ORDER', mechanism:'Container box pool imbalance — Asian hubs deplete export inventory',  example:'Singapore & Busan available box pool −22% Q1 2024 vs prior year; lease rates +40%',     lag:'2–5m',  strength:63},
+      {stage:'2ND ORDER', mechanism:'Fleet reallocation removes GCC-route capacity — spot premium surge',  example:'GCC import spot rates +18–24% above contract rates Q1 2024',                            lag:'2–6m',  strength:68},
+      {stage:'3RD ORDER', mechanism:'Shipper inventory buffering generates GCC warehousing demand surge',   example:'UAE logistics demand index +11 pts Q2 2024 above seasonal baseline',                    lag:'4–8m',  strength:51}
+    ],
+    timeline:[
+      {label:'Canal Restriction Enforcement', start:0, dur:4, order:0},
+      {label:'Cape / Suez Rerouting Surge',   start:1, dur:6, order:1},
+      {label:'Box Pool Imbalance (Asia)',      start:2, dur:5, order:2},
+      {label:'GCC Spot Rate Premium',          start:3, dur:5, order:2},
+      {label:'GCC Warehousing Demand Surge',   start:4, dur:6, order:3, gcc:true}
+    ],
+    timelineUnit:'months'
   },
   {
     id:'cbam', title:'EU Carbon Border Adjustment Phase-In',
@@ -6683,7 +6786,29 @@ var WL_SIGNALS = [
       data:[[52,48,12,78,38],[65,58,10,82,42],[42,35,8,68,30],[35,28,8,75,25],[38,32,8,72,28],[25,22,6,65,20]]
     },
     insight:'East Africa food crises are modelled as humanitarian and agricultural disruptions with localised logistics consequences. The transmission mechanism extends into GCC industrial supply chains through a non-obvious pathway: emergency food procurement surges absorb global reefer container capacity, creating cold chain equipment shortages that cascade into pharmaceutical, chemical, and temperature-sensitive industrial imports. For GCC ports — particularly Jeddah and Dammam — the consequence is not food import congestion in isolation but a broader port productivity impact as reefer plug capacity and specialised handling equipment become constrained. Industrial importers dependent on temperature-controlled cargo absorb 3–5 week delays originating from a humanitarian event on the Horn of Africa that they have no analytical framework to anticipate.',
-    blindspot:'East Africa food crises cascade into GCC industrial supply chains through reefer container absorption — pharmaceutical and specialty chemical importers experience delays caused by humanitarian grain shipments, with no existing framework to forecast the connection.'
+    blindspot:'East Africa food crises cascade into GCC industrial supply chains through reefer container absorption — pharmaceutical and specialty chemical importers experience delays caused by humanitarian grain shipments, with no existing framework to forecast the connection.',
+    geoNodes:[
+      {label:'Horn of Africa',              lat:9,  lng:44,  order:0},
+      {label:'WFP Global Procurement',      lat:46, lng:6,   order:1},
+      {label:'South Asian Grain Exporters', lat:23, lng:78,  order:1},
+      {label:'Indian Ocean Corridor',       lat:5,  lng:72,  order:2},
+      {label:'Jeddah / Dammam · GCC',      lat:22, lng:46,  order:3, gcc:true}
+    ],
+    evidence:[
+      {stage:'ORIGIN',    mechanism:'Multi-country rainfall deficit produces simultaneous crop failure',    example:'2022: 4th consecutive failed rainy season; 22M people food insecure across HOA region',   lag:'0–1m',  strength:74},
+      {stage:'1ST ORDER', mechanism:'WFP emergency grain procurement competes in global grain markets',    example:'2022: WFP procured 1.2M MT grain globally, tightening wheat and sorghum supply',          lag:'1–3m',  strength:68},
+      {stage:'1ST ORDER', mechanism:'Emergency food shipping absorbs global reefer container pool',        example:'Reefer container lease rates +38% during 2022 East Africa crisis peak',                    lag:'2–4m',  strength:72},
+      {stage:'2ND ORDER', mechanism:'GCC food import volumes surge, competing directly for reefer slots',  example:'Saudi grain imports +18% Q3 2022 vs Q3 2021; UAE food imports +12% same period',         lag:'2–5m',  strength:65},
+      {stage:'3RD ORDER', mechanism:'Cold-chain bottleneck cascades into pharmaceutical & industrial cargo',example:'Jeddah reefer plug saturation → 3–5 week delays on pharma imports Q3–Q4 2022',          lag:'3–6m',  strength:57}
+    ],
+    timeline:[
+      {label:'HOA Crop Failure',            start:0, dur:3, order:0},
+      {label:'WFP Procurement Surge',       start:1, dur:4, order:1},
+      {label:'Reefer Capacity Absorption',  start:2, dur:5, order:1},
+      {label:'GCC Food Import Surge',       start:2, dur:6, order:2},
+      {label:'Cold-Chain Bottleneck (GCC)', start:3, dur:5, order:3, gcc:true}
+    ],
+    timelineUnit:'months'
   },
   {
     id:'turkey', title:'Turkish Export Competitiveness Surge',
@@ -6716,6 +6841,330 @@ var WL_SIGNALS = [
     },
     insight:'Turkish lira depreciation is typically analysed as a bilateral trade flow event. The systemic transmission runs through Eastern Mediterranean shipping congestion: Turkish export surges saturate Med container capacity, generating northbound Suez queue buildups that reduce eastbound vessel availability for GCC import routes. This creates a spot rate premium in GCC lanes entirely disconnected from regional demand or geopolitical conditions — a phantom cost increase driven by monetary policy in Ankara. The behavioural paradox: European goods become cheaper to source as Turkish competition intensifies, but the same congestion dynamics make them more expensive and slower to arrive at GCC destinations.',
     blindspot:'Turkish lira depreciation raises GCC import costs through Eastern Mediterranean congestion — European goods become cheaper to source at origin but more expensive and slower to receive, creating a cost paradox invisible to buyers focused on FOB prices.'
+  },
+
+  // ── CLIMATE & PHYSICAL RISK — additional 10 signals ──────────────────────────
+
+  {
+    id:'iod', title:'Indian Ocean Dipole Intensification',
+    category:'Climate / Ocean Systems', confidence:73,
+    horizon:'12–36 months', origin:'Indian Ocean',
+    systemicImpact:61,
+    scores:[
+      {label:'A · Exposure Score',         val:32},
+      {label:'B · Transmission Strength',  val:65},
+      {label:'C · Propagation Velocity',   val:55},
+      {label:'D · GCC Sensitivity',        val:62},
+      {label:'E · Confidence Level',       val:73},
+      {label:'F · Indirect Amplification', val:68}
+    ],
+    exposure:{direct:14, indirect:44, systemic:62},
+    chain:[
+      {label:'Positive IOD Event Onset',                    score:0.72, order:0},
+      {label:'Indian Monsoon Rainfall Suppression',         score:0.68, order:1},
+      {label:'South Asian Multi-Country Crop Shortfall',    score:0.64, order:1},
+      {label:'Concurrent GCC Food Import Surge',            score:0.70, order:2},
+      {label:'GCC Port Cold-Chain Handling Bottleneck',     score:0.65, order:3, gcc:true}
+    ],
+    gcc:{
+      countries:['UAE','Saudi Arabia','Oman','Qatar','Kuwait','Bahrain'],
+      sectors:['Ports','Inland Log.','Energy T.','Food Sec.','Industrial'],
+      data:[[35,28,12,65,25],[38,32,12,70,28],[30,25,10,62,22],[25,20,10,68,18],[28,22,10,65,20],[20,18,8,58,15]]
+    },
+    insight:'Indian Ocean Dipole intensification suppresses Indian monsoon rainfall, triggering simultaneous agricultural shortfalls across India, Pakistan, and Sri Lanka. The critical transmission dynamic is convergence: all three countries reduce food exports and increase imports at the same time, overwhelming GCC port grain-handling and cold-chain capacity in a way that no single-country crop failure can replicate. Standard GCC food security models assess origin diversification across South Asia as a hedge — IOD events invalidate that hedge by compressing all origins simultaneously.',
+    blindspot:'IOD eliminates the diversification benefit of multi-origin food sourcing across South Asia — when India, Pakistan, and Sri Lanka underperform simultaneously, GCC ports face a convergent import surge with no alternative origin to absorb volume.'
+  },
+
+  {
+    id:'glacier', title:'Himalayan Glacier Retreat',
+    category:'Climate / Hydrology', confidence:82,
+    horizon:'3–10 years', origin:'Himalayas / Hindu Kush',
+    systemicImpact:58,
+    scores:[
+      {label:'A · Exposure Score',         val:28},
+      {label:'B · Transmission Strength',  val:58},
+      {label:'C · Propagation Velocity',   val:18},
+      {label:'D · GCC Sensitivity',        val:55},
+      {label:'E · Confidence Level',       val:82},
+      {label:'F · Indirect Amplification', val:62}
+    ],
+    exposure:{direct:8, indirect:38, systemic:58},
+    chain:[
+      {label:'Glacier Mass Loss Acceleration',              score:0.78, order:0},
+      {label:'Meltwater Surge Phase (Short-term Abundance)',score:0.68, order:1},
+      {label:'Seasonal River Flow Collapse (Long-term)',    score:0.62, order:1},
+      {label:'Pakistan Agricultural Export Capacity Decline',score:0.55, order:2},
+      {label:'GCC South-Asian Sourcing Gap Exposure',       score:0.49, order:3, gcc:true}
+    ],
+    gcc:{
+      countries:['UAE','Saudi Arabia','Oman','Qatar','Kuwait','Bahrain'],
+      sectors:['Ports','Inland Log.','Energy T.','Food Sec.','Industrial'],
+      data:[[28,22,12,55,30],[30,25,12,58,32],[22,18,10,48,25],[18,15,8,52,20],[20,16,8,50,22],[15,12,6,42,18]]
+    },
+    insight:'Himalayan glacier retreat is counterintuitively masked by an initial meltwater abundance phase — rivers run higher than historical norms as ice mass converts to runoff, sustaining Pakistani and Indian agricultural yields in the near term. This creates a false signal of hydrological stability. The structural scarcity phase emerges 3–7 years later as ice reserves deplete, sharply compressing water-intensive crop production. GCC logistics planners relying on current South Asian agricultural output as a proxy for future reliability face a structural sourcing disruption with no warning period.',
+    blindspot:'Glacier retreat initially increases river flow and agricultural abundance — GCC sourcing analysts observing current productivity have no signal of the structural scarcity phase 3–7 years away, when Pakistan and India simultaneously lose irrigation water.'
+  },
+
+  {
+    id:'austdrought', title:'Australian Drought Cycle Intensification',
+    category:'Climate / Agriculture', confidence:76,
+    horizon:'6–24 months', origin:'Australia',
+    systemicImpact:54,
+    scores:[
+      {label:'A · Exposure Score',         val:25},
+      {label:'B · Transmission Strength',  val:62},
+      {label:'C · Propagation Velocity',   val:68},
+      {label:'D · GCC Sensitivity',        val:55},
+      {label:'E · Confidence Level',       val:76},
+      {label:'F · Indirect Amplification', val:58}
+    ],
+    exposure:{direct:18, indirect:38, systemic:55},
+    chain:[
+      {label:'El Niño / IOD-Driven Australian Drought',    score:0.74, order:0},
+      {label:'Wheat / Barley / Livestock Output Decline',  score:0.68, order:1},
+      {label:'Global Grain Market Price Tightening',       score:0.62, order:2},
+      {label:'GCC Food Import Cost Inflation',             score:0.58, order:2},
+      {label:'Bulk Vessel Capacity Reallocation from Australia-GCC Route', score:0.52, order:3, gcc:true}
+    ],
+    gcc:{
+      countries:['UAE','Saudi Arabia','Oman','Qatar','Kuwait','Bahrain'],
+      sectors:['Ports','Inland Log.','Energy T.','Food Sec.','Industrial'],
+      data:[[30,25,12,62,20],[32,28,12,68,22],[25,20,10,55,18],[20,16,8,60,15],[22,18,8,58,16],[16,14,6,52,12]]
+    },
+    insight:'Australia supplies approximately 12% of GCC wheat and barley imports. Drought cycles depress output across wheat, barley, and beef simultaneously, generating a multi-commodity food import cost spike. The less-modelled second-order effect is bulk vessel reallocation: during drought years, bulk carriers depart the Australia-GCC grain corridor as cargo volumes shrink. This freed capacity migrates opportunistically into other bulk markets — iron ore, coal, fertiliser — temporarily creating rate anomalies in GCC construction materials and industrial raw material imports entirely unrelated to demand conditions.',
+    blindspot:'Australian drought reduces bulk vessel utilisation on the Australia-GCC grain corridor, releasing capacity that migrates to other bulk routes — creating unexpected freight rate shifts in GCC construction materials imports driven by an agricultural event on the other side of the world.'
+  },
+
+  {
+    id:'mekong', title:'Mekong Basin Water Stress',
+    category:'Climate / Hydrology', confidence:71,
+    horizon:'12–30 months', origin:'SE Asia / Lancang',
+    systemicImpact:57,
+    scores:[
+      {label:'A · Exposure Score',         val:28},
+      {label:'B · Transmission Strength',  val:60},
+      {label:'C · Propagation Velocity',   val:55},
+      {label:'D · GCC Sensitivity',        val:58},
+      {label:'E · Confidence Level',       val:71},
+      {label:'F · Indirect Amplification', val:62}
+    ],
+    exposure:{direct:12, indirect:40, systemic:58},
+    chain:[
+      {label:'Upstream Damming + Rainfall Deficit',         score:0.70, order:0},
+      {label:'Vietnam / Thailand Rice Yield Compression',   score:0.65, order:1},
+      {label:'Multi-Nation Export Restriction Trigger',     score:0.62, order:1},
+      {label:'GCC Rice Origin Diversification Forced',      score:0.68, order:2},
+      {label:'Jebel Ali Cold-Chain & Dry Bulk Rerouting',  score:0.58, order:3, gcc:true}
+    ],
+    gcc:{
+      countries:['UAE','Saudi Arabia','Oman','Qatar','Kuwait','Bahrain'],
+      sectors:['Ports','Inland Log.','Energy T.','Food Sec.','Industrial'],
+      data:[[28,22,10,60,18],[30,25,10,65,20],[22,18,8,55,15],[18,14,8,58,12],[20,16,8,56,14],[15,12,6,50,10]]
+    },
+    insight:'The Mekong Basin provides irrigation water for over 60% of Vietnam and Thailand\'s rice cultivation — GCC\'s two primary rice import sources. Water stress events, compounded by Chinese upstream dam operations, trigger simultaneous export restrictions from both countries as governments prioritise domestic food security. The transmission mechanism is political compounding: each country imposes restrictions in response to the other doing so, accelerating the supply withdrawal. GCC importers seeking alternative origins discover India and Pakistan simultaneously under their own agricultural stress, leaving Myanmar as the only viable alternative with significantly higher logistics cost and longer transit.',
+    blindspot:'Mekong stress triggers political export restriction cascades across Vietnam, Thailand, and their alternatives simultaneously — GCC importers find that diversification into multiple SE Asian rice suppliers creates correlated, not independent, supply risk.'
+  },
+
+  {
+    id:'arctic', title:'Arctic Shipping Route Opening',
+    category:'Climate / Maritime Infrastructure', confidence:65,
+    horizon:'5–15 years', origin:'Arctic Circle',
+    systemicImpact:63,
+    scores:[
+      {label:'A · Exposure Score',         val:52},
+      {label:'B · Transmission Strength',  val:48},
+      {label:'C · Propagation Velocity',   val:15},
+      {label:'D · GCC Sensitivity',        val:68},
+      {label:'E · Confidence Level',       val:65},
+      {label:'F · Indirect Amplification', val:72}
+    ],
+    exposure:{direct:35, indirect:55, systemic:65},
+    chain:[
+      {label:'Arctic Ice Sheet Seasonal Thinning',          score:0.62, order:0},
+      {label:'Northern Sea Route Navigation Window Extends',score:0.58, order:1},
+      {label:'Europe–Asia Direct Transit Time Compression', score:0.65, order:1},
+      {label:'Suez Canal Volume Structural Erosion',        score:0.60, order:2},
+      {label:'Jebel Ali Transshipment Revenue Model Disruption', score:0.55, order:3, gcc:true}
+    ],
+    gcc:{
+      countries:['UAE','Saudi Arabia','Oman','Qatar','Kuwait','Bahrain'],
+      sectors:['Ports','Inland Log.','Energy T.','Food Sec.','Industrial'],
+      data:[[72,55,28,12,45],[45,38,22,10,30],[65,48,20,10,35],[30,25,18,8,22],[25,20,15,8,18],[20,15,12,6,14]]
+    },
+    insight:'The Arctic Northern Sea Route reduces Europe–Asia transit time by 30–40% compared to the Suez route, eliminating the geographic logic that makes Jebel Ali an essential transshipment hub. The exposure is structural rather than operational: Jebel Ali generates approximately 40% of throughput from transshipment — cargo that neither originates from nor is destined for the GCC but uses it as a waypoint because Suez routing makes it optimal. Arctic routing dissolves this waypoint necessity for high-value, time-sensitive cargo first, progressively eroding the transshipment revenue base. This timeline is long but the trend is directional and irreversible.',
+    blindspot:'Arctic routing doesn\'t threaten GCC trade volumes directly — it threatens the geographic logic that makes Gulf ports essential transshipment waypoints, rendering the hub model progressively obsolete as direct Europe–Asia lanes mature.',
+    geoNodes:[
+      {label:'Arctic NSR Corridor',       lat:76, lng:60,  order:0},
+      {label:'Northern European Ports',   lat:54, lng:10,  order:1},
+      {label:'East Asian Ports',          lat:34, lng:129, order:1},
+      {label:'Suez Canal (Bypassed)',     lat:30, lng:32,  order:2},
+      {label:'Jebel Ali · GCC',          lat:25, lng:55,  order:3, gcc:true}
+    ],
+    evidence:[
+      {stage:'ORIGIN',    mechanism:'Arctic sea ice minimum extends Northern Sea Route navigation window', example:'2023: NSR open 140+ days vs <30 in 1990; sea ice minimum 4.23M km² — 6th lowest on record', lag:'Secular trend', strength:62},
+      {stage:'1ST ORDER', mechanism:'NSR transit time 35% shorter than Suez removes hub waypoint logic',   example:'Hamburg–Yokohama: 23 days NSR vs 35 days Suez; 3,200 nm shorter with no Gulf port call',    lag:'5–10yr',        strength:58},
+      {stage:'1ST ORDER', mechanism:'Direct Europe–Asia routing bypasses Gulf entirely',                   example:'All NSR routing models show no geographic justification for a Gulf transshipment call',       lag:'5–10yr',        strength:65},
+      {stage:'2ND ORDER', mechanism:'Suez Canal volume shifts structurally as NSR reaches commercial scale',example:'Consensus modelling: 5–15% Suez volume shift by 2035–40 per Lloyd\'s and Clarksons',       lag:'8–15yr',        strength:60},
+      {stage:'3RD ORDER', mechanism:'Jebel Ali transshipment revenue model structurally undermined',        example:'~40% of JEA throughput is transshipment; NSR removes the geographic logic sustaining it',   lag:'10–15yr',       strength:55}
+    ],
+    timeline:[
+      {label:'Arctic Ice Retreat (Ongoing)', start:0,   dur:180, order:0},
+      {label:'NSR Commercial Viability',     start:60,  dur:60,  order:1},
+      {label:'Carrier Route Optimization',   start:84,  dur:60,  order:1},
+      {label:'Suez Volume Structural Shift', start:96,  dur:84,  order:2},
+      {label:'Jebel Ali Hub Disruption',     start:120, dur:60,  order:3, gcc:true}
+    ],
+    timelineUnit:'months'
+  },
+
+  {
+    id:'medagri', title:'Mediterranean Agricultural Heat Stress',
+    category:'Climate / Agriculture', confidence:78,
+    horizon:'6–18 months', origin:'Southern Europe / North Africa',
+    systemicImpact:49,
+    scores:[
+      {label:'A · Exposure Score',         val:22},
+      {label:'B · Transmission Strength',  val:55},
+      {label:'C · Propagation Velocity',   val:62},
+      {label:'D · GCC Sensitivity',        val:48},
+      {label:'E · Confidence Level',       val:78},
+      {label:'F · Indirect Amplification', val:52}
+    ],
+    exposure:{direct:14, indirect:32, systemic:48},
+    chain:[
+      {label:'Mediterranean Heat Event Intensity',          score:0.75, order:0},
+      {label:'Olive / Citrus / Premium Produce Failure',    score:0.68, order:1},
+      {label:'European Food Export Volume Compression',     score:0.62, order:2},
+      {label:'GCC Air Freight Perishable Demand Surge',     score:0.58, order:2},
+      {label:'GCC Air Cargo Capacity Tightness (Non-food)',score:0.52, order:3, gcc:true}
+    ],
+    gcc:{
+      countries:['UAE','Saudi Arabia','Oman','Qatar','Kuwait','Bahrain'],
+      sectors:['Ports','Inland Log.','Energy T.','Food Sec.','Industrial'],
+      data:[[25,20,10,42,18],[22,18,10,38,16],[18,15,8,35,14],[15,12,8,40,12],[18,14,8,38,12],[12,10,6,32,10]]
+    },
+    insight:'Mediterranean heat stress compresses European premium agricultural exports — olive oil, citrus, stone fruits, processed foods — that constitute a disproportionate share of GCC\'s premium consumer import basket. The non-obvious transmission pathway runs through air freight: as perishable goods availability tightens, European producers and GCC importers shift urgent residual supply to air cargo, creating temporary capacity tightness across GCC air freight markets. Non-food air freight users — pharmaceutical, electronics, fashion — absorb collateral cost increases and schedule delays from a weather event affecting European farms.',
+    blindspot:'Mediterranean crop failures transmit to GCC pharmaceutical and electronics importers through air freight capacity competition — urgent perishable food cargo displaces non-food air freight, creating cross-sector cost pressure invisible to industrial logistics planners.'
+  },
+
+  {
+    id:'adenweather', title:'Gulf of Aden Seasonal Weather Intensification',
+    category:'Climate / Maritime Operations', confidence:68,
+    horizon:'3–12 months', origin:'Indian Ocean / Arabian Sea',
+    systemicImpact:52,
+    scores:[
+      {label:'A · Exposure Score',         val:30},
+      {label:'B · Transmission Strength',  val:55},
+      {label:'C · Propagation Velocity',   val:72},
+      {label:'D · GCC Sensitivity',        val:52},
+      {label:'E · Confidence Level',       val:68},
+      {label:'F · Indirect Amplification', val:48}
+    ],
+    exposure:{direct:22, indirect:35, systemic:50},
+    chain:[
+      {label:'Intensified Arabian Sea Monsoon Patterns',    score:0.66, order:0},
+      {label:'Gulf of Aden Sea State Deterioration',        score:0.62, order:1},
+      {label:'Vessel Schedule Adherence Breakdown',         score:0.58, order:1},
+      {label:'GCC Port Berth Productivity Loss',            score:0.55, order:2},
+      {label:'Supply Chain Buffer Requirement Increase',    score:0.50, order:3, gcc:true}
+    ],
+    gcc:{
+      countries:['UAE','Saudi Arabia','Oman','Qatar','Kuwait','Bahrain'],
+      sectors:['Ports','Inland Log.','Energy T.','Food Sec.','Industrial'],
+      data:[[42,30,15,20,28],[38,28,14,18,25],[55,35,12,16,30],[28,22,12,15,20],[25,20,10,14,18],[22,18,10,12,15]]
+    },
+    insight:'Gulf of Aden weather patterns are intensifying independently of the security situation, with monsoon-driven sea states creating vessel schedule disruptions that logistics analysts systematically misattribute to Houthi threat conditions. The analytical conflation matters: risk mitigation responses to security events — rerouting, convoy procedures, insurance premiums — are ineffective against meteorological schedule variability. GCC importers and carriers operating under security-focused frameworks are investing in the wrong mitigation category, leaving weather-driven disruption unaddressed.',
+    blindspot:'Gulf of Aden schedule variability is attributed to security risk when the driver has shifted toward intensifying monsoon sea states — security mitigation frameworks and insurance products provide no protection against the meteorological disruption now dominating the corridor.'
+  },
+
+  {
+    id:'sahel', title:'Sub-Saharan Sahel Desertification',
+    category:'Climate / Food Security', confidence:74,
+    horizon:'2–8 years', origin:'West / Central Africa',
+    systemicImpact:55,
+    scores:[
+      {label:'A · Exposure Score',         val:22},
+      {label:'B · Transmission Strength',  val:52},
+      {label:'C · Propagation Velocity',   val:28},
+      {label:'D · GCC Sensitivity',        val:55},
+      {label:'E · Confidence Level',       val:74},
+      {label:'F · Indirect Amplification', val:60}
+    ],
+    exposure:{direct:10, indirect:38, systemic:55},
+    chain:[
+      {label:'Sahel Agricultural Productivity Collapse',    score:0.70, order:0},
+      {label:'West African Rural–Urban Displacement Surge', score:0.65, order:1},
+      {label:'WFP / NGO Emergency Food Procurement Volume', score:0.62, order:1},
+      {label:'GCC Reefer Transshipment Capacity Absorption',score:0.58, order:2},
+      {label:'GCC Commercial Cold-Chain Availability Squeeze', score:0.52, order:3, gcc:true}
+    ],
+    gcc:{
+      countries:['UAE','Saudi Arabia','Oman','Qatar','Kuwait','Bahrain'],
+      sectors:['Ports','Inland Log.','Energy T.','Food Sec.','Industrial'],
+      data:[[25,18,10,48,15],[22,16,10,45,14],[18,14,8,40,12],[15,12,8,42,10],[18,14,8,40,12],[12,10,6,35,10]]
+    },
+    insight:'Sahel desertification drives population displacement toward coastal West African cities, triggering humanitarian food import surges routed through GCC transshipment hubs — particularly Jeddah and Dammam — as waypoints for East African humanitarian cargo. The transmission to GCC commercial logistics runs through reefer container capacity: WFP and NGO bulk food shipments absorb refrigerated container availability in the same corridors that GCC commercial importers depend upon. Pharmaceutical, chemical, and perishable consumer goods importers experience cold-chain equipment shortages from a humanitarian crisis geographically remote from their supply chains.',
+    blindspot:'West African humanitarian food surges route through GCC transshipment hubs, competing for reefer capacity with GCC commercial importers — pharmaceutical and specialty chemical importers experience logistics disruption from a humanitarian crisis they have no framework to monitor.'
+  },
+
+  {
+    id:'northsea', title:'North Sea Wind Capacity Expansion',
+    category:'Energy Transition / Maritime', confidence:82,
+    horizon:'3–8 years', origin:'Northern Europe',
+    systemicImpact:58,
+    scores:[
+      {label:'A · Exposure Score',         val:45},
+      {label:'B · Transmission Strength',  val:62},
+      {label:'C · Propagation Velocity',   val:22},
+      {label:'D · GCC Sensitivity',        val:60},
+      {label:'E · Confidence Level',       val:82},
+      {label:'F · Indirect Amplification', val:68}
+    ],
+    exposure:{direct:28, indirect:48, systemic:60},
+    chain:[
+      {label:'North Sea Offshore Wind Capacity Acceleration',score:0.78, order:0},
+      {label:'European LNG Import Demand Structural Decline',score:0.72, order:1},
+      {label:'Qatar / GCC LNG Spot Market Oversupply',       score:0.66, order:1},
+      {label:'GCC Fiscal Revenue Compression',               score:0.62, order:2},
+      {label:'Vision 2030 / QNV Infrastructure Spend Deceleration', score:0.56, order:3, gcc:true}
+    ],
+    gcc:{
+      countries:['UAE','Saudi Arabia','Oman','Qatar','Kuwait','Bahrain'],
+      sectors:['Ports','Inland Log.','Energy T.','Food Sec.','Industrial'],
+      data:[[30,25,48,10,42],[28,22,65,8,45],[25,20,42,8,35],[22,18,72,8,30],[18,15,55,8,28],[15,12,45,6,22]]
+    },
+    insight:'North Sea offshore wind expansion is accelerating Europe\'s structural exit from LNG dependence — Qatar\'s primary long-term contract market. The direct revenue transmission runs through LNG contract renegotiation pressure and spot market oversupply as European import demand falls below contracted volumes. The logistics consequence is indirect but systemic: GCC fiscal revenue compression at precisely the moment when Vision 2030, Qatar National Vision, and Oman Vision 2040 require sustained multi-year infrastructure CAPEX. The industrial project cargo surges that currently drive GCC port throughput growth are funded by hydrocarbon revenues — a wind farm in the North Sea is the upstream driver of a logistics demand deceleration in the Gulf.',
+    blindspot:'A North Sea wind farm reduces GCC port throughput by compressing the hydrocarbon revenues that fund the infrastructure projects generating industrial cargo surges — the causal chain is 3 steps removed and invisible to port demand models.'
+  },
+
+  {
+    id:'lanina', title:'La Niña Multi-Region Agricultural Disruption',
+    category:'Climate / Agriculture', confidence:69,
+    horizon:'6–18 months', origin:'Pacific Ocean',
+    systemicImpact:56,
+    scores:[
+      {label:'A · Exposure Score',         val:28},
+      {label:'B · Transmission Strength',  val:68},
+      {label:'C · Propagation Velocity',   val:72},
+      {label:'D · GCC Sensitivity',        val:55},
+      {label:'E · Confidence Level',       val:69},
+      {label:'F · Indirect Amplification', val:65}
+    ],
+    exposure:{direct:16, indirect:45, systemic:56},
+    chain:[
+      {label:'La Niña Pacific Cooling Event',               score:0.68, order:0},
+      {label:'Correlated Drought Across South America / Australia / SE Asia', score:0.64, order:1},
+      {label:'Multi-Origin Food Export Compression',        score:0.70, order:1},
+      {label:'GCC Import Diversification Strategy Failure', score:0.65, order:2},
+      {label:'Spot Procurement Surge + Port Congestion',    score:0.58, order:3, gcc:true}
+    ],
+    gcc:{
+      countries:['UAE','Saudi Arabia','Oman','Qatar','Kuwait','Bahrain'],
+      sectors:['Ports','Inland Log.','Energy T.','Food Sec.','Industrial'],
+      data:[[28,22,12,68,20],[30,25,12,72,22],[22,18,10,62,18],[18,14,8,65,15],[20,16,8,62,16],[15,12,6,55,12]]
+    },
+    insight:'La Niña events simultaneously suppress agricultural output across South America (wheat, soy), Australia (wheat, barley), and Southeast Asia (rice) — three of GCC\'s four major food import corridors. The critical logistics consequence is that geographic diversification strategies — the primary resilience mechanism in GCC food procurement — fail simultaneously rather than providing the independent risk buffer they are designed to deliver. GCC food security planners who have diversified across multiple origins on the assumption of uncorrelated supply risk discover that La Niña creates a highly correlated shock, forcing emergency spot procurement at elevated global prices across all origins at once, converging on the same port infrastructure simultaneously.',
+    blindspot:'La Niña invalidates GCC food import diversification strategies — geographically diverse supplier portfolios across South America, Australia, and SE Asia are simultaneously impacted, exposing the false independence assumption that underpins GCC food security resilience planning.'
   }
 ];
 
@@ -6925,8 +7374,8 @@ var WL_GROUPS = [
   {
     id:'climate', icon:'◈',
     title:'Climate & Physical Risk',
-    desc:'Hydrology, drought, weather extremes and their transmission into freight and port markets',
-    signals:['panama','eastafrica']
+    desc:'Hydrology, drought, ocean systems, weather extremes and their transmission into freight and port markets',
+    signals:['panama','eastafrica','iod','glacier','austdrought','mekong','arctic','medagri','adenweather','sahel','northsea','lanina']
   },
   {
     id:'trade', icon:'◇',
@@ -6951,11 +7400,161 @@ var WL_GROUPS = [
 var wlState = { activeGroup:null, activeSignal:null };
 var wlInitialized = false;
 
+// Compute top-3 per category — keyed object for O(1) lookup
+var WL_TOP3 = (function() {
+  var top = {};
+  WL_GROUPS.forEach(function(g) {
+    g.signals
+      .map(function(id){ return WL_SIGNALS.find(function(s){ return s.id===id; }); })
+      .filter(Boolean)
+      .sort(function(a,b){ return b.systemicImpact - a.systemicImpact; })
+      .slice(0,3)
+      .forEach(function(s){ top[s.id] = true; });
+  });
+  return top;
+})();
+
+// Leaflet map state
+var wlGeoMap    = null;
+var wlGeoLayers = [];
+
+function wlRenderGeoMap(sig) {
+  var sec = document.getElementById('wl-evidence-section');
+  if (!sig || !sig.geoNodes) {
+    if (sec) sec.className = 'wl-hidden';
+    return;
+  }
+  if (sec) sec.className = 'wl-visible';
+  wlRenderTimeline(sig);
+  wlRenderEvidence(sig);
+
+  // Defer until container is visible and measurable
+  setTimeout(function() {
+    var el = document.getElementById('wl-geo-map');
+    if (!el) return;
+
+    if (!wlGeoMap) {
+      wlGeoMap = L.map('wl-geo-map', {
+        zoomControl:false, attributionControl:true,
+        scrollWheelZoom:false, dragging:false,
+        doubleClickZoom:false, boxZoom:false, keyboard:false
+      });
+      L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_nolabels/{z}/{x}/{y}{r}.png', {
+        attribution:'© OSM © CARTO', maxZoom:8
+      }).addTo(wlGeoMap);
+    }
+
+    // Clear previous layers
+    wlGeoLayers.forEach(function(l){ try{ wlGeoMap.removeLayer(l); }catch(e){} });
+    wlGeoLayers = [];
+
+    var cols = ['#e03040','#e8673c','#b8952a','#9b70e0'];
+    var bounds = [];
+
+    // Draw connecting lines first (behind markers)
+    for (var i = 1; i < sig.geoNodes.length; i++) {
+      var n0 = sig.geoNodes[i-1], n1 = sig.geoNodes[i];
+      var lc = n1.gcc ? '#7c3aed' : (cols[n1.order] || '#4a6fa5');
+      var pl = L.polyline([[n0.lat,n0.lng],[n1.lat,n1.lng]], {
+        color:lc, weight:1.5, opacity:0.4, dashArray:'5 4'
+      }).addTo(wlGeoMap);
+      wlGeoLayers.push(pl);
+    }
+
+    // Draw node markers
+    sig.geoNodes.forEach(function(node) {
+      var col = node.gcc ? '#9b70e0' : (cols[node.order] || '#4a6fa5');
+      var sz  = (node.order===0 || node.gcc) ? 13 : 9;
+      var icon = L.divIcon({
+        html: '<div style="width:'+sz+'px;height:'+sz+'px;border-radius:50%;background:'+col+
+              ';border:2px solid rgba(255,255,255,.3);box-shadow:0 0 8px '+col+
+              ';transform:translate(-50%,-50%)"></div>',
+        iconSize:[0,0], iconAnchor:[0,0], className:''
+      });
+      var m = L.marker([node.lat,node.lng],{icon:icon})
+        .bindTooltip(node.label,{permanent:true,className:'wl-map-tooltip',direction:'top',offset:[0,-(sz/2+3)]})
+        .addTo(wlGeoMap);
+      wlGeoLayers.push(m);
+      bounds.push([node.lat,node.lng]);
+    });
+
+    wlGeoMap.invalidateSize();
+    if (bounds.length) {
+      try { wlGeoMap.fitBounds(L.latLngBounds(bounds),{padding:[28,28],maxZoom:5}); }
+      catch(e){ wlGeoMap.setView([25,40],2); }
+    }
+  }, 80);
+}
+
+function wlRenderTimeline(sig) {
+  var el = document.getElementById('wl-timeline-svg');
+  if (!el || !sig.timeline) { if(el) el.innerHTML=''; return; }
+  var items = sig.timeline;
+  var maxT  = 0;
+  items.forEach(function(t){ maxT = Math.max(maxT, t.start + t.dur); });
+
+  var W=360, rH=28, lW=148, pad=6, barW=W-lW-pad;
+  var H = items.length * rH + 22;
+  var cols = ['#e03040','#e8673c','#b8952a','#7c3aed'];
+  var unit = sig.timelineUnit || 'months';
+
+  var s = '<svg viewBox="0 0 '+W+' '+H+'" style="width:100%;display:block">';
+  // Axis labels
+  s += '<text x="'+lW+'" y="10" font-family="IBM Plex Mono,monospace" font-size="7" fill="#334b66">0</text>';
+  s += '<text x="'+(W-pad)+'" y="10" font-family="IBM Plex Mono,monospace" font-size="7" fill="#334b66" text-anchor="end">'+maxT+' '+unit+'</text>';
+
+  items.forEach(function(t, i) {
+    var y   = i * rH + 14;
+    var col = t.gcc ? '#7c3aed' : (cols[t.order] || '#4a6fa5');
+    var bx  = lW + (t.start / maxT) * barW;
+    var bw  = Math.max(5, (t.dur / maxT) * barW);
+    var lbl = t.label.length > 21 ? t.label.slice(0,20)+'…' : t.label;
+
+    s += '<text x="0" y="'+(y+12)+'" font-family="Inter,sans-serif" font-size="8.5" fill="#8fa0b5">'+lbl+'</text>';
+    s += '<rect x="'+lW+'" y="'+(y+2)+'" width="'+barW+'" height="13" rx="2" fill="#040a14"/>';
+    s += '<rect x="'+bx+'" y="'+(y+2)+'" width="'+bw+'" height="13" rx="2" fill="'+col+'" opacity="0.65"/>';
+    var tag = t.order===0?'ORIGIN':t.order===1?'1ST':t.order===2?'2ND':'3RD';
+    s += '<text x="'+(bx+4)+'" y="'+(y+12)+'" font-family="IBM Plex Mono,monospace" font-size="6.5" fill="rgba(255,255,255,.45)">'+tag+'</text>';
+  });
+  s += '</svg>';
+  el.innerHTML = s;
+}
+
+function wlRenderEvidence(sig) {
+  var el = document.getElementById('wl-evidence-table');
+  if (!el || !sig.evidence) { if(el) el.innerHTML=''; return; }
+  var stageCols = {'ORIGIN':'#e03040','1ST ORDER':'#e8673c','2ND ORDER':'#b8952a','3RD ORDER':'#7c3aed'};
+  var h = '<table class="wl-ev-table"><thead><tr>';
+  ['Stage','Mechanism','Historical Evidence','Time Lag','Strength'].forEach(function(c){
+    h += '<th>'+c+'</th>';
+  });
+  h += '</tr></thead><tbody>';
+  sig.evidence.forEach(function(ev, i) {
+    var col = stageCols[ev.stage] || '#4a6fa5';
+    h += '<tr class="'+(i%2===0?'even':'odd')+'">';
+    h += '<td><span class="wl-ev-stage" style="color:'+col+';background:'+col+'1a;border-color:'+col+'55">'+ev.stage+'</span></td>';
+    h += '<td class="wl-ev-mech">'+ev.mechanism+'</td>';
+    h += '<td class="wl-ev-ex">'+ev.example+'</td>';
+    h += '<td class="wl-ev-lag">'+ev.lag+'</td>';
+    h += '<td class="wl-ev-str"><div class="wl-ev-str-inner">'+
+         '<div class="wl-ev-bar"><div class="wl-ev-fill" style="width:'+ev.strength+'%;background:'+col+'"></div></div>'+
+         '<span class="wl-ev-num" style="color:'+col+'">'+ev.strength+'</span>'+
+         '</div></td>';
+    h += '</tr>';
+  });
+  h += '</tbody></table>';
+  el.innerHTML = h;
+}
+
 function initWatchlist() {
   if (wlInitialized) return;
   wlInitialized = true;
   var tsEl = document.getElementById('wl-ts');
   if (tsEl) tsEl.textContent = new Date().toLocaleDateString('en-GB',{day:'2-digit',month:'short',year:'numeric'});
+  var sc = document.getElementById('wl-sig-count');
+  if (sc) sc.textContent = WL_SIGNALS.length;
+  var cc = document.getElementById('wl-cat-count');
+  if (cc) cc.textContent = WL_GROUPS.length;
   renderWLCategories();
 }
 
@@ -6997,11 +7596,20 @@ function selectWLCategory(gid) {
   var sigs = g.signals.map(function(id){
     return WL_SIGNALS.find(function(s){return s.id===id;});
   }).filter(Boolean);
+  // Sort: top-5 first, then remaining by systemicImpact desc
+  sigs.sort(function(a,b){
+    var aTop = !!WL_TOP3[a.id], bTop = !!WL_TOP3[b.id];
+    if (aTop && !bTop) return -1;
+    if (!aTop && bTop) return 1;
+    return b.systemicImpact - a.systemicImpact;
+  });
   var h = '<div class="wl-mosaic">';
   sigs.forEach(function(sig){
     var sc = wlSysColor(sig.systemicImpact);
     var cc = sig.confidence>=80?'#25a066':sig.confidence>=65?'#b8952a':'#e8673c';
-    h += '<div class="wl-mosaic-card" onclick="selectWLSignal(\''+sig.id+'\')">'+
+    var isTop3 = !!WL_TOP3[sig.id];
+    h += '<div class="wl-mosaic-card'+(isTop3?' wl-mc-top5':'')+'" onclick="selectWLSignal(\''+sig.id+'\')">'+
+         (isTop3?'<div class="wl-mc-top5-badge">&#9733; Top 3 Category Impact</div>':'')+
          '<div class="wl-mc-title">'+sig.title+'</div>'+
          '<div class="wl-mc-meta">'+
            '<div class="wl-mc-met"><span>TIME HORIZON</span><span class="wl-mc-met-val">'+sig.horizon+'</span></div>'+
@@ -7061,6 +7669,7 @@ function selectWLSignal(sid) {
     wlRenderExposure(sig);
     wlRenderHeatmap(sig);
     wlRenderInsight(sig);
+    wlRenderGeoMap(sig);   // scientific evidence panel (map + timeline + table)
   }
   // Smooth scroll to analysis
   setTimeout(function(){

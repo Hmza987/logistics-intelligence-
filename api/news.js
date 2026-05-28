@@ -6,24 +6,51 @@ const fetch = require('node-fetch');
 //
 // Data sources (in priority order):
 //   1. NewsAPI.org      — set NEWSAPI_KEY in Vercel env vars (100 req/day free)
-//   2. The Guardian API — free public tier (api-key=test or GUARDIAN_API_KEY)
-//   3. BBC Middle East RSS — no key, extremely reliable
-//   4. GDELT Doc API   — last resort; may be unreliable from some regions
+//   2. Al Jazeera RSS   — no key; best auto-coverage for Iran/Gulf/ME events
+//   3. The Guardian API — free public tier (api-key=test or GUARDIAN_API_KEY)
+//   4. BBC Middle East + Business RSS — no key, very reliable
+//   5. Reuters RSS      — no key, global fallback
+//   6. GDELT Doc API    — last resort; may time out in some regions
+//
+// Design principle: ALL queries use REGION + EVENT-TYPE patterns rather than
+// named events. This means a new Bandar Abbas strike, IRGC retaliation, or any
+// other Gulf security incident is captured automatically — no manual updates
+// needed. GCC_RE (defined once below) is the single source of truth for what
+// counts as "relevant."
 //
 // Response cached 3 min on CDN edge (matches frontend poll interval).
 // ──────────────────────────────────────────────────────────────────────────────
 
 var FETCH_TIMEOUT = 7000; // ms per request
 
-// Classify headline into ALERT / WATCH / INFO
+// ── Single-source-of-truth relevance filter ───────────────────────────────────
+// Covers: key waterways, regional states, key actors, freight terms, event
+// types. Deliberately broad so future incidents are auto-captured without code
+// changes. Any Iran/Gulf/shipping story passes; unrelated content is blocked.
+var GCC_RE = new RegExp(
+  'hormuz|centcom|irgc|iran|strait|houthi|red.?sea|gulf|' +
+  'shipping|freight|tanker|cargo|vessel|port|' +
+  'saudi|uae|oman|yemen|bab.?el.?mand|bandar.?abbas|' +
+  'kuwait|bahrain|qatar|doha|muscat|riyadh|abu.?dhabi|dubai|jeddah|' +
+  'aramco|adnoc|naval|warship|blockade|embargo|' +
+  'persian.?gulf|iran.*sanction|sanction.*iran|' +
+  'jebel.?ali|salalah|sohar|khor.?fakkan|dammam|aqaba|suez|' +
+  'maersk|msc|hapag|cma.?cgm|cosco|evergreen|dp.?world|' +
+  'attack.*iran|iran.*attack|strike.*gulf|gulf.*strike|' +
+  'missile.*gulf|gulf.*missile|drone.*gulf|gulf.*drone|' +
+  'naval.*incident|maritime.*incident|ship.*seized|vessel.*hijack',
+  'i'
+);
+
+// ── Classify headline into ALERT / WATCH / INFO ────────────────────────────────
 function classifyTag(text) {
   var t = (text || '').toLowerCase();
-  if (/strike|attack|militar|centcom|missile|drone|bomb|war|conflict|explosion|shoot|fired|killed|casualt|threat|escalat|irgc|bandar.?abbas|retaliat|intercept/.test(t)) return 'ALERT';
-  if (/warning|risk|danger|sanction|blockade|closure|suspend|disrupt|halt|surge|divert|reroute|delay|premium|incident/.test(t)) return 'WATCH';
+  if (/strike|attack|militar|centcom|missile|drone|bomb|war|conflict|explosion|shoot|fired|killed|casualt|threat|escalat|irgc|bandar.?abbas|retaliat|intercept|seized|hijack|blast|shell/.test(t)) return 'ALERT';
+  if (/warning|risk|danger|sanction|blockade|closure|suspend|disrupt|halt|surge|divert|reroute|delay|premium|incident|restrict|tension|standoff/.test(t)) return 'WATCH';
   return 'INFO';
 }
 
-// Parse GDELT date format "20260526T120000Z" → ISO string
+// ── Parse GDELT date format "20260526T120000Z" → ISO string ───────────────────
 function parseGdeltDate(d) {
   if (!d) return '';
   try {
@@ -33,7 +60,7 @@ function parseGdeltDate(d) {
   } catch(e) { return ''; }
 }
 
-// Strip known junk suffixes from titles
+// ── Strip known junk suffixes from titles ─────────────────────────────────────
 function cleanTitle(t) {
   return (t || '')
     .replace(/\s*[-|]\s*(Reuters|Bloomberg|AP|AFP|BBC|CNN|WSJ|FT|Guardian|NYT|Al Jazeera|CNBC|Forbes)[^-|]*$/i, '')
@@ -42,12 +69,12 @@ function cleanTitle(t) {
     .trim();
 }
 
-// Lightweight RSS/XML parser — extracts title, link, pubDate, description
+// ── Lightweight RSS/XML parser ────────────────────────────────────────────────
 function parseRSS(xml, sourceName) {
   var items = [];
   var itemRx = /<item>([\s\S]*?)<\/item>/g;
   var im;
-  while ((im = itemRx.exec(xml)) !== null && items.length < 10) {
+  while ((im = itemRx.exec(xml)) !== null && items.length < 15) {
     var block = im[1];
     var titleM = block.match(/<title>(?:<!\[CDATA\[)?([\s\S]*?)(?:\]\]>)?<\/title>/);
     var linkM  = block.match(/<link>([\s\S]*?)<\/link>/) ||
@@ -81,7 +108,7 @@ module.exports = async function handler(req, res) {
   var seen  = new Set();
 
   function addItem(item) {
-    if (items.length >= 12) return;
+    if (items.length >= 15) return;
     if (!item.url || seen.has(item.url)) return;
     if (!item.title || item.title === '[Removed]') return;
     seen.add(item.url);
@@ -89,11 +116,24 @@ module.exports = async function handler(req, res) {
     items.push(item);
   }
 
-  // ── 1. NewsAPI.org (preferred — richer metadata, most recent) ─────────────────
+  // ── 1. NewsAPI.org ─────────────────────────────────────────────────────────────
+  // Query uses REGION + EVENT-TYPE terms (not named events) so any future Gulf/
+  // Iran military or shipping incident is captured without code changes.
   var newsKey = process.env.NEWSAPI_KEY;
   if (newsKey) {
     try {
-      var q = 'Hormuz OR CENTCOM OR "Red Sea shipping" OR "GCC freight" OR "Iran tanker" OR "Bab el-Mandeb" OR "Gulf shipping" OR "Bandar Abbas" OR IRGC OR "Iran attack" OR "Iran strike" OR "Kuwait attack" OR "Iran missile" OR "Gulf attack" OR "Persian Gulf attack" OR "Iran retaliation"';
+      var q = [
+        // Key waterways & chokepoints
+        'Hormuz', '"Strait of Hormuz"', '"Bab el-Mandeb"', '"Red Sea shipping"', '"Persian Gulf"',
+        // Key actors (covers all their future actions automatically)
+        'IRGC', '"Iran military"', '"Iranian forces"', 'CENTCOM',
+        // Freight & port terms
+        '"GCC freight"', '"Gulf shipping"', '"Iran tanker"', '"Red Sea freight"',
+        '"container ship" Gulf', '"cargo vessel" Iran',
+        // Action patterns (region-agnostic — catch any Gulf incident)
+        '"Gulf attack"', '"Iran attack"', '"Iran strike"', '"Iran retaliation"',
+        '"Iran sanctions"', '"Iran nuclear"'
+      ].join(' OR ');
       var r = await fetch(
         'https://newsapi.org/v2/everything' +
         '?q=' + encodeURIComponent(q) +
@@ -118,16 +158,45 @@ module.exports = async function handler(req, res) {
     } catch(e) { /* fall through */ }
   }
 
-  // ── 2. The Guardian API (free — no key required with api-key=test) ─────────────
-  if (items.length < 5) {
+  // ── 2. Al Jazeera RSS (excellent auto-coverage of Iran/Gulf/ME events) ─────────
+  // AJ covers this region natively — no special event names needed. Any attack,
+  // military movement, or shipping incident in the Gulf will appear here.
+  if (items.length < 10) {
+    var ajFeeds = [
+      { url: 'https://www.aljazeera.com/xml/rss/all.xml',           name: 'Al Jazeera' },
+      { url: 'https://www.aljazeera.com/feeds/news-feeds.rss',      name: 'Al Jazeera' }
+    ];
+    var ajFetched = false;
+    for (var ai = 0; ai < ajFeeds.length && !ajFetched; ai++) {
+      try {
+        var ar = await fetch(ajFeeds[ai].url, {
+          timeout: FETCH_TIMEOUT,
+          headers: { 'User-Agent': 'Mozilla/5.0 (compatible; GCCLogisticsDashboard/2.0)' }
+        });
+        if (!ar.ok) continue;
+        var axml = await ar.text();
+        var aItems = parseRSS(axml, ajFeeds[ai].name);
+        aItems.forEach(function(a) {
+          if (GCC_RE.test(a.title + ' ' + a.description)) addItem(a);
+        });
+        ajFetched = true;
+        if (items.length && src === 'none') src = 'Al Jazeera';
+      } catch(e) { /* try next URL */ }
+    }
+  }
+
+  // ── 3. The Guardian API ────────────────────────────────────────────────────────
+  // Same pattern-based approach: region + event-type, no named events.
+  if (items.length < 8) {
     try {
-      // Use GUARDIAN_API_KEY if set (free registration at open-platform.theguardian.com)
-      // Falls back to the public "test" key which works without registration
       var guardianKey = process.env.GUARDIAN_API_KEY || 'test';
       var guardianUrl =
         'https://content.guardianapis.com/search' +
         '?q=' + encodeURIComponent(
-          'Hormuz OR CENTCOM OR "Red Sea" OR "Iran tanker" OR "Gulf shipping" OR "Bab el-Mandeb" OR "Yemen Houthi" OR "GCC freight" OR "Bandar Abbas" OR IRGC OR "Iran attack" OR "Iran strike" OR "Kuwait attack" OR "Iran retaliation" OR "Gulf attack"'
+          'Hormuz OR IRGC OR "Iran military" OR "Red Sea" OR "Persian Gulf" OR ' +
+          '"Iran tanker" OR "Gulf shipping" OR "Bab el-Mandeb" OR "Yemen Houthi" OR ' +
+          '"GCC freight" OR CENTCOM OR "Iran sanctions" OR "Iran attack" OR ' +
+          '"Gulf attack" OR "Iran strike" OR "Iranian forces" OR "Iran nuclear"'
         ) +
         '&api-key=' + guardianKey +
         '&show-fields=trailText' +
@@ -138,9 +207,13 @@ module.exports = async function handler(req, res) {
         var gd = await gr.json();
         var results = (gd.response && gd.response.results) || [];
         results.forEach(function(a) {
+          var title = cleanTitle(a.webTitle || '');
+          var desc  = ((a.fields && a.fields.trailText) || '').replace(/<[^>]*>/g, '').slice(0, 160);
+          // Apply same relevance filter — Guardian "test" key can return broad results
+          if (!GCC_RE.test(title + ' ' + desc)) return;
           addItem({
-            title:       cleanTitle(a.webTitle || ''),
-            description: ((a.fields && a.fields.trailText) || '').replace(/<[^>]*>/g, '').slice(0, 160),
+            title:       title,
+            description: desc,
             url:         a.webUrl || '',
             source:      'The Guardian',
             publishedAt: a.webPublicationDate || '',
@@ -152,13 +225,13 @@ module.exports = async function handler(req, res) {
     } catch(e) { /* fall through */ }
   }
 
-  // ── 3. BBC Middle East RSS (no key, very reliable) ────────────────────────────
-  if (items.length < 5) {
+  // ── 4. BBC Middle East + Business RSS ─────────────────────────────────────────
+  if (items.length < 8) {
     var bbcFeeds = [
       { url: 'https://feeds.bbci.co.uk/news/world/middle_east/rss.xml', name: 'BBC Middle East' },
       { url: 'https://feeds.bbci.co.uk/news/business/rss.xml',          name: 'BBC Business'    }
     ];
-    for (var fi = 0; fi < bbcFeeds.length && items.length < 8; fi++) {
+    for (var fi = 0; fi < bbcFeeds.length && items.length < 10; fi++) {
       try {
         var br = await fetch(bbcFeeds[fi].url, {
           timeout: FETCH_TIMEOUT,
@@ -167,8 +240,6 @@ module.exports = async function handler(req, res) {
         if (!br.ok) continue;
         var bxml = await br.text();
         var rssItems = parseRSS(bxml, bbcFeeds[fi].name);
-        // BBC RSS covers all news — only keep items relevant to our region
-        var GCC_RE = /hormuz|centcom|iran|irgc|strait|houthi|red sea|gulf|shipping|freight|tanker|saudi|uae|oman|yemen|bab el.mand|bandar.?abbas|kuwait.?attack|iran.?attack|iran.?strike|iran.?missile|gulf.?attack|persian.?gulf/i;
         rssItems.forEach(function(a) {
           if (GCC_RE.test(a.title + ' ' + a.description)) addItem(a);
         });
@@ -177,8 +248,8 @@ module.exports = async function handler(req, res) {
     }
   }
 
-  // ── 4. Reuters RSS World feed (fallback) ──────────────────────────────────────
-  if (items.length < 5) {
+  // ── 5. Reuters RSS World feed ──────────────────────────────────────────────────
+  if (items.length < 6) {
     try {
       var rrss = await fetch('https://feeds.reuters.com/reuters/topNews', {
         timeout: FETCH_TIMEOUT,
@@ -187,18 +258,27 @@ module.exports = async function handler(req, res) {
       if (rrss.ok) {
         var rxml = await rrss.text();
         var rItems = parseRSS(rxml, 'Reuters');
-        var GCC_RE2 = /hormuz|centcom|iran|irgc|strait|houthi|red sea|gulf|shipping|freight|tanker|saudi|uae|oman|yemen|bab el.mand|bandar.?abbas|kuwait.?attack|iran.?attack|iran.?strike|iran.?missile|gulf.?attack|persian.?gulf/i;
         rItems.forEach(function(a) {
-          if (GCC_RE2.test(a.title + ' ' + a.description)) addItem(a);
+          if (GCC_RE.test(a.title + ' ' + a.description)) addItem(a);
         });
         if (items.length && src === 'none') src = 'Reuters';
       }
     } catch(e) { /* fall through */ }
   }
 
-  // ── 5. GDELT Doc API (last resort — may timeout in some regions) ──────────────
+  // ── 6. GDELT Doc API (last resort) ────────────────────────────────────────────
+  // Queries use region + event-type patterns — not named events — so they remain
+  // relevant indefinitely without manual updates.
   if (items.length < 3) {
-    var GDELT_QUERIES = ['Strait Hormuz', 'CENTCOM Gulf', 'Red Sea freight', 'IRGC Kuwait', 'Bandar Abbas attack', 'Iran attack Gulf'];
+    var GDELT_QUERIES = [
+      'Iran military attack Gulf',
+      'IRGC attack retaliation',
+      'Strait Hormuz shipping incident',
+      'Red Sea Houthi vessel',
+      'Persian Gulf naval conflict',
+      'Iran sanctions oil tanker',
+      'GCC freight disruption'
+    ];
     for (var qi = 0; qi < GDELT_QUERIES.length && items.length < 12; qi++) {
       try {
         var gdeltUrl =
@@ -206,7 +286,7 @@ module.exports = async function handler(req, res) {
           '?query=' + encodeURIComponent(GDELT_QUERIES[qi]) +
           '&mode=ArtList&maxrecords=5&format=json&timespan=3d';
         var r2 = await fetch(gdeltUrl, {
-          timeout: 4000, // short timeout — don't block response
+          timeout: 4000,
           headers: { 'User-Agent': 'Mozilla/5.0 (compatible; GCCLogisticsDashboard/2.0)' }
         });
         if (!r2.ok) continue;

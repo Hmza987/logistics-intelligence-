@@ -1922,6 +1922,66 @@ canvas { font-family: var(--f-mono); }
 .wl-blindspot { margin-top:10px; padding:8px 10px; background:rgba(124,58,237,.05); border-left:2px solid #7c3aed; }
 .wl-bs-lbl { font-family:var(--f-mono); font-size:7px; letter-spacing:.12em; text-transform:uppercase; color:var(--c-tx2); margin-bottom:3px; }
 .wl-bs-text { font-size:9px; font-family:var(--f-mono); color:#c084fc; line-height:1.5; letter-spacing:.03em; }
+
+/* ── WL Category List ─── */
+.wl-cat-list { display:flex; flex-direction:column; gap:4px; margin-bottom:14px; }
+.wl-cat-row {
+  display:grid; grid-template-columns:26px 1fr 74px 16px;
+  gap:12px; align-items:center; padding:12px 16px;
+  border:1px solid var(--c-bd1); background:var(--c-s1);
+  border-radius:var(--r); cursor:pointer;
+  transition:border-color var(--t),background var(--t);
+}
+.wl-cat-row:hover { border-color:var(--c-bd2); background:var(--c-s2); }
+.wl-cat-row.active { border-color:#7c3aed; background:rgba(124,58,237,.07); }
+.wl-cat-ico { font-size:14px; color:#9b70e0; text-align:center; line-height:1; }
+.wl-cat-name { font-size:11px; font-weight:700; color:var(--c-tx0); margin-bottom:2px; }
+.wl-cat-desc { font-size:8px; color:var(--c-tx2); font-family:var(--f-mono); letter-spacing:.03em; }
+.wl-cat-count { font-family:var(--f-mono); font-size:8.5px; color:var(--c-tx2); text-align:right; white-space:nowrap; }
+.wl-cat-arr { font-size:9px; color:var(--c-tx2); transition:transform var(--t),color var(--t); }
+.wl-cat-row.active .wl-cat-arr { transform:rotate(90deg); color:#9b70e0; }
+
+/* ── WL Signal Mosaic ─── */
+@keyframes wl-fadein { from{opacity:0;transform:translateY(5px)} to{opacity:1;transform:none} }
+.wl-mosaic {
+  display:grid; grid-template-columns:repeat(auto-fit,minmax(210px,1fr));
+  gap:8px; margin-bottom:14px; animation:wl-fadein .18s ease;
+}
+.wl-mosaic-card {
+  padding:14px 16px;
+  border:1px solid var(--c-bd1); background:var(--c-s1);
+  border-radius:var(--r); cursor:pointer; position:relative; overflow:hidden;
+  transition:border-color var(--t),background var(--t);
+}
+.wl-mosaic-card::before {
+  content:''; position:absolute; left:0; top:0; bottom:0; width:3px;
+  background:var(--c-bd1); transition:background var(--t);
+}
+.wl-mosaic-card:hover { border-color:var(--c-bd2); background:var(--c-s2); }
+.wl-mosaic-card:hover::before { background:var(--c-gold-dim); }
+.wl-mosaic-card.active { border-color:#7c3aed; background:rgba(124,58,237,.07); }
+.wl-mosaic-card.active::before { background:#7c3aed; }
+.wl-mc-title { font-size:11px; font-weight:600; color:var(--c-tx0); line-height:1.3; margin-bottom:8px; }
+.wl-mc-meta { display:flex; gap:10px; flex-wrap:wrap; margin-bottom:8px; }
+.wl-mc-met { font-family:var(--f-mono); font-size:7.5px; color:var(--c-tx2); display:flex; flex-direction:column; gap:2px; }
+.wl-mc-met-val { font-size:9px; color:var(--c-tx1); }
+.wl-mc-score { display:flex; align-items:baseline; gap:4px; margin-top:6px; }
+.wl-mc-score-val { font-family:var(--f-mono); font-size:18px; font-weight:700; line-height:1; }
+.wl-mc-score-lbl { font-family:var(--f-mono); font-size:7px; color:var(--c-tx2); }
+.wl-mc-bar-bg { height:3px; background:var(--c-s2); border-radius:2px; overflow:hidden; margin-top:5px; }
+.wl-mc-bar-fill { height:100%; border-radius:2px; }
+
+/* ── Breadcrumb & show/hide ─── */
+.wl-hidden { display:none; }
+.wl-visible { display:block; animation:wl-fadein .2s ease; }
+.wl-breadcrumb {
+  display:flex; align-items:center; gap:8px; margin-bottom:12px;
+  font-family:var(--f-mono); font-size:8px; color:var(--c-tx2); letter-spacing:.06em;
+}
+.wl-bc-link { color:#9b70e0; cursor:pointer; }
+.wl-bc-link:hover { color:#c084fc; text-decoration:underline; }
+.wl-bc-sep { color:var(--c-tx3); }
+.wl-bc-cur { color:var(--c-tx1); }
 </style>
 </head>
 <body>
@@ -2971,49 +3031,49 @@ canvas { font-family: var(--f-mono); }
     </div>
   </div>
 
-  <!-- Signal selector strip (populated by JS) -->
-  <div class="wl-strip" id="wl-strip"></div>
+  <!-- Category list (always visible after init) -->
+  <div class="wl-cat-list" id="wl-categories"></div>
 
-  <!-- Main signal panel -->
-  <div class="wl-panel">
+  <!-- Signal mosaic (appears when a category is selected) -->
+  <div id="wl-mosaic-wrap" class="wl-hidden"></div>
 
-    <!-- LEFT: Transmission network -->
-    <div class="wl-tx-col">
-      <div class="wl-signal-box">
-        <!-- Signal node header -->
-        <div class="wl-signal-top">
-          <div id="wl-signal-header"></div>
-          <div class="wl-conf-wrap" id="wl-conf-ring"></div>
+  <!-- Full analysis (appears when a signal is selected from the mosaic) -->
+  <div id="wl-analysis-wrap" class="wl-hidden">
+
+    <!-- Breadcrumb navigation -->
+    <div class="wl-breadcrumb" id="wl-breadcrumb"></div>
+
+    <!-- Main two-column panel -->
+    <div class="wl-panel">
+
+      <!-- LEFT: Transmission network -->
+      <div class="wl-tx-col">
+        <div class="wl-signal-box">
+          <div class="wl-signal-top">
+            <div id="wl-signal-header"></div>
+            <div class="wl-conf-wrap" id="wl-conf-ring"></div>
+          </div>
+          <div class="wl-tx-label">&#8618; Transmission Network &mdash; Stress Propagation Chain</div>
+          <div class="wl-tx-svg-wrap" id="wl-tx-svg"></div>
         </div>
-        <!-- Transmission chain -->
-        <div class="wl-tx-label">&#8618; Transmission Network &mdash; Stress Propagation Chain</div>
-        <div class="wl-tx-svg-wrap" id="wl-tx-svg"></div>
-      </div>
-    </div>
-
-    <!-- RIGHT: Analysis panel -->
-    <div class="wl-analysis-col">
-
-      <!-- Propagation scores -->
-      <div class="wl-rcard">
-        <div class="wl-rcard-title">Propagation Model &mdash; Six-Factor Assessment</div>
-        <div id="wl-scores"></div>
       </div>
 
-      <!-- Exposure breakdown -->
-      <div class="wl-rcard">
-        <div class="wl-rcard-title">GCC Exposure Profile</div>
-        <div id="wl-exposure"></div>
+      <!-- RIGHT: Analysis panel -->
+      <div class="wl-analysis-col">
+        <div class="wl-rcard">
+          <div class="wl-rcard-title">Propagation Model &mdash; Six-Factor Assessment</div>
+          <div id="wl-scores"></div>
+        </div>
+        <div class="wl-rcard">
+          <div class="wl-rcard-title">GCC Exposure Profile</div>
+          <div id="wl-exposure"></div>
+        </div>
+        <div class="wl-rcard">
+          <div class="wl-rcard-title">GCC Country &times; Sector Impact Heatmap &nbsp;<span style="font-size:7px;color:var(--c-tx2)">(0&ndash;100)</span></div>
+          <div id="wl-heatmap"></div>
+        </div>
+        <div class="wl-insight-card" id="wl-insight"></div>
       </div>
-
-      <!-- GCC heatmap -->
-      <div class="wl-rcard">
-        <div class="wl-rcard-title">GCC Country &times; Sector Impact Heatmap &nbsp;<span style="font-size:7px;color:var(--c-tx2)">(0&ndash;100)</span></div>
-        <div id="wl-heatmap"></div>
-      </div>
-
-      <!-- Strategic insight -->
-      <div class="wl-insight-card" id="wl-insight"></div>
 
     </div>
   </div>
@@ -6836,32 +6896,143 @@ function renderWatchlistSignal(id) {
   wlRenderInsight(sig);
 }
 
+// ── Group / Category definitions ──────────────────────────────────────────────
+var WL_GROUPS = [
+  {
+    id:'climate', icon:'◈',
+    title:'Climate & Physical Risk',
+    desc:'Hydrology, drought, weather extremes and their transmission into freight and port markets',
+    signals:['panama','eastafrica']
+  },
+  {
+    id:'trade', icon:'◇',
+    title:'Trade Policy & Regulation',
+    desc:'Carbon border adjustment, currency dynamics, tariff mechanisms and trade flow shifts',
+    signals:['cbam','turkey']
+  },
+  {
+    id:'geopolitical', icon:'△',
+    title:'Geopolitical Infrastructure',
+    desc:'Corridor development, hub competition and maritime gateway hierarchy restructuring',
+    signals:['imec']
+  },
+  {
+    id:'economic', icon:'◆',
+    title:'Economic Demand Dynamics',
+    desc:'Property sector effects, metals demand contraction and vessel class cross-market reallocation',
+    signals:['china']
+  }
+];
+
+var wlState = { activeGroup:null, activeSignal:null };
 var wlInitialized = false;
+
 function initWatchlist() {
   if (wlInitialized) return;
   wlInitialized = true;
-  // Timestamp
   var tsEl = document.getElementById('wl-ts');
   if (tsEl) tsEl.textContent = new Date().toLocaleDateString('en-GB',{day:'2-digit',month:'short',year:'numeric'});
-  // Build signal strip pills
-  var strip = document.getElementById('wl-strip');
-  if (strip) {
-    WL_SIGNALS.forEach(function(sig,i){
-      var p = document.createElement('div');
-      p.className = 'wl-pill' + (i===0?' active':'');
-      p.dataset.id = sig.id;
-      p.onclick = function(){ renderWatchlistSignal(sig.id); };
-      p.innerHTML =
-        '<div class="wl-pill-cat">'+sig.category+'</div>'+
-        '<div class="wl-pill-title">'+sig.title+'</div>'+
-        '<div><span class="wl-pill-score">'+sig.systemicImpact+'</span>'+
-        '<span class="wl-pill-score-lbl"> systemic</span></div>';
-      strip.appendChild(p);
-    });
-  }
-  // Render first signal
-  renderWatchlistSignal(WL_SIGNALS[0].id);
+  renderWLCategories();
 }
+
+function renderWLCategories() {
+  var el = document.getElementById('wl-categories');
+  if (!el) return;
+  el.innerHTML = '';
+  WL_GROUPS.forEach(function(g) {
+    var row = document.createElement('div');
+    row.className = 'wl-cat-row' + (wlState.activeGroup===g.id?' active':'');
+    row.dataset.gid = g.id;
+    row.onclick = function(){ selectWLCategory(g.id); };
+    var cnt = g.signals.length;
+    row.innerHTML =
+      '<div class="wl-cat-ico">'+g.icon+'</div>'+
+      '<div><div class="wl-cat-name">'+g.title+'</div>'+
+      '<div class="wl-cat-desc">'+g.desc+'</div></div>'+
+      '<div class="wl-cat-count">'+cnt+' signal'+(cnt>1?'s':'')+'</div>'+
+      '<div class="wl-cat-arr">&#9658;</div>';
+    el.appendChild(row);
+  });
+}
+
+function selectWLCategory(gid) {
+  wlState.activeGroup = gid;
+  wlState.activeSignal = null;
+  // Update active state on rows
+  document.querySelectorAll('.wl-cat-row').forEach(function(r){
+    r.classList.toggle('active', r.dataset.gid===gid);
+  });
+  // Show mosaic, hide analysis
+  var mw = document.getElementById('wl-mosaic-wrap');
+  var aw = document.getElementById('wl-analysis-wrap');
+  if (mw) mw.className = 'wl-visible';
+  if (aw) aw.className = 'wl-hidden';
+  // Render mosaic
+  var g = WL_GROUPS.find(function(x){return x.id===gid;});
+  if (!g || !mw) return;
+  var sigs = g.signals.map(function(id){
+    return WL_SIGNALS.find(function(s){return s.id===id;});
+  }).filter(Boolean);
+  var h = '<div class="wl-mosaic">';
+  sigs.forEach(function(sig){
+    var sc = wlSysColor(sig.systemicImpact);
+    var cc = sig.confidence>=80?'#25a066':sig.confidence>=65?'#b8952a':'#e8673c';
+    h += '<div class="wl-mosaic-card" onclick="selectWLSignal(\''+sig.id+'\')">'+
+         '<div class="wl-mc-title">'+sig.title+'</div>'+
+         '<div class="wl-mc-meta">'+
+           '<div class="wl-mc-met"><span>TIME HORIZON</span><span class="wl-mc-met-val">'+sig.horizon+'</span></div>'+
+           '<div class="wl-mc-met"><span>ORIGIN</span><span class="wl-mc-met-val">'+sig.origin+'</span></div>'+
+           '<div class="wl-mc-met"><span>CONFIDENCE</span><span class="wl-mc-met-val" style="color:'+cc+'">'+sig.confidence+'%</span></div>'+
+         '</div>'+
+         '<div class="wl-mc-score">'+
+           '<span class="wl-mc-score-val" style="color:'+sc+'">'+sig.systemicImpact+'</span>'+
+           '<span class="wl-mc-score-lbl">systemic impact</span>'+
+         '</div>'+
+         '<div class="wl-mc-bar-bg"><div class="wl-mc-bar-fill" style="width:'+sig.systemicImpact+'%;background:'+sc+'"></div></div>'+
+         '</div>';
+  });
+  h += '</div>';
+  mw.innerHTML = h;
+}
+
+function selectWLSignal(sid) {
+  wlState.activeSignal = sid;
+  // Active state on mosaic cards
+  document.querySelectorAll('.wl-mosaic-card').forEach(function(c){
+    var oc = c.getAttribute('onclick')||'';
+    c.classList.toggle('active', oc.indexOf(sid)!==-1);
+  });
+  // Show analysis panel
+  var aw = document.getElementById('wl-analysis-wrap');
+  if (aw) aw.className = 'wl-visible';
+  // Breadcrumb
+  var g = WL_GROUPS.find(function(x){return x.signals.indexOf(sid)!==-1;});
+  var sig = WL_SIGNALS.find(function(s){return s.id===sid;});
+  var bc = document.getElementById('wl-breadcrumb');
+  if (bc && g && sig) {
+    bc.innerHTML =
+      '<span class="wl-bc-link" onclick="selectWLCategory(\''+g.id+'\')">&#8592; '+g.title+'</span>'+
+      '<span class="wl-bc-sep">&#8250;</span>'+
+      '<span class="wl-bc-cur">'+sig.title+'</span>';
+  }
+  // Render analysis
+  if (sig) {
+    wlRenderHeader(sig);
+    wlRenderConfRing(sig);
+    wlRenderChain(sig);
+    wlRenderScores(sig);
+    wlRenderExposure(sig);
+    wlRenderHeatmap(sig);
+    wlRenderInsight(sig);
+  }
+  // Smooth scroll to analysis
+  setTimeout(function(){
+    var el=document.getElementById('wl-analysis-wrap');
+    if(el) el.scrollIntoView({behavior:'smooth',block:'start'});
+  },60);
+}
+
+function renderWatchlistSignal(sid){ selectWLSignal(sid); } // backward compat
 // ── END STRATEGIC WATCHLIST ───────────────────────────────────────────────────
 
 

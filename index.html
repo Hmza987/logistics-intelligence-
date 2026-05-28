@@ -2046,6 +2046,14 @@ canvas { font-family: var(--f-mono); }
   margin-bottom:8px; line-height:1.5; font-style:italic;
 }
 #wl-chart-canvas { width:100% !important; }
+#wl-chart-source {
+  margin-top:7px; font-family:var(--f-mono); font-size:7px;
+  color:#243446; letter-spacing:.04em;
+}
+#wl-chart-source a {
+  color:#2d4d66; text-decoration:none; border-bottom:1px solid #1e3344;
+}
+#wl-chart-source a:hover { color:#4a9fe8; border-color:#4a9fe8; }
 
 /* ── Key insight summary banner ── */
 .wl-key-insight {
@@ -3173,6 +3181,7 @@ canvas { font-family: var(--f-mono); }
           <div style="position:relative;height:190px">
             <canvas id="wl-chart-canvas"></canvas>
           </div>
+          <div id="wl-chart-source"></div>
         </div>
       </div>
     </div>
@@ -6662,6 +6671,8 @@ var WL_SIGNALS = [
       yLabel:'Max Daily Transits',
       color:'#e8673c',
       note:'R²≈0.91 — each 1 m drop in lake level removes ~5 daily transits; 2023–24 drought forced level to 22 m, the lowest in 73 years of recorded data',
+      source:'Panama Canal Authority (ACP) — Water & Transit Operations',
+      sourceUrl:'https://www.pancanal.com/eng/op/index.html',
       points:[
         {x:26.8,y:38},{x:26.6,y:38},{x:26.4,y:37},{x:26.2,y:37},{x:26.0,y:36},
         {x:25.8,y:35},{x:25.5,y:34},{x:25.2,y:33},{x:25.0,y:31},{x:24.8,y:29},
@@ -6826,6 +6837,8 @@ var WL_SIGNALS = [
       yLabel:'Reefer Lease Rate Index (Jan 2021 = 100)',
       color:'#e03040',
       note:'Reefer rates peaked 3–4 months after HOA drought declaration (Jun 2022), confirming the transmission lag modelled in the causality chain',
+      source:'Drewry Reefer Shipping Annual Review & WFP Logistics Cluster',
+      sourceUrl:'https://www.drewry.co.uk/supply-chain-advisors/supply-chain-expertise/reefer-shipping',
       labels:['Jan-21','Apr-21','Jul-21','Oct-21','Jan-22','Apr-22','Jul-22','Oct-22','Jan-23','Apr-23','Jul-23','Oct-23'],
       values:[100,108,125,142,158,178,195,182,165,148,132,118]
     }
@@ -6913,6 +6926,8 @@ var WL_SIGNALS = [
       xLabel:'IOD Dipole Mode Index', yLabel:'India June–Sep Rainfall (% of LPA)',
       color:'#4a9fe8',
       note:'Correlation R²≈0.68 — positive IOD (>+0.4) consistently suppresses monsoon below 95% LPA, triggering crop stress across Pakistan, Sri Lanka, and India simultaneously',
+      source:'NOAA Climate Prediction Center & India Meteorological Department',
+      sourceUrl:'https://www.cpc.ncep.noaa.gov/products/precip/CWlink/MJO/enso.shtml',
       points:[
         {x:-0.8,y:112},{x:-0.6,y:108},{x:-0.4,y:105},{x:-0.3,y:103},{x:-0.2,y:101},
         {x:0.0,y:100},{x:0.1,y:99},{x:0.2,y:98},{x:0.3,y:97},{x:0.4,y:95},
@@ -6970,6 +6985,8 @@ var WL_SIGNALS = [
       xLabel:'Year', yLabel:'Cumulative Mass Balance (m water equivalent)',
       color:'#4a9fe8',
       note:'Accelerating since 2000 — rate of loss doubled vs 1970–2000 average; Karakoram "anomaly" now reversing, confirming system-wide collapse trajectory',
+      source:'World Glacier Monitoring Service (WGMS) — Global Glacier Change Bulletin',
+      sourceUrl:'https://wgms.ch/products_ref_glaciers/',
       labels:[1970,1975,1980,1985,1990,1995,2000,2005,2010,2015,2020,2023],
       values:[0,-0.8,-1.6,-2.5,-3.5,-4.8,-6.2,-8.1,-10.5,-13.4,-17.2,-20.1]
     }
@@ -7022,6 +7039,8 @@ var WL_SIGNALS = [
       xLabel:'Year', yLabel:'Production (Million MT)',
       color:'#b8952a',
       note:'2019–20 drought year produced only 15.2M MT vs 35M MT average — a 57% collapse triggering GCC emergency procurement across alternative origins at 18–25% cost premium',
+      source:'ABARES — Australian Agricultural Commodities Report',
+      sourceUrl:'https://www.agriculture.gov.au/abares/research-topics/agricultural-outlook',
       labels:['2014','2015','2016','2017','2018','2019','2020','2021','2022','2023'],
       values:[23.9,24.3,35.1,31.8,17.3,15.2,33.3,36.3,39.3,26.0]
     }
@@ -7075,6 +7094,8 @@ var WL_SIGNALS = [
       xLabel:'Year', yLabel:'Annual Average Flow (m³/s)',
       color:'#4a9fe8',
       note:'2019–20 drought year recorded lowest flow since records began — Chinese dam operations amplify natural variability; downstream Vietnam and Thailand rice yields correlate at R²≈0.72 with flow levels',
+      source:'Mekong River Commission — Hydrological Data & Water Resources',
+      sourceUrl:'https://www.mrcmekong.org/our-work/topics/water-resources',
       labels:[2010,2011,2012,2013,2014,2015,2016,2017,2018,2019,2020,2021,2022,2023],
       values:[5200,6100,5800,5400,5100,4200,3800,5600,5300,2900,3200,5100,4800,3600]
     }
@@ -7137,6 +7158,8 @@ var WL_SIGNALS = [
       yLabel:'Vessel Transits',
       color:'#4a9fe8',
       note:'+1,125% growth 2010→2021; volatility driven by weather and Russian policy — the secular upward trend is unambiguous and directionally irreversible',
+      source:'CHNL — Arctic & Northern Sea Route Information Office',
+      sourceUrl:'https://arctic-lio.com',
       labels:[2010,2011,2012,2013,2014,2015,2016,2017,2018,2019,2020,2021,2022,2023],
       values:[4,34,46,71,53,18,19,27,27,37,62,85,71,89]
     }
@@ -7189,6 +7212,8 @@ var WL_SIGNALS = [
       xLabel:'Summer Temp Anomaly (°C above 1990–2020 mean)', yLabel:'Spain+Italy Olive Oil Output (000 MT)',
       color:'#b8952a',
       note:'R²≈0.74 — each +1°C anomaly correlates with ~18% production reduction; 2023 summer anomaly of +2.8°C drove 52% output collapse across Iberian-Italian belt',
+      source:'Copernicus Climate Change Service (C3S) & International Olive Council',
+      sourceUrl:'https://climate.copernicus.eu/climate-bulletins',
       points:[
         {x:0.2,y:2850},{x:0.3,y:2700},{x:0.1,y:2900},{x:0.4,y:2650},{x:0.5,y:2500},
         {x:0.6,y:2400},{x:0.3,y:2780},{x:0.8,y:2200},{x:0.7,y:2350},{x:1.0,y:2050},
@@ -7247,6 +7272,8 @@ var WL_SIGNALS = [
       xLabel:'Quarter', yLabel:'Average Delay (Days)',
       color:'#e8673c',
       note:'Q3 delays consistently 2–4× higher than Q1/Q2 — monsoon seasonality creates predictable but worsening disruption pattern; 2023 Q3 peak of 4.1 days represents new historical maximum',
+      source:'Salalah Port Services Operational Reports & AP Møller-Maersk Network Updates',
+      sourceUrl:'https://www.salalahport.com',
       labels:['Q1-20','Q2-20','Q3-20','Q4-20','Q1-21','Q2-21','Q3-21','Q4-21','Q1-22','Q2-22','Q3-22','Q4-22','Q1-23','Q2-23','Q3-23','Q4-23'],
       values:[1.2,1.4,2.8,1.3,1.1,1.5,3.2,1.4,1.3,1.6,3.8,1.5,1.2,1.7,4.1,1.6]
     }
@@ -7299,6 +7326,8 @@ var WL_SIGNALS = [
       xLabel:'Year', yLabel:'WFP Sahel Emergency Response (000 MT)',
       color:'#b8952a',
       note:'Inverse correlation R²≈0.79 — each 10% rainfall deficit triggers ~180,000 MT additional WFP procurement; 2022 peak of 1.8M MT set new WFP Sahel programme record',
+      source:'WFP — Emergency Food Aid Operations & FEWS NET Sahel Monitoring',
+      sourceUrl:'https://www.wfp.org/emergencies/sahel-emergency',
       labels:[2010,2011,2012,2013,2014,2015,2016,2017,2018,2019,2020,2021,2022,2023],
       values:[420,680,850,520,480,620,780,710,640,820,960,1100,1800,1450]
     }
@@ -7351,6 +7380,8 @@ var WL_SIGNALS = [
       xLabel:'Year', yLabel:'Middle East PSV Day Rate (USD/day)',
       color:'#25a066',
       note:'OSV day rates in ME Gulf spiked 65% as North Sea wind buildout relocated vessels 2021–2023; R²≈0.81 between European renewable vessel demand and GCC OSV scarcity premium',
+      source:'Clarksons Research — Offshore Vessel Day Rate Database',
+      sourceUrl:'https://www.clarksons.com/services/research/',
       labels:[2018,2019,2020,2021,2022,2023,2024],
       values:[12500,11800,8200,10500,16800,21400,19800]
     }
@@ -7404,6 +7435,8 @@ var WL_SIGNALS = [
       xLabel:'Year', yLabel:'FAO Food Price Index (2014–16 = 100)',
       color:'#e03040',
       note:'La Niña phases (ONI < −0.5) correlate with global food price spikes 6–12 months later — 2010–12 and 2020–23 La Niña events both produced record food price peaks impacting GCC import costs',
+      source:'FAO Food Price Index & NOAA Oceanic Niño Index (ONI)',
+      sourceUrl:'https://www.fao.org/worldfoodsituation/foodpricesindex/en/',
       labels:[2000,2002,2004,2006,2008,2010,2012,2014,2016,2018,2020,2021,2022,2023],
       values:[90,89,105,118,201,171,210,120,91,116,98,125,143,127]
     }
@@ -7690,6 +7723,12 @@ function wlRenderChart(sig) {
   var ch = sig.chart;
   if (title) title.textContent = ch.title;
   if (note)  note.textContent  = ch.note || '';
+  var src = document.getElementById('wl-chart-source');
+  if (src) {
+    src.innerHTML = ch.source
+      ? 'Source: <a href="'+(ch.sourceUrl||'#')+'" target="_blank" rel="noopener">'+ch.source+'</a>'
+      : '';
+  }
 
   // Destroy previous instance
   if (wlChartInst) { try{ wlChartInst.destroy(); }catch(e){} wlChartInst = null; }

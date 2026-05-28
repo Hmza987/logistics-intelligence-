@@ -1794,6 +1794,134 @@ canvas { font-family: var(--f-mono); }
   0%,100% { opacity:1; }
   50%     { opacity:.15; }
 }
+
+/* ── STRATEGIC WATCHLIST ─────────────────────────────────────────────────────
+   Purple accent system — signals live upstream of all other tabs
+   ─────────────────────────────────────────────────────────────────────────── */
+.wl-page-header {
+  margin-bottom:16px; padding-bottom:14px;
+  border-bottom:1px solid var(--c-bd1);
+  display:flex; align-items:flex-start; justify-content:space-between; gap:12px;
+}
+.wl-page-title {
+  font-family:var(--f-mono); font-size:10px; font-weight:700;
+  letter-spacing:.15em; color:#c084fc; text-transform:uppercase; margin-bottom:3px;
+}
+.wl-page-sub { font-size:10px; color:var(--c-tx1); margin-bottom:2px; }
+.wl-page-meta { font-family:var(--f-mono); font-size:8px; color:var(--c-tx2); letter-spacing:.06em; }
+.wl-doctrine {
+  font-family:var(--f-mono); font-size:8px; color:#9b70e0;
+  text-align:right; max-width:300px; line-height:1.55; letter-spacing:.03em;
+}
+/* Signal selector strip */
+.wl-strip {
+  display:grid; grid-template-columns:repeat(6,1fr);
+  gap:6px; margin-bottom:14px;
+}
+@media(max-width:960px){ .wl-strip{ grid-template-columns:repeat(3,1fr); } }
+.wl-pill {
+  padding:8px 10px; border:1px solid var(--c-bd1); background:var(--c-s1);
+  cursor:pointer; border-radius:var(--r); transition:border-color var(--t),background var(--t);
+}
+.wl-pill:hover { border-color:var(--c-bd2); background:var(--c-s2); }
+.wl-pill.active { border-color:#7c3aed; background:rgba(124,58,237,.07); }
+.wl-pill-cat {
+  font-family:var(--f-mono); font-size:7px; letter-spacing:.1em;
+  text-transform:uppercase; color:var(--c-tx2); margin-bottom:3px;
+}
+.wl-pill-title { font-size:9px; font-weight:600; color:var(--c-tx0); line-height:1.35; margin-bottom:4px; }
+.wl-pill-score { font-family:var(--f-mono); font-size:11px; font-weight:700; color:var(--c-gold); }
+.wl-pill-score-lbl { font-family:var(--f-mono); font-size:7px; color:var(--c-tx2); margin-left:3px; }
+/* Main two-column layout */
+.wl-panel { display:grid; grid-template-columns:1fr 370px; gap:12px; align-items:start; }
+@media(max-width:960px){ .wl-panel{ grid-template-columns:1fr; } }
+/* Left column */
+.wl-tx-col { display:flex; flex-direction:column; gap:10px; }
+.wl-signal-box {
+  background:var(--c-s1); border:1px solid var(--c-bd1);
+  border-radius:var(--r); padding:16px;
+}
+.wl-signal-top {
+  display:grid; grid-template-columns:1fr auto; gap:12px;
+  margin-bottom:14px; padding-bottom:12px; border-bottom:1px solid var(--c-bd0);
+}
+.wl-signal-name { font-size:13px; font-weight:700; color:var(--c-tx0); margin-bottom:5px; line-height:1.3; }
+.wl-signal-meta { display:flex; flex-wrap:wrap; gap:10px; }
+.wl-meta-item { font-family:var(--f-mono); font-size:8px; color:var(--c-tx2); letter-spacing:.06em; display:flex; flex-direction:column; gap:2px; }
+.wl-meta-val { font-size:10px; color:var(--c-tx1); font-weight:600; }
+.wl-conf-wrap { display:flex; flex-direction:column; align-items:center; gap:4px; min-width:62px; }
+.wl-conf-svg { width:58px; height:58px; }
+.wl-conf-lbl { font-family:var(--f-mono); font-size:7px; color:var(--c-tx2); letter-spacing:.06em; text-transform:uppercase; }
+.wl-tx-label {
+  font-family:var(--f-mono); font-size:8px; letter-spacing:.12em;
+  color:var(--c-tx2); text-transform:uppercase; margin-bottom:10px;
+}
+.wl-tx-svg-wrap { min-height:340px; overflow:visible; }
+.wl-tx-svg-wrap svg { width:100%; overflow:visible; }
+/* Right column */
+.wl-analysis-col { display:flex; flex-direction:column; gap:10px; }
+.wl-rcard {
+  background:var(--c-s1); border:1px solid var(--c-bd1);
+  border-radius:var(--r); padding:14px;
+}
+.wl-rcard-title {
+  font-family:var(--f-mono); font-size:8px; letter-spacing:.12em;
+  color:var(--c-tx2); text-transform:uppercase; margin-bottom:10px;
+}
+/* Score rows */
+.wl-score-row {
+  display:grid; grid-template-columns:140px 1fr 30px;
+  gap:6px; align-items:center; margin-bottom:6px;
+}
+.wl-score-lbl {
+  font-family:var(--f-mono); font-size:7px; color:var(--c-tx1);
+  letter-spacing:.04em; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;
+}
+.wl-bar-bg { height:4px; background:var(--c-s2); border-radius:2px; overflow:hidden; }
+.wl-bar-fill { height:100%; border-radius:2px; transition:width .6s ease; }
+.wl-score-val { font-family:var(--f-mono); font-size:9px; color:var(--c-gold); text-align:right; }
+/* Systemic impact */
+.wl-systemic {
+  display:flex; align-items:center; gap:10px;
+  margin-top:10px; padding-top:10px; border-top:1px solid var(--c-bd0);
+}
+.wl-sys-lbl { font-family:var(--f-mono); font-size:7px; color:var(--c-tx2); text-transform:uppercase; letter-spacing:.08em; margin-bottom:3px; }
+.wl-sys-val { font-family:var(--f-mono); font-size:24px; font-weight:700; line-height:1; min-width:42px; }
+.wl-sys-track { flex:1; height:6px; background:var(--c-s2); border-radius:3px; overflow:hidden; }
+.wl-sys-fill { height:100%; border-radius:3px; transition:width .8s ease; }
+/* Exposure breakdown */
+.wl-exp-row { display:grid; grid-template-columns:64px 1fr 26px; gap:6px; align-items:center; margin-bottom:6px; }
+.wl-exp-lbl { font-family:var(--f-mono); font-size:7px; color:var(--c-tx2); text-transform:uppercase; letter-spacing:.06em; }
+.wl-exp-val { font-family:var(--f-mono); font-size:9px; text-align:right; }
+/* GCC heatmap */
+.wl-hm-col-row { display:grid; gap:2px; margin-bottom:3px; padding-left:52px; }
+.wl-hm-col-lbl {
+  font-family:var(--f-mono); font-size:6.5px; color:var(--c-tx2);
+  text-align:center; letter-spacing:.03em; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;
+}
+.wl-hm-data-row { display:flex; gap:2px; margin-bottom:2px; align-items:center; }
+.wl-hm-row-lbl { font-family:var(--f-mono); font-size:7px; color:var(--c-tx1); width:50px; flex-shrink:0; }
+.wl-hm-cell {
+  flex:1; height:20px; border-radius:2px;
+  display:flex; align-items:center; justify-content:center;
+  font-family:var(--f-mono); font-size:7.5px; font-weight:600;
+  transition:background .5s ease;
+}
+/* Strategic insight */
+.wl-insight-card {
+  background:var(--c-s0);
+  border:1px solid rgba(124,58,237,.22);
+  border-left:3px solid #7c3aed;
+  border-radius:var(--r); padding:14px;
+}
+.wl-insight-lbl {
+  font-family:var(--f-mono); font-size:7px; letter-spacing:.12em;
+  color:#9b70e0; text-transform:uppercase; margin-bottom:8px;
+}
+.wl-insight-text { font-size:10px; line-height:1.65; color:var(--c-tx1); }
+.wl-blindspot { margin-top:10px; padding:8px 10px; background:rgba(124,58,237,.05); border-left:2px solid #7c3aed; }
+.wl-bs-lbl { font-family:var(--f-mono); font-size:7px; letter-spacing:.12em; text-transform:uppercase; color:var(--c-tx2); margin-bottom:3px; }
+.wl-bs-text { font-size:9px; font-family:var(--f-mono); color:#c084fc; line-height:1.5; letter-spacing:.03em; }
 </style>
 </head>
 <body>
@@ -1869,6 +1997,7 @@ canvas { font-family: var(--f-mono); }
   <div class="tab" onclick="showTab('rates',this)">&#9671; Container Rates</div>
   <div class="tab" onclick="showTab('trucking',this)">&#9672; GCC Trucking</div>
   <div class="tab" onclick="showTab('simulator',this)">&#9670; Scenario Simulator</div>
+  <div class="tab" onclick="showTab('watchlist',this)">&#8881; Strategic Watchlist</div>
 </div>
 
 <!-- MOBILE CURRENT-TAB INDICATOR -->
@@ -2824,6 +2953,72 @@ canvas { font-family: var(--f-mono); }
 </div>
 
 
+<!-- ============================================================ TAB 5: STRATEGIC WATCHLIST -->
+<div class="page" id="page-watchlist">
+
+  <!-- Page header -->
+  <div class="wl-page-header">
+    <div>
+      <div class="wl-page-title">&#8881; Strategic Watchlist</div>
+      <div class="wl-page-sub">Weak signal intelligence &middot; Multi-order transmission modelling &middot; GCC exposure assessment</div>
+      <div class="wl-page-meta">6 active signals &middot; Updated <span id="wl-ts">—</span></div>
+    </div>
+    <div class="wl-doctrine">
+      "The value is not identifying events.<br>
+      The value is revealing hidden propagation<br>
+      mechanisms between seemingly unrelated<br>
+      developments and logistics outcomes."
+    </div>
+  </div>
+
+  <!-- Signal selector strip (populated by JS) -->
+  <div class="wl-strip" id="wl-strip"></div>
+
+  <!-- Main signal panel -->
+  <div class="wl-panel">
+
+    <!-- LEFT: Transmission network -->
+    <div class="wl-tx-col">
+      <div class="wl-signal-box">
+        <!-- Signal node header -->
+        <div class="wl-signal-top">
+          <div id="wl-signal-header"></div>
+          <div class="wl-conf-wrap" id="wl-conf-ring"></div>
+        </div>
+        <!-- Transmission chain -->
+        <div class="wl-tx-label">&#8618; Transmission Network &mdash; Stress Propagation Chain</div>
+        <div class="wl-tx-svg-wrap" id="wl-tx-svg"></div>
+      </div>
+    </div>
+
+    <!-- RIGHT: Analysis panel -->
+    <div class="wl-analysis-col">
+
+      <!-- Propagation scores -->
+      <div class="wl-rcard">
+        <div class="wl-rcard-title">Propagation Model &mdash; Six-Factor Assessment</div>
+        <div id="wl-scores"></div>
+      </div>
+
+      <!-- Exposure breakdown -->
+      <div class="wl-rcard">
+        <div class="wl-rcard-title">GCC Exposure Profile</div>
+        <div id="wl-exposure"></div>
+      </div>
+
+      <!-- GCC heatmap -->
+      <div class="wl-rcard">
+        <div class="wl-rcard-title">GCC Country &times; Sector Impact Heatmap &nbsp;<span style="font-size:7px;color:var(--c-tx2)">(0&ndash;100)</span></div>
+        <div id="wl-heatmap"></div>
+      </div>
+
+      <!-- Strategic insight -->
+      <div class="wl-insight-card" id="wl-insight"></div>
+
+    </div>
+  </div>
+
+</div>
 
 
 
@@ -2836,8 +3031,8 @@ var mapReady = false;
 var activeScenario = 1;
 
 // ── TABS ──────────────────────────────────────────────────────────────────────
-var TAB_LABELS = { hormuz:'Hormuz Traffic', rates:'Container Rates', trucking:'GCC Trucking', simulator:'Scenario Simulator' };
-var TAB_ICONS  = { hormuz:'&#9651;', rates:'&#9671;', trucking:'&#9672;', simulator:'&#9670;' };
+var TAB_LABELS = { hormuz:'Hormuz Traffic', rates:'Container Rates', trucking:'GCC Trucking', simulator:'Scenario Simulator', watchlist:'Strategic Watchlist' };
+var TAB_ICONS  = { hormuz:'&#9651;', rates:'&#9671;', trucking:'&#9672;', simulator:'&#9670;', watchlist:'&#8881;' };
 
 // Reorder trucking tab: dwell times → corridor traffic → FTL → map/fleet
 (function() {
@@ -2882,6 +3077,9 @@ function showTab(name, el) {
       if (!CHARTS['fChart']) initFreightChart();
       if (!chokepointsMapReady) setTimeout(initChokepointsMap, 200);
       else if (chokepointsMap) chokepointsMap.invalidateSize();
+    }
+    if (name === 'watchlist') {
+      initWatchlist();
     }
     if (name === 'trucking') {
       setTimeout(initGCCCorridorsMap, 100);
@@ -6236,6 +6434,436 @@ function mobShowTab(name) {
 document.addEventListener('keydown', function(e) {
   if (e.key === 'Escape') closeMobNav();
 });
+
+// ── STRATEGIC WATCHLIST ENGINE ────────────────────────────────────────────────
+// Design principle: signals use REGION + SYSTEM-TYPE patterns, not named events.
+// Each signal defines a full multi-order transmission chain with GCC impact data.
+// ─────────────────────────────────────────────────────────────────────────────
+
+var WL_SIGNALS = [
+  {
+    id:'panama', title:'Panama Canal Hydrological Stress',
+    category:'Climate / Infrastructure', confidence:87,
+    horizon:'6–18 months', origin:'Central America',
+    systemicImpact:67,
+    scores:[
+      {label:'A · Exposure Score',         val:34},
+      {label:'B · Transmission Strength',  val:76},
+      {label:'C · Propagation Velocity',   val:58},
+      {label:'D · GCC Sensitivity',        val:68},
+      {label:'E · Confidence Level',       val:87},
+      {label:'F · Indirect Amplification', val:72}
+    ],
+    exposure:{direct:12, indirect:48, systemic:71},
+    chain:[
+      {label:'Panama Water Deficit',               score:0.82, order:0},
+      {label:'Lake Gatún Level Constraint',        score:0.79, order:1},
+      {label:'Draft Restriction Enforcement',      score:0.76, order:1},
+      {label:'Vessel Queue Accumulation',          score:0.71, order:1},
+      {label:'Fleet Reallocation (Cape / Suez)',   score:0.68, order:2},
+      {label:'Container Asset Displacement',       score:0.63, order:2},
+      {label:'Shipper Inventory Buffer Expansion', score:0.57, order:3},
+      {label:'GCC Warehousing Demand Surge',       score:0.51, order:3, gcc:true}
+    ],
+    gcc:{
+      countries:['UAE','Saudi Arabia','Oman','Qatar','Kuwait','Bahrain'],
+      sectors:['Ports','Inland Log.','Energy T.','Food Sec.','Industrial'],
+      data:[[42,35,18,52,45],[35,40,16,60,48],[48,32,20,45,38],[38,26,32,55,28],[25,30,26,62,32],[18,22,15,48,25]]
+    },
+    insight:'While the Panama Canal water deficit appears geographically remote from GCC logistics networks, transmission modelling reveals disproportionate second-order exposure through container repositioning dynamics. The primary impact pathway is not route disruption — fewer than 8% of GCC-bound vessels transit Panama — but rather global container asset displacement. Fleet reallocation from Transpacific to alternative routes creates repositioning demand surges that tighten box availability in Asian export hubs, amplifying GCC import cycle times by an estimated 12–18 days. Critically, the behavioural response — shipper inventory buffering — generates a warehousing demand spike in UAE and Oman transshipment corridors that persists 2–3 quarters beyond the original canal constraint.',
+    blindspot:'Container repositioning dynamics create GCC import delays even though no GCC-bound vessel transits Panama. The mechanism is asset displacement, not route impact.'
+  },
+  {
+    id:'cbam', title:'EU Carbon Border Adjustment Phase-In',
+    category:'Regulatory / Trade Policy', confidence:91,
+    horizon:'18–48 months', origin:'European Union',
+    systemicImpact:74,
+    scores:[
+      {label:'A · Exposure Score',         val:55},
+      {label:'B · Transmission Strength',  val:68},
+      {label:'C · Propagation Velocity',   val:32},
+      {label:'D · GCC Sensitivity',        val:79},
+      {label:'E · Confidence Level',       val:91},
+      {label:'F · Indirect Amplification', val:81}
+    ],
+    exposure:{direct:22, indirect:61, systemic:83},
+    chain:[
+      {label:'EU CBAM Phase-In Acceleration',          score:0.75, order:0},
+      {label:'Embedded Carbon Cost Shock (Mfg)',        score:0.72, order:1},
+      {label:'Production Cost Differential',           score:0.68, order:1},
+      {label:'Supply Chain Geography Reconfiguration', score:0.65, order:2},
+      {label:'GCC Low-Carbon Manufacturing Advantage', score:0.72, order:2},
+      {label:'FDI Acceleration → GCC Industrial Zones',score:0.69, order:2},
+      {label:'Capital Equipment Import Surge',         score:0.63, order:3},
+      {label:'GCC Port Infrastructure Demand Growth',  score:0.71, order:3, gcc:true}
+    ],
+    gcc:{
+      countries:['UAE','Saudi Arabia','Oman','Qatar','Kuwait','Bahrain'],
+      sectors:['Ports','Inland Log.','Energy T.','Food Sec.','Industrial'],
+      data:[[65,72,55,12,78],[58,65,70,10,82],[48,42,60,8,65],[40,35,72,10,55],[32,38,65,8,62],[28,30,50,8,48]]
+    },
+    insight:'The EU Carbon Border Adjustment Mechanism is typically modelled as a European import cost issue. Transmission analysis reveals an underappreciated second-order consequence: CBAM creates a structural cost differential that amplifies the GCC\'s comparative advantage as an energy-abundant, capital-intensive manufacturing base. The strongest GCC impact pathway runs through FDI acceleration into industrial free zones — KIZAD, NEOM Industrial, Sohar Free Zone — generating sustained inbound capital equipment cargo surges. Saudi and UAE ports should anticipate elevated project cargo volumes 18–36 months after each CBAM implementation phase. This is a structurally positive demand signal that most logistics operators have not yet priced into capacity planning.',
+    blindspot:'CBAM is a European import mechanism — but its dominant GCC logistics effect is an inbound industrial cargo surge driven by manufacturing FDI seeking lower embedded-carbon cost bases in the Gulf.'
+  },
+  {
+    id:'china', title:'China Property Sector Structural Contraction',
+    category:'Economic / Demand Dynamics', confidence:82,
+    horizon:'12–36 months', origin:'China (Domestic)',
+    systemicImpact:58,
+    scores:[
+      {label:'A · Exposure Score',         val:42},
+      {label:'B · Transmission Strength',  val:71},
+      {label:'C · Propagation Velocity',   val:48},
+      {label:'D · GCC Sensitivity',        val:63},
+      {label:'E · Confidence Level',       val:82},
+      {label:'F · Indirect Amplification', val:65}
+    ],
+    exposure:{direct:18, indirect:44, systemic:68},
+    chain:[
+      {label:'China Property Sales Structural Decline', score:0.79, order:0},
+      {label:'Steel Demand Structural Contraction',     score:0.76, order:1},
+      {label:'Iron Ore Shipping Volume Decline',        score:0.73, order:1},
+      {label:'Dry Bulk Vessel Surplus',                 score:0.68, order:2},
+      {label:'Dry-to-Container Fleet Class Migration',  score:0.59, order:2},
+      {label:'Container Vessel Supply Overhang',        score:0.55, order:2},
+      {label:'Freight Rate Structural Depression',      score:0.62, order:3},
+      {label:'GCC Import Cost Normalization + Service Rationalisation', score:0.58, order:3, gcc:true}
+    ],
+    gcc:{
+      countries:['UAE','Saudi Arabia','Oman','Qatar','Kuwait','Bahrain'],
+      sectors:['Ports','Inland Log.','Energy T.','Food Sec.','Industrial'],
+      data:[[38,32,25,15,55],[42,38,28,12,52],[35,28,22,10,48],[30,25,32,12,42],[25,28,28,10,45],[22,20,20,8,38]]
+    },
+    insight:'China\'s property sector contraction is universally modelled as a steel and iron ore market event. The transmission mechanism extends further: structural dry bulk volume declines push vessel owners to migrate capacity toward container trades, creating a cross-segment supply overhang that depresses container freight rates globally. For GCC importers, this translates to an extended period of structurally lower import costs. However, the critical second-order consequence is carrier profitability compression triggering service rationalisation on secondary GCC routes. Oman and Bahrain feeder services face frequency and reliability reductions even as headline spot rates fall — a paradox of cheaper freight on fewer services.',
+    blindspot:'China property collapse transmits to GCC logistics via vessel class migration — dry bulk overcapacity bleeds into container markets, depressing rates but reducing feeder service frequency on Oman, Qatar, and Bahrain routes.'
+  },
+  {
+    id:'imec', title:'IMEC Corridor Operationalization',
+    category:'Geopolitical / Infrastructure', confidence:64,
+    horizon:'24–60 months', origin:'India / UAE / Saudi Arabia',
+    systemicImpact:71,
+    scores:[
+      {label:'A · Exposure Score',         val:68},
+      {label:'B · Transmission Strength',  val:58},
+      {label:'C · Propagation Velocity',   val:22},
+      {label:'D · GCC Sensitivity',        val:82},
+      {label:'E · Confidence Level',       val:64},
+      {label:'F · Indirect Amplification', val:76}
+    ],
+    exposure:{direct:45, indirect:67, systemic:82},
+    chain:[
+      {label:'IMEC MoU Political Commitment',           score:0.65, order:0},
+      {label:'Mundra / JNPT Infrastructure Expansion',  score:0.62, order:1},
+      {label:'India–UAE Direct Rail-Sea Linkage',       score:0.68, order:1},
+      {label:'Jebel Ali Transshipment Share Erosion',   score:0.58, order:2},
+      {label:'GCC Hub Port Competitive Disruption',     score:0.55, order:2},
+      {label:'Sohar / Dammam Route Reorientation',      score:0.62, order:2},
+      {label:'GCC Port Investment Acceleration',        score:0.69, order:3},
+      {label:'Maritime Gateway Hierarchy Restructuring',score:0.75, order:3, gcc:true}
+    ],
+    gcc:{
+      countries:['UAE','Saudi Arabia','Oman','Qatar','Kuwait','Bahrain'],
+      sectors:['Ports','Inland Log.','Energy T.','Food Sec.','Industrial'],
+      data:[[75,65,20,15,60],[65,58,18,12,55],[55,45,15,10,48],[45,38,18,12,40],[38,32,15,8,35],[30,25,12,8,28]]
+    },
+    insight:'IMEC is widely framed as a geopolitical counter-narrative to BRI. The logistics consequence is more specific: IMEC creates a direct India-UAE freight lane that reduces Jebel Ali\'s role as the default South Asian transshipment hub. Transmission modelling suggests Jebel Ali faces a 15–22% reduction in India-origin transshipment volumes over a 5-year horizon as corridor infrastructure matures. Sohar and Dammam gain disproportionately as alternative gateway ports. The underappreciated downstream consequence is that competitive pressure from IMEC will accelerate GCC port infrastructure investment — creating a near-term capital equipment import surge and triggering structural competitive restructuring of the entire Gulf maritime gateway hierarchy.',
+    blindspot:'IMEC\'s primary logistics impact is not new trade volume creation — it is competitive pressure on Jebel Ali\'s transshipment dominance that reshuffles GCC port market share and triggers a multi-year infrastructure investment cycle that generates its own cargo surge.'
+  },
+  {
+    id:'eastafrica', title:'East Africa Food Security Crisis',
+    category:'Climate / Food Security', confidence:79,
+    horizon:'3–12 months', origin:'Horn of Africa',
+    systemicImpact:79,
+    scores:[
+      {label:'A · Exposure Score',         val:28},
+      {label:'B · Transmission Strength',  val:74},
+      {label:'C · Propagation Velocity',   val:72},
+      {label:'D · GCC Sensitivity',        val:76},
+      {label:'E · Confidence Level',       val:79},
+      {label:'F · Indirect Amplification', val:85}
+    ],
+    exposure:{direct:15, indirect:55, systemic:81},
+    chain:[
+      {label:'Horn of Africa Rainfall Deficit',        score:0.74, order:0},
+      {label:'Regional Crop Failure',                  score:0.71, order:1},
+      {label:'WFP Emergency Grain Procurement',        score:0.68, order:1},
+      {label:'Global Grain Market Tightening',         score:0.65, order:2},
+      {label:'GCC Food Import Volume Surge',           score:0.72, order:2},
+      {label:'Reefer Container Capacity Absorption',   score:0.69, order:2},
+      {label:'Pharma / Industrial Cold Chain Squeeze', score:0.64, order:3},
+      {label:'Jeddah / Dammam Port Productivity Impact',score:0.57, order:3, gcc:true}
+    ],
+    gcc:{
+      countries:['UAE','Saudi Arabia','Oman','Qatar','Kuwait','Bahrain'],
+      sectors:['Ports','Inland Log.','Energy T.','Food Sec.','Industrial'],
+      data:[[52,48,12,78,38],[65,58,10,82,42],[42,35,8,68,30],[35,28,8,75,25],[38,32,8,72,28],[25,22,6,65,20]]
+    },
+    insight:'East Africa food crises are modelled as humanitarian and agricultural disruptions with localised logistics consequences. The transmission mechanism extends into GCC industrial supply chains through a non-obvious pathway: emergency food procurement surges absorb global reefer container capacity, creating cold chain equipment shortages that cascade into pharmaceutical, chemical, and temperature-sensitive industrial imports. For GCC ports — particularly Jeddah and Dammam — the consequence is not food import congestion in isolation but a broader port productivity impact as reefer plug capacity and specialised handling equipment become constrained. Industrial importers dependent on temperature-controlled cargo absorb 3–5 week delays originating from a humanitarian event on the Horn of Africa that they have no analytical framework to anticipate.',
+    blindspot:'East Africa food crises cascade into GCC industrial supply chains through reefer container absorption — pharmaceutical and specialty chemical importers experience delays caused by humanitarian grain shipments, with no existing framework to forecast the connection.'
+  },
+  {
+    id:'turkey', title:'Turkish Export Competitiveness Surge',
+    category:'Currency / Trade Flows', confidence:73,
+    horizon:'3–9 months', origin:'Turkey',
+    systemicImpact:63,
+    scores:[
+      {label:'A · Exposure Score',         val:38},
+      {label:'B · Transmission Strength',  val:65},
+      {label:'C · Propagation Velocity',   val:78},
+      {label:'D · GCC Sensitivity',        val:62},
+      {label:'E · Confidence Level',       val:73},
+      {label:'F · Indirect Amplification', val:69}
+    ],
+    exposure:{direct:24, indirect:52, systemic:74},
+    chain:[
+      {label:'TRY/USD Depreciation Acceleration',       score:0.71, order:0},
+      {label:'Turkish Export Price Competitiveness',    score:0.68, order:1},
+      {label:'Eastern Med Shipping Volume Surge',       score:0.65, order:1},
+      {label:'Suez Canal Northbound Queue Buildup',     score:0.61, order:2},
+      {label:'Eastbound Vessel Repositioning Deficit',  score:0.58, order:2},
+      {label:'GCC Import Slot Availability Constraint', score:0.63, order:2},
+      {label:'GCC Spot Rate Premium Amplification',     score:0.67, order:3},
+      {label:'JIT Supply Chain Stress (EU-origin Cargo)',score:0.61, order:3, gcc:true}
+    ],
+    gcc:{
+      countries:['UAE','Saudi Arabia','Oman','Qatar','Kuwait','Bahrain'],
+      sectors:['Ports','Inland Log.','Energy T.','Food Sec.','Industrial'],
+      data:[[58,45,20,35,52],[62,52,18,32,55],[45,35,15,28,42],[42,32,18,30,38],[38,30,15,32,42],[30,25,12,28,32]]
+    },
+    insight:'Turkish lira depreciation is typically analysed as a bilateral trade flow event. The systemic transmission runs through Eastern Mediterranean shipping congestion: Turkish export surges saturate Med container capacity, generating northbound Suez queue buildups that reduce eastbound vessel availability for GCC import routes. This creates a spot rate premium in GCC lanes entirely disconnected from regional demand or geopolitical conditions — a phantom cost increase driven by monetary policy in Ankara. The behavioural paradox: European goods become cheaper to source as Turkish competition intensifies, but the same congestion dynamics make them more expensive and slower to arrive at GCC destinations.',
+    blindspot:'Turkish lira depreciation raises GCC import costs through Eastern Mediterranean congestion — European goods become cheaper to source at origin but more expensive and slower to receive, creating a cost paradox invisible to buyers focused on FOB prices.'
+  }
+];
+
+// ── Colour helpers ─────────────────────────────────────────────────────────────
+function wlHeatColor(s) {
+  if (s < 15) return {bg:'rgba(5,7,10,0.5)',  tx:'transparent'};
+  if (s < 30) return {bg:'rgba(184,149,42,.15)', tx:'#7a6025'};
+  if (s < 50) return {bg:'rgba(184,149,42,.30)', tx:'#b8952a'};
+  if (s < 65) return {bg:'rgba(232,103,60,.38)', tx:'#e8673c'};
+  if (s < 80) return {bg:'rgba(224,48,64,.46)',  tx:'#e03040'};
+  return            {bg:'rgba(224,48,64,.68)',   tx:'#ff5060'};
+}
+function wlBarColor(v) {
+  return v < 40 ? '#25a066' : v < 65 ? '#b8952a' : v < 80 ? '#e8673c' : '#e03040';
+}
+function wlSysColor(v) {
+  return v < 50 ? '#25a066' : v < 65 ? '#b8952a' : v < 80 ? '#e8673c' : '#e03040';
+}
+function wlNodeColor(score, gcc) {
+  if (gcc) return '#7c3aed';
+  if (score > 0.75) return '#e03040';
+  if (score > 0.65) return '#e8673c';
+  return '#b8952a';
+}
+function wlOrderLabel(o) { return o===0?'ORIGIN':o===1?'1ST ORDER':o===2?'2ND ORDER':'3RD ORDER'; }
+function wlOrderColor(o) { return o===0?'#e03040':o===1?'#e8673c':o===2?'#b8952a':'#c084fc'; }
+
+// ── Renderers ──────────────────────────────────────────────────────────────────
+function wlRenderHeader(sig) {
+  var el = document.getElementById('wl-signal-header');
+  if (!el) return;
+  el.innerHTML =
+    '<div class="wl-signal-name">' + sig.title + '</div>' +
+    '<div class="wl-signal-meta">' +
+      '<div class="wl-meta-item"><span>CATEGORY</span><span class="wl-meta-val">' + sig.category + '</span></div>' +
+      '<div class="wl-meta-item"><span>TIME HORIZON</span><span class="wl-meta-val">' + sig.horizon + '</span></div>' +
+      '<div class="wl-meta-item"><span>SIGNAL ORIGIN</span><span class="wl-meta-val">' + sig.origin + '</span></div>' +
+    '</div>';
+}
+
+function wlRenderConfRing(sig) {
+  var el = document.getElementById('wl-conf-ring');
+  if (!el) return;
+  var r=24, cx=29, cy=29;
+  var circ = 2*Math.PI*r;
+  var dash = (sig.confidence/100)*circ;
+  var col = sig.confidence>=80?'#25a066':sig.confidence>=65?'#b8952a':'#e8673c';
+  el.innerHTML =
+    '<svg class="wl-conf-svg" viewBox="0 0 58 58">' +
+      '<circle cx="'+cx+'" cy="'+cy+'" r="'+r+'" fill="none" stroke="#172030" stroke-width="4"/>' +
+      '<circle cx="'+cx+'" cy="'+cy+'" r="'+r+'" fill="none" stroke="'+col+'" stroke-width="4"' +
+      ' stroke-dasharray="'+dash.toFixed(1)+' '+circ.toFixed(1)+'"' +
+      ' transform="rotate(-90 '+cx+' '+cy+')" stroke-linecap="round"/>' +
+      '<text x="'+cx+'" y="'+(cy+1)+'" text-anchor="middle" dominant-baseline="middle"' +
+      ' font-family="IBM Plex Mono,monospace" font-size="11" font-weight="700" fill="'+col+'">'+sig.confidence+'</text>' +
+    '</svg>' +
+    '<div class="wl-conf-lbl">Confidence %</div>';
+}
+
+function wlRenderChain(sig) {
+  var el = document.getElementById('wl-tx-svg');
+  if (!el) return;
+  var chain = sig.chain;
+  var n = chain.length;
+  var nodeH=34, nodeW=310, gapY=16, startX=4, startY=6;
+  var totalH = n*(nodeH+gapY) + 20;
+  var svgW = 500;
+  var prevOrder = -1;
+  var s = '<svg viewBox="0 0 '+svgW+' '+totalH+'" style="min-height:'+totalH+'px">';
+  for (var i=0; i<n; i++) {
+    var nd = chain[i];
+    var y = startY + i*(nodeH+gapY);
+    var midX = startX + nodeW/2;
+    var col = wlNodeColor(nd.score, nd.gcc);
+    var bg = nd.gcc ? 'rgba(124,58,237,.14)' :
+             nd.score>0.75 ? 'rgba(224,48,64,.10)' :
+             nd.score>0.65 ? 'rgba(232,103,60,.10)' : 'rgba(184,149,42,.09)';
+    // Connector
+    if (i>0) {
+      var prevY = startY+(i-1)*(nodeH+gapY)+nodeH;
+      s += '<line x1="'+midX+'" y1="'+prevY+'" x2="'+midX+'" y2="'+(y-3)+'"'+
+           ' stroke="'+col+'" stroke-width="1.5" stroke-dasharray="3 2" opacity="0.55"/>';
+      s += '<polygon points="'+midX+','+y+' '+(midX-4)+','+(y-7)+' '+(midX+4)+','+(y-7)+'"'+
+           ' fill="'+col+'" opacity="0.65"/>';
+    }
+    // Node rect
+    s += '<rect x="'+startX+'" y="'+y+'" width="'+nodeW+'" height="'+nodeH+'"'+
+         ' rx="3" fill="'+bg+'" stroke="'+col+'" stroke-width="0.8" opacity="0.9"/>';
+    // Order label (top-left)
+    var ordLbl = wlOrderLabel(nd.order);
+    var ordCol = wlOrderColor(nd.order);
+    s += '<text x="'+(startX+7)+'" y="'+(y+11)+'"'+
+         ' font-family="IBM Plex Mono,monospace" font-size="6.5" fill="'+ordCol+'" opacity="0.75">'+ordLbl+'</text>';
+    // Node name
+    s += '<text x="'+(startX+7)+'" y="'+(y+24)+'"'+
+         ' font-family="Inter,sans-serif" font-size="9.5" fill="'+(nd.gcc?'#c084fc':'#8fa0b5')+'"'+
+         ' font-weight="'+(nd.gcc?'700':'400')+'">'+nd.label+'</text>';
+    // Score bar (right side)
+    var bx = startX+nodeW-78, by = y+nodeH/2-2;
+    s += '<rect x="'+bx+'" y="'+by+'" width="55" height="4" rx="2" fill="#131c28"/>';
+    s += '<rect x="'+bx+'" y="'+by+'" width="'+(nd.score*55).toFixed(1)+'" height="4" rx="2" fill="'+col+'" opacity="0.8"/>';
+    s += '<text x="'+(bx+60)+'" y="'+(by+3.5)+'"'+
+         ' font-family="IBM Plex Mono,monospace" font-size="8" fill="'+col+'" dominant-baseline="middle">'+
+         Math.round(nd.score*100)+'</text>';
+    // Side order annotation on change
+    if (nd.order !== prevOrder && nd.order>0) {
+      var ax=startX+nodeW+14, ay=y+nodeH/2;
+      s += '<text x="'+ax+'" y="'+ay+'"'+
+           ' font-family="IBM Plex Mono,monospace" font-size="7" fill="'+ordCol+'"'+
+           ' dominant-baseline="middle" opacity="0.6" font-weight="600">'+
+           (nd.order===1?'1st':nd.order===2?'2nd':'3rd')+' order</text>';
+      s += '<line x1="'+(startX+nodeW)+'" y1="'+ay+'" x2="'+(ax-3)+'" y2="'+ay+'"'+
+           ' stroke="'+ordCol+'" stroke-width="0.5" opacity="0.25"/>';
+    }
+    prevOrder = nd.order;
+  }
+  s += '</svg>';
+  el.innerHTML = s;
+}
+
+function wlRenderScores(sig) {
+  var el = document.getElementById('wl-scores');
+  if (!el) return;
+  var h='';
+  sig.scores.forEach(function(sc) {
+    var col = wlBarColor(sc.val);
+    h += '<div class="wl-score-row">'+
+         '<div class="wl-score-lbl">'+sc.label+'</div>'+
+         '<div class="wl-bar-bg"><div class="wl-bar-fill" style="width:'+sc.val+'%;background:'+col+'"></div></div>'+
+         '<div class="wl-score-val">'+sc.val+'</div></div>';
+  });
+  var sc = sig.systemicImpact, col = wlSysColor(sc);
+  h += '<div class="wl-systemic">'+
+       '<div><div class="wl-sys-lbl">Systemic Impact Score</div>'+
+       '<div class="wl-sys-val" style="color:'+col+'">'+sc+'</div></div>'+
+       '<div class="wl-sys-track"><div class="wl-sys-fill" style="width:'+sc+'%;background:'+col+'"></div></div>'+
+       '</div>';
+  el.innerHTML = h;
+}
+
+function wlRenderExposure(sig) {
+  var el = document.getElementById('wl-exposure');
+  if (!el) return;
+  var rows = [
+    {lbl:'Direct',   val:sig.exposure.direct,   col:'#b8952a'},
+    {lbl:'Indirect', val:sig.exposure.indirect,  col:'#e8673c'},
+    {lbl:'Systemic', val:sig.exposure.systemic,  col:'#e03040'}
+  ];
+  var h='';
+  rows.forEach(function(r){
+    h += '<div class="wl-exp-row">'+
+         '<div class="wl-exp-lbl">'+r.lbl+'</div>'+
+         '<div class="wl-bar-bg"><div class="wl-bar-fill" style="width:'+r.val+'%;background:'+r.col+'"></div></div>'+
+         '<div class="wl-exp-val" style="color:'+r.col+'">'+r.val+'</div></div>';
+  });
+  el.innerHTML = h;
+}
+
+function wlRenderHeatmap(sig) {
+  var el = document.getElementById('wl-heatmap');
+  if (!el) return;
+  var g = sig.gcc;
+  var nC = g.sectors.length;
+  var h = '<div class="wl-hm-col-row" style="grid-template-columns:repeat('+nC+',1fr)">';
+  g.sectors.forEach(function(s){ h+='<div class="wl-hm-col-lbl">'+s+'</div>'; });
+  h += '</div>';
+  g.countries.forEach(function(c,ci){
+    h += '<div class="wl-hm-data-row"><div class="wl-hm-row-lbl">'+c+'</div>';
+    g.data[ci].forEach(function(v){
+      var col=wlHeatColor(v);
+      h+='<div class="wl-hm-cell" style="background:'+col.bg+';color:'+col.tx+'">'+v+'</div>';
+    });
+    h += '</div>';
+  });
+  el.innerHTML = h;
+}
+
+function wlRenderInsight(sig) {
+  var el = document.getElementById('wl-insight');
+  if (!el) return;
+  el.innerHTML =
+    '<div class="wl-insight-lbl">&#9670; Strategic Transmission Analysis</div>'+
+    '<div class="wl-insight-text">'+sig.insight+'</div>'+
+    '<div class="wl-blindspot">'+
+      '<div class="wl-bs-lbl">Non-Obvious Transmission Pathway</div>'+
+      '<div class="wl-bs-text">'+sig.blindspot+'</div>'+
+    '</div>';
+}
+
+function renderWatchlistSignal(id) {
+  var sig = WL_SIGNALS.find(function(s){return s.id===id;});
+  if (!sig) return;
+  document.querySelectorAll('.wl-pill').forEach(function(p){
+    p.classList.toggle('active', p.dataset.id===id);
+  });
+  wlRenderHeader(sig);
+  wlRenderConfRing(sig);
+  wlRenderChain(sig);
+  wlRenderScores(sig);
+  wlRenderExposure(sig);
+  wlRenderHeatmap(sig);
+  wlRenderInsight(sig);
+}
+
+var wlInitialized = false;
+function initWatchlist() {
+  if (wlInitialized) return;
+  wlInitialized = true;
+  // Timestamp
+  var tsEl = document.getElementById('wl-ts');
+  if (tsEl) tsEl.textContent = new Date().toLocaleDateString('en-GB',{day:'2-digit',month:'short',year:'numeric'});
+  // Build signal strip pills
+  var strip = document.getElementById('wl-strip');
+  if (strip) {
+    WL_SIGNALS.forEach(function(sig,i){
+      var p = document.createElement('div');
+      p.className = 'wl-pill' + (i===0?' active':'');
+      p.dataset.id = sig.id;
+      p.onclick = function(){ renderWatchlistSignal(sig.id); };
+      p.innerHTML =
+        '<div class="wl-pill-cat">'+sig.category+'</div>'+
+        '<div class="wl-pill-title">'+sig.title+'</div>'+
+        '<div><span class="wl-pill-score">'+sig.systemicImpact+'</span>'+
+        '<span class="wl-pill-score-lbl"> systemic</span></div>';
+      strip.appendChild(p);
+    });
+  }
+  // Render first signal
+  renderWatchlistSignal(WL_SIGNALS[0].id);
+}
+// ── END STRATEGIC WATCHLIST ───────────────────────────────────────────────────
+
 
 // ── Cover / Landing Page ──────────────────────────────────────────────────────
 // Shows once per browser session (sessionStorage flag).

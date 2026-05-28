@@ -1832,19 +1832,16 @@ canvas { font-family: var(--f-mono); }
 .wl-pill-title { font-size:9px; font-weight:600; color:var(--c-tx0); line-height:1.35; margin-bottom:4px; }
 .wl-pill-score { font-family:var(--f-mono); font-size:11px; font-weight:700; color:var(--c-gold); }
 .wl-pill-score-lbl { font-family:var(--f-mono); font-size:7px; color:var(--c-tx2); margin-left:3px; }
-/* Main two-column layout */
-.wl-panel { display:grid; grid-template-columns:1fr 370px; gap:12px; align-items:start; }
-@media(max-width:960px){ .wl-panel{ grid-template-columns:1fr; } }
-/* Left column */
-.wl-tx-col { display:flex; flex-direction:column; gap:10px; }
-.wl-signal-box {
+/* Signal header card (standalone above causality table) */
+.wl-sig-header-card {
   background:var(--c-s1); border:1px solid var(--c-bd1);
-  border-radius:var(--r); padding:16px;
+  border-radius:var(--r); padding:14px 16px; margin-bottom:10px;
 }
-.wl-signal-top {
-  display:grid; grid-template-columns:1fr auto; gap:12px;
-  margin-bottom:14px; padding-bottom:12px; border-bottom:1px solid var(--c-bd0);
-}
+/* Metrics row: 2-col (Propagation Model | Exposure Profile) */
+.wl-metrics-row { display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-bottom:10px; }
+@media(max-width:700px){ .wl-metrics-row { grid-template-columns:1fr; } }
+/* Heatmap card — full width */
+.wl-heatmap-card { margin-bottom:10px; }
 .wl-signal-name { font-size:13px; font-weight:700; color:var(--c-tx0); margin-bottom:5px; line-height:1.3; }
 .wl-signal-meta { display:flex; flex-wrap:wrap; gap:10px; }
 .wl-meta-item { font-family:var(--f-mono); font-size:8px; color:var(--c-tx2); letter-spacing:.06em; display:flex; flex-direction:column; gap:2px; }
@@ -3134,7 +3131,10 @@ canvas { font-family: var(--f-mono); }
     <!-- Key insight — first thing visible on signal open -->
     <div class="wl-key-insight" id="wl-key-insight"></div>
 
-    <!-- ── Causality table — first analytical content after key message ── -->
+    <!-- Signal header: title + meta + systemic impact (always visible) -->
+    <div id="wl-signal-header" class="wl-sig-header-card"></div>
+
+    <!-- ── Causality table — right after signal header ── -->
     <div id="wl-ev-table-top" class="wl-ev-top-wrap wl-hidden">
       <div class="wl-ev-card">
         <div class="wl-ev-title">&#9660; Causality Chain &mdash; Evidence &amp; Historical Validation</div>
@@ -3142,38 +3142,22 @@ canvas { font-family: var(--f-mono); }
       </div>
     </div>
 
-    <!-- Main two-column panel -->
-    <div class="wl-panel">
-
-      <!-- LEFT: Transmission network -->
-      <div class="wl-tx-col">
-        <div class="wl-signal-box">
-          <div class="wl-signal-top">
-            <div id="wl-signal-header"></div>
-          </div>
-          <div class="wl-tx-label">&#8618; Transmission Network &mdash; Stress Propagation Chain</div>
-          <div class="wl-tx-svg-wrap" id="wl-tx-svg"></div>
-        </div>
+    <!-- ── Scores + Exposure (2-col), then Heatmap + Insight full-width ── -->
+    <div class="wl-metrics-row">
+      <div class="wl-rcard">
+        <div class="wl-rcard-title">Propagation Model &mdash; Six-Factor Assessment</div>
+        <div id="wl-scores"></div>
       </div>
-
-      <!-- RIGHT: Analysis panel -->
-      <div class="wl-analysis-col">
-        <div class="wl-rcard">
-          <div class="wl-rcard-title">Propagation Model &mdash; Six-Factor Assessment</div>
-          <div id="wl-scores"></div>
-        </div>
-        <div class="wl-rcard">
-          <div class="wl-rcard-title">GCC Exposure Profile</div>
-          <div id="wl-exposure"></div>
-        </div>
-        <div class="wl-rcard">
-          <div class="wl-rcard-title">GCC Country &times; Sector Impact Heatmap &nbsp;<span style="font-size:7px;color:var(--c-tx2)">(0&ndash;100)</span></div>
-          <div id="wl-heatmap"></div>
-        </div>
-        <div class="wl-insight-card" id="wl-insight"></div>
+      <div class="wl-rcard">
+        <div class="wl-rcard-title">GCC Exposure Profile</div>
+        <div id="wl-exposure"></div>
       </div>
-
     </div>
+    <div class="wl-rcard wl-heatmap-card">
+      <div class="wl-rcard-title">GCC Country &times; Sector Impact Heatmap &nbsp;<span style="font-size:7px;color:var(--c-tx2)">(0&ndash;100)</span></div>
+      <div id="wl-heatmap"></div>
+    </div>
+    <div class="wl-insight-card" id="wl-insight"></div>
 
     <!-- ── Map + Data Chart (shown only for signals with full evidence data) ── -->
     <div id="wl-evidence-section" class="wl-hidden">
@@ -7424,7 +7408,6 @@ function renderWatchlistSignal(id) {
     p.classList.toggle('active', p.dataset.id===id);
   });
   wlRenderHeader(sig);
-  wlRenderChain(sig);
   wlRenderScores(sig);
   wlRenderExposure(sig);
   wlRenderHeatmap(sig);

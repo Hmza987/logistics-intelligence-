@@ -3150,7 +3150,6 @@ canvas { font-family: var(--f-mono); }
         <div class="wl-signal-box">
           <div class="wl-signal-top">
             <div id="wl-signal-header"></div>
-            <div class="wl-conf-wrap" id="wl-conf-ring"></div>
           </div>
           <div class="wl-tx-label">&#8618; Transmission Network &mdash; Stress Propagation Chain</div>
           <div class="wl-tx-svg-wrap" id="wl-tx-svg"></div>
@@ -7240,15 +7239,32 @@ function wlOrderLabel(o) { return o===0?'ORIGIN':o===1?'1ST ORDER':o===2?'2ND OR
 function wlOrderColor(o) { return o===0?'#e03040':o===1?'#e8673c':o===2?'#b8952a':'#c084fc'; }
 
 // ── Renderers ──────────────────────────────────────────────────────────────────
+function wlConfLabel(c) {
+  if (c >= 85) return {label:'Certain',       color:'#25a066'};
+  if (c >= 75) return {label:'Highly Likely', color:'#4a9fe8'};
+  if (c >= 65) return {label:'Likely',        color:'#b8952a'};
+  return              {label:'Possible',      color:'#e8673c'};
+}
 function wlRenderHeader(sig) {
   var el = document.getElementById('wl-signal-header');
   if (!el) return;
+  var sc   = wlSysColor(sig.systemicImpact);
+  var conf = wlConfLabel(sig.confidence);
   el.innerHTML =
-    '<div class="wl-signal-name">' + sig.title + '</div>' +
-    '<div class="wl-signal-meta">' +
+    '<div style="display:flex;align-items:flex-start;justify-content:space-between;gap:12px;flex-wrap:wrap">' +
+      '<div class="wl-signal-name">' + sig.title + '</div>' +
+      '<div style="display:flex;align-items:center;gap:6px;flex-shrink:0">' +
+        '<span style="font-family:var(--f-mono);font-size:7px;color:var(--c-tx2);letter-spacing:.08em">SYSTEMIC IMPACT</span>' +
+        '<span style="font-family:var(--f-mono);font-size:20px;font-weight:700;color:'+sc+';line-height:1">'+sig.systemicImpact+'</span>' +
+      '</div>' +
+    '</div>' +
+    '<div class="wl-signal-meta" style="margin-top:6px">' +
       '<div class="wl-meta-item"><span>CATEGORY</span><span class="wl-meta-val">' + sig.category + '</span></div>' +
       '<div class="wl-meta-item"><span>TIME HORIZON</span><span class="wl-meta-val">' + sig.horizon + '</span></div>' +
       '<div class="wl-meta-item"><span>SIGNAL ORIGIN</span><span class="wl-meta-val">' + sig.origin + '</span></div>' +
+      '<div class="wl-meta-item"><span>CONFIDENCE</span>' +
+        '<span class="wl-meta-val" style="color:'+conf.color+'">'+conf.label+'</span>' +
+      '</div>' +
     '</div>';
 }
 
@@ -7408,7 +7424,6 @@ function renderWatchlistSignal(id) {
     p.classList.toggle('active', p.dataset.id===id);
   });
   wlRenderHeader(sig);
-  wlRenderConfRing(sig);
   wlRenderChain(sig);
   wlRenderScores(sig);
   wlRenderExposure(sig);
@@ -7774,7 +7789,6 @@ function selectWLSignal(sid) {
   // Render analysis
   if (sig) {
     wlRenderHeader(sig);
-    wlRenderConfRing(sig);
     wlRenderChain(sig);
     wlRenderScores(sig);
     wlRenderExposure(sig);

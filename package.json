@@ -14,7 +14,7 @@
   },
   "scripts": {
     "validate": "node --check api/hormuz.js && echo 'Syntax OK'",
-    "dev": "vercel dev",
+    "dev": "npx serve . --listen 3000 --no-clipboard",
     "deploy": "vercel --prod"
   }
 }

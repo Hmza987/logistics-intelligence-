@@ -1,5 +1,6 @@
 {
   "version": 2,
+  "devCommand": "npx --yes serve . --listen $PORT --no-clipboard",
   "headers": [
     {
       "source": "/index.html",

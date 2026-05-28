@@ -1982,6 +1982,27 @@ canvas { font-family: var(--f-mono); }
 .wl-bc-link:hover { color:#c084fc; text-decoration:underline; }
 .wl-bc-sep { color:var(--c-tx3); }
 .wl-bc-cur { color:var(--c-tx1); }
+
+/* ── Key insight summary banner ── */
+.wl-key-insight {
+  display:flex; align-items:flex-start; gap:14px;
+  background:linear-gradient(135deg, rgba(139,92,246,.13) 0%, rgba(20,14,38,.85) 100%);
+  border:1px solid rgba(139,92,246,.35);
+  border-left:3px solid #8b5cf6;
+  border-radius:6px;
+  padding:16px 20px;
+  margin:0 0 14px;
+  animation:wl-fadein .25s ease;
+}
+.wl-ki-icon { font-size:20px; line-height:1; flex-shrink:0; margin-top:1px; color:#8b5cf6; }
+.wl-ki-label {
+  font-size:7.5px; letter-spacing:2px; color:#9b70e0; font-weight:700;
+  text-transform:uppercase; margin-bottom:7px; font-family:var(--f-mono);
+}
+.wl-ki-text {
+  font-size:13px; color:#ddd6f3; line-height:1.6;
+  font-style:italic;
+}
 </style>
 </head>
 <body>
@@ -3042,6 +3063,9 @@ canvas { font-family: var(--f-mono); }
 
     <!-- Breadcrumb navigation -->
     <div class="wl-breadcrumb" id="wl-breadcrumb"></div>
+
+    <!-- Key insight — first thing visible on signal open -->
+    <div class="wl-key-insight" id="wl-key-insight"></div>
 
     <!-- Main two-column panel -->
     <div class="wl-panel">
@@ -7014,6 +7038,19 @@ function selectWLSignal(sid) {
       '<span class="wl-bc-link" onclick="selectWLCategory(\''+g.id+'\')">&#8592; '+g.title+'</span>'+
       '<span class="wl-bc-sep">&#8250;</span>'+
       '<span class="wl-bc-cur">'+sig.title+'</span>';
+  }
+  // Key insight banner — first visible element in analysis panel
+  var ki = document.getElementById('wl-key-insight');
+  if (ki && sig && sig.blindspot) {
+    ki.innerHTML =
+      '<div class="wl-ki-icon">&#9670;</div>'+
+      '<div>'+
+        '<div class="wl-ki-label">Non-Obvious Transmission Pathway</div>'+
+        '<div class="wl-ki-text">'+sig.blindspot+'</div>'+
+      '</div>';
+    ki.style.display = 'flex';
+  } else if (ki) {
+    ki.style.display = 'none';
   }
   // Render analysis
   if (sig) {

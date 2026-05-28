@@ -7714,8 +7714,8 @@ function selectWLCategory(gid) {
   });
   var h = '<div class="wl-mosaic">';
   sigs.forEach(function(sig){
-    var sc = wlSysColor(sig.systemicImpact);
-    var cc = sig.confidence>=80?'#25a066':sig.confidence>=65?'#b8952a':'#e8673c';
+    var sc   = wlSysColor(sig.systemicImpact);
+    var conf = wlConfLabel(sig.confidence);
     var isTop3 = !!WL_TOP3[sig.id];
     h += '<div class="wl-mosaic-card'+(isTop3?' wl-mc-top5':'')+'" onclick="selectWLSignal(\''+sig.id+'\')">'+
          (isTop3?'<div class="wl-mc-top5-badge">&#9733; Top 3 Category Impact</div>':'')+
@@ -7723,7 +7723,7 @@ function selectWLCategory(gid) {
          '<div class="wl-mc-meta">'+
            '<div class="wl-mc-met"><span>TIME HORIZON</span><span class="wl-mc-met-val">'+sig.horizon+'</span></div>'+
            '<div class="wl-mc-met"><span>ORIGIN</span><span class="wl-mc-met-val">'+sig.origin+'</span></div>'+
-           '<div class="wl-mc-met"><span>CONFIDENCE</span><span class="wl-mc-met-val" style="color:'+cc+'">'+sig.confidence+'%</span></div>'+
+           '<div class="wl-mc-met"><span>CONFIDENCE</span><span class="wl-mc-met-val" style="color:'+conf.color+'">'+conf.label+'</span></div>'+
          '</div>'+
          '<div class="wl-mc-score">'+
            '<span class="wl-mc-score-val" style="color:'+sc+'">'+sig.systemicImpact+'</span>'+

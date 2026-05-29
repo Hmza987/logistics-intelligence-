@@ -15,6 +15,7 @@
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
 <style>
 /* ═══════════════════════════════════════════════════════════════════════════
    GULF LOGISTICS INTELLIGENCE — EXECUTIVE DESIGN SYSTEM
@@ -1971,6 +1972,53 @@ canvas { font-family: var(--f-mono); }
 /* ── Breadcrumb & show/hide ─── */
 .wl-hidden { display:none; }
 .wl-visible { display:block; animation:wl-fadein .2s ease; }
+
+/* ── Exec Summary Panel ─────────────────────────────────── */
+#wl-exec-panel { display:none; margin-top:14px; }
+.wl-exec-summary {
+  background:linear-gradient(135deg,rgba(10,15,30,.85),rgba(14,22,38,.9));
+  border:1px solid rgba(212,160,23,.18);
+  border-left:3px solid var(--c-gold);
+  border-radius:4px;
+  padding:18px 20px;
+  margin-bottom:14px;
+}
+.wl-exec-label {
+  font-family:var(--f-mono);
+  font-size:7.5px;
+  letter-spacing:.14em;
+  color:var(--c-gold);
+  text-transform:uppercase;
+  margin-bottom:10px;
+}
+.wl-exec-text {
+  font-family:var(--f-body);
+  font-size:11.5px;
+  line-height:1.78;
+  color:var(--c-tx1);
+}
+.wl-brief-btn {
+  display:flex;
+  align-items:center;
+  gap:9px;
+  background:linear-gradient(135deg,#c8a800,#a87d00);
+  color:#0a0f1e;
+  border:none;
+  border-radius:4px;
+  padding:13px 24px;
+  font-family:var(--f-mono);
+  font-size:10px;
+  font-weight:bold;
+  letter-spacing:.1em;
+  text-transform:uppercase;
+  cursor:pointer;
+  transition:opacity .15s,transform .1s;
+  width:100%;
+  justify-content:center;
+}
+.wl-brief-btn:hover { opacity:.88; transform:translateY(-1px); }
+.wl-brief-btn:disabled { opacity:.5; cursor:not-allowed; transform:none; }
+.wl-brief-btn-icon { font-size:16px; }
 .wl-breadcrumb {
   display:flex; align-items:center; gap:8px; margin-bottom:12px;
   font-family:var(--f-mono); font-size:8px; color:var(--c-tx2); letter-spacing:.06em;
@@ -3144,6 +3192,9 @@ canvas { font-family: var(--f-mono); }
 
     <!-- Signal header: title + meta + systemic impact (always visible) -->
     <div id="wl-signal-header" class="wl-sig-header-card"></div>
+
+    <!-- ── Executive summary + Strategy Brief button ── -->
+    <div id="wl-exec-panel"></div>
 
     <!-- ── Causality table — right after signal header ── -->
     <div id="wl-ev-table-top" class="wl-ev-top-wrap wl-hidden">
@@ -9698,9 +9749,11 @@ function selectWLSignal(sid) {
   // Show analysis panel
   var aw = document.getElementById('wl-analysis-wrap');
   if (aw) aw.className = 'wl-visible';
+
+  var g   = WL_GROUPS.find(function(x){ return x.signals.indexOf(sid) !== -1; });
+  var sig = WL_SIGNALS.find(function(s){ return s.id === sid; });
+
   // Breadcrumb
-  var g = WL_GROUPS.find(function(x){return x.signals.indexOf(sid)!==-1;});
-  var sig = WL_SIGNALS.find(function(s){return s.id===sid;});
   var bc = document.getElementById('wl-breadcrumb');
   if (bc && g && sig) {
     bc.innerHTML =
@@ -9708,42 +9761,261 @@ function selectWLSignal(sid) {
       '<span class="wl-bc-sep">&#8250;</span>'+
       '<span class="wl-bc-cur">'+sig.title+'</span>';
   }
-  // Key insight banner — first visible element in analysis panel
-  var ki = document.getElementById('wl-key-insight');
-  if (ki && sig && sig.blindspot) {
-    ki.innerHTML =
-      '<div class="wl-ki-icon">&#9670;</div>'+
-      '<div>'+
-        '<div class="wl-ki-label">Non-Obvious Transmission Pathway</div>'+
-        '<div class="wl-ki-text">'+sig.blindspot+'</div>'+
-      '</div>';
-    ki.style.display = 'flex';
-  } else if (ki) {
-    ki.style.display = 'none';
+
+  // Hide key insight banner and all complex analysis panels
+  ['wl-key-insight','wl-ev-table-top','wl-evidence-section'].forEach(function(id){
+    var el = document.getElementById(id);
+    if (el) el.style.display = 'none';
+  });
+  document.querySelectorAll('.wl-metrics-row, .wl-heatmap-card, .wl-insight-card').forEach(function(el){
+    el.style.display = 'none';
+  });
+
+  if (!sig) return;
+
+  // Render signal header (title, meta, systemic impact bar)
+  wlRenderHeader(sig);
+
+  // Exec summary + brief button
+  var ep = document.getElementById('wl-exec-panel');
+  if (ep) {
+    ep.innerHTML =
+      '<div class="wl-exec-summary">'+
+        '<div class="wl-exec-label">&#9670; Executive Assessment</div>'+
+        '<div class="wl-exec-text">'+sig.insight+'</div>'+
+      '</div>'+
+      '<button class="wl-brief-btn" id="wl-brief-btn" onclick="generateStrategyBrief(\''+sig.id+'\')">'+
+        '<span class="wl-brief-btn-icon">&#8659;</span> Download Strategy Brief'+
+      '</button>';
+    ep.style.display = 'block';
   }
-  // Render analysis
-  if (sig) {
-    wlRenderHeader(sig);
-    wlRenderChain(sig);
-    wlRenderScores(sig);
-    wlRenderExposure(sig);
-    wlRenderHeatmap(sig);
-    wlRenderInsight(sig);
-    // Causality table — shown first, right after key insight banner
-    var evTop = document.getElementById('wl-ev-table-top');
-    if (evTop) evTop.className = 'wl-ev-top-wrap ' + (sig.evidence ? 'wl-visible' : 'wl-hidden');
-    wlRenderEvidence(sig);
-    // Map + data chart panel
-    wlRenderGeoMap(sig);
-  }
+
   // Smooth scroll to analysis
   setTimeout(function(){
-    var el=document.getElementById('wl-analysis-wrap');
-    if(el) el.scrollIntoView({behavior:'smooth',block:'start'});
-  },60);
+    var el = document.getElementById('wl-analysis-wrap');
+    if (el) el.scrollIntoView({ behavior:'smooth', block:'start' });
+  }, 60);
 }
 
 function renderWatchlistSignal(sid){ selectWLSignal(sid); } // backward compat
+
+// ── STRATEGY BRIEF PDF GENERATOR ─────────────────────────────────────────────
+function generateStrategyBrief(sid) {
+  var sig = WL_SIGNALS.find(function(s){ return s.id === sid; });
+  if (!sig) return;
+
+  var btn = document.getElementById('wl-brief-btn');
+  if (btn) { btn.innerHTML = '<span class="wl-brief-btn-icon">&#9203;</span> Generating Brief…'; btn.disabled = true; }
+
+  // Date + reference
+  var now    = new Date();
+  var months = ['January','February','March','April','May','June','July','August','September','October','November','December'];
+  var date   = months[now.getMonth()] + ' ' + now.getDate() + ', ' + now.getFullYear();
+  var refNum = 'GIB-' + now.getFullYear() + '-' + String(Math.floor(Math.random()*9000)+1000);
+
+  // Confidence language
+  var confLabel = sig.confidence >= 85 ? 'Certain' : sig.confidence >= 70 ? 'Highly Likely' : sig.confidence >= 55 ? 'Likely' : 'Possible';
+  var confLang  = sig.confidence >= 85 ? 'with high confidence' : sig.confidence >= 70 ? 'with moderate-to-high confidence' : sig.confidence >= 55 ? 'with moderate confidence' : 'with low confidence';
+  var impactLevel = sig.systemicImpact >= 70 ? 'HIGH' : sig.systemicImpact >= 50 ? 'MODERATE-HIGH' : sig.systemicImpact >= 35 ? 'MODERATE' : 'LOW';
+
+  // Key Judgments — derived from chain nodes
+  var triggerNode = sig.chain.find(function(c){ return c.order === 0; }) || sig.chain[0];
+  var gccNode     = (sig.chain.filter(function(c){ return c.gcc; }).pop()) || sig.chain[sig.chain.length - 1];
+  var midNodes    = sig.chain.filter(function(c){ return !c.gcc && c.order >= 2; });
+  var midNode     = midNodes[Math.floor(midNodes.length / 2)] || sig.chain[Math.floor(sig.chain.length / 2)];
+  var kj1 = 'We assess ' + confLang + ' that ' + triggerNode.label.toLowerCase() + ' represents a material and escalating risk to GCC logistics network stability over the ' + sig.horizon + ' horizon.';
+  var kj2 = midNode ? 'The transmission mechanism progresses through ' + midNode.label.toLowerCase() + ', with second- and third-order effects propagating to GCC freight capacity and lead time reliability.' : 'Second-order effects are expected to propagate through established trade corridors serving the GCC region.';
+  var kj3 = 'The primary GCC impact pathway concludes in ' + gccNode.label.toLowerCase() + '. Systemic exposure is assessed at ' + sig.systemicImpact + '/100, rated ' + impactLevel + '.';
+
+  // Recommended Actions — category-contextualised
+  var cat = (sig.category || '').toLowerCase();
+  var actions;
+  if (cat.indexOf('climate') !== -1 || cat.indexOf('physical') !== -1) {
+    actions = [
+      'Commission a 90-day freight route stress test incorporating the ' + triggerNode.label.toLowerCase() + ' scenario across all GCC import corridors.',
+      'Activate contingency warehousing capacity protocols at Jebel Ali and Salalah to absorb potential lead time extensions of 12–18 days.',
+      'Engage primary shipping line partners to negotiate priority allocation clauses for GCC-bound cargo under disruption conditions.'
+    ];
+  } else if (cat.indexOf('trade') !== -1 || cat.indexOf('geopo') !== -1) {
+    actions = [
+      'Initiate a supplier diversification review for the top-10 origin markets directly exposed to this trade policy signal.',
+      'Brief GCC customs and port authorities on anticipated cargo flow realignment and prepare absorption capacity for diverted corridor volumes.',
+      'Establish an early-warning tripwire dashboard monitoring the leading regulatory indicators identified in this brief, with a 30-day review cadence.'
+    ];
+  } else if (cat.indexOf('economic') !== -1 || cat.indexOf('financial') !== -1) {
+    actions = [
+      'Review freight rate hedging instruments and forward contracts for core GCC import commodity categories across the ' + sig.horizon + ' window.',
+      'Conduct a carrier concentration analysis to quantify exposure to service reduction on secondary GCC feeder routes under consolidation pressure.',
+      'Integrate the leading demand indicators identified in this brief into the quarterly logistics market outlook model.'
+    ];
+  } else if (cat.indexOf('technology') !== -1 || cat.indexOf('digital') !== -1) {
+    actions = [
+      'Assess GCC logistics operator readiness for the technology transition described and identify capability gaps requiring prioritised investment.',
+      'Engage technology vendors active in adjacent markets to build strategic optionality ahead of the adoption window.',
+      'Commission a peer benchmarking study on regional logistics networks\' adoption posture to identify first-mover advantage opportunities.'
+    ];
+  } else {
+    actions = [
+      'Conduct a scenario planning workshop incorporating the ' + sig.title + ' signal into GCC logistics strategy for the ' + sig.horizon + ' planning horizon.',
+      'Assign a monitoring brief to the intelligence team with a 30-day update cadence and defined escalation tripwires.',
+      'Integrate findings into the next Ministerial logistics risk assessment cycle with quantified probability ranges.'
+    ];
+  }
+
+  // ── Build PDF sections ────────────────────────────────────────────────────
+
+  // Causal Chain
+  var orderLabels = ['Trigger', '1st Order', '2nd Order', '3rd Order', '4th Order'];
+  var chainRows = sig.chain.map(function(c) {
+    var ol = orderLabels[c.order] || (c.order + ' Order');
+    var bg = c.gcc ? 'background:#fffbea;padding:5px 7px;border-left:3px solid #c8a800;margin-bottom:4px;' : 'padding:4px 7px;margin-bottom:3px;';
+    return '<div style="display:flex;align-items:baseline;gap:8px;'+bg+'">' +
+      '<span style="font-size:7px;font-family:Arial,sans-serif;color:#999;min-width:56px;text-transform:uppercase;letter-spacing:.06em;flex-shrink:0;">'+ol+'</span>' +
+      '<span style="flex:1;font-size:10px;color:'+(c.gcc?'#5a3e00':'#222')+';font-weight:'+(c.gcc?'bold':'normal')+';">'+c.label+(c.gcc?' <span style="font-size:7.5px;color:#c8a800;">← GCC IMPACT</span>':'')+'</span>' +
+      '<span style="font-size:8px;color:#888;font-family:Arial,sans-serif;flex-shrink:0;">'+Math.round(c.score*100)+'%</span>' +
+    '</div>';
+  }).join('');
+
+  // GCC Country × Sector table
+  var gccTableHTML = '';
+  if (sig.gcc && sig.gcc.countries && sig.gcc.sectors && sig.gcc.data) {
+    var sectorCols = sig.gcc.sectors.map(function(s){ return '<th style="text-align:center;padding:4px 5px;background:#0a0f1e;color:#d4a017;font-weight:normal;font-size:7px;letter-spacing:.07em;text-transform:uppercase;">'+s+'</th>'; }).join('');
+    var dataRows = sig.gcc.countries.map(function(country, ci) {
+      var row = sig.gcc.data[ci] || [];
+      var cells = row.map(function(v){
+        var col = v>=60?'#b71c1c':v>=40?'#e65100':v>=25?'#c8a800':'#2e7d32';
+        return '<td style="text-align:center;padding:4px 5px;color:'+col+';font-weight:bold;font-size:9px;">'+v+'</td>';
+      }).join('');
+      return '<tr style="'+(ci%2===0?'background:#fafafa;':'')+'">' +
+        '<td style="padding:4px 7px;font-weight:bold;color:#0a0f1e;font-size:9px;font-family:Arial,sans-serif;">'+country+'</td>' +
+        cells + '</tr>';
+    }).join('');
+    gccTableHTML = '<table style="width:100%;border-collapse:collapse;font-family:Arial,sans-serif;">' +
+      '<thead><tr><th style="text-align:left;padding:4px 7px;background:#0a0f1e;color:#d4a017;font-weight:normal;font-size:7px;letter-spacing:.07em;text-transform:uppercase;">Country</th>'+sectorCols+'</tr></thead>' +
+      '<tbody>'+dataRows+'</tbody></table>' +
+      '<div style="font-size:7px;color:#999;font-family:Arial,sans-serif;margin-top:4px;">Values 0–100 · Red ≥60 (High) · Orange ≥40 (Moderate-High) · Amber ≥25 (Moderate) · Green &lt;25 (Low)</div>';
+  }
+
+  // Six-Factor Scores
+  var scoresHTML = '';
+  if (sig.scores && sig.scores.length) {
+    var scoreCells = sig.scores.map(function(sc){
+      var col = sc.val>=70?'#b71c1c':sc.val>=50?'#e65100':sc.val>=35?'#c8a800':'#2e7d32';
+      return '<div style="background:#f5f5f5;padding:7px 9px;border-left:3px solid '+col+';">' +
+        '<div style="font-size:7px;font-family:Arial,sans-serif;color:#888;text-transform:uppercase;letter-spacing:.06em;margin-bottom:2px;">'+sc.label+'</div>' +
+        '<div style="font-size:17px;font-weight:bold;color:'+col+';font-family:Arial,sans-serif;line-height:1;">'+sc.val+'</div>' +
+      '</div>';
+    }).join('');
+    scoresHTML = '<div style="display:grid;grid-template-columns:repeat(3,1fr);gap:6px;">'+scoreCells+'</div>';
+  }
+
+  // Evidence table (first 5 rows)
+  var evHTML = '';
+  if (sig.evidence && sig.evidence.length) {
+    var evRows = sig.evidence.slice(0,5).map(function(ev,ei){
+      return '<tr style="'+(ei%2===0?'background:#fafafa;':'')+'">' +
+        '<td style="padding:4px 6px;font-size:8.5px;color:#222;">'+( ev.event||'' )+'</td>' +
+        '<td style="padding:4px 6px;font-size:8.5px;color:#666;white-space:nowrap;">'+( ev.period||ev.year||'' )+'</td>' +
+        '<td style="padding:4px 6px;font-size:8.5px;color:#444;">'+( ev.impact||'' )+'</td>' +
+        '<td style="padding:4px 6px;font-size:7.5px;color:#888;">'+( ev.source||'' )+'</td>' +
+      '</tr>';
+    }).join('');
+    evHTML = '<table style="width:100%;border-collapse:collapse;font-family:Arial,sans-serif;">' +
+      '<thead><tr>' +
+        ['Event / Precedent','Period','Impact','Source'].map(function(h){ return '<th style="text-align:left;padding:4px 6px;background:#0a0f1e;color:#d4a017;font-weight:normal;font-size:7px;letter-spacing:.07em;text-transform:uppercase;">'+h+'</th>'; }).join('') +
+      '</tr></thead><tbody>'+evRows+'</tbody></table>';
+  }
+
+  // ── Section builder helper ─────────────────────────────────────────────────
+  function sec(title, bodyHTML) {
+    return '<div style="padding:9px 22px 7px;border-top:1px solid #e8e8e8;">' +
+      '<div style="font-family:Arial,sans-serif;font-size:8px;font-weight:bold;text-transform:uppercase;letter-spacing:.16em;color:#0a0f1e;border-bottom:1.5px solid #0a0f1e;padding-bottom:3px;margin-bottom:9px;">'+title+'</div>' +
+      bodyHTML +
+    '</div>';
+  }
+
+  function numbered(items) {
+    return '<div style="font-size:10.5px;line-height:1.72;color:#1a1a1a;">' +
+      items.map(function(t,i){
+        return '<div style="margin-bottom:6px;padding-left:16px;position:relative;">' +
+          '<span style="position:absolute;left:0;color:#0a0f1e;font-weight:bold;">'+(i+1)+'.</span>'+t+'</div>';
+      }).join('') +
+    '</div>';
+  }
+
+  // ── Full brief HTML ────────────────────────────────────────────────────────
+  var classBar = '<div style="background:#0a0f1e;color:#d4a017;padding:9px 22px;font-family:Arial,sans-serif;font-size:7.5px;letter-spacing:.18em;text-align:center;font-weight:bold;text-transform:uppercase;">' +
+    '■ STRATEGIC INTELLIGENCE BRIEF · MINISTERIAL USE ONLY · NOT FOR DISTRIBUTION ■</div>';
+
+  var docHeader = '<div style="padding:12px 22px 10px;border-bottom:2px solid #0a0f1e;display:flex;justify-content:space-between;align-items:flex-start;">' +
+    '<div>' +
+      '<div style="font-family:Arial,sans-serif;font-size:9px;font-weight:bold;color:#0a0f1e;text-transform:uppercase;letter-spacing:.14em;margin-bottom:3px;">Gulf Logistics Intelligence Centre</div>' +
+      '<div style="font-size:9px;color:#555;font-family:Arial,sans-serif;">Prepared for: Senior Leadership · Strategic Intelligence Division</div>' +
+    '</div>' +
+    '<div style="text-align:right;font-family:Arial,sans-serif;font-size:8px;color:#666;line-height:1.7;">' +
+      '<div><b>'+refNum+'</b></div>' +
+      '<div>'+date+'</div>' +
+      '<div style="color:#999;font-size:7.5px;">ASSESSMENT HORIZON: '+sig.horizon+'</div>' +
+    '</div>' +
+  '</div>';
+
+  var subjectBlock = '<div style="padding:10px 22px 9px;border-bottom:1px solid #ddd;">' +
+    '<div style="font-family:Arial,sans-serif;font-size:7.5px;color:#999;text-transform:uppercase;letter-spacing:.12em;margin-bottom:4px;">Subject</div>' +
+    '<div style="font-size:19px;font-weight:bold;color:#0a0f1e;line-height:1.2;margin-bottom:5px;">'+sig.title+'</div>' +
+    '<div style="font-size:9px;color:#555;font-family:Arial,sans-serif;display:flex;align-items:center;gap:10px;flex-wrap:wrap;">' +
+      '<span style="background:#0a0f1e;color:#d4a017;padding:2px 8px;font-size:7px;letter-spacing:.1em;font-weight:bold;">'+impactLevel+' SYSTEMIC IMPACT ('+sig.systemicImpact+')</span>' +
+      '<span>'+sig.category+'</span>' +
+      '<span>· Origin: '+(sig.origin||'—')+'</span>' +
+      '<span>· Confidence: '+confLabel+' ('+sig.confidence+'%)</span>' +
+    '</div>' +
+  '</div>';
+
+  var kjHTML = sec('Key Judgments', numbered([kj1, kj2, kj3]));
+  var assessHTML = sec('Assessment', '<div style="font-size:10.5px;line-height:1.78;color:#1a1a1a;">'+(sig.insight||'')+'</div>');
+  var chainHTML2 = sec('Causal Transmission Pathway', '<div style="font-size:10px;">'+chainRows+'</div>');
+  var scSec  = scoresHTML ? sec('Propagation Model — Six-Factor Assessment', scoresHTML) : '';
+  var gccSec = gccTableHTML ? sec('GCC Country × Sector Exposure Matrix', gccTableHTML) : '';
+  var confSec = sec('Confidence &amp; Analytic Caveats',
+    '<div style="font-size:10.5px;line-height:1.72;color:#1a1a1a;">' +
+      '<p style="margin:0 0 7px;"><b>Confidence Level:</b> '+confLabel+' ('+sig.confidence+'%) — ' + (
+        sig.confidence >= 85 ? 'Multiple independent corroborating sources with strong historical precedent and validated causal mechanism.' :
+        sig.confidence >= 70 ? 'Several corroborating sources with established causal pathway; some assumptions remain untested at current data density.' :
+        sig.confidence >= 55 ? 'Limited primary sources with a plausible but partially unvalidated causal mechanism.' :
+        'Early-stage signal with limited corroboration; causal pathway is hypothesised and requires further validation.' ) + '</p>' +
+      '<p style="margin:0;"><b>Non-Obvious Pathway &amp; Caveat:</b> '+(sig.blindspot||'No specific analytic caveats identified at current confidence threshold.')+'</p>' +
+    '</div>');
+  var actSec = sec('Recommended Actions', numbered(actions));
+  var evSec  = evHTML ? sec('Intelligence Basis — Historical Validation', evHTML) : '';
+
+  var footerBar = '<div style="background:#0a0f1e;color:#d4a017;padding:8px 22px;font-family:Arial,sans-serif;font-size:7px;letter-spacing:.16em;text-align:center;font-weight:bold;text-transform:uppercase;margin-top:6px;">' +
+    '■ STRATEGIC INTELLIGENCE BRIEF · MINISTERIAL USE ONLY · '+refNum+' · '+date+' ■</div>';
+
+  var briefHTML = '<div style="font-family:\'Times New Roman\',serif;color:#111;background:#fff;width:190mm;margin:0 auto;">' +
+    classBar + docHeader + subjectBlock + kjHTML + assessHTML + chainHTML2 + scSec + gccSec + confSec + actSec + evSec + footerBar +
+  '</div>';
+
+  // ── Render + export ───────────────────────────────────────────────────────
+  var wrapper = document.createElement('div');
+  wrapper.style.cssText = 'position:fixed;left:-9999px;top:0;width:210mm;z-index:-1;';
+  wrapper.innerHTML = briefHTML;
+  document.body.appendChild(wrapper);
+
+  var filename = sig.id + '-strategy-brief-' + now.getFullYear() + '.pdf';
+  html2pdf().set({
+    margin:      [6, 6, 6, 6],
+    filename:    filename,
+    image:       { type:'jpeg', quality:0.98 },
+    html2canvas: { scale:2, useCORS:true, logging:false },
+    jsPDF:       { unit:'mm', format:'a4', orientation:'portrait' }
+  }).from(wrapper).save().then(function(){
+    document.body.removeChild(wrapper);
+    if (btn) { btn.innerHTML = '<span class="wl-brief-btn-icon">&#8659;</span> Download Strategy Brief'; btn.disabled = false; }
+  }).catch(function(err){
+    console.error('Brief generation error:', err);
+    document.body.removeChild(wrapper);
+    if (btn) { btn.innerHTML = '<span class="wl-brief-btn-icon">&#8659;</span> Download Strategy Brief'; btn.disabled = false; }
+  });
+}
 // ── END STRATEGIC WATCHLIST ───────────────────────────────────────────────────
 
 

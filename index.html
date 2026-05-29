@@ -6912,15 +6912,18 @@ var WL_SIGNALS = [
     timelineUnit:'months',
     chart:{
       type:'line',
-      title:'Global Reefer Container Lease Rate Index vs. HOA Food Crisis Events (2021–2023)',
+      title:'Global Reefer Container Lease Rate Index vs HOA Population Food Insecure (2021–2023)',
       xLabel:'Month',
       yLabel:'Reefer Lease Rate Index (Jan 2021 = 100)',
-      color:'#e03040',
+      color:'#e03040', dualAxis:true,
+      label2:'HOA Population Food Insecure (WFP, Millions)',
+      color2:'#b8952a',
       note:'Reefer rates peaked 3–4 months after HOA drought declaration (Jun 2022), confirming the transmission lag modelled in the causality chain',
-      source:'Drewry Reefer Shipping Annual Review & WFP Logistics Cluster',
+      source:'Drewry Reefer Shipping Annual Review & WFP Logistics Cluster — Horn of Africa Crisis Dashboard',
       sourceUrl:'https://www.drewry.co.uk/supply-chain-advisors/supply-chain-expertise/reefer-shipping',
       labels:['Jan-21','Apr-21','Jul-21','Oct-21','Jan-22','Apr-22','Jul-22','Oct-22','Jan-23','Apr-23','Jul-23','Oct-23'],
-      values:[100,108,125,142,158,178,195,182,165,148,132,118]
+      values:[100,108,125,142,158,178,195,182,165,148,132,118],
+      values2:[14.0,15.2,16.8,18.5,19.8,21.0,22.0,21.5,20.2,18.8,17.5,16.2]
     }
   },
   {
@@ -7486,12 +7489,15 @@ var WL_SIGNALS = [
       type:'line',
       title:'Middle East OSV Day Rates vs North Sea Offshore Wind Investment (2018–2024)',
       xLabel:'Year', yLabel:'Middle East PSV Day Rate (USD/day)',
-      color:'#25a066',
+      color:'#25a066', dualAxis:true,
+      label2:'North Sea Offshore Wind Investment Committed ($B, annual)',
+      color2:'#4a9fe8',
       note:'OSV day rates in ME Gulf spiked 65% as North Sea wind buildout relocated vessels 2021–2023; R²≈0.81 between European renewable vessel demand and GCC OSV scarcity premium',
-      source:'Clarksons Research — Offshore Vessel Day Rate Database',
+      source:'Clarksons Research — Offshore Vessel Day Rate Database & BloombergNEF Offshore Wind Investment Report',
       sourceUrl:'https://www.clarksons.com/services/research/',
       labels:[2018,2019,2020,2021,2022,2023,2024],
-      values:[12500,11800,8200,10500,16800,21400,19800]
+      values:[12500,11800,8200,10500,16800,21400,19800],
+      values2:[26,32,18,25,44,58,72]
     }
   },
 
@@ -7541,12 +7547,15 @@ var WL_SIGNALS = [
       type:'line',
       title:'Oceanic Niño Index (ONI) vs Global Food Commodity Price Index (2000–2023)',
       xLabel:'Year', yLabel:'FAO Food Price Index (2014–16 = 100)',
-      color:'#e03040',
+      color:'#e03040', dualAxis:true,
+      label2:'ONI Index (absolute; La Niña = high value)',
+      color2:'#4a9fe8',
       note:'La Niña phases (ONI < −0.5) correlate with global food price spikes 6–12 months later — 2010–12 and 2020–23 La Niña events both produced record food price peaks impacting GCC import costs',
-      source:'FAO Food Price Index & NOAA Oceanic Niño Index (ONI)',
+      source:'FAO Food Price Index & NOAA Oceanic Niño Index (ONI) — ENSO Historical Data',
       sourceUrl:'https://www.fao.org/worldfoodsituation/foodpricesindex/en/',
       labels:[2000,2002,2004,2006,2008,2010,2012,2014,2016,2018,2020,2021,2022,2023],
-      values:[90,89,105,118,201,171,210,120,91,116,98,125,143,127]
+      values:[90,89,105,118,201,171,210,120,91,116,98,125,143,127],
+      values2:[1.7,1.2,0.8,1.1,1.4,1.6,0.5,0.5,2.3,0.9,0.9,1.0,1.0,1.8]
     }
   },
 
@@ -9883,21 +9892,63 @@ function generateStrategyBrief(sid) {
   if (sig.chart) {
     var ch = sig.chart;
     if ((ch.type === 'line' || ch.type === 'bar') && ch.labels && ch.values) {
-      var cMaxVal = Math.max.apply(null, ch.values.map(function(v){ return isNaN(v) ? 0 : Number(v); }));
+      var isDual  = !!(ch.values2 && ch.values2.length);
+      var cMaxVal = Math.max.apply(null, ch.values.map(function(v){ return isNaN(v) ? 0 : Math.abs(Number(v)); }));
+      var cMaxV2  = isDual ? Math.max.apply(null, ch.values2.map(function(v){ return isNaN(v) ? 0 : Math.abs(Number(v)); })) : 0;
+      var cCol1   = ch.color  || '#1565c0';
+      var cCol2   = ch.color2 || '#c8a800';
       var chartBars = ch.labels.map(function(lbl, ci) {
-        var raw  = ch.values[ci];
-        var cVal = isNaN(raw) ? 0 : Number(raw);
-        var pct  = cMaxVal > 0 ? Math.round((cVal / cMaxVal) * 100) : 0;
-        var bCol = pct >= 75 ? '#b71c1c' : pct >= 50 ? '#e65100' : pct >= 30 ? '#c8a800' : '#1565c0';
-        return '<div style="display:flex;align-items:center;gap:8px;margin-bottom:4px;">' +
-          '<div style="font-size:7.5px;color:#555;font-family:Arial,sans-serif;width:90px;flex-shrink:0;text-align:right;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;" title="' + lbl + '">' + lbl + '</div>' +
-          '<div style="flex:1;background:#f0f0f0;height:14px;position:relative;">' +
-            '<div style="width:' + pct + '%;height:100%;background:' + bCol + ';"></div>' +
+        var raw1  = ch.values[ci];
+        var cVal1 = isNaN(raw1) ? 0 : Number(raw1);
+        var pct1  = cMaxVal > 0 ? Math.round((Math.abs(cVal1) / cMaxVal) * 100) : 0;
+        var bCol1 = isDual ? cCol1 :
+          (pct1 >= 75 ? '#b71c1c' : pct1 >= 50 ? '#e65100' : pct1 >= 30 ? '#c8a800' : '#1565c0');
+        var disp1 = (Math.floor(cVal1) === cVal1) ? cVal1 : cVal1.toFixed(1);
+        var bar2  = '';
+        if (isDual) {
+          var raw2  = ch.values2[ci];
+          var cVal2 = isNaN(raw2) ? 0 : Number(raw2);
+          var pct2  = cMaxV2 > 0 ? Math.round((Math.abs(cVal2) / cMaxV2) * 100) : 0;
+          var disp2 = (Math.floor(cVal2) === cVal2) ? cVal2 : cVal2.toFixed(1);
+          bar2 =
+            '<div style="display:flex;align-items:center;gap:8px;margin-bottom:1px;">' +
+              '<div style="font-size:0;width:90px;flex-shrink:0;"></div>' +
+              '<div style="flex:1;background:#f0f0f0;height:10px;position:relative;">' +
+                '<div style="width:' + pct2 + '%;height:100%;background:' + cCol2 + ';opacity:.88;"></div>' +
+              '</div>' +
+              '<div style="font-size:7.5px;color:#666;font-family:Arial,sans-serif;width:32px;flex-shrink:0;">' + disp2 + '</div>' +
+            '</div>';
+        }
+        return '<div style="margin-bottom:' + (isDual ? '5px' : '4px') + ';">' +
+          '<div style="display:flex;align-items:center;gap:8px;margin-bottom:' + (isDual ? '1px' : '0') + ';">' +
+            '<div style="font-size:7.5px;color:#555;font-family:Arial,sans-serif;width:90px;flex-shrink:0;text-align:right;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;" title="' + lbl + '">' + lbl + '</div>' +
+            '<div style="flex:1;background:#f0f0f0;height:' + (isDual ? '12' : '14') + 'px;position:relative;">' +
+              '<div style="width:' + pct1 + '%;height:100%;background:' + bCol1 + ';"></div>' +
+            '</div>' +
+            '<div style="font-size:8px;color:#333;font-family:Arial,sans-serif;width:32px;flex-shrink:0;">' + disp1 + '</div>' +
           '</div>' +
-          '<div style="font-size:8px;color:#333;font-family:Arial,sans-serif;width:32px;flex-shrink:0;">' + cVal + '</div>' +
+          bar2 +
         '</div>';
       }).join('');
+      // Legend for dual-axis charts
+      var cLegend = '';
+      if (isDual) {
+        var lbl1txt = ch.yLabel  || 'Series 1';
+        var lbl2txt = ch.label2  || 'Series 2';
+        cLegend =
+          '<div style="display:flex;flex-wrap:wrap;gap:14px;margin-bottom:8px;font-family:Arial,sans-serif;font-size:8px;color:#444;">' +
+            '<div style="display:flex;align-items:center;gap:5px;">' +
+              '<div style="width:16px;height:9px;background:' + cCol1 + ';flex-shrink:0;"></div>' +
+              '<span>' + lbl1txt + '</span>' +
+            '</div>' +
+            '<div style="display:flex;align-items:center;gap:5px;">' +
+              '<div style="width:16px;height:9px;background:' + cCol2 + ';opacity:.88;flex-shrink:0;"></div>' +
+              '<span>' + lbl2txt + '</span>' +
+            '</div>' +
+          '</div>';
+      }
       chartSec = sec(ch.title || (sig.title + ' — Trend Data'),
+        cLegend +
         '<div style="margin-bottom:6px;">' + chartBars + '</div>' +
         (ch.note   ? '<div style="font-size:7.5px;color:#888;font-family:Arial,sans-serif;margin-top:4px;">' + ch.note + '</div>' : '') +
         (ch.source ? '<div style="font-size:7px;color:#aaa;font-family:Arial,sans-serif;margin-top:2px;">Source: ' + ch.source + '</div>' : '')

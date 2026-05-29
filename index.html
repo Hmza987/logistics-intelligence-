@@ -9892,65 +9892,146 @@ function generateStrategyBrief(sid) {
   if (sig.chart) {
     var ch = sig.chart;
     if ((ch.type === 'line' || ch.type === 'bar') && ch.labels && ch.values) {
-      var isDual  = !!(ch.values2 && ch.values2.length);
-      var cMaxVal = Math.max.apply(null, ch.values.map(function(v){ return isNaN(v) ? 0 : Math.abs(Number(v)); }));
-      var cMaxV2  = isDual ? Math.max.apply(null, ch.values2.map(function(v){ return isNaN(v) ? 0 : Math.abs(Number(v)); })) : 0;
-      var cCol1   = ch.color  || '#1565c0';
-      var cCol2   = ch.color2 || '#c8a800';
-      var chartBars = ch.labels.map(function(lbl, ci) {
-        var raw1  = ch.values[ci];
-        var cVal1 = isNaN(raw1) ? 0 : Number(raw1);
-        var pct1  = cMaxVal > 0 ? Math.round((Math.abs(cVal1) / cMaxVal) * 100) : 0;
-        var bCol1 = isDual ? cCol1 :
-          (pct1 >= 75 ? '#b71c1c' : pct1 >= 50 ? '#e65100' : pct1 >= 30 ? '#c8a800' : '#1565c0');
-        var disp1 = (Math.floor(cVal1) === cVal1) ? cVal1 : cVal1.toFixed(1);
-        var bar2  = '';
-        if (isDual) {
-          var raw2  = ch.values2[ci];
-          var cVal2 = isNaN(raw2) ? 0 : Number(raw2);
-          var pct2  = cMaxV2 > 0 ? Math.round((Math.abs(cVal2) / cMaxV2) * 100) : 0;
-          var disp2 = (Math.floor(cVal2) === cVal2) ? cVal2 : cVal2.toFixed(1);
-          bar2 =
-            '<div style="display:flex;align-items:center;gap:8px;margin-bottom:1px;">' +
-              '<div style="font-size:0;width:90px;flex-shrink:0;"></div>' +
-              '<div style="flex:1;background:#f0f0f0;height:10px;position:relative;">' +
-                '<div style="width:' + pct2 + '%;height:100%;background:' + cCol2 + ';opacity:.88;"></div>' +
-              '</div>' +
-              '<div style="font-size:7.5px;color:#666;font-family:Arial,sans-serif;width:32px;flex-shrink:0;">' + disp2 + '</div>' +
-            '</div>';
+      // ── SVG dual-axis line chart ───────────────────────────────────────────
+      var lcIsDual = !!(ch.values2 && ch.values2.length);
+      var lcW = 520, lcH = 200;
+      var lcPL = 54, lcPT = 18, lcPR = lcIsDual ? 54 : 14, lcPB = 44;
+      var lcPlotW = lcW - lcPL - lcPR, lcPlotH = lcH - lcPT - lcPB;
+      var lcN   = ch.labels.length;
+      var lcC1  = ch.color  || '#e03040';
+      var lcC2  = ch.color2 || '#c8a800';
+
+      // X positions — evenly spaced categorical
+      var lcXpos = [];
+      for (var _lxi = 0; _lxi < lcN; _lxi++) {
+        lcXpos.push(lcPL + (lcN <= 1 ? lcPlotW / 2 : (_lxi / (lcN - 1)) * lcPlotW));
+      }
+
+      // Series 1 scale (left Y-axis)
+      var lcV1 = ch.values.map(function(v){ return isNaN(v) ? 0 : Number(v); });
+      var lcYmin1 = Math.min.apply(null, lcV1), lcYmax1 = Math.max.apply(null, lcV1);
+      var lcYr1 = lcYmax1 - lcYmin1 || Math.abs(lcYmax1) || 1;
+      lcYmin1 -= lcYr1 * 0.1; lcYmax1 += lcYr1 * 0.1;
+      var lcSY1 = function(v){ return lcPT + lcPlotH - (v - lcYmin1) / (lcYmax1 - lcYmin1) * lcPlotH; };
+
+      // Series 2 scale (right Y-axis)
+      var lcV2 = [], lcYmin2 = 0, lcYmax2 = 1, lcSY2 = null;
+      if (lcIsDual) {
+        lcV2 = ch.values2.map(function(v){ return isNaN(v) ? 0 : Number(v); });
+        lcYmin2 = Math.min.apply(null, lcV2); lcYmax2 = Math.max.apply(null, lcV2);
+        var lcYr2 = lcYmax2 - lcYmin2 || Math.abs(lcYmax2) || 1;
+        lcYmin2 -= lcYr2 * 0.1; lcYmax2 += lcYr2 * 0.1;
+        lcSY2 = function(v){ return lcPT + lcPlotH - (v - lcYmin2) / (lcYmax2 - lcYmin2) * lcPlotH; };
+      }
+
+      // Number formatter
+      var lcFmt = function(v) {
+        var a = Math.abs(v);
+        if (a >= 10000) return (v / 1000).toFixed(0) + 'K';
+        if (a >= 1000)  return (v / 1000).toFixed(1) + 'K';
+        if (a > 0 && a < 1) return v.toFixed(2);
+        if (Math.floor(v) !== v) return v.toFixed(1);
+        return String(Math.round(v));
+      };
+
+      // Horizontal grid + left Y-axis ticks
+      var lcGrid = '';
+      for (var _lyi = 0; _lyi <= 4; _lyi++) {
+        var _lyv = lcYmin1 + (_lyi / 4) * (lcYmax1 - lcYmin1);
+        var _lyy = lcSY1(_lyv);
+        lcGrid += '<line x1="' + lcPL + '" y1="' + _lyy.toFixed(1) + '" x2="' + (lcPL + lcPlotW) + '" y2="' + _lyy.toFixed(1) + '" stroke="#ebebeb" stroke-width="1"/>';
+        lcGrid += '<text x="' + (lcPL - 4) + '" y="' + (_lyy + 3.5).toFixed(1) + '" text-anchor="end" font-size="7.5" fill="#888" font-family="Arial,sans-serif">' + lcFmt(_lyv) + '</text>';
+      }
+
+      // Right Y-axis ticks (series 2)
+      var lcRTicks = '';
+      if (lcIsDual) {
+        for (var _ryi = 0; _ryi <= 4; _ryi++) {
+          var _ryv = lcYmin2 + (_ryi / 4) * (lcYmax2 - lcYmin2);
+          var _ryy = lcSY2(_ryv);
+          lcRTicks += '<text x="' + (lcPL + lcPlotW + 4) + '" y="' + (_ryy + 3.5).toFixed(1) + '" text-anchor="start" font-size="7.5" fill="' + lcC2 + '" font-family="Arial,sans-serif">' + lcFmt(_ryv) + '</text>';
         }
-        return '<div style="margin-bottom:' + (isDual ? '5px' : '4px') + ';">' +
-          '<div style="display:flex;align-items:center;gap:8px;margin-bottom:' + (isDual ? '1px' : '0') + ';">' +
-            '<div style="font-size:7.5px;color:#555;font-family:Arial,sans-serif;width:90px;flex-shrink:0;text-align:right;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;" title="' + lbl + '">' + lbl + '</div>' +
-            '<div style="flex:1;background:#f0f0f0;height:' + (isDual ? '12' : '14') + 'px;position:relative;">' +
-              '<div style="width:' + pct1 + '%;height:100%;background:' + bCol1 + ';"></div>' +
-            '</div>' +
-            '<div style="font-size:8px;color:#333;font-family:Arial,sans-serif;width:32px;flex-shrink:0;">' + disp1 + '</div>' +
-          '</div>' +
-          bar2 +
-        '</div>';
-      }).join('');
-      // Legend for dual-axis charts
-      var cLegend = '';
-      if (isDual) {
-        var lbl1txt = ch.yLabel  || 'Series 1';
-        var lbl2txt = ch.label2  || 'Series 2';
-        cLegend =
-          '<div style="display:flex;flex-wrap:wrap;gap:14px;margin-bottom:8px;font-family:Arial,sans-serif;font-size:8px;color:#444;">' +
+      }
+
+      // X-axis tick labels (skip if crowded)
+      var lcXLabels = '';
+      var lcStep = Math.max(1, Math.ceil(lcN / 10));
+      for (var _lxj = 0; _lxj < lcN; _lxj += lcStep) {
+        lcXLabels += '<text x="' + lcXpos[_lxj].toFixed(1) + '" y="' + (lcPT + lcPlotH + 13) + '" text-anchor="middle" font-size="7.5" fill="#888" font-family="Arial,sans-serif">' + ch.labels[_lxj] + '</text>';
+      }
+      if ((lcN - 1) % lcStep !== 0) {
+        lcXLabels += '<text x="' + lcXpos[lcN - 1].toFixed(1) + '" y="' + (lcPT + lcPlotH + 13) + '" text-anchor="middle" font-size="7.5" fill="#888" font-family="Arial,sans-serif">' + ch.labels[lcN - 1] + '</text>';
+      }
+
+      // Series 1 line path + dots
+      var lcPath1 = 'M ' + lcXpos[0].toFixed(1) + ',' + lcSY1(lcV1[0]).toFixed(1);
+      for (var _lp1 = 1; _lp1 < lcN; _lp1++) {
+        lcPath1 += ' L ' + lcXpos[_lp1].toFixed(1) + ',' + lcSY1(lcV1[_lp1]).toFixed(1);
+      }
+      var lcDots1 = '';
+      for (var _ld1 = 0; _ld1 < lcN; _ld1++) {
+        lcDots1 += '<circle cx="' + lcXpos[_ld1].toFixed(1) + '" cy="' + lcSY1(lcV1[_ld1]).toFixed(1) + '" r="3" fill="' + lcC1 + '" stroke="white" stroke-width="1.2"/>';
+      }
+
+      // Series 2 line path + dots
+      var lcPath2 = '', lcDots2 = '';
+      if (lcIsDual) {
+        lcPath2 = 'M ' + lcXpos[0].toFixed(1) + ',' + lcSY2(lcV2[0]).toFixed(1);
+        for (var _lp2 = 1; _lp2 < lcN; _lp2++) {
+          lcPath2 += ' L ' + lcXpos[_lp2].toFixed(1) + ',' + lcSY2(lcV2[_lp2]).toFixed(1);
+        }
+        for (var _ld2 = 0; _ld2 < lcN; _ld2++) {
+          lcDots2 += '<circle cx="' + lcXpos[_ld2].toFixed(1) + '" cy="' + lcSY2(lcV2[_ld2]).toFixed(1) + '" r="3" fill="' + lcC2 + '" stroke="white" stroke-width="1.2"/>';
+        }
+      }
+
+      // Axis labels (rotated Y labels)
+      var lcAxLbls = '';
+      var lcMidY = (lcPT + lcPlotH / 2).toFixed(1);
+      if (ch.xLabel) lcAxLbls += '<text x="' + (lcPL + lcPlotW / 2).toFixed(1) + '" y="' + (lcH - 3) + '" text-anchor="middle" font-size="8.5" fill="#555" font-family="Arial,sans-serif">' + ch.xLabel + '</text>';
+      if (ch.yLabel) lcAxLbls += '<text x="10" y="' + lcMidY + '" text-anchor="middle" font-size="8" fill="' + lcC1 + '" font-family="Arial,sans-serif" transform="rotate(-90 10 ' + lcMidY + ')">' + ch.yLabel + '</text>';
+      if (lcIsDual && ch.label2) {
+        var lcRX = (lcW - 10).toFixed(1);
+        lcAxLbls += '<text x="' + lcRX + '" y="' + lcMidY + '" text-anchor="middle" font-size="8" fill="' + lcC2 + '" font-family="Arial,sans-serif" transform="rotate(90 ' + lcRX + ' ' + lcMidY + ')">' + ch.label2 + '</text>';
+      }
+
+      // Legend (inline SVG line swatches)
+      var lcLegend = '';
+      if (lcIsDual) {
+        lcLegend =
+          '<div style="display:flex;flex-wrap:wrap;gap:16px;margin-bottom:6px;font-family:Arial,sans-serif;font-size:8px;color:#333;">' +
             '<div style="display:flex;align-items:center;gap:5px;">' +
-              '<div style="width:16px;height:9px;background:' + cCol1 + ';flex-shrink:0;"></div>' +
-              '<span>' + lbl1txt + '</span>' +
+              '<svg width="24" height="10" xmlns="http://www.w3.org/2000/svg">' +
+                '<line x1="0" y1="5" x2="24" y2="5" stroke="' + lcC1 + '" stroke-width="2"/>' +
+                '<circle cx="12" cy="5" r="3" fill="' + lcC1 + '"/>' +
+              '</svg>' +
+              '<span>' + (ch.yLabel || 'Series 1') + '</span>' +
             '</div>' +
             '<div style="display:flex;align-items:center;gap:5px;">' +
-              '<div style="width:16px;height:9px;background:' + cCol2 + ';opacity:.88;flex-shrink:0;"></div>' +
-              '<span>' + lbl2txt + '</span>' +
+              '<svg width="24" height="10" xmlns="http://www.w3.org/2000/svg">' +
+                '<line x1="0" y1="5" x2="24" y2="5" stroke="' + lcC2 + '" stroke-width="2" stroke-dasharray="5,3"/>' +
+                '<circle cx="12" cy="5" r="3" fill="' + lcC2 + '"/>' +
+              '</svg>' +
+              '<span>' + (ch.label2 || 'Series 2') + '</span>' +
             '</div>' +
           '</div>';
       }
+
+      // Assemble SVG
+      var lcSvg =
+        '<svg width="100%" viewBox="0 0 ' + lcW + ' ' + lcH + '" xmlns="http://www.w3.org/2000/svg" style="display:block;">' +
+          '<rect width="' + lcW + '" height="' + lcH + '" fill="#fafafa"/>' +
+          '<rect x="' + lcPL + '" y="' + lcPT + '" width="' + lcPlotW + '" height="' + lcPlotH + '" fill="white" stroke="#ddd" stroke-width="1"/>' +
+          lcGrid + lcRTicks + lcXLabels +
+          '<path d="' + lcPath1 + '" fill="none" stroke="' + lcC1 + '" stroke-width="2.2" stroke-linejoin="round"/>' +
+          lcDots1 +
+          (lcIsDual ? '<path d="' + lcPath2 + '" fill="none" stroke="' + lcC2 + '" stroke-width="2.2" stroke-dasharray="6,3" stroke-linejoin="round"/>' + lcDots2 : '') +
+          lcAxLbls +
+        '</svg>';
+
       chartSec = sec(ch.title || (sig.title + ' — Trend Data'),
-        cLegend +
-        '<div style="margin-bottom:6px;">' + chartBars + '</div>' +
-        (ch.note   ? '<div style="font-size:7.5px;color:#888;font-family:Arial,sans-serif;margin-top:4px;">' + ch.note + '</div>' : '') +
+        lcLegend + lcSvg +
+        (ch.note   ? '<div style="font-size:7.5px;color:#888;font-family:Arial,sans-serif;margin-top:5px;">' + ch.note + '</div>' : '') +
         (ch.source ? '<div style="font-size:7px;color:#aaa;font-family:Arial,sans-serif;margin-top:2px;">Source: ' + ch.source + '</div>' : '')
       );
     } else if (ch.type === 'scatter' && ch.points) {

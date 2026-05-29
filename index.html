@@ -9108,6 +9108,16 @@ var WL_SIGNALS = [
       values:[0.99,1.08,1.20,1.38,1.55,1.72,2.00],
       values2:[4.2,5.5,6.2,8.2,10.5,13.0,18.0]
     }
+  }
+];
+
+// ── Group / Category definitions ──────────────────────────────────────────────
+var WL_GROUPS = [
+  {
+    id:'climate', icon:'◈',
+    title:'Climate & Physical Risk',
+    desc:'Hydrology, drought, ocean systems, weather extremes and their transmission into freight and port markets',
+    signals:['panama','eastafrica','iod','glacier','austdrought','mekong','arctic','medagri','adenweather','sahel','northsea','lanina']
   },
   {
     id:'trade', icon:'◇',
@@ -9134,6 +9144,225 @@ var WL_SIGNALS = [
     signals:['samigration','emiratisation','africapop']
   }
 ];
+
+
+// ── Colour helpers ─────────────────────────────────────────────────────────────
+function wlHeatColor(s) {
+  if (s < 15) return {bg:'rgba(5,7,10,0.5)',  tx:'transparent'};
+  if (s < 30) return {bg:'rgba(184,149,42,.15)', tx:'#7a6025'};
+  if (s < 50) return {bg:'rgba(184,149,42,.30)', tx:'#b8952a'};
+  if (s < 65) return {bg:'rgba(232,103,60,.38)', tx:'#e8673c'};
+  if (s < 80) return {bg:'rgba(224,48,64,.46)',  tx:'#e03040'};
+  return            {bg:'rgba(224,48,64,.68)',   tx:'#ff5060'};
+}
+function wlBarColor(v) {
+  return v < 40 ? '#25a066' : v < 65 ? '#b8952a' : v < 80 ? '#e8673c' : '#e03040';
+}
+function wlSysColor(v) {
+  return v < 50 ? '#25a066' : v < 65 ? '#b8952a' : v < 80 ? '#e8673c' : '#e03040';
+}
+function wlNodeColor(score, gcc) {
+  if (gcc) return '#7c3aed';
+  if (score > 0.75) return '#e03040';
+  if (score > 0.65) return '#e8673c';
+  return '#b8952a';
+}
+function wlOrderLabel(o) { return o===0?'ORIGIN':o===1?'1ST ORDER':o===2?'2ND ORDER':'3RD ORDER'; }
+function wlOrderColor(o) { return o===0?'#e03040':o===1?'#e8673c':o===2?'#b8952a':'#c084fc'; }
+
+// ── Renderers ──────────────────────────────────────────────────────────────────
+function wlConfLabel(c) {
+  if (c >= 85) return {label:'Certain',       color:'#25a066'};
+  if (c >= 75) return {label:'Highly Likely', color:'#4a9fe8'};
+  if (c >= 65) return {label:'Likely',        color:'#b8952a'};
+  return              {label:'Possible',      color:'#e8673c'};
+}
+function wlRenderHeader(sig) {
+  var el = document.getElementById('wl-signal-header');
+  if (!el) return;
+  var sc   = wlSysColor(sig.systemicImpact);
+  var conf = wlConfLabel(sig.confidence);
+  el.innerHTML =
+    '<div style="display:flex;align-items:flex-start;justify-content:space-between;gap:12px;flex-wrap:wrap">' +
+      '<div class="wl-signal-name">' + sig.title + '</div>' +
+      '<div style="display:flex;align-items:center;gap:6px;flex-shrink:0">' +
+        '<span style="font-family:var(--f-mono);font-size:7px;color:var(--c-tx2);letter-spacing:.08em">SYSTEMIC IMPACT</span>' +
+        '<span style="font-family:var(--f-mono);font-size:20px;font-weight:700;color:'+sc+';line-height:1">'+sig.systemicImpact+'</span>' +
+      '</div>' +
+    '</div>' +
+    '<div class="wl-signal-meta" style="margin-top:6px">' +
+      '<div class="wl-meta-item"><span>CATEGORY</span><span class="wl-meta-val">' + sig.category + '</span></div>' +
+      '<div class="wl-meta-item"><span>TIME HORIZON</span><span class="wl-meta-val">' + sig.horizon + '</span></div>' +
+      '<div class="wl-meta-item"><span>SIGNAL ORIGIN</span><span class="wl-meta-val">' + sig.origin + '</span></div>' +
+      '<div class="wl-meta-item"><span>CONFIDENCE</span>' +
+        '<span class="wl-meta-val" style="color:'+conf.color+'">'+conf.label+'</span>' +
+      '</div>' +
+    '</div>';
+}
+
+function wlRenderConfRing(sig) {
+  var el = document.getElementById('wl-conf-ring');
+  if (!el) return;
+  var r=24, cx=29, cy=29;
+  var circ = 2*Math.PI*r;
+  var dash = (sig.confidence/100)*circ;
+  var col = sig.confidence>=80?'#25a066':sig.confidence>=65?'#b8952a':'#e8673c';
+  el.innerHTML =
+    '<svg class="wl-conf-svg" viewBox="0 0 58 58">' +
+      '<circle cx="'+cx+'" cy="'+cy+'" r="'+r+'" fill="none" stroke="#172030" stroke-width="4"/>' +
+      '<circle cx="'+cx+'" cy="'+cy+'" r="'+r+'" fill="none" stroke="'+col+'" stroke-width="4"' +
+      ' stroke-dasharray="'+dash.toFixed(1)+' '+circ.toFixed(1)+'"' +
+      ' transform="rotate(-90 '+cx+' '+cy+')" stroke-linecap="round"/>' +
+      '<text x="'+cx+'" y="'+(cy+1)+'" text-anchor="middle" dominant-baseline="middle"' +
+      ' font-family="IBM Plex Mono,monospace" font-size="11" font-weight="700" fill="'+col+'">'+sig.confidence+'</text>' +
+    '</svg>' +
+    '<div class="wl-conf-lbl">Confidence %</div>';
+}
+
+function wlRenderChain(sig) {
+  var el = document.getElementById('wl-tx-svg');
+  if (!el) return;
+  var chain = sig.chain;
+  var n = chain.length;
+  var nodeH=34, nodeW=310, gapY=16, startX=4, startY=6;
+  var totalH = n*(nodeH+gapY) + 20;
+  var svgW = 500;
+  var prevOrder = -1;
+  var s = '<svg viewBox="0 0 '+svgW+' '+totalH+'" style="min-height:'+totalH+'px">';
+  for (var i=0; i<n; i++) {
+    var nd = chain[i];
+    var y = startY + i*(nodeH+gapY);
+    var midX = startX + nodeW/2;
+    var col = wlNodeColor(nd.score, nd.gcc);
+    var bg = nd.gcc ? 'rgba(124,58,237,.14)' :
+             nd.score>0.75 ? 'rgba(224,48,64,.10)' :
+             nd.score>0.65 ? 'rgba(232,103,60,.10)' : 'rgba(184,149,42,.09)';
+    // Connector
+    if (i>0) {
+      var prevY = startY+(i-1)*(nodeH+gapY)+nodeH;
+      s += '<line x1="'+midX+'" y1="'+prevY+'" x2="'+midX+'" y2="'+(y-3)+'"'+
+           ' stroke="'+col+'" stroke-width="1.5" stroke-dasharray="3 2" opacity="0.55"/>';
+      s += '<polygon points="'+midX+','+y+' '+(midX-4)+','+(y-7)+' '+(midX+4)+','+(y-7)+'"'+
+           ' fill="'+col+'" opacity="0.65"/>';
+    }
+    // Node rect
+    s += '<rect x="'+startX+'" y="'+y+'" width="'+nodeW+'" height="'+nodeH+'"'+
+         ' rx="3" fill="'+bg+'" stroke="'+col+'" stroke-width="0.8" opacity="0.9"/>';
+    // Order label (top-left)
+    var ordLbl = wlOrderLabel(nd.order);
+    var ordCol = wlOrderColor(nd.order);
+    s += '<text x="'+(startX+7)+'" y="'+(y+11)+'"'+
+         ' font-family="IBM Plex Mono,monospace" font-size="6.5" fill="'+ordCol+'" opacity="0.75">'+ordLbl+'</text>';
+    // Node name
+    s += '<text x="'+(startX+7)+'" y="'+(y+24)+'"'+
+         ' font-family="Inter,sans-serif" font-size="9.5" fill="'+(nd.gcc?'#c084fc':'#8fa0b5')+'"'+
+         ' font-weight="'+(nd.gcc?'700':'400')+'">'+nd.label+'</text>';
+    // Score bar (right side)
+    var bx = startX+nodeW-78, by = y+nodeH/2-2;
+    s += '<rect x="'+bx+'" y="'+by+'" width="55" height="4" rx="2" fill="#131c28"/>';
+    s += '<rect x="'+bx+'" y="'+by+'" width="'+(nd.score*55).toFixed(1)+'" height="4" rx="2" fill="'+col+'" opacity="0.8"/>';
+    s += '<text x="'+(bx+60)+'" y="'+(by+3.5)+'"'+
+         ' font-family="IBM Plex Mono,monospace" font-size="8" fill="'+col+'" dominant-baseline="middle">'+
+         Math.round(nd.score*100)+'</text>';
+    // Side order annotation on change
+    if (nd.order !== prevOrder && nd.order>0) {
+      var ax=startX+nodeW+14, ay=y+nodeH/2;
+      s += '<text x="'+ax+'" y="'+ay+'"'+
+           ' font-family="IBM Plex Mono,monospace" font-size="7" fill="'+ordCol+'"'+
+           ' dominant-baseline="middle" opacity="0.6" font-weight="600">'+
+           (nd.order===1?'1st':nd.order===2?'2nd':'3rd')+' order</text>';
+      s += '<line x1="'+(startX+nodeW)+'" y1="'+ay+'" x2="'+(ax-3)+'" y2="'+ay+'"'+
+           ' stroke="'+ordCol+'" stroke-width="0.5" opacity="0.25"/>';
+    }
+    prevOrder = nd.order;
+  }
+  s += '</svg>';
+  el.innerHTML = s;
+}
+
+function wlRenderScores(sig) {
+  var el = document.getElementById('wl-scores');
+  if (!el) return;
+  var h='';
+  sig.scores.forEach(function(sc) {
+    var col = wlBarColor(sc.val);
+    h += '<div class="wl-score-row">'+
+         '<div class="wl-score-lbl">'+sc.label+'</div>'+
+         '<div class="wl-bar-bg"><div class="wl-bar-fill" style="width:'+sc.val+'%;background:'+col+'"></div></div>'+
+         '<div class="wl-score-val">'+sc.val+'</div></div>';
+  });
+  var sc = sig.systemicImpact, col = wlSysColor(sc);
+  h += '<div class="wl-systemic">'+
+       '<div><div class="wl-sys-lbl">Systemic Impact Score</div>'+
+       '<div class="wl-sys-val" style="color:'+col+'">'+sc+'</div></div>'+
+       '<div class="wl-sys-track"><div class="wl-sys-fill" style="width:'+sc+'%;background:'+col+'"></div></div>'+
+       '</div>';
+  el.innerHTML = h;
+}
+
+function wlRenderExposure(sig) {
+  var el = document.getElementById('wl-exposure');
+  if (!el) return;
+  var rows = [
+    {lbl:'Direct',   val:sig.exposure.direct,   col:'#b8952a'},
+    {lbl:'Indirect', val:sig.exposure.indirect,  col:'#e8673c'},
+    {lbl:'Systemic', val:sig.exposure.systemic,  col:'#e03040'}
+  ];
+  var h='';
+  rows.forEach(function(r){
+    h += '<div class="wl-exp-row">'+
+         '<div class="wl-exp-lbl">'+r.lbl+'</div>'+
+         '<div class="wl-bar-bg"><div class="wl-bar-fill" style="width:'+r.val+'%;background:'+r.col+'"></div></div>'+
+         '<div class="wl-exp-val" style="color:'+r.col+'">'+r.val+'</div></div>';
+  });
+  el.innerHTML = h;
+}
+
+function wlRenderHeatmap(sig) {
+  var el = document.getElementById('wl-heatmap');
+  if (!el) return;
+  var g = sig.gcc;
+  var nC = g.sectors.length;
+  var h = '<div class="wl-hm-col-row" style="grid-template-columns:repeat('+nC+',1fr)">';
+  g.sectors.forEach(function(s){ h+='<div class="wl-hm-col-lbl">'+s+'</div>'; });
+  h += '</div>';
+  g.countries.forEach(function(c,ci){
+    h += '<div class="wl-hm-data-row"><div class="wl-hm-row-lbl">'+c+'</div>';
+    g.data[ci].forEach(function(v){
+      var col=wlHeatColor(v);
+      h+='<div class="wl-hm-cell" style="background:'+col.bg+';color:'+col.tx+'">'+v+'</div>';
+    });
+    h += '</div>';
+  });
+  el.innerHTML = h;
+}
+
+function wlRenderInsight(sig) {
+  var el = document.getElementById('wl-insight');
+  if (!el) return;
+  el.innerHTML =
+    '<div class="wl-insight-lbl">&#9670; Strategic Transmission Analysis</div>'+
+    '<div class="wl-insight-text">'+sig.insight+'</div>'+
+    '<div class="wl-blindspot">'+
+      '<div class="wl-bs-lbl">Non-Obvious Transmission Pathway</div>'+
+      '<div class="wl-bs-text">'+sig.blindspot+'</div>'+
+    '</div>';
+}
+
+function renderWatchlistSignal(id) {
+  var sig = WL_SIGNALS.find(function(s){return s.id===id;});
+  if (!sig) return;
+  document.querySelectorAll('.wl-pill').forEach(function(p){
+    p.classList.toggle('active', p.dataset.id===id);
+  });
+  wlRenderHeader(sig);
+  wlRenderScores(sig);
+  wlRenderExposure(sig);
+  wlRenderHeatmap(sig);
+  wlRenderInsight(sig);
+}
+
+
 
 var wlState = { activeGroup:null, activeSignal:null };
 var wlInitialized = false;

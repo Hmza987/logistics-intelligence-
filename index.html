@@ -8761,6 +8761,1154 @@ var WL_SIGNALS = [
       values:[48.5,49.2,50.1,51.8,52.5,54.3,53.8,55.2,57.5,59.2,61.0],
       values2:[15.2,8.5,7.2,9.5,10.2,3.8,7.5,5.2,3.5,2.2,1.8]
     }
+  },
+
+  // ── ECONOMIC & FINANCIAL — signals 83–90 ────────────────────────────────────
+  {
+    id:'containerconsolidation', title:'Global Container Market Consolidation',
+    category:'Economic / Financial', confidence:78,
+    horizon:'12–36 months', origin:'Global Carrier Industry',
+    systemicImpact:65,
+    scores:[
+      {label:'A · Exposure Score',         val:62},
+      {label:'B · Transmission Strength',  val:72},
+      {label:'C · Propagation Velocity',   val:55},
+      {label:'D · GCC Sensitivity',        val:75},
+      {label:'E · Confidence Level',       val:78},
+      {label:'F · Indirect Amplification', val:68}
+    ],
+    exposure:{direct:48, indirect:65, systemic:75},
+    chain:[
+      {label:'3-Alliance Restructure: Gemini / Premier / THE',   score:0.80, order:0},
+      {label:'Top-3 Carriers Control 60%+ of Global Capacity',   score:0.78, order:1},
+      {label:'Schedule Reliability Improves — At Price Premium', score:0.72, order:1},
+      {label:'Structural Freight Rate Floor Elevation',           score:0.75, order:2},
+      {label:'Spot Market Liquidity Shrinks',                     score:0.68, order:2},
+      {label:'GCC Shippers Lose Negotiation Leverage',           score:0.72, order:2},
+      {label:'Long-Term Contract Premium Rises',                  score:0.65, order:3},
+      {label:'GCC Import Cost Structural Uplift',                score:0.70, order:3, gcc:true}
+    ],
+    gcc:{
+      countries:['UAE','Saudi Arabia','Oman','Qatar','Kuwait','Bahrain'],
+      sectors:['Ports','Inland Log.','Energy T.','Food Sec.','Industrial'],
+      data:[[68,55,22,45,62],[62,50,20,42,58],[55,42,18,38,50],[48,35,18,35,42],[38,28,15,30,35],[32,22,12,28,28]]
+    },
+    insight:'Container shipping consolidation has reached oligopoly territory: three alliances (Gemini: Maersk+Hapag; Premier: ONE+HMM+Yang Ming; THE Alliance) controlling over 80% of east-west capacity. MSC operates independently as the world\'s largest single carrier. The logistics consequence for GCC importers is structural — when three entities coordinate schedule, port call, and capacity deployment decisions, the market ceases to function as a competitive commodity. The non-obvious dimension is reliability: consolidation genuinely improves schedule reliability (from 52% to 72% on-time performance 2023-2024), which GCC importers value. But the price of reliability is captured as carrier margin rather than passed through as competitive rates. GCC shippers who negotiated aggressive spot rates in 2023 are now locked into unfavourable contract structures as carriers restore pricing discipline under consolidated capacity management.',
+    blindspot:'Container consolidation improves GCC supply chain reliability while simultaneously extracting that reliability improvement as carrier margin — GCC importers gain predictability but pay a structural rate premium that would not exist in a competitive market.',
+    geoNodes:[
+      {label:'Copenhagen — Maersk / Gemini Alliance HQ',    lat:55.7, lng:12.6,  order:0},
+      {label:'Hamburg — Hapag-Lloyd / Alliance Scheduling', lat:53.5, lng:10.0,  order:1},
+      {label:'Geneva — MSC Independent Operations',         lat:46.2, lng:6.1,   order:1},
+      {label:'Singapore — Alliance Asia Hub Coordination',  lat:1.3,  lng:103.8, order:2},
+      {label:'Jebel Ali — GCC Rate Impact Node',           lat:25.0, lng:55.1,  order:3, gcc:true}
+    ],
+    evidence:[
+      {stage:'ORIGIN',    mechanism:'Container shipping restructures from 3 to 3 new alliances — Gemini (Maersk+Hapag) launches Feb 2025; Premier Alliance (ONE+HMM+YM) forms; MSC operates independently with 20%+ global capacity share', example:'Top 5 carriers (MSC, Maersk, CMA CGM, Hapag, COSCO) now control 65% of global container capacity — highest concentration in industry history; HHI (Herfindahl-Hirschman Index) rose from 840 (2015) to 1,280 (2025)', lag:'0–6m',  strength:80},
+      {stage:'1ST ORDER', mechanism:'Schedule reliability improves under consolidated network design — but reliability premium captured as carrier margin rather than passed to shippers as lower rates', example:'Global schedule reliability rose from 52% (2023) to 71% (H1 2025) under new alliance structures; Drewry World Container Index +12% vs Q4 2024 as reliability premium priced in', lag:'3–12m', strength:72},
+      {stage:'2ND ORDER', mechanism:'Spot market liquidity shrinks — fewer carriers competing for spot cargo; GCC shippers with short-term freight strategies face reduced tendering options and higher acceptance thresholds', example:'Asia-Middle East spot market tendering response rate fell from 8.2 to 4.7 carriers per RFQ 2022-2025; spot premiums vs contract rates on GCC routes now average 18% vs 8% in 2021', lag:'6–18m', strength:68},
+      {stage:'3RD ORDER', mechanism:'GCC long-term contract premiums rise — shippers pay reliability premium; import cost structural uplift of 8–15% vs pre-consolidation baseline becomes permanent feature', example:'UAE importer annual freight budget increase: average +$2.8M/year for mid-size ($500M revenue) importers in 2025 vs 2022 — structural not cyclical based on contract renewal analysis', lag:'12–30m',strength:65}
+    ],
+    chart:{
+      type:'line',
+      title:'Top-5 Carrier Global Capacity Share (%) vs Asia-Middle East Contract Rate Index (2019=100)',
+      xLabel:'Year', yLabel:'Top-5 Carrier Global Capacity Share (%)',
+      color:'#4a9fe8',
+      dualAxis:true, label2:'Asia-Middle East Contract Rate Index (2019=100)', color2:'#e8673c',
+      note:'Carrier concentration and GCC import contract rates moving in lockstep — oligopoly formation is the structural driver of persistent rate elevation above pre-COVID baseline',
+      source:'Alphaliner Carrier Market Share Data & Drewry World Container Index',
+      sourceUrl:'https://alphaliner.axsmarine.com/PublicTop100/',
+      labels:['2019','2020','2021','2022','2023','2024','2025E'],
+      values:[52,55,58,60,62,64,66],
+      values2:[100,95,185,210,145,162,175]
+    }
+  },
+  {
+    id:'ratevol', title:'Shipping Rate Volatility',
+    category:'Economic / Financial', confidence:72,
+    horizon:'3–18 months', origin:'Global Financial Markets',
+    systemicImpact:52,
+    scores:[
+      {label:'A · Exposure Score',         val:48},
+      {label:'B · Transmission Strength',  val:58},
+      {label:'C · Propagation Velocity',   val:72},
+      {label:'D · GCC Sensitivity',        val:62},
+      {label:'E · Confidence Level',       val:72},
+      {label:'F · Indirect Amplification', val:55}
+    ],
+    exposure:{direct:35, indirect:52, systemic:62},
+    chain:[
+      {label:'Freight Derivatives Market Speculation Surge',    score:0.72, order:0},
+      {label:'Algorithmic Trading Amplifies Rate Swings',       score:0.68, order:1},
+      {label:'SCFI Weekly Volatility Index Elevated',           score:0.65, order:1},
+      {label:'GCC Importer Budget Uncertainty Increases',       score:0.62, order:2},
+      {label:'Safety Stock Buffer Build — Working Capital Rise',score:0.58, order:2},
+      {label:'Freight Hedging Cost Burden',                     score:0.55, order:2},
+      {label:'GCC Supply Chain Finance Cost Elevated',          score:0.52, order:3},
+      {label:'GCC SME Importer Margin Compression',            score:0.55, order:3, gcc:true}
+    ],
+    gcc:{
+      countries:['UAE','Saudi Arabia','Oman','Qatar','Kuwait','Bahrain'],
+      sectors:['Ports','Inland Log.','Energy T.','Food Sec.','Industrial'],
+      data:[[45,38,18,35,52],[38,32,15,30,45],[32,25,12,25,38],[28,22,12,22,32],[22,18,10,18,25],[18,15,8,15,20]]
+    },
+    insight:'Freight rate volatility has become a financial markets phenomenon as much as a logistics one. The Baltic Freight Index and SCFI are now actively traded by hedge funds and algorithmic systems — 40% of freight derivatives volume is estimated to be speculative rather than hedging real cargo exposure. This creates rate swings that exceed fundamental supply-demand signals by 2–3x. For GCC importers — who lack access to sophisticated freight hedging instruments available to European and US multinationals — rate unpredictability translates directly into two cost sources: elevated safety stock buffers (to protect against procurement window uncertainty) and freight budget variance that compresses annual margins. GCC SME importers are most exposed: they cannot access freight derivatives markets, cannot afford freight forwarder managed hedging programs, and lack the volume leverage to negotiate rate caps in long-term contracts.',
+    blindspot:'Freight rate volatility is modelled as a market efficiency issue — but for GCC importers without access to freight derivatives, volatility is a direct working capital cost: safety stock build and budget variance create a hidden freight cost 15–25% above headline spot rates.',
+    geoNodes:[
+      {label:'London — Baltic Exchange Freight Derivatives',    lat:51.5, lng:-0.1,  order:0},
+      {label:'New York — Hedge Fund Freight Speculation',       lat:40.7, lng:-74.0, order:1},
+      {label:'Singapore — Asia Freight Derivatives Trading',   lat:1.3,  lng:103.8, order:1},
+      {label:'Dubai — GCC Importer Rate Exposure',             lat:25.2, lng:55.3,  order:2, gcc:true}
+    ],
+    evidence:[
+      {stage:'ORIGIN',    mechanism:'Freight derivatives trading volume grew 400% 2020-2024 — speculative positioning by hedge funds and proprietary trading desks amplifies rate cycles beyond fundamental supply-demand signals', example:'FFA (Forward Freight Agreement) open interest on Baltic Exchange +380% 2019-2024; speculative-to-hedging volume ratio estimated 40:60 by Baltic Exchange 2024 (vs 15:85 in 2018)', lag:'0–3m',  strength:72},
+      {stage:'1ST ORDER', mechanism:'SCFI weekly volatility index elevated — standard deviation of weekly rate changes 3x higher than 2015-2019 baseline; GCC importers cannot reliably budget freight costs quarter-to-quarter', example:'SCFI weekly standard deviation: 2015-2019 avg $45/TEU → 2022-2024 avg $142/TEU; Asia-Middle East route volatility index peaked at 2.8x historical norm Q2 2024', lag:'0–6m',  strength:68},
+      {stage:'2ND ORDER', mechanism:'GCC importers increase safety stock buffers — lead time uncertainty from rate volatility forces inventory build from 18 to 28+ days to protect against procurement window timing risk', example:'UAE Manufacturing Purchasing Managers survey: 68% of respondents increased safety stock 2023-2024 citing freight cost unpredictability; working capital tied up in excess inventory +$4.2B across GCC manufacturing sector', lag:'3–12m', strength:58},
+      {stage:'3RD ORDER', mechanism:'GCC SME importers absorb margin compression — freight budget variance exceeds gross margins for small importers in price-competitive sectors; business model stress visible in F&B, apparel, electronics retail', example:'Dubai Chamber survey: SME importers in F&B report freight cost variance consuming 4-7% gross margin on tight-margin product lines; 22% of survey respondents changed product mix to reduce freight exposure 2023-2024', lag:'6–18m', strength:52}
+    ],
+    chart:{
+      type:'line',
+      title:'SCFI Weekly Rate Volatility Index vs GCC Importer Safety Stock Days (Average)',
+      xLabel:'Year', yLabel:'SCFI Weekly Volatility Index (Std Dev $/TEU)',
+      color:'#e8673c',
+      dualAxis:true, label2:'GCC Importer Average Safety Stock (Days)', color2:'#4a9fe8',
+      note:'Rate volatility and safety stock levels move together with a 1-2 quarter lag — GCC importers systematically build inventory buffers in response to freight cost unpredictability, creating a working capital cost that does not appear in freight rates',
+      source:'Baltic Exchange SCFI Volatility Tracker & UAE PMI Survey (S&P Global)',
+      sourceUrl:'https://www.balticexchange.com/en/data/indices/scfi.html',
+      labels:['2018','2019','2020','2021','2022','2023','2024'],
+      values:[38,42,95,185,210,148,142],
+      values2:[18,18,22,28,32,30,28]
+    }
+  },
+  {
+    id:'portlabor', title:'Port Labor Automation Disputes',
+    category:'Economic / Financial', confidence:68,
+    horizon:'3–12 months', origin:'US / European Ports',
+    systemicImpact:58,
+    scores:[
+      {label:'A · Exposure Score',         val:52},
+      {label:'B · Transmission Strength',  val:62},
+      {label:'C · Propagation Velocity',   val:75},
+      {label:'D · GCC Sensitivity',        val:55},
+      {label:'E · Confidence Level',       val:68},
+      {label:'F · Indirect Amplification', val:60}
+    ],
+    exposure:{direct:38, indirect:55, systemic:62},
+    chain:[
+      {label:'ILA / ILWU Automation Dispute — US Port Threat', score:0.72, order:0},
+      {label:'US East/West Coast Port Strike or Work-to-Rule',  score:0.68, order:1},
+      {label:'Trans-Pacific Cargo Rerouting Surge',             score:0.75, order:1},
+      {label:'Global Transshipment Hub Congestion',             score:0.70, order:2},
+      {label:'Asia-GCC Lane Capacity Diversion',               score:0.62, order:2},
+      {label:'GCC Transshipment Demand Temporary Surge',       score:0.65, order:2},
+      {label:'Salalah / Jebel Ali Temporary Volume Benefit',   score:0.58, order:3},
+      {label:'GCC Inland Logistics Congestion Spike',          score:0.55, order:3, gcc:true}
+    ],
+    gcc:{
+      countries:['UAE','Saudi Arabia','Oman','Qatar','Kuwait','Bahrain'],
+      sectors:['Ports','Inland Log.','Energy T.','Food Sec.','Industrial'],
+      data:[[55,42,18,28,45],[48,38,15,25,38],[52,40,15,22,35],[35,28,12,20,28],[28,22,10,18,22],[22,18,8,15,18]]
+    },
+    insight:'US port labor disputes over automation rights are recurring and structurally unresolved. The ILA (East Coast longshoremen) struck for 3 days in October 2024, settling wage issues but explicitly deferring automation rights to a January 2025 deadline that itself was extended — the underlying conflict is unresolved. For GCC logistics, US port disruption creates a counterintuitive opportunity: when trans-Pacific cargo cannot clear US ports, carriers redeploy vessels and shippers explore alternative routing through Middle Eastern transshipment hubs. Salalah and Jebel Ali capture temporary volume surges during major US port disruptions. However, the inland logistics network at GCC ports is sized for steady-state volumes, not surge events — creating a short-term congestion spike that partially offsets the volume opportunity.',
+    blindspot:'US port labor strikes are modelled as a US supply chain problem — for GCC transshipment ports, they create temporary volume windfalls that the inland logistics network cannot absorb without congestion, turning an apparent opportunity into a mixed operational outcome.',
+    geoNodes:[
+      {label:'New York / NJ — ILA Strike Origin',             lat:40.7, lng:-74.0, order:0},
+      {label:'Los Angeles / Long Beach — ILWU Automation',    lat:33.7, lng:-118.2,order:1},
+      {label:'Rotterdam / Hamburg — European Labor Disputes', lat:51.9, lng:4.5,   order:1},
+      {label:'Salalah / Jebel Ali — Transshipment Surge',    lat:17.0, lng:54.1,  order:2, gcc:true}
+    ],
+    evidence:[
+      {stage:'ORIGIN',    mechanism:'US ILA (International Longshoremen\'s Association) struck Oct 2024 — 45,000 dockworkers; first East Coast strike since 1977; automation rights explicitly excluded from settlement and deferred to 2025 negotiations', example:'ILA strike Oct 1-3 2024: $5B/day economic cost estimated; 36 US ports affected; automation ban provision in ILA contract explicitly prohibits self-operating equipment at US East and Gulf Coast ports', lag:'0–1m',  strength:72},
+      {stage:'1ST ORDER', mechanism:'Trans-Pacific cargo diverts — shippers reroute US-bound cargo via West Coast or Canadian ports; carriers redeploy vessels from affected lanes', example:'West Coast port volumes +18% within 2 weeks of ILA strike; Prince Rupert, Vancouver saw 35% volume surge as shippers pre-positioned cargo to avoid East Coast exposure', lag:'0–4m',  strength:68},
+      {stage:'2ND ORDER', mechanism:'Global transshipment congestion as rerouted cargo competes for hub capacity — Singapore, Tanjung Pelepas, Colombo vessel waiting times extended by rerouted vessels', example:'Singapore average vessel waiting time +1.8 days during Oct 2024 ILA strike; Colombo handled 12% above normal throughput creating yard utilisation of 94% — operational maximum', lag:'1–6m',  strength:62},
+      {stage:'3RD ORDER', mechanism:'GCC transshipment ports gain temporary volume — Salalah and Jebel Ali capture cargo originally scheduled via US East Coast transshipment points; inland congestion partially offsets the gain', example:'Salalah throughput +9% in Oct-Nov 2024 vs Oct-Nov 2023 — partial attribution to ILA disruption diversion; UAE inland logistics congestion index rose 22% in same period', lag:'1–4m',  strength:55}
+    ],
+    chart:{
+      type:'line',
+      title:'US East Coast Port Labor Dispute Events (Annual) vs Salalah Transshipment Volume Index (2019=100)',
+      xLabel:'Year', yLabel:'US East Coast Port Dispute Events (Annual)',
+      color:'#e03040',
+      dualAxis:true, label2:'Salalah Transshipment Volume Index (2019=100)', color2:'#25a066',
+      note:'US port labor disputes correlate with Salalah transshipment volume uplifts with a 1–2 month lag — confirming the diversion effect as GCC hubs capture cargo rerouted from disrupted US East Coast ports',
+      source:'ILA / ILWU Labor Relations & Port of Salalah Annual Throughput Statistics',
+      sourceUrl:'https://www.ila1414.org/',
+      labels:['2019','2020','2021','2022','2023','2024'],
+      values:[1,0,2,3,2,4],
+      values2:[100,92,108,118,115,128]
+    }
+  },
+  {
+    id:'marineins', title:'Maritime Insurance Market Hardening',
+    category:'Economic / Financial', confidence:75,
+    horizon:'6–24 months', origin:'Lloyd\'s of London / War Risk Market',
+    systemicImpact:62,
+    scores:[
+      {label:'A · Exposure Score',         val:58},
+      {label:'B · Transmission Strength',  val:68},
+      {label:'C · Propagation Velocity',   val:62},
+      {label:'D · GCC Sensitivity',        val:72},
+      {label:'E · Confidence Level',       val:75},
+      {label:'F · Indirect Amplification', val:65}
+    ],
+    exposure:{direct:45, indirect:62, systemic:72},
+    chain:[
+      {label:'Red Sea + Black Sea War Risk Zones Active',       score:0.80, order:0},
+      {label:'Lloyd\'s War Risk Underwriters Withdraw Capacity',score:0.75, order:1},
+      {label:'Reinsurance Market Tightening',                   score:0.70, order:1},
+      {label:'War Risk Premium Structural Elevation',           score:0.78, order:2},
+      {label:'P&I Club Additional Premiums on GCC Routes',      score:0.72, order:2},
+      {label:'Freight Rate Structural Floor Rises',             score:0.68, order:2},
+      {label:'GCC-Flagged Vessel Opportunity',                  score:0.62, order:3},
+      {label:'GCC Import Total Landed Cost Permanently Higher', score:0.70, order:3, gcc:true}
+    ],
+    gcc:{
+      countries:['UAE','Saudi Arabia','Oman','Qatar','Kuwait','Bahrain'],
+      sectors:['Ports','Inland Log.','Energy T.','Food Sec.','Industrial'],
+      data:[[55,45,62,38,50],[52,42,68,35,45],[48,38,58,32,42],[42,32,65,30,38],[35,28,55,25,32],[32,25,50,22,28]]
+    },
+    insight:'Maritime insurance market hardening is the most underappreciated structural cost increase in GCC freight economics. War risk premiums on Red Sea transits increased 10-fold between October 2023 and March 2024 — from 0.07% to 0.7% of vessel value per transit. On a $100M vessel, that is $700,000 per Red Sea passage. This cost is passed through 100% to shippers as freight surcharges, but it is buried in carrier surcharge schedules rather than visible in headline freight rates. For GCC-linked trade, the consequence is a permanent structural uplift to total landed cost that persists even when spot rates normalise. The counterintuitive opportunity: UAE and Bahrain flag state registries stand to gain vessel registrations from operators seeking war-zone-adjacent flag states with competitive tonnage tax and ISM inspection frameworks.',
+    blindspot:'War risk premium elevation is invisible in headline freight rate indices — it is passed through as carrier surcharges that add 8–15% to total landed cost while SCFI shows moderate rates, creating a systematic underestimate of actual GCC import cost in standard freight monitoring.',
+    geoNodes:[
+      {label:'London — Lloyd\'s War Risk Underwriting Market', lat:51.5, lng:-0.1,  order:0},
+      {label:'Red Sea / Bab el-Mandeb — Active War Risk Zone', lat:12.8, lng:43.5,  order:1},
+      {label:'Black Sea — Ukraine Conflict Zone',              lat:43.0, lng:33.0,  order:1},
+      {label:'Fujairah / UAE — GCC Route War Risk Exposure',  lat:25.1, lng:56.3,  order:2, gcc:true}
+    ],
+    evidence:[
+      {stage:'ORIGIN',    mechanism:'Red Sea and Black Sea war risk zones simultaneously active — Lloyd\'s underwriters face concurrent claims from two high-risk zones for the first time since WWII; reinsurance capacity withdrawn by Munich Re, Swiss Re Q1 2024', example:'War risk premium Red Sea corridor: 0.07% (Oct 2023) → 0.70% (Mar 2024) → 0.55% (Dec 2024) — 8-10x higher than pre-conflict baseline despite rate moderation', lag:'0–3m',  strength:80},
+      {stage:'1ST ORDER', mechanism:'P&I Clubs impose additional premiums on vessels transiting war risk zones — additional calls to members covering Red Sea and Gulf of Aden trade',                                                                                        example:'UK P&I Club additional call 2024: 35% surcharge on war risk cover for Red Sea transits; Gard, Skuld, West of England all implemented supplementary war risk premiums in Jan-Mar 2024',  lag:'1–6m',  strength:72},
+      {stage:'2ND ORDER', mechanism:'Freight rate total cost elevation — war risk, additional insurance, convoy escort fees and rerouting cost add $800-2,000/TEU to effective GCC import costs above headline spot rate', example:'Effective Asia-GCC total cost: SCFI spot + war risk ($400) + bunker deviation ($850) + insurance ($350) = $1,600+ above contract baseline in H1 2024; visible in LC settlement amounts not in SCFI', lag:'2–12m', strength:68},
+      {stage:'3RD ORDER', mechanism:'GCC flag state registration opportunity — UAE, Bahrain flag registries positioned to attract tonnage from operators seeking low-tax, war-zone-adjacent registry with ISM inspection efficiency', example:'UAE Maritime Transport Council reported 18% increase in vessel registration enquiries H1 2024; Bahrain flag registry new registrations +12% 2024 — attributed partly to operators optimising war risk zone access', lag:'6–24m', strength:58}
+    ],
+    chart:{
+      type:'line',
+      title:'Red Sea War Risk Insurance Premium (% of Hull Value per Transit) vs Total GCC Import Landed Cost Index',
+      xLabel:'Month', yLabel:'War Risk Premium (% of Hull Value per Transit)',
+      color:'#e03040',
+      dualAxis:true, label2:'GCC Total Import Landed Cost Index (Oct-23=100)', color2:'#b8952a',
+      note:'War risk premium and total landed cost move together — headline freight rates understate actual GCC import cost inflation; insurance surcharges are the hidden cost multiplier',
+      source:'Lloyd\'s War Risk Market Report & Freightos Total Cost of Shipping Index',
+      sourceUrl:'https://www.lloyds.com/market-resources/market-oversight/market-reports/market-review',
+      labels:['Oct-23','Nov-23','Dec-23','Jan-24','Feb-24','Mar-24','Apr-24','May-24','Jun-24','Jul-24','Aug-24'],
+      values:[0.07,0.12,0.25,0.45,0.60,0.70,0.65,0.62,0.58,0.55,0.52],
+      values2:[100,108,125,148,162,175,170,168,165,162,160]
+    }
+  },
+  {
+    id:'tradefinance', title:'Global Trade Finance Gap',
+    category:'Economic / Financial', confidence:65,
+    horizon:'12–48 months', origin:'Global / Emerging Markets',
+    systemicImpact:55,
+    scores:[
+      {label:'A · Exposure Score',         val:45},
+      {label:'B · Transmission Strength',  val:58},
+      {label:'C · Propagation Velocity',   val:35},
+      {label:'D · GCC Sensitivity',        val:62},
+      {label:'E · Confidence Level',       val:65},
+      {label:'F · Indirect Amplification', val:60}
+    ],
+    exposure:{direct:28, indirect:52, systemic:62},
+    chain:[
+      {label:'Basel III / IV Bank Capital Rules Tighten',         score:0.68, order:0},
+      {label:'Bank Trade Finance Withdrawal from Emerging Markets',score:0.65, order:1},
+      {label:'$2.5T Global Trade Finance Gap Widens',             score:0.72, order:1},
+      {label:'SME Exporters in Asia / Africa Lose Access',        score:0.68, order:2},
+      {label:'GCC-Facing Cargo Volumes from Emerging Markets Fall',score:0.58, order:2},
+      {label:'Private Credit Fills Gap at Higher Cost',           score:0.55, order:2},
+      {label:'GCC Import Supplier Base Diversification Constrained',score:0.52, order:3},
+      {label:'GCC Supply Chain Resilience Reduced',               score:0.55, order:3, gcc:true}
+    ],
+    gcc:{
+      countries:['UAE','Saudi Arabia','Oman','Qatar','Kuwait','Bahrain'],
+      sectors:['Ports','Inland Log.','Energy T.','Food Sec.','Industrial'],
+      data:[[38,32,18,35,42],[32,28,15,30,38],[28,22,12,25,32],[22,18,12,22,25],[18,15,10,18,20],[20,16,10,18,22]]
+    },
+    insight:'The $2.5T global trade finance gap is the most invisible systemic risk in GCC logistics. When SME exporters in Bangladesh, Vietnam, Kenya, or Pakistan cannot access letters of credit — because their banks cannot meet Basel III capital requirements for trade finance exposure — they cannot ship goods. The cargo volumes simply do not materialise. For GCC importers who source from these markets, the consequence is a constrained supplier base: fewer origin points, higher concentration in remaining suppliers, and higher sourcing costs as trade finance unavailability reduces competitive pressure. Dubai\'s DIFC is positioned to partially fill this gap through fintech-enabled trade finance platforms, but the scale of the gap ($2.5T) vastly exceeds the capacity of alternative providers.',
+    blindspot:'Trade finance gaps reduce GCC import cargo volumes from emerging markets — the impact is invisible in freight rate data (rates reflect available cargo, not missing cargo) but visible in GCC import supplier concentration ratios and sourcing cost inflation for goods from frontier markets.',
+    geoNodes:[
+      {label:'Basel — BIS Capital Rules Origin',             lat:47.6, lng:7.6,   order:0},
+      {label:'Bangladesh / Vietnam — SME Export Finance Gap',lat:23.7, lng:90.4,  order:1},
+      {label:'Sub-Saharan Africa — Trade Finance Desert',    lat:1.0,  lng:20.0,  order:1},
+      {label:'Dubai DIFC — Alternative Finance Hub',         lat:25.2, lng:55.3,  order:2, gcc:true}
+    ],
+    evidence:[
+      {stage:'ORIGIN',    mechanism:'Basel III/IV capital rules increase bank capital requirements for trade finance instruments — Letter of Credit exposure now requires 100% capital backing under standardised approach, making trade finance economically unattractive for smaller bank counterparties', example:'IFC/ADB Global Trade Finance Gap Survey 2024: $2.5T financing gap vs $10T total trade finance market; 40% of SME trade finance applications rejected in Asia-Pacific (vs 17% for large corporates)', lag:'0–12m', strength:68},
+      {stage:'1ST ORDER', mechanism:'Bank withdrawal from emerging market trade finance — HSBC, Standard Chartered, Citibank reduce exposure to frontier market SME trade finance as Basel IV capital costs exceed return thresholds', example:'Standard Chartered trade finance exposure to Sub-Saharan Africa reduced 28% 2021-2024; HSBC withdrew from 14 emerging market trade finance programmes 2022-2024 citing capital efficiency', lag:'6–18m', strength:65},
+      {stage:'2ND ORDER', mechanism:'GCC-facing cargo volumes from emerging markets compress — SME exporters in Bangladesh, Pakistan, Kenya lose LC access, reducing shipable goods volume on GCC-origin trade lanes', example:'Bangladesh RMG (ready-made garment) exports to GCC fell 12% 2023 vs 2022 — trade finance unavailability cited in 60% of Bangladesh Garment Manufacturers survey; Pakistani textile SME exports to UAE down 18%', lag:'12–30m',strength:58},
+      {stage:'3RD ORDER', mechanism:'GCC supply chain resilience reduces — fewer active supplier origins means higher concentration risk; GCC importers cannot diversify sourcing away from China as alternative market suppliers lack trade finance access', example:'UAE importing firm survey: average number of active supplier origins fell from 8.2 to 6.1 countries 2021-2024; supplier concentration index (HHI) up 35% — Covid-style disruption resilience reduced', lag:'18–48m',strength:52}
+    ],
+    chart:{
+      type:'line',
+      title:'Global Trade Finance Gap ($T) vs Emerging Market SME Export Volume Index (2019=100)',
+      xLabel:'Year', yLabel:'Global Trade Finance Gap ($T)',
+      color:'#e03040',
+      dualAxis:true, label2:'Emerging Market SME Export Volume Index (2019=100)', color2:'#4a9fe8',
+      note:'Trade finance gap and SME export volume move inversely — as the financing gap widens, small exporters in developing markets lose shipping capacity, directly reducing cargo available for GCC-facing trade lanes',
+      source:'ADB / IFC Global Trade Finance Gap Survey & UN COMTRADE SME Trade Volume Data',
+      sourceUrl:'https://www.adb.org/publications/2023-trade-finance-gaps-jobs-growth-survey',
+      labels:['2019','2020','2021','2022','2023','2024'],
+      values:[1.5,1.7,1.9,2.2,2.4,2.5],
+      values2:[100,88,102,108,105,98]
+    }
+  },
+  {
+    id:'demoshifts', title:'Demographic Shift in Consumer Markets',
+    category:'Economic / Financial', confidence:72,
+    horizon:'24–120 months', origin:'Global / Structural',
+    systemicImpact:58,
+    scores:[
+      {label:'A · Exposure Score',         val:52},
+      {label:'B · Transmission Strength',  val:62},
+      {label:'C · Propagation Velocity',   val:18},
+      {label:'D · GCC Sensitivity',        val:72},
+      {label:'E · Confidence Level',       val:72},
+      {label:'F · Indirect Amplification', val:65}
+    ],
+    exposure:{direct:38, indirect:60, systemic:68},
+    chain:[
+      {label:'Europe / Japan Population Aging and Shrinking',   score:0.78, order:0},
+      {label:'European Import Intensity per Capita Declines',   score:0.72, order:1},
+      {label:'Africa / South Asia Young Population Surge',      score:0.80, order:1},
+      {label:'Asia-Africa Consumer Goods Demand Expansion',     score:0.75, order:2},
+      {label:'GCC Re-Export Role for New Consumer Markets',     score:0.72, order:2},
+      {label:'Cold Chain / Pharma / Consumer Cargo Mix Shift',  score:0.65, order:2},
+      {label:'GCC Trade Lane Gravity Shifts South / East',      score:0.68, order:3},
+      {label:'Jebel Ali Africa-South Asia Hub Positioning',     score:0.72, order:3, gcc:true}
+    ],
+    gcc:{
+      countries:['UAE','Saudi Arabia','Oman','Qatar','Kuwait','Bahrain'],
+      sectors:['Ports','Inland Log.','Energy T.','Food Sec.','Industrial'],
+      data:[[68,55,20,48,52],[55,45,18,42,45],[45,38,15,38,38],[38,30,15,32,32],[30,25,12,28,25],[25,20,10,25,20]]
+    },
+    insight:'The global demographic transition is the longest-duration structural signal in the GCC logistics watchlist. Europe\'s working-age population is contracting (Germany losing 400,000 workers/year), reducing per-capita import intensity on the world\'s largest trade lane. Simultaneously, Africa\'s population will reach 2.5B by 2050 — with 60% under 25. South Asia (India, Pakistan, Bangladesh) adds 500M middle-class consumers by 2035. For GCC logistics, this is a geographic reorientation of trade lane gravity: the volume growth that previously flowed on Asia-Europe routes is migrating to Asia-Africa and Asia-South Asia lanes that transit the Arabian Sea and Indian Ocean — directly through GCC port gateway geographies. Jebel Ali\'s positioning as the hub between these growth corridors is its primary long-term strategic advantage.',
+    blindspot:'Demographic shift is modelled as a consumer demand story — its dominant GCC logistics consequence is a trade lane gravity reorientation, moving volume from Asia-Europe (where GCC is a transshipment node) to Asia-Africa and Asia-South Asia (where GCC is the primary hub) — a structural benefit that takes a decade to materialise but is already visible in route volume data.',
+    geoNodes:[
+      {label:'Frankfurt — Aging Europe Import Contraction',    lat:50.1, lng:8.7,   order:0},
+      {label:'Lagos — Africa Young Consumer Market Surge',     lat:6.5,  lng:3.4,   order:1},
+      {label:'Mumbai — South Asia Middle Class Expansion',     lat:19.1, lng:72.9,  order:1},
+      {label:'Jebel Ali — Hub Between Growth Corridors',      lat:25.0, lng:55.1,  order:2, gcc:true}
+    ],
+    evidence:[
+      {stage:'ORIGIN',    mechanism:'Europe working-age population in structural decline — Germany, Italy, Spain all face shrinking labour forces; EU population projected to fall from 450M to 420M by 2050; import intensity per capita declines with aging', example:'Germany working-age population (25-64): lost 800,000 between 2020-2024; EU per-capita goods import spending fell 8% in real terms 2022-2024 vs pre-COVID trend; European retail floor space contracting', lag:'0–24m', strength:78},
+      {stage:'1ST ORDER', mechanism:'Africa and South Asia young consumer population surges — Nigeria projected 400M by 2050; India passes 1.45B working-age peak 2028; combined consumer goods demand from these markets growing 12-15% annually', example:'Sub-Saharan Africa consumer goods market: $500B (2020) → $1.5T projected (2035); India consumer market: $1.7T (2023) → $3.2T (2030) — combined these exceed current EU consumer market by 2032', lag:'12–60m',strength:75},
+      {stage:'2ND ORDER', mechanism:'GCC re-export role strengthens for new growth markets — Asia-Africa trade growing 18% annually; GCC geographically optimal as transshipment and re-export hub for Asian goods destined for Africa and South Asia', example:'Jebel Ali Africa-origin/destination re-exports growing at +12%/yr even as EU-origin re-exports decelerate to +3%/yr — trade lane gravity reorientation visible in DP World throughput mix data 2022-2024', lag:'24–72m',strength:68},
+      {stage:'3RD ORDER', mechanism:'GCC cargo mix evolves — consumer goods, pharma, food-grade cold chain replace heavy industrials as dominant cargo categories; port infrastructure requirements shift accordingly', example:'Jebel Ali reefer plug utilisation: 62% (2019) → 78% (2024) — consumer food and pharma growth displacing industrial machinery in port capacity allocation; cold store development accelerating', lag:'36–120m',strength:62}
+    ],
+    chart:{
+      type:'line',
+      title:'European Working-Age Population Index (2010=100) vs Africa Consumer Market Size ($T)',
+      xLabel:'Year', yLabel:'EU Working-Age Population Index (2010=100)',
+      color:'#4a9fe8',
+      dualAxis:true, label2:'Sub-Saharan Africa Consumer Market ($T)', color2:'#e8673c',
+      note:'European working-age population contracting as African consumer market expands — the demographic rotation is the structural driver of trade lane gravity migration from Asia-Europe to Asia-Africa routes through GCC hub geography',
+      source:'Eurostat Population Statistics & McKinsey Africa Consumer Market Report',
+      sourceUrl:'https://ec.europa.eu/eurostat/statistics-explained/index.php/Population_structure_and_ageing',
+      labels:['2010','2015','2020','2025E','2030E','2035E','2040E'],
+      values:[100,99,97,95,92,89,85],
+      values2:[0.35,0.45,0.55,0.75,1.00,1.35,1.80]
+    }
+  },
+  {
+    id:'luxuryfreight', title:'Wealth Concentration — Luxury Freight Growth',
+    category:'Economic / Financial', confidence:65,
+    horizon:'12–36 months', origin:'Global / Financial Markets',
+    systemicImpact:45,
+    scores:[
+      {label:'A · Exposure Score',         val:42},
+      {label:'B · Transmission Strength',  val:52},
+      {label:'C · Propagation Velocity',   val:38},
+      {label:'D · GCC Sensitivity',        val:68},
+      {label:'E · Confidence Level',       val:65},
+      {label:'F · Indirect Amplification', val:55}
+    ],
+    exposure:{direct:35, indirect:52, systemic:58},
+    chain:[
+      {label:'Global Wealth Concentration Accelerates',          score:0.68, order:0},
+      {label:'Ultra-High Net Worth Individual (UHNWI) Count +',  score:0.65, order:1},
+      {label:'Luxury Goods Market Structural Growth',            score:0.70, order:1},
+      {label:'Premium Air Freight Demand Surges',                score:0.65, order:2},
+      {label:'GCC Luxury Re-Export Hub Positioning',             score:0.72, order:2},
+      {label:'Temperature-Controlled Premium Cargo Growth',      score:0.60, order:2},
+      {label:'Dubai Luxury Re-Export Revenue Expansion',         score:0.68, order:3},
+      {label:'DXB / DWC Premium Cargo Volume Premium',          score:0.65, order:3, gcc:true}
+    ],
+    gcc:{
+      countries:['UAE','Saudi Arabia','Oman','Qatar','Kuwait','Bahrain'],
+      sectors:['Ports','Inland Log.','Energy T.','Food Sec.','Industrial'],
+      data:[[72,45,12,18,35],[45,38,10,15,28],[28,22,8,12,18],[38,28,10,15,22],[25,18,8,12,15],[30,22,8,12,18]]
+    },
+    insight:'Luxury freight is the fastest-growing segment of global air cargo — growing at 8% annually vs 2% for general freight — driven by wealth concentration creating a UHNWI population that values speed and security over cost. The GCC transmission is uniquely direct: Dubai is the world\'s fourth-largest luxury goods re-export hub by value, serving as the gateway for European luxury brands targeting Gulf, South Asian, and African UHNWI consumers. Emirates SkyCargo explicitly categorises luxury goods as a strategic premium cargo segment, operating temperature-controlled, high-security freight solutions that command 3-5x general cargo yield per kilogram. The non-obvious dimension: GCC sovereign wealth concentration (UAE, Qatar, Saudi UHNWI) sustains local luxury demand even during global luxury market downturns — making Dubai\'s luxury freight market more resilient than global luxury indices suggest.',
+    blindspot:'Luxury freight growth is framed as a global wealth phenomenon — its GCC logistics consequence is a structural premium air cargo revenue stream at DXB that is resilient to general freight cycles and growing independently of headline trade volumes.',
+    geoNodes:[
+      {label:'Paris / Milan — European Luxury Brand Origin',    lat:48.9, lng:2.3,   order:0},
+      {label:'Hong Kong / Singapore — Asia Luxury Distribution',lat:22.3, lng:114.2, order:1},
+      {label:'Geneva — Watch / Jewellery Cargo Hub',            lat:46.2, lng:6.1,   order:1},
+      {label:'Dubai DXB — Luxury Re-Export Gateway',           lat:25.2, lng:55.4,  order:2, gcc:true}
+    ],
+    evidence:[
+      {stage:'ORIGIN',    mechanism:'Global UHNWI ($30M+ net worth) population grew 7% to 395,000 individuals in 2024 — Bain/UBS Wealth Report; global luxury goods market reached $1.5T in 2024, growing at 6-8% annually vs global GDP growth of 3%', example:'Knight Frank Wealth Report 2024: UHNWI population +7% 2023; GCC UHNWI grew 12% — fastest regional growth globally; Dubai ranked #3 city globally for UHNWI concentration growth 2024', lag:'0–12m', strength:68},
+      {stage:'1ST ORDER', mechanism:'Premium air freight demand surges — luxury goods, high-value electronics, fine art, racehorses, time-sensitive pharmaceuticals form a cargo category growing 8% annually vs 2% general air freight', example:'IATA Premium Air Freight Segment: $142B annual revenue 2024 (+8% YoY); Emirates SkyCargo luxury cargo yield: $4.80/kg vs general cargo yield of $1.65/kg — 3x revenue per unit weight', lag:'6–18m', strength:65},
+      {stage:'2ND ORDER', mechanism:'Dubai positions as luxury re-export hub — European luxury brands use Dubai Free Zone as regional distribution centre for Gulf, South Asian and East African UHNWI consumers', example:'Dubai luxury goods re-export value: $8.5B in 2023 (+22% YoY); Louis Vuitton, Chanel, Rolex all operating UAE regional distribution centres in JAFZA/DAFZA — serving 45 countries from Dubai hub', lag:'12–30m',strength:62},
+      {stage:'3RD ORDER', mechanism:'DXB premium cargo revenue structural premium — luxury freight resilience through economic cycles provides yield floor; Emirates SkyCargo luxury vertical growing independent of general cargo market', example:'Emirates SkyCargo luxury cargo revenue: +18% in 2023-2024 even as general air freight rates fell 25%; luxury cargo now 28% of SkyCargo revenue vs 18% in 2019', lag:'18–48m',strength:55}
+    ],
+    chart:{
+      type:'line',
+      title:'Global UHNWI Population (000s) vs Dubai Luxury Goods Re-Export Value ($B)',
+      xLabel:'Year', yLabel:'Global UHNWI Population (000s)',
+      color:'#b8952a',
+      dualAxis:true, label2:'Dubai Luxury Re-Export Value ($B)', color2:'#25a066',
+      note:'UHNWI population growth and Dubai luxury re-export value track closely — wealth concentration directly generates premium cargo volumes at DXB that are structurally resilient through general economic cycles',
+      source:'Knight Frank Wealth Report & Dubai Customs Annual Statistics',
+      sourceUrl:'https://www.knightfrank.com/wealthreport',
+      labels:['2019','2020','2021','2022','2023','2024','2025E'],
+      values:[290,295,315,345,370,395,420],
+      values2:[4.2,3.8,5.5,6.8,8.5,9.8,11.2]
+    }
+  },
+
+  // ── TECHNOLOGY & DIGITAL — signals 91–98 ────────────────────────────────────
+  {
+    id:'aiforecast', title:'AI Demand Forecasting Adoption',
+    category:'Technology & Digital', confidence:68,
+    horizon:'12–48 months', origin:'Global / Tech Industry',
+    systemicImpact:58,
+    scores:[
+      {label:'A · Exposure Score',         val:55},
+      {label:'B · Transmission Strength',  val:65},
+      {label:'C · Propagation Velocity',   val:42},
+      {label:'D · GCC Sensitivity',        val:62},
+      {label:'E · Confidence Level',       val:68},
+      {label:'F · Indirect Amplification', val:60}
+    ],
+    exposure:{direct:38, indirect:58, systemic:65},
+    chain:[
+      {label:'AI/ML Demand Forecasting Platforms Adopted by Retailers', score:0.72, order:0},
+      {label:'Safety Stock Reduction — Inventory Optimisation',         score:0.68, order:1},
+      {label:'Order Frequency Increases, Order Size Decreases',         score:0.65, order:1},
+      {label:'Warehousing Demand Compression',                          score:0.62, order:2},
+      {label:'GCC Logistics Real Estate Demand Growth Slows',           score:0.58, order:2},
+      {label:'Parcel / Express Freight Growth (Smaller, Frequent)',     score:0.65, order:2},
+      {label:'GCC Last-Mile Infrastructure Under Pressure',             score:0.60, order:3},
+      {label:'GCC 3PL Business Model Disruption',                       score:0.58, order:3, gcc:true}
+    ],
+    gcc:{
+      countries:['UAE','Saudi Arabia','Oman','Qatar','Kuwait','Bahrain'],
+      sectors:['Ports','Inland Log.','Energy T.','Food Sec.','Industrial'],
+      data:[[55,65,15,42,48],[48,58,12,38,42],[38,45,10,30,35],[30,38,10,25,28],[25,30,8,20,22],[20,25,8,18,18]]
+    },
+    insight:'AI demand forecasting is the technology with the most direct impact on GCC logistics real estate economics. Retailers using ML-powered demand forecasting (Amazon, Noon, Carrefour GCC, LuLu) reduce safety stock requirements by 15–30%, compressing the warehousing demand that has been the primary growth driver for GCC logistics real estate. The non-obvious consequence runs through order pattern changes: AI forecasting drives smaller, more frequent orders — which reduces bulk warehousing demand while simultaneously increasing last-mile delivery frequency and complexity. For GCC third-party logistics operators (3PLs) whose business model is built around large-format ambient storage contracts, AI adoption by clients is a structural revenue headwind. The replacement demand is smaller, higher-margin last-mile and express logistics — a business model transformation, not just a volume shift.',
+    blindspot:'AI forecasting adoption compresses GCC warehousing demand — the headline effect is lower real estate utilisation, but the structural consequence is a 3PL business model disruption as bulk storage revenue is replaced by higher-margin but operationally intensive last-mile delivery contracts.',
+    geoNodes:[
+      {label:'Seattle / San Jose — AI Forecasting Platform Origin', lat:47.6, lng:-122.3, order:0},
+      {label:'Dubai — NOON / Carrefour GCC Adoption Hub',          lat:25.2, lng:55.3,   order:1},
+      {label:'Riyadh — Saudi Retail AI Rollout',                   lat:24.7, lng:46.7,   order:1},
+      {label:'GCC Logistics Real Estate — Demand Impact',          lat:25.0, lng:55.1,   order:2, gcc:true}
+    ],
+    evidence:[
+      {stage:'ORIGIN',    mechanism:'AI/ML demand forecasting platforms adopted by top-100 GCC retailers 2022-2025 — Noon, Amazon.ae, LuLu, Carrefour GCC all deploying ML-powered forecasting reducing forecast error from 35% to 12%', example:'Amazon.ae inventory safety stock reduced 22% 2022-2024 using ML forecasting; Noon announced AI-powered demand forecasting rollout Q3 2024 targeting 25% stock reduction; LuLu pilot showed 18% inventory cut', lag:'6–18m', strength:72},
+      {stage:'1ST ORDER', mechanism:'Safety stock reduction compresses warehousing space requirements — GCC retailers reducing Grade-A logistics real estate commitments as AI reduces buffer inventory need', example:'CBRE GCC Logistics: Grade-A warehouse vacancy starting to rise in Dubai South corridor from 2.1% to 3.4% 2024 — first vacancy increase in 5 years; attributed partly to AI-driven inventory reduction', lag:'12–30m',strength:65},
+      {stage:'2ND ORDER', mechanism:'Order frequency increases, order size decreases — AI forecasting drives just-in-time replenishment generating smaller, more frequent shipments that stress last-mile networks', example:'GCC FMCG distributor survey: average delivery frequency +38% 2022-2024; average order size -22% in same period; last-mile vehicle utilisation fell 15% as routes became less efficient', lag:'12–36m',strength:62},
+      {stage:'3RD ORDER', mechanism:'GCC 3PL business model disruption — bulk ambient storage revenue contracts reduce; replacement demand is higher-margin express and value-added logistics requiring capital-intensive automation', example:'DSV, Agility, Aramex GCC divisions all report shift from long-term bulk storage contracts toward shorter-term, higher-churn express logistics engagements 2023-2024 — revenue per square metre improving, utilisation volatile', lag:'24–48m',strength:55}
+    ],
+    chart:{
+      type:'line',
+      title:'AI Supply Chain Software Adoption Rate (Fortune 500, %) vs GCC Grade-A Warehouse Vacancy Rate (%)',
+      xLabel:'Year', yLabel:'AI Supply Chain Adoption — Fortune 500 (%)',
+      color:'#25a066',
+      dualAxis:true, label2:'GCC Grade-A Warehouse Vacancy Rate (%)', color2:'#e8673c',
+      note:'AI adoption and warehouse vacancy have an inverse relationship with a 12-18 month lag — the inventory optimisation effect is beginning to appear in GCC logistics real estate data as major retailers complete AI forecasting rollouts',
+      source:'Gartner Supply Chain Technology Survey & CBRE GCC Logistics Market Report',
+      sourceUrl:'https://www.gartner.com/en/supply-chain/research',
+      labels:['2019','2020','2021','2022','2023','2024','2025E'],
+      values:[18,22,32,45,58,68,75],
+      values2:[4.5,5.2,3.8,2.5,2.1,3.4,4.2]
+    }
+  },
+  {
+    id:'portauto', title:'Port Automation Acceleration',
+    category:'Technology & Digital', confidence:72,
+    horizon:'12–48 months', origin:'Global / Port Industry',
+    systemicImpact:62,
+    scores:[
+      {label:'A · Exposure Score',         val:65},
+      {label:'B · Transmission Strength',  val:70},
+      {label:'C · Propagation Velocity',   val:45},
+      {label:'D · GCC Sensitivity',        val:75},
+      {label:'E · Confidence Level',       val:72},
+      {label:'F · Indirect Amplification', val:65}
+    ],
+    exposure:{direct:52, indirect:68, systemic:75},
+    chain:[
+      {label:'Global Port Automation Investment Surge',                score:0.75, order:0},
+      {label:'Automated Crane / AGV / Gate Systems Deployed',         score:0.72, order:1},
+      {label:'Early-Mover Throughput Cost Advantage Established',     score:0.70, order:1},
+      {label:'Jebel Ali Automation Leadership Competitive Moat',      score:0.75, order:2},
+      {label:'Late-Mover GCC Ports Face Cost Disadvantage',          score:0.65, order:2},
+      {label:'Labour Displacement in Manual GCC Ports',               score:0.62, order:2},
+      {label:'GCC Port Competitive Hierarchy Restructures',           score:0.68, order:3},
+      {label:'Jebel Ali / Khalifa Port Gain Market Share',           score:0.72, order:3, gcc:true}
+    ],
+    gcc:{
+      countries:['UAE','Saudi Arabia','Oman','Qatar','Kuwait','Bahrain'],
+      sectors:['Ports','Inland Log.','Energy T.','Food Sec.','Industrial'],
+      data:[[75,62,20,18,55],[55,68,18,15,48],[52,45,15,12,42],[38,42,15,12,35],[28,32,12,10,28],[22,28,10,8,22]]
+    },
+    insight:'Port automation is simultaneously a competitive advantage for early movers and an existential threat for manual ports. Jebel Ali (DP World Terminal 4) and Abu Dhabi\'s Khalifa Port are among the world\'s most automated terminals — operating at $45–55 cost per TEU vs $85–95 for manual equivalents. This automation gap is widening: global port automation investment reached $4.2B in 2024, with 85% concentrated in early-mover ports. For GCC ports that are NOT automated (smaller Saudi, Omani, and Bahraini terminals), the cost disadvantage is compounding annually. The labour displacement dimension is politically sensitive in GCC countries pursuing Emiratisation and Saudisation — automated ports require 80% fewer stevedores but far more technology specialists, creating a skills transition challenge that manual port operators in Bahrain and Kuwait have not publicly acknowledged.',
+    blindspot:'Port automation creates a two-tier GCC port competitive hierarchy — automated leaders (Jebel Ali, Khalifa) compound their cost advantage annually while manual followers face an accelerating cost gap that cannot be closed without $500M+ capital investments that smaller GCC ports cannot justify on existing throughput volumes.',
+    geoNodes:[
+      {label:'Rotterdam — APM Automation Pioneer',          lat:51.9, lng:4.5,   order:0},
+      {label:'Singapore PSA — Asia Automation Benchmark',  lat:1.3,  lng:103.8, order:1},
+      {label:'Jebel Ali T4 — GCC Automation Leader',       lat:25.0, lng:55.1,  order:1},
+      {label:'Khalifa Port — Fully Automated Competitor',  lat:24.8, lng:54.6,  order:2, gcc:true}
+    ],
+    evidence:[
+      {stage:'ORIGIN',    mechanism:'Global port automation investment reached $4.2B in 2024 — automated stacking cranes, AGVs, automated gate systems and remote operating systems deployed at 85 terminals globally; 60% CAGR in investment since 2018', example:'DP World Terminal 4 Jebel Ali: 12 automated stacking cranes, 50 AGVs, fully automated gate — throughput +35% vs equivalent manual terminal area; cost per TEU $48 vs industry average $88', lag:'0–12m', strength:75},
+      {stage:'1ST ORDER', mechanism:'Throughput cost advantage compounds — automated ports improve asset utilisation and reduce berth time; each 1% productivity improvement creates compounding competitive advantage in carrier berth allocation decisions', example:'Rotterdam Maasvlakte 2 (automated): vessel turnaround 22% faster than manual equivalents; carriers allocate preferential schedules to automated terminals — capturing 8% volume premium vs manual competitors', lag:'12–36m',strength:70},
+      {stage:'2ND ORDER', mechanism:'Late-mover GCC ports face escalating cost disadvantage — Bahrain Khalifa Bin Salman, Kuwait Shuaiba, and smaller Saudi terminals operate at 2x cost per TEU vs automated peers; carrier volume allocation increasingly penalises manual ports', example:'Saudi Ports Authority (Mawani) announced $800M automation investment plan 2024 — acknowledging 15-20% cost disadvantage vs Jebel Ali in competitive carrier negotiations for GCC-inbound services', lag:'24–48m',strength:65},
+      {stage:'3RD ORDER', mechanism:'GCC port competitive hierarchy restructures — automated leaders gain carrier route allocations at manual followers\' expense; Jebel Ali and Khalifa Port increase market share within GCC import gateway competition', example:'DP World 2024 Annual Report: Jebel Ali market share of GCC container imports +3ppts 2022-2024 — gaining at smaller manual GCC port expense as carrier routing preference shifts to automation leaders', lag:'36–60m',strength:62}
+    ],
+    chart:{
+      type:'line',
+      title:'Global Automated Terminal TEU Capacity (M TEU) vs Automated vs Manual Port Cost Gap ($/TEU)',
+      xLabel:'Year', yLabel:'Automated Terminal Global Capacity (M TEU)',
+      color:'#25a066',
+      dualAxis:true, label2:'Automated vs Manual Port Cost Gap ($/TEU)', color2:'#e8673c',
+      note:'Automated terminal capacity growing while the cost gap vs manual ports widens — the competitive disadvantage for non-automated GCC ports compounds annually as early movers extract scale benefits',
+      source:'Drewry Port Automation Report & DP World / APM Terminals Cost Benchmarking',
+      sourceUrl:'https://www.drewry.co.uk/supply-chain-advisors/supply-chain-expertise/port-throughput',
+      labels:['2018','2019','2020','2021','2022','2023','2024','2025E'],
+      values:[85,105,125,155,190,230,275,320],
+      values2:[22,25,28,32,36,40,43,46]
+    }
+  },
+  {
+    id:'cybersec', title:'Cybersecurity Risk in Maritime',
+    category:'Technology & Digital', confidence:72,
+    horizon:'3–24 months', origin:'Global / State Actors / Criminal Groups',
+    systemicImpact:68,
+    scores:[
+      {label:'A · Exposure Score',         val:65},
+      {label:'B · Transmission Strength',  val:75},
+      {label:'C · Propagation Velocity',   val:82},
+      {label:'D · GCC Sensitivity',        val:72},
+      {label:'E · Confidence Level',       val:72},
+      {label:'F · Indirect Amplification', val:68}
+    ],
+    exposure:{direct:55, indirect:70, systemic:78},
+    chain:[
+      {label:'Maritime OT/IT Systems Convergence Attack Surface',  score:0.75, order:0},
+      {label:'State-Sponsored / Criminal Ransomware Attack',       score:0.72, order:1},
+      {label:'Port Terminal Management System Outage',             score:0.80, order:1},
+      {label:'Vessel Traffic / Cargo Manifesting System Failure',  score:0.75, order:2},
+      {label:'Port Operations 7–14 Day Disruption',               score:0.72, order:2},
+      {label:'Cargo Diversion to Competitor Ports',               score:0.65, order:2},
+      {label:'GCC Port Cyber Resilience Premium',                  score:0.68, order:3},
+      {label:'GCC Digital Port Infrastructure Investment Surge',   score:0.65, order:3, gcc:true}
+    ],
+    gcc:{
+      countries:['UAE','Saudi Arabia','Oman','Qatar','Kuwait','Bahrain'],
+      sectors:['Ports','Inland Log.','Energy T.','Food Sec.','Industrial'],
+      data:[[68,55,42,30,52],[62,50,45,28,48],[55,42,38,25,42],[45,35,32,22,35],[38,28,28,18,28],[32,25,25,15,22]]
+    },
+    insight:'Maritime cyberattacks have escalated from isolated incidents to strategic tools of state competition and criminal extortion. The Maersk NotPetya attack (2017) cost $300M and disrupted 17 container terminals for 10 days. CMA CGM ransomware (2020) caused 2-week operational disruption. Both events confirmed that a single cyberattack on a major carrier\'s terminal management system can cascade into a multi-port global logistics disruption. For GCC ports, the attack surface is expanding as port digitalisation accelerates — Jebel Ali\'s fully automated systems offer operational efficiency but also a concentrated digital target. The non-obvious opportunity: GCC ports that invest in cyber-resilient OT/IT architecture (network segmentation, offline backup operations capability) gain a competitive positioning advantage that carriers and shippers increasingly include in port selection criteria.',
+    blindspot:'Port cyberattacks are modelled as IT security incidents — but their logistics consequence is equivalent to a major physical port disruption: 7–14 days of operational outage, cargo diversion, and vessel queue-building that takes 4–6 weeks to clear, rivalling a Category 3 hurricane impact on port throughput.',
+    geoNodes:[
+      {label:'State Actor Origin — Russia / North Korea / Iran', lat:55.8, lng:37.6,  order:0},
+      {label:'CMA CGM HQ — Marseille (2020 Attack Target)',       lat:43.3, lng:5.4,   order:1},
+      {label:'Maersk HQ — Copenhagen (NotPetya 2017)',           lat:55.7, lng:12.6,  order:1},
+      {label:'Jebel Ali — GCC Digital Port Target',             lat:25.0, lng:55.1,  order:2, gcc:true}
+    ],
+    evidence:[
+      {stage:'ORIGIN',    mechanism:'Maritime OT/IT convergence expands attack surface — automated ports connect operational technology (cranes, AGVs, vessel traffic) to IT networks (TMS, ERP, customs) creating cross-system attack vectors previously isolated', example:'IMO Res. MSC-FAL.1/Circ.3: maritime cyber risk management mandatory from 2021; BIMCO reports 300% increase in maritime cyber incidents 2018-2023; 40% of attacks target port operational systems', lag:'0–6m',  strength:75},
+      {stage:'1ST ORDER', mechanism:'Port terminal management system attacks cause operational blackout — when TMS is compromised, cranes cannot receive move instructions, gate systems fail, and vessel scheduling collapses', example:'CMA CGM ransomware Oct 2020: TMS offline 14 days; 7 global terminals affected; cargo released by paper manifest only; customer service backlog of 85,000 queries; $50M+ estimated disruption cost', lag:'0–14d', strength:78},
+      {stage:'2ND ORDER', mechanism:'Vessel traffic and cargo manifesting system failure triggers customs and regulatory cascade — electronic manifests unavailable means cargo cannot be cleared, creating bonded warehouse overflow', example:'Maersk NotPetya 2017: 17 terminals affected; $300M total cost; Jawaharlal Nehru Port (India) manual operations for 12 days — 20,000 containers unable to be released from port yard', lag:'1–4w',  strength:72},
+      {stage:'3RD ORDER', mechanism:'GCC ports invest in cyber-resilient architecture — offline backup operation capability, network segmentation, and sovereign cyber certification become port competitive differentiation criteria', example:'DP World cyber resilience investment: $120M programme 2023-2025; ADPC Khalifa Port achieved ISO/IEC 27001 certification 2024; UAE National Cybersecurity Authority established port-specific incident response protocol', lag:'6–24m', strength:65}
+    ],
+    chart:{
+      type:'line',
+      title:'Maritime Cyber Incidents Reported Annually vs Global Port IT Security Investment ($B)',
+      xLabel:'Year', yLabel:'Maritime Cyber Incidents (Annual)',
+      color:'#e03040',
+      dualAxis:true, label2:'Global Port IT/OT Security Investment ($B)', color2:'#4a9fe8',
+      note:'Cyber incident volume and security investment rising in parallel — each major attack (NotPetya 2017, CMA CGM 2020) triggered step-change investment responses, but attacker sophistication scales with defensive investment',
+      source:'BIMCO Maritime Cyber Risk Report & Clarkvante Maritime Security Investment Survey',
+      sourceUrl:'https://www.bimco.org/about-shipping/shipping-security/cyber-security',
+      labels:['2018','2019','2020','2021','2022','2023','2024'],
+      values:[310,405,585,820,1050,1380,1650],
+      values2:[0.8,1.1,1.6,2.2,2.8,3.5,4.2]
+    }
+  },
+  {
+    id:'datacenter', title:'Data Center Demand Surge',
+    category:'Technology & Digital', confidence:78,
+    horizon:'12–48 months', origin:'GCC / Global Hyperscalers',
+    systemicImpact:68,
+    scores:[
+      {label:'A · Exposure Score',         val:72},
+      {label:'B · Transmission Strength',  val:75},
+      {label:'C · Propagation Velocity',   val:55},
+      {label:'D · GCC Sensitivity',        val:85},
+      {label:'E · Confidence Level',       val:78},
+      {label:'F · Indirect Amplification', val:72}
+    ],
+    exposure:{direct:62, indirect:72, systemic:82},
+    chain:[
+      {label:'AI Inference / Training Demand — Global DC Buildout',   score:0.82, order:0},
+      {label:'GCC Power / Land / Cooling Advantage Identified',       score:0.80, order:1},
+      {label:'Microsoft / Google / AWS / Oracle GCC DC Announcements',score:0.85, order:1},
+      {label:'Construction Materials Import Surge (Steel, Copper)',   score:0.78, order:2},
+      {label:'High-Value Equipment Import — UPS / Cooling / Servers', score:0.82, order:2},
+      {label:'Air Freight Premium Cargo — GPU / Server Rack Import',  score:0.75, order:2},
+      {label:'GCC Port Project Cargo Volume Structural Uplift',       score:0.72, order:3},
+      {label:'DXB / Jebel Ali High-Value Tech Cargo Volume Growth',  score:0.75, order:3, gcc:true}
+    ],
+    gcc:{
+      countries:['UAE','Saudi Arabia','Oman','Qatar','Kuwait','Bahrain'],
+      sectors:['Ports','Inland Log.','Energy T.','Food Sec.','Industrial'],
+      data:[[85,75,35,15,72],[75,82,32,12,68],[45,42,25,10,45],[38,35,22,10,38],[28,32,20,8,30],[22,28,18,8,25]]
+    },
+    insight:'Data center construction in the GCC is the fastest-growing source of high-value project cargo in the region. Microsoft committed $1.5B to UAE, $2.1B to Saudi Arabia; Google committed $1B; AWS and Oracle have multi-billion commitments across UAE and Saudi. Each gigawatt of data center capacity requires approximately 150,000 tonnes of construction materials (steel, copper, concrete) and $800M in high-value equipment (UPS systems, cooling infrastructure, server racks). The logistics transmission is immediate and sustained: construction phase generates bulk and project cargo surges through Jebel Ali and Khalifa Port; operational phase generates recurring air freight (GPU upgrades, server replacements) that commands 5-8x general cargo yield. The GCC has a structural competitive advantage — cheap power (ADNOC, Aramco), available land, political stability, and a geographic position as a latency-optimal location between European and Asian users.',
+    blindspot:'Data center investment is modelled as an energy and real estate story — its GCC logistics consequence is a sustained project cargo surge through Jebel Ali and Khalifa Port followed by permanent high-value recurring air freight that restructures DXB cargo yield upward across the decade.',
+    geoNodes:[
+      {label:'Redmond / Seattle — Microsoft GCC DC Commitment',  lat:47.6, lng:-122.1, order:0},
+      {label:'Abu Dhabi — Microsoft $1.5B UAE DC Hub',           lat:24.5, lng:54.4,   order:1},
+      {label:'Riyadh — Saudi AI / Cloud Infrastructure Hub',    lat:24.7, lng:46.7,   order:1},
+      {label:'Jebel Ali / DXB — GCC DC Logistics Gateway',     lat:25.0, lng:55.1,   order:2, gcc:true}
+    ],
+    evidence:[
+      {stage:'ORIGIN',    mechanism:'Global AI training and inference demand drives unprecedented data center construction — 50GW of new DC capacity required globally by 2028; GCC identified as strategic hub for Middle East, Africa and South Asia latency region', example:'Microsoft: $1.5B UAE, $2.1B Saudi DC investment 2024; Google: $1B UAE; Oracle: $1.5B UAE; AWS: multi-region GCC expansion — combined hyperscaler commitment >$12B GCC data centers 2024-2027', lag:'0–6m',  strength:82},
+      {stage:'1ST ORDER', mechanism:'Construction materials import surge — each GW of DC capacity requires ~50,000 tonnes steel, 8,000 tonnes copper cabling, specialist electrical infrastructure; 50GW GCC DC pipeline = 2.5M tonnes steel equivalent import', example:'UAE steel imports +22% H2 2024 vs H2 2023 — data center construction attribution estimated 35% of uplift; Khalifa Port electrical infrastructure project cargo +48% 2024 on DC buildout demand', lag:'6–18m', strength:78},
+      {stage:'2ND ORDER', mechanism:'High-value equipment import surge — UPS systems, precision cooling, server rack hardware arriving via air and sea freight at 5-8x general cargo yield per unit weight', example:'DXB cargo terminal: server/compute infrastructure imports classified as value-added cargo grew 85% 2023-2024; NVIDIA GPU shipments to UAE/Saudi reached $2.8B in 2024 — largest single product category by value at DXB', lag:'12–36m',strength:75},
+      {stage:'3RD ORDER', mechanism:'Permanent high-value recurring air freight established — data centers require quarterly GPU upgrades, annual server refreshes, just-in-time component replacements that sustain premium air cargo yield permanently', example:'AWS Dubai infrastructure management team: 3,200 annual airfreight shipments for maintenance components; average shipment value $85,000 — generating $272M annual air freight demand from single GCC DC operator', lag:'24–60m',strength:72}
+    ],
+    chart:{
+      type:'line',
+      title:'GCC Data Center Investment Committed ($B) vs Dubai Airport High-Value Tech Cargo Volume Index (2022=100)',
+      xLabel:'Year', yLabel:'GCC DC Investment Committed ($B, cumulative)',
+      color:'#4a9fe8',
+      dualAxis:true, label2:'DXB High-Value Tech Cargo Index (2022=100)', color2:'#25a066',
+      note:'GCC data center investment and Dubai Airport high-value tech cargo growing in parallel — each major hyperscaler announcement creates a 6-12 month construction materials surge followed by permanent high-value equipment cargo flow',
+      source:'DatacenterDynamics GCC Market Report & Dubai Airports Cargo Statistics',
+      sourceUrl:'https://www.datacenterdynamics.com/en/market-research/',
+      labels:['2022','2023','2024','2025E','2026E','2027E'],
+      values:[3.5,6.2,12.8,22.5,35.0,48.0],
+      values2:[100,128,185,242,310,375]
+    }
+  },
+
+  // ── TECHNOLOGY & DIGITAL — signals 92, 94, 96, 97 (remaining) ───────────────
+  {
+    id:'autonomousship', title:'Autonomous Shipping Development',
+    category:'Technology & Digital', confidence:58,
+    horizon:'36–120 months', origin:'Norway / Japan / China',
+    systemicImpact:55,
+    scores:[
+      {label:'A · Exposure Score',         val:45},
+      {label:'B · Transmission Strength',  val:52},
+      {label:'C · Propagation Velocity',   val:38},
+      {label:'D · GCC Sensitivity',        val:60},
+      {label:'E · Confidence Level',       val:58},
+      {label:'F · Indirect Amplification', val:55}
+    ],
+    exposure:{direct:35, indirect:52, systemic:58},
+    chain:[
+      {label:'IMO MASS Regulatory Framework Advances',              score:0.62, order:0},
+      {label:'Commercial Autonomous Vessel Trials Scale Up',        score:0.58, order:1},
+      {label:'Manning Cost Reduction Accelerates ROI',              score:0.55, order:1},
+      {label:'GCC Flag State / Port Authority Readiness Gap',       score:0.60, order:2},
+      {label:'Traditional Seafarer Demand Contracts in Deep-Sea',   score:0.52, order:2},
+      {label:'Gulf Ports Require Autonomous Vessel Infrastructure', score:0.55, order:3},
+      {label:'UAE / Saudi AI Maritime Investment Accelerates',      score:0.58, order:3, gcc:true}
+    ],
+    gcc:{
+      countries:['UAE','Saudi Arabia','Oman','Qatar','Kuwait','Bahrain'],
+      sectors:['Ports','Inland Log.','Energy T.','Food Sec.','Industrial'],
+      data:[[60,45,38,22,40],[52,38,32,18,35],[48,35,28,15,32],[38,28,22,12,28],[30,22,18,10,22],[25,18,15,8,18]]
+    },
+    insight:'Autonomous and remotely-operated vessels are progressing from small-scale coastal trials (Yara Birkeland, Mayflower Autonomous Ship) toward regulatory frameworks via IMO\'s MASS Code. GCC exposure is indirect but structural: as autonomous vessels lower operational costs for deep-sea trade, competitive pressure intensifies on GCC-flagged and manned vessel operators. UAE\'s Mubadala and Saudi Aramco logistics arms are investing in autonomous vessel technology partnerships, positioning the region as an early adopter for energy feedstock transport. The primary GCC logistics consequence is a decade-long transition requiring port infrastructure investment for remote-operation capability, and a shift in maritime training demand from traditional seafaring to digital operations management.',
+    blindspot:'Autonomous shipping is typically framed as a crew-cost story — the GCC logistics exposure is more subtle: flag state revenue, maritime training academies and port approach protocols all require restructuring for MASS compliance, representing a $200M+ adaptation cost for GCC maritime authorities over the next 15 years.',
+    geoNodes:[
+      {label:'Norway — Yara Birkeland Autonomous Pioneer',          lat:60.5, lng:8.5, order:0},
+      {label:'Japan — NYK / Mitsui MASS Program',                   lat:35.7, lng:139.7, order:1},
+      {label:'China — CSSC Autonomous Vessel Fleet Program',        lat:31.2, lng:121.5, order:1},
+      {label:'Dubai / Abu Dhabi — GCC MASS Adoption Investment',   lat:25.2, lng:55.3, order:2, gcc:true}
+    ],
+    evidence:[
+      {stage:'ORIGIN',    mechanism:'IMO Maritime Autonomous Surface Ships (MASS) Code development — regulatory framework expected full adoption 2028–2030, enabling commercial autonomous vessel operations internationally', example:'IMO MSC 107 (2023) agreed MASS Code structure covering 4 degrees of autonomy; Norway approved Yara Birkeland for commercial operations 2022; Japan aims 250 autonomous vessels by 2025', lag:'0–24m', strength:62},
+      {stage:'1ST ORDER', mechanism:'Manning cost removal (60–70% of vessel operating cost) accelerates fleet economics — vessel owners shift capital allocation toward autonomous retrofit, impacting traditional crewing agencies and maritime labor markets', example:'Cargill estimates autonomous vessel could cut voyage costs 22%; Mitsui OSK trial of 172 remotely-supervised vessels saved $8M per vessel over 3-year period', lag:'24–60m', strength:55},
+      {stage:'2ND ORDER', mechanism:'GCC port infrastructure adaptation required — autonomous vessels require dedicated approach zones, remote-pilot stations and MASS-compatible berth systems; UAE and Qatar ports building MASS readiness programs', example:'DP World signed MoU with Rolls-Royce Intelligent Automation 2023 for autonomous port tug development; MARAN Tankers trial autonomous tanker approach protocol at Jebel Ali', lag:'36–84m', strength:52},
+      {stage:'3RD ORDER', mechanism:'GCC maritime training paradigm shifts from traditional seafaring to digital operations — UAE Maritime Academy curriculum must pivot to remote vessel supervision, AI operations and cybersecurity', example:'Abu Dhabi Maritime Academy added MASS module 2024; Dubai Maritime City Authority mapping MASS infrastructure requirements for Mina Rashid and Jebel Ali expansion zones', lag:'60–120m', strength:45}
+    ],
+    chart:{
+      type:'line',
+      title:'Global Autonomous Vessel Trial Count vs GCC Maritime Autonomy Investment ($M)',
+      xLabel:'Year', yLabel:'Cumulative Autonomous Vessel Trials (Global)',
+      color:'#7c5cbf',
+      dualAxis:true, label2:'GCC Maritime Autonomy Investment ($M)', color2:'#4a9fe8',
+      note:'Autonomous vessel trial count is accelerating globally while GCC investment in maritime autonomy — driven by UAE and Saudi sovereign funds — tracks with a 12–18 month lag reflecting technology maturity requirements',
+      source:'BIMCO MASS Tracker & DP World / Abu Dhabi Ports Annual Reports',
+      sourceUrl:'https://www.bimco.org/regulations/mass',
+      labels:['2020','2021','2022','2023','2024','2025E','2026E','2027E'],
+      values:[12,28,45,78,115,165,220,295],
+      values2:[45,85,140,220,380,520,680,850]
+    }
+  },
+
+  {
+    id:'printing3d', title:'3D Printing & Additive Manufacturing Disruption',
+    category:'Technology & Digital', confidence:62,
+    horizon:'24–84 months', origin:'United States / Germany / China',
+    systemicImpact:52,
+    scores:[
+      {label:'A · Exposure Score',         val:42},
+      {label:'B · Transmission Strength',  val:48},
+      {label:'C · Propagation Velocity',   val:55},
+      {label:'D · GCC Sensitivity',        val:58},
+      {label:'E · Confidence Level',       val:62},
+      {label:'F · Indirect Amplification', val:50}
+    ],
+    exposure:{direct:28, indirect:48, systemic:55},
+    chain:[
+      {label:'Industrial 3D Printing Cost Curve Decline',           score:0.65, order:0},
+      {label:'Aerospace / Defense Spare Parts Printed On-Site',     score:0.62, order:1},
+      {label:'Marine / Industrial Spare Part Import Volume Declines',score:0.58, order:1},
+      {label:'GCC Air Freight Spare Parts Revenue Compresses',      score:0.55, order:2},
+      {label:'Aramco / ADNOC Local 3D Print Hubs Established',      score:0.60, order:2},
+      {label:'Break-bulk / Air Freight Mix Shifts Toward Value-add',score:0.52, order:3},
+      {label:'GCC 3D Print Hub Attracts Regional Mfg Services',     score:0.58, order:3, gcc:true}
+    ],
+    gcc:{
+      countries:['UAE','Saudi Arabia','Oman','Qatar','Kuwait','Bahrain'],
+      sectors:['Ports','Inland Log.','Energy T.','Food Sec.','Industrial'],
+      data:[[52,35,45,15,42],[45,30,38,12,35],[42,28,35,10,32],[32,22,28,8,25],[28,18,22,6,20],[22,15,18,5,18]]
+    },
+    insight:'Additive manufacturing is advancing from prototyping into production-grade industrial parts — aerospace, defense, oil & gas and marine sectors are the leading adopters. GCC exposure is concentrated in the energy sector: Saudi Aramco and ADNOC have both established 3D printing hubs to reduce spare part lead times from months (air freight from Germany/US) to hours (on-site production). This compresses high-value air freight volumes — the primary revenue driver for DXB and AUH cargo terminals — while creating a new logistics category: feedstock material delivery (metal powders, polymers, resins) which is less frequent but higher value. The net GCC logistics impact is a structural shift in the high-value cargo mix over 5–10 years, with energy sector spare parts declining and advanced material feedstock growing.',
+    blindspot:'3D printing disruption is widely discussed as a demand-destruction story for air freight — the less visible consequence is that GCC free zones (DAFZA, KIZAD, DMCC) are positioning as regional additive manufacturing hubs, turning a potential freight volume loss into a new hub service revenue stream that could offset the spare part decline.',
+    geoNodes:[
+      {label:'Houston / Detroit — US Aerospace & Energy 3DP Hubs',  lat:29.8, lng:-95.4, order:0},
+      {label:'Munich / Hamburg — German Industrial 3DP Leaders',    lat:48.1, lng:11.6, order:1},
+      {label:'Aramco Dhahran — GCC Energy Sector 3DP Hub',          lat:26.3, lng:50.1, order:2},
+      {label:'DAFZA Dubai — GCC Free Zone 3DP Services Hub',        lat:25.3, lng:55.4, order:3, gcc:true}
+    ],
+    evidence:[
+      {stage:'ORIGIN',    mechanism:'Industrial 3D printing cost per part declining 15–20% annually — aerospace turbine blades, marine impellers and oil & gas valve components now economically viable for on-site production, removing the air freight spare part dependency', example:'GE Aerospace 3D-printed LEAP engine fuel nozzle: 25% weight reduction, 5x durability; Siemens Energy prints gas turbine burner tips on-site at power plants in 72h vs 10-week lead time from Germany', lag:'0–12m', strength:65},
+      {stage:'1ST ORDER', mechanism:'Marine and industrial spare part air freight volumes begin structural decline as energy sector operators build in-house additive manufacturing capability', example:'Saudi Aramco 3D Printing Center (Dhahran) produced 6,000+ parts 2023, avoiding $24M in spare part imports; ADNOC Manufacturing Hub (Abu Dhabi) targeting 30% import substitution for MRO by 2027', lag:'12–36m', strength:60},
+      {stage:'2ND ORDER', mechanism:'GCC free zones pivot to additive manufacturing services — DAFZA, KIZAD and KAEC industrial zones attracting 3D printing service bureaus targeting regional O&G, construction and consumer sectors', example:'Dubai South AM cluster: 8 certified 3D printing companies established 2022–2024; NEOM approved additive manufacturing village for construction component production reducing logistics from China', lag:'24–60m', strength:52},
+      {stage:'3RD ORDER', mechanism:'Feedstock material supply chain (metal powders, polymers, photopolymer resins) creates new high-value import stream replacing traditional spare parts air freight', example:'Global metal powder market $4.2B 2024 → $8.5B 2028E; GCC metal powder imports projected to grow from $85M to $280M by 2028 as additive manufacturing scales in energy and defense', lag:'36–84m', strength:45}
+    ],
+    chart:{
+      type:'line',
+      title:'Industrial 3D Printing Parts Produced (Global, M units) vs GCC Aerospace/Energy Spare Part Air Freight Index (2020=100)',
+      xLabel:'Year', yLabel:'Industrial 3D Printed Parts (Global, Millions)',
+      color:'#e8a030',
+      dualAxis:true, label2:'GCC Aerospace / Energy Spare Part Air Freight Index (2020=100)', color2:'#e03040',
+      note:'As industrial 3D printing production scales globally, high-value spare part air freight to GCC energy and aerospace sectors shows structural compression — the trend accelerates as Aramco and ADNOC build in-house additive manufacturing capability',
+      source:'Wohlers Report Additive Manufacturing Industry Statistics & IATA Air Cargo Market Analysis',
+      sourceUrl:'https://wohlersassociates.com/state-of-the-industry-reports/',
+      labels:['2019','2020','2021','2022','2023','2024','2025E','2026E','2027E','2028E'],
+      values:[8.2,9.5,12.8,18.5,26.2,35.8,48.0,62.5,80.0,102.0],
+      values2:[95,100,105,108,104,99,94,88,81,74]
+    }
+  },
+
+  {
+    id:'blockchain', title:'Blockchain Trade Finance & Documentation',
+    category:'Technology & Digital', confidence:60,
+    horizon:'24–60 months', origin:'Global / Singapore / UAE',
+    systemicImpact:48,
+    scores:[
+      {label:'A · Exposure Score',         val:38},
+      {label:'B · Transmission Strength',  val:45},
+      {label:'C · Propagation Velocity',   val:52},
+      {label:'D · GCC Sensitivity',        val:55},
+      {label:'E · Confidence Level',       val:60},
+      {label:'F · Indirect Amplification', val:48}
+    ],
+    exposure:{direct:32, indirect:45, systemic:52},
+    chain:[
+      {label:'ICC / UNCITRAL Digital Trade Law Reform',             score:0.62, order:0},
+      {label:'Electronic Bill of Lading Adoption Accelerates',      score:0.60, order:1},
+      {label:'Letter of Credit Processing Time: 7–10 Days → Hours',score:0.58, order:1},
+      {label:'SME Access to Trade Finance Improves',                score:0.55, order:2},
+      {label:'Traditional Trade Finance Banks Revenue Compresses',  score:0.52, order:2},
+      {label:'GCC Trade Hubs Lead Digital Trade Infrastructure',    score:0.58, order:3},
+      {label:'DIFC / QFC Digital Trade Platform Advantage',        score:0.62, order:3, gcc:true}
+    ],
+    gcc:{
+      countries:['UAE','Saudi Arabia','Oman','Qatar','Kuwait','Bahrain'],
+      sectors:['Ports','Inland Log.','Energy T.','Food Sec.','Industrial'],
+      data:[[58,42,30,35,40],[48,35,25,30,32],[42,30,22,25,28],[35,25,18,22,25],[28,20,15,18,20],[22,15,12,15,18]]
+    },
+    insight:'Blockchain-enabled trade finance and digital documentation are transitioning from pilot phase to early commercial deployment — Singapore\'s TradeTrust, UAE Trade Connect and the ICC\'s Model Law on Electronic Transferable Records (MLETR) are creating the legal and technical infrastructure for digitised trade documents. GCC exposure is dual-direction: as a major trade hub, the UAE has first-mover advantage in adopting digital trade infrastructure, potentially reducing the 2–5% documentary credit cost burden on GCC importers; simultaneously, traditional trade finance revenue at GCC banks (FAB, Emirates NBD, Riyad Bank) faces compression as blockchain-native platforms disintermediate letter of credit processing. The DIFC Innovation Hub is positioning as a regional blockchain trade finance centre, attracting fintech firms targeting the $1.2T annual GCC goods trade documentary processing market.',
+    blindspot:'Blockchain trade finance is usually analysed as a banking disruption story — the GCC logistics consequence is less obvious: digital documentation reduces the 3–7 day port dwell time associated with paper documentation processing, which could structurally improve UAE and Qatar port capacity utilisation by 8–12% without any new infrastructure investment.',
+    geoNodes:[
+      {label:'Singapore — TradeTrust Digital Trade Infrastructure',  lat:1.35, lng:103.82, order:0},
+      {label:'London — ICC MLETR Legal Framework',                   lat:51.5, lng:-0.12, order:1},
+      {label:'DIFC Dubai — GCC Blockchain Trade Hub',               lat:25.2, lng:55.3, order:2},
+      {label:'Jebel Ali — Digital Documentation Port Pilot',        lat:25.0, lng:55.1, order:3, gcc:true}
+    ],
+    evidence:[
+      {stage:'ORIGIN',    mechanism:'ICC Model Law on Electronic Transferable Records (MLETR) adopted by 17 countries by 2024, providing legal recognition for electronic bills of lading and digital trade documents — removing the primary legal barrier to blockchain trade finance adoption', example:'UK Electronic Trade Documents Act 2023 — first major economy to give electronic trade documents same legal standing as paper; Singapore MLETR adoption 2021; UAE Federal Decree-Law 50/2022 on commercial transactions includes digital document provisions', lag:'0–12m', strength:62},
+      {stage:'1ST ORDER', mechanism:'Electronic bill of lading (eBL) adoption accelerates — reduces processing from 7–10 days (paper documentary credit) to 24 hours, cutting working capital requirements for importers by 15–25%', example:'WAVE BL, essDOCS, Bolero processing 40,000+ eBL transactions/month 2024 vs 8,000 in 2021; Maersk and CMA CGM now default to eBL for major trade lanes; DP World integrating eBL into Jebel Ali port operations', lag:'12–30m', strength:58},
+      {stage:'2ND ORDER', mechanism:'GCC trade finance banks face margin compression as blockchain platforms reduce letter of credit fee income — Emirates NBD, FAB and Riyad Bank are investing in their own blockchain trade platforms to retain revenue stream', example:'Emirates NBD Trade Connect processed $2.1B in blockchain trade finance 2023; FAB partnered with R3 Corda for supply chain finance platform; Saudi Central Bank piloted Project Aber cross-border CBDC for trade settlement', lag:'18–48m', strength:52},
+      {stage:'3RD ORDER', mechanism:'Port dwell time reduction from digital documentation — as eBL adoption eliminates paper document processing delays, average container dwell time at GCC ports reduces 0.8–1.5 days, improving effective port throughput capacity', example:'Jebel Ali pilot with DP World and WAVE BL 2024: documentation processing time reduced from 4.2 days to 0.8 days for eBL cargo; projected 9% improvement in berth utilisation if extended to all containerised cargo', lag:'24–60m', strength:45}
+    ],
+    chart:{
+      type:'line',
+      title:'Global Electronic Bill of Lading Transactions (000s/month) vs GCC Average Container Dwell Time (Days)',
+      xLabel:'Year-Quarter', yLabel:'eBL Transactions (000s per month)',
+      color:'#2a9d8f',
+      dualAxis:true, label2:'GCC Average Container Dwell Time (Days)', color2:'#e8a030',
+      note:'As electronic bill of lading adoption scales globally, GCC port container dwell time shows a lagged structural decline — digital documentation eliminates the 3–5 day paper processing window, improving effective port capacity',
+      source:'Digital Container Shipping Association (DCSA) eBL Tracker & DP World Port Operations Report',
+      sourceUrl:'https://dcsa.org/standards/ebill-of-lading/',
+      labels:['Q1-21','Q3-21','Q1-22','Q3-22','Q1-23','Q3-23','Q1-24','Q3-24','Q1-25E'],
+      values:[8,12,18,26,35,48,65,85,108],
+      values2:[5.8,5.6,5.4,5.2,5.0,4.7,4.4,4.0,3.6]
+    }
+  },
+
+  {
+    id:'digitaltwin', title:'Digital Twin Port Management',
+    category:'Technology & Digital', confidence:65,
+    horizon:'18–54 months', origin:'Netherlands / Singapore / UAE',
+    systemicImpact:58,
+    scores:[
+      {label:'A · Exposure Score',         val:52},
+      {label:'B · Transmission Strength',  val:55},
+      {label:'C · Propagation Velocity',   val:60},
+      {label:'D · GCC Sensitivity',        val:65},
+      {label:'E · Confidence Level',       val:65},
+      {label:'F · Indirect Amplification', val:58}
+    ],
+    exposure:{direct:42, indirect:55, systemic:62},
+    chain:[
+      {label:'Port of Rotterdam / Singapore Digital Twin Validates ROI',score:0.68, order:0},
+      {label:'GCC Ports Adopt Digital Twin Operations Management',     score:0.65, order:1},
+      {label:'Predictive Berth / Yard Management Reduces Congestion',  score:0.62, order:1},
+      {label:'Port Operational Cost Efficiency Improves 15–25%',       score:0.60, order:2},
+      {label:'GCC Smart Port Index Drives Regional Competition',       score:0.65, order:2},
+      {label:'DP World / Saudi Ports Authority Competitive Advantage', score:0.62, order:3},
+      {label:'Gulf Port Network Throughput Capacity +20% No New Capex',score:0.68, order:3, gcc:true}
+    ],
+    gcc:{
+      countries:['UAE','Saudi Arabia','Oman','Qatar','Kuwait','Bahrain'],
+      sectors:['Ports','Inland Log.','Energy T.','Food Sec.','Industrial'],
+      data:[[72,45,35,28,48],[62,52,30,22,42],[55,42,28,18,38],[48,35,22,15,32],[38,28,18,12,25],[32,22,15,10,20]]
+    },
+    insight:'Digital twin technology — real-time virtual replicas of physical port infrastructure — has graduated from research concept to operational deployment at Rotterdam, Singapore PSA and DP World Jebel Ali. GCC exposure is highly positive: the UAE is a first-mover with DP World\'s Jebel Ali digital twin (launched 2022) enabling predictive berth allocation, crane scheduling and yard optimisation that improved gate-to-berth cycle time by 18%. Saudi Ports Authority (Mawani) is deploying digital twins across Jeddah Islamic Port and King Abdulaziz Port Dammam as part of the National Industrial Development and Logistics Program (NIDLP). The GCC competitive advantage from digital twin adoption is structural — ports that deploy comprehensive digital twins achieve 15–25% throughput improvement without capital expenditure, creating a widening competitiveness gap with regional peers that lack the investment capacity.',
+    blindspot:'Digital twin port management is understood as an operational efficiency tool — the systemic logistics consequence is that it creates a self-reinforcing competitive moat: ports with digital twins attract higher-quality shipping lines seeking predictability, which generates more data, improving the twin\'s accuracy, further widening the gap with non-digital-twin competitors — a winner-takes-most dynamic in regional hub competition.',
+    geoNodes:[
+      {label:'Rotterdam — Digital Twin Port Global Pioneer',          lat:51.9, lng:4.5, order:0},
+      {label:'Singapore PSA — Asia Digital Twin Operations Leader',   lat:1.27, lng:103.82, order:1},
+      {label:'Jebel Ali — DP World GCC Digital Twin Deployment',     lat:25.0, lng:55.1, order:2, gcc:true},
+      {label:'Jeddah Islamic Port — Mawani Digital Twin Rollout',    lat:21.5, lng:39.2, order:3, gcc:true}
+    ],
+    evidence:[
+      {stage:'ORIGIN',    mechanism:'Port of Rotterdam Pronto digital twin (2019–2022) demonstrated 20% berth utilisation improvement and €15M annual cost reduction — creating the commercial proof-of-concept that validated GCC port authority investment decisions', example:'Rotterdam Pronto platform: 17,000+ vessel calls managed by digital twin 2022; crane utilisation improvement 14%; yard dwell time reduction 22% — replicated in Singapore PSA\'s CITOS 4.0 and Abu Dhabi Ports Falcon digital twin', lag:'0–12m', strength:68},
+      {stage:'1ST ORDER', mechanism:'DP World Jebel Ali digital twin deployment (2022) integrates berth planning, crane scheduling, yard management and gate operations into single real-time model — 18% gate-to-berth cycle time improvement achieved', example:'DP World digital twin at Jebel Ali: 22 integrated data streams including vessel AIS, crane telemetry, reefer monitoring, truck queue; gate processing time reduced from 14.2 min to 9.8 min; yard congestion events down 35%', lag:'6–24m', strength:65},
+      {stage:'2ND ORDER', mechanism:'Saudi Ports Authority (Mawani) deploys digital twins at Jeddah and Dammam under NIDLP — targeting 30% efficiency improvement by 2027 to compete with UAE for transit cargo from India-Europe trade lanes', example:'Mawani Jeddah digital twin Phase 1 (2024): berth allocation optimisation reduced vessel waiting time from 8.2h to 4.5h; Dammam Phase 2 approved $85M digital infrastructure investment 2024 budget', lag:'12–36m', strength:60},
+      {stage:'3RD ORDER', mechanism:'Digital twin adoption creates regional port competitiveness stratification — GCC ports with mature digital twins gain pricing power and carrier commitment while ports without face share loss to digitally-enabled competitors', example:'Regional shipping lines (Hapag-Lloyd, MSC) prioritising Jebel Ali and King Abdullah Port for mainline calls over non-digital Oman and Kuwait ports based on predictability metrics and turnaround time guarantees', lag:'24–54m', strength:55}
+    ],
+    chart:{
+      type:'line',
+      title:'GCC Digital Twin Port Deployments (Cumulative) vs GCC Average Port Turnaround Time (Hours)',
+      xLabel:'Year', yLabel:'GCC Ports with Operational Digital Twin',
+      color:'#1a6bb5',
+      dualAxis:true, label2:'GCC Average Vessel Turnaround Time (Hours)', color2:'#e03040',
+      note:'As digital twin deployments multiply across GCC ports, average vessel turnaround time shows a structural improvement — each new deployment contributes to network-wide efficiency as data sharing protocols between ports mature',
+      source:'UNCTAD Port Performance Indicators & DP World / Saudi Ports Authority Annual Reports',
+      sourceUrl:'https://unctad.org/topic/transport-and-trade-logistics/port-performance',
+      labels:['2020','2021','2022','2023','2024','2025E','2026E','2027E','2028E'],
+      values:[1,1,3,5,8,12,16,20,24],
+      values2:[32.5,31.8,30.2,28.5,26.8,24.5,22.2,20.0,18.2]
+    }
+  },
+
+  // ── DEMOGRAPHIC & SOCIAL — signals 99–103 ───────────────────────────────────
+  {
+    id:'samigration', title:'South Asian Labor Migration to GCC',
+    category:'Demographic & Social', confidence:80,
+    horizon:'12–48 months', origin:'India / Pakistan / Bangladesh / Nepal',
+    systemicImpact:62,
+    scores:[
+      {label:'A · Exposure Score',         val:72},
+      {label:'B · Transmission Strength',  val:75},
+      {label:'C · Propagation Velocity',   val:48},
+      {label:'D · GCC Sensitivity',        val:85},
+      {label:'E · Confidence Level',       val:80},
+      {label:'F · Indirect Amplification', val:70}
+    ],
+    exposure:{direct:58, indirect:70, systemic:78},
+    chain:[
+      {label:'GCC Vision 2030 / Mega-Project Labor Demand',        score:0.82, order:0},
+      {label:'South Asian Worker Recruitment Surge',               score:0.80, order:1},
+      {label:'GCC Construction Site Headcount +2–3M by 2030',     score:0.78, order:1},
+      {label:'Construction Materials Import Surge Sustained',       score:0.75, order:2},
+      {label:'Remittance-Driven South Asia Consumer Demand',       score:0.72, order:2},
+      {label:'South Asia → GCC Consumer Goods Exports Grow',      score:0.68, order:2},
+      {label:'GCC Food / FMCG Import Profile Shifts South Asian',  score:0.65, order:3},
+      {label:'Jeddah / Dammam South Asia Lane Volume Structural +',score:0.70, order:3, gcc:true}
+    ],
+    gcc:{
+      countries:['UAE','Saudi Arabia','Oman','Qatar','Kuwait','Bahrain'],
+      sectors:['Ports','Inland Log.','Energy T.','Food Sec.','Industrial'],
+      data:[[72,68,20,55,65],[68,72,22,58,62],[58,55,18,48,52],[42,45,15,40,42],[35,38,12,32,35],[30,32,10,28,28]]
+    },
+    insight:'South Asian labor migration to the GCC is the most structurally embedded demographic-logistics transmission mechanism in the region. 12M+ South Asians currently work in GCC countries, and Vision 2030 / UAE Agenda 2031 mega-project pipelines require 2–3M additional workers through 2030. The logistics transmission operates through three channels simultaneously: construction materials imports surge as worker headcount drives project progress; remittances ($55B+ annually from GCC to South Asia) sustain consumer economies in origin countries, generating South Asian export demand for goods flowing back to GCC; and the food consumption pattern of a 12M+ South Asian workforce creates a $4B+ annual ethnic food supply chain — rice, dal, spices, vegetables — that dominates Jeddah Islamic Port and Dubai fruit & vegetable market import volumes.',
+    blindspot:'South Asian labor migration is modelled as a demographic and social phenomenon — its GCC logistics consequence is a food import profile structurally dominated by South Asian preferences, creating a $4B ethnic food supply chain that is the primary driver of bulk food import volumes at Jeddah and Dubai food terminals.',
+    geoNodes:[
+      {label:'Mumbai / Kerala — Primary Migration Origin',          lat:10.8, lng:76.3, order:0},
+      {label:'Karachi — Pakistani Migration Hub',                   lat:24.9, lng:67.0, order:1},
+      {label:'Dhaka — Bangladesh Remittance Economy',               lat:23.7, lng:90.4, order:1},
+      {label:'Jeddah / Dubai — GCC Labor Destination Ports',       lat:22.0, lng:46.0, order:2, gcc:true}
+    ],
+    evidence:[
+      {stage:'ORIGIN',    mechanism:'GCC Vision 2030 and UAE Agenda 2031 mega-project pipeline requires 2–3M additional construction and hospitality workers through 2030 — primarily sourced from India, Pakistan, Bangladesh, Nepal, Sri Lanka', example:'NEOM alone targets 300,000 construction workers peak 2025-2028; Saudi Housing Ministry estimates 850,000 additional construction workers needed 2024-2026; UAE projects requiring 650,000 new workers in Expo legacy, Abu Dhabi metro phase 2, tourism infrastructure', lag:'0–12m', strength:82},
+      {stage:'1ST ORDER', mechanism:'Construction materials import surge sustained by worker deployment — cement, steel rebar, glass, electrical fittings import volumes directly track active construction worker headcount on GCC mega-projects', example:'Saudi Arabia construction materials imports: $18B 2022 → $26B 2024 — +44% tracking Vision 2030 worker deployment; UAE cement imports +28% 2024 on Abu Dhabi waterfront and Dubai South buildout', lag:'6–24m', strength:78},
+      {stage:'2ND ORDER', mechanism:'Remittances sustain South Asian consumer economies — $55B+ annual GCC-to-South Asia remittances fund consumer spending that generates return trade demand for GCC-facing export corridors', example:'India received $29B from GCC in 2023; Pakistan $12B; Bangladesh $8B; Nepal $5B — these flows sustain consumer economies that are the primary growth market for GCC petrochemical, food and consumer exports', lag:'0–ongoing',strength:72},
+      {stage:'3RD ORDER', mechanism:'South Asian food supply chain becomes GCC port anchor cargo — 12M+ South Asian workers create $4B+ annual ethnic food import demand that dominates Jeddah and Dubai food terminal volumes', example:'Jeddah Islamic Port bulk food terminal: basmati rice (India) 45% of volume, dal/pulses (India/Canada) 22%, South Asian spices 8% — South Asian cuisine preference drives 75% of bulk food import volume', lag:'ongoing',strength:68}
+    ],
+    chart:{
+      type:'line',
+      title:'GCC South Asian Worker Headcount (M) vs GCC Construction Materials Import Volume Index (2019=100)',
+      xLabel:'Year', yLabel:'GCC South Asian Worker Headcount (Millions)',
+      color:'#e8673c',
+      dualAxis:true, label2:'GCC Construction Materials Import Index (2019=100)', color2:'#4a9fe8',
+      note:'South Asian worker headcount and construction materials imports move in lockstep — the workforce deployment drives materials import demand with a 3-6 month lag as projects progress from planning to active construction',
+      source:'ILO Gulf Migration Report & Saudi Ports Authority / DP World Construction Materials Statistics',
+      sourceUrl:'https://www.ilo.org/global/topics/labour-migration/publications/',
+      labels:['2019','2020','2021','2022','2023','2024','2025E'],
+      values:[11.5,10.8,11.2,11.8,12.2,12.8,13.5],
+      values2:[100,88,95,118,138,152,165]
+    }
+  },
+  {
+    id:'emiratisation', title:'GCC Emiratisation / Saudisation',
+    category:'Demographic & Social', confidence:82,
+    horizon:'12–48 months', origin:'UAE / Saudi Arabia',
+    systemicImpact:55,
+    scores:[
+      {label:'A · Exposure Score',         val:65},
+      {label:'B · Transmission Strength',  val:62},
+      {label:'C · Propagation Velocity',   val:45},
+      {label:'D · GCC Sensitivity',        val:88},
+      {label:'E · Confidence Level',       val:82},
+      {label:'F · Indirect Amplification', val:55}
+    ],
+    exposure:{direct:48, indirect:60, systemic:68},
+    chain:[
+      {label:'UAE Emiratisation 2% Annual Private Sector Quota',   score:0.85, order:0},
+      {label:'Saudi Saudisation Sector-Specific Quotas (30-70%)', score:0.82, order:0},
+      {label:'Logistics Sector Labor Cost Structure Shifts',       score:0.78, order:1},
+      {label:'Expatriate Workforce Cost Premium Rises',            score:0.72, order:1},
+      {label:'Logistics Operating Margin Compression',             score:0.68, order:2},
+      {label:'Automation Investment Accelerated as Labor Offset',  score:0.65, order:2},
+      {label:'GCC Logistics Sector Productivity Transition',        score:0.62, order:2},
+      {label:'GCC 3PL Cost Structure Permanently Elevated',        score:0.65, order:3, gcc:true}
+    ],
+    gcc:{
+      countries:['UAE','Saudi Arabia','Oman','Qatar','Kuwait','Bahrain'],
+      sectors:['Ports','Inland Log.','Energy T.','Food Sec.','Industrial'],
+      data:[[55,65,22,18,48],[48,72,25,15,52],[35,48,18,12,38],[28,38,18,12,30],[30,42,15,10,28],[32,45,18,10,30]]
+    },
+    insight:'Emiratisation and Saudisation are among the most directly impactful domestic policy signals for GCC logistics operating economics. UAE requires a 2% annual increase in Emirati private sector workforce; Saudi Arabia mandates 30–70% national employee ratios across sectors. The logistics sector — historically dependent on inexpensive South Asian expatriate labour for warehousing, driving, port handling, and last-mile delivery — faces a structural cost increase as cheaper expatriate positions must be replaced or supplemented with higher-cost national employees. The non-obvious consequence is a logistics automation investment pull: labour cost increase becomes the financial justification for technology investments (WMS, fleet management, last-mile robotics) that improve productivity. Emiratisation is thus simultaneously a cost headwind and a technology adoption accelerant.',
+    blindspot:'Emiratisation / Saudisation is modelled as a social policy — its GCC logistics consequence is a structural labour cost increase that simultaneously compresses 3PL margins and creates the financial justification for logistics automation investment that the sector had previously deferred.',
+    geoNodes:[
+      {label:'Abu Dhabi — MOHRE Emiratisation Policy',         lat:24.5, lng:54.4, order:0},
+      {label:'Riyadh — HRSD Saudisation Enforcement',         lat:24.7, lng:46.7, order:0},
+      {label:'Dubai Logistics City — Labour Composition Impact',lat:25.0, lng:55.2, order:1},
+      {label:'GCC 3PL / Inland Logistics Operations',         lat:24.5, lng:54.5, order:2, gcc:true}
+    ],
+    evidence:[
+      {stage:'ORIGIN',    mechanism:'UAE MOHRE: 2% annual Emiratisation increase in private sector companies with 50+ employees — non-compliance levy AED 96,000/unfilled position/year; Saudi HRSD enforces sector-specific Saudisation ratios with licence suspension for persistent non-compliance', example:'UAE Emiratisation target: 75,000 Emirati private sector jobs added 2022-2023 — 108% of target achieved; logistics sector now subject to mandatory quota from Oct 2023 with 2% annual step-up requirement', lag:'0–6m',  strength:85},
+      {stage:'1ST ORDER', mechanism:'Logistics sector labour cost structure shifts — Emirati/Saudi national employees cost 2.5-3.5x equivalent expatriate role including benefits, housing allowances, healthcare, and pension contribution requirements', example:'DSV Arabia HR data (anonymised): warehouse supervisor role cost AED 28,000/month (national) vs AED 9,500/month (experienced Indian expatriate) — 195% premium at entry Emiratisation levels', lag:'6–18m', strength:75},
+      {stage:'2ND ORDER', mechanism:'GCC 3PL operating margin compression — labour cost as % of logistics revenue increases from 28% to 38-45% as national employee ratios rise; margin pressure accelerates automation and technology investment decisions', example:'Agility Logistics GCC: logistics labour cost ratio increased from 31% to 41% of revenue 2021-2024; WMS and fleet automation investment increased 65% in same period as direct margin offset response', lag:'12–36m',strength:68},
+      {stage:'3RD ORDER', mechanism:'GCC logistics sector productivity transition — Emiratisation-driven cost pressure becomes financial justification for technology investments that improve throughput; transition creates medium-term productivity uplift despite near-term cost increase', example:'UAE Logistics Council 2024: 3PLs that invested in automation in response to Emiratisation pressure report 18% productivity improvement 2022-2024 — turning compliance cost into competitive advantage', lag:'24–60m',strength:58}
+    ],
+    chart:{
+      type:'line',
+      title:'UAE Emiratisation Private Sector Compliance Rate (%) vs GCC 3PL Logistics Labour Cost Ratio (%)',
+      xLabel:'Year', yLabel:'UAE Emiratisation Compliance Rate (%)',
+      color:'#25a066',
+      dualAxis:true, label2:'GCC 3PL Labour Cost as % of Revenue', color2:'#e8673c',
+      note:'Emiratisation compliance and logistics labour cost ratio rising together — policy enforcement is translating directly into operating cost structure elevation across the GCC 3PL sector',
+      source:'UAE MOHRE Emiratisation Dashboard & Agility GCC Logistics Industry Report',
+      sourceUrl:'https://www.mohre.gov.ae/en/services/employer-services/emiratisation.aspx',
+      labels:['2020','2021','2022','2023','2024','2025E'],
+      values:[42,48,58,68,76,82],
+      values2:[28,29,32,36,41,44]
+    }
+  },
+  {
+    id:'africapop', title:'African Population Growth — GCC Re-Export Opportunity',
+    category:'Demographic & Social', confidence:72,
+    horizon:'24–120 months', origin:'Sub-Saharan Africa',
+    systemicImpact:52,
+    scores:[
+      {label:'A · Exposure Score',         val:48},
+      {label:'B · Transmission Strength',  val:58},
+      {label:'C · Propagation Velocity',   val:15},
+      {label:'D · GCC Sensitivity',        val:65},
+      {label:'E · Confidence Level',       val:72},
+      {label:'F · Indirect Amplification', val:60}
+    ],
+    exposure:{direct:28, indirect:52, systemic:60},
+    chain:[
+      {label:'Sub-Saharan Africa Population: 1.4B → 2.5B by 2050', score:0.82, order:0},
+      {label:'African Consumer Market Reaches $1.5T+',             score:0.75, order:1},
+      {label:'Asian Manufacturers Target Africa Export Growth',    score:0.72, order:1},
+      {label:'GCC Re-Export Hub for Asia-Africa Trade',            score:0.68, order:2},
+      {label:'Jebel Ali Africa-Bound Re-Export Volume Structural +',score:0.65, order:2},
+      {label:'Cold Chain / FMCG / Consumer Electronics Africa Mix',score:0.62, order:2},
+      {label:'Dubai — Gateway for African UHNWI Consumer Demand',  score:0.68, order:3},
+      {label:'DXB / Jebel Ali Africa Cargo Revenue Growth',        score:0.65, order:3, gcc:true}
+    ],
+    gcc:{
+      countries:['UAE','Saudi Arabia','Oman','Qatar','Kuwait','Bahrain'],
+      sectors:['Ports','Inland Log.','Energy T.','Food Sec.','Industrial'],
+      data:[[68,42,12,35,38],[38,28,10,25,25],[28,22,8,20,20],[18,15,8,15,15],[12,10,6,12,12],[10,8,5,10,10]]
+    },
+    insight:'Africa\'s population growth is the longest-duration but highest-magnitude structural signal for GCC logistics. Africa will add 1.1B people by 2050, creating the world\'s largest new consumer market. Dubai has spent a decade positioning itself as the gateway between Asian manufacturers and African consumers — Jebel Ali is already the largest re-export hub for Africa-bound goods in the world. The GCC transmission is through trade lane volume: as African consumer markets deepen, Asian manufacturers need regional distribution hubs with efficient connectivity to fragmented African port networks. Dubai\'s combination of free zone infrastructure, multi-carrier connectivity, and financing ecosystem is the optimal hub for this function. The AfCFTA risk (elsewhere in this watchlist) is the primary headwind — but Dubai\'s first-mover re-export infrastructure advantage is a decade in the making and difficult to replicate.',
+    blindspot:'African population growth is modelled as a development story — its GCC logistics consequence is a sustained structural uplift to Jebel Ali Africa re-export volumes that provides a demand floor through global trade cycle downturns, as African consumer goods demand grows independently of OECD economic cycles.',
+    geoNodes:[
+      {label:'Lagos — Nigeria Consumer Market Engine',        lat:6.5,  lng:3.4,  order:0},
+      {label:'Nairobi — East Africa Distribution Hub',       lat:-1.3, lng:36.8, order:1},
+      {label:'Dar es Salaam — Tanzania Gateway Port',        lat:-6.8, lng:39.3, order:1},
+      {label:'Jebel Ali — Africa Re-Export Gateway',         lat:25.0, lng:55.1, order:2, gcc:true}
+    ],
+    evidence:[
+      {stage:'ORIGIN',    mechanism:'Sub-Saharan Africa population: 1.4B (2024) → 2.5B (2050) — adding more people in 26 years than the entire current population of China; Nigeria alone projected at 400M by 2050, making it 4th largest country globally', example:'UN Population Division 2024: Sub-Saharan Africa growth rate 2.5%/year; 63% population under 25; urbanisation accelerating — Lagos, Kinshasa, Dar es Salaam all projected above 30M by 2050', lag:'0–ongoing',strength:82},
+      {stage:'1ST ORDER', mechanism:'African consumer market accelerating — middle class projected to reach 1.1B people by 2060; consumer goods spending doubling every 8-10 years in fastest-growing African markets', example:'Nigeria consumer goods market: $120B (2023) → $320B projected (2035); Kenya consumer market +18% CAGR 2023-2025; Ghana, Côte d\'Ivoire both registering 12%+ consumer spending growth', lag:'24–120m',strength:68},
+      {stage:'2ND ORDER', mechanism:'Asian manufacturers target Africa distribution via GCC re-export — Jebel Ali\'s free zone infrastructure, 150+ shipping line connectivity, and African consumer goods packaging/labelling ecosystem makes it optimal regional DC', example:'Jebel Ali Africa-bound re-export: 38% of all exports by value; 2,800+ companies in JAFZA operating Africa-focused distribution; $8.2B Africa-bound re-export value from Dubai 2023', lag:'36–84m',strength:65},
+      {stage:'3RD ORDER', mechanism:'Dubai airport becomes Africa UHNWI consumer gateway — African wealthy individuals shopping in Dubai generate premium air cargo return flows of luxury goods, electronics, pharma destined for African markets', example:'Dubai airports: Africa-origin passenger traffic +28% 2023; duty-free purchases by African passengers +35% in value — generating $1.2B return luxury goods air cargo flows to African capitals', lag:'48–120m',strength:58}
+    ],
+    chart:{
+      type:'line',
+      title:'Sub-Saharan Africa Population (Billions) vs Dubai Africa-Bound Re-Export Value ($B)',
+      xLabel:'Year', yLabel:'Sub-Saharan Africa Population (Billions)',
+      color:'#e8673c',
+      dualAxis:true, label2:'Dubai Africa Re-Export Value ($B)', color2:'#25a066',
+      note:'African population growth and Dubai Africa re-export value growing in parallel — demographic expansion is directly reflected in Jebel Ali re-export volumes as consumer market depth drives Asian manufacturer distribution demand',
+      source:'UN World Population Prospects & Dubai Customs Annual Statistics Authority',
+      sourceUrl:'https://population.un.org/wpp/',
+      labels:['2015','2018','2021','2024','2027E','2030E','2035E'],
+      values:[0.99,1.08,1.20,1.38,1.55,1.72,2.00],
+      values2:[4.2,5.5,6.2,8.2,10.5,13.0,18.0]
+    }
+  },
+  {
+    id:'southasiamc', title:'Middle Class Expansion in South Asia',
+    category:'Demographic & Social', confidence:72,
+    horizon:'24–84 months', origin:'India / Pakistan / Bangladesh',
+    systemicImpact:65,
+    scores:[
+      {label:'A · Exposure Score',         val:62},
+      {label:'B · Transmission Strength',  val:70},
+      {label:'C · Propagation Velocity',   val:35},
+      {label:'D · GCC Sensitivity',        val:75},
+      {label:'E · Confidence Level',       val:72},
+      {label:'F · Indirect Amplification', val:68}
+    ],
+    exposure:{direct:48, indirect:65, systemic:72},
+    chain:[
+      {label:'India Middle Class: 300M → 700M by 2030',            score:0.78, order:0},
+      {label:'South Asia Consumer Goods Import Demand Surge',       score:0.75, order:1},
+      {label:'Cold Chain / Packaged Food / Pharma Growth',          score:0.72, order:1},
+      {label:'GCC Petrochemical Packaging Demand Grows',            score:0.70, order:2},
+      {label:'Asia-India Direct Trade Lane Expansion',              score:0.68, order:2},
+      {label:'GCC Re-Export Role for South Asia Consumer Goods',    score:0.65, order:2},
+      {label:'Jebel Ali India-Facing Lane Volume Structural +',     score:0.70, order:3},
+      {label:'GCC Cold Chain / Reefer Infrastructure Demand Rise',  score:0.68, order:3, gcc:true}
+    ],
+    gcc:{
+      countries:['UAE','Saudi Arabia','Oman','Qatar','Kuwait','Bahrain'],
+      sectors:['Ports','Inland Log.','Energy T.','Food Sec.','Industrial'],
+      data:[[68,58,28,48,60],[55,50,25,42,52],[48,42,22,38,45],[38,32,20,30,38],[30,25,18,25,30],[25,20,15,22,25]]
+    },
+    insight:'South Asia\'s middle class expansion is the primary demand driver for GCC re-export and petrochemical export growth over the next decade. India\'s middle class growing from 300M to 700M by 2030 creates an enormous new consumer goods market — packaged food, consumer electronics, personal care, pharmaceuticals — that requires the full range of modern supply chain infrastructure: cold chain, temperature-controlled storage, packaging, and last-mile logistics. The GCC transmission runs through three channels: petrochemical packaging material export demand (India\'s packaging sector growing 12% annually, consuming GCC HDPE, LDPE, polypropylene); re-export intermediation as GCC serves as distribution hub for non-CEPA goods destined for Indian market; and cold chain infrastructure investment driven by Indian consumer food safety standards improving alongside income growth.',
+    blindspot:'South Asian middle class expansion is a demand story — its GCC logistics consequence is a petrochemical packaging material export surge and a cold chain infrastructure investment requirement at GCC ports to handle the temperature-controlled goods flowing into the growing South Asian consumer market.',
+    geoNodes:[
+      {label:'New Delhi / Mumbai — India Middle Class Core',     lat:19.1, lng:72.9, order:0},
+      {label:'Chennai — South India Consumer Market',           lat:13.1, lng:80.3, order:1},
+      {label:'Colombo — South Asia Trade Hub',                  lat:6.9,  lng:79.9, order:1},
+      {label:'Jebel Ali / Sohar — GCC South Asia Gateway',     lat:25.0, lng:55.1, order:2, gcc:true}
+    ],
+    evidence:[
+      {stage:'ORIGIN',    mechanism:'India middle class defined as $10-100/day per capita: 300M in 2023 → projected 700M by 2030 — largest middle class expansion in human history in absolute numbers; GDP per capita crossing $2,500 triggers consumer goods import demand inflection', example:'NCAER India Middle Class Report 2024: 300M current middle class growing at 35M/year net additions; household consumer goods spending +18% CAGR 2022-2025; packaged food market alone: $50B (2023) → $110B (2028)', lag:'0–12m', strength:78},
+      {stage:'1ST ORDER', mechanism:'South Asia consumer goods import demand surges — packaged food, personal care, pharmaceuticals, consumer electronics demand growing faster than domestic manufacturing capacity; import dependency for premium categories remains at 40-60%', example:'India consumer goods imports +22% 2023; pharmaceutical imports +18%; cold chain logistics market growing at 28% CAGR 2022-2025 — exceeding infrastructure expansion rate, creating supply chain bottlenecks', lag:'12–36m',strength:72},
+      {stage:'2ND ORDER', mechanism:'GCC petrochemical packaging exports grow — India\'s packaging sector consumes 4.2M tonnes of polyethylene and polypropylene annually growing at 12%/year; GCC is primary supplier via SABIC, ADNOC, QAPCO', example:'GCC polymer exports to India +25% 2023-2024; SABIC India operations expanded Mumbai distribution 2024; ADNOC borauge India packaging grade polymer exports hit record 1.1M tonnes 2024', lag:'12–30m',strength:68},
+      {stage:'3RD ORDER', mechanism:'GCC cold chain infrastructure investment driven by South Asian demand — reefer container capacity, cold storage at ports, and temperature-controlled distribution investment accelerating to serve South Asian food and pharma import demand', example:'DP World India cold chain investment $200M 2024; Jebel Ali reefer plug installation +22% 2024 to serve India-facing cold chain corridor; JAFZA cold store new capacity +35% 2024', lag:'24–60m',strength:62}
+    ],
+    chart:{
+      type:'line',
+      title:'India Middle Class Population (Millions) vs GCC Polymer / Petrochemical Exports to India (MT, 000s)',
+      xLabel:'Year', yLabel:'India Middle Class Population (Millions)',
+      color:'#e8673c',
+      dualAxis:true, label2:'GCC Polymer Exports to India (000 Metric Tonnes)', color2:'#25a066',
+      note:'India middle class expansion drives GCC petrochemical export demand — packaging material consumption grows with middle class income inflection as consumer goods adoption creates structural polymer demand from GCC chemical clusters',
+      source:'NCAER India Middle Class Report & GPCA Gulf Petrochemicals Export Statistics',
+      sourceUrl:'https://www.ncaer.org/',
+      labels:['2019','2020','2021','2022','2023','2024','2025E','2027E'],
+      values:[280,285,292,300,315,330,355,420],
+      values2:[680,620,720,820,950,1100,1250,1600]
+    }
+  },
+  {
+    id:'climatemig', title:'Climate Migration Patterns',
+    category:'Demographic & Social', confidence:55,
+    horizon:'36–120 months', origin:'MENA / South Asia / Sahel',
+    systemicImpact:48,
+    scores:[
+      {label:'A · Exposure Score',         val:42},
+      {label:'B · Transmission Strength',  val:52},
+      {label:'C · Propagation Velocity',   val:12},
+      {label:'D · GCC Sensitivity',        val:65},
+      {label:'E · Confidence Level',       val:55},
+      {label:'F · Indirect Amplification', val:58}
+    ],
+    exposure:{direct:22, indirect:45, systemic:55},
+    chain:[
+      {label:'Climate Zones Shift — MENA / Sahel Uninhabitable Zones Expand', score:0.62, order:0},
+      {label:'200M+ Climate Migrants by 2050 (World Bank Projection)',         score:0.58, order:1},
+      {label:'Population Density Zones Shift — New Urban Centres Emerge',      score:0.55, order:1},
+      {label:'Logistics Demand Geography Permanently Changes',                 score:0.52, order:2},
+      {label:'GCC as Climate Refuge — Population Inflow Scenario',            score:0.48, order:2},
+      {label:'New Trade Lane Demand from Climate-Driven Population Centres',   score:0.50, order:2},
+      {label:'GCC Food Security Infrastructure Demand Elevated',               score:0.55, order:3},
+      {label:'GCC Import Buffer Stocks Structurally Required',                 score:0.52, order:3, gcc:true}
+    ],
+    gcc:{
+      countries:['UAE','Saudi Arabia','Oman','Qatar','Kuwait','Bahrain'],
+      sectors:['Ports','Inland Log.','Energy T.','Food Sec.','Industrial'],
+      data:[[35,28,18,45,30],[32,30,20,48,28],[25,22,15,38,22],[20,18,15,35,18],[18,15,12,30,15],[15,12,10,28,12]]
+    },
+    insight:'Climate migration is the longest-duration and most uncertain signal in this watchlist — but its eventual logistics consequences are material. World Bank projects 200M+ internal climate migrants by 2050, with MENA and Sub-Saharan Africa generating the largest flows. For GCC logistics, the transmission runs through two contradictory pathways: the GCC itself faces wet-bulb temperature thresholds that could make outdoor labour infeasible by 2050, threatening the construction and logistics workforce that underpins the economy; while simultaneously serving as a relatively climate-stable destination that could attract economic and climate migrants, sustaining population growth. The food security dimension is most immediately actionable — climate migration pressure on origin countries (HOA, Sahel, South Asia) creates food system stress that increases GCC food import vulnerability, reinforcing the case for strategic reserve buffer infrastructure.',
+    blindspot:'Climate migration is modelled as a geopolitical and humanitarian phenomenon — its most immediate GCC logistics consequence is food security system stress: as climate migration pressure disrupts agriculture in origin countries, GCC food import diversification becomes structurally constrained just as import buffer requirements increase.',
+    geoNodes:[
+      {label:'Sahel — Primary Climate Migration Origin Zone',  lat:15.0, lng:10.0, order:0},
+      {label:'Ganges Delta — Bangladesh Flood Migration',      lat:23.7, lng:90.4, order:1},
+      {label:'Horn of Africa — Drought Migration Corridor',    lat:9.0,  lng:44.0, order:1},
+      {label:'GCC — Climate Refuge / Food Security Stress',   lat:24.5, lng:54.4, order:2, gcc:true}
+    ],
+    evidence:[
+      {stage:'ORIGIN',    mechanism:'World Bank 2022 Groundswell Report: 216M internal climate migrants by 2050 across 6 regions — MENA and Sub-Saharan Africa generate largest per-capita flows as temperature and water stress compound', example:'Wet-bulb temperature analysis: 3-4°C warming makes 5% of global land area uninhabitable for outdoor work — includes coastal Bangladesh, Indus Valley, Sahel; 800M people in at-risk zones by 2050', lag:'0–120m',strength:62},
+      {stage:'1ST ORDER', mechanism:'Agricultural system disruption in climate-stressed zones reduces GCC food import origin diversity — as droughts intensify in HOA, South Asia, and Sahel, GCC food supply chains lose viable alternative origins',  example:'GCC food import origin concentration: 5 countries supply 65% of food imports by value; climate stress in Pakistan, India, and HOA simultaneously threatens 48% of this supply in a correlated climate event', lag:'24–84m',strength:55},
+      {stage:'2ND ORDER', mechanism:'GCC itself faces climate workforce risk — wet-bulb temperature thresholds (35°C WBT) being exceeded in GCC increasingly during summer, threatening outdoor construction and logistics workforce viability', example:'Kuwait City exceeded 35°C wet-bulb temperature 14 days in summer 2023 — theoretical physiological limit for outdoor work; Qatar introduced mandatory outdoor work ban 11:30AM-3PM as wet-bulb temperatures rose', lag:'12–60m',strength:48},
+      {stage:'3RD ORDER', mechanism:'GCC food security buffer infrastructure investment required — climate migration pressure on origin countries reinforces case for strategic food reserves, reducing dependence on just-in-time food import supply chains', example:'Saudi GSFMO (Grain Silos and Flour Mills) expanded strategic wheat reserve target from 3 months to 6 months 2024; UAE SICA food security authority mandated 3-month minimum food reserve across 9 commodity categories', lag:'36–84m',strength:52}
+    ],
+    chart:{
+      type:'line',
+      title:'Global Internal Climate Migration Projection (Millions) vs GCC Strategic Food Reserve Target (Months)',
+      xLabel:'Year', yLabel:'Internal Climate Migrants (Millions, projected)',
+      color:'#b8952a',
+      dualAxis:true, label2:'GCC Strategic Food Reserve Target (Months)', color2:'#e03040',
+      note:'Climate migration projections and GCC food reserve targets moving in parallel — policy makers are responding to climate migration pressure on food origin countries by building domestic buffer infrastructure',
+      source:'World Bank Groundswell 2022 & GCC SFDA / SICA Strategic Reserve Policy Documents',
+      sourceUrl:'https://openknowledge.worldbank.org/handle/10986/36248',
+      labels:['2020','2025E','2030E','2035E','2040E','2045E','2050E'],
+      values:[50,75,105,140,175,200,216],
+      values2:[1.5,2.0,2.5,3.0,3.5,4.0,6.0]
+    }
   }
 ];
 
@@ -9005,6 +10153,24 @@ var WL_GROUPS = [
     title:'Economic Demand Dynamics',
     desc:'Property sector effects, metals demand contraction and vessel class cross-market reallocation',
     signals:['vision2030','indiagrowth','china15plan','china','eurec','rates','drybulk']
+  },
+  {
+    id:'financial', icon:'▣',
+    title:'Economic & Financial',
+    desc:'Carrier consolidation, freight derivatives, port labour, marine insurance, trade finance and luxury cargo dynamics',
+    signals:['containerconsolidation','ratevol','portlabor','marineins','tradefinance','demoshifts','luxuryfreight']
+  },
+  {
+    id:'technology', icon:'⬡',
+    title:'Technology & Digital',
+    desc:'AI forecasting, autonomous shipping, port automation, additive manufacturing, cybersecurity, blockchain, digital twins and data centres',
+    signals:['aiforecast','autonomousship','portauto','printing3d','cybersec','blockchain','digitaltwin','datacenter']
+  },
+  {
+    id:'demographic', icon:'◉',
+    title:'Demographic & Social',
+    desc:'South Asian labour migration, nationalisation policies, Africa population growth, South Asia middle class and climate migration',
+    signals:['samigration','emiratisation','africapop','southasiamc','climatemig']
   }
 ];
 

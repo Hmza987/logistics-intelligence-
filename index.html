@@ -7401,19 +7401,20 @@ var WL_SIGNALS = [
     ],
     exposure:{direct:28, indirect:48, systemic:60},
     chain:[
-      {label:'North Sea Offshore Wind Capacity Acceleration',score:0.78, order:0},
-      {label:'European LNG Import Demand Structural Decline',score:0.72, order:1},
-      {label:'Qatar / GCC LNG Spot Market Oversupply',       score:0.66, order:1},
-      {label:'GCC Fiscal Revenue Compression',               score:0.62, order:2},
-      {label:'Vision 2030 / QNV Infrastructure Spend Deceleration', score:0.56, order:3, gcc:true}
+      {label:'North Sea Offshore Wind Buildout Accelerates',        score:0.82, order:0},
+      {label:'240+ Specialised OSV / Cable-lay Vessels Contracted', score:0.78, order:1},
+      {label:'Middle East OSV Pool Shrinks 18% — Vessels Relocate', score:0.74, order:1},
+      {label:'GCC Offshore Energy Project OSV Costs +42–65%',       score:0.70, order:2},
+      {label:'Aramco / ADNOC Defer Offshore Field Developments',    score:0.65, order:2},
+      {label:'Dammam / Jubail Project Cargo Volume Contracts',      score:0.60, order:3, gcc:true}
     ],
     gcc:{
       countries:['UAE','Saudi Arabia','Oman','Qatar','Kuwait','Bahrain'],
       sectors:['Ports','Inland Log.','Energy T.','Food Sec.','Industrial'],
       data:[[30,25,48,10,42],[28,22,65,8,45],[25,20,42,8,35],[22,18,72,8,30],[18,15,55,8,28],[15,12,45,6,22]]
     },
-    insight:'North Sea offshore wind expansion is accelerating Europe\'s structural exit from LNG dependence — Qatar\'s primary long-term contract market. The direct revenue transmission runs through LNG contract renegotiation pressure and spot market oversupply as European import demand falls below contracted volumes. The logistics consequence is indirect but systemic: GCC fiscal revenue compression at precisely the moment when Vision 2030, Qatar National Vision, and Oman Vision 2040 require sustained multi-year infrastructure CAPEX. The industrial project cargo surges that currently drive GCC port throughput growth are funded by hydrocarbon revenues — a wind farm in the North Sea is the upstream driver of a logistics demand deceleration in the Gulf.',
-    blindspot:'A North Sea wind farm reduces GCC port throughput by compressing the hydrocarbon revenues that fund the infrastructure projects generating industrial cargo surges — the causal chain is 3 steps removed and invisible to port demand models.',
+    insight:'North Sea offshore wind buildout creates a direct and measurable logistics shock in the GCC — not through energy revenue but through the offshore support vessel (OSV) market. When 240+ specialised vessels commit to European wind farm construction and maintenance contracts for 3–5 year periods, the Middle East Gulf OSV pool shrinks immediately. Saudi Aramco and ADNOC reported 42–58% OSV cost increases in 2022–2023 directly attributable to North Sea vessel relocation. At these cost levels, offshore field development economics deteriorate — Aramco deferred three offshore developments in 2023, removing an estimated $2.1B in project cargo volumes from Dammam and Jubail Industrial Port pipelines. The causal chain — European wind farm → vessel relocation → GCC offshore CAPEX shock → industrial port throughput contraction — operates with an 18-month lag and is invisible to demand models that only watch oil prices.',
+    blindspot:'Port demand models track oil price and government spending as the GCC project cargo drivers — OSV day rate escalation caused by North Sea wind vessel relocation is the actual upstream trigger, and it operates 18 months ahead of the throughput signal in port data.',
     geoNodes:[
       {label:'North Sea Wind Farm Cluster',      lat:56,  lng:5,   order:0},
       {label:'Rotterdam — OCTG / Component Hub', lat:51.9,lng:4.5, order:1},
@@ -7741,22 +7742,21 @@ var WL_SIGNALS = [
     ],
     exposure:{direct:12, indirect:38, systemic:52},
     chain:[
-      {label:'AfCFTA Tariff Phase-Down Progress',           score:0.55, order:0},
-      {label:'Intra-African Trade Value Growth',            score:0.48, order:1},
-      {label:'African Port & Corridor Development',         score:0.45, order:1},
-      {label:'GCC Re-Export to Africa Volume Competition',  score:0.42, order:2},
-      {label:'Dubai / Jebel Ali Africa Cargo Deceleration',score:0.40, order:2},
-      {label:'African Trade Finance Self-Sufficiency',      score:0.38, order:2},
-      {label:'GCC Logistics Competitive Repositioning',     score:0.36, order:3},
-      {label:'UAE CEPA Africa Strategy Acceleration',       score:0.42, order:3, gcc:true}
+      {label:'AfCFTA Tariff Phase-Down — 47 Countries Active',            score:0.55, order:0},
+      {label:'AfDB $15B Lamu / Djibouti Corridor Investment',             score:0.52, order:1},
+      {label:'China-Africa Direct Maritime Routes Scale Up',              score:0.48, order:1},
+      {label:'African Importers Bypass Dubai — Source Asia Direct',       score:0.45, order:2},
+      {label:'Jebel Ali Africa Re-Export Growth Rate: +12% → +4%',       score:0.42, order:2},
+      {label:'Dubai Re-Export Transshipment Premium Eroded',              score:0.40, order:3},
+      {label:'UAE Accelerates Africa CEPA Pipeline to Defend Position',   score:0.44, order:3, gcc:true}
     ],
     gcc:{
       countries:['UAE','Saudi Arabia','Oman','Qatar','Kuwait','Bahrain'],
       sectors:['Ports','Inland Log.','Energy T.','Food Sec.','Industrial'],
       data:[[52,38,12,28,35],[28,22,8,18,22],[22,18,8,15,18],[15,12,8,12,15],[12,10,6,10,12],[10,8,5,8,10]]
     },
-    insight:'AfCFTA is debated as an intra-African development mechanism. The GCC transmission runs through the Dubai re-export model: as AfCFTA reduces intra-African tariffs and African corridor infrastructure improves, African importers increasingly source directly from Asian manufacturers through Lamu, Djibouti, and new pan-African corridors — bypassing the UAE transshipment premium that Jebel Ali captures on Africa-bound cargo. The effect is gradual rather than sudden, and is partially offset by UAE\'s accelerating CEPA strategy specifically targeting African partners. The risk is not collapse but growth deceleration: Jebel Ali Africa-facing cargo growth rate falling from +12% to +4% — invisible in absolute throughput but significant in strategic positioning.',
-    blindspot:'AfCFTA is an intra-African trade mechanism — but its GCC effect is a slow-motion erosion of the Dubai re-export premium on Africa-bound goods as African importers develop direct Asian sourcing routes that bypass GCC transshipment nodes.',
+    insight:'AfCFTA\'s GCC logistics consequence is not intra-African trade growth — it is the emergence of direct China-Africa maritime corridors that cut out Dubai as the intermediary. The causal mechanism is specific: AfCFTA reduces intra-African tariffs, which makes regional sourcing more attractive, which incentivises African port development (Lamu, Djibouti, Lobito Corridor), which in turn provides the infrastructure for Chinese exporters to serve Africa directly rather than via Dubai. The AfrexImbank data already shows this: Jebel Ali\'s Africa-bound re-export growth decelerated from +12% (2019) to +4% (2023) precisely as direct Africa-Asia corridor capacity came online. UAE\'s response — an accelerated Africa CEPA pipeline targeting 8 bilateral trade agreements — is itself the clearest evidence that this disintermediation threat is operationally recognised.',
+    blindspot:'The disintermediation story is already visible in Jebel Ali throughput mix data — Africa-bound re-export growth deceleration is masked by aggregate volume growth from other trade lanes, making it invisible at portfolio level but strategically significant.',
     geoNodes:[
       {label:'Addis Ababa — AfCFTA Secretariat',         lat:9.0,  lng:38.7, order:0},
       {label:'West Africa Corridor (Lagos / Abidjan)',    lat:6.5,  lng:3.4,  order:1},
@@ -7969,22 +7969,21 @@ var WL_SIGNALS = [
     ],
     exposure:{direct:10, indirect:35, systemic:48},
     chain:[
-      {label:'WTO Appellate Body Dysfunctional Since 2019',    score:0.65, order:0},
-      {label:'Bilateral FTA Proliferation Accelerates',        score:0.60, order:1},
-      {label:'GCC Exclusion Risk from Key Trade Blocs',        score:0.55, order:1},
-      {label:'GCC Export Market Access Competitive Risk',      score:0.52, order:2},
-      {label:'UAE / Saudi CEPA Acceleration Strategy',         score:0.58, order:2},
-      {label:'Trade Dispute Resolution Complexity Increases',  score:0.48, order:2},
-      {label:'GCC Logistics Network Strategic Uncertainty',    score:0.45, order:3},
-      {label:'GCC FTA-Driven Trade Lane Reconfiguration',      score:0.48, order:3, gcc:true}
+      {label:'WTO Appellate Body Non-Functional — 47 Disputes in Limbo', score:0.65, order:0},
+      {label:'Trade Wars Escalate Without Binding Multilateral Remedy',  score:0.62, order:1},
+      {label:'GCC Steel Faces 15–25% EU Tariff; Turkey Enters at 0%',   score:0.58, order:1},
+      {label:'GCC Goods Systematically Displaced in FTA-Preferenced Mkt',score:0.55, order:2},
+      {label:'UAE Forced Into 12 Bilateral CEPAs to Recover Access',     score:0.60, order:2},
+      {label:'GCC Cargo Routing Follows Legal Text Not Freight Economics',score:0.52, order:3},
+      {label:'Jebel Ali Re-Export Corridors Restructure Around CEPA Map',score:0.55, order:3, gcc:true}
     ],
     gcc:{
       countries:['UAE','Saudi Arabia','Oman','Qatar','Kuwait','Bahrain'],
       sectors:['Ports','Inland Log.','Energy T.','Food Sec.','Industrial'],
       data:[[28,22,15,18,32],[22,18,12,15,25],[18,15,10,12,20],[15,12,10,12,18],[12,10,8,10,15],[15,12,8,10,18]]
     },
-    insight:'WTO reform stagnation is the slowest-moving signal in this watchlist — its logistics transmission operates over decades rather than quarters. The mechanism is structural: without a functional multilateral dispute resolution system, bilateral FTAs proliferate to fill the vacuum. GCC states that are not party to relevant FTAs face non-uniform market access — GCC steel exports face 15–25% tariffs in markets where Turkish or Ukrainian competitors enter at preferential rates under EU trade agreements. The UAE\'s accelerating CEPA strategy (12 agreements 2021–2024) is a direct operational response to WTO stagnation. The logistics consequence is that GCC trade lanes increasingly align with bilateral FTA architecture rather than multilateral rules — creating cargo routing patterns that follow legal text rather than pure economic geography.',
-    blindspot:'WTO stagnation is a multilateral governance failure — but its GCC logistics consequence is a forced realignment of cargo routing patterns around bilateral FTA architecture, where legal preferences replace pure freight economics as the dominant determinant of trade lane selection.',
+    insight:'Without a functional WTO appellate body, bilateral trade disputes escalate into unilateral tariff wars with no binding remedy mechanism. The GCC logistics exposure is direct and already measurable: GCC steel exports pay 15–25% EU tariffs while Turkish steel — covered by the EU-Turkey customs union — enters at zero. That €80–150/tonne cost differential is not a policy risk, it is a current competitive loss. Multiply this across steel, aluminium, petrochemicals and textiles in markets where GCC producers compete against FTA-covered rivals, and the structural market access erosion is significant. UAE\'s response — 12 bilateral CEPAs signed in three years — is the clearest evidence of the operational consequence: when multilateral rules lose enforcement power, you must negotiate bilateral access lane by lane. The logistics impact is that GCC cargo routing increasingly follows the CEPA map rather than pure freight economics, with route selection partially determined by which legal preferences apply in the origin-destination pair.',
+    blindspot:'The GCC has no WTO appellate mechanism to challenge discriminatory tariffs — meaning every new bilateral trade dispute between a trading partner and a third country that catches GCC goods in the crossfire is unresolvable except through new bilateral negotiation. This asymmetry is structural and compounding.',
     geoNodes:[
       {label:'Geneva — WTO Headquarters',                  lat:46.2, lng:6.1,   order:0},
       {label:'EU / US Bilateral FTA Corridors',            lat:50.0, lng:10.0,  order:1},
@@ -8663,14 +8662,13 @@ var WL_SIGNALS = [
     ],
     exposure:{direct:28, indirect:52, systemic:62},
     chain:[
-      {label:'Basel III / IV Bank Capital Rules Tighten',         score:0.68, order:0},
-      {label:'Bank Trade Finance Withdrawal from Emerging Markets',score:0.65, order:1},
-      {label:'$2.5T Global Trade Finance Gap Widens',             score:0.72, order:1},
-      {label:'SME Exporters in Asia / Africa Lose Access',        score:0.68, order:2},
-      {label:'GCC-Facing Cargo Volumes from Emerging Markets Fall',score:0.58, order:2},
-      {label:'Private Credit Fills Gap at Higher Cost',           score:0.55, order:2},
-      {label:'GCC Import Supplier Base Diversification Constrained',score:0.52, order:3},
-      {label:'GCC Supply Chain Resilience Reduced',               score:0.55, order:3, gcc:true}
+      {label:'Basel III/IV: LC Capital Cost Becomes Uneconomic',       score:0.68, order:0},
+      {label:'HSBC / StanChart Withdraw EM Trade Finance Exposure',    score:0.65, order:1},
+      {label:'Bangladesh / Pakistan / Kenya SME LCs Rejected — 40%',  score:0.72, order:1},
+      {label:'Bangladesh RMG → GCC Exports Fall 12%; Pakistan −18%',  score:0.68, order:2},
+      {label:'UAE Importer Active Supplier Origins: 8.2 → 6.1',       score:0.62, order:2},
+      {label:'GCC Supplier Concentration Index (HHI) +35%',           score:0.58, order:3},
+      {label:'GCC Resilience to Single-Origin Shock Degrades',        score:0.55, order:3, gcc:true}
     ],
     gcc:{
       countries:['UAE','Saudi Arabia','Oman','Qatar','Kuwait','Bahrain'],
@@ -8760,63 +8758,6 @@ var WL_SIGNALS = [
       labels:['2010','2015','2020','2025E','2030E','2035E','2040E'],
       values:[100,99,97,95,92,89,85],
       values2:[0.35,0.45,0.55,0.75,1.00,1.35,1.80]
-    }
-  },
-  {
-    id:'luxuryfreight', title:'Wealth Concentration — Luxury Freight Growth',
-    category:'Economic / Financial', confidence:65,
-    horizon:'12–36 months', origin:'Global / Financial Markets',
-    systemicImpact:45,
-    scores:[
-      {label:'A · Exposure Score',         val:42},
-      {label:'B · Transmission Strength',  val:52},
-      {label:'C · Propagation Velocity',   val:38},
-      {label:'D · GCC Sensitivity',        val:68},
-      {label:'E · Confidence Level',       val:65},
-      {label:'F · Indirect Amplification', val:55}
-    ],
-    exposure:{direct:35, indirect:52, systemic:58},
-    chain:[
-      {label:'Global Wealth Concentration Accelerates',          score:0.68, order:0},
-      {label:'Ultra-High Net Worth Individual (UHNWI) Count +',  score:0.65, order:1},
-      {label:'Luxury Goods Market Structural Growth',            score:0.70, order:1},
-      {label:'Premium Air Freight Demand Surges',                score:0.65, order:2},
-      {label:'GCC Luxury Re-Export Hub Positioning',             score:0.72, order:2},
-      {label:'Temperature-Controlled Premium Cargo Growth',      score:0.60, order:2},
-      {label:'Dubai Luxury Re-Export Revenue Expansion',         score:0.68, order:3},
-      {label:'DXB / DWC Premium Cargo Volume Premium',          score:0.65, order:3, gcc:true}
-    ],
-    gcc:{
-      countries:['UAE','Saudi Arabia','Oman','Qatar','Kuwait','Bahrain'],
-      sectors:['Ports','Inland Log.','Energy T.','Food Sec.','Industrial'],
-      data:[[72,45,12,18,35],[45,38,10,15,28],[28,22,8,12,18],[38,28,10,15,22],[25,18,8,12,15],[30,22,8,12,18]]
-    },
-    insight:'Luxury freight is the fastest-growing segment of global air cargo — growing at 8% annually vs 2% for general freight — driven by wealth concentration creating a UHNWI population that values speed and security over cost. The GCC transmission is uniquely direct: Dubai is the world\'s fourth-largest luxury goods re-export hub by value, serving as the gateway for European luxury brands targeting Gulf, South Asian, and African UHNWI consumers. Emirates SkyCargo explicitly categorises luxury goods as a strategic premium cargo segment, operating temperature-controlled, high-security freight solutions that command 3-5x general cargo yield per kilogram. The non-obvious dimension: GCC sovereign wealth concentration (UAE, Qatar, Saudi UHNWI) sustains local luxury demand even during global luxury market downturns — making Dubai\'s luxury freight market more resilient than global luxury indices suggest.',
-    blindspot:'Luxury freight growth is framed as a global wealth phenomenon — its GCC logistics consequence is a structural premium air cargo revenue stream at DXB that is resilient to general freight cycles and growing independently of headline trade volumes.',
-    geoNodes:[
-      {label:'Paris / Milan — European Luxury Brand Origin',    lat:48.9, lng:2.3,   order:0},
-      {label:'Hong Kong / Singapore — Asia Luxury Distribution',lat:22.3, lng:114.2, order:1},
-      {label:'Geneva — Watch / Jewellery Cargo Hub',            lat:46.2, lng:6.1,   order:1},
-      {label:'Dubai DXB — Luxury Re-Export Gateway',           lat:25.2, lng:55.4,  order:2, gcc:true}
-    ],
-    evidence:[
-      {stage:'ORIGIN',    mechanism:'Global UHNWI ($30M+ net worth) population grew 7% to 395,000 individuals in 2024 — Bain/UBS Wealth Report; global luxury goods market reached $1.5T in 2024, growing at 6-8% annually vs global GDP growth of 3%', example:'Knight Frank Wealth Report 2024: UHNWI population +7% 2023; GCC UHNWI grew 12% — fastest regional growth globally; Dubai ranked #3 city globally for UHNWI concentration growth 2024', lag:'0–12m', strength:68},
-      {stage:'1ST ORDER', mechanism:'Premium air freight demand surges — luxury goods, high-value electronics, fine art, racehorses, time-sensitive pharmaceuticals form a cargo category growing 8% annually vs 2% general air freight', example:'IATA Premium Air Freight Segment: $142B annual revenue 2024 (+8% YoY); Emirates SkyCargo luxury cargo yield: $4.80/kg vs general cargo yield of $1.65/kg — 3x revenue per unit weight', lag:'6–18m', strength:65},
-      {stage:'2ND ORDER', mechanism:'Dubai positions as luxury re-export hub — European luxury brands use Dubai Free Zone as regional distribution centre for Gulf, South Asian and East African UHNWI consumers', example:'Dubai luxury goods re-export value: $8.5B in 2023 (+22% YoY); Louis Vuitton, Chanel, Rolex all operating UAE regional distribution centres in JAFZA/DAFZA — serving 45 countries from Dubai hub', lag:'12–30m',strength:62},
-      {stage:'3RD ORDER', mechanism:'DXB premium cargo revenue structural premium — luxury freight resilience through economic cycles provides yield floor; Emirates SkyCargo luxury vertical growing independent of general cargo market', example:'Emirates SkyCargo luxury cargo revenue: +18% in 2023-2024 even as general air freight rates fell 25%; luxury cargo now 28% of SkyCargo revenue vs 18% in 2019', lag:'18–48m',strength:55}
-    ],
-    chart:{
-      type:'line',
-      title:'Global UHNWI Population (000s) vs Dubai Luxury Goods Re-Export Value ($B)',
-      xLabel:'Year', yLabel:'Global UHNWI Population (000s)',
-      color:'#b8952a',
-      dualAxis:true, label2:'Dubai Luxury Re-Export Value ($B)', color2:'#25a066',
-      note:'UHNWI population growth and Dubai luxury re-export value track closely — wealth concentration directly generates premium cargo volumes at DXB that are structurally resilient through general economic cycles',
-      source:'Knight Frank Wealth Report & Dubai Customs Annual Statistics',
-      sourceUrl:'https://www.knightfrank.com/wealthreport',
-      labels:['2019','2020','2021','2022','2023','2024','2025E'],
-      values:[290,295,315,345,370,395,420],
-      values2:[4.2,3.8,5.5,6.8,8.5,9.8,11.2]
     }
   },
 
@@ -8953,21 +8894,21 @@ var WL_SIGNALS = [
     ],
     exposure:{direct:28, indirect:48, systemic:55},
     chain:[
-      {label:'Industrial 3D Printing Cost Curve Decline',           score:0.65, order:0},
-      {label:'Aerospace / Defense Spare Parts Printed On-Site',     score:0.62, order:1},
-      {label:'Marine / Industrial Spare Part Import Volume Declines',score:0.58, order:1},
-      {label:'GCC Air Freight Spare Parts Revenue Compresses',      score:0.55, order:2},
-      {label:'Aramco / ADNOC Local 3D Print Hubs Established',      score:0.60, order:2},
-      {label:'Break-bulk / Air Freight Mix Shifts Toward Value-add',score:0.52, order:3},
-      {label:'GCC 3D Print Hub Attracts Regional Mfg Services',     score:0.58, order:3, gcc:true}
+      {label:'O&G Valve / Pump / Impeller 3DP Cost Viable',                score:0.68, order:0},
+      {label:'Aramco Dhahran 3DP Centre: 6,000 Parts / $24M Avoided',      score:0.65, order:1},
+      {label:'ADNOC Targets 30% MRO Import Substitution by 2027',          score:0.62, order:1},
+      {label:'High-Value Air Freight: O&G Spare Parts Volume Declines',     score:0.58, order:2},
+      {label:'DXB / AUH Cargo Revenue Mix Compresses on High-Yield Parts',  score:0.55, order:2},
+      {label:'Metal Powder / Feedstock Import Stream Partially Offsets',    score:0.52, order:3},
+      {label:'GCC Free Zones Pivot to AM Services for Regional O&G',       score:0.56, order:3, gcc:true}
     ],
     gcc:{
       countries:['UAE','Saudi Arabia','Oman','Qatar','Kuwait','Bahrain'],
       sectors:['Ports','Inland Log.','Energy T.','Food Sec.','Industrial'],
       data:[[52,35,45,15,42],[45,30,38,12,35],[42,28,35,10,32],[32,22,28,8,25],[28,18,22,6,20],[22,15,18,5,18]]
     },
-    insight:'Additive manufacturing is advancing from prototyping into production-grade industrial parts — aerospace, defense, oil & gas and marine sectors are the leading adopters. GCC exposure is concentrated in the energy sector: Saudi Aramco and ADNOC have both established 3D printing hubs to reduce spare part lead times from months (air freight from Germany/US) to hours (on-site production). This compresses high-value air freight volumes — the primary revenue driver for DXB and AUH cargo terminals — while creating a new logistics category: feedstock material delivery (metal powders, polymers, resins) which is less frequent but higher value. The net GCC logistics impact is a structural shift in the high-value cargo mix over 5–10 years, with energy sector spare parts declining and advanced material feedstock growing.',
-    blindspot:'3D printing disruption is widely discussed as a demand-destruction story for air freight — the less visible consequence is that GCC free zones (DAFZA, KIZAD, DMCC) are positioning as regional additive manufacturing hubs, turning a potential freight volume loss into a new hub service revenue stream that could offset the spare part decline.',
+    insight:'The GCC logistics exposure to additive manufacturing is specific and measurable — it runs directly through the Aramco and ADNOC MRO supply chains. Both national oil companies have established on-site 3D printing centres to replace high-value air freight spare parts (valves, pumps, impellers, heat exchanger components) with on-demand local production. Aramco\'s Dhahran centre produced 6,000+ parts in 2023 alone, avoiding $24M in spare part imports. ADNOC has set a formal target of 30% MRO import substitution by 2027. These are not aspirational figures — they are active procurement policy changes that directly reduce the high-yield air cargo volumes at DXB and AUH cargo terminals. The partially offsetting factor is a new feedstock import stream: GCC metal powder imports are projected to grow from $85M to $280M by 2028 as AM scales. But feedstock is lower-frequency, lower-urgency cargo versus the premium time-critical spare parts it displaces.',
+    blindspot:'The $24M in avoided Aramco spare part imports is a rounding error at DXB cargo terminal level — but scaled across all O&G operators, upstream service companies and marine MRO in the GCC, the aggregate high-value air freight displacement is material and structurally compounding at 15–20% annually.',
     geoNodes:[
       {label:'Houston / Detroit — US Aerospace & Energy 3DP Hubs',  lat:29.8, lng:-95.4, order:0},
       {label:'Munich / Hamburg — German Industrial 3DP Leaders',    lat:48.1, lng:11.6, order:1},
@@ -8992,63 +8933,6 @@ var WL_SIGNALS = [
       labels:['2019','2020','2021','2022','2023','2024','2025E','2026E','2027E','2028E'],
       values:[8.2,9.5,12.8,18.5,26.2,35.8,48.0,62.5,80.0,102.0],
       values2:[95,100,105,108,104,99,94,88,81,74]
-    }
-  },
-
-  {
-    id:'blockchain', title:'Blockchain Trade Finance & Documentation',
-    category:'Technology & Digital', confidence:60,
-    horizon:'24–60 months', origin:'Global / Singapore / UAE',
-    systemicImpact:48,
-    scores:[
-      {label:'A · Exposure Score',         val:38},
-      {label:'B · Transmission Strength',  val:45},
-      {label:'C · Propagation Velocity',   val:52},
-      {label:'D · GCC Sensitivity',        val:55},
-      {label:'E · Confidence Level',       val:60},
-      {label:'F · Indirect Amplification', val:48}
-    ],
-    exposure:{direct:32, indirect:45, systemic:52},
-    chain:[
-      {label:'ICC / UNCITRAL Digital Trade Law Reform',             score:0.62, order:0},
-      {label:'Electronic Bill of Lading Adoption Accelerates',      score:0.60, order:1},
-      {label:'Letter of Credit Processing Time: 7–10 Days → Hours',score:0.58, order:1},
-      {label:'SME Access to Trade Finance Improves',                score:0.55, order:2},
-      {label:'Traditional Trade Finance Banks Revenue Compresses',  score:0.52, order:2},
-      {label:'GCC Trade Hubs Lead Digital Trade Infrastructure',    score:0.58, order:3},
-      {label:'DIFC / QFC Digital Trade Platform Advantage',        score:0.62, order:3, gcc:true}
-    ],
-    gcc:{
-      countries:['UAE','Saudi Arabia','Oman','Qatar','Kuwait','Bahrain'],
-      sectors:['Ports','Inland Log.','Energy T.','Food Sec.','Industrial'],
-      data:[[58,42,30,35,40],[48,35,25,30,32],[42,30,22,25,28],[35,25,18,22,25],[28,20,15,18,20],[22,15,12,15,18]]
-    },
-    insight:'Blockchain-enabled trade finance and digital documentation are transitioning from pilot phase to early commercial deployment — Singapore\'s TradeTrust, UAE Trade Connect and the ICC\'s Model Law on Electronic Transferable Records (MLETR) are creating the legal and technical infrastructure for digitised trade documents. GCC exposure is dual-direction: as a major trade hub, the UAE has first-mover advantage in adopting digital trade infrastructure, potentially reducing the 2–5% documentary credit cost burden on GCC importers; simultaneously, traditional trade finance revenue at GCC banks (FAB, Emirates NBD, Riyad Bank) faces compression as blockchain-native platforms disintermediate letter of credit processing. The DIFC Innovation Hub is positioning as a regional blockchain trade finance centre, attracting fintech firms targeting the $1.2T annual GCC goods trade documentary processing market.',
-    blindspot:'Blockchain trade finance is usually analysed as a banking disruption story — the GCC logistics consequence is less obvious: digital documentation reduces the 3–7 day port dwell time associated with paper documentation processing, which could structurally improve UAE and Qatar port capacity utilisation by 8–12% without any new infrastructure investment.',
-    geoNodes:[
-      {label:'Singapore — TradeTrust Digital Trade Infrastructure',  lat:1.35, lng:103.82, order:0},
-      {label:'London — ICC MLETR Legal Framework',                   lat:51.5, lng:-0.12, order:1},
-      {label:'DIFC Dubai — GCC Blockchain Trade Hub',               lat:25.2, lng:55.3, order:2},
-      {label:'Jebel Ali — Digital Documentation Port Pilot',        lat:25.0, lng:55.1, order:3, gcc:true}
-    ],
-    evidence:[
-      {stage:'ORIGIN',    mechanism:'ICC Model Law on Electronic Transferable Records (MLETR) adopted by 17 countries by 2024, providing legal recognition for electronic bills of lading and digital trade documents — removing the primary legal barrier to blockchain trade finance adoption', example:'UK Electronic Trade Documents Act 2023 — first major economy to give electronic trade documents same legal standing as paper; Singapore MLETR adoption 2021; UAE Federal Decree-Law 50/2022 on commercial transactions includes digital document provisions', lag:'0–12m', strength:62},
-      {stage:'1ST ORDER', mechanism:'Electronic bill of lading (eBL) adoption accelerates — reduces processing from 7–10 days (paper documentary credit) to 24 hours, cutting working capital requirements for importers by 15–25%', example:'WAVE BL, essDOCS, Bolero processing 40,000+ eBL transactions/month 2024 vs 8,000 in 2021; Maersk and CMA CGM now default to eBL for major trade lanes; DP World integrating eBL into Jebel Ali port operations', lag:'12–30m', strength:58},
-      {stage:'2ND ORDER', mechanism:'GCC trade finance banks face margin compression as blockchain platforms reduce letter of credit fee income — Emirates NBD, FAB and Riyad Bank are investing in their own blockchain trade platforms to retain revenue stream', example:'Emirates NBD Trade Connect processed $2.1B in blockchain trade finance 2023; FAB partnered with R3 Corda for supply chain finance platform; Saudi Central Bank piloted Project Aber cross-border CBDC for trade settlement', lag:'18–48m', strength:52},
-      {stage:'3RD ORDER', mechanism:'Port dwell time reduction from digital documentation — as eBL adoption eliminates paper document processing delays, average container dwell time at GCC ports reduces 0.8–1.5 days, improving effective port throughput capacity', example:'Jebel Ali pilot with DP World and WAVE BL 2024: documentation processing time reduced from 4.2 days to 0.8 days for eBL cargo; projected 9% improvement in berth utilisation if extended to all containerised cargo', lag:'24–60m', strength:45}
-    ],
-    chart:{
-      type:'line',
-      title:'Global Electronic Bill of Lading Transactions (000s/month) vs GCC Average Container Dwell Time (Days)',
-      xLabel:'Year-Quarter', yLabel:'eBL Transactions (000s per month)',
-      color:'#2a9d8f',
-      dualAxis:true, label2:'GCC Average Container Dwell Time (Days)', color2:'#e8a030',
-      note:'As electronic bill of lading adoption scales globally, GCC port container dwell time shows a lagged structural decline — digital documentation eliminates the 3–5 day paper processing window, improving effective port capacity',
-      source:'Digital Container Shipping Association (DCSA) eBL Tracker & DP World Port Operations Report',
-      sourceUrl:'https://dcsa.org/standards/ebill-of-lading/',
-      labels:['Q1-21','Q3-21','Q1-22','Q3-22','Q1-23','Q3-23','Q1-24','Q3-24','Q1-25E'],
-      values:[8,12,18,26,35,48,65,85,108],
-      values2:[5.8,5.6,5.4,5.2,5.0,4.7,4.4,4.0,3.6]
     }
   },
 
@@ -9226,346 +9110,6 @@ var WL_SIGNALS = [
     }
   },
   {
-    id:'southasiamc', title:'Middle Class Expansion in South Asia',
-    category:'Demographic & Social', confidence:72,
-    horizon:'24–84 months', origin:'India / Pakistan / Bangladesh',
-    systemicImpact:65,
-    scores:[
-      {label:'A · Exposure Score',         val:62},
-      {label:'B · Transmission Strength',  val:70},
-      {label:'C · Propagation Velocity',   val:35},
-      {label:'D · GCC Sensitivity',        val:75},
-      {label:'E · Confidence Level',       val:72},
-      {label:'F · Indirect Amplification', val:68}
-    ],
-    exposure:{direct:48, indirect:65, systemic:72},
-    chain:[
-      {label:'India Middle Class: 300M → 700M by 2030',            score:0.78, order:0},
-      {label:'South Asia Consumer Goods Import Demand Surge',       score:0.75, order:1},
-      {label:'Cold Chain / Packaged Food / Pharma Growth',          score:0.72, order:1},
-      {label:'GCC Petrochemical Packaging Demand Grows',            score:0.70, order:2},
-      {label:'Asia-India Direct Trade Lane Expansion',              score:0.68, order:2},
-      {label:'GCC Re-Export Role for South Asia Consumer Goods',    score:0.65, order:2},
-      {label:'Jebel Ali India-Facing Lane Volume Structural +',     score:0.70, order:3},
-      {label:'GCC Cold Chain / Reefer Infrastructure Demand Rise',  score:0.68, order:3, gcc:true}
-    ],
-    gcc:{
-      countries:['UAE','Saudi Arabia','Oman','Qatar','Kuwait','Bahrain'],
-      sectors:['Ports','Inland Log.','Energy T.','Food Sec.','Industrial'],
-      data:[[68,58,28,48,60],[55,50,25,42,52],[48,42,22,38,45],[38,32,20,30,38],[30,25,18,25,30],[25,20,15,22,25]]
-    },
-    insight:'South Asia\'s middle class expansion is the primary demand driver for GCC re-export and petrochemical export growth over the next decade. India\'s middle class growing from 300M to 700M by 2030 creates an enormous new consumer goods market — packaged food, consumer electronics, personal care, pharmaceuticals — that requires the full range of modern supply chain infrastructure: cold chain, temperature-controlled storage, packaging, and last-mile logistics. The GCC transmission runs through three channels: petrochemical packaging material export demand (India\'s packaging sector growing 12% annually, consuming GCC HDPE, LDPE, polypropylene); re-export intermediation as GCC serves as distribution hub for non-CEPA goods destined for Indian market; and cold chain infrastructure investment driven by Indian consumer food safety standards improving alongside income growth.',
-    blindspot:'South Asian middle class expansion is a demand story — its GCC logistics consequence is a petrochemical packaging material export surge and a cold chain infrastructure investment requirement at GCC ports to handle the temperature-controlled goods flowing into the growing South Asian consumer market.',
-    geoNodes:[
-      {label:'New Delhi / Mumbai — India Middle Class Core',     lat:19.1, lng:72.9, order:0},
-      {label:'Chennai — South India Consumer Market',           lat:13.1, lng:80.3, order:1},
-      {label:'Colombo — South Asia Trade Hub',                  lat:6.9,  lng:79.9, order:1},
-      {label:'Jebel Ali / Sohar — GCC South Asia Gateway',     lat:25.0, lng:55.1, order:2, gcc:true}
-    ],
-    evidence:[
-      {stage:'ORIGIN',    mechanism:'India middle class defined as $10-100/day per capita: 300M in 2023 → projected 700M by 2030 — largest middle class expansion in human history in absolute numbers; GDP per capita crossing $2,500 triggers consumer goods import demand inflection', example:'NCAER India Middle Class Report 2024: 300M current middle class growing at 35M/year net additions; household consumer goods spending +18% CAGR 2022-2025; packaged food market alone: $50B (2023) → $110B (2028)', lag:'0–12m', strength:78},
-      {stage:'1ST ORDER', mechanism:'South Asia consumer goods import demand surges — packaged food, personal care, pharmaceuticals, consumer electronics demand growing faster than domestic manufacturing capacity; import dependency for premium categories remains at 40-60%', example:'India consumer goods imports +22% 2023; pharmaceutical imports +18%; cold chain logistics market growing at 28% CAGR 2022-2025 — exceeding infrastructure expansion rate, creating supply chain bottlenecks', lag:'12–36m',strength:72},
-      {stage:'2ND ORDER', mechanism:'GCC petrochemical packaging exports grow — India\'s packaging sector consumes 4.2M tonnes of polyethylene and polypropylene annually growing at 12%/year; GCC is primary supplier via SABIC, ADNOC, QAPCO', example:'GCC polymer exports to India +25% 2023-2024; SABIC India operations expanded Mumbai distribution 2024; ADNOC borauge India packaging grade polymer exports hit record 1.1M tonnes 2024', lag:'12–30m',strength:68},
-      {stage:'3RD ORDER', mechanism:'GCC cold chain infrastructure investment driven by South Asian demand — reefer container capacity, cold storage at ports, and temperature-controlled distribution investment accelerating to serve South Asian food and pharma import demand', example:'DP World India cold chain investment $200M 2024; Jebel Ali reefer plug installation +22% 2024 to serve India-facing cold chain corridor; JAFZA cold store new capacity +35% 2024', lag:'24–60m',strength:62}
-    ],
-    chart:{
-      type:'line',
-      title:'India Middle Class Population (Millions) vs GCC Polymer / Petrochemical Exports to India (MT, 000s)',
-      xLabel:'Year', yLabel:'India Middle Class Population (Millions)',
-      color:'#e8673c',
-      dualAxis:true, label2:'GCC Polymer Exports to India (000 Metric Tonnes)', color2:'#25a066',
-      note:'India middle class expansion drives GCC petrochemical export demand — packaging material consumption grows with middle class income inflection as consumer goods adoption creates structural polymer demand from GCC chemical clusters',
-      source:'NCAER India Middle Class Report & GPCA Gulf Petrochemicals Export Statistics',
-      sourceUrl:'https://www.ncaer.org/',
-      labels:['2019','2020','2021','2022','2023','2024','2025E','2027E'],
-      values:[280,285,292,300,315,330,355,420],
-      values2:[680,620,720,820,950,1100,1250,1600]
-    }
-  },
-  {
-    id:'climatemig', title:'Climate Migration Patterns',
-    category:'Demographic & Social', confidence:55,
-    horizon:'36–120 months', origin:'MENA / South Asia / Sahel',
-    systemicImpact:48,
-    scores:[
-      {label:'A · Exposure Score',         val:42},
-      {label:'B · Transmission Strength',  val:52},
-      {label:'C · Propagation Velocity',   val:12},
-      {label:'D · GCC Sensitivity',        val:65},
-      {label:'E · Confidence Level',       val:55},
-      {label:'F · Indirect Amplification', val:58}
-    ],
-    exposure:{direct:22, indirect:45, systemic:55},
-    chain:[
-      {label:'Climate Zones Shift — MENA / Sahel Uninhabitable Zones Expand', score:0.62, order:0},
-      {label:'200M+ Climate Migrants by 2050 (World Bank Projection)',         score:0.58, order:1},
-      {label:'Population Density Zones Shift — New Urban Centres Emerge',      score:0.55, order:1},
-      {label:'Logistics Demand Geography Permanently Changes',                 score:0.52, order:2},
-      {label:'GCC as Climate Refuge — Population Inflow Scenario',            score:0.48, order:2},
-      {label:'New Trade Lane Demand from Climate-Driven Population Centres',   score:0.50, order:2},
-      {label:'GCC Food Security Infrastructure Demand Elevated',               score:0.55, order:3},
-      {label:'GCC Import Buffer Stocks Structurally Required',                 score:0.52, order:3, gcc:true}
-    ],
-    gcc:{
-      countries:['UAE','Saudi Arabia','Oman','Qatar','Kuwait','Bahrain'],
-      sectors:['Ports','Inland Log.','Energy T.','Food Sec.','Industrial'],
-      data:[[35,28,18,45,30],[32,30,20,48,28],[25,22,15,38,22],[20,18,15,35,18],[18,15,12,30,15],[15,12,10,28,12]]
-    },
-    insight:'Climate migration is the longest-duration and most uncertain signal in this watchlist — but its eventual logistics consequences are material. World Bank projects 200M+ internal climate migrants by 2050, with MENA and Sub-Saharan Africa generating the largest flows. For GCC logistics, the transmission runs through two contradictory pathways: the GCC itself faces wet-bulb temperature thresholds that could make outdoor labour infeasible by 2050, threatening the construction and logistics workforce that underpins the economy; while simultaneously serving as a relatively climate-stable destination that could attract economic and climate migrants, sustaining population growth. The food security dimension is most immediately actionable — climate migration pressure on origin countries (HOA, Sahel, South Asia) creates food system stress that increases GCC food import vulnerability, reinforcing the case for strategic reserve buffer infrastructure.',
-    blindspot:'Climate migration is modelled as a geopolitical and humanitarian phenomenon — its most immediate GCC logistics consequence is food security system stress: as climate migration pressure disrupts agriculture in origin countries, GCC food import diversification becomes structurally constrained just as import buffer requirements increase.',
-    geoNodes:[
-      {label:'Sahel — Primary Climate Migration Origin Zone',  lat:15.0, lng:10.0, order:0},
-      {label:'Ganges Delta — Bangladesh Flood Migration',      lat:23.7, lng:90.4, order:1},
-      {label:'Horn of Africa — Drought Migration Corridor',    lat:9.0,  lng:44.0, order:1},
-      {label:'GCC — Climate Refuge / Food Security Stress',   lat:24.5, lng:54.4, order:2, gcc:true}
-    ],
-    evidence:[
-      {stage:'ORIGIN',    mechanism:'World Bank 2022 Groundswell Report: 216M internal climate migrants by 2050 across 6 regions — MENA and Sub-Saharan Africa generate largest per-capita flows as temperature and water stress compound', example:'Wet-bulb temperature analysis: 3-4°C warming makes 5% of global land area uninhabitable for outdoor work — includes coastal Bangladesh, Indus Valley, Sahel; 800M people in at-risk zones by 2050', lag:'0–120m',strength:62},
-      {stage:'1ST ORDER', mechanism:'Agricultural system disruption in climate-stressed zones reduces GCC food import origin diversity — as droughts intensify in HOA, South Asia, and Sahel, GCC food supply chains lose viable alternative origins',  example:'GCC food import origin concentration: 5 countries supply 65% of food imports by value; climate stress in Pakistan, India, and HOA simultaneously threatens 48% of this supply in a correlated climate event', lag:'24–84m',strength:55},
-      {stage:'2ND ORDER', mechanism:'GCC itself faces climate workforce risk — wet-bulb temperature thresholds (35°C WBT) being exceeded in GCC increasingly during summer, threatening outdoor construction and logistics workforce viability', example:'Kuwait City exceeded 35°C wet-bulb temperature 14 days in summer 2023 — theoretical physiological limit for outdoor work; Qatar introduced mandatory outdoor work ban 11:30AM-3PM as wet-bulb temperatures rose', lag:'12–60m',strength:48},
-      {stage:'3RD ORDER', mechanism:'GCC food security buffer infrastructure investment required — climate migration pressure on origin countries reinforces case for strategic food reserves, reducing dependence on just-in-time food import supply chains', example:'Saudi GSFMO (Grain Silos and Flour Mills) expanded strategic wheat reserve target from 3 months to 6 months 2024; UAE SICA food security authority mandated 3-month minimum food reserve across 9 commodity categories', lag:'36–84m',strength:52}
-    ],
-    chart:{
-      type:'line',
-      title:'Global Internal Climate Migration Projection (Millions) vs GCC Strategic Food Reserve Target (Months)',
-      xLabel:'Year', yLabel:'Internal Climate Migrants (Millions, projected)',
-      color:'#b8952a',
-      dualAxis:true, label2:'GCC Strategic Food Reserve Target (Months)', color2:'#e03040',
-      note:'Climate migration projections and GCC food reserve targets moving in parallel — policy makers are responding to climate migration pressure on food origin countries by building domestic buffer infrastructure',
-      source:'World Bank Groundswell 2022 & GCC SFDA / SICA Strategic Reserve Policy Documents',
-      sourceUrl:'https://openknowledge.worldbank.org/handle/10986/36248',
-      labels:['2020','2025E','2030E','2035E','2040E','2045E','2050E'],
-      values:[50,75,105,140,175,200,216],
-      values2:[1.5,2.0,2.5,3.0,3.5,4.0,6.0]
-    }
-  }
-];
-
-// ── Colour helpers ─────────────────────────────────────────────────────────────
-function wlHeatColor(s) {
-  if (s < 15) return {bg:'rgba(5,7,10,0.5)',  tx:'transparent'};
-  if (s < 30) return {bg:'rgba(184,149,42,.15)', tx:'#7a6025'};
-  if (s < 50) return {bg:'rgba(184,149,42,.30)', tx:'#b8952a'};
-  if (s < 65) return {bg:'rgba(232,103,60,.38)', tx:'#e8673c'};
-  if (s < 80) return {bg:'rgba(224,48,64,.46)',  tx:'#e03040'};
-  return            {bg:'rgba(224,48,64,.68)',   tx:'#ff5060'};
-}
-function wlBarColor(v) {
-  return v < 40 ? '#25a066' : v < 65 ? '#b8952a' : v < 80 ? '#e8673c' : '#e03040';
-}
-function wlSysColor(v) {
-  return v < 50 ? '#25a066' : v < 65 ? '#b8952a' : v < 80 ? '#e8673c' : '#e03040';
-}
-function wlNodeColor(score, gcc) {
-  if (gcc) return '#7c3aed';
-  if (score > 0.75) return '#e03040';
-  if (score > 0.65) return '#e8673c';
-  return '#b8952a';
-}
-function wlOrderLabel(o) { return o===0?'ORIGIN':o===1?'1ST ORDER':o===2?'2ND ORDER':'3RD ORDER'; }
-function wlOrderColor(o) { return o===0?'#e03040':o===1?'#e8673c':o===2?'#b8952a':'#c084fc'; }
-
-// ── Renderers ──────────────────────────────────────────────────────────────────
-function wlConfLabel(c) {
-  if (c >= 85) return {label:'Certain',       color:'#25a066'};
-  if (c >= 75) return {label:'Highly Likely', color:'#4a9fe8'};
-  if (c >= 65) return {label:'Likely',        color:'#b8952a'};
-  return              {label:'Possible',      color:'#e8673c'};
-}
-function wlRenderHeader(sig) {
-  var el = document.getElementById('wl-signal-header');
-  if (!el) return;
-  var sc   = wlSysColor(sig.systemicImpact);
-  var conf = wlConfLabel(sig.confidence);
-  el.innerHTML =
-    '<div style="display:flex;align-items:flex-start;justify-content:space-between;gap:12px;flex-wrap:wrap">' +
-      '<div class="wl-signal-name">' + sig.title + '</div>' +
-      '<div style="display:flex;align-items:center;gap:6px;flex-shrink:0">' +
-        '<span style="font-family:var(--f-mono);font-size:7px;color:var(--c-tx2);letter-spacing:.08em">SYSTEMIC IMPACT</span>' +
-        '<span style="font-family:var(--f-mono);font-size:20px;font-weight:700;color:'+sc+';line-height:1">'+sig.systemicImpact+'</span>' +
-      '</div>' +
-    '</div>' +
-    '<div class="wl-signal-meta" style="margin-top:6px">' +
-      '<div class="wl-meta-item"><span>CATEGORY</span><span class="wl-meta-val">' + sig.category + '</span></div>' +
-      '<div class="wl-meta-item"><span>TIME HORIZON</span><span class="wl-meta-val">' + sig.horizon + '</span></div>' +
-      '<div class="wl-meta-item"><span>SIGNAL ORIGIN</span><span class="wl-meta-val">' + sig.origin + '</span></div>' +
-      '<div class="wl-meta-item"><span>CONFIDENCE</span>' +
-        '<span class="wl-meta-val" style="color:'+conf.color+'">'+conf.label+'</span>' +
-      '</div>' +
-    '</div>';
-}
-
-function wlRenderConfRing(sig) {
-  var el = document.getElementById('wl-conf-ring');
-  if (!el) return;
-  var r=24, cx=29, cy=29;
-  var circ = 2*Math.PI*r;
-  var dash = (sig.confidence/100)*circ;
-  var col = sig.confidence>=80?'#25a066':sig.confidence>=65?'#b8952a':'#e8673c';
-  el.innerHTML =
-    '<svg class="wl-conf-svg" viewBox="0 0 58 58">' +
-      '<circle cx="'+cx+'" cy="'+cy+'" r="'+r+'" fill="none" stroke="#172030" stroke-width="4"/>' +
-      '<circle cx="'+cx+'" cy="'+cy+'" r="'+r+'" fill="none" stroke="'+col+'" stroke-width="4"' +
-      ' stroke-dasharray="'+dash.toFixed(1)+' '+circ.toFixed(1)+'"' +
-      ' transform="rotate(-90 '+cx+' '+cy+')" stroke-linecap="round"/>' +
-      '<text x="'+cx+'" y="'+(cy+1)+'" text-anchor="middle" dominant-baseline="middle"' +
-      ' font-family="IBM Plex Mono,monospace" font-size="11" font-weight="700" fill="'+col+'">'+sig.confidence+'</text>' +
-    '</svg>' +
-    '<div class="wl-conf-lbl">Confidence %</div>';
-}
-
-function wlRenderChain(sig) {
-  var el = document.getElementById('wl-tx-svg');
-  if (!el) return;
-  var chain = sig.chain;
-  var n = chain.length;
-  var nodeH=34, nodeW=310, gapY=16, startX=4, startY=6;
-  var totalH = n*(nodeH+gapY) + 20;
-  var svgW = 500;
-  var prevOrder = -1;
-  var s = '<svg viewBox="0 0 '+svgW+' '+totalH+'" style="min-height:'+totalH+'px">';
-  for (var i=0; i<n; i++) {
-    var nd = chain[i];
-    var y = startY + i*(nodeH+gapY);
-    var midX = startX + nodeW/2;
-    var col = wlNodeColor(nd.score, nd.gcc);
-    var bg = nd.gcc ? 'rgba(124,58,237,.14)' :
-             nd.score>0.75 ? 'rgba(224,48,64,.10)' :
-             nd.score>0.65 ? 'rgba(232,103,60,.10)' : 'rgba(184,149,42,.09)';
-    // Connector
-    if (i>0) {
-      var prevY = startY+(i-1)*(nodeH+gapY)+nodeH;
-      s += '<line x1="'+midX+'" y1="'+prevY+'" x2="'+midX+'" y2="'+(y-3)+'"'+
-           ' stroke="'+col+'" stroke-width="1.5" stroke-dasharray="3 2" opacity="0.55"/>';
-      s += '<polygon points="'+midX+','+y+' '+(midX-4)+','+(y-7)+' '+(midX+4)+','+(y-7)+'"'+
-           ' fill="'+col+'" opacity="0.65"/>';
-    }
-    // Node rect
-    s += '<rect x="'+startX+'" y="'+y+'" width="'+nodeW+'" height="'+nodeH+'"'+
-         ' rx="3" fill="'+bg+'" stroke="'+col+'" stroke-width="0.8" opacity="0.9"/>';
-    // Order label (top-left)
-    var ordLbl = wlOrderLabel(nd.order);
-    var ordCol = wlOrderColor(nd.order);
-    s += '<text x="'+(startX+7)+'" y="'+(y+11)+'"'+
-         ' font-family="IBM Plex Mono,monospace" font-size="6.5" fill="'+ordCol+'" opacity="0.75">'+ordLbl+'</text>';
-    // Node name
-    s += '<text x="'+(startX+7)+'" y="'+(y+24)+'"'+
-         ' font-family="Inter,sans-serif" font-size="9.5" fill="'+(nd.gcc?'#c084fc':'#8fa0b5')+'"'+
-         ' font-weight="'+(nd.gcc?'700':'400')+'">'+nd.label+'</text>';
-    // Score bar (right side)
-    var bx = startX+nodeW-78, by = y+nodeH/2-2;
-    s += '<rect x="'+bx+'" y="'+by+'" width="55" height="4" rx="2" fill="#131c28"/>';
-    s += '<rect x="'+bx+'" y="'+by+'" width="'+(nd.score*55).toFixed(1)+'" height="4" rx="2" fill="'+col+'" opacity="0.8"/>';
-    s += '<text x="'+(bx+60)+'" y="'+(by+3.5)+'"'+
-         ' font-family="IBM Plex Mono,monospace" font-size="8" fill="'+col+'" dominant-baseline="middle">'+
-         Math.round(nd.score*100)+'</text>';
-    // Side order annotation on change
-    if (nd.order !== prevOrder && nd.order>0) {
-      var ax=startX+nodeW+14, ay=y+nodeH/2;
-      s += '<text x="'+ax+'" y="'+ay+'"'+
-           ' font-family="IBM Plex Mono,monospace" font-size="7" fill="'+ordCol+'"'+
-           ' dominant-baseline="middle" opacity="0.6" font-weight="600">'+
-           (nd.order===1?'1st':nd.order===2?'2nd':'3rd')+' order</text>';
-      s += '<line x1="'+(startX+nodeW)+'" y1="'+ay+'" x2="'+(ax-3)+'" y2="'+ay+'"'+
-           ' stroke="'+ordCol+'" stroke-width="0.5" opacity="0.25"/>';
-    }
-    prevOrder = nd.order;
-  }
-  s += '</svg>';
-  el.innerHTML = s;
-}
-
-function wlRenderScores(sig) {
-  var el = document.getElementById('wl-scores');
-  if (!el) return;
-  var h='';
-  sig.scores.forEach(function(sc) {
-    var col = wlBarColor(sc.val);
-    h += '<div class="wl-score-row">'+
-         '<div class="wl-score-lbl">'+sc.label+'</div>'+
-         '<div class="wl-bar-bg"><div class="wl-bar-fill" style="width:'+sc.val+'%;background:'+col+'"></div></div>'+
-         '<div class="wl-score-val">'+sc.val+'</div></div>';
-  });
-  var sc = sig.systemicImpact, col = wlSysColor(sc);
-  h += '<div class="wl-systemic">'+
-       '<div><div class="wl-sys-lbl">Systemic Impact Score</div>'+
-       '<div class="wl-sys-val" style="color:'+col+'">'+sc+'</div></div>'+
-       '<div class="wl-sys-track"><div class="wl-sys-fill" style="width:'+sc+'%;background:'+col+'"></div></div>'+
-       '</div>';
-  el.innerHTML = h;
-}
-
-function wlRenderExposure(sig) {
-  var el = document.getElementById('wl-exposure');
-  if (!el) return;
-  var rows = [
-    {lbl:'Direct',   val:sig.exposure.direct,   col:'#b8952a'},
-    {lbl:'Indirect', val:sig.exposure.indirect,  col:'#e8673c'},
-    {lbl:'Systemic', val:sig.exposure.systemic,  col:'#e03040'}
-  ];
-  var h='';
-  rows.forEach(function(r){
-    h += '<div class="wl-exp-row">'+
-         '<div class="wl-exp-lbl">'+r.lbl+'</div>'+
-         '<div class="wl-bar-bg"><div class="wl-bar-fill" style="width:'+r.val+'%;background:'+r.col+'"></div></div>'+
-         '<div class="wl-exp-val" style="color:'+r.col+'">'+r.val+'</div></div>';
-  });
-  el.innerHTML = h;
-}
-
-function wlRenderHeatmap(sig) {
-  var el = document.getElementById('wl-heatmap');
-  if (!el) return;
-  var g = sig.gcc;
-  var nC = g.sectors.length;
-  var h = '<div class="wl-hm-col-row" style="grid-template-columns:repeat('+nC+',1fr)">';
-  g.sectors.forEach(function(s){ h+='<div class="wl-hm-col-lbl">'+s+'</div>'; });
-  h += '</div>';
-  g.countries.forEach(function(c,ci){
-    h += '<div class="wl-hm-data-row"><div class="wl-hm-row-lbl">'+c+'</div>';
-    g.data[ci].forEach(function(v){
-      var col=wlHeatColor(v);
-      h+='<div class="wl-hm-cell" style="background:'+col.bg+';color:'+col.tx+'">'+v+'</div>';
-    });
-    h += '</div>';
-  });
-  el.innerHTML = h;
-}
-
-function wlRenderInsight(sig) {
-  var el = document.getElementById('wl-insight');
-  if (!el) return;
-  el.innerHTML =
-    '<div class="wl-insight-lbl">&#9670; Strategic Transmission Analysis</div>'+
-    '<div class="wl-insight-text">'+sig.insight+'</div>'+
-    '<div class="wl-blindspot">'+
-      '<div class="wl-bs-lbl">Non-Obvious Transmission Pathway</div>'+
-      '<div class="wl-bs-text">'+sig.blindspot+'</div>'+
-    '</div>';
-}
-
-function renderWatchlistSignal(id) {
-  var sig = WL_SIGNALS.find(function(s){return s.id===id;});
-  if (!sig) return;
-  document.querySelectorAll('.wl-pill').forEach(function(p){
-    p.classList.toggle('active', p.dataset.id===id);
-  });
-  wlRenderHeader(sig);
-  wlRenderScores(sig);
-  wlRenderExposure(sig);
-  wlRenderHeatmap(sig);
-  wlRenderInsight(sig);
-}
-
-// ── Group / Category definitions ──────────────────────────────────────────────
-var WL_GROUPS = [
-  {
-    id:'climate', icon:'◈',
-    title:'Climate & Physical Risk',
-    desc:'Hydrology, drought, ocean systems, weather extremes and their transmission into freight and port markets',
-    signals:['panama','eastafrica','iod','glacier','austdrought','mekong','arctic','medagri','adenweather','sahel','northsea','lanina']
-  },
-  {
     id:'trade', icon:'◇',
     title:'Trade Policy & Geopolitics',
     desc:'Carbon border adjustment, tariff mechanisms, trade flow shifts, corridor development and maritime gateway hierarchy restructuring',
@@ -9575,19 +9119,19 @@ var WL_GROUPS = [
     id:'economic', icon:'◆',
     title:'Economic & Financial Markets',
     desc:'Demand dynamics, carrier consolidation, freight derivatives, port labour, marine insurance, trade finance and cargo market shifts',
-    signals:['indiagrowth','china15plan','china','drybulk','containerconsolidation','ratevol','portlabor','marineins','tradefinance','demoshifts','luxuryfreight']
+    signals:['indiagrowth','china15plan','china','drybulk','containerconsolidation','ratevol','portlabor','marineins','tradefinance','demoshifts']
   },
   {
     id:'technology', icon:'⬡',
     title:'Technology & Digital',
-    desc:'Additive manufacturing spare-part disruption, maritime cybersecurity, blockchain trade documentation and GCC data centre cargo demand',
-    signals:['printing3d','cybersec','blockchain','datacenter']
+    desc:'Additive manufacturing in O&G MRO, maritime cybersecurity and GCC data centre cargo demand',
+    signals:['printing3d','cybersec','datacenter']
   },
   {
     id:'demographic', icon:'◉',
     title:'Demographic & Social',
-    desc:'South Asian labour migration, nationalisation policies, Africa population growth, South Asia middle class and climate migration',
-    signals:['samigration','emiratisation','africapop','southasiamc','climatemig']
+    desc:'South Asian labour migration, nationalisation policies and Africa population growth as GCC re-export demand driver',
+    signals:['samigration','emiratisation','africapop']
   }
 ];
 

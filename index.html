@@ -4,14 +4,6 @@
 <meta charset="utf-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1"/>
 <title>Gulf Logistics Intelligence</title>
-<!-- Auth guard: hide body until session is verified, then reveal or redirect -->
-<style>body{visibility:hidden}</style>
-<script>
-  fetch('/api/auth').then(function(r){
-    if(r.status===401){ location.replace('/login'); }
-    else { document.body.style.visibility='visible'; }
-  }).catch(function(){ document.body.style.visibility='visible'; });
-</script>
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
@@ -2122,6 +2114,60 @@ canvas { font-family: var(--f-mono); }
   font-size:13px; color:#ddd6f3; line-height:1.6;
   font-style:italic;
 }
+
+/* ═══════════════════ SITE FOOTER ═══════════════════ */
+#site-footer {
+  margin-top:48px;
+  border-top:1px solid rgba(212,160,23,.15);
+  background:linear-gradient(180deg,rgba(8,12,24,.0) 0%,rgba(8,12,24,.95) 100%);
+}
+.sf-inner {
+  max-width:1200px; margin:0 auto;
+  padding:28px 28px 16px;
+  display:flex; gap:40px; flex-wrap:wrap; align-items:flex-start;
+}
+.sf-brand {
+  display:flex; align-items:center; gap:12px; min-width:200px; flex:1;
+}
+.sf-logo-dot {
+  width:10px; height:10px; border-radius:50%;
+  background:var(--c-gold); box-shadow:0 0 8px rgba(212,160,23,.6);
+  flex-shrink:0;
+}
+.sf-name {
+  font-family:var(--f-mono); font-size:11px; font-weight:700;
+  color:var(--c-gold); letter-spacing:.12em; text-transform:uppercase;
+}
+.sf-tag {
+  font-family:var(--f-body); font-size:9.5px; color:var(--c-tx2);
+  margin-top:3px; letter-spacing:.04em;
+}
+.sf-cols {
+  display:flex; gap:36px; flex-wrap:wrap;
+}
+.sf-col { min-width:130px; }
+.sf-col-title {
+  font-family:var(--f-mono); font-size:7.5px; letter-spacing:.14em;
+  text-transform:uppercase; color:var(--c-gold); margin-bottom:9px;
+}
+.sf-links {
+  display:flex; flex-direction:column; gap:6px;
+}
+.sf-link {
+  font-family:var(--f-body); font-size:9.5px; color:var(--c-tx2);
+  cursor:pointer; text-decoration:none;
+  transition:color .15s;
+}
+.sf-link:hover { color:var(--c-tx1); }
+.sf-link-plain {
+  font-family:var(--f-body); font-size:9.5px; color:rgba(180,185,200,.55);
+}
+.sf-bar {
+  border-top:1px solid rgba(212,160,23,.1);
+  padding:10px 28px;
+  font-family:var(--f-mono); font-size:7.5px; letter-spacing:.12em;
+  color:rgba(212,160,23,.4); text-align:center; text-transform:uppercase;
+}
 </style>
 </head>
 <body>
@@ -2157,8 +2203,8 @@ canvas { font-family: var(--f-mono); }
     </div>
     <div id="cv-divider"></div>
     <div id="cv-sub">
-      Strait of Hormuz &nbsp;&middot;&nbsp; Red Sea &nbsp;&middot;&nbsp; Suez Canal<br>
-      Scenario Simulation &nbsp;&middot;&nbsp; Live Freight Rates &nbsp;&middot;&nbsp; Executive Briefing
+      Strait of Hormuz &nbsp;&middot;&nbsp; Red Sea &nbsp;&middot;&nbsp; Suez Canal &nbsp;&middot;&nbsp; GCC Trucking Corridors<br>
+      44 Risk Signals &nbsp;&middot;&nbsp; Scenario Simulation &nbsp;&middot;&nbsp; Downloadable Strategy Briefs
     </div>
     <button id="cv-enter">Enter Dashboard &nbsp;&rarr;</button>
     <button id="cv-skip">Skip intro</button>
@@ -2166,9 +2212,9 @@ canvas { font-family: var(--f-mono); }
 
   <!-- Bottom status strip -->
   <div id="cv-footer">
-    <span class="cv-fi cv-fi-live">Live feed active</span>
-    <span class="cv-fi">Scenario Engine v2.0 &nbsp;&middot;&nbsp; May 2026</span>
-    <span class="cv-fi">Ministerial Grade &nbsp;&bull;&nbsp; Restricted</span>
+    <span class="cv-fi">44 Strategic Signals &nbsp;&middot;&nbsp; 5 Threat Categories &nbsp;&middot;&nbsp; 6 GCC Markets</span>
+    <span class="cv-fi">Signal Database v2.6 &nbsp;&middot;&nbsp; May 2026</span>
+    <span class="cv-fi">Ministerial Grade &nbsp;&bull;&nbsp; Restricted Distribution</span>
   </div>
 
 </div>
@@ -2179,14 +2225,14 @@ canvas { font-family: var(--f-mono); }
     <div class="dot"></div>
     <div>
       <h1>Gulf Logistics Intelligence</h1>
-      <div class="sub">Maritime Intelligence &middot; Freight &amp; Logistics &middot; GCC Strategic Assessment &middot; May 2026</div>
+      <div class="sub">Maritime Intelligence &middot; Freight &amp; Logistics &middot; GCC Strategic Assessment &middot; <span id="hdr-data-ver">Signal Database v2.6 &mdash; May 2026</span></div>
     </div>
   </div>
   <div class="right">
     <div class="live-pill"><div class="live-dot"></div>Live</div>
     <div class="ts" id="ts"></div>
     <button class="hbtn" onclick="location.reload()">&#8635; Refresh All</button>
-    <a href="/logout" class="hbtn" style="text-decoration:none;color:inherit;opacity:0.6" title="Sign out">&#9099; Sign Out</a>
+    <a href="mailto:intelligence@gulf-logistics.io" class="hbtn" style="text-decoration:none;color:inherit;opacity:0.8" title="Contact the intelligence team">&#9993; Contact</a>
     <button class="hbtn mob-only" id="mob-menu-btn" onclick="openMobNav()" aria-label="Open menu" style="font-size:16px;padding:4px 10px;line-height:1">&#9776;</button>
   </div>
 </div>
@@ -3164,7 +3210,7 @@ canvas { font-family: var(--f-mono); }
     <div>
       <div class="wl-page-title">&#8881; Strategic Watchlist</div>
       <div class="wl-page-sub">Weak signal intelligence &middot; Multi-order transmission modelling &middot; GCC exposure assessment</div>
-      <div class="wl-page-meta"><span id="wl-sig-count">—</span> active signals &middot; <span id="wl-cat-count">—</span> categories &middot; Updated <span id="wl-ts">—</span></div>
+      <div class="wl-page-meta"><span id="wl-sig-count">—</span> active signals &middot; <span id="wl-cat-count">—</span> categories &middot; Signal Database v2.6 &middot; Updated <span id="wl-ts">—</span></div>
     </div>
     <div class="wl-doctrine">
       "The value is not identifying events.<br>
@@ -3242,6 +3288,51 @@ canvas { font-family: var(--f-mono); }
   </div>
 
 </div>
+
+<!-- ═══════════════════════════════════ SITE FOOTER ═══════════════════════════════════ -->
+<footer id="site-footer">
+  <div class="sf-inner">
+    <div class="sf-brand">
+      <div class="sf-logo-dot"></div>
+      <div>
+        <div class="sf-name">Gulf Logistics Intelligence</div>
+        <div class="sf-tag">Strategic intelligence for GCC supply chain risk</div>
+      </div>
+    </div>
+    <div class="sf-cols">
+      <div class="sf-col">
+        <div class="sf-col-title">Platform</div>
+        <div class="sf-links">
+          <span class="sf-link" onclick="showTab('hormuz',document.querySelector('.tab'))">Hormuz Traffic</span>
+          <span class="sf-link" onclick="showTab('rates',document.querySelectorAll('.tab')[1])">Container Rates</span>
+          <span class="sf-link" onclick="showTab('trucking',document.querySelectorAll('.tab')[2])">GCC Trucking</span>
+          <span class="sf-link" onclick="showTab('simulator',document.querySelectorAll('.tab')[3])">Scenario Simulator</span>
+          <span class="sf-link" onclick="showTab('watchlist',document.querySelectorAll('.tab')[4])">Strategic Watchlist</span>
+        </div>
+      </div>
+      <div class="sf-col">
+        <div class="sf-col-title">Intelligence</div>
+        <div class="sf-links">
+          <span class="sf-link-plain">44 Active Risk Signals</span>
+          <span class="sf-link-plain">5 Threat Categories</span>
+          <span class="sf-link-plain">6 GCC Markets Covered</span>
+          <span class="sf-link-plain">Downloadable Strategy Briefs</span>
+        </div>
+      </div>
+      <div class="sf-col">
+        <div class="sf-col-title">Contact</div>
+        <div class="sf-links">
+          <a class="sf-link" href="mailto:intelligence@gulf-logistics.io">intelligence@gulf-logistics.io</a>
+          <span class="sf-link-plain">Signal Database v2.6</span>
+          <span class="sf-link-plain">Last updated: May 2026</span>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="sf-bar">
+    Gulf Logistics Intelligence &nbsp;&middot;&nbsp; Signal Database v2.6 &nbsp;&middot;&nbsp; May 2026 &nbsp;&middot;&nbsp; Restricted Distribution
+  </div>
+</footer>
 
 
 <script>
@@ -9824,16 +9915,19 @@ function generateStrategyBrief(sid) {
   // Confidence language
   var confLabel = sig.confidence >= 85 ? 'Certain' : sig.confidence >= 70 ? 'Highly Likely' : sig.confidence >= 55 ? 'Likely' : 'Possible';
   var confLang  = sig.confidence >= 85 ? 'with high confidence' : sig.confidence >= 70 ? 'with moderate-to-high confidence' : sig.confidence >= 55 ? 'with moderate confidence' : 'with low confidence';
-  var impactLevel = sig.systemicImpact >= 70 ? 'HIGH' : sig.systemicImpact >= 50 ? 'MODERATE-HIGH' : sig.systemicImpact >= 35 ? 'MODERATE' : 'LOW';
+  var sigImpact  = sig.systemicImpact || 0;
+  var sigHorizon = sig.horizon || 'Medium-term';
+  var impactLevel = sigImpact >= 70 ? 'HIGH' : sigImpact >= 50 ? 'MODERATE-HIGH' : sigImpact >= 35 ? 'MODERATE' : 'LOW';
 
-  // Key Judgments — derived from chain nodes
-  var triggerNode = sig.chain.find(function(c){ return c.order === 0; }) || sig.chain[0];
-  var gccNode     = (sig.chain.filter(function(c){ return c.gcc; }).pop()) || sig.chain[sig.chain.length - 1];
-  var midNodes    = sig.chain.filter(function(c){ return !c.gcc && c.order >= 2; });
-  var midNode     = midNodes[Math.floor(midNodes.length / 2)] || sig.chain[Math.floor(sig.chain.length / 2)];
-  var kj1 = 'We assess ' + confLang + ' that ' + triggerNode.label.toLowerCase() + ' represents a material and escalating risk to GCC logistics network stability over the ' + sig.horizon + ' horizon.';
+  // Key Judgments — derived from chain nodes (defensive: handle missing chain)
+  var safeChain   = (sig.chain && sig.chain.length) ? sig.chain : [{label: sig.title, order: 0, score: 0.5}];
+  var triggerNode = safeChain.find(function(c){ return c.order === 0; }) || safeChain[0];
+  var gccNode     = (safeChain.filter(function(c){ return c.gcc; }).pop()) || safeChain[safeChain.length - 1];
+  var midNodes    = safeChain.filter(function(c){ return !c.gcc && c.order >= 2; });
+  var midNode     = midNodes[Math.floor(midNodes.length / 2)] || safeChain[Math.floor(safeChain.length / 2)];
+  var kj1 = 'We assess ' + confLang + ' that ' + triggerNode.label.toLowerCase() + ' represents a material and escalating risk to GCC logistics network stability over the ' + sigHorizon + ' horizon.';
   var kj2 = midNode ? 'The transmission mechanism progresses through ' + midNode.label.toLowerCase() + ', with second- and third-order effects propagating to GCC freight capacity and lead time reliability.' : 'Second-order effects are expected to propagate through established trade corridors serving the GCC region.';
-  var kj3 = 'The primary GCC impact pathway concludes in ' + gccNode.label.toLowerCase() + '. Systemic exposure is assessed at ' + sig.systemicImpact + '/100, rated ' + impactLevel + '.';
+  var kj3 = 'The primary GCC impact pathway concludes in ' + gccNode.label.toLowerCase() + '. Systemic exposure is assessed at ' + sigImpact + '/100, rated ' + impactLevel + '.';
 
   // Recommended Actions — category-contextualised
   var cat = (sig.category || '').toLowerCase();
@@ -9852,7 +9946,7 @@ function generateStrategyBrief(sid) {
     ];
   } else if (cat.indexOf('economic') !== -1 || cat.indexOf('financial') !== -1) {
     actions = [
-      'Review freight rate hedging instruments and forward contracts for core GCC import commodity categories across the ' + sig.horizon + ' window.',
+      'Review freight rate hedging instruments and forward contracts for core GCC import commodity categories across the ' + sigHorizon + ' window.',
       'Conduct a carrier concentration analysis to quantify exposure to service reduction on secondary GCC feeder routes under consolidation pressure.',
       'Integrate the leading demand indicators identified in this brief into the quarterly logistics market outlook model.'
     ];
@@ -9864,7 +9958,7 @@ function generateStrategyBrief(sid) {
     ];
   } else {
     actions = [
-      'Conduct a scenario planning workshop incorporating the ' + sig.title + ' signal into GCC logistics strategy for the ' + sig.horizon + ' planning horizon.',
+      'Conduct a scenario planning workshop incorporating the ' + sig.title + ' signal into GCC logistics strategy for the ' + sigHorizon + ' planning horizon.',
       'Assign a monitoring brief to the intelligence team with a 30-day update cadence and defined escalation tripwires.',
       'Integrate findings into the next Ministerial logistics risk assessment cycle with quantified probability ranges.'
     ];
@@ -9874,11 +9968,11 @@ function generateStrategyBrief(sid) {
 
   // ── Chain narrative (prose, merged into Assessment) ──────────────────────────────
   var chainNarrative = '';
-  if (sig.chain && sig.chain.length) {
-    var trigNode     = sig.chain.find(function(c){ return c.order === 0; });
-    var firstOrds    = sig.chain.filter(function(c){ return c.order === 1; });
-    var secondOrds   = sig.chain.filter(function(c){ return c.order === 2; });
-    var gccChainNodes= sig.chain.filter(function(c){ return c.gcc; });
+  if (safeChain && safeChain.length) {
+    var trigNode     = safeChain.find(function(c){ return c.order === 0; });
+    var firstOrds    = safeChain.filter(function(c){ return c.order === 1; });
+    var secondOrds   = safeChain.filter(function(c){ return c.order === 2; });
+    var gccChainNodes= safeChain.filter(function(c){ return c.gcc; });
     var chainSents   = [];
     if (trigNode) chainSents.push('The transmission originates with <b>' + trigNode.label + '</b>.');
     if (firstOrds.length)    chainSents.push('This produces first-order effects across ' + firstOrds.map(function(n){ return '<b>' + n.label + '</b>'; }).join(' and ') + '.');
@@ -10202,7 +10296,7 @@ function generateStrategyBrief(sid) {
     '<div style="text-align:right;font-family:Arial,sans-serif;font-size:8px;color:#666;line-height:1.7;">' +
       '<div><b>' + refNum + '</b></div>' +
       '<div>' + date + '</div>' +
-      '<div style="color:#999;font-size:7.5px;">ASSESSMENT HORIZON: ' + sig.horizon + '</div>' +
+      '<div style="color:#999;font-size:7.5px;">ASSESSMENT HORIZON: ' + sigHorizon + '</div>' +
     '</div>' +
     '</div>';
 
@@ -10211,7 +10305,7 @@ function generateStrategyBrief(sid) {
     '<div style="font-family:Arial,sans-serif;font-size:7.5px;color:#999;text-transform:uppercase;letter-spacing:.12em;margin-bottom:4px;">Subject</div>' +
     '<div style="font-size:19px;font-weight:bold;color:#0a0f1e;line-height:1.2;margin-bottom:5px;">' + sig.title + '</div>' +
     '<div style="font-size:9px;color:#555;font-family:Arial,sans-serif;display:flex;align-items:center;gap:10px;flex-wrap:wrap;">' +
-      '<span style="background:#0a0f1e;color:#d4a017;padding:2px 8px;font-size:7px;letter-spacing:.1em;font-weight:bold;">' + impactLevel + ' SYSTEMIC IMPACT (' + sig.systemicImpact + ')</span>' +
+      '<span style="background:#0a0f1e;color:#d4a017;padding:2px 8px;font-size:7px;letter-spacing:.1em;font-weight:bold;">' + impactLevel + ' SYSTEMIC IMPACT (' + sigImpact + ')</span>' +
       '<span>' + sig.category + '</span>' +
       '<span>· Origin: ' + (sig.origin || '—') + '</span>' +
       '<span>· Confidence: ' + confLabel + ' (' + sig.confidence + '%)</span>' +
@@ -10225,12 +10319,12 @@ function generateStrategyBrief(sid) {
     (sig.scores && sig.scores.length >= 3 ?
       '<p style="margin:10px 0 0;">' +
         '<b>Quantified Risk Indicators:</b> ' +
-        'Transmission modelling assigns a systemic impact score of <b>' + sig.systemicImpact + '%</b> across GCC logistics networks. ' +
+        'Transmission modelling assigns a systemic impact score of <b>' + sigImpact + '%</b> across GCC logistics networks. ' +
         'Key propagation factors: ' + sig.scores.slice(0, 3).map(function(sc){
           var col = sc.val >= 70 ? '#b71c1c' : sc.val >= 50 ? '#e65100' : sc.val >= 35 ? '#c8a800' : '#2e7d32';
           return sc.label + ' (<b style="color:' + col + ';">' + sc.val + '/100</b>)';
         }).join(', ') + '. ' +
-        'Assessment horizon: <b>' + sig.horizon + '</b>.' +
+        'Assessment horizon: <b>' + sigHorizon + '</b>.' +
       '</p>'
       : '') +
     (chainNarrative ? '<p style="margin:10px 0 0;"><b>Causal Pathway:</b> ' + chainNarrative + '</p>' : '') +
@@ -10270,23 +10364,40 @@ function generateStrategyBrief(sid) {
   // Native print engine → user clicks Save as PDF in the dialog.
   // Far more reliable than html2canvas (no DOM capture issues, perfect colour fidelity).
   var fullDoc = '<!DOCTYPE html><html><head><meta charset="utf-8">' +
+    '<meta name="viewport" content="width=device-width,initial-scale=1">' +
     '<title>' + sig.title + ' — Strategy Brief</title>' +
     '<style>' +
-      '@page { size:A4; margin:12mm; }' +
-      'body { margin:0; padding:0; background:#fff; -webkit-print-color-adjust:exact; print-color-adjust:exact; }' +
+      '@page { size:A4 portrait; margin:12mm; }' +
+      'html,body { margin:0; padding:0; background:#fff;' +
+        '-webkit-print-color-adjust:exact; print-color-adjust:exact;' +
+        'color-adjust:exact; }' +
+      /* SVG cross-browser: ensure fills/strokes survive print */
+      'svg { overflow:visible; shape-rendering:geometricPrecision; }' +
+      'svg text { font-family:Arial,Helvetica,sans-serif; }' +
       '@media print {' +
+        '*  { -webkit-print-color-adjust:exact !important;' +
+             'print-color-adjust:exact !important; color-adjust:exact !important; }' +
+        'svg { overflow:visible !important; }' +
         'body { margin:0; }' +
         '.no-print { display:none !important; }' +
+        /* avoid page break inside chart sections */
+        'div[style*="padding:9px 22px"] { page-break-inside:avoid; }' +
       '}' +
       '.print-btn {' +
         'position:fixed; top:16px; right:16px; z-index:9999;' +
         'background:#0a0f1e; color:#d4a017; border:none; border-radius:4px;' +
         'padding:10px 20px; font-family:Arial,sans-serif; font-size:12px;' +
         'font-weight:bold; letter-spacing:.08em; cursor:pointer;' +
-        'text-transform:uppercase;' +
+        'text-transform:uppercase; box-shadow:0 2px 8px rgba(0,0,0,.35);' +
       '}' +
+      '.print-btn:hover { opacity:.85; }' +
+      /* Browser tip bar */
+      '#browser-tip { font-family:Arial,sans-serif; font-size:10px; color:#666;' +
+        'text-align:center; padding:6px; background:#fffbea;' +
+        'border-bottom:1px solid #e8d800; }' +
     '</style>' +
     '</head><body>' +
+    '<div id="browser-tip" class="no-print">For best results use <b>Google Chrome</b> &rarr; File &rarr; Print &rarr; Save as PDF &nbsp;|&nbsp; Destination: <b>Save as PDF</b> &nbsp;|&nbsp; Layout: <b>Portrait</b></div>' +
     '<button class="print-btn no-print" onclick="window.print()">&#8659; Save as PDF</button>' +
     briefHTML +
     '<scr'+'ipt>window.onload=function(){setTimeout(function(){window.print();},400);};</scr'+'ipt>' +

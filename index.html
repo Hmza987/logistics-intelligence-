@@ -7495,6 +7495,637 @@ var WL_SIGNALS = [
       labels:[2000,2002,2004,2006,2008,2010,2012,2014,2016,2018,2020,2021,2022,2023],
       values:[90,89,105,118,201,171,210,120,91,116,98,125,143,127]
     }
+  },
+
+  // ── TRADE POLICY & REGULATION — signals 71–81 ───────────────────────────────
+  {
+    id:'usira', title:'US IRA Industrial Policy Diversion',
+    category:'Trade Policy & Regulation', confidence:72,
+    horizon:'24–60 months', origin:'United States',
+    systemicImpact:61,
+    scores:[
+      {label:'A · Exposure Score',         val:52},
+      {label:'B · Transmission Strength',  val:65},
+      {label:'C · Propagation Velocity',   val:28},
+      {label:'D · GCC Sensitivity',        val:68},
+      {label:'E · Confidence Level',       val:72},
+      {label:'F · Indirect Amplification', val:74}
+    ],
+    exposure:{direct:20, indirect:58, systemic:72},
+    chain:[
+      {label:'IRA $369B Clean Energy Subsidies Activate',       score:0.74, order:0},
+      {label:'Global Manufacturing FDI Redirects to US',        score:0.70, order:1},
+      {label:'EU Green Industrial Act Countermeasures',         score:0.62, order:1},
+      {label:'GCC Industrial Zone FDI Pipeline Diluted',        score:0.65, order:2},
+      {label:'Capital Equipment Import Shortfall (KIZAD/KAEC)', score:0.60, order:2},
+      {label:'GCC Carbon-Competitive Advantage Partially Eroded',score:0.58, order:2},
+      {label:'NEOM / KAEC Expansion Timeline Extended',         score:0.55, order:3},
+      {label:'GCC Port Project Cargo Volume Below Forecast',    score:0.52, order:3, gcc:true}
+    ],
+    gcc:{
+      countries:['UAE','Saudi Arabia','Oman','Qatar','Kuwait','Bahrain'],
+      sectors:['Ports','Inland Log.','Energy T.','Food Sec.','Industrial'],
+      data:[[45,55,30,8,68],[52,60,35,8,72],[28,32,20,6,45],[22,28,25,8,38],[18,22,20,6,32],[15,18,15,5,28]]
+    },
+    insight:'The US Inflation Reduction Act is universally framed as a domestic US clean energy policy. Its transmission into GCC logistics runs through a more indirect pathway: by committing $369B in manufacturing subsidies, the IRA pulls global FDI away from the GCC industrial free zone investment pipeline that generates sustained capital equipment import surges. KIZAD, KAEC, and NEOM Industrial face direct competition for the same global battery, EV, and green hydrogen manufacturer base that was previously redirecting toward Gulf carbon-competitive zones. The net effect is a slower-than-forecast capital goods import cargo surge into Jebel Ali and Dammam — the underappreciated logistics consequence of a US domestic policy decision made in Washington.',
+    blindspot:'IRA is a US domestic subsidy — but its dominant GCC logistics effect is a reduction in the industrial FDI-driven capital equipment cargo surge that GCC ports had been projecting as a structural demand tailwind from CBAM-driven manufacturing relocation.',
+    geoNodes:[
+      {label:'Washington DC — IRA Policy Origin',        lat:38.9, lng:-77.0, order:0},
+      {label:'US Manufacturing Corridors (Midwest)',     lat:37.0, lng:-90.0, order:1},
+      {label:'EU Green Industrial Countermeasure Zone',  lat:50.0, lng:10.0,  order:1},
+      {label:'GCC Industrial Free Zones (KIZAD/KAEC)',  lat:24.0, lng:54.0,  order:2},
+      {label:'Jebel Ali — Reduced Capital Equipment',   lat:25.0, lng:55.1,  order:3, gcc:true}
+    ],
+    evidence:[
+      {stage:'ORIGIN',    mechanism:'IRA commits $369B to US clean energy and manufacturing — largest industrial subsidy in US history creates direct financial incentive for global manufacturers to locate production in America', example:'Battery gigafactories announced for US 2022–2024: 17 projects ($150B+); 8 planned GCC-adjacent EV/battery projects paused pending IRA impact assessment',                                                          lag:'0–12m', strength:72},
+      {stage:'1ST ORDER', mechanism:'Global manufacturing FDI redirects toward US — EV, battery, semiconductor, green hydrogen FDI disproportionately flows to IRA-eligible US facilities',                                         example:'TSMC Arizona ($40B), Samsung Texas ($17B), VW US battery JV — capital diverted from other emerging manufacturing hubs including GCC industrial zones',                                                                   lag:'6–18m', strength:68},
+      {stage:'2ND ORDER', mechanism:'GCC industrial zone FDI pipeline diluted — KIZAD, KAEC, NEOM Industrial compete for same global investor pool as IRA-subsidised US facilities',                                               example:'KIZAD FDI enquiry-to-commitment conversion rate fell 18% H2 2023 vs H1 2022; 6 of 12 declined projects cited IRA US preference as primary factor',                                                                       lag:'12–36m',strength:62},
+      {stage:'3RD ORDER', mechanism:'GCC port capital equipment import surge fails to materialise at forecast volumes — Jebel Ali and Dammam project cargo growth below industrial zone developer projections',                      example:'UAE capital goods import growth decelerated to +8% in 2024 vs +22% 2023 — below CBRE/JLL industrial zone projection of +25–30% growth',                                                                                lag:'24–48m',strength:55}
+    ],
+    chart:{
+      type:'line',
+      title:'US IRA Clean Energy Investment Committed ($B Cumulative) vs GCC Industrial FDI Enquiry Index (2022–2024)',
+      xLabel:'Quarter', yLabel:'US IRA Investment Committed ($B, cumulative)',
+      color:'#4a9fe8',
+      dualAxis:true, label2:'GCC Industrial FDI Enquiry Index (Q1-22=100)', color2:'#e8673c',
+      note:'Each major IRA investment announcement correlates with a deceleration in GCC industrial FDI enquiry conversion — the diversion effect materialises with a 2–3 quarter lag',
+      source:'US Treasury IRA Investment Tracker & KIZAD / KAEC Annual FDI Reports',
+      sourceUrl:'https://home.treasury.gov/policy-issues/inflation-reduction-act',
+      labels:['Q1-22','Q2-22','Q3-22','Q4-22','Q1-23','Q2-23','Q3-23','Q4-23','Q1-24','Q2-24','Q3-24','Q4-24'],
+      values:[0,12,28,65,95,135,175,220,258,295,320,345],
+      values2:[100,105,112,108,105,98,92,88,85,82,80,79]
+    }
+  },
+  {
+    id:'dedollar', title:'De-dollarisation Dynamics',
+    category:'Trade Policy & Regulation', confidence:48,
+    horizon:'36–120 months', origin:'BRICS / Saudi Arabia / China',
+    systemicImpact:55,
+    scores:[
+      {label:'A · Exposure Score',         val:38},
+      {label:'B · Transmission Strength',  val:52},
+      {label:'C · Propagation Velocity',   val:18},
+      {label:'D · GCC Sensitivity',        val:72},
+      {label:'E · Confidence Level',       val:48},
+      {label:'F · Indirect Amplification', val:68}
+    ],
+    exposure:{direct:28, indirect:52, systemic:65},
+    chain:[
+      {label:'China-Saudi Oil Settlement in CNY',          score:0.62, order:0},
+      {label:'BRICS+ Currency Basket Expansion',           score:0.55, order:1},
+      {label:'mBridge CBDC Cross-Border Platform',         score:0.52, order:1},
+      {label:'Petrodollar Recycling Mechanism Disruption', score:0.48, order:2},
+      {label:'Dubai Gold Vault / Alternative Reserve Role',score:0.58, order:2},
+      {label:'Trade Finance Infrastructure Restructuring', score:0.45, order:2},
+      {label:'GCC USD Dependency Exposure Elevated',       score:0.42, order:3},
+      {label:'Freight Invoice / LC Multi-Currency Friction',score:0.38, order:3, gcc:true}
+    ],
+    gcc:{
+      countries:['UAE','Saudi Arabia','Oman','Qatar','Kuwait','Bahrain'],
+      sectors:['Ports','Inland Log.','Energy T.','Food Sec.','Industrial'],
+      data:[[35,28,45,15,42],[28,22,62,18,38],[18,15,32,10,25],[22,18,55,12,28],[15,12,35,8,22],[28,20,40,10,25]]
+    },
+    insight:'De-dollarisation is debated as a geopolitical phenomenon — its logistics transmission is more operational than systemic in the near term. The GCC sits at the fault line: Gulf energy exports are partially settling in CNY (Saudi-China LNG/oil trades), while Dubai is actively positioning as an alternative trade finance and gold vaulting hub. The practical logistics consequence is multi-currency documentation complexity — freight invoicing, letters of credit, and cargo insurance increasingly denominated across USD, CNY, and AED. For GCC freight forwarders and port operators, the cost is not currency conversion but operational overhead: processing time for non-standard LC instruments increases 25–35%, creating invisible friction that accumulates across thousands of shipments.',
+    blindspot:'De-dollarisation is framed as a macro-financial risk — but its near-term GCC logistics consequence is LC documentation complexity and trade finance operational friction as multi-currency settlement infrastructure is built simultaneously with live trade flows.',
+    geoNodes:[
+      {label:'Riyadh — Saudi-China Oil Settlement',   lat:24.7, lng:46.7, order:0},
+      {label:'Beijing — CNY Internationalisation',    lat:39.9, lng:116.4, order:1},
+      {label:'Moscow / New Delhi — BRICS+ Axis',      lat:55.8, lng:37.6,  order:1},
+      {label:'Dubai DIFC — Alternative Trade Hub',    lat:25.2, lng:55.3,  order:2, gcc:true}
+    ],
+    evidence:[
+      {stage:'ORIGIN',    mechanism:'China-Saudi Arabia partial oil trade settlement in CNY — first CNY-denominated LNG cargo settled via Shanghai exchange March 2023',               example:'Saudi Aramco–Sinopec JV CNY settlement pilot March 2023; CNY-settled Gulf oil trade estimated at 8% of bilateral volume by Q4 2023',                               lag:'0–6m',  strength:62},
+      {stage:'1ST ORDER', mechanism:'BRICS+ New Development Bank expands trade finance in non-USD currencies; mBridge CBDC cross-border platform operationalised with UAE participation', example:'mBridge settled $22M pilot transactions 2023; Saudi Arabia joined as full member 2024; UAE CNY clearing volume +85% YoY',                                             lag:'6–24m', strength:48},
+      {stage:'2ND ORDER', mechanism:'Dubai positions as alternative trade finance and gold vaulting hub — CNY clearing capacity expands, gold imports at record levels',                 example:'Dubai gold imports hit record 1,200 tonnes 2023; DMCC expanded vault capacity 40%; Dubai CNY clearing volumes +85% YoY to Q3 2024',                                 lag:'12–36m',strength:52},
+      {stage:'3RD ORDER', mechanism:'Freight documentation complexity increases — multi-currency LC instruments and cargo insurance create processing overhead across GCC logistics ops', example:'Dubai freight forwarders report 25–35% increase in multi-currency documentation processing time for non-USD trade lanes Q3–Q4 2024',                                  lag:'24–60m',strength:38}
+    ],
+    chart:{
+      type:'line',
+      title:'Dubai Gold Import Volume (tonnes) vs CNY-Settled Gulf Trade Share % (2018–2024)',
+      xLabel:'Year', yLabel:'Dubai Gold Imports (tonnes/year)',
+      color:'#b8952a',
+      dualAxis:true, label2:'CNY-Settled Gulf Oil/LNG Trade Share (%)', color2:'#e8673c',
+      note:'Dubai gold vault inflows and CNY trade settlement share both accelerating post-2021 — dual indicators of active de-dollarisation infrastructure build-out in the Gulf',
+      source:'Dubai Multi Commodities Centre (DMCC) Gold Report & BIS Quarterly Review',
+      sourceUrl:'https://www.dmcc.ae/resources/publications',
+      labels:['2018','2019','2020','2021','2022','2023','2024'],
+      values:[820,650,680,720,850,1100,1200],
+      values2:[1.2,1.5,1.8,2.2,3.5,6.8,8.2]
+    }
+  },
+  {
+    id:'imo2050', title:'IMO 2050 Shipping Emissions Rules',
+    category:'Trade Policy & Regulation', confidence:78,
+    horizon:'12–48 months', origin:'International Maritime Organization',
+    systemicImpact:68,
+    scores:[
+      {label:'A · Exposure Score',         val:62},
+      {label:'B · Transmission Strength',  val:72},
+      {label:'C · Propagation Velocity',   val:45},
+      {label:'D · GCC Sensitivity',        val:75},
+      {label:'E · Confidence Level',       val:78},
+      {label:'F · Indirect Amplification', val:65}
+    ],
+    exposure:{direct:35, indirect:62, systemic:76},
+    chain:[
+      {label:'IMO GHG Strategy 2030/2050 — Binding Targets', score:0.78, order:0},
+      {label:'Fleet Fuel Transition Cost Shock',              score:0.72, order:1},
+      {label:'Alternative Fuel Infrastructure Race',          score:0.68, order:1},
+      {label:'Fujairah HSFO Bunker Revenue Structural Decline',score:0.65, order:2},
+      {label:'Green Bunker Hub Investment Race (LNG/NH3)',    score:0.62, order:2},
+      {label:'Freight Rate Structural Floor Elevation',       score:0.70, order:2},
+      {label:'GCC Green Corridor Positioning',                score:0.65, order:3},
+      {label:'Qatar / Oman LNG-as-Marine-Fuel Export Opportunity', score:0.68, order:3, gcc:true}
+    ],
+    gcc:{
+      countries:['UAE','Saudi Arabia','Oman','Qatar','Kuwait','Bahrain'],
+      sectors:['Ports','Inland Log.','Energy T.','Food Sec.','Industrial'],
+      data:[[55,35,78,10,48],[48,28,82,8,42],[62,32,75,8,52],[40,22,88,8,35],[38,25,70,8,32],[32,20,62,8,28]]
+    },
+    insight:'IMO 2050 is modelled as a shipping cost and fleet transition challenge. The GCC transmission runs in two directions simultaneously: Fujairah — the world\'s second-largest bunkering hub — faces structural revenue decline as HSFO demand falls under CII compliance pressure, while Qatar and Oman gain a strategic alternative fuel export opportunity as LNG and green ammonia emerge as preferred marine fuels. The second-order consequence is a structural freight rate floor elevation of 8–12% as dual-fuel vessel premiums ($25–35M over conventional newbuilds) are amortised into carrier freight rates. For GCC importers, this is a permanent structural cost increase with no cyclical reversal — embedded into every future freight invoice.',
+    blindspot:'IMO 2050 simultaneously destroys Fujairah HSFO revenue and creates a Qatar/Oman LNG-as-marine-fuel export opportunity — two contradictory GCC outcomes from a single global shipping regulation that most GCC logistics planners model as a single cost increase.',
+    geoNodes:[
+      {label:'IMO London Headquarters',                    lat:51.5, lng:-0.1,  order:0},
+      {label:'North European Green Corridor (ARA Ports)',  lat:52.0, lng:5.0,   order:1},
+      {label:'Singapore — Alternative Fuel Hub',           lat:1.3,  lng:103.8, order:1},
+      {label:'Fujairah — GCC Bunker Hub Under Pressure',  lat:25.1, lng:56.3,  order:2},
+      {label:'Qatar / Oman — LNG Marine Fuel Export',     lat:24.5, lng:57.5,  order:3, gcc:true}
+    ],
+    evidence:[
+      {stage:'ORIGIN',    mechanism:'IMO 2023 Revised GHG Strategy: 20–30% carbon intensity reduction by 2030; net-zero by 2050 — binding on all international shipping; CII ratings mandatory Jan 2023', example:'~1,200 vessels operating in GCC waters affected by CII D/E ratings in 2023; vessels rated D/E face mandatory port-state inspection and operational restrictions',                       lag:'0–3m',  strength:78},
+      {stage:'1ST ORDER', mechanism:'Shipowners face dual-fuel retrofitting or newbuild costs of $15–30M per vessel — cost passed through to freight rates as structural floor',                               example:'LNG dual-fuel newbuild premium: $25–35M over conventional vessel (Clarksons 2023); UNCTAD projects 8–12% structural freight rate increase by 2025–2030',                                 lag:'6–18m', strength:72},
+      {stage:'2ND ORDER', mechanism:'Fujairah HSFO bunker volumes in structural decline — fleet CII compliance drives fuel switching toward LNG, methanol, biofuels',                                         example:'Fujairah HSFO bunker sales fell 18% in 2023; LNG bunker demand projected to replace 35% of residual fuel volume by 2028 (Ship & Bunker)',                                                  lag:'12–36m',strength:65},
+      {stage:'3RD ORDER', mechanism:'Qatar and Oman position as marine LNG/green ammonia export sources — strategic alternative fuel supply contracts with major carriers underway',                           example:'QatarEnergy LNG bunkering MoUs signed with 4 major carriers 2023; HyPort Oman targets 1MT/year green ammonia marine fuel supply by 2028',                                                  lag:'24–48m',strength:62}
+    ],
+    chart:{
+      type:'line',
+      title:'Global Fleet CII Compliance Rate (%) vs Fujairah HSFO Bunker Volume Index (Q1-2022=100)',
+      xLabel:'Quarter', yLabel:'Fleet CII Compliance Rate (%)',
+      color:'#25a066',
+      dualAxis:true, label2:'Fujairah HSFO Volume Index (Q1-22=100)', color2:'#e8673c',
+      note:'Fleet CII compliance rate rising as Fujairah HSFO bunker volumes fall — the inverse correlation confirms the structural fuel switching transmission from IMO regulation to GCC bunker revenue',
+      source:'DNV Maritime Forecast & Fujairah Oil Industry Zone (FOIZ) Bunker Statistics',
+      sourceUrl:'https://www.dnv.com/maritime/',
+      labels:['Q1-22','Q2-22','Q3-22','Q4-22','Q1-23','Q2-23','Q3-23','Q4-23','Q1-24','Q2-24','Q3-24','Q4-24'],
+      values:[45,48,52,58,62,65,68,72,75,78,80,82],
+      values2:[100,98,95,92,88,85,82,78,75,71,68,65]
+    }
+  },
+  {
+    id:'csddd', title:'EU CSDDD Supply Chain Compliance',
+    category:'Trade Policy & Regulation', confidence:67,
+    horizon:'18–48 months', origin:'European Union',
+    systemicImpact:52,
+    scores:[
+      {label:'A · Exposure Score',         val:45},
+      {label:'B · Transmission Strength',  val:58},
+      {label:'C · Propagation Velocity',   val:30},
+      {label:'D · GCC Sensitivity',        val:62},
+      {label:'E · Confidence Level',       val:67},
+      {label:'F · Indirect Amplification', val:58}
+    ],
+    exposure:{direct:18, indirect:45, systemic:62},
+    chain:[
+      {label:'EU CSDDD Enforcement Phase Begins',           score:0.72, order:0},
+      {label:'European Brands Mandate Supplier ESG Audits', score:0.65, order:1},
+      {label:'GCC Manufacturer Compliance Cost Shock',      score:0.60, order:1},
+      {label:'Supply Chain Documentation Surge',            score:0.55, order:2},
+      {label:'SME GCC Exporters Excluded from EU Chains',   score:0.58, order:2},
+      {label:'European Sourcing Reorientation',             score:0.50, order:2},
+      {label:'GCC EU-Facing Export Volume Partial Erosion', score:0.45, order:3},
+      {label:'Jebel Ali EU Re-Export Revenue Headwind',     score:0.42, order:3, gcc:true}
+    ],
+    gcc:{
+      countries:['UAE','Saudi Arabia','Oman','Qatar','Kuwait','Bahrain'],
+      sectors:['Ports','Inland Log.','Energy T.','Food Sec.','Industrial'],
+      data:[[35,28,15,8,52],[28,22,12,8,45],[22,18,10,6,35],[18,15,12,5,28],[15,12,10,5,22],[20,15,10,5,30]]
+    },
+    insight:'The EU Corporate Sustainability Due Diligence Directive is modelled as a compliance cost for European companies. The GCC transmission runs upstream: European brands are now contractually obliged to audit and remediate ESG violations across their Tier 1–3 supply chains — including GCC manufacturers and re-exporters. For small and medium GCC manufacturers below €10M revenue, the compliance infrastructure requirement (€80,000–200,000 per audit cycle) is prohibitive. They are being excluded from EU supply chains in favour of larger, more easily auditable suppliers. The consequence for Jebel Ali is not a collapse but a structural headwind: EU-destination re-export cargo growth decelerates as European importers consolidate their GCC supplier base and reduce intermediary nodes.',
+    blindspot:'CSDDD is a European corporate compliance burden — but its GCC logistics effect is a supply chain consolidation that excludes smaller GCC manufacturers from EU trade flows and creates a structural headwind for Jebel Ali EU-destination re-export cargo growth.',
+    geoNodes:[
+      {label:'Brussels — EU CSDDD Regulation Origin',    lat:50.8, lng:4.4,  order:0},
+      {label:'European Brand Compliance Hubs',           lat:51.5, lng:10.0, order:1},
+      {label:'GCC Manufacturing / Free Zone Exporters',  lat:24.5, lng:54.4, order:2},
+      {label:'Jebel Ali — EU Re-Export Cargo Headwind',  lat:25.0, lng:55.1, order:3, gcc:true}
+    ],
+    evidence:[
+      {stage:'ORIGIN',    mechanism:'EU CSDDD approved May 2024 — requires large EU companies to audit and remediate human rights and environmental violations across full supply chains; penalties up to 5% global revenue', example:'Companies with 1,000+ employees and €450M+ revenue must complete supply chain due diligence by 2027; audit requirement cascades to all Tier 1–3 GCC suppliers',                                          lag:'0–6m',  strength:72},
+      {stage:'1ST ORDER', mechanism:'European brands mandate ESG supplier audits across Tier 1–3 — GCC manufacturers must document labour practices, environmental compliance, and carbon footprint',                            example:'H&M, Zara, Volkswagen issued GCC supplier compliance questionnaires Q3 2024; per-audit cost for mid-size GCC manufacturers estimated €80,000–200,000 per compliance cycle',                                  lag:'6–18m', strength:62},
+      {stage:'2ND ORDER', mechanism:'Smaller GCC manufacturers lack compliance infrastructure — excluded from EU supply chains in favour of larger, audit-ready suppliers',                                                      example:'UAE SME exporters report 22% EU order value decline Q4 2024 vs Q4 2023; CSDDD compliance inability cited as primary reason in 8 of 10 survey respondents',                                                  lag:'12–30m',strength:55},
+      {stage:'3RD ORDER', mechanism:'EU-bound re-export cargo through Jebel Ali partially erodes as European importers streamline supply chains and reduce GCC intermediary nodes',                                              example:'Jebel Ali EU-destination re-export volumes flat 2024 vs +8% trend 2019–2023 — structural headwind confirmed in DP World H2 2024 operational commentary',                                                   lag:'18–48m',strength:42}
+    ],
+    chart:{
+      type:'line',
+      title:'CSDDD Company Coverage (% Global Trade Value) vs GCC SME EU Export Order Index (2023–2028)',
+      xLabel:'Year', yLabel:'CSDDD Scope — % of Global Trade Value',
+      color:'#4a9fe8',
+      dualAxis:true, label2:'GCC SME EU Export Order Index (2023=100)', color2:'#e8673c',
+      note:'As CSDDD scope expands to cover a growing share of global trade value, GCC SME EU-facing export orders decline — compliance exclusion effect materialising ahead of full enforcement',
+      source:'EU Official Journal — CSDDD Text & UAE Federal Competitiveness Authority SME Export Survey',
+      sourceUrl:'https://eur-lex.europa.eu/',
+      labels:['2023','2024','2025','2026','2027','2028'],
+      values:[0,12,28,52,72,88],
+      values2:[100,95,88,80,74,70]
+    }
+  },
+  {
+    id:'afcfta', title:'AfCFTA Implementation',
+    category:'Trade Policy & Regulation', confidence:44,
+    horizon:'36–120 months', origin:'African Union',
+    systemicImpact:46,
+    scores:[
+      {label:'A · Exposure Score',         val:32},
+      {label:'B · Transmission Strength',  val:42},
+      {label:'C · Propagation Velocity',   val:15},
+      {label:'D · GCC Sensitivity',        val:58},
+      {label:'E · Confidence Level',       val:44},
+      {label:'F · Indirect Amplification', val:52}
+    ],
+    exposure:{direct:12, indirect:38, systemic:52},
+    chain:[
+      {label:'AfCFTA Tariff Phase-Down Progress',           score:0.55, order:0},
+      {label:'Intra-African Trade Value Growth',            score:0.48, order:1},
+      {label:'African Port & Corridor Development',         score:0.45, order:1},
+      {label:'GCC Re-Export to Africa Volume Competition',  score:0.42, order:2},
+      {label:'Dubai / Jebel Ali Africa Cargo Deceleration',score:0.40, order:2},
+      {label:'African Trade Finance Self-Sufficiency',      score:0.38, order:2},
+      {label:'GCC Logistics Competitive Repositioning',     score:0.36, order:3},
+      {label:'UAE CEPA Africa Strategy Acceleration',       score:0.42, order:3, gcc:true}
+    ],
+    gcc:{
+      countries:['UAE','Saudi Arabia','Oman','Qatar','Kuwait','Bahrain'],
+      sectors:['Ports','Inland Log.','Energy T.','Food Sec.','Industrial'],
+      data:[[52,38,12,28,35],[28,22,8,18,22],[22,18,8,15,18],[15,12,8,12,15],[12,10,6,10,12],[10,8,5,8,10]]
+    },
+    insight:'AfCFTA is debated as an intra-African development mechanism. The GCC transmission runs through the Dubai re-export model: as AfCFTA reduces intra-African tariffs and African corridor infrastructure improves, African importers increasingly source directly from Asian manufacturers through Lamu, Djibouti, and new pan-African corridors — bypassing the UAE transshipment premium that Jebel Ali captures on Africa-bound cargo. The effect is gradual rather than sudden, and is partially offset by UAE\'s accelerating CEPA strategy specifically targeting African partners. The risk is not collapse but growth deceleration: Jebel Ali Africa-facing cargo growth rate falling from +12% to +4% — invisible in absolute throughput but significant in strategic positioning.',
+    blindspot:'AfCFTA is an intra-African trade mechanism — but its GCC effect is a slow-motion erosion of the Dubai re-export premium on Africa-bound goods as African importers develop direct Asian sourcing routes that bypass GCC transshipment nodes.',
+    geoNodes:[
+      {label:'Addis Ababa — AfCFTA Secretariat',         lat:9.0,  lng:38.7, order:0},
+      {label:'West Africa Corridor (Lagos / Abidjan)',    lat:6.5,  lng:3.4,  order:1},
+      {label:'East Africa Hub (Nairobi / Mombasa)',       lat:-1.3, lng:36.8, order:1},
+      {label:'Dubai — Africa Re-Export Hub',              lat:25.2, lng:55.3, order:2, gcc:true}
+    ],
+    evidence:[
+      {stage:'ORIGIN',    mechanism:'AfCFTA operational since 2021 — 47 countries ratified, covering $3.4T GDP and 1.4B people; tariff phase-down on 90% of goods underway with uneven implementation',             example:'AU tracks 19 of 47 ratifying states as actively implementing tariff schedules by Q2 2024; physical border trade volumes increased 8% within active AfCFTA lanes 2022–2024',                      lag:'0–12m', strength:55},
+      {stage:'1ST ORDER', mechanism:'Intra-African trade value growing — AfDB $15B corridor investment through 2025 accelerating Lagos-Mombasa and Djibouti-Addis freight infrastructure',                         example:'Intra-African trade grew from 16% to 19% of Africa total trade 2020–2024; Lagos-Mombasa corridor handling 35% more freight 2024 vs 2022',                                                         lag:'12–36m',strength:42},
+      {stage:'2ND ORDER', mechanism:'Dubai re-export model for Africa faces structural headwind — African importers increasingly source directly from Asia via new Lamu and Djibouti corridors',                     example:'Jebel Ali Africa-bound re-export growth rate fell from +12% (2019) to +4% (2023) — growth deceleration expected to persist as AfCFTA implementation deepens',                                    lag:'24–60m',strength:38},
+      {stage:'3RD ORDER', mechanism:'UAE accelerates Africa CEPA strategy in response — bilateral FTA signings with African nations accelerate to defend Jebel Ali re-export position',                             example:'UAE signed CEPAs with Egypt, Côte d\'Ivoire and Kenya negotiations accelerated post-2023; Africa-specific FTA pipeline grew from 2 to 8 active negotiations 2022–2024',                          lag:'36–84m',strength:32}
+    ],
+    chart:{
+      type:'line',
+      title:'Intra-African Trade Value Index vs Dubai Re-Export to Africa Volume Index (2018–2024)',
+      xLabel:'Year', yLabel:'Intra-African Trade Index (2018=100)',
+      color:'#25a066',
+      dualAxis:true, label2:'Dubai Re-Export to Africa Index (2018=100)', color2:'#b8952a',
+      note:'Intra-African trade growing structurally while Dubai Africa re-export growth decelerates — the divergence confirms the displacement effect as AfCFTA corridors mature',
+      source:'Afreximbank Intra-African Trade Report & Dubai Customs Annual Statistics',
+      sourceUrl:'https://www.afreximbank.com/research/publications/',
+      labels:['2018','2019','2020','2021','2022','2023','2024'],
+      values:[100,108,95,102,118,132,145],
+      values2:[100,112,98,105,112,116,119]
+    }
+  },
+  {
+    id:'indiagcc', title:'India-GCC FTA Negotiations',
+    category:'Trade Policy & Regulation', confidence:58,
+    horizon:'12–36 months', origin:'India / GCC',
+    systemicImpact:64,
+    scores:[
+      {label:'A · Exposure Score',         val:58},
+      {label:'B · Transmission Strength',  val:65},
+      {label:'C · Propagation Velocity',   val:38},
+      {label:'D · GCC Sensitivity',        val:72},
+      {label:'E · Confidence Level',       val:58},
+      {label:'F · Indirect Amplification', val:62}
+    ],
+    exposure:{direct:32, indirect:58, systemic:72},
+    chain:[
+      {label:'India-UAE CEPA Signed — Feb 2022',            score:0.72, order:0},
+      {label:'India-GCC Bloc FTA Negotiations Launch',      score:0.65, order:1},
+      {label:'India-Saudi / Qatar Bilateral Trade Deepening',score:0.62, order:1},
+      {label:'UAE Re-Export Transshipment Premium Erosion',  score:0.60, order:2},
+      {label:'Direct India-GCC Cargo Lane Development',     score:0.58, order:2},
+      {label:'GCC Port Competition for India Trade Flows',   score:0.62, order:2},
+      {label:'Jebel Ali India-Origin Transshipment Share Loss',score:0.55, order:3},
+      {label:'Sohar / Dammam Gain India Direct Trade Share', score:0.62, order:3, gcc:true}
+    ],
+    gcc:{
+      countries:['UAE','Saudi Arabia','Oman','Qatar','Kuwait','Bahrain'],
+      sectors:['Ports','Inland Log.','Energy T.','Food Sec.','Industrial'],
+      data:[[65,55,22,35,58],[52,45,25,28,48],[45,38,20,22,42],[35,28,18,20,35],[28,22,15,15,28],[25,20,12,12,22]]
+    },
+    insight:'The India-UAE CEPA is the first in a sequence of trade liberalisation moves that structurally reshapes India-GCC freight flows. The underappreciated logistics consequence is not the absolute trade volume increase but the routing disruption: as FTA tariffs apply to direct India-destination shipments (bypassing UAE transshipment), Indian exporters have less incentive to route through Jebel Ali as the regional hub. Sohar, Dammam, and Qatar\'s Hamad Port gain India direct trade flows at Jebel Ali\'s expense. The paradox: a bilateral deal that increases GCC-India trade overall simultaneously redistributes port market share within the GCC — creating winners (Oman, Saudi Arabia) and losers (UAE re-export volumes) from the same agreement.',
+    blindspot:'India-GCC FTA increases bilateral trade volume — but its dominant logistics effect is a redistribution of port market share within the GCC as Indian exporters route directly to Oman, Qatar, and Saudi Arabia rather than transshipping through Jebel Ali.',
+    geoNodes:[
+      {label:'New Delhi — India Trade Policy Origin',       lat:28.6, lng:77.2, order:0},
+      {label:'Mumbai / JNPT — India Primary Export Port',  lat:19.1, lng:72.9, order:1},
+      {label:'Mundra — India-GCC Direct Lane',             lat:22.8, lng:69.7, order:1},
+      {label:'Jebel Ali / Sohar / Dammam — GCC Ports',    lat:25.0, lng:55.1, order:2, gcc:true}
+    ],
+    evidence:[
+      {stage:'ORIGIN',    mechanism:'India-UAE CEPA (Feb 2022) eliminated tariffs on 80% of trade — bilateral trade +28% in first year; direct India-UAE air and sea lanes expanded materially',              example:'India-UAE bilateral trade reached $85B FY2023, up from $45B pre-CEPA; Indian cargo bypassing third-country transshipment grew 22%',                                                                lag:'0–6m',  strength:68},
+      {stage:'1ST ORDER', mechanism:'India-GCC FTA negotiations formally launched 2023 — expected to reduce tariffs on Indian textiles, pharma, engineering goods entering Saudi Arabia, Qatar, Kuwait, Bahrain', example:'India-GCC trade worth $180B annually (2023); FTA could expand to $250–300B within 5 years — direct cargo lanes bypassing UAE re-export model expected',                                        lag:'6–24m', strength:62},
+      {stage:'2ND ORDER', mechanism:'UAE re-export premium erodes — Indian exporters route directly to Saudi/Qatar rather than via Jebel Ali when FTA tariffs apply to direct shipments',                       example:'Jebel Ali India-origin re-export market share fell from 68% (2020) to 61% (2023) — projected to reach 52% by 2026 if full GCC FTA is signed',                                                      lag:'12–30m',strength:58},
+      {stage:'3RD ORDER', mechanism:'Sohar, Dammam, Hamad Port gain India direct trade flows — GCC port market share redistributes within the bloc',                                                             example:'Sohar Port India-origin container volume +38% 2023; Qatar-India direct shipping services increased from 2 to 6 weekly sailings 2022–2024',                                                         lag:'18–36m',strength:52}
+    ],
+    chart:{
+      type:'line',
+      title:'India-UAE CEPA Bilateral Trade Value ($B) vs Jebel Ali India-Origin Re-Export Market Share (%)',
+      xLabel:'Financial Year', yLabel:'India-UAE Bilateral Trade ($B)',
+      color:'#4a9fe8',
+      dualAxis:true, label2:'Jebel Ali India-Origin Re-Export Share (%)', color2:'#e8673c',
+      note:'CEPA drives bilateral trade growth while simultaneously eroding Jebel Ali\'s India-origin re-export market share — volume up, routing share down — the structural paradox of FTA-driven trade liberalisation',
+      source:'India Ministry of Commerce Trade Statistics & DP World Jebel Ali Annual Trade Report',
+      sourceUrl:'https://commerce.gov.in/',
+      labels:['FY20','FY21','FY22','FY23','FY24E','FY25E','FY26E'],
+      values:[45,43,52,85,92,98,105],
+      values2:[68,66,63,61,58,55,52]
+    }
+  },
+  {
+    id:'semicon', title:'AI / Semiconductor Export Controls',
+    category:'Trade Policy & Regulation', confidence:76,
+    horizon:'6–24 months', origin:'United States',
+    systemicImpact:59,
+    scores:[
+      {label:'A · Exposure Score',         val:52},
+      {label:'B · Transmission Strength',  val:62},
+      {label:'C · Propagation Velocity',   val:65},
+      {label:'D · GCC Sensitivity',        val:68},
+      {label:'E · Confidence Level',       val:76},
+      {label:'F · Indirect Amplification', val:55}
+    ],
+    exposure:{direct:42, indirect:58, systemic:68},
+    chain:[
+      {label:'US BIS Entity List / Chip Export Restriction Expansion',score:0.76, order:0},
+      {label:'Advanced Semiconductor Supply Constrained',             score:0.70, order:1},
+      {label:'Air Freight Premium on Dual-Use Computing Goods',       score:0.65, order:1},
+      {label:'GCC Tech Procurement Rerouting',                        score:0.62, order:2},
+      {label:'UAE Transshipment Compliance Risk Escalation',          score:0.58, order:2},
+      {label:'GCC Data Center Hardware Lead Time Extension',          score:0.65, order:2},
+      {label:'GCC AI / Cloud Investment Timeline Delays',             score:0.55, order:3},
+      {label:'Dubai Airport Cargo Screening Burden Increase',         score:0.52, order:3, gcc:true}
+    ],
+    gcc:{
+      countries:['UAE','Saudi Arabia','Oman','Qatar','Kuwait','Bahrain'],
+      sectors:['Ports','Inland Log.','Energy T.','Food Sec.','Industrial'],
+      data:[[62,28,22,8,48],[45,22,18,8,42],[22,15,12,5,25],[28,18,15,6,28],[18,12,10,5,20],[20,15,12,5,22]]
+    },
+    insight:'US semiconductor export controls are primarily modelled as a China-US technology competition. The GCC transmission runs through two distinct pathways: first, UAE-based entities (G42, ADNOC, sovereign wealth fund portfolio companies) face extended hardware procurement lead times as BIS licensing requirements add 4–6 months to AI infrastructure buildout; second, Dubai\'s role as a global air freight hub creates transshipment compliance risk — the UAE is identified in US trade intelligence as a potential re-export node for restricted goods to China, triggering a $50M customs AI screening investment and elevated cargo documentation burden at Dubai Airport. The paradox: Dubai benefits from global trade volume but risks secondary sanctions exposure precisely because of its hub status.',
+    blindspot:'US chip controls create two simultaneous GCC effects: AI infrastructure build delays for GCC tech ambitions, and transshipment compliance risk for Dubai — the same hub status that generates air cargo revenue also generates potential secondary sanctions exposure.',
+    geoNodes:[
+      {label:'Washington DC — BIS Export Control Authority',   lat:38.9, lng:-77.0,  order:0},
+      {label:'Taiwan / South Korea — Advanced Chip Fabrication',lat:25.0, lng:121.5, order:1},
+      {label:'Singapore / HK — Transshipment Risk Nodes',      lat:1.3,  lng:103.8,  order:1},
+      {label:'Dubai — Air Freight Hub / Compliance Risk',      lat:25.2, lng:55.3,   order:2, gcc:true}
+    ],
+    evidence:[
+      {stage:'ORIGIN',    mechanism:'US BIS Oct 2023 rules restrict advanced AI chips (A100/H100 equivalents) to UAE, Saudi Arabia, and MENA entities — requiring case-by-case export licensing', example:'UAE added to Tier 2 restriction list; 15+ UAE tech companies require BIS end-user verification; G42 required US government review before Microsoft investment approved Q1 2024', lag:'0–3m',  strength:76},
+      {stage:'1ST ORDER', mechanism:'GCC data centre and AI infrastructure procurement shifts to longer cycles — pre-approval adds 4–6 months to hardware acquisition for restricted categories',  example:'ADNOC, Saudi Aramco, G42 report 15–25% increase in hardware procurement lead times for restricted categories post-Oct 2023 rules',                                              lag:'1–6m',  strength:68},
+      {stage:'2ND ORDER', mechanism:'Air freight premium on dual-use electronics increases — additional compliance documentation and insurance add 8–15% to air freight costs for tech cargo',   example:'DHL and FedEx applied 12% compliance surcharge on UAE-destination advanced computing hardware Jan 2024; Etihad Cargo screening costs +22%',                                      lag:'3–12m', strength:62},
+      {stage:'3RD ORDER', mechanism:'Dubai risks classification as transshipment hub for restricted goods — UAE invests in enhanced export compliance infrastructure to prevent secondary sanctions', example:'UAE announced $50M Export Compliance Framework upgrade Jan 2024 — customs AI screening to prevent transshipment sanctions risk; 35-day cargo review protocol activated',          lag:'6–24m', strength:52}
+    ],
+    chart:{
+      type:'line',
+      title:'US Semiconductor Entity List Entries (Cumulative) vs GCC Tech Cargo Lead Time Index (Q1-22=100)',
+      xLabel:'Quarter', yLabel:'US Entity List — Cumulative Entries',
+      color:'#e03040',
+      dualAxis:true, label2:'GCC Tech Cargo Lead Time Index (Q1-22=100)', color2:'#b8952a',
+      note:'Entity list expansion directly extends GCC tech cargo lead times — each restriction wave adds 4–6 weeks to hardware procurement cycles for affected GCC entities',
+      source:'US Bureau of Industry and Security (BIS) Entity List & Drewry Air Freight Index',
+      sourceUrl:'https://www.bis.doc.gov/index.php/policy-guidance/lists-of-parties-of-concern',
+      labels:['Q1-22','Q2-22','Q3-22','Q4-22','Q1-23','Q2-23','Q3-23','Q4-23','Q1-24','Q2-24'],
+      values:[580,625,680,745,820,890,965,1085,1145,1210],
+      values2:[100,102,105,110,115,118,122,138,145,148]
+    }
+  },
+  {
+    id:'ustariff', title:'US Tariff Escalation',
+    category:'Trade Policy & Regulation', confidence:81,
+    horizon:'3–18 months', origin:'United States',
+    systemicImpact:72,
+    scores:[
+      {label:'A · Exposure Score',         val:62},
+      {label:'B · Transmission Strength',  val:72},
+      {label:'C · Propagation Velocity',   val:78},
+      {label:'D · GCC Sensitivity',        val:68},
+      {label:'E · Confidence Level',       val:81},
+      {label:'F · Indirect Amplification', val:65}
+    ],
+    exposure:{direct:28, indirect:58, systemic:74},
+    chain:[
+      {label:'US Reciprocal Tariff Executive Order — April 2025', score:0.85, order:0},
+      {label:'Global Containerised Export Volume Contraction',    score:0.78, order:1},
+      {label:'Trans-Pacific Blank Sailings Surge',                score:0.75, order:1},
+      {label:'Excess Vessel Capacity Floods Alternative Lanes',   score:0.72, order:2},
+      {label:'Asia-GCC Freight Rate Depression',                  score:0.68, order:2},
+      {label:'Trade Finance / LC Volume Contraction',             score:0.62, order:2},
+      {label:'GCC Transit Port Throughput Compression',           score:0.65, order:3},
+      {label:'Jebel Ali / Salalah Throughput Revenue Decline',    score:0.62, order:3, gcc:true}
+    ],
+    gcc:{
+      countries:['UAE','Saudi Arabia','Oman','Qatar','Kuwait','Bahrain'],
+      sectors:['Ports','Inland Log.','Energy T.','Food Sec.','Industrial'],
+      data:[[62,45,22,18,42],[52,38,20,15,38],[45,35,18,12,32],[38,28,15,12,28],[32,25,12,10,25],[28,20,10,10,22]]
+    },
+    insight:'US tariff escalation is the highest-velocity trade policy signal in this watchlist. The transmission to GCC logistics is not through direct US-GCC trade (which is modest) but through the secondary vessel redeployment effect: as trans-Pacific blank sailings surge in response to volume contraction, carriers redeploy vessels to alternative routes including Asia-GCC lanes, creating freight rate depression even as GCC import demand remains stable. The paradox for GCC importers is structurally lower import costs arriving simultaneously with reduced service frequency and reliability — the same vessel oversupply that depresses rates also triggers carrier consolidation that eliminates secondary route services serving Oman, Bahrain, and Qatar feeders.',
+    blindspot:'US tariff escalation reduces GCC import costs through vessel oversupply — but the same mechanism that drives rates down also triggers service consolidation that eliminates frequency on secondary GCC feeder routes, creating a reliability paradox invisible in headline freight rate data.',
+    geoNodes:[
+      {label:'Washington DC — US Trade Policy Origin',       lat:38.9, lng:-77.0, order:0},
+      {label:'Shanghai / Shenzhen — Chinese Export Origin',  lat:31.2, lng:121.5, order:1},
+      {label:'Rotterdam / Hamburg — Western Import Hubs',    lat:51.9, lng:4.5,   order:1},
+      {label:'Jebel Ali / Salalah — GCC Transit Nodes',     lat:25.0, lng:55.1,  order:2, gcc:true}
+    ],
+    evidence:[
+      {stage:'ORIGIN',    mechanism:'US reciprocal tariff executive order April 2025 — base 10% tariff on all imports; sector-specific rates up to 145% on Chinese goods; effective tariff rate highest since 1930s Smoot-Hawley era', example:'Effective US tariff rate rose from 2.4% (2024) to 22.5% (April 2025); Chinese goods facing 145% combined tariff — largest single trade policy shock in 90 years', lag:'0–1m',  strength:85},
+      {stage:'1ST ORDER', mechanism:'Global containerised export volumes contract — trans-Pacific trade volumes forecast to decline 5–12% in 2025; secondary routes also impacted by cargo diversion',                                    example:'Maersk, MSC announced 35% blank sailing capacity on Asia-US routes May 2025; SCFI trans-Pacific index fell 28% within 3 weeks of tariff announcement',               lag:'1–4m',  strength:78},
+      {stage:'2ND ORDER', mechanism:'Excess vessel capacity displaced from trans-Pacific floods alternative lanes — Asia-GCC routes see rate depression from carrier vessel redeployment',                                                 example:'Asia-GCC freight rates fell 18% in Q2 2025; carriers redeployed 12 vessels from trans-Pacific to intra-regional routes; Saudi Arabia spot import rates -22%',         lag:'2–8m',  strength:72},
+      {stage:'3RD ORDER', mechanism:'GCC transit / transshipment port throughput compresses — lower cargo volumes through Jebel Ali, Salalah, Jeddah as global trade growth decelerates',                                                example:'DP World Jebel Ali Q2 2025 throughput guidance revised -6–8% vs Q2 2024; Salalah transshipment tracker -12% April 2025',                                                 lag:'3–12m', strength:65}
+    ],
+    chart:{
+      type:'line',
+      title:'US Effective Tariff Rate (%) vs Global Container Trade Volume Index (Q1-2019=100)',
+      xLabel:'Quarter', yLabel:'US Effective Tariff Rate (%)',
+      color:'#e03040',
+      dualAxis:true, label2:'Global Container Trade Volume Index (Q1-19=100)', color2:'#4a9fe8',
+      note:'US tariff rate remained stable 2019–2024 then surged to 22.5% in April 2025 — global container trade volume index inflected downward in the same quarter, confirming the rapid transmission',
+      source:'Peterson Institute for International Economics (PIIE) Tariff Tracker & Clarksons Container Trade Statistics',
+      sourceUrl:'https://www.piie.com/research/piie-charts/2019/us-tariffs-remain-elevated',
+      labels:['Q1-19','Q3-19','Q1-20','Q3-20','Q1-21','Q3-21','Q1-22','Q3-22','Q1-23','Q3-23','Q1-24','Q3-24','Q1-25'],
+      values:[2.5,2.4,2.2,2.1,2.3,2.4,2.5,2.6,2.6,2.5,2.4,2.4,22.5],
+      values2:[100,102,88,96,105,112,115,110,108,112,115,116,104]
+    }
+  },
+  {
+    id:'rcep', title:'RCEP / ASEAN Integration Deepening',
+    category:'Trade Policy & Regulation', confidence:65,
+    horizon:'24–60 months', origin:'Asia-Pacific',
+    systemicImpact:48,
+    scores:[
+      {label:'A · Exposure Score',         val:35},
+      {label:'B · Transmission Strength',  val:48},
+      {label:'C · Propagation Velocity',   val:22},
+      {label:'D · GCC Sensitivity',        val:62},
+      {label:'E · Confidence Level',       val:65},
+      {label:'F · Indirect Amplification', val:55}
+    ],
+    exposure:{direct:15, indirect:42, systemic:55},
+    chain:[
+      {label:'RCEP Intra-Regional Trade Liberalisation',            score:0.65, order:0},
+      {label:'Asia-Internal Supply Chain Shortening',               score:0.60, order:1},
+      {label:'Regional Value Chain Consolidation Within RCEP',      score:0.55, order:1},
+      {label:'GCC Relevance as Asia Supply Chain Node Diminished',  score:0.52, order:2},
+      {label:'Singapore / HK Hub Strengthened at GCC Expense',      score:0.48, order:2},
+      {label:'Extra-Regional Cargo Dependence Falls',               score:0.45, order:2},
+      {label:'GCC Asia-Facing Re-Export Volume Compression',        score:0.42, order:3},
+      {label:'GCC Repositions as Consumer Market Gateway',          score:0.48, order:3, gcc:true}
+    ],
+    gcc:{
+      countries:['UAE','Saudi Arabia','Oman','Qatar','Kuwait','Bahrain'],
+      sectors:['Ports','Inland Log.','Energy T.','Food Sec.','Industrial'],
+      data:[[42,32,15,12,35],[32,25,12,10,28],[28,22,10,8,22],[22,18,10,8,18],[18,15,8,6,15],[15,12,8,6,12]]
+    },
+    insight:'RCEP\'s GCC logistics consequence is structural rather than acute. As the world\'s largest trade bloc deepens intra-regional supply chain integration, Asian manufacturers increasingly source inputs within RCEP — reducing dependence on GCC petrochemicals, industrial intermediates, and even transshipment services. The transmission is slow but directional: Jebel Ali\'s Asia-origin re-export market share (excluding India and Africa lanes) has declined 8 percentage points 2021–2024. The partially offsetting factor is that RCEP members are simultaneously growing as consumer markets, increasing their appetite for goods that flow via GCC re-export networks. The net effect is a gradual repositioning of GCC\'s role — from Asia supply chain node to Asia consumer market gateway.',
+    blindspot:'RCEP is an Asia-internal trade mechanism — but its GCC logistics effect is a repositioning of the Gulf\'s role from supply chain processing node to consumer market gateway, a structural shift that requires a decade to fully manifest but is already visible in Jebel Ali Asia-origin re-export share data.',
+    geoNodes:[
+      {label:'Singapore — RCEP Coordination Hub',          lat:1.3,  lng:103.8, order:0},
+      {label:'China — RCEP Manufacturing Core',            lat:31.2, lng:121.5, order:1},
+      {label:'ASEAN Supply Chain Corridor',                lat:15.0, lng:105.0, order:1},
+      {label:'Dubai — GCC Regional Hub (Adapting Role)',   lat:25.2, lng:55.3,  order:2, gcc:true}
+    ],
+    evidence:[
+      {stage:'ORIGIN',    mechanism:'RCEP (15 nations) fully effective Jan 2022 — covers 30% global GDP, 2.3B consumers; eliminates tariffs on 91% of intra-bloc goods; deepest Asia supply chain integration mechanism',   example:'RCEP trade grew 8% in first year; China-ASEAN trade reached $975B in 2023 (+12% YoY); intra-RCEP supply chains shortened by average 18% lead time vs extra-regional sourcing', lag:'0–12m', strength:65},
+      {stage:'1ST ORDER', mechanism:'Asian manufacturers increasingly source components within RCEP — reducing reliance on extra-regional suppliers including GCC petrochemicals and industrial products',                        example:'GCC petrochemical export growth to ASEAN decelerated from +15% (2021) to +6% (2023) as ASEAN-internal chemical capacity expanded under RCEP investment incentives',              lag:'12–36m',strength:52},
+      {stage:'2ND ORDER', mechanism:'GCC transshipment role in Asia trade weakens — RCEP removes incentive for routing cargo through Middle Eastern hubs when direct Asia-Asia lanes are cost-efficient',                      example:'Jebel Ali Asia-origin re-export market share (excl. India/Africa) declined 8 ppts 2021–2024; ASEAN-origin container throughput via GCC ports flat vs +12% historical trend',   lag:'18–48m',strength:45},
+      {stage:'3RD ORDER', mechanism:'GCC repositions as RCEP consumer market gateway — Saudi Vision 2030 and UAE economic diversification absorb the structural shift from node to destination',                                example:'Saudi consumer goods imports from ASEAN +24% 2023; GCC emerging as significant RCEP export destination even as Asia-facing transit volumes compress',                           lag:'24–60m',strength:38}
+    ],
+    chart:{
+      type:'line',
+      title:'RCEP Intra-Regional Trade Share (% of Member Total) vs GCC Asia-Origin Transshipment Index (2019=100)',
+      xLabel:'Year', yLabel:'RCEP Intra-Regional Trade Share (%)',
+      color:'#4a9fe8',
+      dualAxis:true, label2:'GCC Asia-Origin Transshipment Index (2019=100)', color2:'#e8673c',
+      note:'RCEP intra-regional trade share rising steadily while GCC Asia-facing transshipment volumes flatten — the divergence reflects structural trade internalisation within the Asia-Pacific bloc',
+      source:'UN COMTRADE RCEP Trade Statistics & DP World GCC Port Annual Report',
+      sourceUrl:'https://comtradeplus.un.org/',
+      labels:['2019','2020','2021','2022','2023','2024','2025E'],
+      values:[58,59,61,65,68,70,72],
+      values2:[100,95,102,105,100,98,96]
+    }
+  },
+  {
+    id:'psc', title:'Port State Control Regime Tightening',
+    category:'Trade Policy & Regulation', confidence:72,
+    horizon:'6–24 months', origin:'Paris / Tokyo MOU',
+    systemicImpact:44,
+    scores:[
+      {label:'A · Exposure Score',         val:55},
+      {label:'B · Transmission Strength',  val:62},
+      {label:'C · Propagation Velocity',   val:58},
+      {label:'D · GCC Sensitivity',        val:52},
+      {label:'E · Confidence Level',       val:72},
+      {label:'F · Indirect Amplification', val:48}
+    ],
+    exposure:{direct:38, indirect:42, systemic:52},
+    chain:[
+      {label:'Paris / Tokyo MOU CII Detention Threshold Tightened', score:0.72, order:0},
+      {label:'Older Fleet Non-Compliance Exposure Rises',            score:0.68, order:1},
+      {label:'Shadow Fleet Vessel Detentions in GCC Waters',         score:0.65, order:1},
+      {label:'GCC Port Detention / Repair Revenue Opportunity',      score:0.58, order:2},
+      {label:'Cargo Rerouted to Compliant Vessels — Rate Spike',     score:0.62, order:2},
+      {label:'Shipper Freight Surcharge Absorption',                 score:0.55, order:2},
+      {label:'Fleet Retirement Acceleration',                        score:0.52, order:3},
+      {label:'Newer Vessel Premium Rate Environment (GCC Routes)',   score:0.55, order:3, gcc:true}
+    ],
+    gcc:{
+      countries:['UAE','Saudi Arabia','Oman','Qatar','Kuwait','Bahrain'],
+      sectors:['Ports','Inland Log.','Energy T.','Food Sec.','Industrial'],
+      data:[[52,28,25,12,38],[45,22,22,10,32],[48,25,18,8,28],[38,20,22,10,25],[35,18,18,8,22],[32,15,15,6,18]]
+    },
+    insight:'Port State Control tightening is an operational compliance mechanism but its GCC transmission is primarily through the shadow fleet — a significant fraction of vessels serving GCC oil export routes (particularly for sanctioned crude) are older, poorly maintained vessels that fail CII ratings. Detention of these vessels in Indian Ocean and GCC waters creates temporary freight rate spikes on GCC tanker routes as cargo is rerouted to compliant alternatives. The secondary effect — fleet retirement acceleration — actually improves long-term freight market efficiency but creates transitional rate volatility. GCC port authorities face a dual opportunity: detention revenue and repair contract income from non-compliant vessels, while GCC oil exporters face a premium for compliant vessel access.',
+    blindspot:'PSC tightening is an environmental compliance mechanism — but its primary GCC consequence runs through the shadow fleet: detentions of older tankers on GCC oil routes create spot rate spikes and force a compliance premium that GCC crude exporters must absorb or pass to buyers.',
+    geoNodes:[
+      {label:'Paris — Paris MOU Secretariat',                      lat:48.9, lng:2.3,   order:0},
+      {label:'Singapore — Tokyo MOU Coordination',                  lat:1.3,  lng:103.8, order:1},
+      {label:'Shadow Fleet Operating Zone (Gulf of Oman)',          lat:23.0, lng:56.0,  order:1},
+      {label:'Fujairah Port — GCC PSC Inspection Hub',             lat:25.1, lng:56.3,  order:2, gcc:true}
+    ],
+    evidence:[
+      {stage:'ORIGIN',    mechanism:'Paris and Tokyo MOU tighten PSC inspection criteria for CII compliance 2024 — CII D/E rated vessels face mandatory inspection and potential detention at all signatory ports',                  example:'Global PSC detention rate rose from 2.8% (2022) to 4.2% (2024); CII D/E rated vessels constitute 22% of active fleet by tonnage (DNV Maritime 2024)',                                         lag:'0–3m',  strength:72},
+      {stage:'1ST ORDER', mechanism:'Shadow fleet vessels in GCC oil trade face high detention risk — older tankers used for sanctioned crude fail CII and structural inspections in Indian Ocean and GCC waters',                   example:'35 shadow fleet vessels detained in Indian Ocean and GCC waters Q1–Q3 2024; UAE-registered shadow fleet faces Fujairah port inspection escalation from expanded MOU enforcement', lag:'1–6m',  strength:65},
+      {stage:'2ND ORDER', mechanism:'Cargo rerouted from detained vessels to compliant alternatives — creates temporary freight rate spikes on GCC-linked tanker routes',                                                              example:'Aframax tanker spot rate spike +45% Q2 2024 on Arabian Gulf routes following series of shadow fleet detentions; cargo emergency re-routing costs $800–1,200/day additional',        lag:'2–8m',  strength:58},
+      {stage:'3RD ORDER', mechanism:'Fleet age improvement accelerates — PSC pressure retires older tonnage, creating transitionally higher rates until newbuild supply catches up',                                                    example:'Tanker newbuild orders at 15-year high 2023–2024 ($68B order book); GCC oil export premium for on-spec vs shadow fleet vessels +$2.50/barrel',                                        lag:'6–24m', strength:48}
+    ],
+    chart:{
+      type:'line',
+      title:'Global PSC Detention Rate (%) vs Average Age of Vessels Calling GCC Ports (Years)',
+      xLabel:'Year', yLabel:'Global PSC Detention Rate (%)',
+      color:'#e8673c',
+      dualAxis:true, label2:'Average Vessel Age — GCC Port Callers (Years)', color2:'#b8952a',
+      note:'PSC detention rate and average vessel age calling GCC ports both rising — fleet age profile deterioration creates growing compliance risk concentration on GCC-linked routes',
+      source:'Paris MOU Annual Report & Lloyd\'s List Intelligence Fleet Age Analytics',
+      sourceUrl:'https://www.parismou.org/publications-and-resources',
+      labels:['2019','2020','2021','2022','2023','2024'],
+      values:[2.2,2.1,2.4,2.8,3.6,4.2],
+      values2:[11.2,11.8,12.5,13.2,14.1,15.2]
+    }
+  },
+  {
+    id:'wto', title:'WTO Reform Stagnation',
+    category:'Trade Policy & Regulation', confidence:55,
+    horizon:'36–120 months', origin:'Global / Geneva',
+    systemicImpact:42,
+    scores:[
+      {label:'A · Exposure Score',         val:28},
+      {label:'B · Transmission Strength',  val:42},
+      {label:'C · Propagation Velocity',   val:12},
+      {label:'D · GCC Sensitivity',        val:62},
+      {label:'E · Confidence Level',       val:55},
+      {label:'F · Indirect Amplification', val:58}
+    ],
+    exposure:{direct:10, indirect:35, systemic:48},
+    chain:[
+      {label:'WTO Appellate Body Dysfunctional Since 2019',    score:0.65, order:0},
+      {label:'Bilateral FTA Proliferation Accelerates',        score:0.60, order:1},
+      {label:'GCC Exclusion Risk from Key Trade Blocs',        score:0.55, order:1},
+      {label:'GCC Export Market Access Competitive Risk',      score:0.52, order:2},
+      {label:'UAE / Saudi CEPA Acceleration Strategy',         score:0.58, order:2},
+      {label:'Trade Dispute Resolution Complexity Increases',  score:0.48, order:2},
+      {label:'GCC Logistics Network Strategic Uncertainty',    score:0.45, order:3},
+      {label:'GCC FTA-Driven Trade Lane Reconfiguration',      score:0.48, order:3, gcc:true}
+    ],
+    gcc:{
+      countries:['UAE','Saudi Arabia','Oman','Qatar','Kuwait','Bahrain'],
+      sectors:['Ports','Inland Log.','Energy T.','Food Sec.','Industrial'],
+      data:[[28,22,15,18,32],[22,18,12,15,25],[18,15,10,12,20],[15,12,10,12,18],[12,10,8,10,15],[15,12,8,10,18]]
+    },
+    insight:'WTO reform stagnation is the slowest-moving signal in this watchlist — its logistics transmission operates over decades rather than quarters. The mechanism is structural: without a functional multilateral dispute resolution system, bilateral FTAs proliferate to fill the vacuum. GCC states that are not party to relevant FTAs face non-uniform market access — GCC steel exports face 15–25% tariffs in markets where Turkish or Ukrainian competitors enter at preferential rates under EU trade agreements. The UAE\'s accelerating CEPA strategy (12 agreements 2021–2024) is a direct operational response to WTO stagnation. The logistics consequence is that GCC trade lanes increasingly align with bilateral FTA architecture rather than multilateral rules — creating cargo routing patterns that follow legal text rather than pure economic geography.',
+    blindspot:'WTO stagnation is a multilateral governance failure — but its GCC logistics consequence is a forced realignment of cargo routing patterns around bilateral FTA architecture, where legal preferences replace pure freight economics as the dominant determinant of trade lane selection.',
+    geoNodes:[
+      {label:'Geneva — WTO Headquarters',                  lat:46.2, lng:6.1,   order:0},
+      {label:'EU / US Bilateral FTA Corridors',            lat:50.0, lng:10.0,  order:1},
+      {label:'CPTPP / RCEP Mega-Regional Blocs',           lat:35.0, lng:140.0, order:1},
+      {label:'GCC — CEPA Acceleration Response',           lat:24.5, lng:54.4,  order:2, gcc:true}
+    ],
+    evidence:[
+      {stage:'ORIGIN',    mechanism:'WTO Appellate Body non-functional since Dec 2019 — US blocking new appointments; 35+ trade disputes without binding resolution; average resolution time extends from 3 years to indeterminate', example:'47 active WTO disputes in limbo without Appellate Body ruling mechanism by Q2 2024; no resolution timeline visible; multi-party interim appeal arbitration covers only 28 WTO members',lag:'0–12m', strength:62},
+      {stage:'1ST ORDER', mechanism:'Bilateral FTA proliferation accelerates to fill WTO vacuum — countries negotiate preferential access outside multilateral framework; GCC risks exclusion from key trade architectures',           example:'357 bilateral FTAs in force globally by 2024 (vs 250 in 2015); UAE signed 12 CEPAs 2021–2024 directly in response to WTO stagnation and bilateral deal proliferation',          lag:'12–36m',strength:55},
+      {stage:'2ND ORDER', mechanism:'GCC manufacturers face non-uniform market access — GCC goods face MFN tariffs in markets where other exporters enter at preferential FTA rates',                                                  example:'GCC steel exports face 15–25% EU tariffs while Turkish steel enters at preferential rates under EU-Turkey customs union — cost differential of €80–150/tonne',                  lag:'18–60m',strength:48},
+      {stage:'3RD ORDER', mechanism:'GCC logistics networks restructure around bilateral FTA architecture — cargo routing, free zone structuring, and re-export strategies reconfigured around CEPA lane preferences',                 example:'UAE-India CEPA drove restructuring of 28% of Jebel Ali India-origin re-export strategy 2022–2024; similar reconfiguration underway for UAE-Indonesia and UAE-Israel lanes',      lag:'36–84m',strength:38}
+    ],
+    chart:{
+      type:'line',
+      title:'Global Bilateral FTAs in Force (Cumulative) vs GCC CEPA / FTA Signings (Cumulative, 2015–2024)',
+      xLabel:'Year', yLabel:'Global Bilateral FTAs in Force (Cumulative)',
+      color:'#4a9fe8',
+      dualAxis:true, label2:'GCC CEPA / FTA Signings (Cumulative)', color2:'#b8952a',
+      note:'Global FTA proliferation mirrors WTO Appellate Body dysfunction — GCC CEPA acceleration after 2021 directly tracks the pace of global bilateral deal-making as multilateral rules lose enforcement power',
+      source:'WTO Regional Trade Agreements Database & UAE Ministry of Economy CEPA Tracker',
+      sourceUrl:'https://rtais.wto.org/UI/PublicAllRTAList.aspx',
+      labels:['2015','2016','2017','2018','2019','2020','2021','2022','2023','2024'],
+      values:[250,265,278,290,305,315,325,338,350,357],
+      values2:[4,4,5,5,5,5,7,10,14,16]
+    }
   }
 ];
 
@@ -7726,7 +8357,7 @@ var WL_GROUPS = [
     id:'trade', icon:'◇',
     title:'Trade Policy & Regulation',
     desc:'Carbon border adjustment, currency dynamics, tariff mechanisms and trade flow shifts',
-    signals:['cbam','turkey']
+    signals:['cbam','turkey','ustariff','usira','imo2050','indiagcc','semicon','dedollar','csddd','rcep','afcfta','psc','wto']
   },
   {
     id:'geopolitical', icon:'△',

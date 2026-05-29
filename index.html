@@ -2534,7 +2534,7 @@ canvas { font-family: var(--f-mono); }
     <div class="map-section-header">
       <div>
         <div class="map-section-title" style="color:#7a9eb8">&#9671; Global Shipping Lanes &amp; Port Call Imbalance — Hormuz Crisis</div>
-        <div class="map-section-sub">Circle size = weekly port calls &bull; dashed ring = pre-crisis volume &bull; hover any port for data &bull; May 2026</div>
+        <div class="map-section-sub">Bubble size = commercial vessel calls/week (AIS-calibrated) &bull; dashed ring = pre-crisis volume &bull; badge = live AIS vessel count &bull; hover any port for data &bull; May 2026</div>
       </div>
       <div style="display:flex;align-items:center;gap:8px">
         <div class="map-legend" style="padding:0;background:none;border:none;display:flex;flex-wrap:wrap;gap:8px;min-width:unset">
@@ -6222,7 +6222,14 @@ function addLiveBadge(portCfg, data) {
     '<div class="pc-popup-wrap">' +
       '<div class="pc-popup-title">' + portCfg.name.toUpperCase() + ' — PORT CALLS</div>' +
       (data.inPort !== null && data.inPort !== undefined
-        ? '<div class="pc-popup-stat">&#9679; <b>' + data.inPort + '</b> vessels currently in port</div>'
+        ? '<div class="pc-popup-stat">&#9679; <b>' + data.inPort + '</b> in port' +
+          (data.arrivals24h !== null && data.arrivals24h !== undefined
+            ? ' &nbsp;&#183;&nbsp; <b>' + data.arrivals24h + '</b> arrivals last 24 h'
+            : '') +
+          (data.arrivals24h !== null && data.arrivals24h !== undefined
+            ? ' &nbsp;&#183;&nbsp; <span style="color:#5a8090">~<b>' + Math.round(data.arrivals24h * 7) + '</b>/wk implied</span>'
+            : '') +
+          '</div>'
         : '') +
       (arrivals.length > 0
         ? '<div class="pc-popup-sub">Expected Arrivals' + (data.expectedTotal ? ' — ' + data.expectedTotal + ' total' : '') + '</div>' +
@@ -6391,7 +6398,7 @@ function initChokepointsMap() {
   });
 
   // ── PORT CALLS LAYER ─────────────────────────────────────────────────────
-  // pre = weekly container vessel calls pre-crisis | cur = current (May 2026)
+  // pre = modelled commercial vessel calls/week pre-crisis | cur = AIS-calibrated May 2026 (myshiptracking.com)
   var PORT_CALLS = [
     // ── Asian export hubs (stable) ────────────────────────────────────────
     { name:'Shanghai',     country:'China',        lat:31.23, lng:121.48, pre:95,  cur:90  },
@@ -6400,36 +6407,36 @@ function initChokepointsMap() {
     { name:'Singapore',    country:'Singapore',    lat:1.27,  lng:103.50, pre:185, cur:180 },
     { name:'Port Klang',   country:'Malaysia',     lat:2.95,  lng:101.18, pre:75,  cur:70  },
     // ── Indian Ocean waypoint (surging — Cape route stop) ─────────────────
-    { name:'Colombo',      country:'Sri Lanka',    lat:6.93,  lng:79.84,  pre:58,  cur:82  },
+    { name:'Colombo',      country:'Sri Lanka',    lat:6.93,  lng:79.84,  pre:58,  cur:100  },
     // ── Gulf ports INSIDE Hormuz (collapsed) ──────────────────────────────
-    { name:'Jebel Ali',    country:'UAE',          lat:24.98, lng:55.05,  pre:62,  cur:5   },
-    { name:'Bandar Abbas', country:'Iran',         lat:27.20, lng:56.17,  pre:28,  cur:2   },
+    { name:'Jebel Ali',    country:'UAE',          lat:24.98, lng:55.05,  pre:62,  cur:14   },
+    { name:'Bandar Abbas', country:'Iran',         lat:27.20, lng:56.17,  pre:28,  cur:7   },
     { name:'Khalifa Port', country:'UAE',          lat:24.80, lng:54.58,  pre:22,  cur:2   },
     { name:'Hamad Port',   country:'Qatar',        lat:24.92, lng:51.56,  pre:18,  cur:2   },
     { name:'Bahrain Port', country:'Bahrain',      lat:26.21, lng:50.56,  pre:15,  cur:2   },
     { name:'Shuwaikh',     country:'Kuwait',       lat:29.36, lng:47.95,  pre:20,  cur:1   },
-    { name:'Dammam',       country:'Saudi Arabia', lat:26.47, lng:50.12,  pre:35,  cur:3   },
+    { name:'Dammam',       country:'Saudi Arabia', lat:26.47, lng:50.12,  pre:35,  cur:7   },
     // ── Gulf OUTSIDE Hormuz (surging — alternative hubs) ─────────────────
     { name:'Fujairah',     country:'UAE',          lat:25.13, lng:56.33,  pre:14,  cur:34  },
-    { name:'Salalah',      country:'Oman',         lat:17.00, lng:54.08,  pre:28,  cur:54  },
-    { name:'Sohar',        country:'Oman',         lat:24.37, lng:56.68,  pre:10,  cur:26  },
+    { name:'Salalah',      country:'Oman',         lat:17.00, lng:54.08,  pre:28,  cur:42  },
+    { name:'Sohar',        country:'Oman',         lat:24.37, lng:56.68,  pre:10,  cur:56  },
     // ── Red Sea ───────────────────────────────────────────────────────────
-    { name:'Jeddah',       country:'Saudi Arabia', lat:21.47, lng:39.08,  pre:48,  cur:72  },
-    { name:'Port Said',    country:'Egypt',        lat:31.28, lng:32.20,  pre:85,  cur:28  },
+    { name:'Jeddah',       country:'Saudi Arabia', lat:21.47, lng:39.08,  pre:48,  cur:80  },
+    { name:'Port Said',    country:'Egypt',        lat:31.28, lng:32.20,  pre:85,  cur:63  },
     // ── East Africa (surging — Cape route feeder) ─────────────────────────
-    { name:'Djibouti',     country:'Djibouti',     lat:11.59, lng:43.10,  pre:32,  cur:22  },
+    { name:'Djibouti',     country:'Djibouti',     lat:11.59, lng:43.10,  pre:32,  cur:21  },
     { name:'Mombasa',      country:'Kenya',        lat:-4.05, lng:39.65,  pre:22,  cur:40  },
-    { name:'Dar es Salaam',country:'Tanzania',     lat:-6.85, lng:39.30,  pre:16,  cur:28  },
+    { name:'Dar es Salaam',country:'Tanzania',     lat:-6.85, lng:39.30,  pre:16,  cur:42  },
     { name:'Maputo',       country:'Mozambique',   lat:-25.97,lng:32.57,  pre:8,   cur:18  },
     // ── Cape route hubs (surging — main diversion path) ──────────────────
-    { name:'Durban',       country:'South Africa', lat:-29.87,lng:31.03,  pre:22,  cur:54  },
+    { name:'Durban',       country:'South Africa', lat:-29.87,lng:31.03,  pre:22,  cur:68  },
     { name:'Cape Town',    country:'South Africa', lat:-33.90,lng:18.40,  pre:18,  cur:46  },
-    { name:'Port Louis',   country:'Mauritius',    lat:-20.16,lng:57.50,  pre:12,  cur:28  },
+    { name:'Port Louis',   country:'Mauritius',    lat:-20.16,lng:57.50,  pre:12,  cur:38  },
     // ── West Africa (Cape route waypoints, surging) ───────────────────────
-    { name:'Lomé',         country:'Togo',         lat:6.13,  lng:1.27,   pre:14,  cur:24  },
+    { name:'Lomé',         country:'Togo',         lat:6.13,  lng:1.27,   pre:14,  cur:25  },
     { name:'Ndayane',      country:'Senegal',      lat:14.46, lng:-17.04, pre:5,   cur:14  },
     // ── North Africa / Atlantic gateway (surging — Cape vessels via Gibraltar) ──
-    { name:'Tanger Med',   country:'Morocco',      lat:35.85, lng:-5.48,  pre:52,  cur:72  },
+    { name:'Tanger Med',   country:'Morocco',      lat:35.85, lng:-5.48,  pre:52,  cur:100  },
     // ── European destination ports (stable) ───────────────────────────────
     { name:'Rotterdam',    country:'Netherlands',  lat:51.91, lng:4.35,   pre:95,  cur:92  },
     { name:'Hamburg',      country:'Germany',      lat:53.54, lng:9.85,   pre:55,  cur:52  },

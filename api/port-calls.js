@@ -44,6 +44,15 @@ function parsePortPage(html) {
     if (m) expectedTotal = parseInt(m[1], 10);
   }
 
+  // Extract 24h arrivals count
+  var arrivals24h = null;
+  m = html.match(/[Aa]rrivals?[\s\S]{0,50}?24[\s\S]{0,30}?(\d{1,4})/);
+  if (m) arrivals24h = parseInt(m[1], 10);
+  if (arrivals24h === null) {
+    m = html.match(/(\d{1,4})[\s\S]{0,30}?[Aa]rrivals?[^a-z]{0,20}24/);
+    if (m) arrivals24h = parseInt(m[1], 10);
+  }
+
   // Extract individual arrival rows
   // Each row: icon (type) → vessel link /vessels/NAME-mmsi-NNNN → ETA timestamp
   var arrivals = [];
@@ -107,7 +116,7 @@ function parsePortPage(html) {
     return true;
   });
 
-  return { inPort: inPort, expectedTotal: expectedTotal, arrivals: arrivals.slice(0, 10) };
+  return { inPort: inPort, expectedTotal: expectedTotal, arrivals24h: arrivals24h, arrivals: arrivals.slice(0, 10) };
 }
 
 // In-process cache: port key → { data, ts }
@@ -159,6 +168,7 @@ module.exports = async (req, res) => {
       sourceUrl:     cfg.url,
       inPort:        parsed.inPort,
       expectedTotal: parsed.expectedTotal,
+      arrivals24h:   parsed.arrivals24h,
       arrivals:      parsed.arrivals,
       asOf:          new Date().toISOString()
     };

@@ -658,6 +658,37 @@ a { color: inherit; text-decoration: none; }
 .pc-refresh-btn:hover { background:rgba(61,214,140,0.18); }
 .pc-refresh-btn:disabled { opacity:0.45; cursor:default; }
 
+/* ── PORT DETAIL POPUP ────────────────────────────────────────────────────── */
+.pp-popup .leaflet-popup-content-wrapper {
+  background:#080c12!important; border:1px solid #1e2d3a!important;
+  border-radius:8px!important; padding:0!important; overflow:hidden;
+  box-shadow:0 12px 48px rgba(0,0,0,.9)!important;
+}
+.pp-popup .leaflet-popup-tip { background:#080c12!important; }
+.pp-popup .leaflet-popup-content { margin:0!important; padding:0!important; width:340px!important; }
+.pp-popup .leaflet-popup-close-button { color:#4a6070!important; z-index:10; font-size:16px!important; padding:4px 8px!important; }
+.pp-hdr { width:100%; height:118px; position:relative; overflow:hidden; display:flex; align-items:flex-end; flex-shrink:0; }
+.pp-hdr-grid {
+  position:absolute; inset:0;
+  background-image:
+    repeating-linear-gradient(0deg,rgba(255,255,255,.045) 0,rgba(255,255,255,.045) 1px,transparent 1px,transparent 24px),
+    repeating-linear-gradient(90deg,rgba(255,255,255,.045) 0,rgba(255,255,255,.045) 1px,transparent 1px,transparent 24px);
+}
+.pp-hdr-fade { position:absolute; inset:0; background:linear-gradient(to top,rgba(8,12,18,.97) 0%,rgba(8,12,18,.1) 65%,transparent 100%); }
+.pp-hdr-content { position:relative; z-index:1; padding:8px 12px; width:100%; box-sizing:border-box; display:flex; justify-content:space-between; align-items:flex-end; }
+.pp-name { font-family:'IBM Plex Mono',monospace; font-size:13px; font-weight:700; color:#e8eaed; letter-spacing:.01em; line-height:1.2; }
+.pp-country { font-family:'IBM Plex Mono',monospace; font-size:7px; color:#5a7080; margin-top:2px; letter-spacing:.05em; text-transform:uppercase; }
+.pp-status-badge { font-family:'IBM Plex Mono',monospace; font-size:7px; font-weight:700; letter-spacing:.07em; padding:3px 8px; border-radius:3px; white-space:nowrap; flex-shrink:0; margin-left:8px; align-self:flex-start; margin-top:2px; }
+.pp-body { padding:10px 12px 12px; }
+.pp-section-head { font-family:'IBM Plex Mono',monospace; font-size:7px; color:#2a4050; letter-spacing:.12em; text-transform:uppercase; margin:8px 0 4px; padding-bottom:3px; border-bottom:1px solid #0e1a24; }
+.pp-row { display:flex; justify-content:space-between; align-items:center; padding:3px 0; }
+.pp-lbl { font-family:'IBM Plex Mono',monospace; font-size:8px; color:#4a6070; }
+.pp-val { font-family:'IBM Plex Mono',monospace; font-size:9px; color:#c8d4e0; font-weight:600; text-align:right; }
+.pp-chg { font-family:'IBM Plex Mono',monospace; font-size:8px; font-weight:700; }
+.pp-live-dot { display:inline-block; width:5px; height:5px; background:#3dd68c; border-radius:50%; margin-right:3px; animation:ppPulse 2s ease-in-out infinite; vertical-align:middle; }
+@keyframes ppPulse { 0%,100%{opacity:1;transform:scale(1)} 50%{opacity:.3;transform:scale(.7)} }
+.pp-loading { color:#2a4050; font-family:'IBM Plex Mono',monospace; font-size:7.5px; font-style:italic; padding:2px 0; }
+
 /* Leaflet popup */
 .leaflet-popup-content-wrapper {
   background: rgba(8,11,15,.97)!important;
@@ -6306,6 +6337,137 @@ function fetchLivePortCalls(bustCache) {
 
 function refreshPortCalls() { fetchLivePortCalls(true); }
 
+// ── PORT DETAIL POPUP DATA + HELPERS ─────────────────────────────────────────
+// TEU capacity (annual), container berths, header gradient per port
+var PORT_INFO = {
+  'Shanghai':      { teu:'47M',  berths:132, grad:'linear-gradient(135deg,#05101e 0%,#091a32 60%,#040e1c 100%)' },
+  'Busan':         { teu:'22M',  berths:37,  grad:'linear-gradient(135deg,#05101e 0%,#091a32 60%,#040e1c 100%)' },
+  'Hong Kong':     { teu:'18M',  berths:24,  grad:'linear-gradient(135deg,#05101e 0%,#091a32 60%,#040e1c 100%)' },
+  'Singapore':     { teu:'40M',  berths:64,  grad:'linear-gradient(135deg,#041c12 0%,#073022 60%,#031410 100%)' },
+  'Port Klang':    { teu:'14M',  berths:31,  grad:'linear-gradient(135deg,#041c12 0%,#073022 60%,#031410 100%)' },
+  'Colombo':       { teu:'7.5M', berths:12,  grad:'linear-gradient(135deg,#04181e 0%,#082a2e 60%,#031218 100%)' },
+  'Jebel Ali':     { teu:'22M',  berths:67,  grad:'linear-gradient(135deg,#1c0608 0%,#2e0e10 60%,#140408 100%)' },
+  'Bandar Abbas':  { teu:'2.5M', berths:15,  grad:'linear-gradient(135deg,#1c0608 0%,#2e0e10 60%,#140408 100%)' },
+  'Khalifa Port':  { teu:'5M',   berths:14,  grad:'linear-gradient(135deg,#1c0608 0%,#2e0e10 60%,#140408 100%)' },
+  'Hamad Port':    { teu:'7.5M', berths:17,  grad:'linear-gradient(135deg,#1c0608 0%,#2e0e10 60%,#140408 100%)' },
+  'Bahrain Port':  { teu:'1.5M', berths:10,  grad:'linear-gradient(135deg,#1c0608 0%,#2e0e10 60%,#140408 100%)' },
+  'Shuwaikh':      { teu:'0.8M', berths:6,   grad:'linear-gradient(135deg,#1c0608 0%,#2e0e10 60%,#140408 100%)' },
+  'Dammam':        { teu:'1.8M', berths:38,  grad:'linear-gradient(135deg,#1c0608 0%,#2e0e10 60%,#140408 100%)' },
+  'Fujairah':      { teu:'1.5M', berths:13,  grad:'linear-gradient(135deg,#060e20 0%,#0c1a38 60%,#040c18 100%)' },
+  'Salalah':       { teu:'4.8M', berths:9,   grad:'linear-gradient(135deg,#031e12 0%,#063220 60%,#021410 100%)' },
+  'Sohar':         { teu:'1.5M', berths:10,  grad:'linear-gradient(135deg,#031e12 0%,#063220 60%,#021410 100%)' },
+  'Jeddah':        { teu:'6M',   berths:38,  grad:'linear-gradient(135deg,#14100a 0%,#221c10 60%,#100c06 100%)' },
+  'Port Said':     { teu:'7M',   berths:15,  grad:'linear-gradient(135deg,#06100c 0%,#0e1e18 60%,#040e0a 100%)' },
+  'Djibouti':      { teu:'1.5M', berths:7,   grad:'linear-gradient(135deg,#180e04 0%,#281808 60%,#120a02 100%)' },
+  'Mombasa':       { teu:'1.5M', berths:16,  grad:'linear-gradient(135deg,#180e04 0%,#281808 60%,#120a02 100%)' },
+  'Dar es Salaam': { teu:'1M',   berths:12,  grad:'linear-gradient(135deg,#180e04 0%,#281808 60%,#120a02 100%)' },
+  'Maputo':        { teu:'0.5M', berths:7,   grad:'linear-gradient(135deg,#180e04 0%,#281808 60%,#120a02 100%)' },
+  'Durban':        { teu:'3M',   berths:57,  grad:'linear-gradient(135deg,#081406 0%,#102010 60%,#060e04 100%)' },
+  'Cape Town':     { teu:'1M',   berths:15,  grad:'linear-gradient(135deg,#081406 0%,#102010 60%,#060e04 100%)' },
+  'Port Louis':    { teu:'0.7M', berths:8,   grad:'linear-gradient(135deg,#04161c 0%,#082630 60%,#031016 100%)' },
+  'Lomé':          { teu:'0.9M', berths:6,   grad:'linear-gradient(135deg,#180e04 0%,#281806 60%,#120a02 100%)' },
+  'Ndayane':       { teu:'3M',   berths:5,   grad:'linear-gradient(135deg,#180e04 0%,#281806 60%,#120a02 100%)' },
+  'Tanger Med':    { teu:'9M',   berths:11,  grad:'linear-gradient(135deg,#04100e 0%,#081e1a 60%,#030c0a 100%)' },
+  'Rotterdam':     { teu:'15M',  berths:53,  grad:'linear-gradient(135deg,#060e1a 0%,#0c1a2e 60%,#040c14 100%)' },
+  'Hamburg':       { teu:'8.5M', berths:30,  grad:'linear-gradient(135deg,#060e1a 0%,#0c1a2e 60%,#040c14 100%)' },
+  'Antwerp':       { teu:'14M',  berths:80,  grad:'linear-gradient(135deg,#060e1a 0%,#0c1a2e 60%,#040c14 100%)' },
+  'Felixstowe':    { teu:'4.5M', berths:12,  grad:'linear-gradient(135deg,#060e1a 0%,#0c1a2e 60%,#040c14 100%)' },
+};
+
+// Port name → live API key (GCC ports only)
+var PP_LIVE_KEYS = {
+  'Jebel Ali':'jebel-ali', 'Salalah':'salalah', 'Sohar':'sohar',
+  'Jeddah':'jeddah', 'Dammam':'dammam', 'Fujairah':'fujairah',
+  'Doha':'doha', 'Hamad Port':'doha'
+};
+
+// Status: 5-tier — Congested = RED, Severely Disrupted = ORANGE (distinct)
+function portStatus(p) {
+  var ratio = p.cur / p.pre;
+  if (ratio >= 1.25) return { label:'CONGESTED',          color:'#e03040', bg:'rgba(224,48,64,.18)' };
+  if (ratio >= 0.88) return { label:'RISK OF CONGESTION', color:'#f0c84b', bg:'rgba(240,200,75,.15)' };
+  if (ratio >= 0.55) return { label:'NORMAL TRAFFIC',     color:'#3dd68c', bg:'rgba(61,214,140,.13)' };
+  if (ratio >= 0.30) return { label:'REDUCED TRAFFIC',    color:'#e8673c', bg:'rgba(232,103,60,.16)' };
+  return               { label:'SEVERELY DISRUPTED',  color:'#e8673c', bg:'rgba(232,103,60,.16)' };
+}
+
+function buildLiveSectionHtml(live) {
+  var html = '';
+  if (live && live.inPort !== null && live.inPort !== undefined) {
+    html += '<div class="pp-row"><span class="pp-lbl">Ships in port now</span>' +
+            '<span class="pp-val" style="color:#3dd68c">&#9679; ' + live.inPort + ' vessels</span></div>';
+  }
+  if (live && live.expectedTotal !== null && live.expectedTotal !== undefined) {
+    html += '<div class="pp-row"><span class="pp-lbl">Expected arrivals</span>' +
+            '<span class="pp-val">' + live.expectedTotal + ' vessels</span></div>';
+  } else if (live && live.arrivals24h !== null && live.arrivals24h !== undefined) {
+    html += '<div class="pp-row"><span class="pp-lbl">Arrivals (last 24 h)</span>' +
+            '<span class="pp-val">' + live.arrivals24h + ' vessels</span></div>';
+  }
+  return html || '<div class="pp-loading">No live data available</div>';
+}
+
+function buildPortPopupHtml(p, info, status, live) {
+  var pct  = Math.round((p.cur - p.pre) / p.pre * 100);
+  var sign = pct >= 0 ? '+' : '';
+  var chgColor = pct >= 0 ? '#3dd68c' : '#e8673c';
+  var liveKey  = PP_LIVE_KEYS[p.name];
+
+  var liveSection = liveKey
+    ? (live ? buildLiveSectionHtml(live) : '<div class="pp-loading">&#8635; Loading live data…</div>')
+    : '<div class="pp-lbl" style="color:#2a3a48">Live AIS not available for this port</div>';
+
+  return (
+    '<div class="pp-hdr" style="background:' + info.grad + '">' +
+      '<div class="pp-hdr-grid"></div>' +
+      '<div class="pp-hdr-fade"></div>' +
+      '<div class="pp-hdr-content">' +
+        '<div>' +
+          '<div class="pp-name">' + p.name + '</div>' +
+          '<div class="pp-country">' + p.country + '</div>' +
+        '</div>' +
+        '<div class="pp-status-badge" style="color:' + status.color + ';background:' + status.bg + '">' + status.label + '</div>' +
+      '</div>' +
+    '</div>' +
+    '<div class="pp-body">' +
+      '<div class="pp-section-head">Infrastructure</div>' +
+      '<div class="pp-row"><span class="pp-lbl">&#9646; TEU Capacity</span><span class="pp-val">' + info.teu + ' TEU / year</span></div>' +
+      '<div class="pp-row"><span class="pp-lbl">&#9875; Container Berths</span><span class="pp-val">' + info.berths + '</span></div>' +
+      '<div class="pp-section-head">Vessel Traffic</div>' +
+      '<div class="pp-row"><span class="pp-lbl">Pre-crisis baseline</span><span class="pp-val">' + p.pre + ' calls / week</span></div>' +
+      '<div class="pp-row"><span class="pp-lbl">Current · May 2026</span>' +
+        '<span class="pp-val">' + p.cur + ' &nbsp;<span class="pp-chg" style="color:' + chgColor + '">' + sign + pct + '%</span></span>' +
+      '</div>' +
+      '<div class="pp-section-head"><span class="pp-live-dot"></span>Live AIS · myshiptracking.com</div>' +
+      '<div class="pp-live-section">' + liveSection + '</div>' +
+    '</div>'
+  );
+}
+
+function openPortPopup(p, latlng) {
+  var info   = PORT_INFO[p.name] || { teu:'N/A', berths:'N/A', grad:'linear-gradient(135deg,#060c14 0%,#0a1422 100%)' };
+  var status = portStatus(p);
+  var liveKey = PP_LIVE_KEYS[p.name];
+
+  var popup = L.popup({ maxWidth:360, minWidth:340, className:'pp-popup', autoPan:true, closeButton:true })
+    .setLatLng(latlng)
+    .setContent(buildPortPopupHtml(p, info, status, null))
+    .openOn(chokepointsMap);
+
+  if (liveKey) {
+    fetch('/api/port-calls?port=' + liveKey)
+      .then(function(r) { if (!r.ok) throw new Error(r.status); return r.json(); })
+      .then(function(live) {
+        var el = document.querySelector('.pp-live-section');
+        if (el) el.innerHTML = buildLiveSectionHtml(live);
+      })
+      .catch(function() {
+        var el = document.querySelector('.pp-live-section');
+        if (el) el.innerHTML = '<div class="pp-loading">Live data unavailable</div>';
+      });
+  }
+}
+
 // ── GLOBAL CHOKEPOINTS MAP ────────────────────────────────────────────────────
 var chokepointsMap = null, chokepointsMapReady = false;
 
@@ -6491,16 +6653,21 @@ function initChokepointsMap() {
     }).addTo(chokepointsMap);
 
     // Current port call circle (filled square-ish via circle)
-    L.circleMarker([p.lat, p.lng], {
-      radius: rCur,
-      color: col, weight: 1.5,
-      fillColor: col, fillOpacity: 0.30,
-      interactive: true
-    }).bindTooltip(tipHtml, {
-      sticky: false, direction: 'top',
-      className: 'cp-tip',
-      offset: [0, -(rCur + 4)]
-    }).addTo(chokepointsMap);
+    (function(port) {
+      L.circleMarker([port.lat, port.lng], {
+        radius: rCur,
+        color: col, weight: 1.5,
+        fillColor: col, fillOpacity: 0.30,
+        interactive: true
+      }).bindTooltip(tipHtml, {
+        sticky: false, direction: 'top',
+        className: 'cp-tip',
+        offset: [0, -(rCur + 4)]
+      }).on('click', function(e) {
+        L.DomEvent.stopPropagation(e);
+        openPortPopup(port, [port.lat, port.lng]);
+      }).addTo(chokepointsMap);
+    })(p);
 
     // % change label — only for significant movers (±40%+)
     if (Math.abs(pct) >= 40) {

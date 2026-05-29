@@ -9861,137 +9861,222 @@ function generateStrategyBrief(sid) {
     ];
   }
 
-  // ── Build PDF sections ────────────────────────────────────────────────────
+  // ── Build PDF sections ────────────────────────────────────────────────────────────────────────
 
-  // Causal Chain
-  var orderLabels = ['Trigger', '1st Order', '2nd Order', '3rd Order', '4th Order'];
-  var chainRows = sig.chain.map(function(c) {
-    var ol = orderLabels[c.order] || (c.order + ' Order');
-    var bg = c.gcc ? 'background:#fffbea;padding:5px 7px;border-left:3px solid #c8a800;margin-bottom:4px;' : 'padding:4px 7px;margin-bottom:3px;';
-    return '<div style="display:flex;align-items:baseline;gap:8px;'+bg+'">' +
-      '<span style="font-size:7px;font-family:Arial,sans-serif;color:#999;min-width:56px;text-transform:uppercase;letter-spacing:.06em;flex-shrink:0;">'+ol+'</span>' +
-      '<span style="flex:1;font-size:10px;color:'+(c.gcc?'#5a3e00':'#222')+';font-weight:'+(c.gcc?'bold':'normal')+';">'+c.label+(c.gcc?' <span style="font-size:7.5px;color:#c8a800;">← GCC IMPACT</span>':'')+'</span>' +
-      '<span style="font-size:8px;color:#888;font-family:Arial,sans-serif;flex-shrink:0;">'+Math.round(c.score*100)+'%</span>' +
-    '</div>';
-  }).join('');
+  // ── Chain narrative (prose, merged into Assessment) ──────────────────────────────
+  var chainNarrative = '';
+  if (sig.chain && sig.chain.length) {
+    var trigNode     = sig.chain.find(function(c){ return c.order === 0; });
+    var firstOrds    = sig.chain.filter(function(c){ return c.order === 1; });
+    var secondOrds   = sig.chain.filter(function(c){ return c.order === 2; });
+    var gccChainNodes= sig.chain.filter(function(c){ return c.gcc; });
+    var chainSents   = [];
+    if (trigNode) chainSents.push('The transmission originates with <b>' + trigNode.label + '</b>.');
+    if (firstOrds.length)    chainSents.push('This produces first-order effects across ' + firstOrds.map(function(n){ return '<b>' + n.label + '</b>'; }).join(' and ') + '.');
+    if (secondOrds.length)   chainSents.push('Secondary propagation extends to ' + secondOrds.map(function(n){ return n.label; }).join(', ') + '.');
+    if (gccChainNodes.length) chainSents.push('Direct GCC exposure crystallises through ' + gccChainNodes.map(function(n){ return '<b>' + n.label + '</b> (' + Math.round(n.score * 100) + '% transmission probability)'; }).join(' and ') + '.');
+    chainNarrative = chainSents.join(' ');
+  }
 
-  // GCC Country × Sector table
+  // ── CSS bar-chart / scatter-table (no canvas) ─────────────────────────────────────────────────
+  var chartSec = '';
+  if (sig.chart) {
+    var ch = sig.chart;
+    if ((ch.type === 'line' || ch.type === 'bar') && ch.labels && ch.values) {
+      var cMaxVal = Math.max.apply(null, ch.values.map(function(v){ return isNaN(v) ? 0 : Number(v); }));
+      var chartBars = ch.labels.map(function(lbl, ci) {
+        var raw  = ch.values[ci];
+        var cVal = isNaN(raw) ? 0 : Number(raw);
+        var pct  = cMaxVal > 0 ? Math.round((cVal / cMaxVal) * 100) : 0;
+        var bCol = pct >= 75 ? '#b71c1c' : pct >= 50 ? '#e65100' : pct >= 30 ? '#c8a800' : '#1565c0';
+        return '<div style="display:flex;align-items:center;gap:8px;margin-bottom:4px;">' +
+          '<div style="font-size:7.5px;color:#555;font-family:Arial,sans-serif;width:90px;flex-shrink:0;text-align:right;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;" title="' + lbl + '">' + lbl + '</div>' +
+          '<div style="flex:1;background:#f0f0f0;height:14px;position:relative;">' +
+            '<div style="width:' + pct + '%;height:100%;background:' + bCol + ';"></div>' +
+          '</div>' +
+          '<div style="font-size:8px;color:#333;font-family:Arial,sans-serif;width:32px;flex-shrink:0;">' + cVal + '</div>' +
+        '</div>';
+      }).join('');
+      chartSec = sec(ch.title || (sig.title + ' — Trend Data'),
+        '<div style="margin-bottom:6px;">' + chartBars + '</div>' +
+        (ch.note   ? '<div style="font-size:7.5px;color:#888;font-family:Arial,sans-serif;margin-top:4px;">' + ch.note + '</div>' : '') +
+        (ch.source ? '<div style="font-size:7px;color:#aaa;font-family:Arial,sans-serif;margin-top:2px;">Source: ' + ch.source + '</div>' : '')
+      );
+    } else if (ch.type === 'scatter' && ch.points) {
+      var scRows = ch.points.slice(0, 8).map(function(pt, si) {
+        return '<tr style="' + (si % 2 === 0 ? 'background:#fafafa;' : '') + '">' +
+          '<td style="padding:4px 8px;font-size:9px;color:#333;">' + pt.x + '</td>' +
+          '<td style="padding:4px 8px;font-size:9px;color:#333;text-align:right;">' + pt.y + '</td>' +
+        '</tr>';
+      }).join('');
+      chartSec = sec(ch.title || 'Scatter Analysis',
+        '<table style="width:100%;border-collapse:collapse;font-family:Arial,sans-serif;">' +
+        '<thead><tr>' +
+          '<th style="text-align:left;padding:4px 8px;background:#0a0f1e;color:#d4a017;font-size:7px;letter-spacing:.07em;text-transform:uppercase;font-weight:normal;">' + (ch.xLabel || 'X') + '</th>' +
+          '<th style="text-align:right;padding:4px 8px;background:#0a0f1e;color:#d4a017;font-size:7px;letter-spacing:.07em;text-transform:uppercase;font-weight:normal;">' + (ch.yLabel || 'Y') + '</th>' +
+        '</tr></thead><tbody>' + scRows + '</tbody></table>' +
+        (ch.note   ? '<div style="font-size:7.5px;color:#888;font-family:Arial,sans-serif;margin-top:4px;">' + ch.note + '</div>' : '') +
+        (ch.source ? '<div style="font-size:7px;color:#aaa;font-family:Arial,sans-serif;margin-top:2px;">Source: ' + ch.source + '</div>' : '')
+      );
+    }
+  }
+
+  // ── Geographic transmission path (HTML/CSS nodes) ────────────────────────────────────────────
+  var geoSec = '';
+  if (sig.geoNodes && sig.geoNodes.length) {
+    var sortedGeo = sig.geoNodes.slice().sort(function(a, b){ return a.order - b.order; });
+    var geoBoxes  = sortedGeo.map(function(n, gi) {
+      var isGCC  = !!n.gcc;
+      var gBg    = isGCC ? '#fffbea' : '#f5f5f5';
+      var gBord  = isGCC ? '2px solid #c8a800' : '1px solid #ccc';
+      var gTc    = isGCC ? '#5a3e00' : '#222';
+      var gFw    = isGCC ? 'bold' : 'normal';
+      var gBadge = isGCC ? '<div style="font-size:6.5px;color:#c8a800;text-transform:uppercase;letter-spacing:.08em;margin-top:2px;">GCC</div>' : '';
+      var gArrow = (gi < sortedGeo.length - 1) ? '<div style="font-size:18px;color:#bbb;padding:0 3px;line-height:1;align-self:center;">→</div>' : '';
+      return '<div style="display:flex;align-items:center;">' +
+        '<div style="background:' + gBg + ';border:' + gBord + ';padding:6px 10px;font-family:Arial,sans-serif;font-size:8.5px;color:' + gTc + ';font-weight:' + gFw + ';min-width:64px;text-align:center;">' +
+          n.label + gBadge +
+        '</div>' +
+        gArrow +
+      '</div>';
+    }).join('');
+    geoSec = sec('Geographic Transmission Path',
+      '<div style="display:flex;align-items:center;flex-wrap:wrap;gap:0;padding:4px 0;">' + geoBoxes + '</div>'
+    );
+  }
+
+  // GCC Country x Sector table
   var gccTableHTML = '';
   if (sig.gcc && sig.gcc.countries && sig.gcc.sectors && sig.gcc.data) {
-    var sectorCols = sig.gcc.sectors.map(function(s){ return '<th style="text-align:center;padding:4px 5px;background:#0a0f1e;color:#d4a017;font-weight:normal;font-size:7px;letter-spacing:.07em;text-transform:uppercase;">'+s+'</th>'; }).join('');
-    var dataRows = sig.gcc.countries.map(function(country, ci) {
-      var row = sig.gcc.data[ci] || [];
-      var cells = row.map(function(v){
-        var col = v>=60?'#b71c1c':v>=40?'#e65100':v>=25?'#c8a800':'#2e7d32';
-        return '<td style="text-align:center;padding:4px 5px;color:'+col+';font-weight:bold;font-size:9px;">'+v+'</td>';
+    var gccSectorCols = sig.gcc.sectors.map(function(s){ return '<th style="text-align:center;padding:4px 5px;background:#0a0f1e;color:#d4a017;font-weight:normal;font-size:7px;letter-spacing:.07em;text-transform:uppercase;">' + s + '</th>'; }).join('');
+    var gccDataRows   = sig.gcc.countries.map(function(country, ci) {
+      var gRow   = sig.gcc.data[ci] || [];
+      var gCells = gRow.map(function(v) {
+        var gCol = v >= 60 ? '#b71c1c' : v >= 40 ? '#e65100' : v >= 25 ? '#c8a800' : '#2e7d32';
+        return '<td style="text-align:center;padding:4px 5px;color:' + gCol + ';font-weight:bold;font-size:9px;">' + v + '</td>';
       }).join('');
-      return '<tr style="'+(ci%2===0?'background:#fafafa;':'')+'">' +
-        '<td style="padding:4px 7px;font-weight:bold;color:#0a0f1e;font-size:9px;font-family:Arial,sans-serif;">'+country+'</td>' +
-        cells + '</tr>';
+      return '<tr style="' + (ci % 2 === 0 ? 'background:#fafafa;' : '') + '">' +
+        '<td style="padding:4px 7px;font-weight:bold;color:#0a0f1e;font-size:9px;font-family:Arial,sans-serif;">' + country + '</td>' +
+        gCells + '</tr>';
     }).join('');
-    gccTableHTML = '<table style="width:100%;border-collapse:collapse;font-family:Arial,sans-serif;">' +
-      '<thead><tr><th style="text-align:left;padding:4px 7px;background:#0a0f1e;color:#d4a017;font-weight:normal;font-size:7px;letter-spacing:.07em;text-transform:uppercase;">Country</th>'+sectorCols+'</tr></thead>' +
-      '<tbody>'+dataRows+'</tbody></table>' +
-      '<div style="font-size:7px;color:#999;font-family:Arial,sans-serif;margin-top:4px;">Values 0–100 · Red ≥60 (High) · Orange ≥40 (Moderate-High) · Amber ≥25 (Moderate) · Green &lt;25 (Low)</div>';
+    gccTableHTML =
+      '<table style="width:100%;border-collapse:collapse;font-family:Arial,sans-serif;">' +
+      '<thead><tr><th style="text-align:left;padding:4px 7px;background:#0a0f1e;color:#d4a017;font-weight:normal;font-size:7px;letter-spacing:.07em;text-transform:uppercase;">Country</th>' +
+      gccSectorCols + '</tr></thead>' +
+      '<tbody>' + gccDataRows + '</tbody></table>' +
+      '<div style="font-size:7px;color:#999;font-family:Arial,sans-serif;margin-top:4px;">Values 0–80 · Red ≥60 (High) · Orange ≥40 (Moderate-High) · Amber ≥25 (Moderate) · Green &lt;25 (Low)</div>';
   }
 
   // Six-Factor Scores
   var scoresHTML = '';
   if (sig.scores && sig.scores.length) {
-    var scoreCells = sig.scores.map(function(sc){
-      var col = sc.val>=70?'#b71c1c':sc.val>=50?'#e65100':sc.val>=35?'#c8a800':'#2e7d32';
-      return '<div style="background:#f5f5f5;padding:7px 9px;border-left:3px solid '+col+';">' +
-        '<div style="font-size:7px;font-family:Arial,sans-serif;color:#888;text-transform:uppercase;letter-spacing:.06em;margin-bottom:2px;">'+sc.label+'</div>' +
-        '<div style="font-size:17px;font-weight:bold;color:'+col+';font-family:Arial,sans-serif;line-height:1;">'+sc.val+'</div>' +
+    var scoreCells = sig.scores.map(function(sc) {
+      var sCol = sc.val >= 70 ? '#b71c1c' : sc.val >= 50 ? '#e65100' : sc.val >= 35 ? '#c8a800' : '#2e7d32';
+      return '<div style="background:#f5f5f5;padding:7px 9px;border-left:3px solid ' + sCol + ';">' +
+        '<div style="font-size:7px;font-family:Arial,sans-serif;color:#888;text-transform:uppercase;letter-spacing:.06em;margin-bottom:2px;">' + sc.label + '</div>' +
+        '<div style="font-size:17px;font-weight:bold;color:' + sCol + ';font-family:Arial,sans-serif;line-height:1;">' + sc.val + '</div>' +
       '</div>';
     }).join('');
-    scoresHTML = '<div style="display:grid;grid-template-columns:repeat(3,1fr);gap:6px;">'+scoreCells+'</div>';
+    scoresHTML = '<div style="display:grid;grid-template-columns:repeat(3,1fr);gap:6px;">' + scoreCells + '</div>';
   }
 
   // Evidence table (first 5 rows)
   var evHTML = '';
   if (sig.evidence && sig.evidence.length) {
-    var evRows = sig.evidence.slice(0,5).map(function(ev,ei){
-      return '<tr style="'+(ei%2===0?'background:#fafafa;':'')+'">' +
-        '<td style="padding:4px 6px;font-size:8.5px;color:#222;">'+( ev.event||'' )+'</td>' +
-        '<td style="padding:4px 6px;font-size:8.5px;color:#666;white-space:nowrap;">'+( ev.period||ev.year||'' )+'</td>' +
-        '<td style="padding:4px 6px;font-size:8.5px;color:#444;">'+( ev.impact||'' )+'</td>' +
-        '<td style="padding:4px 6px;font-size:7.5px;color:#888;">'+( ev.source||'' )+'</td>' +
+    var evRows = sig.evidence.slice(0, 5).map(function(ev, ei) {
+      return '<tr style="' + (ei % 2 === 0 ? 'background:#fafafa;' : '') + '">' +
+        '<td style="padding:4px 6px;font-size:8.5px;color:#222;">'  + (ev.event  || '') + '</td>' +
+        '<td style="padding:4px 6px;font-size:8.5px;color:#666;white-space:nowrap;">' + (ev.period || ev.year || '') + '</td>' +
+        '<td style="padding:4px 6px;font-size:8.5px;color:#444;">'  + (ev.impact || '') + '</td>' +
+        '<td style="padding:4px 6px;font-size:7.5px;color:#888;">'  + (ev.source || '') + '</td>' +
       '</tr>';
     }).join('');
-    evHTML = '<table style="width:100%;border-collapse:collapse;font-family:Arial,sans-serif;">' +
+    evHTML =
+      '<table style="width:100%;border-collapse:collapse;font-family:Arial,sans-serif;">' +
       '<thead><tr>' +
-        ['Event / Precedent','Period','Impact','Source'].map(function(h){ return '<th style="text-align:left;padding:4px 6px;background:#0a0f1e;color:#d4a017;font-weight:normal;font-size:7px;letter-spacing:.07em;text-transform:uppercase;">'+h+'</th>'; }).join('') +
-      '</tr></thead><tbody>'+evRows+'</tbody></table>';
+        ['Event / Precedent', 'Period', 'Impact', 'Source'].map(function(h){
+          return '<th style="text-align:left;padding:4px 6px;background:#0a0f1e;color:#d4a017;font-weight:normal;font-size:7px;letter-spacing:.07em;text-transform:uppercase;">' + h + '</th>';
+        }).join('') +
+      '</tr></thead><tbody>' + evRows + '</tbody></table>';
   }
 
-  // ── Section builder helper ─────────────────────────────────────────────────
+  // ── Section builder helper ────────────────────────────────────────────────────────────────────────────
   function sec(title, bodyHTML) {
     return '<div style="padding:9px 22px 7px;border-top:1px solid #e8e8e8;">' +
-      '<div style="font-family:Arial,sans-serif;font-size:8px;font-weight:bold;text-transform:uppercase;letter-spacing:.16em;color:#0a0f1e;border-bottom:1.5px solid #0a0f1e;padding-bottom:3px;margin-bottom:9px;">'+title+'</div>' +
+      '<div style="font-family:Arial,sans-serif;font-size:8px;font-weight:bold;text-transform:uppercase;letter-spacing:.16em;color:#0a0f1e;border-bottom:1.5px solid #0a0f1e;padding-bottom:3px;margin-bottom:9px;">' + title + '</div>' +
       bodyHTML +
     '</div>';
   }
 
   function numbered(items) {
     return '<div style="font-size:10.5px;line-height:1.72;color:#1a1a1a;">' +
-      items.map(function(t,i){
+      items.map(function(t, ni) {
         return '<div style="margin-bottom:6px;padding-left:16px;position:relative;">' +
-          '<span style="position:absolute;left:0;color:#0a0f1e;font-weight:bold;">'+(i+1)+'.</span>'+t+'</div>';
+          '<span style="position:absolute;left:0;color:#0a0f1e;font-weight:bold;">' + (ni + 1) + '.</span>' + t + '</div>';
       }).join('') +
     '</div>';
   }
 
-  // ── Full brief HTML ────────────────────────────────────────────────────────
-  var classBar = '<div style="background:#0a0f1e;color:#d4a017;padding:9px 22px;font-family:Arial,sans-serif;font-size:7.5px;letter-spacing:.18em;text-align:center;font-weight:bold;text-transform:uppercase;">' +
+  // ── Full brief HTML ────────────────────────────────────────────────────────────────────────────
+  var classBar =
+    '<div style="background:#0a0f1e;color:#d4a017;padding:9px 22px;font-family:Arial,sans-serif;font-size:7.5px;letter-spacing:.18em;text-align:center;font-weight:bold;text-transform:uppercase;">' +
     '■ STRATEGIC INTELLIGENCE BRIEF · MINISTERIAL USE ONLY · NOT FOR DISTRIBUTION ■</div>';
 
-  var docHeader = '<div style="padding:12px 22px 10px;border-bottom:2px solid #0a0f1e;display:flex;justify-content:space-between;align-items:flex-start;">' +
+  var docHeader =
+    '<div style="padding:12px 22px 10px;border-bottom:2px solid #0a0f1e;display:flex;justify-content:space-between;align-items:flex-start;">' +
     '<div>' +
       '<div style="font-family:Arial,sans-serif;font-size:9px;font-weight:bold;color:#0a0f1e;text-transform:uppercase;letter-spacing:.14em;margin-bottom:3px;">Gulf Logistics Intelligence Centre</div>' +
       '<div style="font-size:9px;color:#555;font-family:Arial,sans-serif;">Prepared for: Senior Leadership · Strategic Intelligence Division</div>' +
     '</div>' +
     '<div style="text-align:right;font-family:Arial,sans-serif;font-size:8px;color:#666;line-height:1.7;">' +
-      '<div><b>'+refNum+'</b></div>' +
-      '<div>'+date+'</div>' +
-      '<div style="color:#999;font-size:7.5px;">ASSESSMENT HORIZON: '+sig.horizon+'</div>' +
+      '<div><b>' + refNum + '</b></div>' +
+      '<div>' + date + '</div>' +
+      '<div style="color:#999;font-size:7.5px;">ASSESSMENT HORIZON: ' + sig.horizon + '</div>' +
     '</div>' +
-  '</div>';
+    '</div>';
 
-  var subjectBlock = '<div style="padding:10px 22px 9px;border-bottom:1px solid #ddd;">' +
+  var subjectBlock =
+    '<div style="padding:10px 22px 9px;border-bottom:1px solid #ddd;">' +
     '<div style="font-family:Arial,sans-serif;font-size:7.5px;color:#999;text-transform:uppercase;letter-spacing:.12em;margin-bottom:4px;">Subject</div>' +
-    '<div style="font-size:19px;font-weight:bold;color:#0a0f1e;line-height:1.2;margin-bottom:5px;">'+sig.title+'</div>' +
+    '<div style="font-size:19px;font-weight:bold;color:#0a0f1e;line-height:1.2;margin-bottom:5px;">' + sig.title + '</div>' +
     '<div style="font-size:9px;color:#555;font-family:Arial,sans-serif;display:flex;align-items:center;gap:10px;flex-wrap:wrap;">' +
-      '<span style="background:#0a0f1e;color:#d4a017;padding:2px 8px;font-size:7px;letter-spacing:.1em;font-weight:bold;">'+impactLevel+' SYSTEMIC IMPACT ('+sig.systemicImpact+')</span>' +
-      '<span>'+sig.category+'</span>' +
-      '<span>· Origin: '+(sig.origin||'—')+'</span>' +
-      '<span>· Confidence: '+confLabel+' ('+sig.confidence+'%)</span>' +
+      '<span style="background:#0a0f1e;color:#d4a017;padding:2px 8px;font-size:7px;letter-spacing:.1em;font-weight:bold;">' + impactLevel + ' SYSTEMIC IMPACT (' + sig.systemicImpact + ')</span>' +
+      '<span>' + sig.category + '</span>' +
+      '<span>· Origin: ' + (sig.origin || '—') + '</span>' +
+      '<span>· Confidence: ' + confLabel + ' (' + sig.confidence + '%)</span>' +
     '</div>' +
-  '</div>';
+    '</div>';
 
-  var kjHTML = sec('Key Judgments', numbered([kj1, kj2, kj3]));
-  var assessHTML = sec('Assessment', '<div style="font-size:10.5px;line-height:1.78;color:#1a1a1a;">'+(sig.insight||'')+'</div>');
-  var chainHTML2 = sec('Causal Transmission Pathway', '<div style="font-size:10px;">'+chainRows+'</div>');
-  var scSec  = scoresHTML ? sec('Propagation Model — Six-Factor Assessment', scoresHTML) : '';
-  var gccSec = gccTableHTML ? sec('GCC Country × Sector Exposure Matrix', gccTableHTML) : '';
-  var confSec = sec('Confidence &amp; Analytic Caveats',
+  var kjHTML    = sec('Key Judgments', numbered([kj1, kj2, kj3]));
+  var assessBody =
+    '<div style="font-size:10.5px;line-height:1.78;color:#1a1a1a;">' +
+    (sig.insight || '') +
+    (chainNarrative ? '<p style="margin:10px 0 0;"><b>Causal Pathway:</b> ' + chainNarrative + '</p>' : '') +
+    '</div>';
+  var assessHTML = sec('Assessment', assessBody);
+  var scSec    = scoresHTML   ? sec('Propagation Model — Six-Factor Assessment', scoresHTML) : '';
+  var gccSec   = gccTableHTML ? sec('GCC Country × Sector Exposure Matrix', gccTableHTML)   : '';
+  var confSec  = sec('Confidence &amp; Analytic Caveats',
     '<div style="font-size:10.5px;line-height:1.72;color:#1a1a1a;">' +
-      '<p style="margin:0 0 7px;"><b>Confidence Level:</b> '+confLabel+' ('+sig.confidence+'%) — ' + (
+      '<p style="margin:0 0 7px;"><b>Confidence Level:</b> ' + confLabel + ' (' + sig.confidence + '%) — ' + (
         sig.confidence >= 85 ? 'Multiple independent corroborating sources with strong historical precedent and validated causal mechanism.' :
         sig.confidence >= 70 ? 'Several corroborating sources with established causal pathway; some assumptions remain untested at current data density.' :
         sig.confidence >= 55 ? 'Limited primary sources with a plausible but partially unvalidated causal mechanism.' :
         'Early-stage signal with limited corroboration; causal pathway is hypothesised and requires further validation.' ) + '</p>' +
-      '<p style="margin:0;"><b>Non-Obvious Pathway &amp; Caveat:</b> '+(sig.blindspot||'No specific analytic caveats identified at current confidence threshold.')+'</p>' +
+      '<p style="margin:0;"><b>Non-Obvious Pathway &amp; Caveat:</b> ' + (sig.blindspot || 'No specific analytic caveats identified at current confidence threshold.') + '</p>' +
     '</div>');
-  var actSec = sec('Recommended Actions', numbered(actions));
-  var evSec  = evHTML ? sec('Intelligence Basis — Historical Validation', evHTML) : '';
+  var actSec   = sec('Recommended Actions', numbered(actions));
+  var evSec    = evHTML ? sec('Intelligence Basis — Historical Validation', evHTML) : '';
 
-  var footerBar = '<div style="background:#0a0f1e;color:#d4a017;padding:8px 22px;font-family:Arial,sans-serif;font-size:7px;letter-spacing:.16em;text-align:center;font-weight:bold;text-transform:uppercase;margin-top:6px;">' +
-    '■ STRATEGIC INTELLIGENCE BRIEF · MINISTERIAL USE ONLY · '+refNum+' · '+date+' ■</div>';
+  var footerBar =
+    '<div style="background:#0a0f1e;color:#d4a017;padding:8px 22px;font-family:Arial,sans-serif;font-size:7px;letter-spacing:.16em;text-align:center;font-weight:bold;text-transform:uppercase;margin-top:6px;">' +
+    '■ STRATEGIC INTELLIGENCE BRIEF · MINISTERIAL USE ONLY · ' + refNum + ' · ' + date + ' ■</div>';
 
-  var briefHTML = '<div style="font-family:\'Times New Roman\',serif;color:#111;background:#fff;width:190mm;margin:0 auto;">' +
-    classBar + docHeader + subjectBlock + kjHTML + assessHTML + chainHTML2 + scSec + gccSec + confSec + actSec + evSec + footerBar +
-  '</div>';
+  var briefHTML =
+    '<div style="font-family:\'Times New Roman\',serif;color:#111;background:#fff;width:190mm;margin:0 auto;">' +
+    classBar + docHeader + subjectBlock + kjHTML + assessHTML + chartSec + geoSec + scSec + gccSec + confSec + actSec + evSec + footerBar +
+    '</div>';
+
 
   // ── Open print window ─────────────────────────────────────────────────────
   // Native print engine → user clicks Save as PDF in the dialog.

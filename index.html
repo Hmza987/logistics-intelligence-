@@ -8703,6 +8703,64 @@ var WL_SIGNALS = [
       values:[3200,2800,1950,1400,1200,1450,1300,1100,1250,1400,1100,950],
       values2:[180,210,185,160,140,130,125,118,122,145,130,105]
     }
+  },
+  {
+    id:'china15plan', title:'China 15th Five-Year Plan — Economic Reorientation',
+    category:'Economic / Demand Dynamics', confidence:74,
+    horizon:'24–84 months', origin:'China (National People\'s Congress)',
+    systemicImpact:76,
+    scores:[
+      {label:'A · Exposure Score',         val:68},
+      {label:'B · Transmission Strength',  val:78},
+      {label:'C · Propagation Velocity',   val:32},
+      {label:'D · GCC Sensitivity',        val:82},
+      {label:'E · Confidence Level',       val:74},
+      {label:'F · Indirect Amplification', val:80}
+    ],
+    exposure:{direct:52, indirect:72, systemic:82},
+    chain:[
+      {label:'15th Plan — Domestic Consumption as Primary Growth Driver',  score:0.78, order:0},
+      {label:'Dual Circulation — Internal Absorption Prioritised',         score:0.75, order:1},
+      {label:'China Export Volume Structural Deceleration',                score:0.72, order:1},
+      {label:'GCC-China Container Lane Volume Restructuring',              score:0.70, order:2},
+      {label:'China Oil / Petrochemical Import Growth Trajectory Revises', score:0.75, order:2},
+      {label:'Chinese Outbound FDI — Consumer Market Focus (GCC Target)',  score:0.68, order:2},
+      {label:'GCC Port China-Origin Cargo Mix Shift (Finished → Consumer)',score:0.65, order:3},
+      {label:'GCC Petrochemical Export Demand Profile Permanently Changes',score:0.72, order:3, gcc:true}
+    ],
+    gcc:{
+      countries:['UAE','Saudi Arabia','Oman','Qatar','Kuwait','Bahrain'],
+      sectors:['Ports','Inland Log.','Energy T.','Food Sec.','Industrial'],
+      data:[[72,58,78,22,68],[68,52,82,18,72],[55,42,68,15,55],[45,35,75,18,48],[38,28,65,12,40],[32,22,58,10,35]]
+    },
+    insight:'China\'s 15th Five-Year Plan (2026–2030) is the most consequential structural economic signal for GCC logistics in this decade — yet it is almost entirely absent from GCC logistics planning frameworks. The plan formally enshrines a transition from export-led, investment-heavy growth to domestic consumption and services: consumption targeted at 60%+ of GDP (from 53%), investment-to-GDP ratio reducing from 43% to 38%, and manufacturing share declining below 25%. For GCC logistics, this is a three-dimensional restructuring event: first, Chinese export volumes decelerate, reducing the container throughput that flows through GCC transshipment hubs; second, China\'s industrial commodity import growth (steel inputs, industrial chemicals) plateaus, revising the GCC petrochemical export demand trajectory permanently; third, Chinese outbound FDI pivots from resource extraction toward consumer market access — making GCC consumer markets an explicit Chinese strategic target, generating a new inbound FDI and finished goods import cargo stream. The cargo mix at Jebel Ali\'s China-origin lanes shifts from industrial intermediates toward consumer electronics, EVs, and lifestyle goods — a structural change in handling, warehousing, and value-added logistics requirements that GCC port operators have not modelled.',
+    blindspot:'China\'s 15th Plan is modelled as a China domestic growth story — its dominant GCC logistics consequence is a permanent restructuring of the China-GCC cargo mix: industrial intermediates volumes flatten while Chinese consumer goods and FDI-driven project cargo surge, requiring fundamentally different port and logistics capabilities than the existing China trade infrastructure.',
+    geoNodes:[
+      {label:'Beijing — 15th Plan NPC Approval',              lat:39.9, lng:116.4, order:0},
+      {label:'Shanghai / Pearl Delta — Export Base Contracts', lat:31.2, lng:121.5, order:1},
+      {label:'Chengdu / Wuhan — Domestic Consumption Core',   lat:30.6, lng:104.1,  order:1},
+      {label:'Jebel Ali — China Lane Cargo Mix Shifts',       lat:25.0, lng:55.1,  order:2},
+      {label:'GCC Industrial / Consumer Markets',             lat:24.5, lng:54.4,  order:3, gcc:true}
+    ],
+    evidence:[
+      {stage:'ORIGIN',    mechanism:'China 15th Five-Year Plan (2026–2030) enshrines dual circulation — domestic consumption targeted at 60%+ of GDP; investment/GDP ratio to fall from 43% to 38%; manufacturing share to decline below 25%', example:'Draft 15th Plan (NPC Dec 2025): domestic consumption primary growth driver explicitly stated for first time in plan history; services sector target 58% GDP by 2030; green economy investment +40% vs 14th Plan', lag:'0–6m',  strength:78},
+      {stage:'1ST ORDER', mechanism:'Chinese export volume growth decelerates structurally — as domestic absorption prioritised, fewer goods available for export at competitive prices; export-GDP ratio projected to fall from 19% to 15% by 2030', example:'China export volume growth forecast: 14th Plan avg +6.5%/yr → 15th Plan avg +2.8%/yr (IMF, OECD 2025); trans-Pacific TEU volume growth forecast cut from +4% to +1.5% annually 2026–2030', lag:'6–18m', strength:72},
+      {stage:'2ND ORDER', mechanism:'China industrial commodity import growth plateaus — 15th Plan targets green economy transition reducing coal, and domestic services focus reduces steel/chemical industrial demand growth trajectory', example:'Goldman Sachs: China crude oil import growth to slow from +3% to +0.8% annually post-2025 as EV penetration and domestic consumption shift reduces industrial energy intensity; petrochemical import growth halved', lag:'12–36m',strength:75},
+      {stage:'3RD ORDER', mechanism:'Chinese outbound FDI pivots to GCC consumer markets — BYD, Alibaba, Xiaomi target GCC as strategic consumer market; FDI generates capital equipment, retail logistics, and data centre cargo streams',         example:'BYD opened UAE flagship distribution centre 2024; Alibaba Cainiao MENA logistics hub operationalised Dubai 2024; Chinese consumer brand FDI to GCC +85% 2023–2024 — new cargo category emerging',      lag:'18–60m',strength:68}
+    ],
+    chart:{
+      type:'line',
+      title:'China Domestic Consumption % of GDP vs Chinese Export Volume Growth Rate (%, YoY)',
+      xLabel:'Year', yLabel:'China Domestic Consumption (% of GDP)',
+      color:'#e03040',
+      dualAxis:true, label2:'Chinese Export Volume Growth Rate (% YoY)', color2:'#4a9fe8',
+      note:'Domestic consumption share rising as export volume growth decelerates — the 15th Plan inflection is the structural break from China\'s 40-year export-led growth model, permanently reshaping global trade lane volume trajectories',
+      source:'National Bureau of Statistics China (NBS) & WTO Global Trade Volume Statistics',
+      sourceUrl:'https://www.stats.gov.cn/english/',
+      labels:['2010','2012','2014','2016','2018','2020','2022','2024','2026E','2028E','2030E'],
+      values:[48.5,49.2,50.1,51.8,52.5,54.3,53.8,55.2,57.5,59.2,61.0],
+      values2:[15.2,8.5,7.2,9.5,10.2,3.8,7.5,5.2,3.5,2.2,1.8]
+    }
   }
 ];
 
@@ -8946,7 +9004,7 @@ var WL_GROUPS = [
     id:'economic', icon:'◆',
     title:'Economic Demand Dynamics',
     desc:'Property sector effects, metals demand contraction and vessel class cross-market reallocation',
-    signals:['vision2030','indiagrowth','china','eurec','rates','drybulk']
+    signals:['vision2030','indiagrowth','china15plan','china','eurec','rates','drybulk']
   }
 ];
 

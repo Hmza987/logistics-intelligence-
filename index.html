@@ -2189,6 +2189,10 @@ canvas { font-family: var(--f-mono); }
         <span class="mob-nav-icon">&#9670;</span>
         <span class="mob-nav-label">Scenario Simulator</span>
       </button>
+      <button class="mob-nav-item" id="mob-tab-watchlist" onclick="mobShowTab('watchlist')">
+        <span class="mob-nav-icon">&#8881;</span>
+        <span class="mob-nav-label">Strategic Watchlist</span>
+      </button>
     </div>
     <div id="mob-nav-footer">
       <div style="font-family:var(--f-mono);font-size:8px;color:var(--c-tx2);letter-spacing:.08em;text-transform:uppercase">Gulf Logistics Intelligence &middot; May 2026</div>
@@ -6584,7 +6588,7 @@ function closeMobNav() {
 function mobShowTab(name) {
   // Delegate to the main showTab function using the matching desktop tab element
   var desktopTabs = document.querySelectorAll('#tabs .tab');
-  var tabNames = ['hormuz', 'rates', 'trucking', 'simulator'];
+  var tabNames = ['hormuz', 'rates', 'trucking', 'simulator', 'watchlist'];
   var idx = tabNames.indexOf(name);
   if (idx !== -1) showTab(name, desktopTabs[idx]);
 

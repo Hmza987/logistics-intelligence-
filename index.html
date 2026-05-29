@@ -15,7 +15,6 @@
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
 <style>
 /* ═══════════════════════════════════════════════════════════════════════════
    GULF LOGISTICS INTELLIGENCE — EXECUTIVE DESIGN SYSTEM
@@ -9994,40 +9993,40 @@ function generateStrategyBrief(sid) {
     classBar + docHeader + subjectBlock + kjHTML + assessHTML + chainHTML2 + scSec + gccSec + confSec + actSec + evSec + footerBar +
   '</div>';
 
-  // ── Render + export ───────────────────────────────────────────────────────
-  // visibility:hidden keeps the element in the render tree (unlike display:none)
-  // so html2canvas can measure and clone it; the onclone callback then makes it
-  // visible inside the clone before the screenshot is taken.
-  var wrapper = document.createElement('div');
-  wrapper.id = '__brief-pdf-wrap__';
-  wrapper.style.cssText = 'position:fixed;left:0;top:0;width:794px;visibility:hidden;z-index:9999;background:#fff;';
-  wrapper.innerHTML = briefHTML;
-  document.body.appendChild(wrapper);
+  // ── Open print window ─────────────────────────────────────────────────────
+  // Native print engine → user clicks Save as PDF in the dialog.
+  // Far more reliable than html2canvas (no DOM capture issues, perfect colour fidelity).
+  var fullDoc = '<!DOCTYPE html><html><head><meta charset="utf-8">' +
+    '<title>' + sig.title + ' — Strategy Brief</title>' +
+    '<style>' +
+      '@page { size:A4; margin:12mm; }' +
+      'body { margin:0; padding:0; background:#fff; -webkit-print-color-adjust:exact; print-color-adjust:exact; }' +
+      '@media print {' +
+        'body { margin:0; }' +
+        '.no-print { display:none !important; }' +
+      '}' +
+      '.print-btn {' +
+        'position:fixed; top:16px; right:16px; z-index:9999;' +
+        'background:#0a0f1e; color:#d4a017; border:none; border-radius:4px;' +
+        'padding:10px 20px; font-family:Arial,sans-serif; font-size:12px;' +
+        'font-weight:bold; letter-spacing:.08em; cursor:pointer;' +
+        'text-transform:uppercase;' +
+      '}' +
+    '</style>' +
+    '</head><body>' +
+    '<button class="print-btn no-print" onclick="window.print()">&#8659; Save as PDF</button>' +
+    briefHTML +
+    '<scr'+'ipt>window.onload=function(){setTimeout(function(){window.print();},400);};</scr'+'ipt>' +
+    '</body></html>';
 
-  var filename = sig.id + '-strategy-brief-' + now.getFullYear() + '.pdf';
-  html2pdf().set({
-    margin:      [8, 8, 8, 8],
-    filename:    filename,
-    image:       { type:'jpeg', quality:0.98 },
-    html2canvas: {
-      scale:       2,
-      useCORS:     true,
-      logging:     false,
-      windowWidth: 794,
-      onclone: function(clonedDoc) {
-        var el = clonedDoc.getElementById('__brief-pdf-wrap__');
-        if (el) el.style.visibility = 'visible';
-      }
-    },
-    jsPDF: { unit:'mm', format:'a4', orientation:'portrait' }
-  }).from(wrapper).save().then(function(){
-    document.body.removeChild(wrapper);
-    if (btn) { btn.innerHTML = '<span class="wl-brief-btn-icon">&#8659;</span> Download Strategy Brief'; btn.disabled = false; }
-  }).catch(function(err){
-    console.error('Brief generation error:', err);
-    document.body.removeChild(wrapper);
-    if (btn) { btn.innerHTML = '<span class="wl-brief-btn-icon">&#8659;</span> Download Strategy Brief'; btn.disabled = false; }
-  });
+  var win = window.open('', '_blank');
+  if (win) {
+    win.document.write(fullDoc);
+    win.document.close();
+  } else {
+    alert('Pop-up blocked. Please allow pop-ups for this site and try again.');
+  }
+  if (btn) { btn.innerHTML = '<span class="wl-brief-btn-icon">&#8659;</span> Download Strategy Brief'; btn.disabled = false; }
 }
 // ── END STRATEGIC WATCHLIST ───────────────────────────────────────────────────
 

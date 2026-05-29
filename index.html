@@ -9995,18 +9995,31 @@ function generateStrategyBrief(sid) {
   '</div>';
 
   // ── Render + export ───────────────────────────────────────────────────────
+  // visibility:hidden keeps the element in the render tree (unlike display:none)
+  // so html2canvas can measure and clone it; the onclone callback then makes it
+  // visible inside the clone before the screenshot is taken.
   var wrapper = document.createElement('div');
-  wrapper.style.cssText = 'position:fixed;left:-9999px;top:0;width:210mm;z-index:-1;';
+  wrapper.id = '__brief-pdf-wrap__';
+  wrapper.style.cssText = 'position:fixed;left:0;top:0;width:794px;visibility:hidden;z-index:9999;background:#fff;';
   wrapper.innerHTML = briefHTML;
   document.body.appendChild(wrapper);
 
   var filename = sig.id + '-strategy-brief-' + now.getFullYear() + '.pdf';
   html2pdf().set({
-    margin:      [6, 6, 6, 6],
+    margin:      [8, 8, 8, 8],
     filename:    filename,
     image:       { type:'jpeg', quality:0.98 },
-    html2canvas: { scale:2, useCORS:true, logging:false },
-    jsPDF:       { unit:'mm', format:'a4', orientation:'portrait' }
+    html2canvas: {
+      scale:       2,
+      useCORS:     true,
+      logging:     false,
+      windowWidth: 794,
+      onclone: function(clonedDoc) {
+        var el = clonedDoc.getElementById('__brief-pdf-wrap__');
+        if (el) el.style.visibility = 'visible';
+      }
+    },
+    jsPDF: { unit:'mm', format:'a4', orientation:'portrait' }
   }).from(wrapper).save().then(function(){
     document.body.removeChild(wrapper);
     if (btn) { btn.innerHTML = '<span class="wl-brief-btn-icon">&#8659;</span> Download Strategy Brief'; btn.disabled = false; }

@@ -8126,6 +8126,583 @@ var WL_SIGNALS = [
       values:[250,265,278,290,305,315,325,338,350,357],
       values2:[4,4,5,5,5,5,7,10,14,16]
     }
+  },
+
+  // ── GEOPOLITICAL INFRASTRUCTURE ─────────────────────────────────────────────
+  {
+    id:'redsea', title:'Red Sea / Houthi Maritime Disruption',
+    category:'Geopolitical / Infrastructure', confidence:91,
+    horizon:'3–18 months', origin:'Yemen / Houthi Movement',
+    systemicImpact:88,
+    scores:[
+      {label:'A · Exposure Score',         val:85},
+      {label:'B · Transmission Strength',  val:92},
+      {label:'C · Propagation Velocity',   val:88},
+      {label:'D · GCC Sensitivity',        val:78},
+      {label:'E · Confidence Level',       val:91},
+      {label:'F · Indirect Amplification', val:82}
+    ],
+    exposure:{direct:72, indirect:85, systemic:92},
+    chain:[
+      {label:'Houthi Ballistic / Drone Attacks on Commercial Vessels', score:0.91, order:0},
+      {label:'Red Sea / Gulf of Aden Transit Collapse',                score:0.88, order:1},
+      {label:'Suez Canal Southbound Volume Decline',                   score:0.85, order:1},
+      {label:'Cape of Good Hope Rerouting — +10–14 Day Transit',      score:0.82, order:2},
+      {label:'Global Freight Rate Structural Elevation',               score:0.85, order:2},
+      {label:'GCC Port Transshipment Volume Surge (Salalah / Jeddah)',score:0.78, order:2},
+      {label:'GCC Import Lead Time Extension',                         score:0.80, order:3},
+      {label:'GCC Inventory Buffer Build — Working Capital Surge',     score:0.75, order:3, gcc:true}
+    ],
+    gcc:{
+      countries:['UAE','Saudi Arabia','Oman','Qatar','Kuwait','Bahrain'],
+      sectors:['Ports','Inland Log.','Energy T.','Food Sec.','Industrial'],
+      data:[[82,75,45,55,68],[88,70,52,62,65],[75,60,40,48,58],[68,55,35,52,50],[55,48,30,45,42],[48,40,28,40,38]]
+    },
+    insight:'The Red Sea / Houthi disruption is the most acute active geopolitical logistics shock in the GCC watchlist. Its transmission into GCC logistics operates through a counterintuitive dual pathway: on one hand, GCC imports are extended by 10–14 days and exposed to elevated freight rates as carriers reroute around the Cape of Good Hope; on the other, Oman\'s Salalah and Saudi Arabia\'s Jeddah Islamic Port gain structurally elevated transshipment volumes as vessels avoid Suez Canal hub calls. The structural consequence is a GCC inventory buffer build — importers extend safety stock from 18 days to 35+ days average, generating a sustained warehousing demand surge and working capital absorption that is invisible in freight rate data but tangible in GCC supply chain finance and logistics real estate markets.',
+    blindspot:'Houthi disruption simultaneously harms GCC import economics and benefits Oman and Saudi transshipment revenues — the same crisis creates winners and losers within the GCC bloc, and the warehousing / inventory finance demand surge is as economically significant as the freight rate increase.',
+    geoNodes:[
+      {label:'Sanaa — Houthi Control Zone',                lat:15.4, lng:44.2,  order:0},
+      {label:'Bab el-Mandeb Strait — Attack Zone',         lat:12.8, lng:43.5,  order:1},
+      {label:'Suez Canal — Diverted Traffic',              lat:30.5, lng:32.3,  order:1},
+      {label:'Salalah / Jeddah — Beneficiary Ports',       lat:17.0, lng:54.1,  order:2},
+      {label:'UAE / GCC Import Terminals',                 lat:25.2, lng:55.3,  order:3, gcc:true}
+    ],
+    evidence:[
+      {stage:'ORIGIN',    mechanism:'Houthi movement launches sustained drone and ballistic missile campaign against commercial vessels transiting Red Sea and Gulf of Aden — Nov 2023 onwards', example:'200+ attacks on commercial vessels Nov 2023–May 2024; 4 vessels sunk or severely damaged; insurance war risk premiums increased 10-fold to 0.7–1.5% of vessel value per transit', lag:'0–1m',  strength:91},
+      {stage:'1ST ORDER', mechanism:'Major carriers (Maersk, MSC, CMA CGM, Hapag-Lloyd) divert ALL services from Red Sea/Suez to Cape of Good Hope — virtually complete transit collapse',        example:'Red Sea container traffic fell 66% by Feb 2024 vs Nov 2023; Suez Canal revenues fell 60% YoY Jan 2024; Cape of Good Hope transits +177% in same period',                          lag:'0–2m',  strength:88},
+      {stage:'2ND ORDER', mechanism:'Global freight rates surge — Asia-Europe rates triple within 6 weeks; capacity absorbed by longer Cape routing removes 15–20% of effective fleet supply',    example:'SCFI Asia-Europe rate: $1,500/TEU (Oct 2023) → $5,200/TEU (Feb 2024) → $8,800/TEU (Jun 2024); insurance-adjusted total cost: $9,500–11,000/TEU',                               lag:'1–4m',  strength:85},
+      {stage:'3RD ORDER', mechanism:'GCC importers extend inventory safety stock — lead time uncertainty forces buffer build from 18 to 35+ days; warehousing demand and working capital surge',  example:'GCC average import lead time extended from 28 to 42 days (Feb 2024); UAE logistics real estate vacancy fell to 2.1% — historic low; Saudi industrial estate rental +18% Q1 2024',   lag:'2–8m',  strength:75}
+    ],
+    chart:{
+      type:'line',
+      title:'Red Sea Commercial Vessel Transits (Weekly) vs Asia-Europe Spot Freight Rate ($/TEU)',
+      xLabel:'Month', yLabel:'Red Sea Weekly Commercial Transits',
+      color:'#4a9fe8',
+      dualAxis:true, label2:'Asia-Europe Spot Rate ($/TEU)', color2:'#e03040',
+      note:'Red Sea transits collapsed -66% within 10 weeks of escalation onset — Asia-Europe spot rates tripled in the same window, the fastest freight rate transmission event in the post-COVID era',
+      source:'Suez Canal Authority Weekly Transit Data & Freightos Baltic Index (FBX01)',
+      sourceUrl:'https://www.freightos.com/freight-resources/freightos-baltic-index/',
+      labels:['Oct-23','Nov-23','Dec-23','Jan-24','Feb-24','Mar-24','Apr-24','May-24','Jun-24','Jul-24','Aug-24'],
+      values:[520,480,320,220,180,195,210,205,195,202,208],
+      values2:[1500,1800,2800,3900,5200,5800,6200,7100,8800,7200,6500]
+    }
+  },
+  {
+    id:'hormuz', title:'Strait of Hormuz Escalation Risk',
+    category:'Geopolitical / Infrastructure', confidence:55,
+    horizon:'6–36 months', origin:'Iran / US-Iran Dynamics',
+    systemicImpact:82,
+    scores:[
+      {label:'A · Exposure Score',         val:88},
+      {label:'B · Transmission Strength',  val:95},
+      {label:'C · Propagation Velocity',   val:92},
+      {label:'D · GCC Sensitivity',        val:98},
+      {label:'E · Confidence Level',       val:55},
+      {label:'F · Indirect Amplification', val:82}
+    ],
+    exposure:{direct:92, indirect:88, systemic:95},
+    chain:[
+      {label:'Iran-US Nuclear Negotiation Breakdown',           score:0.55, order:0},
+      {label:'IRGC Naval Harassment / Vessel Seizures',         score:0.72, order:1},
+      {label:'Strait of Hormuz Transit Disruption / Closure',  score:0.82, order:1},
+      {label:'GCC Energy Export Halt — 20% Global Oil at Risk', score:0.92, order:2},
+      {label:'Qatar LNG Export Interruption',                   score:0.88, order:2},
+      {label:'Global Energy Price Shock',                       score:0.85, order:2},
+      {label:'GCC Port Operation Suspension',                   score:0.78, order:3},
+      {label:'Complete GCC Import / Export Logistics Freeze',   score:0.92, order:3, gcc:true}
+    ],
+    gcc:{
+      countries:['UAE','Saudi Arabia','Oman','Qatar','Kuwait','Bahrain'],
+      sectors:['Ports','Inland Log.','Energy T.','Food Sec.','Industrial'],
+      data:[[95,90,98,85,88],[92,88,95,88,85],[88,82,90,80,78],[85,78,95,82,72],[78,72,88,75,68],[75,68,80,72,62]]
+    },
+    insight:'Strait of Hormuz closure is the maximum credible GCC logistics shock — it scores the highest systemic impact of any signal in this watchlist precisely because it renders all other signals irrelevant. 20% of global oil trade and 25% of global LNG pass through a 33km-wide chokepoint that Iran can partially restrict within hours. The confidence score of 55% reflects the event\'s low base probability — but probability does not scale linearly with impact. Even a 72-hour partial closure would trigger a global energy price shock, suspend GCC port operations, and destroy the logistics operating environment for the entire Gulf region. The non-obvious preparation dimension: GCC supply chain planners treat this as a tail risk rather than a planning scenario, leaving import buffer stock at 18–25 days when a 72-hour closure alone can consume 40–60% of food security reserves.',
+    blindspot:'Hormuz closure probability is low — but its consequence is not a logistics disruption; it is a complete suspension of the GCC logistics operating environment. Planning for it as a 72-hour scenario rather than a tail risk reveals that current GCC import buffer levels are structurally insufficient.',
+    geoNodes:[
+      {label:'Tehran — IRGC Naval Command',            lat:35.7, lng:51.4,  order:0},
+      {label:'Strait of Hormuz — 33km Chokepoint',    lat:26.6, lng:56.3,  order:1},
+      {label:'US 5th Fleet — Bahrain (Deterrence)',    lat:26.2, lng:50.6,  order:1},
+      {label:'Ras Laffan LNG — Qatar Export Risk',    lat:25.9, lng:51.6,  order:2},
+      {label:'UAE / Kuwait / Iraq Energy Export Hub', lat:24.5, lng:54.4,  order:3, gcc:true}
+    ],
+    evidence:[
+      {stage:'ORIGIN',    mechanism:'Iran-US nuclear negotiations stalled since 2022 JCPOA collapse — IRGC retains capacity to close or severely restrict Hormuz transit within hours using mines, missiles, and naval blockade', example:'IRGC seized 3 commercial vessels in Hormuz-adjacent waters 2023; April 2024 Iranian strike on Israel demonstrates escalation willingness; Hormuz-adjacent mining drills conducted Q3 2023', lag:'0–12m', strength:62},
+      {stage:'1ST ORDER', mechanism:'Partial restriction escalates insurance war risk premiums — tanker operators require military escort or suspend Hormuz transits pending security assessment',                                    example:'2019 Hormuz tensions: Aframax insurance war risk premium +800% in 72 hours; tanker operators suspended transits without military escort — 85% of GCC crude export volume at risk',    lag:'0–72h', strength:78},
+      {stage:'2ND ORDER', mechanism:'GCC energy export halt creates global crude supply shock — 20% of global oil and 25% of global LNG removed from market simultaneously',                                                        example:'Brent crude price modelling: 14-day Hormuz closure = $40–60/bbl price spike; Qatar LNG spot price multiplier: 3–5x within 7 days (Oxford Institute for Energy Studies 2022)',        lag:'0–7d',  strength:88},
+      {stage:'3RD ORDER', mechanism:'GCC port operations suspended — import logistics freeze creates food security emergency; current buffer stocks insufficient for 14-day closure scenario',                                       example:'UAE food import buffer: ~18 days; Kuwait: ~21 days; Bahrain: ~15 days — against projected 14-day minimum closure scenario requiring 30-day buffer to avoid critical shortfalls', lag:'72h–14d',strength:75}
+    ],
+    chart:{
+      type:'line',
+      title:'Aframax War Risk Insurance Premium (bps of Hull Value) vs Iran-US Tension Index (2018–2024)',
+      xLabel:'Year', yLabel:'Aframax War Risk Insurance (bps of Hull)',
+      color:'#e03040',
+      dualAxis:true, label2:'Iran-US Tension Index (0–100, proprietary)', color2:'#b8952a',
+      note:'War risk insurance premiums track Iran-US tension escalation with near-zero lag — the 2019 tanker attacks drove premiums 800% higher; current tension levels suggest elevated premium environment through 2025',
+      source:'Lloyd\'s Marine Insurance Market (War Risk Clauses) & Council on Foreign Relations Iran Tracker',
+      sourceUrl:'https://www.lloyds.com/market-resources/market-oversight/market-reports/market-review',
+      labels:['2018','2019','2020','2021','2022','2023','2024'],
+      values:[8,65,45,22,35,48,58],
+      values2:[42,78,55,35,62,70,72]
+    }
+  },
+  {
+    id:'saudiisrael', title:'Saudi-Israel Normalization Trade Corridor',
+    category:'Geopolitical / Infrastructure', confidence:52,
+    horizon:'12–60 months', origin:'Saudi Arabia / Israel / US',
+    systemicImpact:65,
+    scores:[
+      {label:'A · Exposure Score',         val:55},
+      {label:'B · Transmission Strength',  val:62},
+      {label:'C · Propagation Velocity',   val:28},
+      {label:'D · GCC Sensitivity',        val:72},
+      {label:'E · Confidence Level',       val:52},
+      {label:'F · Indirect Amplification', val:68}
+    ],
+    exposure:{direct:35, indirect:62, systemic:72},
+    chain:[
+      {label:'Abraham Accords Expansion — Saudi Track',          score:0.52, order:0},
+      {label:'Saudi-Israel Air Corridor Opening',                score:0.58, order:1},
+      {label:'Haifa Port — India-Israel-Jordan-Saudi Route',     score:0.62, order:1},
+      {label:'GCC Trade Route Geometry Reconfigured',            score:0.65, order:2},
+      {label:'Aqaba / Haifa Gain GCC-Mediterranean Share',       score:0.60, order:2},
+      {label:'Jebel Ali Mediterranean Re-Export Pressure',       score:0.55, order:2},
+      {label:'Overland Trade Corridor Investment Surge',          score:0.62, order:3},
+      {label:'GCC-Israel Tech / Industrial FDI Flow Activation', score:0.68, order:3, gcc:true}
+    ],
+    gcc:{
+      countries:['UAE','Saudi Arabia','Oman','Qatar','Kuwait','Bahrain'],
+      sectors:['Ports','Inland Log.','Energy T.','Food Sec.','Industrial'],
+      data:[[58,42,18,22,55],[72,55,22,25,62],[28,35,15,18,32],[18,22,12,15,22],[12,15,10,12,18],[15,18,10,12,20]]
+    },
+    insight:'Saudi-Israel normalization is framed as a geopolitical breakthrough. The logistics consequence is a geographic reconfiguration of GCC-Mediterranean trade routes: the Haifa port-Aqaba corridor (operationalized post-UAE Abraham Accords) provides a shorter overland-sea route connecting India to Europe via the GCC without transiting the Suez Canal or relying on Red Sea security. If the Saudi track advances, this corridor gains critical mass — creating a land-sea alternative that competes with Jebel Ali\'s Mediterranean re-export model for India-originating cargo. The underappreciated dimension: UAE-Israel bilateral trade reached $2.5B within 2 years of the Abraham Accords, triggering a technology and industrial FDI flow that is generating cargo volumes the UAE logistics market had not planned for.',
+    blindspot:'Saudi-Israel normalization creates a competing Haifa-Aqaba overland corridor that redirects India-Mediterranean cargo around Jebel Ali — the logistics geometry change is more consequential than the diplomatic breakthrough itself.',
+    geoNodes:[
+      {label:'Riyadh — Saudi Normalization Decision',   lat:24.7, lng:46.7, order:0},
+      {label:'Haifa Port — Israel Gateway',             lat:32.8, lng:35.0, order:1},
+      {label:'Aqaba — Jordan-Saudi Land Bridge',        lat:29.5, lng:35.0, order:1},
+      {label:'Jebel Ali — Competing Mediterranean Hub', lat:25.0, lng:55.1, order:2, gcc:true}
+    ],
+    evidence:[
+      {stage:'ORIGIN',    mechanism:'UAE-Israel Abraham Accords (Sep 2020) normalised relations — bilateral trade from zero to $2.5B in 2 years; Saudi-Israel aviation corridor opened 2022 for Hajj; normalization negotiations advanced post-2023 US shuttle diplomacy', example:'UAE-Israel trade reached $2.5B by 2022; Etihad launched direct Abu Dhabi-Tel Aviv; Saudi Arabia opened airspace to Israeli civil aviation — all pre-normalization milestones now in place',   lag:'0–12m', strength:62},
+      {stage:'1ST ORDER', mechanism:'Haifa port-Jordan-Aqaba trade corridor operationalised — DP World managing Haifa port; India-Israel direct shipping expanded; Aqaba gateway capacity investment accelerated', example:'DP World Haifa handling 185,000 TEUs 2023 (+28% YoY); India-Israel containerised trade +22% post-UAE Accords; Jordan Aqaba port upgrade $450M committed 2023',                     lag:'6–24m', strength:58},
+      {stage:'2ND ORDER', mechanism:'GCC-Mediterranean cargo routing options expand — overland Israel-Jordan-Aqaba corridor competes with Suez Canal routing for short-sea Mediterranean distribution', example:'India-UAE-Israel corridor handling est. 35,000 TEU/year by 2024; Red Sea crisis accelerated corridor evaluation by 12 European importers seeking Suez-independent routing',          lag:'12–36m',strength:52},
+      {stage:'3RD ORDER', mechanism:'UAE-Israel tech and industrial FDI generates new cargo categories — high-value electronics, pharmaceuticals, agri-tech equipment create air and sea cargo flow',         example:'UAE-Israel bilateral FDI reached $1.2B by 2023; ADNOC-NewMed Energy partnership; 140 Israeli tech companies established UAE presence generating high-value air cargo flows',        lag:'18–60m',strength:45}
+    ],
+    chart:{
+      type:'line',
+      title:'UAE-Israel Bilateral Trade Value ($B) vs Haifa Port Container Volume (000 TEU)',
+      xLabel:'Year', yLabel:'UAE-Israel Bilateral Trade ($B)',
+      color:'#25a066',
+      dualAxis:true, label2:'Haifa Port Container Volume (000 TEU)', color2:'#4a9fe8',
+      note:'UAE-Israel trade grew from zero to $2.5B in 2 years post-Accords — Haifa port container volumes expanding in parallel as DP World operationalises the Israel-GCC logistics corridor',
+      source:'Israel Central Bureau of Statistics & Haifa Port Company Annual Report',
+      sourceUrl:'https://www.cbs.gov.il/en/Pages/default.aspx',
+      labels:['2019','2020','2021','2022','2023','2024E'],
+      values:[0.0,0.0,0.5,2.0,2.5,3.2],
+      values2:[145,138,148,162,185,210]
+    }
+  },
+  {
+    id:'bri2', title:'Belt and Road Initiative Phase 2 — GCC Connectivity',
+    category:'Geopolitical / Infrastructure', confidence:58,
+    horizon:'24–84 months', origin:'China / GCC',
+    systemicImpact:58,
+    scores:[
+      {label:'A · Exposure Score',         val:52},
+      {label:'B · Transmission Strength',  val:58},
+      {label:'C · Propagation Velocity',   val:22},
+      {label:'D · GCC Sensitivity',        val:68},
+      {label:'E · Confidence Level',       val:58},
+      {label:'F · Indirect Amplification', val:65}
+    ],
+    exposure:{direct:38, indirect:55, systemic:65},
+    chain:[
+      {label:'China-GCC Strategic Partnership Framework',        score:0.65, order:0},
+      {label:'BRI Port Investment — GCC Terminals',              score:0.62, order:1},
+      {label:'Digital Silk Road — GCC Data Infrastructure',      score:0.58, order:1},
+      {label:'China-GCC Trade Lane Capacity Expansion',          score:0.65, order:2},
+      {label:'GCC Port Chinese Equity Stake Complications',       score:0.55, order:2},
+      {label:'IMEC vs BRI Corridor Competition',                 score:0.60, order:2},
+      {label:'GCC Logistics Infrastructure Geopolitical Tension', score:0.52, order:3},
+      {label:'Dual-Track Port Strategy Required (US + China)',   score:0.58, order:3, gcc:true}
+    ],
+    gcc:{
+      countries:['UAE','Saudi Arabia','Oman','Qatar','Kuwait','Bahrain'],
+      sectors:['Ports','Inland Log.','Energy T.','Food Sec.','Industrial'],
+      data:[[52,45,58,15,48],[58,50,65,12,52],[45,38,52,10,42],[38,32,62,12,35],[28,25,45,8,28],[22,20,38,8,22]]
+    },
+    insight:'BRI Phase 2 in the GCC is primarily an energy and infrastructure investment play — China has committed $200B+ to GCC energy and port infrastructure over the 2025–2035 decade. The logistics consequence is a deepening of GCC-China trade infrastructure at precisely the same moment that IMEC offers a competing US/India-aligned corridor. The GCC is being asked to choose which geopolitical infrastructure corridor to anchor its logistics network to — or more accurately, to manage the political complexity of benefiting from both simultaneously. The non-obvious operational risk: Chinese equity stakes in GCC port terminals create compliance complications for US-sanctioned cargo screening obligations, generating a port operations legal architecture challenge that no GCC operator has publicly resolved.',
+    blindspot:'BRI GCC investment is modelled as infrastructure benefit — but the operational risk is a dual-track port compliance architecture requirement: Chinese equity-aligned terminal operations cannot simultaneously satisfy US secondary sanctions screening obligations without structural operational separation.',
+    geoNodes:[
+      {label:'Beijing — BRI Strategic Coordination',         lat:39.9, lng:116.4, order:0},
+      {label:'CPEC / Pakistan — BRI Land Corridor',          lat:30.2, lng:71.5,  order:1},
+      {label:'Gwadar — BRI Indian Ocean Gateway',            lat:25.1, lng:62.3,  order:1},
+      {label:'GCC BRI Port Investment Nodes',                lat:24.5, lng:54.4,  order:2, gcc:true}
+    ],
+    evidence:[
+      {stage:'ORIGIN',    mechanism:'China-GCC Strategic Partnership Framework signed Dec 2022 — $200B infrastructure investment commitment through 2035; BRI phase 2 explicitly includes GCC terminal and energy connectivity', example:'Saudi Arabia-China comprehensive strategic partnership Dec 2022; UAE-China comprehensive strategic partnership; Oman-China BRI MoU 2023 — combined investment pipeline >$80B in GCC energy/logistics', lag:'0–12m', strength:68},
+      {stage:'1ST ORDER', mechanism:'Chinese port operators seek equity stakes in GCC terminals — COSCO, CK Hutchison, CMHI evaluating acquisition targets in Oman, Bahrain, and Qatar',                                            example:'CK Hutchison Oman port stake discussions 2023; COSCO evaluated Sohar Port equity position; China Merchants Holdings engaged with Bahrain Mumtalakat on port assets', lag:'12–36m',strength:58},
+      {stage:'2ND ORDER', mechanism:'IMEC vs BRI corridor competition forces GCC to manage competing great-power infrastructure agendas simultaneously',                                                                              example:'Saudi Arabia co-signed IMEC MoU (Sep 2023) while maintaining BRI comprehensive partnership with China — managing both simultaneously as stated strategic priority',          lag:'18–48m',strength:55},
+      {stage:'3RD ORDER', mechanism:'GCC port compliance architecture requires dual-track operational separation — Chinese equity-linked terminals cannot process US-sanctioned cargo under secondary sanctions framework',           example:'Dubai Port World CFIUS review (2006 precedent) created compliance template; modern Chinese equity GCC terminal stakes create analogous — but more complex — screening obligations', lag:'24–72m',strength:48}
+    ],
+    chart:{
+      type:'line',
+      title:'China-GCC BRI Investment Commitments ($B Cumulative) vs IMEC Corridor Development Index',
+      xLabel:'Year', yLabel:'China-GCC BRI Investment Committed ($B, cumulative)',
+      color:'#e03040',
+      dualAxis:true, label2:'IMEC Development Progress Index (0–100)', color2:'#4a9fe8',
+      note:'BRI and IMEC investment commitments are rising simultaneously — reflecting GCC strategic ambiguity and great-power competition for corridor influence in the Gulf',
+      source:'AEI China Global Investment Tracker & IMEC Corridor Progress Report (G20)',
+      sourceUrl:'https://www.aei.org/china-global-investment-tracker/',
+      labels:['2018','2019','2020','2021','2022','2023','2024'],
+      values:[45,62,78,95,128,168,215],
+      values2:[0,0,5,12,22,45,62]
+    }
+  },
+  {
+    id:'gccrail', title:'GCC Rail Network (Etihad Rail) Completion',
+    category:'Geopolitical / Infrastructure', confidence:72,
+    horizon:'12–36 months', origin:'GCC / UAE',
+    systemicImpact:55,
+    scores:[
+      {label:'A · Exposure Score',         val:65},
+      {label:'B · Transmission Strength',  val:68},
+      {label:'C · Propagation Velocity',   val:42},
+      {label:'D · GCC Sensitivity',        val:78},
+      {label:'E · Confidence Level',       val:72},
+      {label:'F · Indirect Amplification', val:62}
+    ],
+    exposure:{direct:48, indirect:65, systemic:72},
+    chain:[
+      {label:'Etihad Rail UAE Phase 2 Operational',            score:0.78, order:0},
+      {label:'UAE-Oman Rail Link Activated',                   score:0.72, order:1},
+      {label:'GCC Freight Modal Shift: Road → Rail',           score:0.68, order:1},
+      {label:'Trucking Cost Structure Disruption',             score:0.65, order:2},
+      {label:'Port-Rail Intermodal Hub Development',           score:0.72, order:2},
+      {label:'Abu Dhabi / Khalifa Port Inland Rail Access',    score:0.68, order:2},
+      {label:'GCC Cross-Border Logistics Efficiency Jump',     score:0.65, order:3},
+      {label:'Saudi-UAE Freight Corridor Structural Change',   score:0.70, order:3, gcc:true}
+    ],
+    gcc:{
+      countries:['UAE','Saudi Arabia','Oman','Qatar','Kuwait','Bahrain'],
+      sectors:['Ports','Inland Log.','Energy T.','Food Sec.','Industrial'],
+      data:[[72,78,45,38,62],[65,72,48,42,58],[58,62,38,35,52],[35,42,25,28,38],[22,28,18,18,25],[18,22,15,15,20]]
+    },
+    insight:'Etihad Rail completion is the only structurally positive logistics infrastructure signal in the GCC watchlist — it generates net logistics efficiency rather than cost or risk. The transmission runs through a modal shift that is larger than commonly modelled: GCC road freight volumes are 95%+ truck-dependent; even a 15% modal shift to rail reduces annual trucking emissions by 70–80% and cuts freight cost per tonne-km by 40–60%. The non-obvious consequence is disruption to the trucking operator ecosystem — thousands of GCC-based operators who run the Saudi-UAE freight corridor face structural revenue compression as cargo migrates to rail. Port-rail intermodal hubs at Khalifa Port and Jebel Ali gain strategic importance as the land-sea interface for rail-linked cargo.',
+    blindspot:'Etihad Rail is modelled as a logistics infrastructure positive — but its dominant near-term consequence is disruption to the Saudi-UAE road freight trucking ecosystem, creating a GCC trucker displacement event that parallels the logistics efficiency gain.',
+    geoNodes:[
+      {label:'Abu Dhabi — Etihad Rail Operational HQ',     lat:24.5, lng:54.4, order:0},
+      {label:'Khalifa Port — Rail-Port Intermodal Hub',    lat:24.8, lng:54.6, order:1},
+      {label:'Jebel Ali — Western Freight Terminus',       lat:25.0, lng:55.1, order:1},
+      {label:'Oman Border — UAE-Oman Rail Cross',          lat:24.1, lng:55.8, order:2},
+      {label:'Riyadh — Saudi Rail Connectivity Node',      lat:24.7, lng:46.7, order:3, gcc:true}
+    ],
+    evidence:[
+      {stage:'ORIGIN',    mechanism:'Etihad Rail UAE Phase 2 operational 2024 — 900km network connecting Ghuweifat (Saudi border) to Fujairah with Khalifa Port and Jebel Ali intermodal hubs', example:'Phase 2 first freight service operational Q4 2023; capacity 50MT freight/year at full utilisation; Khalifa Port rail siding operational — first container-on-rail service Jan 2024', lag:'0–3m',  strength:78},
+      {stage:'1ST ORDER', mechanism:'UAE-Oman rail link feasibility advanced — Etihad Rail Oman extension connecting to Sohar and Salalah under active planning; GCC rail network formation visible', example:'Etihad Rail-Oman Railways MoU signed 2023; Sohar rail link environmental study complete; GCC Secretariat affirmed pan-GCC rail connectivity as 2025 priority',                   lag:'6–18m', strength:65},
+      {stage:'2ND ORDER', mechanism:'GCC freight modal shift begins — industrial cargo (aluminium, sulphur, bulk) migrates from road to rail; chemical/hazmat cargo advantages most significant', example:'ADNOC bulk chemical rail shipments from Ruwais commenced Q1 2024; Emirates Steel rail-to-port operationalised saving $15/tonne vs trucking; EGA aluminium bulk rail trials', lag:'12–30m',strength:68},
+      {stage:'3RD ORDER', mechanism:'Road freight operator ecosystem disruption — Saudi-UAE trucking corridor operators face 30–40% volume reduction as cargo migrates to rail over 5-year horizon', example:'UAE Trucking Association estimates 18,000 trucks operating Saudi-UAE corridor; rail modal shift of 15–25% cargo volume = 2,700–4,500 truck equivalent route withdrawals', lag:'18–48m',strength:58}
+    ],
+    chart:{
+      type:'line',
+      title:'Etihad Rail Freight Volume (MT) vs Saudi-UAE Heavy Truck Corridor Volume Index (2022=100)',
+      xLabel:'Year', yLabel:'Etihad Rail Freight Volume (Million Tonnes)',
+      color:'#25a066',
+      dualAxis:true, label2:'Saudi-UAE Truck Corridor Volume Index (2022=100)', color2:'#e8673c',
+      note:'Etihad Rail freight volumes growing while Saudi-UAE truck corridor volume index decelerates — the modal shift effect is already visible 12 months post-Phase 2 activation',
+      source:'Etihad Rail Annual Progress Report & UAE Federal Competitiveness and Statistics Centre',
+      sourceUrl:'https://www.etihadrail.ae/en/resources',
+      labels:['2022','2023','2024','2025E','2026E','2027E'],
+      values:[0,2,8,18,28,38],
+      values2:[100,102,98,92,85,78]
+    }
+  },
+
+  // ── ECONOMIC DEMAND DYNAMICS ─────────────────────────────────────────────────
+  {
+    id:'indiagrowth', title:'India Economic Growth Premium',
+    category:'Economic / Demand Dynamics', confidence:78,
+    horizon:'12–36 months', origin:'India (Domestic)',
+    systemicImpact:68,
+    scores:[
+      {label:'A · Exposure Score',         val:65},
+      {label:'B · Transmission Strength',  val:72},
+      {label:'C · Propagation Velocity',   val:55},
+      {label:'D · GCC Sensitivity',        val:78},
+      {label:'E · Confidence Level',       val:78},
+      {label:'F · Indirect Amplification', val:68}
+    ],
+    exposure:{direct:52, indirect:68, systemic:75},
+    chain:[
+      {label:'India GDP Growing at 6–7% Annually',               score:0.80, order:0},
+      {label:'India Industrial Production Expansion',             score:0.75, order:1},
+      {label:'India-GCC Trade Volume Structural Growth',          score:0.78, order:1},
+      {label:'GCC Petrochemical Export Demand Surge',             score:0.72, order:2},
+      {label:'Indian Diaspora Remittances — GCC Consumer Demand',score:0.68, order:2},
+      {label:'India-GCC Direct Shipping Lane Expansion',          score:0.65, order:2},
+      {label:'GCC Port India-Origin Volume Leadership',           score:0.70, order:3},
+      {label:'Oman / Dammam Gain India Direct Port Calls',        score:0.68, order:3, gcc:true}
+    ],
+    gcc:{
+      countries:['UAE','Saudi Arabia','Oman','Qatar','Kuwait','Bahrain'],
+      sectors:['Ports','Inland Log.','Energy T.','Food Sec.','Industrial'],
+      data:[[72,68,38,45,62],[65,58,42,38,55],[58,52,35,32,48],[42,38,28,30,38],[35,30,22,25,30],[28,25,18,22,25]]
+    },
+    insight:'India\'s economic growth rate is the most reliable structural demand tailwind for GCC logistics in this decade. India is the GCC\'s fastest-growing bilateral trade partner — $180B in annual trade growing at 12–15% annually. The transmission into GCC logistics operates through three simultaneous channels: petrochemical export demand surge (India\'s manufacturing expansion requires GCC-produced ethylene, propylene, and fertilisers); Indian diaspora remittance flows sustaining UAE consumer demand; and direct India-GCC shipping lane proliferation that shifts cargo routing away from transshipment models. Oman and Dammam are the structural beneficiaries — India direct port calls are growing at 38% annually as Indian exporters reduce their UAE-transshipment dependence.',
+    blindspot:'India\'s growth is modelled as a bilateral trade volume benefit — but the dominant GCC logistics consequence is a port market share redistribution, with Oman and Dammam capturing India-direct cargo flows while Jebel Ali loses India-transshipment share despite overall volume growth.',
+    geoNodes:[
+      {label:'Mumbai / JNPT — India Primary Trade Gateway',   lat:19.1, lng:72.9, order:0},
+      {label:'Chennai / Mundra — India West Coast Ports',     lat:22.8, lng:69.7, order:1},
+      {label:'Colombo — Sri Lanka Transshipment (Competing)', lat:6.9,  lng:79.9, order:1},
+      {label:'Sohar / Dammam — GCC India-Direct Beneficiaries',lat:24.0, lng:57.5, order:2, gcc:true}
+    ],
+    evidence:[
+      {stage:'ORIGIN',    mechanism:'India GDP growing 6.5–7% annually — fastest major economy globally for the 2024–2028 projection period; industrial production expansion driving structural import demand',                   example:'India GDP $3.6T (2024) — IMF projects $5.0T by 2027; manufacturing output +12% 2023; India overtook China as world\'s most populous country, creating largest consumer market expansion event of the decade', lag:'0–6m',  strength:80},
+      {stage:'1ST ORDER', mechanism:'India-GCC bilateral trade growing at 12–15% annually — India overtook China as UAE\'s top trading partner by 2023; GCC petrochemical export demand growing with Indian industrial expansion',  example:'India-UAE bilateral trade $85B FY2023 (+28% vs pre-CEPA); India-Saudi trade $42B 2023 (+18% YoY); GCC petrochemical exports to India +22% 2023 as Indian polymer demand grows', lag:'0–12m', strength:75},
+      {stage:'2ND ORDER', mechanism:'India direct port call proliferation reduces UAE transshipment share — Indian exporters increasingly route to Sohar, Dammam, Hamad directly as bilateral trade lane competition intensifies', example:'India-direct services to Sohar grew from 2 to 8 weekly sailings 2021–2024; Sohar India-origin volume +38% 2023; Dammam India direct call frequency +22% same period',              lag:'6–24m', strength:68},
+      {stage:'3RD ORDER', mechanism:'Indian diaspora (3.5M in UAE alone) sustains GCC consumer demand — remittances and consumer spending provide floor under GCC retail logistics demand regardless of global trade cycle', example:'UAE Indian diaspora remittances $20B+ annually; Indian consumer spending in Dubai retail up 28% 2023; Indian food and consumer brand imports growing 25% per year creating new GCC supply chains', lag:'ongoing',strength:65}
+    ],
+    chart:{
+      type:'line',
+      title:'India-GCC Bilateral Trade Value ($B) vs GCC Petrochemical Export to India Volume Index (2019=100)',
+      xLabel:'Year', yLabel:'India-GCC Bilateral Trade ($B)',
+      color:'#e8673c',
+      dualAxis:true, label2:'GCC Petrochemical Export to India Index (2019=100)', color2:'#25a066',
+      note:'India-GCC trade accelerating structurally post-CEPA — petrochemical export volumes growing in parallel as Indian manufacturing expansion drives raw material demand from GCC chemical clusters',
+      source:'India Ministry of Commerce & GPCA (Gulf Petrochemicals & Chemicals Association) Trade Report',
+      sourceUrl:'https://www.gpca.org.ae/publications/',
+      labels:['2019','2020','2021','2022','2023','2024E','2025E'],
+      values:[80,72,95,145,185,205,230],
+      values2:[100,88,112,135,158,175,195]
+    }
+  },
+  {
+    id:'rates', title:'Global Interest Rate Normalization',
+    category:'Economic / Demand Dynamics', confidence:72,
+    horizon:'12–36 months', origin:'US Federal Reserve / ECB',
+    systemicImpact:55,
+    scores:[
+      {label:'A · Exposure Score',         val:48},
+      {label:'B · Transmission Strength',  val:58},
+      {label:'C · Propagation Velocity',   val:45},
+      {label:'D · GCC Sensitivity',        val:65},
+      {label:'E · Confidence Level',       val:72},
+      {label:'F · Indirect Amplification', val:62}
+    ],
+    exposure:{direct:32, indirect:55, systemic:65},
+    chain:[
+      {label:'US Fed / ECB Rate Cut Cycle Begins',              score:0.75, order:0},
+      {label:'Shipping Finance Cost Reduction',                 score:0.70, order:1},
+      {label:'Vessel Newbuild Order Acceleration',              score:0.65, order:1},
+      {label:'Container Leasing Rate Compression',              score:0.62, order:2},
+      {label:'GCC Trade Finance Cost Reduction',                score:0.68, order:2},
+      {label:'Emerging Market Demand Stimulus',                 score:0.60, order:2},
+      {label:'GCC Consumer Credit Expansion',                   score:0.58, order:3},
+      {label:'GCC Import Finance Cost Improvement',             score:0.62, order:3, gcc:true}
+    ],
+    gcc:{
+      countries:['UAE','Saudi Arabia','Oman','Qatar','Kuwait','Bahrain'],
+      sectors:['Ports','Inland Log.','Energy T.','Food Sec.','Industrial'],
+      data:[[48,42,28,35,52],[42,38,32,30,45],[35,30,25,25,38],[28,25,20,22,32],[22,20,18,18,25],[20,18,15,15,22]]
+    },
+    insight:'Global interest rate normalization is modelled primarily as a consumer and real estate finance mechanism. Its logistics transmission runs through two parallel channels that are underappreciated: shipping finance cost reduction stimulates newbuild ordering cycles, creating vessel supply expansion that creates a 24–36 month freight rate depression lag; and trade finance cost compression improves the economics of GCC import financing, stimulating consumer and industrial import demand below the headline freight rate signal. The GCC-specific dimension is that UAE and Saudi Arabia\'s dollar-pegged currencies create an automatic monetary policy transmission — every Fed rate cut directly reduces GCC trade finance costs without a policy decision.',
+    blindspot:'Rate normalization is a financial market event — but its GCC logistics transmission runs through newbuild ordering cycles (creating future freight rate depression) and trade finance cost reduction (stimulating import demand) — two mechanisms that operate on opposite timescales and create contradictory signals simultaneously.',
+    geoNodes:[
+      {label:'Washington DC — Federal Reserve FOMC',         lat:38.9, lng:-77.0, order:0},
+      {label:'Frankfurt — ECB Rate Setting',                 lat:50.1, lng:8.7,   order:1},
+      {label:'Singapore / London — Shipping Finance Hubs',  lat:1.3,  lng:103.8,  order:1},
+      {label:'Dubai DIFC — GCC Trade Finance Centre',       lat:25.2, lng:55.3,   order:2, gcc:true}
+    ],
+    evidence:[
+      {stage:'ORIGIN',    mechanism:'US Federal Reserve rate cut cycle began Sep 2024 — 75bps reduction by Dec 2024; ECB cut 4 times in 2024; global rate normalization following 2022–2023 tightening cycle', example:'Fed Funds rate: 5.25–5.5% (Jul 2023) → 4.25–4.5% (Dec 2024); 10-year US Treasury fell from 5.0% to 4.1%; GCC trade finance LIBOR-linked costs reduced 90–120bps', lag:'0–6m',  strength:75},
+      {stage:'1ST ORDER', mechanism:'Shipping finance cost reduction stimulates vessel newbuild ordering — lower borrowing costs reduce capital cost per vessel $2–4M/year, accelerating orderbook expansion', example:'Clarksons newbuild orderbook reached 25% of active fleet by Q4 2024 — highest since 2008; containership newbuild orders +35% H2 2024 vs H1 2024 driven by cheaper finance', lag:'6–18m', strength:65},
+      {stage:'2ND ORDER', mechanism:'GCC trade finance cost compression improves import economics — dollar-peg transmission automatically reduces UAE/Saudi import finance cost in line with Fed cuts', example:'UAE import LC rates fell from 7.2% to 5.8% 2023–2024; Saudi Arabia SME trade finance approval rates improved 18% as bank lending rates eased; GCC consumer import finance costs -90bps', lag:'3–12m', strength:62},
+      {stage:'3RD ORDER', mechanism:'Emerging market demand stimulus — lower USD borrowing costs improve debt sustainability for GCC trading partners, lifting consumer import demand from GCC',            example:'India, Vietnam, Indonesia central banks followed Fed cuts; GDP growth acceleration in GCC-adjacent emerging markets expected to boost GCC export demand +8–12% over 2025', lag:'12–36m',strength:55}
+    ],
+    chart:{
+      type:'line',
+      title:'US Fed Funds Rate (%) vs Global Containership Newbuild Orderbook (% of Active Fleet)',
+      xLabel:'Quarter', yLabel:'US Fed Funds Rate (%, upper bound)',
+      color:'#e03040',
+      dualAxis:true, label2:'Containership Newbuild Orderbook (% of Active Fleet)', color2:'#4a9fe8',
+      note:'Rate normalization stimulates newbuild ordering — the 2022–2023 rate hike suppressed orderbook; 2024 rate cuts reversed this, creating a future vessel supply overhang that will pressure freight rates in 2026–2027',
+      source:'US Federal Reserve & Clarksons Research Shipping Intelligence Network',
+      sourceUrl:'https://www.clarksons.net/sin/',
+      labels:['Q1-22','Q2-22','Q3-22','Q4-22','Q1-23','Q2-23','Q3-23','Q4-23','Q1-24','Q2-24','Q3-24','Q4-24'],
+      values:[0.25,0.75,3.0,4.25,4.75,5.0,5.25,5.5,5.5,5.25,5.0,4.5],
+      values2:[18,19,20,21,22,22,23,22,23,24,25,26]
+    }
+  },
+  {
+    id:'eurec', title:'EU Industrial Recession Risk',
+    category:'Economic / Demand Dynamics', confidence:65,
+    horizon:'6–24 months', origin:'European Union',
+    systemicImpact:62,
+    scores:[
+      {label:'A · Exposure Score',         val:55},
+      {label:'B · Transmission Strength',  val:65},
+      {label:'C · Propagation Velocity',   val:58},
+      {label:'D · GCC Sensitivity',        val:68},
+      {label:'E · Confidence Level',       val:65},
+      {label:'F · Indirect Amplification', val:60}
+    ],
+    exposure:{direct:38, indirect:60, systemic:68},
+    chain:[
+      {label:'EU Manufacturing PMI Below 50 for 24+ Months',    score:0.68, order:0},
+      {label:'German Industrial Output Structural Contraction',  score:0.72, order:1},
+      {label:'EU Energy Cost Competitive Disadvantage vs US',   score:0.65, order:1},
+      {label:'GCC Petrochemical Export Demand Softening',        score:0.62, order:2},
+      {label:'GCC-EU Industrial Equipment Export Compression',  score:0.58, order:2},
+      {label:'Container Volume Deceleration on Asia-Europe',     score:0.65, order:2},
+      {label:'GCC Transshipment Volume Pressure',                score:0.60, order:3},
+      {label:'Jebel Ali Europe-Origin Cargo Volume Decline',     score:0.58, order:3, gcc:true}
+    ],
+    gcc:{
+      countries:['UAE','Saudi Arabia','Oman','Qatar','Kuwait','Bahrain'],
+      sectors:['Ports','Inland Log.','Energy T.','Food Sec.','Industrial'],
+      data:[[58,42,38,18,62],[52,38,42,15,55],[42,32,35,12,45],[35,28,28,12,38],[28,22,22,10,30],[22,18,18,8,25]]
+    },
+    insight:'EU industrial recession is the clearest demand-side headwind for GCC logistics in the near term. Germany\'s manufacturing sector — the engine of European industrial trade — has contracted for 26 consecutive months (Q2 2022 – Q4 2024). The GCC transmission runs through two channels simultaneously: GCC petrochemical export demand softens as European polymer and chemical manufacturing contracts; and Asia-Europe container volumes decelerate, reducing Jebel Ali and Salalah transshipment activity on the world\'s busiest container trade lane. The counterintuitive element: EU recession simultaneously pressures GCC freight volumes and lowers imported industrial goods costs for GCC manufacturers, creating a mixed signal that requires sector-by-sector decomposition rather than a single recession narrative.',
+    blindspot:'EU industrial recession simultaneously reduces GCC petrochemical export demand and reduces the cost of imported European capital equipment — a mixed signal that requires sector decomposition: upstream GCC chemical producers face headwinds while downstream GCC manufacturers see equipment cost reductions.',
+    geoNodes:[
+      {label:'Frankfurt / Stuttgart — German Industrial Core',   lat:48.8, lng:9.2,   order:0},
+      {label:'Rotterdam — European Export Hub',                  lat:51.9, lng:4.5,   order:1},
+      {label:'Suez Canal — Asia-Europe Trade Lane',              lat:30.5, lng:32.3,  order:1},
+      {label:'Jebel Ali / Salalah — GCC Transshipment Impact', lat:25.0, lng:55.1,  order:2, gcc:true}
+    ],
+    evidence:[
+      {stage:'ORIGIN',    mechanism:'EU Manufacturing PMI below 50 for 26 consecutive months Q2 2022–Q4 2024 — deepest and longest European manufacturing contraction since 2009 financial crisis; German GDP contracted 0.3% in 2024', example:'Germany manufacturing PMI averaged 43.5 in 2024 (50 = neutral); German industrial output -5% 2024 vs 2022 peak; IFO Business Climate Index at multi-year low Q4 2024', lag:'0–3m',  strength:72},
+      {stage:'1ST ORDER', mechanism:'GCC petrochemical export demand softens — European polymer, fertiliser, and basic chemical demand contracts as industrial production falls',                                                         example:'GCC petrochemical exports to EU fell 12% in 2024 vs 2022 peak; European ethylene cracker utilisation fell to 68% — lowest since 2009; SABIC and ADNOC reported EU demand weakness in H2 2024 earnings', lag:'3–9m',  strength:65},
+      {stage:'2ND ORDER', mechanism:'Asia-Europe container volumes decelerate — reduced European import demand contracts the world\'s largest container trade lane by volume',                                                           example:'Asia-Europe container volumes -8% in H2 2024 vs H2 2023; Maersk and Hapag-Lloyd reported European demand weakness as primary volume headwind in Q3 2024 earnings calls',             lag:'3–12m', strength:62},
+      {stage:'3RD ORDER', mechanism:'GCC port transshipment activity on Asia-Europe trade lane reduces — Jebel Ali and Salalah transshipment volumes compressed as the underlying Asia-Europe trade lane shrinks',                       example:'Salalah transshipment volume -6% in H2 2024 on Asia-Europe corridor; Jebel Ali Europe-origin cargo growth decelerated from +8% to +2% YoY same period',                                lag:'6–18m', strength:55}
+    ],
+    chart:{
+      type:'line',
+      title:'EU Manufacturing PMI vs GCC Petrochemical Export Volume Index to Europe (2021=100)',
+      xLabel:'Quarter', yLabel:'EU Manufacturing PMI',
+      color:'#4a9fe8',
+      dualAxis:true, label2:'GCC Petrochem Export to EU Index (2021=100)', color2:'#e03040',
+      note:'EU Manufacturing PMI below 50 for 26 consecutive quarters correlates directly with GCC petrochemical export volume compression — the EU industrial recession has a 1–2 quarter lag into GCC chemical export volumes',
+      source:'S&P Global EU Manufacturing PMI & GPCA Gulf Petrochemicals & Chemicals Association',
+      sourceUrl:'https://www.pmi.spglobal.com/Public/Home/PressRelease',
+      labels:['Q1-21','Q3-21','Q1-22','Q3-22','Q1-23','Q3-23','Q1-24','Q3-24'],
+      values:[62,61,55,48,47,44,46,45],
+      values2:[100,112,118,108,95,88,85,82]
+    }
+  },
+  {
+    id:'vision2030', title:'GCC Vision 2030 Domestic Demand Surge',
+    category:'Economic / Demand Dynamics', confidence:82,
+    horizon:'12–60 months', origin:'Saudi Arabia / UAE',
+    systemicImpact:71,
+    scores:[
+      {label:'A · Exposure Score',         val:78},
+      {label:'B · Transmission Strength',  val:75},
+      {label:'C · Propagation Velocity',   val:52},
+      {label:'D · GCC Sensitivity',        val:88},
+      {label:'E · Confidence Level',       val:82},
+      {label:'F · Indirect Amplification', val:72}
+    ],
+    exposure:{direct:65, indirect:72, systemic:82},
+    chain:[
+      {label:'Saudi Vision 2030 / UAE Agenda 2031 Capital Deployment',score:0.82, order:0},
+      {label:'Mega-Project Construction Logistics Demand',             score:0.80, order:1},
+      {label:'GCC Consumer Class Expansion',                           score:0.75, order:1},
+      {label:'GCC Retail / E-commerce Import Demand Surge',            score:0.78, order:2},
+      {label:'Port Infrastructure Expansion — Domestic',               score:0.72, order:2},
+      {label:'Warehousing and Cold Chain Demand Growth',               score:0.75, order:2},
+      {label:'GCC Logistics Real Estate Structural Demand',            score:0.70, order:3},
+      {label:'Inland Logistics Network Capacity Constraint',           score:0.68, order:3, gcc:true}
+    ],
+    gcc:{
+      countries:['UAE','Saudi Arabia','Oman','Qatar','Kuwait','Bahrain'],
+      sectors:['Ports','Inland Log.','Energy T.','Food Sec.','Industrial'],
+      data:[[78,85,35,42,72],[85,88,38,45,80],[55,62,28,35,52],[42,48,22,30,42],[35,38,18,22,32],[28,32,15,18,25]]
+    },
+    insight:'Vision 2030 and UAE Agenda 2031 are the single most powerful domestic demand drivers for GCC logistics in this decade. The pipeline is both large ($3.3T in Saudi PIF-affiliated projects) and diversified — construction, tourism, entertainment, healthcare, and industrial sectors all generate logistics demand simultaneously. The transmission runs through three parallel channels: mega-project construction requires massive import of building materials, equipment, and specialist cargo; consumer class expansion drives retail and e-commerce import volume growth; and government infrastructure investment in ports, roads, and warehousing creates capacity for the demand it is generating. The underappreciated supply-side constraint: inland logistics infrastructure (last-mile delivery, cold chain, warehousing) is expanding at 60% of the pace required to serve projected demand — creating a GCC logistics real estate and inland capacity bottleneck that will persist to 2028.',
+    blindspot:'Vision 2030 is modelled as a demand driver — but its dominant near-term logistics consequence is a supply-side bottleneck: inland logistics infrastructure (warehousing, cold chain, last-mile) cannot scale fast enough to serve the demand it is generating, creating rental inflation and service quality pressure invisible in port throughput data.',
+    geoNodes:[
+      {label:'Riyadh — Vision 2030 PIF Headquarters',      lat:24.7, lng:46.7, order:0},
+      {label:'NEOM / Red Sea Project — Mega Logistics Zone',lat:28.0, lng:35.0, order:1},
+      {label:'Abu Dhabi — UAE Agenda 2031 Capital',         lat:24.5, lng:54.4, order:1},
+      {label:'GCC Inland Logistics Hubs (Constrained)',     lat:25.2, lng:55.3, order:2, gcc:true}
+    ],
+    evidence:[
+      {stage:'ORIGIN',    mechanism:'Saudi PIF deploying $200B+ annually 2024–2030 across Vision 2030 programs — giga-projects (NEOM, Red Sea, Diriyah, Qiddiya) generating sustained mega-project logistics demand', example:'NEOM project alone requires 1.5B tonnes of construction material imports through 2030; 270,000 workers on Vision 2030 sites in 2024; Saudi construction PMI above 55 for 36 consecutive months',    lag:'0–6m',  strength:82},
+      {stage:'1ST ORDER', mechanism:'Mega-project construction import volumes surge — NEOM, Red Sea, Diriyah projects require steel, cement, specialist construction equipment, modular structures',                      example:'Saudi construction materials imports +35% 2023; Jeddah Islamic Port bulk cargo volumes +28% 2023 on Vision 2030 construction demand; NEOM alone budgeted $500B — largest single project logistics demand in history', lag:'6–18m', strength:78},
+      {stage:'2ND ORDER', mechanism:'GCC consumer class expansion drives retail and e-commerce import boom — growing middle class and tourism expansion increase consumer goods import demand structurally',                example:'Saudi e-commerce market grew 35% to $14B 2023; UAE food and consumer goods imports +18% 2023; UAE tourism hit 17M visitors in 2023 — generating $3B+ additional hospitality supply chain demand', lag:'12–36m',strength:72},
+      {stage:'3RD ORDER', mechanism:'GCC inland logistics capacity bottleneck — warehousing, cold chain, and last-mile infrastructure scaling at 60% of demand growth rate; rental prices and service quality under pressure',  example:'Dubai Grade-A logistics real estate vacancy: 2.1% (historic low); Saudi logistics real estate rental +25% 2023; cold chain storage capacity deficit estimated 35% below forecast Vision 2030 demand', lag:'18–60m',strength:68}
+    ],
+    chart:{
+      type:'line',
+      title:'Saudi PIF Annual Capital Deployment ($B) vs GCC Logistics Real Estate Rental Index (2019=100)',
+      xLabel:'Year', yLabel:'Saudi PIF Annual Capital Deployment ($B)',
+      color:'#b8952a',
+      dualAxis:true, label2:'GCC Logistics Real Estate Rental Index (2019=100)', color2:'#25a066',
+      note:'PIF capital deployment acceleration directly correlates with GCC logistics real estate rental inflation — the mega-project construction demand is already visible in warehouse and distribution centre rental markets',
+      source:'Saudi Public Investment Fund Annual Report & CBRE GCC Logistics Real Estate Report',
+      sourceUrl:'https://www.pif.gov.sa/en/Pages/PIF-Annual-Reports.aspx',
+      labels:['2019','2020','2021','2022','2023','2024','2025E'],
+      values:[40,45,65,108,160,200,240],
+      values2:[100,92,105,118,135,152,168]
+    }
+  },
+  {
+    id:'drybulk', title:'Global Dry Bulk Structural Oversupply',
+    category:'Economic / Demand Dynamics', confidence:68,
+    horizon:'12–36 months', origin:'China (Property Sector)',
+    systemicImpact:45,
+    scores:[
+      {label:'A · Exposure Score',         val:38},
+      {label:'B · Transmission Strength',  val:58},
+      {label:'C · Propagation Velocity',   val:52},
+      {label:'D · GCC Sensitivity',        val:48},
+      {label:'E · Confidence Level',       val:68},
+      {label:'F · Indirect Amplification', val:55}
+    ],
+    exposure:{direct:25, indirect:45, systemic:52},
+    chain:[
+      {label:'China Steel / Iron Ore Demand Permanent Reduction', score:0.72, order:0},
+      {label:'Dry Bulk Vessel Surplus Expands',                   score:0.68, order:1},
+      {label:'Vessel Class Migration: Dry Bulk → Container',     score:0.58, order:1},
+      {label:'Container Vessel Supply Overhang',                  score:0.55, order:2},
+      {label:'Global Container Freight Rate Depression',          score:0.62, order:2},
+      {label:'GCC Import Cost Normalisation',                     score:0.58, order:2},
+      {label:'Carrier Service Rationalisation on GCC Routes',    score:0.55, order:3},
+      {label:'Oman / Bahrain Feeder Frequency Reduction',        score:0.52, order:3, gcc:true}
+    ],
+    gcc:{
+      countries:['UAE','Saudi Arabia','Oman','Qatar','Kuwait','Bahrain'],
+      sectors:['Ports','Inland Log.','Energy T.','Food Sec.','Industrial'],
+      data:[[35,28,22,15,42],[38,32,25,12,45],[32,25,18,10,38],[25,20,28,12,32],[22,18,22,10,30],[18,15,18,8,25]]
+    },
+    insight:'Global dry bulk structural oversupply is the lowest-profile signal in the Economic Demand Dynamics category — but its transmission mechanism is the most counterintuitive. China\'s property sector contraction permanently reduces steel and iron ore demand, creating a dry bulk vessel surplus. Vessel owners respond by migrating capacity toward container trades, adding tonnage to an already-recovering container market. The GCC consequence: structurally lower container freight rates (benefiting GCC importers) arrive simultaneously with carrier service rationalisation that eliminates frequency on secondary GCC routes. Oman and Bahrain feeder services see the paradox most acutely — spot rates fall while service reliability worsens, a combination that conventional freight rate indices cannot detect.',
+    blindspot:'Dry bulk oversupply transmits to container markets through vessel class migration — GCC importers see headline freight rate reductions while feeder service frequency on Oman, Qatar, and Bahrain routes deteriorates. The benefit and the cost are invisible to each other in standard rate monitoring.',
+    geoNodes:[
+      {label:'China — Iron Ore Demand Collapse Origin',       lat:31.2, lng:121.5, order:0},
+      {label:'Australia / Brazil — Iron Ore Export Routes',  lat:-25.0, lng:130.0, order:1},
+      {label:'Singapore — Vessel Class Migration Node',      lat:1.3,  lng:103.8,  order:1},
+      {label:'Sohar / Salalah — GCC Feeder Impact Ports',   lat:23.6, lng:58.6,   order:2, gcc:true}
+    ],
+    evidence:[
+      {stage:'ORIGIN',    mechanism:'China property sector permanent contraction reduces steel demand structurally — iron ore shipping volumes declining 3–5% annually from 2023 peak; dry bulk vessel fleet structurally oversupplied', example:'China property sales -40% from 2021 peak; steel production -5% 2024; iron ore port inventories at 5-year highs in Qingdao, Tianjin; BDI Capesize sub-index fell 35% 2024 vs 2023 average', lag:'0–6m',  strength:72},
+      {stage:'1ST ORDER', mechanism:'Dry bulk vessel owners migrate capacity toward container trades — cheaper to operate container-converted or dual-purpose tonnage on growing intra-Asia routes than park vessels',                 example:'12 Handymax vessels converted or chartered for container use Q3–Q4 2024; 8 smaller dry bulk operators entered feeder container markets in Asia; container vessel supply +4% Q4 2024', lag:'3–12m', strength:58},
+      {stage:'2ND ORDER', mechanism:'Container vessel supply overhang deepens — dry-bulk-to-container migration compounds existing orderbook expansion, creating freight rate structural depression',                                   example:'Container freight rates fell 45% H2 2024 from Jun 2024 peak; SCFI spot rate fell from $3,800/TEU (Jun 2024) to $2,100/TEU (Dec 2024) as supply overhang materialised', lag:'6–18m', strength:55},
+      {stage:'3RD ORDER', mechanism:'Carrier service rationalisation on secondary GCC routes — lower profitability triggers frequency reduction on Oman, Qatar, and Bahrain feeder services even as spot rates fall',               example:'MSC reduced Sohar feeder call frequency from weekly to biweekly Q4 2024; Bahrain feeder transit times extended 4 days as direct calls consolidated; Oman port dwell time +18%', lag:'9–24m', strength:48}
+    ],
+    chart:{
+      type:'line',
+      title:'Baltic Dry Index (Capesize Sub-Index) vs Global Container Freight Rate Index (2022=100)',
+      xLabel:'Quarter', yLabel:'Baltic Capesize Index (BCI)',
+      color:'#b8952a',
+      dualAxis:true, label2:'Global Container Freight Rate Index (2022=100)', color2:'#4a9fe8',
+      note:'Dry bulk rate compression (BCI) correlates with container freight rate normalisation with a 2–3 quarter lag — the vessel class migration from dry bulk to container markets creates a freight rate transmission between nominally separate shipping segments',
+      source:'Baltic Exchange Dry Index (BDI / BCI) & SCFI Shanghai Containerized Freight Index',
+      sourceUrl:'https://www.balticexchange.com/en/data/indices/bdi.html',
+      labels:['Q1-22','Q2-22','Q3-22','Q4-22','Q1-23','Q2-23','Q3-23','Q4-23','Q1-24','Q2-24','Q3-24','Q4-24'],
+      values:[3200,2800,1950,1400,1200,1450,1300,1100,1250,1400,1100,950],
+      values2:[180,210,185,160,140,130,125,118,122,145,130,105]
+    }
   }
 ];
 
@@ -8363,13 +8940,13 @@ var WL_GROUPS = [
     id:'geopolitical', icon:'△',
     title:'Geopolitical Infrastructure',
     desc:'Corridor development, hub competition and maritime gateway hierarchy restructuring',
-    signals:['imec']
+    signals:['redsea','hormuz','imec','saudiisrael','bri2','gccrail']
   },
   {
     id:'economic', icon:'◆',
     title:'Economic Demand Dynamics',
     desc:'Property sector effects, metals demand contraction and vessel class cross-market reallocation',
-    signals:['china']
+    signals:['vision2030','indiagrowth','china','eurec','rates','drybulk']
   }
 ];
 

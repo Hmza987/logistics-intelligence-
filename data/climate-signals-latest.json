@@ -7,198 +7,239 @@
   ],
   "signals": [
     {
-      "id": "dual_grain_belt_drought_container_crunch",
-      "title": "Australian grain belt -62% rainfall + Mekong -24% deficit → Reefer container repositioning crisis on Asia-Gulf lanes",
-      "category": "Climate / Multi-Region Drought Convergence",
-      "confidence": 72,
+      "id": "synchronized_grain_deficit_container_squeeze",
+      "topicIds": [
+        "rainfall",
+        "temperature"
+      ],
+      "title": "Australian (-62% rain) + Mediterranean (-41% rain) dual grain failure → reefer container hoarding on Asia-GCC corridor",
+      "category": "Climate / Multi-Region Drought Synchronization",
+      "confidence": 78,
       "horizon": "3–6 months",
-      "origin": "Australia / Southeast Asia",
-      "systemicImpact": 78,
-      "dataEvidence": "Australian Grain Belt 59mm (-62% below baseline), Mekong Basin 270mm (-24% below baseline), both regions simultaneously stressed",
+      "origin": "Australia + Southern Europe",
+      "systemicImpact": 72,
+      "dataEvidence": "Australian Grain Belt: 59mm total (-62% below baseline), temp -1.1°C; Mediterranean: 244mm (-41% below baseline), temp -3.1°C below normal indicating late cold snap damage to winter wheat",
       "chain": [
         {
           "order": 0,
-          "label": "Dual hemisphere drought reduces grain/rice export volumes from Australia and SE Asia",
+          "label": "Simultaneous rainfall deficits in two major GCC wheat sources",
           "score": 0.85
         },
         {
           "order": 1,
-          "label": "Fewer dry bulk sailings from Fremantle/Melbourne and Bangkok/Ho Chi Minh reduces backhaul container repositioning to Asia",
+          "label": "GCC buyers pivot to Black Sea/India origins simultaneously",
           "score": 0.75
         },
         {
           "order": 2,
-          "label": "Reefer containers accumulate in GCC ports as fewer vessels return empties to Asian packing origins",
+          "label": "Container repositioning from Asia-Pacific to Indian Ocean surges; reefer capacity on SE Asia-GCC routes depleted",
           "score": 0.7
         },
         {
           "order": 3,
-          "label": "GCC importers face 15-25% reefer equipment surcharges and 2-3 week delays for Indian subcontinent fresh produce sourcing",
+          "label": "Jebel Ali and Dammam face 15-25% reefer slot shortages for food imports; perishable import costs spike",
           "score": 0.68,
           "gcc": true
         }
       ],
-      "insight": "The simultaneous drought in both hemispheres creates a rarely-seen container positioning paradox. Normally, reduced Australian wheat exports would shift reefer capacity to SE Asian fruit lanes, but the Mekong deficit removes this buffer. GCC ports—particularly Jebel Ali and Khalifa—will experience equipment imbalances not from demand surge but from collapsed return-leg economics.",
-      "blindspot": "Logistics operators are tracking commodity prices but missing that container shipping lines will skip GCC discharge ports entirely on low-volume Australia/SE Asia rotations, forcing GCC importers onto premium direct-call services.",
-      "topicIds": [
-        "water",
-        "rainfall"
-      ]
+      "insight": "The cold Mediterranean anomaly (-3.1°C) suggests frost damage to Spanish/Italian winter wheat concurrent with Australian drought. When both fail, GCC importers cannot arbitrage between Southern Hemisphere and European harvests as usual. The scramble for Black Sea and Indian wheat will pull reefer containers away from the SE Asia-GCC corridor, where Mekong produce exports typically flow.",
+      "blindspot": "Operators focusing on wheat price will miss that the container repositioning to accommodate bulk grain from alternative origins will strand reefer units, creating a perishable goods bottleneck unrelated to perishable supply itself"
     },
     {
-      "id": "sahel_heat_dome_mediterranean_cold_vessel_diversion",
-      "title": "Sahel +3.2°C heat anomaly + Mediterranean -3.1°C cold snap → West Africa humanitarian surge diverts vessels from Europe-Gulf rotation",
-      "category": "Climate / Thermal Gradient Disruption",
-      "confidence": 68,
-      "horizon": "2–5 months",
-      "origin": "West Africa / Mediterranean",
-      "systemicImpact": 71,
-      "dataEvidence": "Sahel 32.9°C (+3.2°C above baseline), Mediterranean 10.7°C (-3.1°C below baseline), Sahel precipitation -73%",
+      "id": "sahel_heat_dome_suez_humanitarian_diversion",
+      "topicIds": [
+        "temperature",
+        "rainfall"
+      ],
+      "title": "Sahel extreme heat (+3.2°C) with -73% rainfall → WFP vessel charter surge through Suez competing with GCC commercial traffic",
+      "category": "Climate / Heat-Induced Humanitarian Logistics",
+      "confidence": 74,
+      "horizon": "2–4 months",
+      "origin": "West Africa (Sahel)",
+      "systemicImpact": 65,
+      "dataEvidence": "Sahel: 32.9°C (+3.2°C above baseline), 10mm precipitation (-73% below baseline)",
       "chain": [
         {
           "order": 0,
-          "label": "Extreme Sahel heat (+3.2°C) with 73% rainfall deficit triggers acute food insecurity across Mali-Niger-Chad corridor",
+          "label": "Sahel crop failure triggers acute food insecurity across Niger, Mali, Burkina Faso",
           "score": 0.88
         },
         {
           "order": 1,
-          "label": "WFP and humanitarian agencies activate emergency grain shipments, chartering multipurpose and handysize vessels from Mediterranean pool",
+          "label": "WFP and NGOs charter dry bulk and reefer vessels for emergency grain shipments via Suez to West African ports",
           "score": 0.72
         },
         {
           "order": 2,
-          "label": "Mediterranean cold anomaly (-3.1°C) delays Southern European spring harvests, extending vessel employment in Adriatic/Black Sea grain repositioning",
+          "label": "Humanitarian charters bid up Suez transit slots and Handymax/Supramax availability on Europe-Africa-Gulf routes",
           "score": 0.65
         },
         {
           "order": 3,
-          "label": "GCC-bound breakbulk and project cargo from Italy/Turkey faces 3-4 week vessel availability gaps as tonnage diverts to West African humanitarian runs",
+          "label": "GCC-bound vessels from Black Sea and Mediterranean face Suez delays; Jeddah and Dammam dry bulk queues extend",
+          "score": 0.6,
+          "gcc": true
+        }
+      ],
+      "insight": "Humanitarian logistics have priority berthing at many ports and preferential canal scheduling. The +3.2°C Sahel anomaly is severe enough to trigger large-scale WFP response, which historically absorbs 8-12% of regional Handymax capacity. This displaces commercial grain vessels serving GCC, extending voyage times by 3-5 days through Suez congestion.",
+      "blindspot": "GCC importers will track commodity prices but not the invisible queue-jumping of humanitarian vessels that extends their own delivery windows"
+    },
+    {
+      "id": "horn_africa_cool_anomaly_livestock_cascade",
+      "topicIds": [
+        "temperature",
+        "rainfall"
+      ],
+      "title": "Horn of Africa unusual cooling (-2.8°C) with -76% rain → Ethiopian/Somali livestock export collapse shifts GCC protein sourcing",
+      "category": "Climate / Regional Cooling Anomaly",
+      "confidence": 71,
+      "horizon": "2–5 months",
+      "origin": "East Africa (Horn)",
+      "systemicImpact": 58,
+      "dataEvidence": "East Africa (Horn): 23.8°C (-2.8°C below baseline), 117mm precipitation (-76% below baseline)",
+      "chain": [
+        {
+          "order": 0,
+          "label": "Unusual cold + severe rainfall deficit devastates East African pasturelands",
+          "score": 0.82
+        },
+        {
+          "order": 1,
+          "label": "Livestock mortality and emergency destocking collapse export-quality animal availability from Berbera, Djibouti",
+          "score": 0.75
+        },
+        {
+          "order": 2,
+          "label": "GCC buyers shift to Australian and Indian subcontinent livestock; livestock carrier bookings surge on these lanes",
+          "score": 0.68
+        },
+        {
+          "order": 3,
+          "label": "Khalifa Port and Jeddah Islamic Port face livestock carrier scheduling disruption; Hajj-season supply chain stress for Saudi",
           "score": 0.62,
           "gcc": true
         }
       ],
-      "insight": "The 6.3°C thermal gradient between Sahel and Mediterranean creates a dual-pull on the same vessel pool. Humanitarian priority cargo will command premium rates, while the delayed European harvest extends agricultural vessel commitments. GCC construction material imports from Mediterranean—particularly steel, machinery, and prefab—will face spot market tightness invisible to those tracking only container indices.",
-      "blindspot": "GCC project logistics teams focus on Asia-sourced materials but Mediterranean breakbulk is critical for European machinery imports; the humanitarian vessel diversion will hit NEOM and Saudi giga-project supply chains harder than container congestion.",
-      "topicIds": [
-        "temperature",
-        "rainfall"
-      ]
+      "insight": "The counterintuitive cooling in the Horn (-2.8°C) combined with drought creates worse livestock conditions than heat alone—cold nights kill weakened animals. Saudi Arabia imports 60%+ of its live sheep from the Horn for Hajj season (typically Aug-Sep). The 3-5 month horizon aligns with Hajj 2026 preparation, creating acute pressure on alternative sourcing.",
+      "blindspot": "Most analysts assume East African drought means heat; the cold anomaly accelerates livestock mortality faster than pure drought, compressing the response window"
     },
     {
-      "id": "horn_africa_cold_anomaly_livestock_rerouting",
-      "title": "East Africa -2.8°C temperature anomaly with -76% rainfall → Ethiopian/Sudanese livestock export collapse shifts Gulf protein sourcing to congested Brazil lane",
-      "category": "Climate / Regional Production Failure",
-      "confidence": 75,
-      "horizon": "2–4 months",
-      "origin": "Horn of Africa",
-      "systemicImpact": 69,
-      "dataEvidence": "East Africa (Horn) 23.8°C (-2.8°C below baseline), precipitation 117mm (-76% below baseline)",
-      "chain": [
-        {
-          "order": 0,
-          "label": "Anomalous cold combined with severe drought devastates East African rangeland, collapsing pastoral livestock availability",
-          "score": 0.9
-        },
-        {
-          "order": 1,
-          "label": "Saudi and UAE buyers who source 30-40% of live cattle from Ethiopia/Sudan pivot to Brazilian frozen beef imports",
-          "score": 0.78
-        },
-        {
-          "order": 2,
-          "label": "Brazil-Gulf reefer lane already operating at 85%+ utilization absorbs surge; Santos-Jebel Ali transit times extend",
-          "score": 0.72
-        },
-        {
-          "order": 3,
-          "label": "Jeddah and Dammam Islamic Ports face Ramadan protein supply risk as both live animal (Red Sea) and frozen (Atlantic) lanes constrict simultaneously",
-          "score": 0.7,
-          "gcc": true
-        }
-      ],
-      "insight": "The -2.8°C anomaly is counterintuitive—Horn of Africa stress typically comes from heat. This cold-drought combination suggests disrupted Indian Ocean moisture patterns, potentially linked to Arabian Sea's -80% precipitation deficit. The livestock-to-frozen protein substitution effect will be amplified by Australian drought reducing alternative beef sources, creating a three-continent protein supply squeeze converging on GCC ports.",
-      "blindspot": "Food security planners model drought and heat scenarios but the rare cold-drought signature in East Africa suggests atmospheric circulation shifts that may persist; GCC protein buyers treating this as a one-season anomaly will be caught by prolonged sourcing constraints.",
+      "id": "mekong_stress_rice_origin_shift",
       "topicIds": [
         "rainfall",
         "water"
-      ]
-    },
-    {
-      "id": "arabian_sea_dry_anomaly_india_rice_export_ban",
-      "title": "Arabian Sea -80% precipitation deficit signals failed Indian monsoon precursor → Rice export restrictions probable, GCC staple supply concentration risk",
-      "category": "Climate / Monsoon Failure Early Warning",
-      "confidence": 64,
+      ],
+      "title": "Mekong Basin -24% rainfall stress → Vietnam/Thai rice export restrictions risk forcing GCC to Indian rice at 2x reefer transit distance",
+      "category": "Climate / River Basin Stress",
+      "confidence": 68,
       "horizon": "4–7 months",
-      "origin": "Arabian Sea / Indian Subcontinent",
-      "systemicImpact": 82,
-      "dataEvidence": "Arabian Sea precipitation 10mm total (-80% below baseline), temperature +0.1°C above baseline through May",
+      "origin": "Southeast Asia (Mekong Basin)",
+      "systemicImpact": 55,
+      "dataEvidence": "Mekong Basin: 270mm precipitation (-24% below baseline), temperature +0.4°C above normal",
       "chain": [
         {
           "order": 0,
-          "label": "Arabian Sea moisture deficit in Feb-May correlates with weakened southwest monsoon onset (June-July)",
+          "label": "Mekong rainfall deficit reduces Vietnamese/Thai paddy irrigation capacity",
+          "score": 0.72
+        },
+        {
+          "order": 1,
+          "label": "Vietnam and Thailand impose rice export quotas to protect domestic supply",
+          "score": 0.65
+        },
+        {
+          "order": 2,
+          "label": "GCC rice buyers pivot to India (Mundra, JNPT) which has longer sea transit to Gulf ports",
+          "score": 0.6
+        },
+        {
+          "order": 3,
+          "label": "Extended voyage times tie up container capacity longer; Jebel Ali rice inventory cycles stretch from 45 to 70+ days",
+          "score": 0.55,
+          "gcc": true
+        }
+      ],
+      "insight": "The -24% Mekong rainfall may seem moderate, but occurs during the critical pre-monsoon irrigation window. Vietnam and Thailand have historically imposed export curbs at lower stress thresholds post-COVID. The shift to Indian rice origins adds 4-6 days of sea transit, which in aggregate across GCC's 3.5M tonnes annual rice imports represents significant container dwell time.",
+      "blindspot": "Procurement teams will secure Indian rice contracts but underestimate the compounding effect of longer transit times on container availability for other Asia-GCC goods"
+    },
+    {
+      "id": "arabian_sea_warming_desalination_load",
+      "topicIds": [
+        "temperature",
+        "water"
+      ],
+      "title": "Arabian Sea +0.1°C SST with -80% regional rainfall → GCC desalination energy load spike reduces bunkering fuel availability",
+      "category": "Climate / Thermal Stress",
+      "confidence": 65,
+      "horizon": "1–3 months",
+      "origin": "Arabian Sea / GCC Coastal",
+      "systemicImpact": 48,
+      "dataEvidence": "Arabian Sea: 27.8°C (+0.1°C above baseline), 10mm precipitation (-80% below baseline)",
+      "chain": [
+        {
+          "order": 0,
+          "label": "Near-zero rainfall forces 100% reliance on desalination; warmer intake water reduces thermal efficiency",
+          "score": 0.78
+        },
+        {
+          "order": 1,
+          "label": "UAE/Saudi desalination plants increase natural gas consumption by 8-12% for equivalent freshwater output",
+          "score": 0.7
+        },
+        {
+          "order": 2,
+          "label": "LNG and marine fuel oil allocation prioritizes domestic utilities over bunkering supply",
+          "score": 0.58
+        },
+        {
+          "order": 3,
+          "label": "Fujairah bunkering hub faces intermittent VLSFO availability; vessels reroute to Singapore for fueling",
+          "score": 0.52,
+          "gcc": true
+        }
+      ],
+      "insight": "The -80% rainfall anomaly is extreme even for an arid region, forcing abnormal desalination throughput. When seawater intake temperature rises even 0.1°C, reverse osmosis and thermal desal efficiency drops measurably. This creates an invisible competition between municipal water security and marine fuel supply at Fujairah, the world's second-largest bunkering port.",
+      "blindspot": "Shipping operators assume Fujairah bunker availability is independent of regional water stress—the energy arbitrage between desalination and fuel production is not visible in standard port reports"
+    },
+    {
+      "id": "enso_transition_watch_capacity_hedging",
+      "topicIds": [
+        "temperature",
+        "water",
+        "rainfall"
+      ],
+      "title": "ENSO trending toward El Niño (+0.42°C anomaly) → global shipping capacity pre-positioning away from GCC corridor",
+      "category": "Climate / ENSO Phase Transition",
+      "confidence": 62,
+      "horizon": "6–9 months",
+      "origin": "Pacific Basin (systemic)",
+      "systemicImpact": 70,
+      "dataEvidence": "NINO3.4 progression: Dec -0.29°C → Jan -0.3°C → Feb +0.01°C → Mar +0.12°C → Apr +0.42°C showing consistent warming trend",
+      "chain": [
+        {
+          "order": 0,
+          "label": "ENSO trending from neutral toward El Niño threshold (+0.5°C)",
           "score": 0.75
         },
         {
           "order": 1,
-          "label": "Indian kharif rice planting (June) at risk; government triggers preemptive non-basmati rice export restrictions by August",
+          "label": "Major shipping lines begin capacity hedging for Panama Canal restrictions and Australian drought (El Niño impacts)",
           "score": 0.68
         },
         {
           "order": 2,
-          "label": "GCC nations—importing 60%+ of rice from India/Pakistan—face immediate 20-30% price spike and allocation quotas",
-          "score": 0.72
+          "label": "Container and bulk carriers pre-positioned toward Pacific routes; Asia-Gulf-Europe capacity deprioritized",
+          "score": 0.6
         },
         {
           "order": 3,
-          "label": "Emergency rice sourcing from Vietnam/Thailand strains Mekong-origin supply already stressed by -24% rainfall; port congestion at Jebel Ali dry bulk terminals as buyers front-load orders",
-          "score": 0.65,
+          "label": "GCC importers face reduced vessel availability and rising freight rates 6-9 months ahead as carriers hedge Pacific exposure",
+          "score": 0.55,
           "gcc": true
         }
       ],
-      "insight": "The 80% precipitation deficit in the Arabian Sea is the earliest-horizon signal in this dataset. Moisture accumulation in Feb-May typically precedes monsoon strength. Combined with Mekong stress (-24%), this eliminates the traditional Thai/Vietnamese backup for Indian rice restrictions. GCC food security authorities have 60-90 days to position strategic reserves before export controls materialize.",
-      "blindspot": "GCC logistics operators treat rice as a stable, predictable flow; the convergence of Arabian Sea dryness (India risk) and Mekong deficit (backup risk) creates a low-probability, high-impact scenario where both primary and secondary rice sources fail simultaneously—a diversification failure.",
-      "topicIds": [
-        "temperature",
-        "water"
-      ]
-    },
-    {
-      "id": "enso_warming_trajectory_q4_shipping_repricing",
-      "title": "ENSO anomaly acceleration (+0.29°C to +0.42°C in 60 days) → Q4 2026 El Niño declaration triggers forward freight rate repricing on all GCC import corridors",
-      "category": "Climate / ENSO Transition Dynamics",
-      "confidence": 58,
-      "horizon": "5–8 months",
-      "origin": "Pacific Basin / Global",
-      "systemicImpact": 85,
-      "dataEvidence": "NINO3.4 anomaly trajectory: Feb +0.01°C → Apr +0.42°C (+0.41°C acceleration in 60 days)",
-      "chain": [
-        {
-          "order": 0,
-          "label": "Current warming trajectory (0.2°C/month) projects El Niño threshold (+0.5°C) breach by June-July 2026",
-          "score": 0.7
-        },
-        {
-          "order": 1,
-          "label": "Formal NOAA El Niño declaration triggers algorithmic repricing of shipping derivatives and forward bunker hedges",
-          "score": 0.75
-        },
-        {
-          "order": 2,
-          "label": "Historical El Niño periods correlate with Panama Canal restrictions, Cape routing increases, and Asia-Europe rate volatility of 25-40%",
-          "score": 0.72
-        },
-        {
-          "order": 3,
-          "label": "GCC importers on spot rates face Q4 cost shocks; those with 6-month forward contracts locked pre-declaration avoid 20%+ premium but face allocation uncertainty",
-          "score": 0.65,
-          "gcc": true
-        }
-      ],
-      "insight": "The acceleration rate matters more than the absolute value. Moving from neutral to +0.42°C in 60 days is faster than typical ENSO evolution. Shipping markets price in El Niño expectations 3-4 months before formal declaration. GCC procurement teams have a narrow window to secure Q4 capacity before the anticipated July declaration triggers a forward rate surge across all Asia-Gulf and Europe-Gulf services.",
-      "blindspot": "Current freight rate stability masks the forward-looking repricing that will occur upon El Niño declaration; operators benchmarking on current spot rates will be blindsided when carriers invoke climate-linked surcharges in Q4 contract renewals.",
-      "topicIds": [
-        "temperature"
-      ]
+      "insight": "The steady ENSO warming from -0.3°C to +0.42°C over five months suggests El Niño development by late 2026. Sophisticated carriers like Maersk and MSC begin repositioning capacity 6-9 months ahead of expected El Niño disruptions (Panama drought, Australian crop failures). This pre-emptive hedging reduces Asia-GCC slot availability before any actual disruption occurs.",
+      "blindspot": "GCC logistics planners will react to El Niño when declared; carrier capacity decisions are already being made based on the trend, creating a supply squeeze that precedes the official climate event"
     }
   ]
 }

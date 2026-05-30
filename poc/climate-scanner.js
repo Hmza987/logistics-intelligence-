@@ -16,13 +16,31 @@
  * Needs: ANTHROPIC_API_KEY in environment
  */
 
-require('dotenv').config({ path: require('path').join(__dirname, '../.env.local') });
-require('dotenv').config({ path: require('path').join(__dirname, '../.env') });
+const fs   = require('fs');
+const path = require('path');
+
+// Load .env.local manually — bypasses any dotenv interceptors
+(function loadEnv() {
+  const envFiles = [
+    path.join(__dirname, '../.env.local'),
+    path.join(__dirname, '../.env'),
+  ];
+  for (const f of envFiles) {
+    if (!fs.existsSync(f)) continue;
+    fs.readFileSync(f, 'utf8').split('\n').forEach(line => {
+      const trimmed = line.trim();
+      if (!trimmed || trimmed.startsWith('#')) return;
+      const eq = trimmed.indexOf('=');
+      if (eq === -1) return;
+      const key = trimmed.slice(0, eq).trim();
+      const val = trimmed.slice(eq + 1).trim().replace(/^["']|["']$/g, '');
+      if (key && !process.env[key]) process.env[key] = val;
+    });
+  }
+})();
 
 const Anthropic = require('@anthropic-ai/sdk');
 const fetch     = require('node-fetch');
-const fs        = require('fs');
-const path      = require('path');
 
 if (!process.env.ANTHROPIC_API_KEY) {
   console.error('\n❌  ANTHROPIC_API_KEY not set.');
@@ -291,19 +309,28 @@ async function main() {
 
   const briefing = buildBriefing(regionResults, ensoRows);
 
-  // Uncomment to inspect raw briefing before sending:
-  // console.log('\n--- BRIEFING ---\n', briefing, '\n--- END ---\n');
+  // Print briefing (useful for debugging / showing data collected)
+  console.log('\n' + '─'.repeat(70));
+  console.log(briefing);
+  console.log('─'.repeat(70) + '\n');
 
   const result = await inferSignals(briefing);
 
   printResults(result);
 
-  // Save output JSON
+  // Save timestamped output
   const outDir  = path.join(__dirname, 'output');
   fs.mkdirSync(outDir, { recursive: true });
   const outFile = path.join(outDir, `signals-climate-${new Date().toISOString().split('T')[0]}.json`);
   fs.writeFileSync(outFile, JSON.stringify(result, null, 2), 'utf8');
-  console.log(`  ✓ Full JSON saved → ${outFile}\n`);
+  console.log(`  ✓ Full JSON saved    → ${outFile}`);
+
+  // Also overwrite the live data file served by the dashboard
+  const dataDir  = path.join(__dirname, '../data');
+  fs.mkdirSync(dataDir, { recursive: true });
+  const liveFile = path.join(dataDir, 'climate-signals-latest.json');
+  fs.writeFileSync(liveFile, JSON.stringify(result, null, 2), 'utf8');
+  console.log(`  ✓ Dashboard data updated → ${liveFile}\n`);
 }
 
 main().catch(err => {

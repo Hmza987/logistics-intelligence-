@@ -1,0 +1,102 @@
+{
+  "scanDate": "2026-05-30",
+  "ensoPhase": "Neutral ENSO (trending warm, +0.42°C anomaly)",
+  "dataSourcesUsed": ["Open-Meteo Archive API", "NOAA PSL NINO3.4"],
+  "signals": [
+    {
+      "id": "simultaneous_grain_deficit_corridor_collapse",
+      "topicIds": ["water", "rainfall"],
+      "title": "Concurrent 62-76% precipitation deficits across Australia and Horn of Africa eliminate GCC wheat sourcing optionality",
+      "category": "Climate / Multi-Region Drought Convergence",
+      "confidence": 78,
+      "horizon": "3-6 months",
+      "origin": "Australia + East Africa",
+      "systemicImpact": 82,
+      "dataEvidence": "Australia grain belt −62% precip · East Africa −76% precip (simultaneous)",
+      "chain": [
+        { "order": 0, "label": "Dual-hemisphere drought locks both southern and eastern grain corridors", "score": 0.85 },
+        { "order": 1, "label": "GCC importers forced into Black Sea/Americas procurement simultaneously with Med buyers", "score": 0.75 },
+        { "order": 2, "label": "Panamax bulk demand spikes on Atlantic routes; Asia-Gulf positioning drops 15-20%", "score": 0.70 },
+        { "order": 3, "label": "Jebel Ali and Dammam dry bulk berth utilisation falls while freight rates surge", "score": 0.65, "gcc": true }
+      ],
+      "insight": "The pairing of Australian winter drought (−62% precip) with East African Long Rains failure (−76%) removes the two traditional swing suppliers GCC buyers pivot between. This forces procurement concentration into Black Sea and Argentine corridors precisely when Mediterranean buyers (−41%) are doing the same, creating a vessel positioning vacuum on Asia-Gulf routes.",
+      "blindspot": "Logistics operators will track grain prices but miss that Panamax/Supramax tonnage is being pulled westward — GCC ports may see berthing slots underutilised while paying premium freight for the vessels that remain positioned eastward."
+    },
+    {
+      "id": "sahel_heat_dome_reefer_cascade",
+      "topicIds": ["temperature", "rainfall"],
+      "title": "Sahel +3.2°C heat anomaly with −73% precipitation triggers West African perishable export collapse, releasing reefer capacity to GCC lanes",
+      "category": "Climate / Extreme Heat Event",
+      "confidence": 71,
+      "horizon": "2-4 months",
+      "origin": "Sahel (West Africa)",
+      "systemicImpact": 58,
+      "dataEvidence": "Sahel temperature +3.2°C above baseline (32.9°C actual) · precipitation only 10mm (−73%)",
+      "chain": [
+        { "order": 0, "label": "Extreme heat collapses Sahelian mango, cashew and vegetable export volumes 30-40%", "score": 0.80 },
+        { "order": 1, "label": "Reefer containers pre-positioned for West Africa-Europe trade strand in Dakar, Abidjan, Tema", "score": 0.70 },
+        { "order": 2, "label": "Shipping lines reposition surplus reefer capacity to higher-yield Asia-Gulf perishables trade", "score": 0.65 },
+        { "order": 3, "label": "GCC reefer import rates soften; 8-12 week window opens for advantageous cold-chain contracts", "score": 0.60, "gcc": true }
+      ],
+      "insight": "The +3.2°C Sahel heat dome is destroying West African horticultural exports that normally consume significant reefer capacity on Africa-Europe routes. This creates an unusual arbitrage window: reefer containers will seek repositioning and lines will offer competitive rates to GCC importers willing to absorb this displaced capacity.",
+      "blindspot": "GCC cold-chain managers focused on their own import costs will miss the 8-12 week window where reefer oversupply exists before lines rebalance globally — this is a procurement timing opportunity, not a threat."
+    },
+    {
+      "id": "mekong_rice_stress_container_demand_shift",
+      "topicIds": ["water", "rainfall"],
+      "title": "Mekong Basin −24% precipitation during critical rice season redirects Asian container demand away from Gulf positioning",
+      "category": "Climate / Monsoon Deficit",
+      "confidence": 68,
+      "horizon": "4-7 months",
+      "origin": "Mekong Basin (Vietnam, Thailand, Cambodia)",
+      "systemicImpact": 65,
+      "dataEvidence": "Mekong precipitation 270mm total (−24% below baseline) · temperature +0.4°C above baseline",
+      "chain": [
+        { "order": 0, "label": "Vietnamese and Thai rice yields decline 10-15% due to irrigation water deficit", "score": 0.72 },
+        { "order": 1, "label": "Reduced export volumes from HCM/Bangkok strand containers; lines cancel sailings", "score": 0.65 },
+        { "order": 2, "label": "Container equipment imbalance shifts boxes to India-Middle East corridor to compensate", "score": 0.60 },
+        { "order": 3, "label": "Khalifa Port and Jeddah see more Indian basmati but at higher slot rates due to equipment tightness", "score": 0.55, "gcc": true }
+      ],
+      "insight": "The −24% Mekong precipitation anomaly will reduce containerised rice exports from Vietnam/Thailand by Q4. Shipping lines will cascade this into sailing cancellations on Asia-Gulf rotations. Indian rice exporters (unaffected) will absorb market share — but the container equipment repositioning cost gets passed to GCC importers as a rate premium.",
+      "blindspot": "Rice price analysts will catch the Vietnam/Thailand production drop; what they'll miss is the 6-8 week lag where container equipment physically relocates, during which GCC importers face equipment availability gaps before Indian corridors normalise."
+    },
+    {
+      "id": "mediterranean_cold_anomaly_fuel_bunker_surge",
+      "topicIds": ["temperature"],
+      "title": "Mediterranean −3.1°C temperature anomaly extending European heating season increases bunker fuel competition at Fujairah",
+      "category": "Climate / Temperature Anomaly",
+      "confidence": 64,
+      "horizon": "1-3 months",
+      "origin": "Mediterranean (Southern Europe)",
+      "systemicImpact": 52,
+      "dataEvidence": "Mediterranean temperature 10.7°C (−3.1°C below baseline) · precipitation −41%",
+      "chain": [
+        { "order": 0, "label": "Extended European heating demand draws LNG and diesel to Mediterranean through June", "score": 0.70 },
+        { "order": 1, "label": "Product tanker arbitrage shifts away from Middle East bunkering hubs toward Europe", "score": 0.62 },
+        { "order": 2, "label": "Fujairah bunker spreads widen; VLSFO premiums rise $15-25/mt", "score": 0.58 },
+        { "order": 3, "label": "GCC-origin vessel operators face elevated voyage costs; some reroute via Singapore bunkering", "score": 0.50, "gcc": true }
+      ],
+      "insight": "The −3.1°C Mediterranean anomaly in late May signals a persistent blocking pattern extending European energy demand. This pulls middle distillates and fuel oil toward European markets, thinning Fujairah supply stocks. The bunker cost impact is modest in absolute terms but compounds with freight rate pressures from other signals.",
+      "blindspot": "Fujairah bunker price movements are watched closely, but the connection to a European temperature anomaly will be missed — operators will attribute spreads to 'market conditions' rather than recognising the 4-6 week duration implied by the blocking pattern."
+    },
+    {
+      "id": "arabian_sea_desalination_port_power_competition",
+      "topicIds": ["temperature", "water"],
+      "title": "Arabian Sea −80% precipitation maximising UAE/Oman desalination load — competing with Jebel Ali port reefer plug capacity",
+      "category": "Climate / Regional Water Stress",
+      "confidence": 59,
+      "horizon": "1-4 months",
+      "origin": "Arabian Sea / GCC coastal zone",
+      "systemicImpact": 45,
+      "dataEvidence": "Arabian Sea precipitation 10mm total (−80% below baseline) · SST +0.1°C above baseline",
+      "chain": [
+        { "order": 0, "label": "Near-zero precipitation forces 100% reliance on desalination for municipal and industrial water", "score": 0.75 },
+        { "order": 1, "label": "Desalination plants increase power draw as summer peaks; UAE/Oman grid margins tighten", "score": 0.65 },
+        { "order": 2, "label": "Port cold-ironing and reefer plug capacity competes with grid priority loads", "score": 0.55 },
+        { "order": 3, "label": "Jebel Ali and Salalah reefer dwell times increase; perishable throughput efficiency drops 8-12%", "score": 0.48, "gcc": true }
+      ],
+      "insight": "The −80% precipitation anomaly is eliminating residual aquifer recharge and maximising desalination dependency precisely as summer peak loads approach. UAE grid operators will prioritise residential cooling and desalination over industrial loads — port reefer plug capacity is among the first discretionary loads to face curtailment.",
+      "blindspot": "Port operators track their own power contracts but rarely model grid-level competition with desalination — the −80% precipitation anomaly is a leading indicator that grid stress will be more severe than typical summer."
+    }
+  ]
+}

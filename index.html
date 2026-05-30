@@ -2037,6 +2037,39 @@ canvas { font-family: var(--f-mono); }
 .wl-mc-bar-bg { height:3px; background:var(--c-s2); border-radius:2px; overflow:hidden; margin-top:5px; }
 .wl-mc-bar-fill { height:100%; border-radius:2px; }
 
+/* ── Live auto-detected signal cards ────────────────────────── */
+.wl-live-section-hdr {
+  font-family:var(--f-mono); font-size:7.5px; letter-spacing:.14em;
+  color:#22d3ee; text-transform:uppercase;
+  display:flex; align-items:center; gap:8px;
+  padding-bottom:10px; margin-bottom:14px;
+  border-bottom:1px solid rgba(34,211,238,.15);
+}
+.wl-live-section-hdr::before { content:'⚡'; font-size:10px; }
+.wl-live-pulse {
+  width:6px; height:6px; border-radius:50%; background:#22d3ee;
+  display:inline-block; margin-right:2px;
+  animation:wl-pulse-core 1.4s ease-in-out infinite;
+}
+.wl-mosaic-card.wl-live { border-color:rgba(34,211,238,.22); }
+.wl-mosaic-card.wl-live::before { background:#22d3ee; }
+.wl-mosaic-card.wl-live:hover { border-color:rgba(34,211,238,.55); }
+.wl-mc-live-badge {
+  font-family:var(--f-mono); font-size:7px; letter-spacing:.12em;
+  color:#22d3ee; text-transform:uppercase;
+  display:flex; align-items:center; gap:5px; margin-bottom:7px;
+}
+.wl-mc-evidence {
+  font-family:var(--f-mono); font-size:8px; line-height:1.45;
+  color:rgba(34,211,238,.55); margin-bottom:9px;
+}
+.wl-curated-section-hdr {
+  font-family:var(--f-mono); font-size:7.5px; letter-spacing:.14em;
+  color:var(--c-tx2); text-transform:uppercase;
+  padding:14px 0 10px; margin-bottom:4px;
+  border-top:1px solid var(--c-bd1);
+}
+
 /* ── Signal identification thinking overlay ─────────────────── */
 .wl-thinking {
   display:flex; flex-direction:column; align-items:center;
@@ -10568,46 +10601,93 @@ function selectWLTopic(gid, tid) {
     }, delay));
   });
 
+  // Fetch live scanner signals in parallel with the thinking phase
+  var liveDataPromise = (gid === 'climate')
+    ? fetch('/data/climate-signals-latest.json').then(function(r){ return r.ok ? r.json() : null; }).catch(function(){ return null; })
+    : Promise.resolve(null);
+
   // ── Step 2: After 5s, fade out thinking and reveal signals ─────────────────
   wlState.thinkTimers.push(setTimeout(function(){
-    var overlay = document.getElementById('wl-think-overlay');
-    if (overlay) {
-      overlay.style.transition = 'opacity 0.45s ease';
-      overlay.style.opacity = '0';
-    }
-    wlState.thinkTimers.push(setTimeout(function(){
-      // Build signal mosaic
-      var h = navBack + '<div class="wl-mosaic">';
-      sigs.forEach(function(sig){
-        var sc   = wlSysColor(sig.systemicImpact);
-        var conf = wlConfLabel(sig.confidence);
-        var isTop3 = !!WL_TOP3[sig.id];
-        h += '<div class="wl-mosaic-card'+(isTop3?' wl-mc-top5':'')+'" onclick="selectWLSignal(\''+sig.id+'\')">'+
-             (isTop3?'<div class="wl-mc-top5-badge">&#9733; Top 3 Category Impact</div>':'')+
-             '<div class="wl-mc-title">'+sig.title+'</div>'+
-             '<div class="wl-mc-meta">'+
-               '<div class="wl-mc-met"><span>TIME HORIZON</span><span class="wl-mc-met-val">'+sig.horizon+'</span></div>'+
-               '<div class="wl-mc-met"><span>ORIGIN</span><span class="wl-mc-met-val">'+sig.origin+'</span></div>'+
-               '<div class="wl-mc-met"><span>CONFIDENCE</span><span class="wl-mc-met-val" style="color:'+conf.color+'">'+conf.label+'</span></div>'+
-             '</div>'+
-             '<div class="wl-mc-score">'+
-               '<span class="wl-mc-score-val" style="color:'+sc+'">'+sig.systemicImpact+'</span>'+
-               '<span class="wl-mc-score-lbl">systemic impact</span>'+
-             '</div>'+
-             '<div class="wl-mc-bar-bg"><div class="wl-mc-bar-fill" style="width:'+sig.systemicImpact+'%;background:'+sc+'"></div></div>'+
-             '</div>';
-      });
-      h += '</div>';
-      mw.innerHTML = h;
-      // Stagger cards in
-      mw.querySelectorAll('.wl-mosaic-card').forEach(function(card, i){
-        card.style.opacity = '0';
-        card.style.animation = 'none';
-        void card.offsetWidth;
-        card.style.animation = 'wl-card-in 0.38s cubic-bezier(0.22,1,0.36,1) forwards';
-        card.style.animationDelay = (i * 65) + 'ms';
-      });
-    }, 450));
+    liveDataPromise.then(function(liveData){
+      var overlay = document.getElementById('wl-think-overlay');
+      if (overlay) {
+        overlay.style.transition = 'opacity 0.45s ease';
+        overlay.style.opacity = '0';
+      }
+      wlState.thinkTimers.push(setTimeout(function(){
+        // Filter live signals for this topic
+        var liveSigs = [];
+        if (liveData && liveData.signals) {
+          liveSigs = liveData.signals.filter(function(s){
+            return (s.topicIds||[]).indexOf(tid) !== -1;
+          });
+        }
+
+        var h = navBack;
+
+        // ── Live signals (auto-detected) ────────────────────────────────────
+        if (liveSigs.length) {
+          h += '<div class="wl-live-section-hdr"><span class="wl-live-pulse"></span>Live &middot; Auto-Detected &middot; '+(liveData.scanDate||'Today')+'</div>';
+          h += '<div class="wl-mosaic">';
+          liveSigs.forEach(function(sig){
+            var sc   = wlSysColor(sig.systemicImpact);
+            var conf = wlConfLabel(sig.confidence);
+            h += '<div class="wl-mosaic-card wl-live" onclick="selectWLSignal(\''+sig.id+'\',true)">'+
+                 '<div class="wl-mc-live-badge">&#9889; Auto-Detected Signal</div>'+
+                 '<div class="wl-mc-title">'+sig.title+'</div>'+
+                 '<div class="wl-mc-evidence">&#128202; '+sig.dataEvidence+'</div>'+
+                 '<div class="wl-mc-meta">'+
+                   '<div class="wl-mc-met"><span>TIME HORIZON</span><span class="wl-mc-met-val">'+sig.horizon+'</span></div>'+
+                   '<div class="wl-mc-met"><span>ORIGIN</span><span class="wl-mc-met-val">'+sig.origin+'</span></div>'+
+                   '<div class="wl-mc-met"><span>CONFIDENCE</span><span class="wl-mc-met-val" style="color:'+conf.color+'">'+conf.label+'</span></div>'+
+                 '</div>'+
+                 '<div class="wl-mc-score">'+
+                   '<span class="wl-mc-score-val" style="color:'+sc+'">'+sig.systemicImpact+'</span>'+
+                   '<span class="wl-mc-score-lbl">systemic impact</span>'+
+                 '</div>'+
+                 '<div class="wl-mc-bar-bg"><div class="wl-mc-bar-fill" style="width:'+sig.systemicImpact+'%;background:'+sc+'"></div></div>'+
+                 '</div>';
+          });
+          h += '</div>';
+        }
+
+        // ── Curated signals ─────────────────────────────────────────────────
+        if (sigs.length) {
+          if (liveSigs.length) h += '<div class="wl-curated-section-hdr">Curated Signals</div>';
+          h += '<div class="wl-mosaic">';
+          sigs.forEach(function(sig){
+            var sc   = wlSysColor(sig.systemicImpact);
+            var conf = wlConfLabel(sig.confidence);
+            var isTop3 = !!WL_TOP3[sig.id];
+            h += '<div class="wl-mosaic-card'+(isTop3?' wl-mc-top5':'')+'" onclick="selectWLSignal(\''+sig.id+'\')">'+
+                 (isTop3?'<div class="wl-mc-top5-badge">&#9733; Top 3 Category Impact</div>':'')+
+                 '<div class="wl-mc-title">'+sig.title+'</div>'+
+                 '<div class="wl-mc-meta">'+
+                   '<div class="wl-mc-met"><span>TIME HORIZON</span><span class="wl-mc-met-val">'+sig.horizon+'</span></div>'+
+                   '<div class="wl-mc-met"><span>ORIGIN</span><span class="wl-mc-met-val">'+sig.origin+'</span></div>'+
+                   '<div class="wl-mc-met"><span>CONFIDENCE</span><span class="wl-mc-met-val" style="color:'+conf.color+'">'+conf.label+'</span></div>'+
+                 '</div>'+
+                 '<div class="wl-mc-score">'+
+                   '<span class="wl-mc-score-val" style="color:'+sc+'">'+sig.systemicImpact+'</span>'+
+                   '<span class="wl-mc-score-lbl">systemic impact</span>'+
+                 '</div>'+
+                 '<div class="wl-mc-bar-bg"><div class="wl-mc-bar-fill" style="width:'+sig.systemicImpact+'%;background:'+sc+'"></div></div>'+
+                 '</div>';
+          });
+          h += '</div>';
+        }
+
+        mw.innerHTML = h;
+        // Stagger all cards in
+        mw.querySelectorAll('.wl-mosaic-card').forEach(function(card, i){
+          card.style.opacity = '0';
+          card.style.animation = 'none';
+          void card.offsetWidth;
+          card.style.animation = 'wl-card-in 0.38s cubic-bezier(0.22,1,0.36,1) forwards';
+          card.style.animationDelay = (i * 65) + 'ms';
+        });
+      }, 450));
+    });
   }, 5000));
 }
 

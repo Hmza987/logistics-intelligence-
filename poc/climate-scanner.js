@@ -245,6 +245,19 @@ OUTPUT FORMAT — respond with ONLY valid JSON, no markdown wrapper, exactly thi
   ]
 }
 
+CHAIN QUALITY REQUIREMENTS — every chain step must follow these rules:
+1. State WHAT happens AND WHY it causes the next step (not just what)
+2. Include specific quantitative data: voyage distances (nautical miles), percentages, port names, timeframes
+3. Key GCC shipping distances to use accurately:
+   - Mundra/India → Jebel Ali: ~1,700nm (~5-6 days)
+   - Ho Chi Minh/Vietnam → Jebel Ali: ~5,000nm (~16-18 days)
+   - Bangkok/Thailand → Jebel Ali: ~5,500nm (~18-20 days)
+   - Fremantle/Australia → Jebel Ali: ~7,200nm (~24-26 days)
+   - Black Sea/Novorossiysk → Jebel Ali (via Suez): ~6,200nm (~21 days)
+   - Santos/Brazil → Jebel Ali: ~11,000nm (~37 days)
+4. Never claim a geographically closer origin has "longer transit time" — always identify the ACTUAL mechanism (port congestion, equipment imbalance, approval delays, capacity constraints)
+5. The GCC impact step must name specific ports (Jebel Ali, Dammam, Jeddah, Khalifa, Salalah) and quantify the effect (cost %, delay in days/weeks, throughput impact %)
+
 IMPORTANT: Every signal MUST include "topicIds" as an array with one or more of these exact values:
 - "temperature"  (heat anomalies, SST changes, warming/cooling events)
 - "water"        (river levels, drought, reservoir stress, desalination pressure)

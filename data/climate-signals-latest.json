@@ -12,7 +12,7 @@
         "rainfall",
         "temperature"
       ],
-      "title": "Australia -62% + East Africa -76% rainfall — GCC loses primary and backup wheat sources simultaneously, forcing Black Sea procurement at $25-40/tonne freight premium",
+      "title": "Australia -62% and East Africa -76% below normal rainfall occurring simultaneously — GCC loses both primary and backup wheat sources at once",
       "category": "Climate / Multi-Region Drought Synchronization",
       "confidence": 78,
       "horizon": "3–6 months",
@@ -51,7 +51,7 @@
         "temperature",
         "rainfall"
       ],
-      "title": "Sahel +3.2°C heat / -73% rainfall — WFP emergency will charter Handymax vessels from the same pool serving Saudi giga-project cargo routes, creating 3-5 week breakbulk gaps",
+      "title": "Sahel at +3.2°C above baseline with -73% rainfall — WFP emergency charters will divert vessels from Europe-Gulf project cargo routes",
       "category": "Climate / Heat-Induced Humanitarian Logistics",
       "confidence": 74,
       "horizon": "2–4 months",
@@ -90,7 +90,7 @@
         "temperature",
         "rainfall"
       ],
-      "title": "East Africa -76% rainfall + cold anomaly — herd collapse forces GCC buyers to Australia and Brazil, both near-capacity; livestock carriers oversubscribed 10-14 weeks ahead",
+      "title": "East Africa -76% rainfall with unusual cold anomaly collapsing rangelands — GCC protein supply forced onto near-capacity Australia and Brazil lanes",
       "category": "Climate / Regional Cooling Anomaly",
       "confidence": 71,
       "horizon": "2–5 months",
@@ -129,7 +129,7 @@
         "rainfall",
         "water"
       ],
-      "title": "Mekong Basin -24% rainfall — Vietnam/Thai rice export quotas will push GCC buyers to India, where port congestion and approval backlogs add 8 weeks delay (not longer voyage — India is 5 days vs Vietnam's 17)",
+      "title": "Mekong Basin -24% below normal rainfall is cutting rice yields — Vietnam and Thai export quotas will force GCC buyers to congested Indian ports",
       "category": "Climate / River Basin Stress",
       "confidence": 68,
       "horizon": "4–7 months",
@@ -168,7 +168,7 @@
         "temperature",
         "water"
       ],
-      "title": "Arabian Sea -80% precipitation — UAE desalination at 100% load will trigger industrial power rationing, reducing Jebel Ali reefer plug capacity 8-12% during peak hours",
+      "title": "Arabian Sea -80% below normal rainfall maximising UAE desalination load — Jebel Ali reefer plug capacity at risk of summer grid rationing",
       "category": "Climate / Thermal Stress",
       "confidence": 65,
       "horizon": "1–3 months",
@@ -208,7 +208,7 @@
         "water",
         "rainfall"
       ],
-      "title": "ENSO at +0.42°C and rising — 55-60% probability of El Nino by Aug-Sep; carriers pre-positioning to Pacific will reduce Asia-Gulf vessel frequency and raise GCC freight rates 6-9 months ahead",
+      "title": "NINO3.4 index at +0.42°C and rising toward El Niño threshold — carriers already cutting Asia-Gulf allocations 6-9 months ahead",
       "category": "Climate / ENSO Phase Transition",
       "confidence": 62,
       "horizon": "6–9 months",

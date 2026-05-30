@@ -2057,11 +2057,42 @@ canvas { font-family: var(--f-mono); }
 .wl-mc-live-badge {
   font-family:var(--f-mono); font-size:7px; letter-spacing:.12em;
   color:#22d3ee; text-transform:uppercase;
-  display:flex; align-items:center; gap:5px; margin-bottom:7px;
+  display:flex; align-items:center; gap:5px; margin-bottom:8px;
 }
-.wl-mc-evidence {
-  font-family:var(--f-mono); font-size:8px; line-height:1.45;
-  color:rgba(34,211,238,.55); margin-bottom:9px;
+.wl-mc-live-title {
+  font-size:14px; font-weight:700; color:var(--c-tx0);
+  line-height:1.35; margin-bottom:14px;
+}
+/* ── Transmission chain ── */
+.wl-live-chain {
+  margin-bottom:12px;
+  border-left:2px solid rgba(34,211,238,.15);
+  padding-left:12px;
+}
+.wl-lc-step {
+  display:flex; align-items:flex-start; gap:7px;
+  padding:3px 0;
+}
+.wl-lc-dot {
+  width:7px; height:7px; border-radius:50%; flex-shrink:0; margin-top:3px;
+}
+.wl-lc-label {
+  font-family:var(--f-body); font-size:10.5px; line-height:1.45;
+  color:var(--c-tx2);
+}
+.wl-lc-step.wl-lc-origin .wl-lc-label { color:#e87060; }
+.wl-lc-step.wl-lc-gcc .wl-lc-label {
+  color:#22d3ee; font-weight:600;
+}
+.wl-lc-arrow {
+  font-size:10px; color:rgba(255,255,255,.15);
+  padding:0 0 0 0; margin-left:-1px; line-height:1;
+}
+.wl-lc-gcc-pill {
+  font-family:var(--f-mono); font-size:6.5px; letter-spacing:.1em;
+  padding:1px 6px; border-radius:3px; flex-shrink:0; margin-top:3px;
+  background:rgba(34,211,238,.12); color:#22d3ee;
+  border:1px solid rgba(34,211,238,.3); text-transform:uppercase;
 }
 .wl-curated-section-hdr {
   font-family:var(--f-mono); font-size:7.5px; letter-spacing:.14em;
@@ -10543,6 +10574,25 @@ function selectWLCategory(gid) {
   });
 }
 
+// ── Build transmission chain HTML for live auto-detected signal cards ────────
+function buildLiveChainHtml(chain) {
+  if (!chain || !chain.length) return '';
+  var dotColors = { 0:'#e87060', 1:'#e8a040', 2:'#b8952a', 3:'#c084fc' };
+  var h = '<div class="wl-live-chain">';
+  chain.forEach(function(step, i) {
+    var isGcc = !!step.gcc;
+    var dot   = isGcc ? '#22d3ee' : (dotColors[step.order] || '#b8952a');
+    var cls   = 'wl-lc-step' + (i===0 ? ' wl-lc-origin' : '') + (isGcc ? ' wl-lc-gcc' : '');
+    h += '<div class="'+cls+'">' +
+         '<span class="wl-lc-dot" style="background:'+dot+'"></span>' +
+         '<span class="wl-lc-label">'+step.label+'</span>' +
+         (isGcc ? '<span class="wl-lc-gcc-pill">GCC&nbsp;Impact</span>' : '') +
+         '</div>';
+    if (i < chain.length - 1) h += '<div class="wl-lc-arrow">&#8595;</div>';
+  });
+  return h + '</div>';
+}
+
 // ── Level 2 → 3: Topic selected — thinking overlay then signals ──────────────
 function selectWLTopic(gid, tid) {
   wlClearThinkTimers();
@@ -10634,16 +10684,12 @@ function selectWLTopic(gid, tid) {
             var conf = wlConfLabel(sig.confidence);
             h += '<div class="wl-mosaic-card wl-live" onclick="selectWLSignal(\''+sig.id+'\',true)">'+
                  '<div class="wl-mc-live-badge">&#9889; Auto-Detected Signal</div>'+
-                 '<div class="wl-mc-title">'+sig.title+'</div>'+
-                 '<div class="wl-mc-evidence">&#128202; '+sig.dataEvidence+'</div>'+
+                 '<div class="wl-mc-live-title">'+sig.title+'</div>'+
+                 buildLiveChainHtml(sig.chain)+
                  '<div class="wl-mc-meta">'+
                    '<div class="wl-mc-met"><span>TIME HORIZON</span><span class="wl-mc-met-val">'+sig.horizon+'</span></div>'+
-                   '<div class="wl-mc-met"><span>ORIGIN</span><span class="wl-mc-met-val">'+sig.origin+'</span></div>'+
                    '<div class="wl-mc-met"><span>CONFIDENCE</span><span class="wl-mc-met-val" style="color:'+conf.color+'">'+conf.label+'</span></div>'+
-                 '</div>'+
-                 '<div class="wl-mc-score">'+
-                   '<span class="wl-mc-score-val" style="color:'+sc+'">'+sig.systemicImpact+'</span>'+
-                   '<span class="wl-mc-score-lbl">systemic impact</span>'+
+                   '<div class="wl-mc-met"><span>SYSTEMIC IMPACT</span><span class="wl-mc-met-val" style="color:'+sc+'">'+sig.systemicImpact+'/100</span></div>'+
                  '</div>'+
                  '<div class="wl-mc-bar-bg"><div class="wl-mc-bar-fill" style="width:'+sig.systemicImpact+'%;background:'+sc+'"></div></div>'+
                  '</div>';

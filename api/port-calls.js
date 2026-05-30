@@ -1,15 +1,49 @@
 'use strict';
 const fetch = require('node-fetch');
 
-// Confirmed port slugs and IDs from myshiptracking.com
+// Confirmed port slugs and IDs from myshiptracking.com (all 31 map ports)
 const PORTS = {
-  'jebel-ali': { name: 'Jebel Ali',  url: 'https://www.myshiptracking.com/ports/port-of-jebel-ali-in-ae-uae-id-228' },
-  'salalah':   { name: 'Salalah',    url: 'https://www.myshiptracking.com/ports/port-of-salalah-in-om-oman-id-3477' },
-  'sohar':     { name: 'Sohar',      url: 'https://www.myshiptracking.com/ports/port-of-sohar-in-om-oman-id-3479' },
-  'jeddah':    { name: 'Jeddah',     url: 'https://www.myshiptracking.com/ports/port-of-jeddah-in-sa-saudi-arabia-id-3441' },
-  'dammam':    { name: 'Dammam',     url: 'https://www.myshiptracking.com/ports/port-of-dammam-in-sa-saudi-arabia-id-3445' },
-  'fujairah':  { name: 'Fujairah',   url: 'https://www.myshiptracking.com/ports/port-of-fujairah-in-ae-uae-id-3510' },
-  'doha':      { name: 'Doha',       url: 'https://www.myshiptracking.com/ports/port-of-doha-in-qa-qatar-id-5833' },
+  // ── Asian export hubs ──────────────────────────────────────────────────────
+  'shanghai':      { name: 'Shanghai',      url: 'https://www.myshiptracking.com/ports/port-of-shanghai-in-cn-china-id-4119' },
+  'busan':         { name: 'Busan',         url: 'https://www.myshiptracking.com/ports/port-of-busan-in-kr-korea-id-5487' },
+  'hong-kong':     { name: 'Hong Kong',     url: 'https://www.myshiptracking.com/ports/port-of-hong-kong-in-hk-hong-kong-id-5843' },
+  'singapore':     { name: 'Singapore',     url: 'https://www.myshiptracking.com/ports/port-of-singapore-in-sg-singapore-id-386' },
+  'port-klang':    { name: 'Port Klang',    url: 'https://www.myshiptracking.com/ports/port-of-port-klang-in-my-malaysia-id-5709' },
+  // ── Indian Ocean waypoint ──────────────────────────────────────────────────
+  'colombo':       { name: 'Colombo',       url: 'https://www.myshiptracking.com/ports/port-of-colombo-in-lk-sri-lanka-id-3662' },
+  // ── Gulf inside Hormuz ────────────────────────────────────────────────────
+  'jebel-ali':     { name: 'Jebel Ali',     url: 'https://www.myshiptracking.com/ports/port-of-jebel-ali-in-ae-uae-id-228' },
+  'bandar-abbas':  { name: 'Bandar Abbas',  url: 'https://www.myshiptracking.com/ports/port-of-bandar-abbas-in-ir-iran-id-3587' },
+  'khalifa':       { name: 'Khalifa Port',  url: 'https://www.myshiptracking.com/ports/port-of-khalifa-in-ae-uae-id-3494' },
+  'doha':          { name: 'Doha',          url: 'https://www.myshiptracking.com/ports/port-of-doha-in-qa-qatar-id-5833' },
+  'bahrain':       { name: 'Bahrain Port',  url: 'https://www.myshiptracking.com/ports/port-of-khalifa-bin-salman-in-bh-bahrain-id-5907' },
+  'kuwait':        { name: 'Shuwaikh',      url: 'https://www.myshiptracking.com/ports/port-of-kuwait-in-kw-kuwait-id-255' },
+  'dammam':        { name: 'Dammam',        url: 'https://www.myshiptracking.com/ports/port-of-dammam-in-sa-saudi-arabia-id-3445' },
+  // ── Gulf outside Hormuz ───────────────────────────────────────────────────
+  'fujairah':      { name: 'Fujairah',      url: 'https://www.myshiptracking.com/ports/port-of-fujairah-in-ae-uae-id-3510' },
+  'salalah':       { name: 'Salalah',       url: 'https://www.myshiptracking.com/ports/port-of-salalah-in-om-oman-id-3477' },
+  'sohar':         { name: 'Sohar',         url: 'https://www.myshiptracking.com/ports/port-of-sohar-in-om-oman-id-3479' },
+  // ── Red Sea ───────────────────────────────────────────────────────────────
+  'jeddah':        { name: 'Jeddah',        url: 'https://www.myshiptracking.com/ports/port-of-jeddah-in-sa-saudi-arabia-id-3441' },
+  'port-said':     { name: 'Port Said',     url: 'https://www.myshiptracking.com/ports/port-of-port-said-in-eg-egypt-id-3167' },
+  // ── East Africa ───────────────────────────────────────────────────────────
+  'djibouti':      { name: 'Djibouti',      url: 'https://www.myshiptracking.com/ports/port-of-djibouti-in-dj-djibouti-id-3430' },
+  'mombasa':       { name: 'Mombasa',       url: 'https://www.myshiptracking.com/ports/port-of-mombasa-in-ke-kenya-id-3429' },
+  'dar-es-salaam': { name: 'Dar es Salaam', url: 'https://www.myshiptracking.com/ports/port-of-dar-es-salaam-in-tz-tanzania-id-3427' },
+  'maputo':        { name: 'Maputo',        url: 'https://www.myshiptracking.com/ports/port-of-maputo-in-mz-mozambique-id-3413' },
+  // ── Cape route hubs ───────────────────────────────────────────────────────
+  'durban':        { name: 'Durban',        url: 'https://www.myshiptracking.com/ports/port-of-durban-in-za-south-africa-id-149' },
+  'cape-town':     { name: 'Cape Town',     url: 'https://www.myshiptracking.com/ports/port-of-cape-town-in-za-south-africa-id-122' },
+  'port-louis':    { name: 'Port Louis',    url: 'https://www.myshiptracking.com/ports/port-of-port-louis-in-mu-mauritius-id-7192' },
+  // ── West Africa ───────────────────────────────────────────────────────────
+  'lome':          { name: 'Lomé',          url: 'https://www.myshiptracking.com/ports/port-of-lome-in-tg-togo-id-3341' },
+  // ── North Africa / Atlantic gateway ──────────────────────────────────────
+  'tanger-med':    { name: 'Tanger Med',    url: 'https://www.myshiptracking.com/ports/port-of-tanger-med-in-ma-morocco-id-3296' },
+  // ── European hubs ─────────────────────────────────────────────────────────
+  'rotterdam':     { name: 'Rotterdam',     url: 'https://www.myshiptracking.com/ports/port-of-rotterdam-in-nl-netherlands-id-361' },
+  'hamburg':       { name: 'Hamburg',       url: 'https://www.myshiptracking.com/ports/port-of-hamburg-in-de-germany-id-104' },
+  'antwerp':       { name: 'Antwerp',       url: 'https://www.myshiptracking.com/ports/port-of-antwerp-in-be-belgium-id-91' },
+  'felixstowe':    { name: 'Felixstowe',    url: 'https://www.myshiptracking.com/ports/port-of-felixstowe-in-gb-united-kingdom-id-166' },
 };
 
 // Simplified icon-number → vessel type label (myshiptracking icon codes)

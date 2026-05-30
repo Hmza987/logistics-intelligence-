@@ -6390,11 +6390,33 @@ var PORT_INFO = {
   'Felixstowe':    { teu:'4.5M', berths:12,  grad:'linear-gradient(135deg,#060e1a 0%,#0c1a2e 60%,#040c14 100%)' },
 };
 
-// Port name → live API key (GCC ports only)
+// Port name → live API key (all 30 tracked map ports; Ndayane omitted — port too new)
 var PP_LIVE_KEYS = {
-  'Jebel Ali':'jebel-ali', 'Salalah':'salalah', 'Sohar':'sohar',
-  'Jeddah':'jeddah', 'Dammam':'dammam', 'Fujairah':'fujairah',
-  'Doha':'doha', 'Hamad Port':'doha'
+  // Asian export hubs
+  'Shanghai':'shanghai', 'Busan':'busan', 'Hong Kong':'hong-kong',
+  'Singapore':'singapore', 'Port Klang':'port-klang',
+  // Indian Ocean
+  'Colombo':'colombo',
+  // Gulf inside Hormuz
+  'Jebel Ali':'jebel-ali', 'Bandar Abbas':'bandar-abbas',
+  'Khalifa Port':'khalifa', 'Hamad Port':'doha', 'Doha':'doha',
+  'Bahrain Port':'bahrain', 'Shuwaikh':'kuwait', 'Dammam':'dammam',
+  // Gulf outside Hormuz
+  'Fujairah':'fujairah', 'Salalah':'salalah', 'Sohar':'sohar',
+  // Red Sea
+  'Jeddah':'jeddah', 'Port Said':'port-said',
+  // East Africa
+  'Djibouti':'djibouti', 'Mombasa':'mombasa',
+  'Dar es Salaam':'dar-es-salaam', 'Maputo':'maputo',
+  // Cape route
+  'Durban':'durban', 'Cape Town':'cape-town', 'Port Louis':'port-louis',
+  // West Africa
+  'Lomé':'lome',
+  // North Africa
+  'Tanger Med':'tanger-med',
+  // European hubs
+  'Rotterdam':'rotterdam', 'Hamburg':'hamburg',
+  'Antwerp':'antwerp', 'Felixstowe':'felixstowe'
 };
 
 // Status: 5-tier — Congested = RED, Severely Disrupted = ORANGE (distinct)
@@ -6429,9 +6451,12 @@ function buildPortPopupHtml(p, info, status, live) {
   var chgColor = pct >= 0 ? '#3dd68c' : '#e8673c';
   var liveKey  = PP_LIVE_KEYS[p.name];
 
+  var msLink = 'https://www.myshiptracking.com/ports?q=' + encodeURIComponent(p.name);
   var liveSection = liveKey
     ? (live ? buildLiveSectionHtml(live) : '<div class="pp-loading">&#8635; Loading live data…</div>')
-    : '<div class="pp-lbl" style="color:#2a3a48">Live AIS not available for this port</div>';
+    : '<div class="pp-lbl" style="color:#2a3a48">AIS data not yet indexed &mdash; ' +
+      '<a href="' + msLink + '" target="_blank" rel="noopener" ' +
+      'style="color:#4a9eda;text-decoration:none">view on myshiptracking.com &#8599;</a></div>';
 
   return (
     '<div class="pp-hdr" style="background:' + info.grad + '">' +

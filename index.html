@@ -2008,6 +2008,7 @@ canvas { font-family: var(--f-mono); }
 
 /* ── WL Signal Mosaic ─── */
 @keyframes wl-fadein { from{opacity:0;transform:translateY(5px)} to{opacity:1;transform:none} }
+@keyframes wl-card-in { from{opacity:0;transform:translateY(14px)} to{opacity:1;transform:translateY(0)} }
 .wl-mosaic {
   display:grid; grid-template-columns:repeat(auto-fit,minmax(210px,1fr));
   gap:8px; margin-bottom:14px; animation:wl-fadein .18s ease;
@@ -10432,6 +10433,14 @@ function selectWLCategory(gid) {
   h += '</div>';
   topw.innerHTML = h;
   topw.className = 'wl-visible';
+  // Stagger topic cards in one by one
+  topw.querySelectorAll('.wl-topic-card').forEach(function(card, i){
+    card.style.opacity = '0';
+    card.style.animation = 'none';
+    void card.offsetWidth; // force reflow
+    card.style.animation = 'wl-card-in 0.38s cubic-bezier(0.22,1,0.36,1) forwards';
+    card.style.animationDelay = (i * 75) + 'ms';
+  });
 }
 
 // ── Level 2 → 3: Topic selected, show its signals ────────────────────────────
@@ -10476,6 +10485,14 @@ function selectWLTopic(gid, tid) {
   h += '</div>';
   mw.innerHTML = h;
   mw.className = 'wl-visible';
+  // Stagger signal cards in one by one
+  mw.querySelectorAll('.wl-mosaic-card').forEach(function(card, i){
+    card.style.opacity = '0';
+    card.style.animation = 'none';
+    void card.offsetWidth; // force reflow
+    card.style.animation = 'wl-card-in 0.38s cubic-bezier(0.22,1,0.36,1) forwards';
+    card.style.animationDelay = (i * 65) + 'ms';
+  });
 }
 
 // ── Back to Level 1: show categories ─────────────────────────────────────────
@@ -10491,7 +10508,17 @@ function wlBackToCategories() {
   if (aw)   aw.className   = 'wl-hidden';
   renderWLCategories();
   var cats = document.getElementById('wl-categories');
-  if (cats) cats.className = 'wl-cat-list';
+  if (cats) {
+    cats.className = 'wl-cat-list';
+    // Stagger category rows back in
+    cats.querySelectorAll('.wl-cat-row').forEach(function(row, i){
+      row.style.opacity = '0';
+      row.style.animation = 'none';
+      void row.offsetWidth;
+      row.style.animation = 'wl-card-in 0.38s cubic-bezier(0.22,1,0.36,1) forwards';
+      row.style.animationDelay = (i * 60) + 'ms';
+    });
+  }
 }
 
 function selectWLSignal(sid) {

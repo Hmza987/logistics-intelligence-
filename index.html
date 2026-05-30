@@ -2037,6 +2037,66 @@ canvas { font-family: var(--f-mono); }
 .wl-mc-bar-bg { height:3px; background:var(--c-s2); border-radius:2px; overflow:hidden; margin-top:5px; }
 .wl-mc-bar-fill { height:100%; border-radius:2px; }
 
+/* ── Signal identification thinking overlay ─────────────────── */
+.wl-thinking {
+  display:flex; flex-direction:column; align-items:center;
+  justify-content:center; padding:56px 20px; text-align:center; min-height:300px;
+  animation:wl-fadein .3s ease;
+}
+.wl-thinking-pulse {
+  width:52px; height:52px; border-radius:50%;
+  border:2px solid rgba(212,160,23,.25);
+  position:relative; margin-bottom:30px; flex-shrink:0;
+  animation:wl-pulse-ring 1.5s ease-in-out infinite;
+}
+.wl-thinking-pulse::before {
+  content:''; position:absolute; inset:-8px; border-radius:50%;
+  border:1px solid rgba(212,160,23,.1);
+  animation:wl-pulse-ring 1.5s ease-in-out infinite .3s;
+}
+.wl-thinking-pulse::after {
+  content:''; position:absolute; inset:8px; border-radius:50%;
+  background:rgba(212,160,23,.18);
+  animation:wl-pulse-core 1.5s ease-in-out infinite;
+}
+@keyframes wl-pulse-ring {
+  0%,100%{ border-color:rgba(212,160,23,.18); transform:scale(1); }
+  50%    { border-color:rgba(212,160,23,.75); transform:scale(1.08); }
+}
+@keyframes wl-pulse-core {
+  0%,100%{ background:rgba(212,160,23,.12); }
+  50%    { background:rgba(212,160,23,.38); }
+}
+.wl-thinking-label {
+  font-family:var(--f-mono); font-size:8px; letter-spacing:.2em;
+  color:var(--c-gold); text-transform:uppercase; margin-bottom:30px;
+}
+.wl-thinking-steps { margin-bottom:30px; min-height:72px; width:100%; max-width:320px; }
+.wl-thinking-step {
+  font-family:var(--f-mono); font-size:10px; letter-spacing:.06em;
+  color:var(--c-tx2); padding:5px 0; opacity:0;
+  transition:opacity .45s ease, color .45s ease;
+  display:flex; align-items:center; justify-content:center; gap:8px;
+}
+.wl-thinking-step::before { content:'◌'; font-size:9px; }
+.wl-thinking-step.wlt-active { opacity:1; color:var(--c-tx0); }
+.wl-thinking-step.wlt-active::before { content:'◉'; color:var(--c-gold); }
+.wl-thinking-step.wlt-done { opacity:.35; }
+.wl-thinking-step.wlt-done::before { content:'◉'; color:var(--c-gold); opacity:.5; }
+.wl-thinking-bar-track {
+  width:260px; height:2px; background:rgba(255,255,255,.05);
+  border-radius:2px; overflow:hidden; margin-bottom:14px;
+}
+.wl-thinking-bar {
+  height:100%; width:0%;
+  background:linear-gradient(90deg,rgba(212,160,23,.4),var(--c-gold));
+  border-radius:2px;
+}
+.wl-thinking-count {
+  font-family:var(--f-mono); font-size:9px; letter-spacing:.08em;
+  color:var(--c-tx2);
+}
+
 /* ── Level 2: Topic tile navigation ────────────────────────── */
 .wl-nav-back {
   display:inline-flex; align-items:center; gap:6px;
@@ -10104,7 +10164,7 @@ function renderWatchlistSignal(id) {
 
 
 
-var wlState = { activeGroup:null, activeTopic:null, activeSignal:null, activeTags:[] };
+var wlState = { activeGroup:null, activeTopic:null, activeSignal:null, activeTags:[], thinkTimers:[] };
 var wlInitialized = false;
 
 // Compute top-3 per category — keyed object for O(1) lookup
@@ -10402,8 +10462,15 @@ function renderWLCategories() {
   });
 }
 
+// ── Clear any pending think timers ────────────────────────────────────────────
+function wlClearThinkTimers() {
+  wlState.thinkTimers.forEach(function(t){ clearTimeout(t); });
+  wlState.thinkTimers = [];
+}
+
 // ── Level 1 → 2: Category selected, show its topics ──────────────────────────
 function selectWLCategory(gid) {
+  wlClearThinkTimers();
   wlState.activeGroup  = gid;
   wlState.activeTopic  = null;
   wlState.activeSignal = null;
@@ -10443,8 +10510,9 @@ function selectWLCategory(gid) {
   });
 }
 
-// ── Level 2 → 3: Topic selected, show its signals ────────────────────────────
+// ── Level 2 → 3: Topic selected — thinking overlay then signals ──────────────
 function selectWLTopic(gid, tid) {
+  wlClearThinkTimers();
   wlState.activeTopic  = tid;
   wlState.activeSignal = null;
   var topw = document.getElementById('wl-topics-wrap');
@@ -10458,45 +10526,94 @@ function selectWLTopic(gid, tid) {
   var sigs = topic.signals.map(function(id){
     return WL_SIGNALS.find(function(s){ return s.id===id; });
   }).filter(Boolean).sort(function(a,b){ return b.systemicImpact-a.systemicImpact; });
-  var h = '<div class="wl-nav-back" onclick="selectWLCategory(\''+gid+'\')">&#8592; '+g.title+'</div>' +
-    '<div class="wl-signals-header">' +
-      '<div class="wl-signals-topic-name">'+topic.label+'</div>' +
-    '</div>' +
-    '<div class="wl-mosaic">';
-  sigs.forEach(function(sig){
-    var sc   = wlSysColor(sig.systemicImpact);
-    var conf = wlConfLabel(sig.confidence);
-    var isTop3 = !!WL_TOP3[sig.id];
-    h += '<div class="wl-mosaic-card'+(isTop3?' wl-mc-top5':'')+'" onclick="selectWLSignal(\''+sig.id+'\')">'+
-         (isTop3?'<div class="wl-mc-top5-badge">&#9733; Top 3 Category Impact</div>':'')+
-         '<div class="wl-mc-title">'+sig.title+'</div>'+
-         '<div class="wl-mc-meta">'+
-           '<div class="wl-mc-met"><span>TIME HORIZON</span><span class="wl-mc-met-val">'+sig.horizon+'</span></div>'+
-           '<div class="wl-mc-met"><span>ORIGIN</span><span class="wl-mc-met-val">'+sig.origin+'</span></div>'+
-           '<div class="wl-mc-met"><span>CONFIDENCE</span><span class="wl-mc-met-val" style="color:'+conf.color+'">'+conf.label+'</span></div>'+
-         '</div>'+
-         '<div class="wl-mc-score">'+
-           '<span class="wl-mc-score-val" style="color:'+sc+'">'+sig.systemicImpact+'</span>'+
-           '<span class="wl-mc-score-lbl">systemic impact</span>'+
-         '</div>'+
-         '<div class="wl-mc-bar-bg"><div class="wl-mc-bar-fill" style="width:'+sig.systemicImpact+'%;background:'+sc+'"></div></div>'+
-         '</div>';
-  });
-  h += '</div>';
-  mw.innerHTML = h;
+
+  // ── Step 1: Show thinking overlay ──────────────────────────────────────────
+  var thinkSteps = [
+    'Scanning signal database…',
+    'Mapping transmission chains…',
+    'Calculating GCC exposure…',
+    'Ranking by systemic impact…'
+  ];
+  var navBack = '<div class="wl-nav-back" onclick="selectWLCategory(\''+gid+'\')">&#8592; '+g.title+'</div>' +
+    '<div class="wl-signals-header"><div class="wl-signals-topic-name">'+topic.label+'</div></div>';
+  var thinkH = navBack +
+    '<div class="wl-thinking" id="wl-think-overlay">' +
+      '<div class="wl-thinking-pulse"></div>' +
+      '<div class="wl-thinking-label">Thinking in progress — signals identification</div>' +
+      '<div class="wl-thinking-steps" id="wl-think-steps">' +
+        thinkSteps.map(function(s){ return '<div class="wl-thinking-step">'+s+'</div>'; }).join('') +
+      '</div>' +
+      '<div class="wl-thinking-bar-track"><div class="wl-thinking-bar" id="wl-think-bar"></div></div>' +
+      '<div class="wl-thinking-count">'+sigs.length+' signal'+(sigs.length!==1?'s':'')+' matched</div>' +
+    '</div>';
+  mw.innerHTML = thinkH;
   mw.className = 'wl-visible';
-  // Stagger signal cards in one by one
-  mw.querySelectorAll('.wl-mosaic-card').forEach(function(card, i){
-    card.style.opacity = '0';
-    card.style.animation = 'none';
-    void card.offsetWidth; // force reflow
-    card.style.animation = 'wl-card-in 0.38s cubic-bezier(0.22,1,0.36,1) forwards';
-    card.style.animationDelay = (i * 65) + 'ms';
+
+  // Start progress bar (5s linear fill)
+  wlState.thinkTimers.push(setTimeout(function(){
+    var bar = document.getElementById('wl-think-bar');
+    if (bar) { bar.style.transition = 'width 5s linear'; bar.style.width = '100%'; }
+  }, 60));
+
+  // Cycle steps: 0s, 1.3s, 2.7s, 4.0s
+  var stepDelays = [0, 1300, 2700, 4000];
+  stepDelays.forEach(function(delay, i){
+    wlState.thinkTimers.push(setTimeout(function(){
+      var steps = document.querySelectorAll('.wl-thinking-step');
+      steps.forEach(function(el, j){
+        el.classList.remove('wlt-active');
+        if (j < i) el.classList.add('wlt-done'); else el.classList.remove('wlt-done');
+      });
+      if (steps[i]) steps[i].classList.add('wlt-active');
+    }, delay));
   });
+
+  // ── Step 2: After 5s, fade out thinking and reveal signals ─────────────────
+  wlState.thinkTimers.push(setTimeout(function(){
+    var overlay = document.getElementById('wl-think-overlay');
+    if (overlay) {
+      overlay.style.transition = 'opacity 0.45s ease';
+      overlay.style.opacity = '0';
+    }
+    wlState.thinkTimers.push(setTimeout(function(){
+      // Build signal mosaic
+      var h = navBack + '<div class="wl-mosaic">';
+      sigs.forEach(function(sig){
+        var sc   = wlSysColor(sig.systemicImpact);
+        var conf = wlConfLabel(sig.confidence);
+        var isTop3 = !!WL_TOP3[sig.id];
+        h += '<div class="wl-mosaic-card'+(isTop3?' wl-mc-top5':'')+'" onclick="selectWLSignal(\''+sig.id+'\')">'+
+             (isTop3?'<div class="wl-mc-top5-badge">&#9733; Top 3 Category Impact</div>':'')+
+             '<div class="wl-mc-title">'+sig.title+'</div>'+
+             '<div class="wl-mc-meta">'+
+               '<div class="wl-mc-met"><span>TIME HORIZON</span><span class="wl-mc-met-val">'+sig.horizon+'</span></div>'+
+               '<div class="wl-mc-met"><span>ORIGIN</span><span class="wl-mc-met-val">'+sig.origin+'</span></div>'+
+               '<div class="wl-mc-met"><span>CONFIDENCE</span><span class="wl-mc-met-val" style="color:'+conf.color+'">'+conf.label+'</span></div>'+
+             '</div>'+
+             '<div class="wl-mc-score">'+
+               '<span class="wl-mc-score-val" style="color:'+sc+'">'+sig.systemicImpact+'</span>'+
+               '<span class="wl-mc-score-lbl">systemic impact</span>'+
+             '</div>'+
+             '<div class="wl-mc-bar-bg"><div class="wl-mc-bar-fill" style="width:'+sig.systemicImpact+'%;background:'+sc+'"></div></div>'+
+             '</div>';
+      });
+      h += '</div>';
+      mw.innerHTML = h;
+      // Stagger cards in
+      mw.querySelectorAll('.wl-mosaic-card').forEach(function(card, i){
+        card.style.opacity = '0';
+        card.style.animation = 'none';
+        void card.offsetWidth;
+        card.style.animation = 'wl-card-in 0.38s cubic-bezier(0.22,1,0.36,1) forwards';
+        card.style.animationDelay = (i * 65) + 'ms';
+      });
+    }, 450));
+  }, 5000));
 }
 
 // ── Back to Level 1: show categories ─────────────────────────────────────────
 function wlBackToCategories() {
+  wlClearThinkTimers();
   wlState.activeGroup  = null;
   wlState.activeTopic  = null;
   wlState.activeSignal = null;

@@ -4,6 +4,14 @@
 <meta charset="utf-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1"/>
 <title>Gulf Logistics Intelligence</title>
+<!-- Auth guard: runs before any content renders -->
+<script>
+(function(){
+  fetch('/api/auth',{cache:'no-store',credentials:'same-origin'})
+    .then(function(r){ if(r.status===401) window.location.replace('/login.html'); })
+    .catch(function(){}); // silent fail = allow (network error / local dev)
+})();
+</script>
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>

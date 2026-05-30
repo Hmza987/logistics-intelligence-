@@ -2094,6 +2094,20 @@ canvas { font-family: var(--f-mono); }
   background:rgba(34,211,238,.12); color:#22d3ee;
   border:1px solid rgba(34,211,238,.3); text-transform:uppercase;
 }
+/* ── Live signal analysis block ─────────────────────────────── */
+.wl-live-analysis {
+  margin-top:12px; padding:10px 12px;
+  background:rgba(34,211,238,.04);
+  border-left:2px solid rgba(34,211,238,.18);
+  border-radius:0 4px 4px 0;
+}
+.wl-live-analysis-lbl {
+  font-family:var(--f-mono); font-size:7px; letter-spacing:.13em;
+  color:rgba(34,211,238,.45); text-transform:uppercase; margin-bottom:5px;
+}
+.wl-live-analysis-text {
+  font-size:10.5px; line-height:1.6; color:var(--c-tx2);
+}
 .wl-curated-section-hdr {
   font-family:var(--f-mono); font-size:7.5px; letter-spacing:.14em;
   color:var(--c-tx2); text-transform:uppercase;
@@ -10682,11 +10696,18 @@ function selectWLTopic(gid, tid) {
           liveSigs.forEach(function(sig){
             var sc   = wlSysColor(sig.systemicImpact);
             var conf = wlConfLabel(sig.confidence);
+            var analysisHtml = sig.insight
+              ? '<div class="wl-live-analysis">'+
+                  '<div class="wl-live-analysis-lbl">&#9670; Analysis</div>'+
+                  '<div class="wl-live-analysis-text">'+sig.insight+'</div>'+
+                '</div>'
+              : '';
             h += '<div class="wl-mosaic-card wl-live" onclick="selectWLSignal(\''+sig.id+'\',true)">'+
                  '<div class="wl-mc-live-badge">&#9889; Auto-Detected Signal</div>'+
                  '<div class="wl-mc-live-title">'+sig.title+'</div>'+
                  buildLiveChainHtml(sig.chain)+
-                 '<div class="wl-mc-meta">'+
+                 analysisHtml+
+                 '<div class="wl-mc-meta" style="margin-top:12px">'+
                    '<div class="wl-mc-met"><span>TIME HORIZON</span><span class="wl-mc-met-val">'+sig.horizon+'</span></div>'+
                    '<div class="wl-mc-met"><span>CONFIDENCE</span><span class="wl-mc-met-val" style="color:'+conf.color+'">'+conf.label+'</span></div>'+
                    '<div class="wl-mc-met"><span>SYSTEMIC IMPACT</span><span class="wl-mc-met-val" style="color:'+sc+'">'+sig.systemicImpact+'/100</span></div>'+

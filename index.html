@@ -2036,6 +2036,91 @@ canvas { font-family: var(--f-mono); }
 .wl-mc-bar-bg { height:3px; background:var(--c-s2); border-radius:2px; overflow:hidden; margin-top:5px; }
 .wl-mc-bar-fill { height:100%; border-radius:2px; }
 
+/* ── Level 2: Topic tile navigation ────────────────────────── */
+.wl-nav-back {
+  display:inline-flex; align-items:center; gap:6px;
+  font-family:var(--f-mono); font-size:9px; letter-spacing:.1em; text-transform:uppercase;
+  color:var(--c-tx2); cursor:pointer; padding:0 0 18px;
+  transition:color .15s;
+}
+.wl-nav-back:hover { color:var(--c-gold); }
+.wl-topics-header {
+  display:flex; align-items:center; gap:10px;
+  padding-bottom:14px; margin-bottom:16px;
+  border-bottom:1px solid var(--c-bd1);
+}
+.wl-topics-cat-icon { font-size:22px; color:var(--c-gold); }
+.wl-topics-cat-name { font-size:16px; font-weight:600; color:var(--c-tx0); }
+.wl-topic-grid { display:flex; flex-direction:column; gap:10px; }
+.wl-topic-card {
+  padding:20px 22px; border:1px solid var(--c-bd1); background:var(--c-s1);
+  border-radius:var(--r); cursor:pointer; position:relative; overflow:hidden;
+  transition:border-color var(--t),background var(--t);
+}
+.wl-topic-card::before {
+  content:''; position:absolute; left:0; top:0; bottom:0; width:3px;
+  background:var(--c-bd1); transition:background var(--t);
+}
+.wl-topic-card:hover { border-color:var(--c-gold); background:rgba(212,160,23,.04); }
+.wl-topic-card:hover::before { background:var(--c-gold); }
+.wl-topic-card:hover .wl-topic-arr { color:var(--c-gold); transform:translateY(-50%) translateX(4px); }
+.wl-topic-name { font-size:14px; font-weight:600; color:var(--c-tx0); margin-bottom:5px; }
+.wl-topic-desc { font-size:11px; color:var(--c-tx2); line-height:1.55; padding-right:28px; }
+.wl-topic-arr {
+  position:absolute; right:18px; top:50%; transform:translateY(-50%);
+  font-size:16px; color:var(--c-tx2); transition:color var(--t),transform var(--t);
+}
+/* Level 3 signals header */
+.wl-signals-header {
+  padding-bottom:14px; margin-bottom:16px;
+  border-bottom:1px solid var(--c-bd1);
+}
+.wl-signals-topic-name { font-size:16px; font-weight:600; color:var(--c-tx0); margin-top:4px; }
+
+/* ── Topic tag filter bar ───────────────────────────────────── */
+.wl-tag-bar {
+  display:flex; flex-wrap:wrap; gap:6px;
+  padding:10px 0 14px;
+  border-bottom:1px solid var(--c-bd1);
+  margin-bottom:14px;
+}
+.wl-tag-bar-label {
+  font-family:var(--f-mono); font-size:7px; letter-spacing:.13em;
+  color:var(--c-tx2); text-transform:uppercase; width:100%; margin-bottom:2px;
+}
+.wl-tag-chip {
+  font-family:var(--f-mono); font-size:8.5px; letter-spacing:.05em;
+  padding:4px 11px; border-radius:12px;
+  border:1px solid var(--c-bd2); color:var(--c-tx2);
+  background:transparent; cursor:pointer;
+  transition:border-color .15s,color .15s,background .15s;
+  user-select:none;
+}
+.wl-tag-chip:hover { color:var(--c-tx1); background:var(--c-s2); }
+.wl-tag-chip.wl-tc-active {
+  border-color:var(--c-gold); color:var(--c-gold);
+  background:rgba(212,160,23,.10);
+}
+.wl-tag-chip-count { font-size:7px; opacity:.55; margin-left:4px; }
+/* Tags rendered on each signal card */
+.wl-mc-tags { display:flex; flex-wrap:wrap; gap:4px; margin-bottom:8px; }
+.wl-mc-tag {
+  font-family:var(--f-mono); font-size:7px; letter-spacing:.04em;
+  padding:2px 7px; border-radius:10px;
+  border:1px solid var(--c-bd1); color:var(--c-tx2);
+  transition:border-color .15s,color .15s,background .15s;
+}
+.wl-mc-tag.wl-mt-active {
+  border-color:rgba(212,160,23,.45); color:rgba(212,160,23,.9);
+  background:rgba(212,160,23,.07);
+}
+/* Dim cards that don't match the active tag filter */
+.wl-mosaic-card.wl-tag-dim {
+  opacity:.16; pointer-events:none;
+  transform:scale(.98);
+  transition:opacity .25s ease,transform .25s ease;
+}
+
 /* ── Breadcrumb & show/hide ─── */
 .wl-hidden { display:none; }
 .wl-visible { display:block; animation:wl-fadein .2s ease; }
@@ -3296,10 +3381,13 @@ canvas { font-family: var(--f-mono); }
     </div>
   </div>
 
-  <!-- Category list (always visible after init) -->
+  <!-- Level 1: Category list -->
   <div class="wl-cat-list" id="wl-categories"></div>
 
-  <!-- Signal mosaic (appears when a category is selected) -->
+  <!-- Level 2: Topics for selected category -->
+  <div id="wl-topics-wrap" class="wl-hidden"></div>
+
+  <!-- Level 3: Signal mosaic for selected topic -->
   <div id="wl-mosaic-wrap" class="wl-hidden"></div>
 
   <!-- Full analysis (appears when a signal is selected from the mosaic) -->
@@ -9721,6 +9809,81 @@ var WL_GROUPS = [
   }
 ];
 
+// ── Topic tags — Climate category prototype (Option D tag-filter) ─────────────
+// Each signal can carry multiple tags; filtering uses OR logic across active chips.
+var WL_TAGS = {
+  'panama':      ['Drought','Water Levels'],
+  'eastafrica':  ['Drought','Rainfall'],
+  'iod':         ['Rainfall','Ocean Systems'],
+  'glacier':     ['Water Levels','Ice & Polar'],
+  'austdrought': ['Drought'],
+  'mekong':      ['Water Levels','Rainfall'],
+  'arctic':      ['Ice & Polar'],
+  'medagri':     ['Rising Temperature'],
+  'adenweather': ['Rising Temperature','Ocean Systems'],
+  'sahel':       ['Drought','Rainfall'],
+  'northsea':    ['Rising Temperature'],
+  'lanina':      ['Rainfall','Ocean Systems']
+};
+
+// ── Topic definitions — all 5 categories (3-level navigation) ────────────────
+var WL_TOPICS = {
+  climate: [
+    { id:'temperature', label:'Rising Temperature',
+      desc:'Sea surface and land temperature extremes affecting agriculture, monsoons and offshore operations',
+      signals:['medagri','adenweather','northsea','arctic'] },
+    { id:'water',       label:'Water Levels & Drought',
+      desc:'River flows, reservoir levels and soil moisture stress cascading into food supply and canal operations',
+      signals:['panama','glacier','mekong','austdrought'] },
+    { id:'rainfall',    label:'Rainfall & Food Disruption',
+      desc:'Rainfall deficits and ocean-driven precipitation patterns triggering simultaneous food import surges',
+      signals:['iod','lanina','eastafrica','sahel'] }
+  ],
+  trade: [
+    { id:'disruptions', label:'Active Disruptions',
+      desc:'Live geopolitical and policy shocks reshaping trade flows right now',
+      signals:['redsea','ustariff'] },
+    { id:'corridors',   label:'New Trade Corridors',
+      desc:'Emerging rail, port and multi-modal routes bypassing established chokepoints',
+      signals:['imec','saudiisrael','gccrail','bri2'] },
+    { id:'carbon',      label:'Carbon & Compliance',
+      desc:'Emissions regulations and supply chain audit requirements restructuring industrial logistics',
+      signals:['cbam','imo2050','csddd'] },
+    { id:'rules',       label:'Market Access Rules',
+      desc:'Trade agreement implementation and port inspection regimes opening and closing market access',
+      signals:['afcfta','psc','wto'] },
+    { id:'currency',    label:'Currency & Capital Flows',
+      desc:'Currency depreciation and industrial subsidies redirecting trade competitiveness and FDI',
+      signals:['turkey','dedollar','usira','indiagcc'] }
+  ],
+  economic: [
+    { id:'demand',      label:'Major Demand Shifts',
+      desc:'Structural changes in the largest economies permanently reshaping freight volumes',
+      signals:['indiagrowth','china','china15plan'] },
+    { id:'shipping',    label:'Shipping Market Dynamics',
+      desc:'Vessel supply imbalances, carrier consolidation and rate volatility across bulk and container',
+      signals:['drybulk','containerconsolidation','ratevol'] },
+    { id:'cost',        label:'Cost & Risk Factors',
+      desc:'Insurance hardening, port labour disputes, trade finance gaps and demographic cost pressures',
+      signals:['marineins','portlabor','tradefinance','demoshifts'] }
+  ],
+  technology: [
+    { id:'manufacturing', label:'On-Site Manufacturing',
+      desc:'3D printing reducing spare parts airfreight dependency across GCC oil and gas operations',
+      signals:['printing3d'] },
+    { id:'digital',     label:'Digital Risk & Infrastructure',
+      desc:'Cyberattack exposure and data centre construction creating new maritime and cargo vulnerabilities',
+      signals:['cybersec','datacenter'] }
+  ],
+  demographic: [
+    { id:'labour',      label:'Labour & Workforce',
+      desc:'South Asian migration supply and nationalisation mandates raising logistics operating costs',
+      signals:['samigration','emiratisation'] },
+    { id:'consumer',    label:'Consumer Market Growth',
+      desc:'African population growth building the GCC\'s next major re-export demand corridor',
+      signals:['africapop'] }
+  ]
+};
 
 // ── Colour helpers ─────────────────────────────────────────────────────────────
 function wlHeatColor(s) {
@@ -9940,7 +10103,7 @@ function renderWatchlistSignal(id) {
 
 
 
-var wlState = { activeGroup:null, activeSignal:null };
+var wlState = { activeGroup:null, activeTopic:null, activeSignal:null, activeTags:[] };
 var wlInitialized = false;
 
 // Compute top-3 per category — keyed object for O(1) lookup
@@ -10191,6 +10354,35 @@ function initWatchlist() {
   renderWLCategories();
 }
 
+// ── Tag filter helpers ────────────────────────────────────────────────────────
+function wlBuildTagBar(sigs) {
+  var tagCounts = {};
+  sigs.forEach(function(sig){
+    (WL_TAGS[sig.id]||[]).forEach(function(t){ tagCounts[t]=(tagCounts[t]||0)+1; });
+  });
+  var tags = Object.keys(tagCounts);
+  if (!tags.length) return '';
+  var none = wlState.activeTags.length===0;
+  var h = '<div class="wl-tag-bar"><div class="wl-tag-bar-label">Filter by topic</div>';
+  h += '<span class="wl-tag-chip'+(none?' wl-tc-active':'')+'" onclick="wlToggleTag(null)">All<span class="wl-tag-chip-count">'+sigs.length+'</span></span>';
+  tags.forEach(function(tag){
+    var on = wlState.activeTags.indexOf(tag)!==-1;
+    h += '<span class="wl-tag-chip'+(on?' wl-tc-active':'')+'" onclick="wlToggleTag(\''+tag.replace(/'/g,"\\'")+'\')">'+
+         tag+'<span class="wl-tag-chip-count">'+tagCounts[tag]+'</span></span>';
+  });
+  return h+'</div>';
+}
+
+function wlToggleTag(tag) {
+  if (!tag) {
+    wlState.activeTags = [];
+  } else {
+    var i = wlState.activeTags.indexOf(tag);
+    if (i===-1) wlState.activeTags.push(tag); else wlState.activeTags.splice(i,1);
+  }
+  if (wlState.activeGroup) selectWLCategory(wlState.activeGroup);
+}
+
 function renderWLCategories() {
   var el = document.getElementById('wl-categories');
   if (!el) return;
@@ -10200,43 +10392,68 @@ function renderWLCategories() {
     row.className = 'wl-cat-row' + (wlState.activeGroup===g.id?' active':'');
     row.dataset.gid = g.id;
     row.onclick = function(){ selectWLCategory(g.id); };
-    var cnt = g.signals.length;
     row.innerHTML =
       '<div class="wl-cat-ico">'+g.icon+'</div>'+
       '<div><div class="wl-cat-name">'+g.title+'</div>'+
       '<div class="wl-cat-desc">'+g.desc+'</div></div>'+
-      '<div class="wl-cat-count">'+cnt+' signal'+(cnt>1?'s':'')+'</div>'+
       '<div class="wl-cat-arr">&#9658;</div>';
     el.appendChild(row);
   });
 }
 
+// ── Level 1 → 2: Category selected, show its topics ──────────────────────────
 function selectWLCategory(gid) {
-  wlState.activeGroup = gid;
+  wlState.activeGroup  = gid;
+  wlState.activeTopic  = null;
   wlState.activeSignal = null;
-  // Update active state on rows
-  document.querySelectorAll('.wl-cat-row').forEach(function(r){
-    r.classList.toggle('active', r.dataset.gid===gid);
+  var cats = document.getElementById('wl-categories');
+  var topw = document.getElementById('wl-topics-wrap');
+  var mw   = document.getElementById('wl-mosaic-wrap');
+  var aw   = document.getElementById('wl-analysis-wrap');
+  if (cats) cats.className = 'wl-cat-list wl-hidden';
+  if (mw)   mw.className   = 'wl-hidden';
+  if (aw)   aw.className   = 'wl-hidden';
+  var g      = WL_GROUPS.find(function(x){ return x.id===gid; });
+  var topics = WL_TOPICS[gid] || [];
+  if (!g || !topw) return;
+  var h = '<div class="wl-nav-back" onclick="wlBackToCategories()">&#8592; Watchlist</div>' +
+    '<div class="wl-topics-header">' +
+      '<span class="wl-topics-cat-icon">'+g.icon+'</span>' +
+      '<span class="wl-topics-cat-name">'+g.title+'</span>' +
+    '</div>' +
+    '<div class="wl-topic-grid">';
+  topics.forEach(function(topic){
+    h += '<div class="wl-topic-card" onclick="selectWLTopic(\''+gid+'\',\''+topic.id+'\')">'+
+         '<div class="wl-topic-name">'+topic.label+'</div>'+
+         (topic.desc?'<div class="wl-topic-desc">'+topic.desc+'</div>':'')+
+         '<div class="wl-topic-arr">&#8250;</div>'+
+         '</div>';
   });
-  // Show mosaic, hide analysis
-  var mw = document.getElementById('wl-mosaic-wrap');
-  var aw = document.getElementById('wl-analysis-wrap');
-  if (mw) mw.className = 'wl-visible';
-  if (aw) aw.className = 'wl-hidden';
-  // Render mosaic
-  var g = WL_GROUPS.find(function(x){return x.id===gid;});
-  if (!g || !mw) return;
-  var sigs = g.signals.map(function(id){
-    return WL_SIGNALS.find(function(s){return s.id===id;});
-  }).filter(Boolean);
-  // Sort: top-5 first, then remaining by systemicImpact desc
-  sigs.sort(function(a,b){
-    var aTop = !!WL_TOP3[a.id], bTop = !!WL_TOP3[b.id];
-    if (aTop && !bTop) return -1;
-    if (!aTop && bTop) return 1;
-    return b.systemicImpact - a.systemicImpact;
-  });
-  var h = '<div class="wl-mosaic">';
+  h += '</div>';
+  topw.innerHTML = h;
+  topw.className = 'wl-visible';
+}
+
+// ── Level 2 → 3: Topic selected, show its signals ────────────────────────────
+function selectWLTopic(gid, tid) {
+  wlState.activeTopic  = tid;
+  wlState.activeSignal = null;
+  var topw = document.getElementById('wl-topics-wrap');
+  var mw   = document.getElementById('wl-mosaic-wrap');
+  var aw   = document.getElementById('wl-analysis-wrap');
+  if (topw) topw.className = 'wl-hidden';
+  if (aw)   aw.className   = 'wl-hidden';
+  var g     = WL_GROUPS.find(function(x){ return x.id===gid; });
+  var topic = (WL_TOPICS[gid]||[]).find(function(t){ return t.id===tid; });
+  if (!g || !topic || !mw) return;
+  var sigs = topic.signals.map(function(id){
+    return WL_SIGNALS.find(function(s){ return s.id===id; });
+  }).filter(Boolean).sort(function(a,b){ return b.systemicImpact-a.systemicImpact; });
+  var h = '<div class="wl-nav-back" onclick="selectWLCategory(\''+gid+'\')">&#8592; '+g.title+'</div>' +
+    '<div class="wl-signals-header">' +
+      '<div class="wl-signals-topic-name">'+topic.label+'</div>' +
+    '</div>' +
+    '<div class="wl-mosaic">';
   sigs.forEach(function(sig){
     var sc   = wlSysColor(sig.systemicImpact);
     var conf = wlConfLabel(sig.confidence);
@@ -10258,6 +10475,23 @@ function selectWLCategory(gid) {
   });
   h += '</div>';
   mw.innerHTML = h;
+  mw.className = 'wl-visible';
+}
+
+// ── Back to Level 1: show categories ─────────────────────────────────────────
+function wlBackToCategories() {
+  wlState.activeGroup  = null;
+  wlState.activeTopic  = null;
+  wlState.activeSignal = null;
+  var topw = document.getElementById('wl-topics-wrap');
+  var mw   = document.getElementById('wl-mosaic-wrap');
+  var aw   = document.getElementById('wl-analysis-wrap');
+  if (topw) topw.className = 'wl-hidden';
+  if (mw)   mw.className   = 'wl-hidden';
+  if (aw)   aw.className   = 'wl-hidden';
+  renderWLCategories();
+  var cats = document.getElementById('wl-categories');
+  if (cats) cats.className = 'wl-cat-list';
 }
 
 function selectWLSignal(sid) {
@@ -10274,13 +10508,22 @@ function selectWLSignal(sid) {
   var g   = WL_GROUPS.find(function(x){ return x.signals.indexOf(sid) !== -1; });
   var sig = WL_SIGNALS.find(function(s){ return s.id === sid; });
 
-  // Breadcrumb
+  // Breadcrumb — 3-level path when coming from a topic
   var bc = document.getElementById('wl-breadcrumb');
   if (bc && g && sig) {
-    bc.innerHTML =
-      '<span class="wl-bc-link" onclick="selectWLCategory(\''+g.id+'\')">&#8592; '+g.title+'</span>'+
-      '<span class="wl-bc-sep">&#8250;</span>'+
-      '<span class="wl-bc-cur">'+sig.title+'</span>';
+    if (wlState.activeTopic) {
+      var topicObj = (WL_TOPICS[g.id]||[]).find(function(t){ return t.id===wlState.activeTopic; });
+      var topicLabel = topicObj ? topicObj.label : g.title;
+      bc.innerHTML =
+        '<span class="wl-bc-link" onclick="selectWLTopic(\''+g.id+'\',\''+wlState.activeTopic+'\')">&#8592; '+topicLabel+'</span>'+
+        '<span class="wl-bc-sep">&#8250;</span>'+
+        '<span class="wl-bc-cur">'+sig.title+'</span>';
+    } else {
+      bc.innerHTML =
+        '<span class="wl-bc-link" onclick="selectWLCategory(\''+g.id+'\')">&#8592; '+g.title+'</span>'+
+        '<span class="wl-bc-sep">&#8250;</span>'+
+        '<span class="wl-bc-cur">'+sig.title+'</span>';
+    }
   }
 
   // Hide key insight banner and all complex analysis panels

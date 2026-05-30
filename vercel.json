@@ -18,9 +18,10 @@
     }
   ],
   "routes": [
-    { "src": "/login",    "status": 302, "headers": { "Location": "/" } },
-    { "src": "/logout",   "status": 302, "headers": { "Location": "/" } },
-    { "src": "/api/(.*)", "dest": "/api/$1" },
-    { "src": "/(.*)",     "dest": "/index.html" }
+    { "src": "/login",      "status": 302, "headers": { "Location": "/" } },
+    { "src": "/logout",     "status": 302, "headers": { "Location": "/" } },
+    { "src": "/api/(.*)",   "dest": "/api/$1" },
+    { "src": "/data/(.*)",  "dest": "/data/$1" },
+    { "src": "/(.*)",       "dest": "/index.html" }
   ]
 }

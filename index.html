@@ -6652,21 +6652,49 @@ function initChokepointsMap() {
       interactive: false
     }).addTo(chokepointsMap);
 
-    // Current port call circle (filled square-ish via circle)
+    // Current port call circle — bindPopup (repeatable) + larger hit-target for small circles
     (function(port) {
-      L.circleMarker([port.lat, port.lng], {
+      var pInfo   = PORT_INFO[port.name] || { teu:'N/A', berths:'N/A', grad:'linear-gradient(135deg,#060c14 0%,#0a1422 100%)' };
+      var pStat   = portStatus(port);
+      var liveKey = PP_LIVE_KEYS[port.name];
+
+      var cm = L.circleMarker([port.lat, port.lng], {
         radius: rCur,
         color: col, weight: 1.5,
         fillColor: col, fillOpacity: 0.30,
         interactive: true
-      }).bindTooltip(tipHtml, {
+      })
+      .bindTooltip(tipHtml, {
         sticky: false, direction: 'top',
         className: 'cp-tip',
         offset: [0, -(rCur + 4)]
-      }).on('click', function(e) {
-        L.DomEvent.stopPropagation(e);
-        openPortPopup(port, [port.lat, port.lng]);
-      }).addTo(chokepointsMap);
+      })
+      .bindPopup(buildPortPopupHtml(port, pInfo, pStat, null), {
+        maxWidth: 360, minWidth: 340,
+        className: 'pp-popup',
+        autoPan: true,
+        closeButton: true
+      })
+      .addTo(chokepointsMap);
+
+      // On each open: refresh live data for GCC ports
+      if (liveKey) {
+        cm.on('popupopen', function() {
+          fetch('/api/port-calls?port=' + liveKey)
+            .then(function(r) { if (!r.ok) throw new Error(r.status); return r.json(); })
+            .then(function(live) {
+              if (cm.isPopupOpen()) cm.setPopupContent(buildPortPopupHtml(port, pInfo, pStat, live));
+            })
+            .catch(function() { /* leave "Loading…" state on error */ });
+        });
+      }
+
+      // Invisible larger hit-target so small circles (r≤6px) are still clickable
+      if (rCur <= 6) {
+        L.circleMarker([port.lat, port.lng], {
+          radius: 10, fillOpacity: 0, opacity: 0, interactive: true
+        }).on('click', function() { cm.openPopup(); }).addTo(chokepointsMap);
+      }
     })(p);
 
     // % change label — only for significant movers (±40%+)

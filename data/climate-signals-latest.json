@@ -39,7 +39,11 @@
         }
       ],
       "insight": "The simultaneous drought in both hemispheres creates a rarely-seen container positioning paradox. Normally, reduced Australian wheat exports would shift reefer capacity to SE Asian fruit lanes, but the Mekong deficit removes this buffer. GCC ports—particularly Jebel Ali and Khalifa—will experience equipment imbalances not from demand surge but from collapsed return-leg economics.",
-      "blindspot": "Logistics operators are tracking commodity prices but missing that container shipping lines will skip GCC discharge ports entirely on low-volume Australia/SE Asia rotations, forcing GCC importers onto premium direct-call services."
+      "blindspot": "Logistics operators are tracking commodity prices but missing that container shipping lines will skip GCC discharge ports entirely on low-volume Australia/SE Asia rotations, forcing GCC importers onto premium direct-call services.",
+      "topicIds": [
+        "water",
+        "rainfall"
+      ]
     },
     {
       "id": "sahel_heat_dome_mediterranean_cold_vessel_diversion",
@@ -74,7 +78,11 @@
         }
       ],
       "insight": "The 6.3°C thermal gradient between Sahel and Mediterranean creates a dual-pull on the same vessel pool. Humanitarian priority cargo will command premium rates, while the delayed European harvest extends agricultural vessel commitments. GCC construction material imports from Mediterranean—particularly steel, machinery, and prefab—will face spot market tightness invisible to those tracking only container indices.",
-      "blindspot": "GCC project logistics teams focus on Asia-sourced materials but Mediterranean breakbulk is critical for European machinery imports; the humanitarian vessel diversion will hit NEOM and Saudi giga-project supply chains harder than container congestion."
+      "blindspot": "GCC project logistics teams focus on Asia-sourced materials but Mediterranean breakbulk is critical for European machinery imports; the humanitarian vessel diversion will hit NEOM and Saudi giga-project supply chains harder than container congestion.",
+      "topicIds": [
+        "temperature",
+        "rainfall"
+      ]
     },
     {
       "id": "horn_africa_cold_anomaly_livestock_rerouting",
@@ -109,7 +117,11 @@
         }
       ],
       "insight": "The -2.8°C anomaly is counterintuitive—Horn of Africa stress typically comes from heat. This cold-drought combination suggests disrupted Indian Ocean moisture patterns, potentially linked to Arabian Sea's -80% precipitation deficit. The livestock-to-frozen protein substitution effect will be amplified by Australian drought reducing alternative beef sources, creating a three-continent protein supply squeeze converging on GCC ports.",
-      "blindspot": "Food security planners model drought and heat scenarios but the rare cold-drought signature in East Africa suggests atmospheric circulation shifts that may persist; GCC protein buyers treating this as a one-season anomaly will be caught by prolonged sourcing constraints."
+      "blindspot": "Food security planners model drought and heat scenarios but the rare cold-drought signature in East Africa suggests atmospheric circulation shifts that may persist; GCC protein buyers treating this as a one-season anomaly will be caught by prolonged sourcing constraints.",
+      "topicIds": [
+        "rainfall",
+        "water"
+      ]
     },
     {
       "id": "arabian_sea_dry_anomaly_india_rice_export_ban",
@@ -144,7 +156,11 @@
         }
       ],
       "insight": "The 80% precipitation deficit in the Arabian Sea is the earliest-horizon signal in this dataset. Moisture accumulation in Feb-May typically precedes monsoon strength. Combined with Mekong stress (-24%), this eliminates the traditional Thai/Vietnamese backup for Indian rice restrictions. GCC food security authorities have 60-90 days to position strategic reserves before export controls materialize.",
-      "blindspot": "GCC logistics operators treat rice as a stable, predictable flow; the convergence of Arabian Sea dryness (India risk) and Mekong deficit (backup risk) creates a low-probability, high-impact scenario where both primary and secondary rice sources fail simultaneously—a diversification failure."
+      "blindspot": "GCC logistics operators treat rice as a stable, predictable flow; the convergence of Arabian Sea dryness (India risk) and Mekong deficit (backup risk) creates a low-probability, high-impact scenario where both primary and secondary rice sources fail simultaneously—a diversification failure.",
+      "topicIds": [
+        "temperature",
+        "water"
+      ]
     },
     {
       "id": "enso_warming_trajectory_q4_shipping_repricing",
@@ -179,7 +195,10 @@
         }
       ],
       "insight": "The acceleration rate matters more than the absolute value. Moving from neutral to +0.42°C in 60 days is faster than typical ENSO evolution. Shipping markets price in El Niño expectations 3-4 months before formal declaration. GCC procurement teams have a narrow window to secure Q4 capacity before the anticipated July declaration triggers a forward rate surge across all Asia-Gulf and Europe-Gulf services.",
-      "blindspot": "Current freight rate stability masks the forward-looking repricing that will occur upon El Niño declaration; operators benchmarking on current spot rates will be blindsided when carriers invoke climate-linked surcharges in Q4 contract renewals."
+      "blindspot": "Current freight rate stability masks the forward-looking repricing that will occur upon El Niño declaration; operators benchmarking on current spot rates will be blindsided when carriers invoke climate-linked surcharges in Q4 contract renewals.",
+      "topicIds": [
+        "temperature"
+      ]
     }
   ]
 }

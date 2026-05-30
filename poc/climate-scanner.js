@@ -225,6 +225,7 @@ OUTPUT FORMAT — respond with ONLY valid JSON, no markdown wrapper, exactly thi
   "signals": [
     {
       "id": "<snake_case_id>",
+      "topicIds": ["<one or more of: temperature | water | rainfall>"],
       "title": "<Observable data point — specific GCC logistics consequence>",
       "category": "Climate / <sub-type>",
       "confidence": <0-100>,
@@ -242,7 +243,13 @@ OUTPUT FORMAT — respond with ONLY valid JSON, no markdown wrapper, exactly thi
       "blindspot": "<the specific second-order consequence most logistics operators will miss>"
     }
   ]
-}`;
+}
+
+IMPORTANT: Every signal MUST include "topicIds" as an array with one or more of these exact values:
+- "temperature"  (heat anomalies, SST changes, warming/cooling events)
+- "water"        (river levels, drought, reservoir stress, desalination pressure)
+- "rainfall"     (precipitation deficits, monsoon failure, food supply impacts)
+Signals can span multiple topics. Always include topicIds — it is required.`;
 
   const response = await client.messages.create({
     model:      'claude-opus-4-5',

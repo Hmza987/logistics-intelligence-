@@ -329,10 +329,8 @@ async function main() {
 
   const briefing = buildBriefing(regionResults, ensoRows);
 
-  // Print briefing (useful for debugging / showing data collected)
-  console.log('\n' + '─'.repeat(70));
-  console.log(briefing);
-  console.log('─'.repeat(70) + '\n');
+  // Uncomment to inspect raw briefing before sending to Claude:
+  // console.log('\n' + '─'.repeat(70) + '\n' + briefing + '\n' + '─'.repeat(70));
 
   const result = await inferSignals(briefing);
 

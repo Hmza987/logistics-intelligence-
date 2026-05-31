@@ -1,0 +1,42 @@
+name: Weekly Climate Signal Scan
+
+on:
+  schedule:
+    - cron: '0 6 * * 1'   # Every Monday 06:00 UTC
+  workflow_dispatch:        # Manual trigger from GitHub UI → Actions tab
+
+jobs:
+  scan:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write       # Needed to commit + push updated data file
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js 18
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run climate signal scanner
+        env:
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+        run: node poc/climate-scanner.js
+
+      - name: Commit updated signals (if data changed)
+        run: |
+          git config user.name  "GCC Signal Bot"
+          git config user.email "signal-bot@gcc-logistics.io"
+          git add data/climate-signals-latest.json
+          if git diff --staged --quiet; then
+            echo "No signal changes — skipping commit"
+          else
+            git commit -m "auto: climate signal scan $(date +%Y-%m-%d)"
+            git push
+          fi

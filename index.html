@@ -4,14 +4,65 @@
 <meta charset="utf-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1"/>
 <title>Gulf Logistics Intelligence</title>
-<!-- Auth guard: runs before any content renders -->
-<script>
-(function(){
-  fetch('/api/auth',{cache:'no-store',credentials:'same-origin'})
-    .then(function(r){ if(r.status===401) window.location.replace('/login.html'); })
-    .catch(function(){}); // silent fail = allow (network error / local dev)
-})();
-</script>
+<!-- Auth overlay styles — loads before anything else -->
+<style>
+#gcc-auth-overlay {
+  position:fixed; inset:0; z-index:999999;
+  background:#05070f;
+  display:flex; align-items:center; justify-content:center; flex-direction:column;
+  font-family:'IBM Plex Mono',monospace;
+  transition:opacity .4s ease;
+}
+#gcc-auth-overlay.gcc-auth-hide { opacity:0; pointer-events:none; }
+.gcc-auth-logo {
+  font-size:10px; letter-spacing:.22em; color:#4a6a8a; text-transform:uppercase;
+  margin-bottom:6px;
+}
+.gcc-auth-title {
+  font-size:22px; font-weight:700; color:#e8eaed; letter-spacing:.04em;
+  margin-bottom:4px;
+}
+.gcc-auth-sub {
+  font-size:9px; letter-spacing:.16em; color:#2d4a62; text-transform:uppercase;
+  margin-bottom:36px;
+}
+.gcc-auth-card {
+  background:#0d1220; border:1px solid #1a2535; border-radius:6px;
+  padding:32px 36px; width:340px; max-width:92vw;
+}
+.gcc-auth-label {
+  font-size:9px; letter-spacing:.14em; color:#3a5268; text-transform:uppercase;
+  display:block; margin-bottom:8px;
+}
+.gcc-auth-input {
+  width:100%; background:#080c18; border:1px solid #1a2535; border-radius:4px;
+  padding:11px 14px; font-size:15px; font-family:'IBM Plex Mono',monospace;
+  color:#e8eaed; outline:none; letter-spacing:.08em;
+  transition:border-color .15s;
+}
+.gcc-auth-input:focus { border-color:#b8952a; }
+.gcc-auth-btn {
+  width:100%; margin-top:16px;
+  background:linear-gradient(135deg,#c8a800,#a87d00);
+  color:#0a0f1e; border:none; border-radius:4px;
+  padding:12px; font-size:10px; font-weight:700; font-family:'IBM Plex Mono',monospace;
+  letter-spacing:.16em; text-transform:uppercase; cursor:pointer;
+  transition:opacity .15s;
+}
+.gcc-auth-btn:hover { opacity:.88; }
+.gcc-auth-btn:disabled { opacity:.5; cursor:default; }
+.gcc-auth-error {
+  display:none; margin-top:12px;
+  background:rgba(224,48,64,.1); border:1px solid rgba(224,48,64,.25);
+  border-radius:4px; padding:9px 12px;
+  font-size:9px; letter-spacing:.08em; color:#e03040;
+}
+.gcc-auth-error.gcc-auth-err-show { display:block; }
+.gcc-auth-footer {
+  margin-top:20px; font-size:8px; letter-spacing:.1em;
+  color:#1a2535; text-align:center;
+}
+</style>
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
@@ -2479,6 +2530,72 @@ canvas { font-family: var(--f-mono); }
 </style>
 </head>
 <body>
+
+<!-- ══════════════════════════════════════════════════════════════════════════
+     AUTH OVERLAY — shown on every page load / refresh.
+     State lives only in JS memory; refresh always requires password.
+     ════════════════════════════════════════════════════════════════════════ -->
+<div id="gcc-auth-overlay">
+  <div class="gcc-auth-logo">&#9651; Gulf Logistics Intelligence</div>
+  <div class="gcc-auth-title">Signal Database</div>
+  <div class="gcc-auth-sub">Restricted Access &bull; Ministerial Grade</div>
+  <div class="gcc-auth-card">
+    <label class="gcc-auth-label" for="gcc-auth-pwd">Access Code</label>
+    <input class="gcc-auth-input" id="gcc-auth-pwd" type="password"
+           placeholder="&#x2022;&#x2022;&#x2022;&#x2022;&#x2022;&#x2022;&#x2022;&#x2022;"
+           autocomplete="current-password" autofocus/>
+    <button class="gcc-auth-btn" id="gcc-auth-btn" type="button">
+      Authenticate &#8594;
+    </button>
+    <div class="gcc-auth-error" id="gcc-auth-err">
+      &#9888;&nbsp; Incorrect access code — please try again
+    </div>
+  </div>
+  <div class="gcc-auth-footer">GCC Logistics Intelligence &bull; Confidential</div>
+</div>
+<script>
+(function(){
+  var overlay = document.getElementById('gcc-auth-overlay');
+  var input   = document.getElementById('gcc-auth-pwd');
+  var btn     = document.getElementById('gcc-auth-btn');
+  var errMsg  = document.getElementById('gcc-auth-err');
+
+  function attempt() {
+    var pwd = input.value;
+    if (!pwd) return;
+    btn.disabled = true;
+    btn.textContent = 'Authenticating…';
+    errMsg.classList.remove('gcc-auth-err-show');
+
+    fetch('/api/verify', {
+      method:'POST', cache:'no-store',
+      headers:{'Content-Type':'application/x-www-form-urlencoded'},
+      body:'password=' + encodeURIComponent(pwd)
+    })
+    .then(function(r){ return r.json(); })
+    .then(function(d){
+      if (d.ok) {
+        overlay.classList.add('gcc-auth-hide');
+        setTimeout(function(){ overlay.style.display='none'; }, 420);
+      } else {
+        errMsg.classList.add('gcc-auth-err-show');
+        input.value = '';
+        input.focus();
+        btn.disabled = false;
+        btn.textContent = 'Authenticate →';
+      }
+    })
+    .catch(function(){
+      // Network error or no DASHBOARD_PASSWORD set — allow through
+      overlay.classList.add('gcc-auth-hide');
+      setTimeout(function(){ overlay.style.display='none'; }, 420);
+    });
+  }
+
+  btn.addEventListener('click', attempt);
+  input.addEventListener('keydown', function(e){ if(e.key==='Enter') attempt(); });
+})();
+</script>
 
 <!-- ═══════════════════════════════════════════════════════════════════════════
      COVER / LANDING PAGE

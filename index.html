@@ -2308,7 +2308,20 @@ canvas { font-family: var(--f-mono); }
 }
 .wl-thinking-count {
   font-family:var(--f-mono); font-size:9px; letter-spacing:.08em;
-  color:var(--c-tx2);
+  color:var(--c-tx2); text-align:center;
+}
+.wl-thinking-count-total {
+  font-size:28px; font-weight:700; color:var(--c-gold);
+  letter-spacing:.03em; line-height:1.1; margin-bottom:4px;
+  transition:all .4s ease;
+}
+.wl-thinking-count-label {
+  font-size:8px; letter-spacing:.14em; color:var(--c-tx2);
+  text-transform:uppercase; margin-bottom:6px;
+}
+.wl-thinking-count-breakdown {
+  font-size:8px; color:#4a5668; letter-spacing:.06em;
+  min-height:12px; transition:opacity .3s ease;
 }
 
 /* ── Level 2: Topic tile navigation ────────────────────────── */
@@ -11354,7 +11367,13 @@ function selectWLTopic(gid, tid) {
         thinkSteps.map(function(s){ return '<div class="wl-thinking-step">'+s+'</div>'; }).join('') +
       '</div>' +
       '<div class="wl-thinking-bar-track"><div class="wl-thinking-bar" id="wl-think-bar"></div></div>' +
-      '<div class="wl-thinking-count">'+sigs.length+' signal'+(sigs.length!==1?'s':'')+' matched</div>' +
+      '<div class="wl-thinking-count">' +
+        '<div class="wl-thinking-count-total" id="wl-think-total">' + sigs.length + '</div>' +
+        '<div class="wl-thinking-count-label">signals identified</div>' +
+        '<div class="wl-thinking-count-breakdown" id="wl-think-breakdown">' +
+          sigs.length + ' curated' +
+        '</div>' +
+      '</div>' +
     '</div>';
   mw.innerHTML = thinkH;
   mw.className = 'wl-visible';
@@ -11382,6 +11401,44 @@ function selectWLTopic(gid, tid) {
   var liveDataPromise = (gid === 'climate')
     ? fetch('/data/climate-signals-latest.json').then(function(r){ return r.ok ? r.json() : null; }).catch(function(){ return null; })
     : Promise.resolve(null);
+
+  // As soon as the live fetch resolves, update the count — before the 5s reveal
+  liveDataPromise.then(function(liveData) {
+    var liveCount = 0;
+    if (liveData && liveData.signals) {
+      liveCount = liveData.signals.filter(function(s){
+        return (s.topicIds||[]).indexOf(tid) !== -1;
+      }).length;
+    }
+    if (liveCount > 0) {
+      var totalEl     = document.getElementById('wl-think-total');
+      var breakdownEl = document.getElementById('wl-think-breakdown');
+      if (totalEl) {
+        // Animate count up from curated to curated+live
+        var start    = sigs.length;
+        var end      = sigs.length + liveCount;
+        var duration = 600; // ms
+        var startTs  = null;
+        function countUp(ts) {
+          if (!startTs) startTs = ts;
+          var progress = Math.min((ts - startTs) / duration, 1);
+          var current  = Math.round(start + (end - start) * progress);
+          totalEl.textContent = current;
+          if (progress < 1) requestAnimationFrame(countUp);
+        }
+        requestAnimationFrame(countUp);
+      }
+      if (breakdownEl) {
+        breakdownEl.style.opacity = '0';
+        setTimeout(function() {
+          breakdownEl.innerHTML =
+            '<span style="color:var(--c-gold)">' + liveCount + ' live auto-detected</span>' +
+            ' &nbsp;+&nbsp; ' + sigs.length + ' curated';
+          breakdownEl.style.opacity = '1';
+        }, 300);
+      }
+    }
+  });
 
   // ── Step 2: After 5s, fade out thinking and reveal signals ─────────────────
   wlState.thinkTimers.push(setTimeout(function(){

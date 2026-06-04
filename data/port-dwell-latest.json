@@ -1,0 +1,133 @@
+{
+  "modelDate": "2026-06-04",
+  "modelVersion": "1.1.0",
+  "formula": "Two-component: T_vessel=(T_s+min(W,B)·T_s/B); T_yard=T_cust·(W+P)/(B·ρ_n)",
+  "note": "Phase 1 — manual vessel observations. Phase 2 will calibrate β via regression on historical data.",
+  "ports": {
+    "jeddah": {
+      "name": "Jeddah Islamic Port",
+      "dwell": 17.4,
+      "dwell_low": 15,
+      "dwell_high": 19.9,
+      "dwell_display": "15–20",
+      "dwell_precrisis": 6.8,
+      "T_vessel": 3.6,
+      "T_yard": 13.8,
+      "congestion_ratio": 2.77,
+      "rho": 0.202,
+      "utilization_pct": 20,
+      "status": "CRITICAL",
+      "color": "#c02030",
+      "inputs": {
+        "W": 52,
+        "P": 20,
+        "lambda": 4.5,
+        "B": 40,
+        "T_s": 1.8,
+        "T_cust": 5,
+        "rho_n": 0.65,
+        "n_normal": 26
+      }
+    },
+    "yanbu": {
+      "name": "Yanbu Commercial Port",
+      "dwell": 15.9,
+      "dwell_low": 13.6,
+      "dwell_high": 18.1,
+      "dwell_display": "14–18",
+      "dwell_precrisis": 6.5,
+      "T_vessel": 4,
+      "T_yard": 11.9,
+      "congestion_ratio": 2.64,
+      "rho": 0.214,
+      "utilization_pct": 21,
+      "status": "CRITICAL",
+      "color": "#c02030",
+      "inputs": {
+        "W": 30,
+        "P": 18,
+        "lambda": 3,
+        "B": 28,
+        "T_s": 2,
+        "T_cust": 4.5,
+        "rho_n": 0.65,
+        "n_normal": 18.2
+      }
+    },
+    "sohar": {
+      "name": "Sohar Port (Oman)",
+      "dwell": 31.5,
+      "dwell_low": 22.7,
+      "dwell_high": 40.3,
+      "dwell_display": "23–40",
+      "dwell_precrisis": 4.7,
+      "T_vessel": 4.4,
+      "T_yard": 27.1,
+      "congestion_ratio": 10.83,
+      "rho": 0.733,
+      "utilization_pct": 73,
+      "status": "CRITICAL",
+      "color": "#c02030",
+      "inputs": {
+        "W": 80,
+        "P": 11,
+        "lambda": 4,
+        "B": 12,
+        "T_s": 2.2,
+        "T_cust": 2.5,
+        "rho_n": 0.7,
+        "n_normal": 8.4
+      }
+    },
+    "khor_fakkan": {
+      "name": "Khor Fakkan (UAE)",
+      "dwell": 13.5,
+      "dwell_low": 9.7,
+      "dwell_high": 17.3,
+      "dwell_display": "10–17",
+      "dwell_precrisis": 3,
+      "T_vessel": 3,
+      "T_yard": 10.5,
+      "congestion_ratio": 7,
+      "rho": 0.656,
+      "utilization_pct": 66,
+      "status": "CRITICAL",
+      "color": "#c02030",
+      "inputs": {
+        "W": 35,
+        "P": 7,
+        "lambda": 3.5,
+        "B": 8,
+        "T_s": 1.5,
+        "T_cust": 1.5,
+        "rho_n": 0.75,
+        "n_normal": 6
+      }
+    },
+    "salalah": {
+      "name": "Salalah (Oman)",
+      "dwell": 8.7,
+      "dwell_low": 6.3,
+      "dwell_high": 11.2,
+      "dwell_display": "6–11",
+      "dwell_precrisis": 2.2,
+      "T_vessel": 2.4,
+      "T_yard": 6.3,
+      "congestion_ratio": 6.35,
+      "rho": 0.667,
+      "utilization_pct": 67,
+      "status": "HIGH",
+      "color": "#e8673c",
+      "inputs": {
+        "W": 32,
+        "P": 8,
+        "lambda": 5,
+        "B": 9,
+        "T_s": 1.2,
+        "T_cust": 1,
+        "rho_n": 0.7,
+        "n_normal": 6.3
+      }
+    }
+  }
+}

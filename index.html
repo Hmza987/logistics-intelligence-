@@ -3537,7 +3537,7 @@ canvas { font-family: var(--f-mono); }
     <div class="sim-inputs-grid">
       <div class="sim-field">
         <label>Origin Port</label>
-        <select id="inp-origin">
+        <select id="inp-origin" onchange="simAutoRun()">
           <option value="SHA">Shanghai (SHA)</option>
           <option value="HAM">Hamburg (HAM)</option>
           <option value="ROT">Rotterdam (ROT)</option>
@@ -3547,7 +3547,7 @@ canvas { font-family: var(--f-mono); }
       </div>
       <div class="sim-field">
         <label>Final Destination (GCC)</label>
-        <select id="inp-dest">
+        <select id="inp-dest" onchange="simAutoRun()">
           <option value="DXB">Dubai / Jebel Ali</option>
           <option value="RUH">Riyadh</option>
           <option value="DMM">Dammam / Khobar</option>
@@ -3559,11 +3559,11 @@ canvas { font-family: var(--f-mono); }
       </div>
       <div class="sim-field">
         <label>Volume (TEU / month)</label>
-        <input type="number" id="inp-teu" value="50" min="1" max="10000"/>
+        <input type="number" id="inp-teu" value="50" min="1" max="10000" onchange="simAutoRun()"/>
       </div>
       <div class="sim-field">
         <label>Commodity Type</label>
-        <select id="inp-commodity">
+        <select id="inp-commodity" onchange="simAutoRun()">
           <option value="general">General / mixed cargo</option>
           <option value="consumer">Consumer goods / FMCG</option>
           <option value="auto">Automotive parts</option>
@@ -3578,7 +3578,7 @@ canvas { font-family: var(--f-mono); }
     <div style="display:flex;align-items:center;gap:14px;flex-wrap:wrap;margin-top:10px;padding-top:10px;border-top:1px solid #1e2730">
       <div class="sim-field" style="flex:0 0 auto">
         <label>Shipment Date</label>
-        <input type="date" id="inp-shipdate" onchange="updateSeasonalBadge()"
+        <input type="date" id="inp-shipdate" onchange="updateSeasonalBadge(); simAutoRun();"
                style="font-family:'IBM Plex Mono',monospace;font-size:9px;background:#0e1318;color:#e8eaed;border:1px solid #2a3340;border-radius:3px;padding:6px 8px;width:140px"/>
       </div>
       <div id="seasonal-badge-wrap" style="display:flex;flex-direction:column;gap:3px;padding-top:14px">
@@ -3984,11 +3984,22 @@ function tagPortDwellCards() {
     if (colorNotes[1]) colorNotes[1].setAttribute('data-pdt','detail');
   });
 }
-// Auto-load when trucking tab is shown
+// Auto-load when trucking tab is shown; set default shipment date to today
 document.addEventListener('DOMContentLoaded', function() {
   tagPortDwellCards();
   var truckingTab = document.querySelector('[onclick="showTab(\'trucking\',this)"]');
   if (truckingTab) truckingTab.addEventListener('click', loadPortDwellModel);
+
+  // Default shipment date to today
+  var sdEl = document.getElementById('inp-shipdate');
+  if (sdEl && !sdEl.value) {
+    var today = new Date();
+    var yyyy  = today.getFullYear();
+    var mm    = String(today.getMonth() + 1).padStart(2, '0');
+    var dd    = String(today.getDate()).padStart(2, '0');
+    sdEl.value = yyyy + '-' + mm + '-' + dd;
+    updateSeasonalBadge();
+  }
 });
 
 // ── Reorder trucking tab: dwell times → corridor traffic → FTL → map/fleet ──
@@ -5279,6 +5290,14 @@ function buildStratImpl(p) {
     { cat:'CORRIDOR RESILIENCE', color:cColor,                   metric:cMetric,                    title:'Trade Corridor Architecture',  text:cTexts[sid]||cTexts[1]                         },
     { cat:'ECONOMIC RISK',      color:oColors[sid]||'#fbbf24',  metric:oMetrics[sid]||'Assessment', title:'Economic Risk Assessment',     text:(oBases[sid]||'')+dEcon, gdpHtml:gdpHtml       }
   ];
+}
+
+// Auto-run: re-runs the simulator whenever an input changes, but only if
+// results are already visible (i.e. user has run at least once).
+function simAutoRun() {
+  var resultsVisible = document.getElementById('sim-results') &&
+                       document.getElementById('sim-results').classList.contains('visible');
+  if (resultsVisible) runSimulator();
 }
 
 function runSimulator() {

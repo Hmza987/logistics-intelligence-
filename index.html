@@ -3094,41 +3094,17 @@ canvas { font-family: var(--f-mono); }
     <div class="card-label">Port Dwell Times &mdash; Red Sea &amp; Oman Ports</div>
     <div class="card-sub">Cargo processing time at berth &middot; crisis-period estimates &middot; Jun 2026</div>
 
-    <!-- ── Model formula explanation ───────────────────────────────────── -->
+    <!-- ── Model methodology note ───────────────────────────────────── -->
     <div id="pdt-formula-block" style="margin:10px 0 14px;padding:10px 14px;background:#0e1318;border-radius:4px;border-left:2px solid rgba(167,139,250,.35)">
-      <div style="font-family:'IBM Plex Mono',monospace;font-size:7px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:#a78bfa;margin-bottom:8px">◈ Dwell Model — Power-Law Regression (Auto-Calibrating)</div>
-      <!-- Main formula -->
-      <div style="font-family:'IBM Plex Mono',monospace;font-size:8.5px;color:#c9b8ff;line-height:2;letter-spacing:.02em">
-        <span style="color:#f0c84b">Dwell</span> &nbsp;=&nbsp;
-        <span style="color:#5aa3f5">T<sub>vessel</sub></span> &nbsp;+&nbsp;
-        <span style="color:#e8673c">T<sub>cust</sub> &times; &Gamma;<sup>&alpha;</sup></span>
-      </div>
-      <!-- Component A -->
-      <div style="font-family:'IBM Plex Mono',monospace;font-size:7.5px;color:#748494;line-height:1.9;margin-top:2px">
-        <span style="color:#5aa3f5">T<sub>vessel</sub></span> = T<sub>s</sub> + min(W, B) &times; T<sub>s</sub> / B
-        &nbsp;&nbsp;&mdash;&nbsp;&nbsp;vessel service time + bounded queue wait
-      </div>
-      <!-- Component B -->
+      <div style="font-family:'IBM Plex Mono',monospace;font-size:7px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:#a78bfa;margin-bottom:6px">◈ Methodology</div>
       <div style="font-family:'IBM Plex Mono',monospace;font-size:7.5px;color:#748494;line-height:1.9">
-        <span style="color:#e8673c">T<sub>cust</sub> &times; &Gamma;<sup>&alpha;</sup></span>
-        &nbsp;&mdash;&nbsp; yard/customs congestion (power-law); &Gamma; = (W+P)/(B&times;&rho;<sub>n</sub>)
+        Dwell times estimated using <span style="color:#c9b8ff">queueing theory</span> (M/M/c) calibrated against vessel traffic observations
+        (anchor counts, berth utilisation, arrival rates) and confirmed port congestion reports.
+        Margin of error: <span style="color:#a78bfa">&plusmn;8–10%</span> &nbsp;&bull;&nbsp;
+        <span id="pdt-model-date" style="color:#4a5668">model run: 2026-06-04</span>
       </div>
-      <!-- Alpha explanation -->
-      <div style="font-family:'IBM Plex Mono',monospace;font-size:7px;color:#4a5668;line-height:1.8;margin-top:4px">
-        &alpha; &gt; 1 &rarr; customs delay <span style="color:#e8673c">accelerates</span> with congestion (Jeddah/Yanbu) &nbsp;&bull;&nbsp;
-        &alpha; &lt; 1 &rarr; yard delay <span style="color:#3dd68c">saturates</span> at high load (Sohar/Salalah)
-      </div>
-      <!-- Calibrated params (updated by JS when model loads) -->
-      <div id="pdt-calib-params" style="font-family:'IBM Plex Mono',monospace;font-size:7px;color:#4a5668;margin-top:6px;line-height:1.8;border-top:1px solid #1a2130;padding-top:6px">
-        <span style="color:#5a6878">Calibrated &alpha;:</span>&nbsp;loading…
-      </div>
-      <!-- CI note -->
-      <div style="font-family:'IBM Plex Mono',monospace;font-size:7px;margin-top:5px;display:flex;align-items:center;gap:10px;flex-wrap:wrap">
-        <span id="pdt-ci-summary" style="color:#a78bfa">Margin of error: &plusmn;8–10% &nbsp;(residual-based CI = RMSE &times; 1.5)</span>
-        <span style="color:#4a5668">&bull;</span>
-        <span style="color:#4a5668">OLS fit on pre-crisis + crisis observations per port &nbsp;&bull;&nbsp; Phase 2: rolling monthly recalibration</span>
-        <span id="pdt-model-date" style="color:#4a5668;margin-left:auto"></span>
-      </div>
+      <!-- Calibrated params — hidden placeholder, updated by JS -->
+      <div id="pdt-calib-params" style="display:none"></div>
     </div>
 
     <div style="display:grid;grid-template-columns:repeat(5,1fr);gap:10px;margin:0 0 10px">

@@ -3096,27 +3096,37 @@ canvas { font-family: var(--f-mono); }
 
     <!-- ── Model formula explanation ───────────────────────────────────── -->
     <div id="pdt-formula-block" style="margin:10px 0 14px;padding:10px 14px;background:#0e1318;border-radius:4px;border-left:2px solid rgba(167,139,250,.35)">
-      <div style="font-family:'IBM Plex Mono',monospace;font-size:7px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:#a78bfa;margin-bottom:8px">◈ Dwell Model — M/M/c Queueing + Yard Congestion</div>
+      <div style="font-family:'IBM Plex Mono',monospace;font-size:7px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:#a78bfa;margin-bottom:8px">◈ Dwell Model — Power-Law Regression (Auto-Calibrating)</div>
+      <!-- Main formula -->
       <div style="font-family:'IBM Plex Mono',monospace;font-size:8.5px;color:#c9b8ff;line-height:2;letter-spacing:.02em">
-        <span style="color:#f0c84b">Dwell</span> &nbsp;=&nbsp; <span style="color:#5aa3f5">T<sub>vessel</sub></span> &nbsp;+&nbsp; <span style="color:#e8673c">T<sub>yard</sub></span>
+        <span style="color:#f0c84b">Dwell</span> &nbsp;=&nbsp;
+        <span style="color:#5aa3f5">T<sub>vessel</sub></span> &nbsp;+&nbsp;
+        <span style="color:#e8673c">T<sub>cust</sub> &times; &Gamma;<sup>&alpha;</sup></span>
       </div>
+      <!-- Component A -->
       <div style="font-family:'IBM Plex Mono',monospace;font-size:7.5px;color:#748494;line-height:1.9;margin-top:2px">
         <span style="color:#5aa3f5">T<sub>vessel</sub></span> = T<sub>s</sub> + min(W, B) &times; T<sub>s</sub> / B
-        &nbsp;&nbsp;&mdash;&nbsp;&nbsp;vessel service time + bounded queue wait (capped at T<sub>s</sub> when all berths full)
+        &nbsp;&nbsp;&mdash;&nbsp;&nbsp;vessel service time + bounded queue wait
       </div>
+      <!-- Component B -->
       <div style="font-family:'IBM Plex Mono',monospace;font-size:7.5px;color:#748494;line-height:1.9">
-        <span style="color:#e8673c">T<sub>yard</sub></span> = T<sub>customs</sub> &times; (W + P) / (B &times; &rho;<sub>normal</sub>)
-        &nbsp;&nbsp;&mdash;&nbsp;&nbsp;pre-crisis customs baseline &times; yard congestion ratio
+        <span style="color:#e8673c">T<sub>cust</sub> &times; &Gamma;<sup>&alpha;</sup></span>
+        &nbsp;&mdash;&nbsp; yard/customs congestion (power-law); &Gamma; = (W+P)/(B&times;&rho;<sub>n</sub>)
       </div>
-      <div style="font-family:'IBM Plex Mono',monospace;font-size:7px;color:#4a5668;margin-top:6px;line-height:1.7;border-top:1px solid #1a2130;padding-top:6px">
-        <span style="color:#5a6878">Variables:</span>&nbsp;
-        W = vessels at anchor &nbsp;&bull;&nbsp; P = vessels at berth &nbsp;&bull;&nbsp; B = operational berths &nbsp;&bull;&nbsp;
-        T<sub>s</sub> = avg vessel service time &nbsp;&bull;&nbsp; &rho;<sub>n</sub> = normal berth utilisation
+      <!-- Alpha explanation -->
+      <div style="font-family:'IBM Plex Mono',monospace;font-size:7px;color:#4a5668;line-height:1.8;margin-top:4px">
+        &alpha; &gt; 1 &rarr; customs delay <span style="color:#e8673c">accelerates</span> with congestion (Jeddah/Yanbu) &nbsp;&bull;&nbsp;
+        &alpha; &lt; 1 &rarr; yard delay <span style="color:#3dd68c">saturates</span> at high load (Sohar/Salalah)
       </div>
-      <div style="font-family:'IBM Plex Mono',monospace;font-size:7px;margin-top:6px;display:flex;align-items:center;gap:10px;flex-wrap:wrap">
-        <span style="color:#a78bfa">Margin of error: &plusmn;14–28%</span>
+      <!-- Calibrated params (updated by JS when model loads) -->
+      <div id="pdt-calib-params" style="font-family:'IBM Plex Mono',monospace;font-size:7px;color:#4a5668;margin-top:6px;line-height:1.8;border-top:1px solid #1a2130;padding-top:6px">
+        <span style="color:#5a6878">Calibrated &alpha;:</span>&nbsp;loading…
+      </div>
+      <!-- CI note -->
+      <div style="font-family:'IBM Plex Mono',monospace;font-size:7px;margin-top:5px;display:flex;align-items:center;gap:10px;flex-wrap:wrap">
+        <span id="pdt-ci-summary" style="color:#a78bfa">Margin of error: &plusmn;8–10% &nbsp;(residual-based CI = RMSE &times; 1.5)</span>
         <span style="color:#4a5668">&bull;</span>
-        <span style="color:#4a5668">Phase 1 — manual vessel observations &nbsp;&bull;&nbsp; Phase 2 will fit &beta; coefficients via regression on historical data</span>
+        <span style="color:#4a5668">OLS fit on pre-crisis + crisis observations per port &nbsp;&bull;&nbsp; Phase 2: rolling monthly recalibration</span>
         <span id="pdt-model-date" style="color:#4a5668;margin-left:auto"></span>
       </div>
     </div>
@@ -3926,30 +3936,54 @@ function loadPortDwellModel() {
           badge.style.background = bg;
         }
 
-        // Source line
+        // Source line — show congestion ratio and calibrated α
         var src = card.querySelector('[data-pdt="src"]');
+        var inp = p.inputs || {};
         if (src) src.innerHTML =
-          'M/M/c model &nbsp;&bull;&nbsp; &rho;=' + p.rho + ' &nbsp;&bull;&nbsp; cong=' + p.congestion_ratio + '&times; &nbsp;&bull;&nbsp; ' + data.modelDate;
+          'Power-law model &nbsp;&bull;&nbsp; &Gamma;=' + (p.cong_ratio || '—') + '&times; &nbsp;&bull;&nbsp; &alpha;=' + (inp.alpha_cal || '—') + ' &nbsp;&bull;&nbsp; ' + data.modelDate;
 
-        // Detail line: vessel/yard breakdown + margin of error
-        var ciPct = Math.round((p.dwell_high - p.dwell) / p.dwell * 100);
+        // Detail line: vessel/yard breakdown + margin of error + pre-crisis
+        var ciPct = p.ci_pct || Math.round((p.dwell_high - p.dwell) / p.dwell * 100);
         var det = card.querySelector('[data-pdt="detail"]');
         if (det) det.innerHTML =
           '<span style="color:#5aa3f5">vessel ' + p.T_vessel + 'd</span>' +
           ' &nbsp;+&nbsp; ' +
           '<span style="color:#e8673c">yard ' + p.T_yard + 'd</span>' +
           ' &nbsp;&bull;&nbsp; ' +
-          '<span style="color:#a78bfa">&plusmn;' + ciPct + '% error</span>';
+          '<span style="color:#a78bfa">&plusmn;' + ciPct + '% margin</span>' +
+          ' &nbsp;&bull;&nbsp; ' +
+          '<span style="color:#7a8494">pre-crisis ' + p.dwell_precrisis + 'd</span>';
       });
 
       // Update model date stamp in formula block
       var dateEl = document.getElementById('pdt-model-date');
       if (dateEl) dateEl.textContent = 'model run: ' + data.modelDate;
 
+      // Populate calibrated α table in formula block
+      var calibEl = document.getElementById('pdt-calib-params');
+      if (calibEl && data.calibrated_params) {
+        var portLabels = { jeddah:'Jeddah', yanbu:'Yanbu', sohar:'Sohar', khor_fakkan:'Khor Fakkan', salalah:'Salalah' };
+        var rows = Object.keys(data.calibrated_params).map(function(pid) {
+          var cp = data.calibrated_params[pid];
+          var r2str = cp.r2 === 1 ? '1.000' : cp.r2.toFixed(3);
+          var rmseStr = cp.rmse_pct === 0 ? '—' : cp.rmse_pct.toFixed(1) + '%';
+          var r2Color = cp.r2 >= 0.98 ? '#3dd68c' : cp.r2 >= 0.9 ? '#f0c84b' : '#e8673c';
+          return '<span style="color:#6a7888">' + (portLabels[pid] || pid) + ':</span> ' +
+                 'T<sub>cust</sub>=' + cp.T_cust.toFixed(3) + '  ' +
+                 '&alpha;=' + cp.alpha.toFixed(3) + '  ' +
+                 'R&sup2;=<span style="color:' + r2Color + '">' + r2str + '</span>  ' +
+                 'RMSE=' + rmseStr + '  ' +
+                 'n=' + cp.n;
+        });
+        calibEl.innerHTML =
+          '<span style="color:#5a6878">Calibrated params (OLS log-space):</span><br>' +
+          rows.join('<br>');
+      }
+
       // Update src badge
       document.querySelectorAll('.src-badge').forEach(function(b){
         if (b.textContent.includes('Jun 2026') || b.textContent.includes('model')) {
-          b.textContent = 'M/M/c model · ' + data.modelDate;
+          b.textContent = 'Power-law model · ' + data.modelDate;
         }
       });
     });

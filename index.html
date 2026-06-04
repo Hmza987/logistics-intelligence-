@@ -3093,7 +3093,35 @@ canvas { font-family: var(--f-mono); }
   <div class="card" style="margin-bottom:14px">
     <div class="card-label">Port Dwell Times &mdash; Red Sea &amp; Oman Ports</div>
     <div class="card-sub">Cargo processing time at berth &middot; crisis-period estimates &middot; Jun 2026</div>
-    <div style="display:grid;grid-template-columns:repeat(5,1fr);gap:10px;margin:12px 0 10px">
+
+    <!-- ── Model formula explanation ───────────────────────────────────── -->
+    <div id="pdt-formula-block" style="margin:10px 0 14px;padding:10px 14px;background:#0e1318;border-radius:4px;border-left:2px solid rgba(167,139,250,.35)">
+      <div style="font-family:'IBM Plex Mono',monospace;font-size:7px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:#a78bfa;margin-bottom:8px">◈ Dwell Model — M/M/c Queueing + Yard Congestion</div>
+      <div style="font-family:'IBM Plex Mono',monospace;font-size:8.5px;color:#c9b8ff;line-height:2;letter-spacing:.02em">
+        <span style="color:#f0c84b">Dwell</span> &nbsp;=&nbsp; <span style="color:#5aa3f5">T<sub>vessel</sub></span> &nbsp;+&nbsp; <span style="color:#e8673c">T<sub>yard</sub></span>
+      </div>
+      <div style="font-family:'IBM Plex Mono',monospace;font-size:7.5px;color:#748494;line-height:1.9;margin-top:2px">
+        <span style="color:#5aa3f5">T<sub>vessel</sub></span> = T<sub>s</sub> + min(W, B) &times; T<sub>s</sub> / B
+        &nbsp;&nbsp;&mdash;&nbsp;&nbsp;vessel service time + bounded queue wait (capped at T<sub>s</sub> when all berths full)
+      </div>
+      <div style="font-family:'IBM Plex Mono',monospace;font-size:7.5px;color:#748494;line-height:1.9">
+        <span style="color:#e8673c">T<sub>yard</sub></span> = T<sub>customs</sub> &times; (W + P) / (B &times; &rho;<sub>normal</sub>)
+        &nbsp;&nbsp;&mdash;&nbsp;&nbsp;pre-crisis customs baseline &times; yard congestion ratio
+      </div>
+      <div style="font-family:'IBM Plex Mono',monospace;font-size:7px;color:#4a5668;margin-top:6px;line-height:1.7;border-top:1px solid #1a2130;padding-top:6px">
+        <span style="color:#5a6878">Variables:</span>&nbsp;
+        W = vessels at anchor &nbsp;&bull;&nbsp; P = vessels at berth &nbsp;&bull;&nbsp; B = operational berths &nbsp;&bull;&nbsp;
+        T<sub>s</sub> = avg vessel service time &nbsp;&bull;&nbsp; &rho;<sub>n</sub> = normal berth utilisation
+      </div>
+      <div style="font-family:'IBM Plex Mono',monospace;font-size:7px;margin-top:6px;display:flex;align-items:center;gap:10px;flex-wrap:wrap">
+        <span style="color:#a78bfa">Margin of error: &plusmn;14–28%</span>
+        <span style="color:#4a5668">&bull;</span>
+        <span style="color:#4a5668">Phase 1 — manual vessel observations &nbsp;&bull;&nbsp; Phase 2 will fit &beta; coefficients via regression on historical data</span>
+        <span id="pdt-model-date" style="color:#4a5668;margin-left:auto"></span>
+      </div>
+    </div>
+
+    <div style="display:grid;grid-template-columns:repeat(5,1fr);gap:10px;margin:0 0 10px">
 
       <div id="pdt-jeddah" style="background:#181c22;border-radius:4px;padding:10px 12px;border-top:2px solid #c02030">
         <div style="font-family:'IBM Plex Mono',monospace;font-size:7px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:#c02030;margin-bottom:2px">Jeddah Islamic Port</div>
@@ -3901,21 +3929,28 @@ function loadPortDwellModel() {
         // Source line
         var src = card.querySelector('[data-pdt="src"]');
         if (src) src.innerHTML =
-          'M/M/c model · ρ=' + p.rho + ' · cong=' + p.congestion_ratio + '× · ' + data.modelDate;
+          'M/M/c model &nbsp;&bull;&nbsp; &rho;=' + p.rho + ' &nbsp;&bull;&nbsp; cong=' + p.congestion_ratio + '&times; &nbsp;&bull;&nbsp; ' + data.modelDate;
 
-        // Detail line
+        // Detail line: vessel/yard breakdown + margin of error
+        var ciPct = Math.round((p.dwell_high - p.dwell) / p.dwell * 100);
         var det = card.querySelector('[data-pdt="detail"]');
         if (det) det.innerHTML =
-          'vessel: ' + p.T_vessel + 'd &bull; yard: ' + p.T_yard + 'd &bull; pre-crisis: ~' + p.dwell_precrisis + 'd';
+          '<span style="color:#5aa3f5">vessel ' + p.T_vessel + 'd</span>' +
+          ' &nbsp;+&nbsp; ' +
+          '<span style="color:#e8673c">yard ' + p.T_yard + 'd</span>' +
+          ' &nbsp;&bull;&nbsp; ' +
+          '<span style="color:#a78bfa">&plusmn;' + ciPct + '% error</span>';
       });
 
-      // Update section sub-heading
-      var sub = document.querySelector('.card-sub');
-      if (sub && sub.textContent.includes('Dwell')) sub.textContent = // won't match, use:
-        null;
-      // update "Jun 2026" badge to show model date
+      // Update model date stamp in formula block
+      var dateEl = document.getElementById('pdt-model-date');
+      if (dateEl) dateEl.textContent = 'model run: ' + data.modelDate;
+
+      // Update src badge
       document.querySelectorAll('.src-badge').forEach(function(b){
-        if (b.textContent.includes('Jun 2026')) b.textContent = 'M/M/c model · ' + data.modelDate;
+        if (b.textContent.includes('Jun 2026') || b.textContent.includes('model')) {
+          b.textContent = 'M/M/c model · ' + data.modelDate;
+        }
       });
     });
 }

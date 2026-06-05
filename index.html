@@ -5097,7 +5097,19 @@ var SCENARIOS = {
   6:{name:'Dual Closure',emoji:'&#9888;',state:'Hormuz + Bab el-Mandeb both closed - maximum stress - worst case',transits:2,brent:135.00,warrisk:'10.0x',reg:{util:98,cong:6},reroute:'Cape → Med → Suez → Jeddah',color:'#e74c3c',routeMults:{cgh:{mult:6.0,days:47,tag:'rt-cgh',label:'Cape of GH',avail:true,note:'Cape of Good Hope → Atlantic → Mediterranean → Suez Canal (north entry) → Jeddah → GCC overland — only sea route for Asian-origin cargo'},redsea:{mult:null,days:null,tag:'rt-na',label:'Red Sea',avail:false,note:'Bab el-Mandeb CLOSED — EU origins: Suez Med entry (direct) still available for Jeddah'},direct:{mult:null,days:null,tag:'rt-na',label:'Hormuz direct',avail:false,note:'CLOSED - IRGC/US blockade'},oman:{mult:5.5,days:25,tag:'rt-dir',label:'Sohar land only',avail:true,note:'Cape → Indian Ocean → Sohar (no Hormuz needed) — extreme war-risk; carriers avoiding entire GCC maritime region'}},implications:[{title:'Jeddah Port',color:'#fbbf24',metric:'Critical sea gateway',text:'Jeddah is the only sea-connected GCC import gateway under dual closure. Asian cargo arrives via Cape of Good Hope → Atlantic → Mediterranean → Suez Canal (north entry) → Jeddah (~47 days). European cargo arrives direct via Med → Suez (~19 days). Both routes enter Suez from the north — Bab el-Mandeb and Hormuz never transited. Saudi Landbridge becomes the GCC\'s primary inland distribution axis.'},{title:'Brent Crude',color:'#e74c3c',metric:'~$135/bbl',text:'+88% vs pre-crisis. Both chokepoints controlling ~40% of global seaborne oil. Marine insurers largely exiting the Gulf and Red Sea southern zones.'},{title:'GCC Trucking',color:'#e74c3c',metric:'Saudi Landbridge critical',text:'Jeddah Landbridge becomes the GCC\'s primary overland artery for all sea-connected imports. Hwy 40 (Jeddah–Riyadh) and cross-GCC routes at maximum. Al Bat\'ha simultaneously handling Asian cargo arriving via Sohar overland.'},{title:'Khor Fakkan/Sohar',color:'#fbbf24',metric:'Cape hub — elevated cost',text:'Sohar accessible via Cape → Indian Ocean → Gulf of Oman (Hormuz not transited). Last viable GCC sea entry for Asian cargo not taking the Cape→Med→Suez→Jeddah route. War-risk extreme — carriers applying maximum regional avoidance premiums.'},{title:'Carrier Posture',color:'#e74c3c',metric:'Cape → Suez standard',text:'All carriers route Asian cargo via Cape of Good Hope → Atlantic → Mediterranean → Suez Canal (north entry) → Jeddah. This is the de-facto standard sea route under dual closure. European lines maintain direct Med→Suez service. Spot rates 5-6×. 47-day Asia-Jeddah transit becomes the new baseline.'},{title:'War-Risk Insurance',color:'#e74c3c',metric:'10.0x / uninsurable',text:'Gulf and Red Sea southern approaches effectively uninsurable. Sohar approaches at maximum premium. Med→Suez north entry retains functional classification — underpins the Jeddah Suez lifeline viability for both Asian (Cape→Med) and European (direct Med) cargo.'}]}
 };
 
-var BASE_RATES  = {SHA:{cgh:1800,redsea:1700,direct:1800,oman:1600},HAM:{cgh:1400,redsea:1200,direct:1400,oman:1300},ROT:{cgh:1350,redsea:1150,direct:1350,oman:1250},SIN:{cgh:1200,redsea:1100,direct:1200,oman:1000},ICD:{cgh:900,redsea:850,direct:850,oman:750}};
+// BASE_RATES — pre-crisis baseline $/FEU (Jan 2025, warRisk=1, util=72%, Brent=$72)
+// Calibrated Jun 2026 using Drewry WCI anchor: SHA→Rotterdam=$3,579 (04 Jun 2026)
+// Back-calculation: $3,579 / regMult(util=95,brent=104.5,nm≈4200,war=0,cong=4) ≈ $815 SHA-EUR base
+// Asia→ME pre-crisis ~5-10% above Asia→Europe (GCC demand premium, fewer services)
+// EU origins ~75-85% of Asia rates; IND ~45-50%; SIN similar to SHA
+// Phase 2: replace with SeaRates per-lane CSV when available
+var BASE_RATES  = {
+  SHA: {direct:900,  redsea:850,  oman:820,  cgh:960 },  // Shanghai → GCC, pre-crisis $/FEU
+  HAM: {direct:750,  redsea:640,  oman:700,  cgh:820 },  // Hamburg  → GCC
+  ROT: {direct:720,  redsea:610,  oman:670,  cgh:790 },  // Rotterdam→ GCC
+  SIN: {direct:750,  redsea:700,  oman:680,  cgh:820 },  // Singapore→ GCC
+  ICD: {direct:420,  redsea:380,  oman:350,  cgh:490 }   // Mundra/Nhava Sheva → GCC
+};
 var PORT_COSTS  = {SHA:450,HAM:520,ROT:500,SIN:380,ICD:320};
 var DEST_CONFIG = {DXB:{port:'Jebel Ali',truck_direct:0,truck_jeddah:1800,truck_sohar:650,truck_cgh:850},RUH:{port:'Riyadh',truck_direct:1900,truck_jeddah:1100,truck_sohar:2200,truck_cgh:2400},DMM:{port:'Dammam',truck_direct:600,truck_jeddah:900,truck_sohar:2800,truck_cgh:3000},DOH:{port:'Hamad Port',truck_direct:1200,truck_jeddah:3200,truck_sohar:3500,truck_cgh:3700},BAH:{port:'Manama',truck_direct:900,truck_jeddah:2800,truck_sohar:3000,truck_cgh:3200},KWI:{port:'Kuwait',truck_direct:1600,truck_jeddah:3700,truck_sohar:4200,truck_cgh:4500},MCT:{port:'Sohar',truck_direct:200,truck_jeddah:1400,truck_sohar:0,truck_cgh:200}};
 var COMM_SRG    = {general:1.0,consumer:1.05,auto:1.08,pharma:1.15,food:1.30,industrial:1.12,chemical:1.35};
@@ -5107,24 +5119,28 @@ var DEST_NAMES  = {DXB:'Dubai / Jebel Ali',RUH:'Riyadh',DMM:'Dammam / Khobar',DO
 var ROUTE_NAMES = {direct:'Hormuz Direct',redsea:'Red Sea / Suez',oman:'Sohar / KF + Land',cgh:'Cape of Good Hope'};
 
 // ── SPOT INDEX REGRESSION MODEL ───────────────────────────────────────────────
-// Extra nautical miles per route vs Hormuz Direct baseline (GCC delivery frame)
-// Sources: SeaRates.com / Marine Traffic / Drewry 2024 routing analysis
+// Extra nautical miles per route vs Hormuz Direct baseline (SHA→DXB = 6,200nm ref)
+// Sources: MarineTraffic routing, Drewry 2024 analysis, SeaRates.com
+// cgh corrected to ~7,000nm: actual SHA→DXB via Cape ≈ 13,200nm (was 4,200 — too low)
 var ROUTE_NM = {
   direct: 0,     // Hormuz Direct — pre-crisis optimal, 0 extra nm
-  redsea: 1400,  // Via Red Sea / Jeddah — +1,400nm vs Hormuz Direct
-  oman:   200,   // Sohar anchor — minimal detour outside Hormuz, +200nm
-  cgh:    4200   // Cape of Good Hope — +4,200nm vs Hormuz Direct
+  redsea: 1400,  // Via Red Sea / Jeddah — +1,400nm vs Hormuz Direct (SHA→Jeddah ~7,600nm)
+  oman:   200,   // Sohar/KF — minimal detour outside Hormuz, +200nm
+  cgh:    7000   // Cape of Good Hope — +7,000nm vs Hormuz Direct (SHA→DXB via Cape ~13,200nm)
 };
 
-// Regression coefficients — calibrated against SCFI / Drewry WCI historical data
-// (2024 Red Sea crisis shock, COVID-peak elasticities, JWC war-risk loadings)
+// Regression coefficients — recalibrated Jun 2026 against Drewry WCI
+// Anchor: SHA→Rotterdam $3,579 / 40ft (04 Jun 2026, Drewry WCI)
+// β₄ corrected: old 0.060 gave only +42% uplift at warRisk=8× — actual IRGC-escorted
+// voyages show 2-3× premium; new 0.180 gives +126% uplift at warRisk=8× ✓
+// Phase 2: refit all β against SeaRates per-lane CSV (5 origins × 4 routes × 3 periods)
 var REG = {
   brentBase: 72,    // Pre-crisis Brent baseline ($/bbl, Jan 2025)
   utilBase:  72,    // Pre-crisis capacity utilisation baseline (%)
-  b1_bunker: 0.009, // β₁ — Brent: +0.9% of base rate per $1/bbl above baseline
-  b2_util:   0.050, // β₂ — Utilisation: +5.0% per 1 pp above 72%
+  b1_bunker: 0.009, // β₁ — Brent: +0.9% per $1/bbl above baseline
+  b2_util:   0.050, // β₂ — Utilisation: +5.0% per 1pp above 72%
   b3_dist:   0.045, // β₃ — Detour: +4.5% per 100nm extra routing
-  b4_warrsk: 0.060, // β₄ — War-risk: +6.0% per 1× multiplier above 1×
+  b4_warrsk: 0.180, // β₄ — War-risk: +18.0% per 1× above 1× (recal. Jun 2026, Drewry anchor)
   b5_cong:   0.015  // β₅ — Port congestion: +1.5% per extra waiting day
 };
 

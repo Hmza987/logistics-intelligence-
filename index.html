@@ -3058,15 +3058,15 @@ canvas { font-family: var(--f-mono); }
 
       <div class="card">
         <div class="card-label">Route Rates &mdash; Shanghai (SHA) &rarr; GCC</div>
-        <div class="card-sub">Spot rates per FEU &bull; Jun 2026 &bull; SeaRates spot + Freightos all-in verified</div>
+        <div class="card-sub">Spot rates per FEU &bull; Jun 2026 &bull; single-cluster · outliers removed</div>
         <table class="rtable">
           <thead><tr><th>Port</th><th>Route</th><th>Rate / FEU</th><th>Pre-Hormuz</th><th>&Delta;</th><th>Days</th></tr></thead>
           <tbody>
-            <tr><td style="color:#e8eaed">Jebel Ali UAE</td><td><span class="badge-md" style="font-size:7px">CoGH</span></td><td><span class="badge-md">$4,700-7,700</span></td><td style="color:#3d4451">~$4,500</td><td style="color:#e74c3c">x1.5</td><td style="color:#7a8494">~47d</td></tr>
-            <tr><td style="color:#e8eaed">Dammam SA</td><td><span class="badge-hi" style="font-size:7px">CoGH</span></td><td><span class="badge-hi">$12,000-13,500</span></td><td style="color:#3d4451">~$5,000</td><td style="color:#e74c3c">x2.5</td><td style="color:#7a8494">~40d</td></tr>
-            <tr><td style="color:#e8eaed">Sohar / KF Oman</td><td><span class="badge-md" style="font-size:7px">Direct</span></td><td><span class="badge-md">$6,000-8,300</span></td><td style="color:#3d4451">~$2,800</td><td style="color:#e74c3c">x2.5</td><td style="color:#7a8494">~20-35d</td></tr>
-            <tr><td style="color:#e8eaed">Hamad Qatar</td><td><span class="badge-hi" style="font-size:7px">CoGH</span></td><td><span class="badge-hi">$13,500-15,500</span></td><td style="color:#3d4451">~$5,500</td><td style="color:#e74c3c">x2.5</td><td style="color:#7a8494">~40d</td></tr>
-            <tr><td style="color:#e8eaed">Jeddah SA</td><td><span class="badge-md" style="font-size:7px">Red Sea</span></td><td><span class="badge-md">$3,500-9,300</span></td><td style="color:#3d4451">~$3,000</td><td style="color:#e74c3c">x2.1</td><td style="color:#7a8494">~27-48d</td></tr>
+            <tr><td style="color:#e8eaed">Jebel Ali UAE</td><td><span class="badge-md" style="font-size:7px">CoGH</span></td><td><span class="badge-md">$7,000-7,700</span></td><td style="color:#3d4451">~$4,500</td><td style="color:#e74c3c">x1.6</td><td style="color:#7a8494">~47d</td></tr>
+            <tr><td style="color:#e8eaed">Dammam SA</td><td><span class="badge-hi" style="font-size:7px">CoGH</span></td><td><span class="badge-hi">$12,500-13,500</span></td><td style="color:#3d4451">~$5,000</td><td style="color:#e74c3c">x2.6</td><td style="color:#7a8494">~40d</td></tr>
+            <tr><td style="color:#e8eaed">Sohar / KF Oman</td><td><span class="badge-lo" style="font-size:7px">Direct</span></td><td><span class="badge-lo">$6,300-8,000</span></td><td style="color:#3d4451">~$2,800</td><td style="color:#e74c3c">x2.5</td><td style="color:#7a8494">~20-35d</td></tr>
+            <tr><td style="color:#e8eaed">Hamad Qatar</td><td><span class="badge-hi" style="font-size:7px">CoGH</span></td><td><span class="badge-hi">$14,000-15,200</span></td><td style="color:#3d4451">~$5,500</td><td style="color:#e74c3c">x2.6</td><td style="color:#7a8494">~40d</td></tr>
+            <tr><td style="color:#e8eaed">Jeddah SA</td><td><span class="badge-md" style="font-size:7px">Red Sea</span></td><td><span class="badge-md">$9,000-9,500</span></td><td style="color:#3d4451">~$3,000</td><td style="color:#e74c3c">x3.1</td><td style="color:#7a8494">~27d</td></tr>
             <tr onclick="showNeomCaveat()" style="cursor:pointer" title="Click for details">
               <td style="color:#c9a227">NEOM Bay SA&nbsp;<span style="font-size:8px;opacity:.7">&#9432;</span></td>
               <td><span class="badge-md" style="font-size:7px">Red Sea</span></td>
@@ -3076,7 +3076,7 @@ canvas { font-family: var(--f-mono); }
             </tr>
           </tbody>
         </table>
-        <div class="src"><span>SeaRates spot (FCL 40', 25 Jun 2026) &bull; Freightos all-in Seabay &bull; Drewry WCI anchor</span><span class="src-badge">real data</span></div>
+        <div class="src"><span>SeaRates spot + Freightos all-in Seabay &bull; 25 Jun 2026 &bull; Excl: Maersk Cape→Suez Jeddah ($3,554, diff. routing cluster) &bull; carrier-direct layer excluded from JBA range</span><span class="src-badge">real data</span></div>
       </div>
 
       <div class="card">
@@ -3104,8 +3104,8 @@ canvas { font-family: var(--f-mono); }
 
       <div class="card">
         <div class="card-label">Market Context &mdash; Jun 2026</div>
-        <div class="signal" style="background:#181c22;border-left:2px solid #e74c3c;margin-bottom:7px">Deep-Gulf ports (Dammam, Hamad, Kuwait) at <strong style="color:#e74c3c">$12,000-15,500/FEU</strong> from Shanghai — CMA CGM spot, Cape+Hormuz routing. Outside-Hormuz (Sohar/KF) the most efficient gateway at $6,000-8,300 (dual-benchmark: SeaRates spot $7,992 · Freightos mid $7,113).</div>
-        <div class="signal" style="background:#181c22;border-left:2px solid #c9a227;margin-bottom:7px">SHA&rarr;Jebel Ali (Cape) at <strong style="color:#f0c84b">$4,700-7,700/FEU</strong> — Maersk spot $4,682 · Freightos all-in $7,726. Cape reroute adds 12-14 extra days vs pre-Hormuz direct; Sohar+truck still recommended for time-sensitive UAE cargo.</div>
+        <div class="signal" style="background:#181c22;border-left:2px solid #e74c3c;margin-bottom:7px">Deep-Gulf ports (Dammam, Hamad, Kuwait) at <strong style="color:#e74c3c">$12,500-15,200/FEU</strong> from Shanghai — CMA CGM spot, Cape+Hormuz routing. Outside-Hormuz (Sohar/KF) the most efficient gateway at $6,300-8,000/FEU (Freightos IQR cluster, CMA CGM KF spot $7,992).</div>
+        <div class="signal" style="background:#181c22;border-left:2px solid #c9a227;margin-bottom:7px">SHA&rarr;Jebel Ali (Cape) at <strong style="color:#f0c84b">$7,000-7,700/FEU</strong> (Freightos all-in cluster, 5 quotes) &mdash; Cape adds 12-14 extra days; Sohar+truck still recommended for time-sensitive UAE cargo. Jeddah Red Sea direct: $9,000-9,500 (CMA CGM, 27d).</div>
         <div class="signal" style="background:#181c22;border-left:2px solid #3dd68c">From Hamburg, <strong style="color:#3dd68c">Jebel Ali cheapest at $3,900-4,200/FEU</strong> (Maersk/MSC spot) — European origins benefit from shorter Cape haul. Jeddah $4,200-5,200; note 16-19 day port dwell CRITICAL — factor into lead times.</div>
         <div class="src" style="margin-top:8px"><span>SeaRates spot · Freightos all-in (Seabay) · Drewry WCI · 25 Jun 2026</span><span class="src-badge">real data</span></div>
       </div>
@@ -5150,14 +5150,15 @@ var SCENARIOS = {
 //  Back-calc: rate = BASE × regMult(sc1) × seasonal(Jun=1.03)
 //  sc1 regMult · oman(nm=200)=5.731  · redsea(nm=1400)=5.830
 //
-//  SHA→redsea: Maersk Cape $3,554 + CMA CGM direct $9,288 avg $6,421 / 5.830 → 1100  (sc1=$6,413)
+//  SHA→redsea: CMA CGM Red Sea direct $9,288 only (Maersk Cape $3,554 excluded — different routing cluster)
+//              $9,288 / 5.830 → 1600  (sc1=$9,328; Maersk Cape→Suez is a separate product, not averaged)
 //  SHA→oman:   KF spot $7,992 + Freightos Sohar mid $7,113 avg $7,553  / 5.731 → 1300  (sc1=$7,450)
 //  HAM→redsea: CMA CGM WH/CPH/AAR avg $4,550 / 5.830 → 780  (sc1=$4,547; actual $4,212-5,103 ✓)
 //  HAM→oman:   CMA CGM Sohar spot $4,819 / 5.731 → 840  (sc1=$4,814; actual $4,819 ✓)
 //  cgh: calibrated against sc2/sc4 recovery targets; avail:false in sc1 for Gulf ports
 //  Phase 2: add SIN/ICD lanes when live spot data available
 var BASE_RATES  = {
-  SHA: {direct:900,  redsea:1100, oman:1300, cgh:1100},  // Shanghai → GCC  · recal. Jun 2026
+  SHA: {direct:900,  redsea:1600, oman:1300, cgh:1100},  // Shanghai → GCC  · recal. Jun 2026
   HAM: {direct:750,  redsea:780,  oman:840,  cgh:650 },  // Hamburg  → GCC  · recal. Jun 2026
   ROT: {direct:720,  redsea:740,  oman:800,  cgh:620 },  // Rotterdam→ GCC  · est. proportional to HAM
   SIN: {direct:750,  redsea:900,  oman:780,  cgh:820 },  // Singapore→ GCC  · pending Phase 2

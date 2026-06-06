@@ -5157,13 +5157,19 @@ var SCENARIOS = {
 //  HAM→redsea: CMA CGM WH/CPH/AAR avg $4,550 / 5.830 → 780  (sc1=$4,547; actual $4,212-5,103 ✓)
 //  HAM→oman:   CMA CGM Sohar spot $4,819 / 5.731 → 840  (sc1=$4,814; actual $4,819 ✓)
 //  cgh: calibrated against sc2/sc4 recovery targets; avail:false in sc1 for Gulf ports
-//  Phase 2: add SIN/ICD lanes when live spot data available
+//  ICD→redsea: CMA CGM Mundra→Jeddah $3,279 Spot / 5.830 → 560  (sc1=$3,265; actual $3,279 ✓)
+//  ICD→oman:   CMA CGM Mundra→Sohar  $3,780 Expired / 5.731 → 660  (sc1=$3,783; actual $3,780 ✓)
+//  ICD direct/cgh: no Mundra data — kept as structural estimates
+//  NOTE: ICD rates derived from 25 Jun 2026 expired SeaRates data — refresh when live rates available
+//  SIN→GCC: pending — no data yet; structural estimates only
+//  Jul 2026 validation: CMA CGM Yangtze Delta→Jeddah Spot avg $9,406 vs Jun $9,288 (+1.3%)
+//    → Hormuz crisis flattening seasonal pattern on redsea route; seasonal model may understate slightly
 var BASE_RATES  = {
   SHA: {direct:900,  redsea:1600, oman:1300, cgh:1100},  // Shanghai → GCC  · recal. Jun 2026
   HAM: {direct:750,  redsea:780,  oman:840,  cgh:650 },  // Hamburg  → GCC  · recal. Jun 2026
   ROT: {direct:720,  redsea:740,  oman:800,  cgh:620 },  // Rotterdam→ GCC  · est. proportional to HAM
-  SIN: {direct:750,  redsea:900,  oman:780,  cgh:820 },  // Singapore→ GCC  · pending Phase 2
-  ICD: {direct:420,  redsea:380,  oman:350,  cgh:490 }   // Mundra/Nhava Sheva → GCC · pending Phase 2
+  SIN: {direct:750,  redsea:900,  oman:780,  cgh:820 },  // Singapore→ GCC  · pending — no data yet
+  ICD: {direct:420,  redsea:560,  oman:660,  cgh:490 }   // Mundra → GCC    · recal. from expired Jun 2026 data
 };
 var PORT_COSTS  = {SHA:450,HAM:520,ROT:500,SIN:380,ICD:320};
 var DEST_CONFIG = {DXB:{port:'Jebel Ali',truck_direct:0,truck_jeddah:1800,truck_sohar:650,truck_cgh:850},RUH:{port:'Riyadh',truck_direct:1900,truck_jeddah:1100,truck_sohar:2200,truck_cgh:2400},DMM:{port:'Dammam',truck_direct:600,truck_jeddah:900,truck_sohar:2800,truck_cgh:3000},DOH:{port:'Hamad Port',truck_direct:1200,truck_jeddah:3200,truck_sohar:3500,truck_cgh:3700},BAH:{port:'Manama',truck_direct:900,truck_jeddah:2800,truck_sohar:3000,truck_cgh:3200},KWI:{port:'Kuwait',truck_direct:1600,truck_jeddah:3700,truck_sohar:4200,truck_cgh:4500},MCT:{port:'Sohar',truck_direct:200,truck_jeddah:1400,truck_sohar:0,truck_cgh:200},NOM:{port:'NEOM Bay Port',truck_direct:2200,truck_jeddah:0,truck_sohar:2300,truck_cgh:0}};

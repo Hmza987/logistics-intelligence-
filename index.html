@@ -5161,14 +5161,19 @@ var SCENARIOS = {
 //  ICD→oman:   CMA CGM Mundra→Sohar  $3,780 Expired / 5.731 → 660  (sc1=$3,783; actual $3,780 ✓)
 //  ICD direct/cgh: no Mundra data — kept as structural estimates
 //  NOTE: ICD rates derived from 25 Jun 2026 expired SeaRates data — refresh when live rates available
-//  SIN→GCC: pending — no data yet; structural estimates only
+//  SIN→oman:   CMA CGM Singapore→KF Spot $5,811 (11d) / 5.731 → 1000  (sc1=$5,731; actual $5,811 ✓)
+//  SIN→redsea: CMA CGM Tanjung Pelepas→Jeddah Spot $6,912 (25d) / 5.830 → 1200  (sc1=$6,996 ✓)
+//              Proxy: Tanjung Pelepas ~50km from Singapore, standard SIN transship hub (same as HAM/WH method)
+//              Maersk SIN→Jeddah $3,116 (43d) excluded — Cape→Suez cluster, different routing product
+//  SIN direct/cgh: Dammam $9,828 and Hamad $12,960 are Hormuz-access (sc2-type) — not used for BASE
+//  NOTE: SIN rates from 18 Jun 2026 SeaRates — expired per user; structural calibration use only
 //  Jul 2026 validation: CMA CGM Yangtze Delta→Jeddah Spot avg $9,406 vs Jun $9,288 (+1.3%)
 //    → Hormuz crisis flattening seasonal pattern on redsea route; seasonal model may understate slightly
 var BASE_RATES  = {
   SHA: {direct:900,  redsea:1600, oman:1300, cgh:1100},  // Shanghai → GCC  · recal. Jun 2026
   HAM: {direct:750,  redsea:780,  oman:840,  cgh:650 },  // Hamburg  → GCC  · recal. Jun 2026
   ROT: {direct:720,  redsea:740,  oman:800,  cgh:620 },  // Rotterdam→ GCC  · est. proportional to HAM
-  SIN: {direct:750,  redsea:900,  oman:780,  cgh:820 },  // Singapore→ GCC  · pending — no data yet
+  SIN: {direct:750,  redsea:1200, oman:1000, cgh:820 },  // Singapore→ GCC  · recal. from expired Jun 2026 data
   ICD: {direct:420,  redsea:560,  oman:660,  cgh:490 }   // Mundra → GCC    · recal. from expired Jun 2026 data
 };
 var PORT_COSTS  = {SHA:450,HAM:520,ROT:500,SIN:380,ICD:320};

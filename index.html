@@ -3052,6 +3052,7 @@ canvas { font-family: var(--f-mono); }
             <tr><td style="color:#e8eaed">Sohar Oman</td><td><span class="badge-md" style="font-size:7px">Direct</span></td><td><span class="badge-md">$3,500-5,000</span></td><td style="color:#3d4451">~$1,600</td><td style="color:#e74c3c">x2.5</td><td style="color:#7a8494">~18d</td></tr>
             <tr><td style="color:#e8eaed">Hamad Qatar</td><td><span class="badge-hi" style="font-size:7px">CoGH</span></td><td><span class="badge-hi">$9,000-11,000</span></td><td style="color:#3d4451">~$1,800</td><td style="color:#e74c3c">x5+</td><td style="color:#7a8494">~40d</td></tr>
             <tr><td style="color:#e8eaed">Jeddah SA</td><td><span class="badge-md" style="font-size:7px">Red Sea</span></td><td><span class="badge-md">$3,800-5,500</span></td><td style="color:#3d4451">~$1,700</td><td style="color:#e74c3c">x2.5</td><td style="color:#7a8494">~22d</td></tr>
+            <tr><td style="color:#e8eaed">NEOM Bay SA</td><td><span class="badge-md" style="font-size:7px">Red Sea</span></td><td><span class="badge-md">$3,500-5,200</span></td><td style="color:#3d4451">~$1,650</td><td style="color:#e74c3c">x2.5</td><td style="color:#7a8494">~24d</td></tr>
           </tbody>
         </table>
         <div class="src"><span>Freightos Terminal &bull; Maersk Op.31 &bull; Xeneta &bull; May 2026</span><span class="src-badge">real data</span></div>
@@ -3068,6 +3069,7 @@ canvas { font-family: var(--f-mono); }
             <tr><td style="color:#e8eaed">Sohar Oman</td><td><span class="badge-md" style="font-size:7px">Red Sea</span></td><td><span class="badge-md">$3,200-4,500</span></td><td style="color:#3d4451">~$1,300</td><td style="color:#e74c3c">x2.5</td><td style="color:#7a8494">~28d</td></tr>
             <tr><td style="color:#e8eaed">Hamad Qatar</td><td><span class="badge-hi" style="font-size:7px">CoGH</span></td><td><span class="badge-hi">$7,000-9,000</span></td><td style="color:#3d4451">~$1,500</td><td style="color:#e74c3c">x5</td><td style="color:#7a8494">~47d</td></tr>
             <tr><td style="color:#e8eaed">Jeddah SA</td><td><span class="badge-lo" style="font-size:7px">Red Sea</span></td><td><span class="badge-lo">$2,000-3,000</span></td><td style="color:#3d4451">~$1,200</td><td style="color:#e74c3c">x1.7</td><td style="color:#7a8494">~9d</td></tr>
+            <tr><td style="color:#e8eaed">NEOM Bay SA</td><td><span class="badge-lo" style="font-size:7px">Red Sea</span></td><td><span class="badge-lo">$1,500-2,200</span></td><td style="color:#3d4451">~$950</td><td style="color:#e74c3c">x1.8</td><td style="color:#7a8494">~8d</td></tr>
           </tbody>
         </table>
         <div class="src"><span>Freightos Terminal &bull; Maersk Op.31 &bull; trans.info &bull; May 2026</span><span class="src-badge">real data</span></div>
@@ -3553,6 +3555,7 @@ canvas { font-family: var(--f-mono); }
           <option value="BAH">Manama (Bahrain)</option>
           <option value="KWI">Kuwait City</option>
           <option value="MCT">Muscat</option>
+          <option value="NOM">NEOM (Saudi Arabia)</option>
         </select>
       </div>
       <div class="sim-field">
@@ -5021,6 +5024,22 @@ var DEST_IMPL = {
       {metric:'Recovering',       color:'#3dd68c',text:'Kuwait overland 1,600km, 16–20hr. Kuwait border recovering. Direct Shuaiba calls ~60% restored.'},
       {metric:'Surge',            color:'#e74c3c',text:'All Kuwait cargo via Gulf overland only. 1,600km at maximum. Kuwait border elevated to 10hr.'},
       {metric:'Overland critical',color:'#e74c3c',text:'Kuwait solely via 1,600km overland. Emergency convoy protocol. Priority: food, pharma, fuel.'}]},
+  NOM:{portName:'NEOM Bay Port (Gulf of Aqaba)',
+    port:[null,
+      {metric:'Operational',  color:'#3dd68c',text:'NEOM Bay Port accessible via Red Sea / Gulf of Aqaba — unaffected by Hormuz closure. Receiving diverted cargo from Jeddah. Direct Red Sea call; no Hormuz transit required.'},
+      {metric:'Operational',  color:'#3dd68c',text:'Gulf of Aqaba entry unaffected by IRGC escort restrictions. Western-flag carriers transiting Red Sea directly. NEOM Bay operating at normal capacity.'},
+      {metric:'Normal ops',   color:'#3dd68c',text:'NEOM Bay Port fully operational. Red Sea access restored. Gateway benefiting from sustained Saudi logistics investment.'},
+      {metric:'Normal ops',   color:'#3dd68c',text:'Full operations. Post-crisis capacity investments accelerated under Vision 2030. NEOM logistics hub commissioning on track.'},
+      {metric:'Bab closed',   color:'#e74c3c',text:'NEOM Bay accessible only via Suez Canal (north entry) for Asian cargo — Bab el-Mandeb blocked. European cargo direct via Med → Suez. Asian cargo via Cape → Med → Suez → Gulf of Aqaba (~47d). Port operational but routing significantly extended.'},
+      {metric:'Dual closure', color:'#e74c3c',text:'NEOM Bay accessible via Cape → Atlantic → Mediterranean → Suez (north entry) → Gulf of Aqaba. Both Hormuz and Bab el-Mandeb bypassed. Transit ~47+ days for Asian-origin cargo. Only viable sea entry for NEOM under dual closure.'}],
+    truckName:'NEOM Bay direct (port delivery)',
+    truck:[null,
+      {metric:'Port delivery',color:'#3dd68c',text:'NEOM Bay Port direct call — no inland haul required. Red Sea routing delivers cargo to port gate. Saudi customs on-site at NEOM Bay terminal.'},
+      {metric:'Port delivery',color:'#3dd68c',text:'Direct NEOM Bay call. No inland trucking. Red Sea access unaffected. NEOM customs integrated processing.'},
+      {metric:'Port delivery',color:'#3dd68c',text:'NEOM Bay direct. No border crossings, no inland haul. Normal Saudi customs processing.'},
+      {metric:'Port delivery',color:'#3dd68c',text:'Direct NEOM Bay port delivery. No inland trucking required. Post-crisis operations normalising.'},
+      {metric:'Cape–Suez entry',color:'#fbbf24',text:'Asian cargo arrives via Cape → Med → Suez → Gulf of Aqaba. No inland haul from NEOM Bay itself. Extended sea transit absorbs logistics time.'},
+      {metric:'Cape–Suez entry',color:'#fbbf24',text:'NEOM Bay direct via Suez north entry — no inland trucking. Sea transit ~47 days for Asian cargo via Cape of Good Hope.'}]},
   MCT:{portName:'Sohar / Muscat Port (Oman)',
     port:[null,
       {metric:'+3,500% volume',color:'#3dd68c',text:'Sohar emerging as primary Asia-GCC gateway. All displaced Hormuz cargo routing via Oman. Rapid capacity expansion underway.'},
@@ -5109,11 +5128,11 @@ var BASE_RATES  = {
   ICD: {direct:420,  redsea:380,  oman:350,  cgh:490 }   // Mundra/Nhava Sheva → GCC
 };
 var PORT_COSTS  = {SHA:450,HAM:520,ROT:500,SIN:380,ICD:320};
-var DEST_CONFIG = {DXB:{port:'Jebel Ali',truck_direct:0,truck_jeddah:1800,truck_sohar:650,truck_cgh:850},RUH:{port:'Riyadh',truck_direct:1900,truck_jeddah:1100,truck_sohar:2200,truck_cgh:2400},DMM:{port:'Dammam',truck_direct:600,truck_jeddah:900,truck_sohar:2800,truck_cgh:3000},DOH:{port:'Hamad Port',truck_direct:1200,truck_jeddah:3200,truck_sohar:3500,truck_cgh:3700},BAH:{port:'Manama',truck_direct:900,truck_jeddah:2800,truck_sohar:3000,truck_cgh:3200},KWI:{port:'Kuwait',truck_direct:1600,truck_jeddah:3700,truck_sohar:4200,truck_cgh:4500},MCT:{port:'Sohar',truck_direct:200,truck_jeddah:1400,truck_sohar:0,truck_cgh:200}};
+var DEST_CONFIG = {DXB:{port:'Jebel Ali',truck_direct:0,truck_jeddah:1800,truck_sohar:650,truck_cgh:850},RUH:{port:'Riyadh',truck_direct:1900,truck_jeddah:1100,truck_sohar:2200,truck_cgh:2400},DMM:{port:'Dammam',truck_direct:600,truck_jeddah:900,truck_sohar:2800,truck_cgh:3000},DOH:{port:'Hamad Port',truck_direct:1200,truck_jeddah:3200,truck_sohar:3500,truck_cgh:3700},BAH:{port:'Manama',truck_direct:900,truck_jeddah:2800,truck_sohar:3000,truck_cgh:3200},KWI:{port:'Kuwait',truck_direct:1600,truck_jeddah:3700,truck_sohar:4200,truck_cgh:4500},MCT:{port:'Sohar',truck_direct:200,truck_jeddah:1400,truck_sohar:0,truck_cgh:200},NOM:{port:'NEOM Bay Port',truck_direct:2200,truck_jeddah:0,truck_sohar:2300,truck_cgh:0}};
 var COMM_SRG    = {general:1.0,consumer:1.05,auto:1.08,pharma:1.15,food:1.30,industrial:1.12,chemical:1.35};
 var COMM_NAMES  = {general:'General / mixed cargo',consumer:'Consumer goods / FMCG',auto:'Automotive parts',pharma:'Pharmaceuticals',food:'Food & perishables (reefer)',industrial:'Industrial / machinery',chemical:'Chemicals / hazmat'};
 var ORIG_NAMES  = {SHA:'Shanghai',HAM:'Hamburg',ROT:'Rotterdam',SIN:'Singapore',ICD:'Mundra / Nhava Sheva'};
-var DEST_NAMES  = {DXB:'Dubai / Jebel Ali',RUH:'Riyadh',DMM:'Dammam / Khobar',DOH:'Doha',BAH:'Manama (Bahrain)',KWI:'Kuwait City',MCT:'Muscat'};
+var DEST_NAMES  = {DXB:'Dubai / Jebel Ali',RUH:'Riyadh',DMM:'Dammam / Khobar',DOH:'Doha',BAH:'Manama (Bahrain)',KWI:'Kuwait City',MCT:'Muscat',NOM:'NEOM (Saudi Arabia)'};
 var ROUTE_NAMES = {direct:'Hormuz Direct',redsea:'Red Sea / Suez',oman:'Sohar / KF + Land',cgh:'Cape of Good Hope'};
 
 // ── SPOT INDEX REGRESSION MODEL ───────────────────────────────────────────────
@@ -5201,7 +5220,8 @@ var GDP_PROJ = {
   DOH:{ country:'Qatar',        src:'IMF WEO Apr 2026', gdp2026f: 6.1, gdp2026a: -8.6 },  // var: -14.7
   BAH:{ country:'Bahrain',      src:'IMF WEO Apr 2026', gdp2026f: 3.3, gdp2026a: -0.5 },  // var: -3.8
   KWI:{ country:'Kuwait',       src:'IMF WEO Apr 2026', gdp2026f: 3.9, gdp2026a: -0.6 },  // var: -4.5
-  MCT:{ country:'Oman',         src:'IMF WEO Apr 2026', gdp2026f: 4.0, gdp2026a:  3.5 }   // var: -0.5
+  MCT:{ country:'Oman',         src:'IMF WEO Apr 2026', gdp2026f: 4.0, gdp2026a:  3.5 },  // var: -0.5
+  NOM:{ country:'Saudi Arabia', src:'IMF WEO Apr 2026', gdp2026f: 4.5, gdp2026a:  3.1 }   // var: -1.4
 };
 
 // ── STRATEGIC IMPLICATIONS BUILDER ──────────────────────────────────────────
@@ -5260,7 +5280,8 @@ function buildStratImpl(p) {
     DOH:'Qatar\'s concentrated import dependency through Hamad Port, combined with limited overland alternative depth, creates heightened economic vulnerability to corridor disruption. Consumer goods inflation and construction material cost exposure are the primary near-term transmission channels.',
     BAH:'Bahrain\'s open economy and financial services orientation mean freight cost inflation passes through to consumer prices relatively quickly. The Causeway as primary logistics artery creates structural exposure to Saudi corridor congestion as a secondary risk multiplier.',
     KWI:'Kuwait\'s geographic position and deep overland dependency from Gulf ports mean disruption has a disproportionate economic impact relative to the size of the freight premium. Food security and essential goods affordability are the priority risk vectors requiring policy attention.',
-    MCT:'Oman is uniquely positioned in this scenario as a neutral logistics hub — corridor disruption generates throughput revenue and infrastructure utilisation gains. The strategic question is how to institutionalise this advantage in post-crisis GCC trade architecture.'
+    MCT:'Oman is uniquely positioned in this scenario as a neutral logistics hub — corridor disruption generates throughput revenue and infrastructure utilisation gains. The strategic question is how to institutionalise this advantage in post-crisis GCC trade architecture.',
+    NOM:'NEOM Bay Port\'s Gulf of Aqaba location gives it a structural advantage under Red Sea disruption — accessible via Suez Canal north entry while Bab el-Mandeb risk is isolated to southern approaches. Sustained disruption provides an accelerated commissioning rationale for NEOM\'s port and logistics infrastructure as Saudi Arabia\'s northernmost maritime gateway and Vision 2030 supply chain hub.'
   };
   var dEcon = destEcon[p.dest] || 'GCC economies face elevated trade cost exposure with direct implications for import-dependent sectors and consumer price stability.';
   var oBases = {
@@ -6831,6 +6852,7 @@ var GCC_PORTS_LIVE = [
   { key:'salalah',   name:'Salalah',    lat:17.00, lng:54.08 },
   { key:'sohar',     name:'Sohar',      lat:24.37, lng:56.68 },
   { key:'jeddah',    name:'Jeddah',     lat:21.47, lng:39.08 },
+  { key:'neom',      name:'NEOM Bay',   lat:28.21, lng:35.43 },
   { key:'dammam',    name:'Dammam',     lat:26.47, lng:50.12 },
   { key:'fujairah',  name:'Fujairah',   lat:25.13, lng:56.33 },
   { key:'doha',      name:'Doha',       lat:24.92, lng:51.56 }
@@ -7235,6 +7257,7 @@ function initChokepointsMap() {
     { name:'Sohar',        country:'Oman',         lat:24.37, lng:56.68,  pre:10,  cur:56  },
     // ── Red Sea ───────────────────────────────────────────────────────────
     { name:'Jeddah',       country:'Saudi Arabia', lat:21.47, lng:39.08,  pre:48,  cur:80  },
+    { name:'NEOM Bay',     country:'Saudi Arabia', lat:28.21, lng:35.43,  pre:2,   cur:14  },
     { name:'Port Said',    country:'Egypt',        lat:31.28, lng:32.20,  pre:85,  cur:63  },
     // ── East Africa (surging — Cape route feeder) ─────────────────────────
     { name:'Djibouti',     country:'Djibouti',     lat:11.59, lng:43.10,  pre:32,  cur:21  },

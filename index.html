@@ -510,6 +510,21 @@ a { color: inherit; text-decoration: none; }
 .badge-hi { background: rgba(192,57,43,.1);  color: var(--c-red-hi);   padding: 2px 7px; border-radius: 2px; font-weight: 500; font-size: 9px; }
 .badge-md { background: rgba(196,122,26,.1); color: var(--c-amber-hi); padding: 2px 7px; border-radius: 2px; font-weight: 500; font-size: 9px; }
 .badge-lo { background: rgba(26,122,74,.1);  color: var(--c-green-hi); padding: 2px 7px; border-radius: 2px; font-weight: 500; font-size: 9px; }
+.badge-wip { background: rgba(90,100,120,.12); color: #5a6878; padding: 2px 7px; border-radius: 2px; font-weight: 500; font-size: 9px; font-style: italic; letter-spacing:.03em; }
+
+/* ── NEOM CALIBRATION MODAL ─────────────────────────────────────────────── */
+#neom-caveat-modal {
+  display: none; position: fixed; inset: 0; z-index: 9800;
+  background: rgba(0,0,0,.72); align-items: center; justify-content: center;
+}
+#neom-caveat-modal.visible { display: flex; }
+.neom-caveat-box {
+  background: #0d1318; border: 1px solid #2a3a4a;
+  border-left: 3px solid #c9a227; border-radius: 6px;
+  padding: 22px 26px 18px; max-width: 440px; width: 90%;
+  font-family: 'IBM Plex Mono', monospace; position: relative;
+  box-shadow: 0 8px 40px rgba(0,0,0,.85);
+}
 
 /* ── TRUCKING PRICE CARDS ───────────────────────────────────────────────── */
 .rprice {
@@ -3052,7 +3067,13 @@ canvas { font-family: var(--f-mono); }
             <tr><td style="color:#e8eaed">Sohar Oman</td><td><span class="badge-md" style="font-size:7px">Direct</span></td><td><span class="badge-md">$3,500-5,000</span></td><td style="color:#3d4451">~$1,600</td><td style="color:#e74c3c">x2.5</td><td style="color:#7a8494">~18d</td></tr>
             <tr><td style="color:#e8eaed">Hamad Qatar</td><td><span class="badge-hi" style="font-size:7px">CoGH</span></td><td><span class="badge-hi">$9,000-11,000</span></td><td style="color:#3d4451">~$1,800</td><td style="color:#e74c3c">x5+</td><td style="color:#7a8494">~40d</td></tr>
             <tr><td style="color:#e8eaed">Jeddah SA</td><td><span class="badge-md" style="font-size:7px">Red Sea</span></td><td><span class="badge-md">$3,800-5,500</span></td><td style="color:#3d4451">~$1,700</td><td style="color:#e74c3c">x2.5</td><td style="color:#7a8494">~22d</td></tr>
-            <tr><td style="color:#e8eaed">NEOM Bay SA</td><td><span class="badge-md" style="font-size:7px">Red Sea</span></td><td><span class="badge-md">$3,500-5,200</span></td><td style="color:#3d4451">~$1,650</td><td style="color:#e74c3c">x2.5</td><td style="color:#7a8494">~24d</td></tr>
+            <tr onclick="showNeomCaveat()" style="cursor:pointer" title="Click for details">
+              <td style="color:#c9a227">NEOM Bay SA&nbsp;<span style="font-size:8px;opacity:.7">&#9432;</span></td>
+              <td><span class="badge-md" style="font-size:7px">Red Sea</span></td>
+              <td><span class="badge-wip">— calibrating</span></td>
+              <td style="color:#3d4451">—</td><td style="color:#3d4451">—</td>
+              <td style="color:#7a8494">~24d</td>
+            </tr>
           </tbody>
         </table>
         <div class="src"><span>Freightos Terminal &bull; Maersk Op.31 &bull; Xeneta &bull; May 2026</span><span class="src-badge">real data</span></div>
@@ -3069,7 +3090,13 @@ canvas { font-family: var(--f-mono); }
             <tr><td style="color:#e8eaed">Sohar Oman</td><td><span class="badge-md" style="font-size:7px">Red Sea</span></td><td><span class="badge-md">$3,200-4,500</span></td><td style="color:#3d4451">~$1,300</td><td style="color:#e74c3c">x2.5</td><td style="color:#7a8494">~28d</td></tr>
             <tr><td style="color:#e8eaed">Hamad Qatar</td><td><span class="badge-hi" style="font-size:7px">CoGH</span></td><td><span class="badge-hi">$7,000-9,000</span></td><td style="color:#3d4451">~$1,500</td><td style="color:#e74c3c">x5</td><td style="color:#7a8494">~47d</td></tr>
             <tr><td style="color:#e8eaed">Jeddah SA</td><td><span class="badge-lo" style="font-size:7px">Red Sea</span></td><td><span class="badge-lo">$2,000-3,000</span></td><td style="color:#3d4451">~$1,200</td><td style="color:#e74c3c">x1.7</td><td style="color:#7a8494">~9d</td></tr>
-            <tr><td style="color:#e8eaed">NEOM Bay SA</td><td><span class="badge-lo" style="font-size:7px">Red Sea</span></td><td><span class="badge-lo">$1,500-2,200</span></td><td style="color:#3d4451">~$950</td><td style="color:#e74c3c">x1.8</td><td style="color:#7a8494">~8d</td></tr>
+            <tr onclick="showNeomCaveat()" style="cursor:pointer" title="Click for details">
+              <td style="color:#c9a227">NEOM Bay SA&nbsp;<span style="font-size:8px;opacity:.7">&#9432;</span></td>
+              <td><span class="badge-lo" style="font-size:7px">Red Sea</span></td>
+              <td><span class="badge-wip">— calibrating</span></td>
+              <td style="color:#3d4451">—</td><td style="color:#3d4451">—</td>
+              <td style="color:#7a8494">~8d</td>
+            </tr>
           </tbody>
         </table>
         <div class="src"><span>Freightos Terminal &bull; Maersk Op.31 &bull; trans.info &bull; May 2026</span><span class="src-badge">real data</span></div>
@@ -12356,6 +12383,39 @@ function generateStrategyBrief(sid) {
   });
 })();
 
+</script>
+
+<!-- ── NEOM CALIBRATION MODAL ──────────────────────────────────────────── -->
+<div id="neom-caveat-modal" onclick="if(event.target===this)closeNeomCaveat()">
+  <div class="neom-caveat-box">
+    <button onclick="closeNeomCaveat()" style="position:absolute;top:10px;right:14px;background:none;border:none;color:#4a5668;font-size:16px;cursor:pointer;line-height:1">&#10005;</button>
+    <div style="font-size:7px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:#c9a227;margin-bottom:10px">&#9432;&nbsp; NEOM Bay Port — Under Calibration</div>
+    <div style="font-size:11px;font-weight:700;color:#e8eaed;margin-bottom:10px;line-height:1.4">No commercial liner rates available yet</div>
+    <div style="font-size:9px;color:#8a9aaa;line-height:1.8;margin-bottom:14px">
+      NEOM Bay Port has no active commercial liner services operating at scale today. The port is under phased commissioning as part of the NEOM megaproject, and no verified spot-market data is available from Freightos, Xeneta, or Drewry for this lane.<br><br>
+      We are actively working to calibrate freight estimates as carrier loops are announced and the port opens to commercial traffic. Rates will be published here once reliable data becomes available.
+    </div>
+    <div style="font-size:8px;color:#3a4a5a;border-top:1px solid #1a2535;padding-top:10px;line-height:1.7">
+      <span style="color:#5a6878">What we know:</span><br>
+      &bull;&nbsp; Location: Gulf of Aqaba, northwest Saudi Arabia (lat 28.2°N)<br>
+      &bull;&nbsp; Routing: Red Sea / Suez — unaffected by Hormuz closure<br>
+      &bull;&nbsp; SHA transit estimate: ~24 days &nbsp;&bull;&nbsp; HAM transit estimate: ~8 days
+    </div>
+  </div>
+</div>
+
+<script>
+function showNeomCaveat() {
+  var m = document.getElementById('neom-caveat-modal');
+  if (m) m.classList.add('visible');
+}
+function closeNeomCaveat() {
+  var m = document.getElementById('neom-caveat-modal');
+  if (m) m.classList.remove('visible');
+}
+document.addEventListener('keydown', function(e) {
+  if (e.key === 'Escape') closeNeomCaveat();
+});
 </script>
 </body>
 </html>

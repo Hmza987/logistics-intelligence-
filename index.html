@@ -5368,6 +5368,12 @@ function runSimulator() {
 
   var origin    = document.getElementById('inp-origin').value;
   var dest      = document.getElementById('inp-dest').value;
+
+  // NEOM Bay Port — no commercial liner data yet; show calibration notice
+  if (dest === 'NOM') {
+    showNeomCaveat();
+    return;
+  }
   var teu       = parseInt(document.getElementById('inp-teu').value) || 50;
   var commodity = document.getElementById('inp-commodity').value;
   var cSrg      = COMM_SRG[commodity] || 1.0;

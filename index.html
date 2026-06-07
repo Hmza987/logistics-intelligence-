@@ -875,6 +875,18 @@ a { color: inherit; text-decoration: none; }
 }
 .sim-field input[type=number] { -moz-appearance: textfield; }
 
+/* ── Date picker indicator — invert icon so it shows on dark background ─── */
+#inp-shipdate::-webkit-calendar-picker-indicator {
+  filter: invert(0.75) brightness(1.4);
+  opacity: 0.65;
+  cursor: pointer;
+  padding: 0;
+  margin-left: 2px;
+}
+#inp-shipdate::-webkit-calendar-picker-indicator:hover {
+  opacity: 1;
+}
+
 .sim-run-btn {
   background: var(--c-gold);
   border: 1px solid var(--c-gold);
@@ -3672,7 +3684,7 @@ canvas { font-family: var(--f-mono); }
         <input type="date" id="inp-shipdate"
                onchange="updateSeasonalBadge(); simAutoRun();"
                oninput="updateSeasonalBadge(); simAutoRun();"
-               style="font-family:'IBM Plex Mono',monospace;font-size:9px;background:#0e1318;color:#e8eaed;border:1px solid #2a3340;border-radius:3px;padding:6px 8px;width:140px"/>
+               style="font-family:'IBM Plex Mono',monospace;font-size:9px;background:#0e1318;color:#e8eaed;border:1px solid #2a3340;border-radius:3px;padding:6px 8px;width:160px"/>
       </div>
       <div id="seasonal-badge-wrap" style="display:flex;flex-direction:column;gap:3px;padding-top:14px">
         <span id="seasonal-label" style="font-size:8px;font-family:'IBM Plex Mono',monospace;font-weight:700;letter-spacing:.06em"></span>
@@ -5460,13 +5472,12 @@ function buildStratImpl(p) {
   ];
 }
 
-// Auto-run: re-runs the simulator whenever an input changes, but only if
-// results are already visible (i.e. user has run at least once).
+// Auto-run: re-runs the simulator whenever an input changes.
+// Fires if simulation has ever been run (_simRanOnce) OR a calibration is in
+// progress — this ensures date/input changes work even after a scenario switch
+// (which hides results but should not block auto-run).
 function simAutoRun() {
-  var resultsVisible = document.getElementById('sim-results') &&
-                       document.getElementById('sim-results').classList.contains('visible');
-  // Also re-run if calibration is in progress (results visible but animation running)
-  if (resultsVisible || window._simCalibrating) {
+  if (window._simRanOnce || window._simCalibrating) {
     window._simSkipDelay = true;   // auto-run: skip the 4s calibrating animation
     runSimulator();
   }
@@ -5875,12 +5886,14 @@ function runSimulator() {
   // ── Show results: instant on auto-run, animated on manual click ──────────
   if (window._simSkipDelay) {
     window._simSkipDelay = false;
+    window._simRanOnce   = true;
     document.getElementById('sim-results').classList.add('visible');
     runBacktest();
     var st2 = document.getElementById('sim-status');
     if (st2) st2.textContent = 'Model calibrated · Jun 2026';
   } else {
     showCalibrating(function() {
+      window._simRanOnce = true;
       document.getElementById('sim-results').classList.add('visible');
       runBacktest();
       var st2 = document.getElementById('sim-status');

@@ -901,6 +901,68 @@ a { color: inherit; text-decoration: none; }
 }
 .sim-run-btn:active { transform: none; box-shadow: none; }
 
+/* ── Simulator — Model Calibrating progress block ──────────────────── */
+#sim-calibrating {
+  display: none;
+  background: #080f18;
+  border: 1px solid #1e3050;
+  border-left: 3px solid #a78bfa;
+  border-radius: 4px;
+  padding: 16px 18px 14px;
+  margin-top: 14px;
+}
+.calib-title {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 8px;
+  font-weight: 700;
+  letter-spacing: .18em;
+  text-transform: uppercase;
+  color: #a78bfa;
+  margin-bottom: 12px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.calib-title-dot {
+  width: 6px; height: 6px; border-radius: 50%;
+  background: #a78bfa;
+  animation: calib-pulse 1s ease-in-out infinite;
+  flex-shrink: 0;
+}
+@keyframes calib-pulse {
+  0%,100% { opacity: 1; box-shadow: 0 0 0 0 rgba(167,139,250,.5); }
+  50%      { opacity: .6; box-shadow: 0 0 0 5px rgba(167,139,250,0); }
+}
+.calib-bar-track {
+  height: 3px;
+  background: #1a2838;
+  border-radius: 2px;
+  overflow: hidden;
+  margin-bottom: 14px;
+}
+#calib-bar-fill {
+  height: 100%;
+  width: 0%;
+  background: linear-gradient(90deg, #a78bfa 0%, #5aa3f5 60%, #3dd68c 100%);
+  border-radius: 2px;
+  box-shadow: 0 0 8px rgba(167,139,250,.4);
+}
+.calib-steps { display: flex; flex-direction: column; gap: 5px; }
+.calib-step {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 8px;
+  letter-spacing: .04em;
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  color: #2a3848;
+  transition: color .25s;
+}
+.calib-step-icon { font-size: 9px; width: 12px; text-align: center; flex-shrink: 0; }
+.calib-step.calib-pending  { color: #2a3848; }
+.calib-step.calib-active   { color: #5aa3f5; }
+.calib-step.calib-done     { color: #3dd68c; }
+
 /* Simulator results */
 .sim-results { display: none; }
 .sim-results.visible { display: block; }
@@ -3622,6 +3684,22 @@ canvas { font-family: var(--f-mono); }
     </div>
   </div>
 
+  <!-- MODEL CALIBRATING PROGRESS -->
+  <div id="sim-calibrating">
+    <div class="calib-title">
+      <div class="calib-title-dot"></div>
+      Model Calibrating&hellip;
+    </div>
+    <div class="calib-bar-track"><div id="calib-bar-fill"></div></div>
+    <div class="calib-steps">
+      <div class="calib-step calib-pending" id="calib-s0"><span class="calib-step-icon">&#9675;</span>Loading scenario parameters</div>
+      <div class="calib-step calib-pending" id="calib-s1"><span class="calib-step-icon">&#9675;</span>Calibrating regression coefficients</div>
+      <div class="calib-step calib-pending" id="calib-s2"><span class="calib-step-icon">&#9675;</span>Computing route viability matrix</div>
+      <div class="calib-step calib-pending" id="calib-s3"><span class="calib-step-icon">&#9675;</span>Resolving landed cost components</div>
+      <div class="calib-step calib-pending" id="calib-s4"><span class="calib-step-icon">&#9675;</span>Generating strategic implications</div>
+    </div>
+  </div>
+
   <!-- RESULTS -->
   <div class="sim-results" id="sim-results">
 
@@ -5385,7 +5463,78 @@ function buildStratImpl(p) {
 function simAutoRun() {
   var resultsVisible = document.getElementById('sim-results') &&
                        document.getElementById('sim-results').classList.contains('visible');
-  if (resultsVisible) runSimulator();
+  if (resultsVisible) {
+    window._simSkipDelay = true;   // auto-run: skip the 4s calibrating animation
+    runSimulator();
+  }
+}
+
+// ── Model Calibrating — 4-second animated progress before results show ───────
+function showCalibrating(callback) {
+  var STEPS      = ['calib-s0','calib-s1','calib-s2','calib-s3','calib-s4'];
+  var STEP_MS    = 4000 / STEPS.length;   // 800 ms per step
+  var ICONS      = { pending:'&#9675;', active:'&#9654;', done:'&#10003;' };
+  var calib      = document.getElementById('sim-calibrating');
+  var barFill    = document.getElementById('calib-bar-fill');
+
+  if (!calib) { callback(); return; }
+
+  // Hide existing results while calibrating
+  var results = document.getElementById('sim-results');
+  if (results) results.classList.remove('visible');
+
+  // Reset all steps to pending
+  STEPS.forEach(function(id) {
+    var el = document.getElementById(id);
+    if (!el) return;
+    el.className = 'calib-step calib-pending';
+    el.querySelector('.calib-step-icon').innerHTML = ICONS.pending;
+  });
+
+  // Reset and show progress bar
+  barFill.style.transition = 'none';
+  barFill.style.width = '0%';
+  calib.style.display = 'block';
+
+  // Kick off bar fill animation on next frame
+  requestAnimationFrame(function() {
+    requestAnimationFrame(function() {
+      barFill.style.transition = 'width 4s linear';
+      barFill.style.width = '100%';
+    });
+  });
+
+  // Cycle through steps
+  STEPS.forEach(function(id, idx) {
+    // Activate this step
+    setTimeout(function() {
+      var el = document.getElementById(id);
+      if (!el) return;
+      el.className = 'calib-step calib-active';
+      el.querySelector('.calib-step-icon').innerHTML = ICONS.active;
+      // Mark previous step done
+      if (idx > 0) {
+        var prev = document.getElementById(STEPS[idx - 1]);
+        if (prev) {
+          prev.className = 'calib-step calib-done';
+          prev.querySelector('.calib-step-icon').innerHTML = ICONS.done;
+        }
+      }
+    }, idx * STEP_MS);
+  });
+
+  // After 4s: mark last step done, hide calibrating block, fire callback
+  setTimeout(function() {
+    var last = document.getElementById(STEPS[STEPS.length - 1]);
+    if (last) {
+      last.className = 'calib-step calib-done';
+      last.querySelector('.calib-step-icon').innerHTML = ICONS.done;
+    }
+    setTimeout(function() {
+      calib.style.display = 'none';
+      callback();
+    }, 220);
+  }, 4000);
 }
 
 function runSimulator() {
@@ -5716,11 +5865,22 @@ function runSimulator() {
     );
   }
 
-  document.getElementById('sim-results').classList.add('visible');
-  runBacktest();
-  var st2 = document.getElementById('sim-status');
-  if (st2) st2.textContent = 'Done.';
-  setTimeout(function(){ document.getElementById('sim-results').scrollIntoView({behavior:'smooth',block:'start'}); }, 100);
+  // ── Show results: instant on auto-run, animated on manual click ──────────
+  if (window._simSkipDelay) {
+    window._simSkipDelay = false;
+    document.getElementById('sim-results').classList.add('visible');
+    runBacktest();
+    var st2 = document.getElementById('sim-status');
+    if (st2) st2.textContent = 'Model calibrated · Jun 2026';
+  } else {
+    showCalibrating(function() {
+      document.getElementById('sim-results').classList.add('visible');
+      runBacktest();
+      var st2 = document.getElementById('sim-status');
+      if (st2) st2.textContent = 'Model calibrated · Jun 2026';
+      setTimeout(function(){ document.getElementById('sim-results').scrollIntoView({behavior:'smooth',block:'start'}); }, 100);
+    });
+  }
 }
 
 // ── RED SEA 2024 BACKTEST ─────────────────────────────────────────────────────

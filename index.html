@@ -3669,7 +3669,9 @@ canvas { font-family: var(--f-mono); }
     <div style="display:flex;align-items:center;gap:14px;flex-wrap:wrap;margin-top:10px;padding-top:10px;border-top:1px solid #1e2730">
       <div class="sim-field" style="flex:0 0 auto">
         <label>Shipment Date</label>
-        <input type="date" id="inp-shipdate" onchange="updateSeasonalBadge(); simAutoRun();"
+        <input type="date" id="inp-shipdate"
+               onchange="updateSeasonalBadge(); simAutoRun();"
+               oninput="updateSeasonalBadge(); simAutoRun();"
                style="font-family:'IBM Plex Mono',monospace;font-size:9px;background:#0e1318;color:#e8eaed;border:1px solid #2a3340;border-radius:3px;padding:6px 8px;width:140px"/>
       </div>
       <div id="seasonal-badge-wrap" style="display:flex;flex-direction:column;gap:3px;padding-top:14px">
@@ -5463,7 +5465,8 @@ function buildStratImpl(p) {
 function simAutoRun() {
   var resultsVisible = document.getElementById('sim-results') &&
                        document.getElementById('sim-results').classList.contains('visible');
-  if (resultsVisible) {
+  // Also re-run if calibration is in progress (results visible but animation running)
+  if (resultsVisible || window._simCalibrating) {
     window._simSkipDelay = true;   // auto-run: skip the 4s calibrating animation
     runSimulator();
   }
@@ -5479,9 +5482,9 @@ function showCalibrating(callback) {
 
   if (!calib) { callback(); return; }
 
-  // Hide existing results while calibrating
-  var results = document.getElementById('sim-results');
-  if (results) results.classList.remove('visible');
+  // Mark calibrating state (do NOT hide results — simAutoRun must still detect
+  // them as visible so date/input changes during the 4s are handled correctly)
+  window._simCalibrating = true;
 
   // Reset all steps to pending
   STEPS.forEach(function(id) {
@@ -5523,6 +5526,9 @@ function showCalibrating(callback) {
     }, idx * STEP_MS);
   });
 
+  // Scroll calibrating block into view so the user sees it
+  setTimeout(function() { calib.scrollIntoView({ behavior:'smooth', block:'nearest' }); }, 80);
+
   // After 4s: mark last step done, hide calibrating block, fire callback
   setTimeout(function() {
     var last = document.getElementById(STEPS[STEPS.length - 1]);
@@ -5531,6 +5537,7 @@ function showCalibrating(callback) {
       last.querySelector('.calib-step-icon').innerHTML = ICONS.done;
     }
     setTimeout(function() {
+      window._simCalibrating = false;
       calib.style.display = 'none';
       callback();
     }, 220);
@@ -7903,9 +7910,9 @@ window.addEventListener('load', function() {
   setTimeout(fetchLiveData, 2500);
   setInterval(fetchLiveData, 10 * 60 * 1000);
 
-  // Set shipment date to today and show initial seasonal badge
+  // Set shipment date to today — only if not already set (guard against overwriting user input)
   var sdInput = document.getElementById('inp-shipdate');
-  if (sdInput) {
+  if (sdInput && !sdInput.value) {
     var today = new Date();
     sdInput.value = today.toISOString().split('T')[0]; // YYYY-MM-DD
     updateSeasonalBadge();

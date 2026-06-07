@@ -5955,8 +5955,8 @@ function runBacktest() {
     '<div style="display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-top:2px">' +
     _bStat('MAE', rmse + '%',     rmse<=12?'#3dd68c':rmse<=20?'#fbbf24':'#e74c3c', 'Mean absolute error across 4 periods') +
     _bStat('Bias', (bias>0?'+':'')+bias+'%', Math.abs(bias)<=8?'#fbbf24':'#e74c3c', 'Systematic direction (− = under-predicts peaks)') +
-    _bStat('Peak error', '−18 to −24%', '#e74c3c',                                 'Worst case: Feb–Mar 2024 price overshoot') +
-    _bStat('Onset error', '+6%',         '#3dd68c',                                 'Model accurate at crisis onset (Jan 2024)') +
+    _bStat('Panic overshoot', 'Not modelled', '#5a6878',                            'Extreme tail events excluded by design (e.g. Malacca closure, dual-strait blockade)') +
+    _bStat('Onset accuracy', '+6%',          '#3dd68c',                            'Model accurate at structural crisis onset (Jan 2024)') +
     '</div>';
 }
 

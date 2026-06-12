@@ -265,7 +265,7 @@ IMPORTANT: Every signal MUST include "topicIds" as an array with one or more of 
 Signals can span multiple topics. Always include topicIds — it is required.`;
 
   const response = await client.messages.create({
-    model:      'claude-opus-4-5',
+    model:      'claude-sonnet-4-6',
     max_tokens: 4096,
     system:     systemPrompt,
     messages:   [{ role: 'user', content: `Analyse this live climate data and identify the top GCC logistics signals:\n\n${briefing}` }],

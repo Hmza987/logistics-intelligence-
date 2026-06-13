@@ -12305,39 +12305,11 @@ function selectWLSignal(sid) {
   if (ep) {
     var epBody = '';
     if (sig.brief_observation) {
-      // Executive template: observation + implications + assessment + recommendation
-      var implColors = ['#1a3d7a','#1a6640','#7a1a2a'];
-      var implHTML = (sig.brief_implications || []).map(function(impl, ii) {
-        var bar = implColors[ii] || '#333';
-        return '<div style="display:flex;margin-bottom:8px;">'+
-          '<div style="width:3px;background:'+bar+';margin-right:9px;flex-shrink:0;border-radius:1px;"></div>'+
-          '<div style="font-size:10px;line-height:1.6;color:#c8d8e8;">'+impl+'</div>'+
-          '</div>';
-      }).join('');
-      var recHTML = '';
-      if (sig.brief_recommendation && sig.brief_recommendation.length) {
-        recHTML = '<div style="margin-top:10px;border-top:1px solid rgba(255,255,255,0.08);padding-top:10px;">'+
-          '<div style="font-size:8px;font-weight:700;letter-spacing:0.1em;color:#d4a017;margin-bottom:7px;text-transform:uppercase;">&#9650; Recommendations</div>'+
-          sig.brief_recommendation.map(function(r, i) {
-            return '<div style="display:flex;margin-bottom:6px;">'+
-              '<div style="min-width:16px;font-size:9px;font-weight:700;color:#d4a017;margin-right:6px;">'+(i+1)+'.</div>'+
-              '<div style="font-size:10px;line-height:1.58;color:#c8d8e8;">'+r+'</div>'+
-              '</div>';
-          }).join('')+
-          '</div>';
-      }
       epBody =
-        '<div style="margin-bottom:10px;">'+
-          '<div style="font-size:8px;font-weight:700;letter-spacing:0.1em;color:#7eb8e8;text-transform:uppercase;margin-bottom:5px;">&#9670; Observation</div>'+
-          '<div style="font-size:10px;line-height:1.65;color:#c8d8e8;border-left:3px solid #1a3d7a;padding-left:9px;">'+sig.brief_observation+'</div>'+
-        '</div>'+
-        (implHTML ? '<div style="font-size:8px;font-weight:700;letter-spacing:0.1em;color:#7eb8e8;text-transform:uppercase;margin-bottom:7px;">&#9670; Implications</div>'+implHTML : '')+
-        (sig.brief_assessment ?
-          '<div style="margin-top:10px;border-top:1px solid rgba(255,255,255,0.08);padding-top:10px;">'+
-            '<div style="font-size:8px;font-weight:700;letter-spacing:0.1em;color:#7eb8e8;text-transform:uppercase;margin-bottom:5px;">&#9670; Assessment</div>'+
-            '<div style="font-size:10px;line-height:1.65;color:#c8d8e8;">'+sig.brief_assessment+'</div>'+
-          '</div>' : '')+
-        recHTML;
+        '<div class="wl-exec-summary">'+
+          '<div class="wl-exec-label">&#9670; Executive Assessment</div>'+
+          '<div class="wl-exec-text">'+(sig.keyTakeaway || sig.insight || '')+'</div>'+
+        '</div>';
     } else {
       epBody =
         '<div class="wl-exec-summary">'+

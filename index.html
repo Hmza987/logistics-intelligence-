@@ -8217,20 +8217,19 @@ var WL_SIGNALS = [
     },
     keyTakeaway:'<b>This is now structural risk, not a one-off event.</b> Before 2010 Gatún fell below the 82 ft draft-restriction threshold in just <b>4 of 45 years</b> (~9%). From 2010–2024 it happened in <b>8 of 15 years</b> (53%). The ENSO cycle has not worsened, but El Niño events now pull the lake below the critical level far more often. The 2025–26 La Niña recovery confirms the cyclicality — not the absence of risk. Next moderate El Niño (forecast probability ~40% by late 2026) brings the next likely restriction window. Track monthly Gatún gauge as the leading tripwire: below <b>~25 m</b>, transit slots tighten and GCC importers face container scarcity in Asian hubs 2–3 quarters later.',
     chart:{
-      type:'scatter',
-      title:'② Lake Gatún Level → Permitted Daily Transits',
-      xLabel:'Lake Gatún Level (m ASL)',
-      yLabel:'Max Daily Transits',
-      color:'#e8673c',
-      note:'The conclusion (transit relationship modelled; level axis matches the real ACP range). Each 1 m drop removes ~5 daily transits — tight enough that the lake level forecasts throughput months ahead. At the 2023 low (~24.2 m) ACP cut transits from ~36 to ~22.',
-      source:'Panama Canal Authority (ACP) — Water & Transit Operations',
+      type:'line',
+      title:'② Route Redistribution: Panama Transits vs Cape of Good Hope Traffic (2020–2024)',
+      xLabel:'Quarter', yLabel:'Panama Daily Transits',
+      label2:'Cape Route Traffic Index (100 = 2019–22 avg)',
+      color:'#4a9fe8',
+      color2:'#e87a3c',
+      dualAxis:true,
+      note:'When Panama restricts, vessels reroute via Cape of Good Hope, pulling container equipment out of Asian hub pools and compressing capacity on Asia–GCC lanes. Q3 2023: pure Panama drought signal — transits fall to ~29/day, Cape surges to ~117. Q4 2023 onwards: Red Sea / Houthi crisis amplifies Cape diversion independently; Suez Canal northbound traffic collapsed ~70% from its pre-2023 norm (index fell to ~28 in Q1 2024). The 2023–24 window was a simultaneous double disruption across two major routes.',
+      source:'Panama Canal Authority (ACP); Cape route index estimated — Clarksons Research / BIMCO / AIS-derived vessel counts',
       sourceUrl:'https://www.pancanal.com/eng/op/index.html',
-      points:[
-        {x:24.2,y:22},{x:24.3,y:24},{x:24.5,y:23},{x:24.7,y:25},{x:24.9,y:24},
-        {x:25.1,y:27},{x:25.3,y:26},{x:25.5,y:29},{x:25.7,y:28},{x:25.9,y:31},
-        {x:26.1,y:30},{x:26.3,y:33},{x:26.4,y:32},{x:26.5,y:35},{x:26.6,y:34},
-        {x:26.7,y:36},{x:26.8,y:35},{x:26.9,y:37}
-      ]
+      labels:['Q1 \'20','Q2 \'20','Q3 \'20','Q4 \'20','Q1 \'21','Q2 \'21','Q3 \'21','Q4 \'21','Q1 \'22','Q2 \'22','Q3 \'22','Q4 \'22','Q1 \'23','Q2 \'23','Q3 \'23','Q4 \'23','Q1 \'24','Q2 \'24','Q3 \'24','Q4 \'24'],
+      values:[37,36,36,37,38,38,38,38,37,37,37,37,37,36,29,23,22,27,33,37],
+      values2:[101,99,100,101,100,100,100,102,101,100,101,100,103,106,117,152,175,165,148,135]
     },
     brief_observation:'Lake Gatún — the freshwater reservoir that powers the Panama Canal\'s lock system — has undergone a structural shift in drought frequency. Analysis of the full ACP gauge record (1965–2026) shows the lake crossing below the 82-foot (25 m) transit-restriction threshold in just 4 of 45 years before 2010 (~9%), rising to 8 of 15 years from 2010 to 2024 (53%). The 2025–26 La Niña recovery has restored Gatún to ~25.9 m — within normal operating range — but the ACP has already activated its LoTSA 2.5 priority-slot rationing programme for July 2026 through January 2027, pre-allocating only ~3 daily priority slots and imposing 80% cancellation penalties. That is the institutional signal that the next restriction cycle is not 12–24 months away: it is already beginning.',
     brief_implications:[

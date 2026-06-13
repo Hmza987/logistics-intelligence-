@@ -8231,7 +8231,15 @@ var WL_SIGNALS = [
         {x:26.1,y:30},{x:26.3,y:33},{x:26.4,y:32},{x:26.5,y:35},{x:26.6,y:34},
         {x:26.7,y:36},{x:26.8,y:35},{x:26.9,y:37}
       ]
-    }
+    },
+    brief_observation:'Lake Gatún — the freshwater reservoir that powers the Panama Canal\'s lock system — has undergone a structural shift in drought frequency. Analysis of the full ACP gauge record (1965–2026) shows the lake crossing below the 82-foot (25 m) transit-restriction threshold in just 4 of 45 years before 2010 (~9%), rising to 8 of 15 years from 2010 to 2024 (53%). The 2025–26 La Niña recovery has restored Gatún to ~25.9 m — within normal operating range — but within a pattern that now repeats every 2–3 years rather than once per decade. The risk is not resolved; it is temporarily dormant.',
+    brief_implications:[
+      '<b>Canal throughput falls 35–40%.</b> When Gatún drops below 25 m, the ACP enforces reduced vessel draft limits and cuts daily transit allocations from a norm of 36–38 vessels to 22–24. Vessel queue waiting times extend by 8–12 days; during the 2023–24 restriction period priority-booking slots traded at up to $4 million each — a cost ultimately absorbed by shippers, freight forwarders, and end-consignees across the supply chain.',
+      '<b>Carriers reroute, adding 14–18 days and material cost.</b> Capacity reduction triggers mass rerouting via the Cape of Good Hope and Suez Canal. Cape route utilisation surged 52% in Q4 2023 versus Q4 2022; vessel turnaround times extended by 31%. Spot rate premiums on Asia–Americas trades reached 18–24% above contract rates, compressing available fleet capacity on all trade lanes simultaneously as voyage lengths increase.',
+      '<b>GCC importers absorb the indirect shock — 2–3 quarters later.</b> Fewer than 8% of GCC-bound vessels transit Panama, yet the region is materially exposed through container asset displacement: Asian hub pool inventory (Singapore, Busan) fell ~22% in Q1 2024 as rerouted fleets drew equipment out of export staging. GCC lane capacity tightened, spot premiums rose 15–25%, and UAE warehousing demand surged 11 index points above seasonal baseline in Q2 2024 — the delayed signature of shipper inventory buffering that repeats each restriction cycle.'
+    ],
+    brief_assessment:'<p>The Panama Canal\'s water risk is structural, not episodic. The ACP\'s full gauge record from 1965 to 2026 shows no meaningful secular decline in mean Gatún levels — the lake\'s long-run average is largely stable. What has changed is the frequency with which El Niño episodes pull the lake below the 82-foot draft-restriction threshold: from once per decade before 2010 to once every 2–3 years since. The mechanism is ENSO amplification — the Gatún catchment is acutely sensitive to precipitation deficits during El Niño phases — but the critical shift is that El Niño events are now breaching the restriction threshold more reliably, and recovery periods between drought years are shortening. The 2010s produced five restriction-level years in one decade; no decade from 1965 to 2009 produced more than two.</p><p>The 2023–24 drought was the canal\'s most operationally disruptive since 1997–98. Gatún fell to 24.15 m (79.2 ft) in July 2023, and the ACP responded with slot rationing, priority auction mechanisms, and a 35–40% throughput cut sustained for approximately 14 months. These were not emergency measures — they were the activation of a well-rehearsed institutional playbook. The ACP manages drought competently; the uncertainty for supply chains is not canal management quality but whether GCC-facing networks have priced in the regularity of future disruption windows.</p><p>The 2025–26 La Niña recovery confirms the ENSO cyclicality: Gatún has returned to ~25.9 m as of June 2026 and the canal is operating normally. The risk is to interpret recovery as resolution. NOAA\'s Climate Prediction Center assesses El Niño probability at 35–40% for late 2026. Under base-case ENSO cycling, the next restriction window sits 12–24 months away. GCC importers in fast-moving consumer goods, automotive components, and pharmaceutical intermediates with Asian supply chain origins face the same exposure in the next cycle unless structural mitigation is embedded in procurement and inventory strategy now.</p>',
+    brief_recommendation:'Panama Canal drought disruption should be embedded in GCC supply chain planning as a permanent recurrence risk — expected roughly every 2–3 years — rather than a tail event managed reactively after onset. Three priorities define the preparedness posture. First, integrate the ACP\'s monthly Gatún gauge reading into standard supply chain monitoring: a reading at or below 25.5 m before September in any year provides a 3–5 month lead time to activate inventory pre-positioning for long-lead import categories, eliminating the reactive premium entirely. Second, negotiate priority allocation or guaranteed-slot provisions with ocean carrier partners on Asia–GCC trades, structured to activate automatically when the ACP announces transit reductions; the incremental cost of such provisions in normal operating conditions is negligible against a 15–25% spot premium absorbed reactively during a restriction window. Third, pre-contract flexible warehousing surge capacity at regional transshipment hubs, sized to absorb 8–12 additional lead-time days and the equipment-availability compression that typically arrives 2–3 quarters after a drought onset — the point at which unprepared importers are most exposed.'
   },
   {
     id:'cbam', title:"EU carbon price at €80/tonne — goods made with heavy industrial energy now taxed on entry into Europe",
@@ -12708,14 +12716,74 @@ function generateStrategyBrief(sid) {
   var actSec   = sec('Recommended Actions', numbered(actions));
   var evSec    = evHTML ? sec('Intelligence Basis — Historical Validation', evHTML) : '';
 
+  // ── Executive template (when signal has brief_* fields) ─────────────────────
+  var useExecTemplate = !!(sig.brief_observation);
+
+  var subjectBlockClean = useExecTemplate
+    ? '<div style="padding:10px 22px 10px;border-bottom:1px solid #ddd;">' +
+        '<div style="font-family:Arial,sans-serif;font-size:7.5px;color:#999;text-transform:uppercase;letter-spacing:.12em;margin-bottom:5px;">Subject</div>' +
+        '<div style="font-size:20px;font-weight:bold;color:#0a0f1e;line-height:1.22;margin-bottom:7px;font-family:Arial,sans-serif;">' + sig.title + '</div>' +
+        '<div style="font-size:9px;color:#555;font-family:Arial,sans-serif;display:flex;gap:14px;align-items:center;flex-wrap:wrap;">' +
+          '<span>' + sig.category + '</span>' +
+          (sig.origin ? '<span style="color:#bbb;">|</span><span>Origin: ' + sig.origin + '</span>' : '') +
+          '<span style="color:#bbb;">|</span><span>Horizon: ' + sigHorizon + '</span>' +
+        '</div>' +
+      '</div>'
+    : subjectBlock;
+
+  var execSummaryHTML = '';
+  var briefAssessHTML = '';
+  var briefRecHTML    = '';
+
+  if (useExecTemplate) {
+    var implDefs = [
+      {label:'Implication 1', bar:'#1a3d7a'},
+      {label:'Implication 2', bar:'#1a6640'},
+      {label:'Implication 3', bar:'#7a1a2a'}
+    ];
+    var implItems = (sig.brief_implications || []).map(function(impl, ii) {
+      var d = implDefs[ii] || {label:'Implication '+(ii+1), bar:'#333'};
+      return '<div style="display:flex;margin-bottom:9px;">' +
+        '<div style="width:3px;min-height:100%;background:'+d.bar+';margin-right:11px;flex-shrink:0;"></div>' +
+        '<div>' +
+          '<div style="font-size:7px;font-weight:bold;text-transform:uppercase;letter-spacing:.12em;color:'+d.bar+';margin-bottom:3px;font-family:Arial,sans-serif;">' + d.label + '</div>' +
+          '<div style="font-size:10.5px;line-height:1.68;color:#1a1a1a;font-family:Arial,sans-serif;">' + impl + '</div>' +
+        '</div>' +
+      '</div>';
+    }).join('');
+
+    execSummaryHTML = sec('Executive Summary',
+      '<div style="background:#f2f5fa;border-left:4px solid #0a0f1e;padding:10px 14px;margin-bottom:14px;">' +
+        '<div style="font-size:7px;font-weight:bold;text-transform:uppercase;letter-spacing:.14em;color:#0a0f1e;margin-bottom:5px;font-family:Arial,sans-serif;">Observation</div>' +
+        '<div style="font-size:10.5px;line-height:1.7;color:#1a1a1a;font-family:Arial,sans-serif;">' + sig.brief_observation + '</div>' +
+      '</div>' +
+      implItems
+    );
+
+    briefAssessHTML = sec('Assessment',
+      '<div style="font-size:10.5px;line-height:1.82;color:#1a1a1a;font-family:Arial,sans-serif;">' +
+      (sig.brief_assessment || sig.insight || '') +
+      '</div>'
+    );
+
+    briefRecHTML = sec('Recommendation',
+      '<div style="font-size:10.5px;line-height:1.82;color:#1a1a1a;font-family:Arial,sans-serif;">' +
+      (sig.brief_recommendation || '') +
+      '</div>'
+    );
+  }
+
   var footerBar =
     '<div style="background:#0a0f1e;color:#d4a017;padding:8px 22px;font-family:Arial,sans-serif;font-size:7px;letter-spacing:.16em;text-align:center;font-weight:bold;text-transform:uppercase;margin-top:6px;">' +
     '■ STRATEGIC INTELLIGENCE BRIEF · MINISTERIAL USE ONLY · ' + refNum + ' · ' + date + ' ■</div>';
 
-  var briefHTML =
-    '<div style="font-family:\'Times New Roman\',serif;color:#111;background:#fff;width:190mm;margin:0 auto;">' +
-    classBar + docHeader + subjectBlock + kjHTML + assessHTML + factSec + chartSec + keySec + geoSec + scSec + gccSec + confSec + actSec + evSec + footerBar +
-    '</div>';
+  var briefHTML = useExecTemplate
+    ? '<div style="font-family:Arial,sans-serif;color:#111;background:#fff;width:190mm;margin:0 auto;">' +
+      classBar + docHeader + subjectBlockClean + execSummaryHTML + briefAssessHTML + factSec + chartSec + keySec + briefRecHTML + footerBar +
+      '</div>'
+    : '<div style="font-family:\'Times New Roman\',serif;color:#111;background:#fff;width:190mm;margin:0 auto;">' +
+      classBar + docHeader + subjectBlock + kjHTML + assessHTML + factSec + chartSec + keySec + geoSec + scSec + gccSec + confSec + actSec + evSec + footerBar +
+      '</div>';
 
 
   // ── Open print window ─────────────────────────────────────────────────────

@@ -2618,19 +2618,31 @@ canvas { font-family: var(--f-mono); }
 .wl-ev-fill { height:4px; border-radius:2px; }
 .wl-ev-num  { font-family:var(--f-mono); font-size:8px; }
 .wl-ev-top-wrap { margin:0 0 14px; }
-#wl-chart-note {
+#wl-chart-note, #wl-fact-note {
   font-size:8px; color:#4a6278; font-family:var(--f-mono);
   margin-bottom:8px; line-height:1.5; font-style:italic;
 }
-#wl-chart-canvas { width:100% !important; }
-#wl-chart-source {
+#wl-chart-canvas, #wl-fact-canvas { width:100% !important; }
+#wl-chart-source, #wl-fact-source {
   margin-top:7px; font-family:var(--f-mono); font-size:7px;
   color:#243446; letter-spacing:.04em;
 }
-#wl-chart-source a {
+#wl-chart-source a, #wl-fact-source a {
   color:#2d4d66; text-decoration:none; border-bottom:1px solid #1e3344;
 }
-#wl-chart-source a:hover { color:#4a9fe8; border-color:#4a9fe8; }
+#wl-chart-source a:hover, #wl-fact-source a:hover { color:#4a9fe8; border-color:#4a9fe8; }
+
+/* ── Key takeaway callout (right of the conclusion chart) ── */
+#wl-keyinfo-card {
+  background:linear-gradient(135deg, rgba(184,149,42,.10) 0%, rgba(14,19,24,.9) 70%);
+  border:1px solid rgba(184,149,42,.32);
+  display:flex; flex-direction:column;
+}
+#wl-keyinfo-card .wl-ev-title { color:#c9a227; }
+#wl-keyinfo-text {
+  font-size:9.5px; line-height:1.7; color:#c5d0de;
+}
+#wl-keyinfo-text b, #wl-keyinfo-text strong { color:#e8c558; font-weight:600; }
 
 /* ── Key insight summary banner ── */
 .wl-key-insight {
@@ -3951,7 +3963,7 @@ canvas { font-family: var(--f-mono); }
     </div>
     <div class="wl-insight-card" id="wl-insight"></div>
 
-    <!-- ── Map + Data Chart (shown only for signals with full evidence data) ── -->
+    <!-- ── Map + Data Charts (shown only for signals with full evidence data) ── -->
     <div id="wl-evidence-section" class="wl-hidden">
       <div class="wl-ev-header">&#9632; Geographic Transmission Map &nbsp;&middot;&nbsp; &#128202; Signal Data</div>
       <div class="wl-ev-grid">
@@ -3959,6 +3971,16 @@ canvas { font-family: var(--f-mono); }
           <div class="wl-ev-title">Geographic Transmission Map</div>
           <div id="wl-geo-map"></div>
         </div>
+        <!-- ① The fact (time-series driver) — only for signals with factChart -->
+        <div class="wl-ev-card" id="wl-fact-card" style="display:none">
+          <div class="wl-ev-title" id="wl-fact-title">The Fact</div>
+          <div id="wl-fact-note"></div>
+          <div style="position:relative;height:190px">
+            <canvas id="wl-fact-canvas"></canvas>
+          </div>
+          <div id="wl-fact-source"></div>
+        </div>
+        <!-- ② The conclusion (correlation / main viz) -->
         <div class="wl-ev-card" id="wl-chart-card">
           <div class="wl-ev-title" id="wl-chart-title">Signal Data</div>
           <div id="wl-chart-note"></div>
@@ -3966,6 +3988,11 @@ canvas { font-family: var(--f-mono); }
             <canvas id="wl-chart-canvas"></canvas>
           </div>
           <div id="wl-chart-source"></div>
+        </div>
+        <!-- Key takeaway — only for signals with keyTakeaway -->
+        <div class="wl-ev-card" id="wl-keyinfo-card" style="display:none">
+          <div class="wl-ev-title">&#9670; Key Takeaway</div>
+          <div id="wl-keyinfo-text"></div>
         </div>
       </div>
     </div>
@@ -8174,20 +8201,32 @@ var WL_SIGNALS = [
       {label:'GCC Warehousing Demand Surge',   start:4, dur:6, order:3, gcc:true}
     ],
     timelineUnit:'months',
+    factChart:{
+      type:'line',
+      title:'① Lake Gatún Water Level — Semi-Annual (2018–2024)',
+      xLabel:'Period', yLabel:'Lake Level (m ASL)',
+      color:'#4a9fe8',
+      note:'The upstream fact. Operating norm is ~26.5 m; the 2023–24 El Niño drought pulled Gatún to 22.0 m by H1-2024 — the lowest in 73 years. Chart ② converts this level into the operational consequence.',
+      source:'Panama Canal Authority (ACP) — Gatún Lake Daily Readings',
+      sourceUrl:'https://www.pancanal.com/eng/op/index.html',
+      labels:['H1-18','H2-18','H1-19','H2-19','H1-20','H2-20','H1-21','H2-21','H1-22','H2-22','H1-23','H2-23','H1-24','H2-24'],
+      values:[26.7,26.5,26.4,26.1,26.3,26.6,26.5,26.4,26.2,25.5,24.6,23.4,22.0,23.8]
+    },
+    keyTakeaway:'<b>Lake level leads; the vessel queue lags.</b> Gatún moves 2–4 months before transit cuts reach shippers, so the level — not the queue — is the early-warning gauge. Below <b>~24 m</b> the canal rations slots and cargo diverts to Cape/Suez. The GCC hit is indirect and delayed: Asian box-pool scarcity and a UAE/Oman warehousing surge land <b>2–3 quarters later</b>. Track monthly Gatún readings as the leading tripwire.',
     chart:{
       type:'scatter',
-      title:'Lake Gatún Level vs. Permitted Daily Transits (2018–2024)',
-      xLabel:'Lake Gatún Level (m)',
+      title:'② Lake Gatún Level → Permitted Daily Transits (2018–2024)',
+      xLabel:'Lake Gatún Level (m ASL)',
       yLabel:'Max Daily Transits',
       color:'#e8673c',
-      note:'R²≈0.91 — each 1 m drop in lake level removes ~5 daily transits; 2023–24 drought forced level to 22 m, the lowest in 73 years of recorded data',
+      note:'The conclusion. Each 1 m drop removes ~5 daily transits — a tight enough fit that the lake level forecasts canal throughput months ahead. The drought cut permitted transits from 38 to ~17.',
       source:'Panama Canal Authority (ACP) — Water & Transit Operations',
       sourceUrl:'https://www.pancanal.com/eng/op/index.html',
       points:[
-        {x:26.8,y:38},{x:26.6,y:38},{x:26.4,y:37},{x:26.2,y:37},{x:26.0,y:36},
-        {x:25.8,y:35},{x:25.5,y:34},{x:25.2,y:33},{x:25.0,y:31},{x:24.8,y:29},
-        {x:24.5,y:27},{x:24.2,y:25},{x:24.0,y:24},{x:23.8,y:23},{x:23.5,y:22},
-        {x:23.2,y:21},{x:23.0,y:20},{x:22.8,y:19},{x:22.5,y:18},{x:22.2,y:17},{x:22.0,y:16}
+        {x:26.8,y:40},{x:26.6,y:37},{x:26.4,y:38},{x:26.2,y:35},{x:26.0,y:37},
+        {x:25.8,y:33},{x:25.5,y:35},{x:25.2,y:31},{x:25.0,y:33},{x:24.8,y:28},
+        {x:24.5,y:30},{x:24.2,y:24},{x:24.0,y:27},{x:23.8,y:22},{x:23.5,y:24},
+        {x:23.2,y:19},{x:23.0,y:22},{x:22.8,y:18},{x:22.5,y:19},{x:22.2,y:16},{x:22.0,y:18}
       ]
     }
   },
@@ -10986,33 +11025,28 @@ var WL_TOP3 = (function() {
 // Leaflet map state
 var wlGeoMap    = null;
 var wlGeoLayers = [];
-// Chart.js instance
+// Chart.js instances — ② conclusion chart and ① fact chart
 var wlChartInst = null;
+var wlFactInst  = null;
 
-function wlRenderChart(sig) {
-  var note  = document.getElementById('wl-chart-note');
-  var title = document.getElementById('wl-chart-title');
-  var card  = document.getElementById('wl-chart-card');
-  var el    = document.getElementById('wl-chart-canvas');
-  if (!el || !sig || !sig.chart) {
-    if (card) card.style.display = 'none';
-    return;
+// Render a single chart (scatter / line / bar) into a target card. Returns the
+// new Chart instance (or null). Shared by the conclusion chart and the fact chart.
+function wlRenderOneChart(els, ch, prevInst) {
+  if (prevInst) { try{ prevInst.destroy(); }catch(e){} prevInst = null; }
+  if (!els.canvas || !ch) {
+    if (els.card) els.card.style.display = 'none';
+    return null;
   }
-  if (card) card.style.display = '';
-  var ch = sig.chart;
-  if (title) title.textContent = ch.title;
-  if (note)  note.textContent  = ch.note || '';
-  var src = document.getElementById('wl-chart-source');
-  if (src) {
-    src.innerHTML = ch.source
+  if (els.card)   els.card.style.display = '';
+  if (els.title)  els.title.textContent  = ch.title;
+  if (els.note)   els.note.textContent    = ch.note || '';
+  if (els.source) {
+    els.source.innerHTML = ch.source
       ? 'Source: <a href="'+(ch.sourceUrl||'#')+'" target="_blank" rel="noopener">'+ch.source+'</a>'
       : '';
   }
 
-  // Destroy previous instance
-  if (wlChartInst) { try{ wlChartInst.destroy(); }catch(e){} wlChartInst = null; }
-
-  var ctx = el.getContext('2d');
+  var ctx = els.canvas.getContext('2d');
   var gridCol = 'rgba(255,255,255,.04)';
   var tickCol = '#3a526b';
 
@@ -11072,7 +11106,7 @@ function wlRenderChart(sig) {
       }
     };
 
-    wlChartInst = new Chart(ctx, {
+    return new Chart(ctx, {
       type:'scatter',
       data:{ datasets:[
         { label:ch.yLabel, data:ch.points,
@@ -11114,7 +11148,7 @@ function wlRenderChart(sig) {
         ticks:{color:tickCol, font:{size:8}}
       };
     }
-    wlChartInst = new Chart(ctx, {
+    return new Chart(ctx, {
       type: ch.type === 'bar' ? 'bar' : 'line',
       data:{ labels:ch.labels, datasets:datasets },
       options: opts
@@ -11122,13 +11156,42 @@ function wlRenderChart(sig) {
   }
 }
 
+// Orchestrate the evidence-panel data story: ② conclusion chart (always),
+// ① fact chart (optional time-series driver), and the key-takeaway callout.
+function wlRenderChart(sig) {
+  wlChartInst = wlRenderOneChart({
+    canvas: document.getElementById('wl-chart-canvas'),
+    title:  document.getElementById('wl-chart-title'),
+    note:   document.getElementById('wl-chart-note'),
+    source: document.getElementById('wl-chart-source'),
+    card:   document.getElementById('wl-chart-card')
+  }, sig && sig.chart, wlChartInst);
+
+  wlFactInst = wlRenderOneChart({
+    canvas: document.getElementById('wl-fact-canvas'),
+    title:  document.getElementById('wl-fact-title'),
+    note:   document.getElementById('wl-fact-note'),
+    source: document.getElementById('wl-fact-source'),
+    card:   document.getElementById('wl-fact-card')
+  }, sig && sig.factChart, wlFactInst);
+
+  var keyCard = document.getElementById('wl-keyinfo-card');
+  var keyText = document.getElementById('wl-keyinfo-text');
+  if (sig && sig.keyTakeaway) {
+    if (keyText) keyText.innerHTML = sig.keyTakeaway;
+    if (keyCard) keyCard.style.display = '';
+  } else if (keyCard) {
+    keyCard.style.display = 'none';
+  }
+}
+
 function wlRenderGeoMap(sig) {
   var sec = document.getElementById('wl-evidence-section');
   if (!sig || !sig.geoNodes) {
-    if (sec) sec.className = 'wl-hidden';
+    if (sec) { sec.className = 'wl-hidden'; sec.style.display = 'none'; }
     return;
   }
-  if (sec) sec.className = 'wl-visible';
+  if (sec) { sec.className = 'wl-visible'; sec.style.display = ''; }
   wlRenderChart(sig);
 
   // Defer until container is visible and measurable
@@ -12112,8 +12175,8 @@ function selectWLSignal(sid) {
     }
   }
 
-  // Hide key insight banner and all complex analysis panels
-  ['wl-key-insight','wl-ev-table-top','wl-evidence-section'].forEach(function(id){
+  // Hide key insight banner and the legacy stat panels (kept in the PDF brief)
+  ['wl-key-insight','wl-ev-table-top'].forEach(function(id){
     var el = document.getElementById(id);
     if (el) el.style.display = 'none';
   });
@@ -12125,6 +12188,9 @@ function selectWLSignal(sid) {
 
   // Render signal header (title, meta, systemic impact bar)
   wlRenderHeader(sig);
+
+  // Evidence panel — geographic map + ① fact chart, ② conclusion chart, key takeaway
+  wlRenderGeoMap(sig);
 
   // Exec summary + brief button
   var ep = document.getElementById('wl-exec-panel');

@@ -12299,9 +12299,8 @@ function generateStrategyBrief(sid) {
   }
 
   // ── CSS bar-chart / scatter-table (no canvas) ─────────────────────────────────────────────────
-  var chartSec = '';
-  if (sig.chart) {
-    var ch = sig.chart;
+  function buildChartSvgSec(ch) {
+    if (!ch) return '';
     if ((ch.type === 'line' || ch.type === 'bar') && ch.labels && ch.values) {
       // ── SVG dual-axis line chart ───────────────────────────────────────────
       var lcIsDual = !!(ch.values2 && ch.values2.length);
@@ -12440,7 +12439,7 @@ function generateStrategyBrief(sid) {
           lcAxLbls +
         '</svg>';
 
-      chartSec = sec(ch.title || (sig.title + ' — Trend Data'),
+      return sec(ch.title || (sig.title + ' — Trend Data'),
         lcLegend + lcSvg +
         (ch.note   ? '<div style="font-size:7.5px;color:#888;font-family:Arial,sans-serif;margin-top:5px;">' + ch.note + '</div>' : '') +
         (ch.source ? '<div style="font-size:7px;color:#aaa;font-family:Arial,sans-serif;margin-top:2px;">Source: ' + ch.source + '</div>' : '')
@@ -12476,14 +12475,22 @@ function generateStrategyBrief(sid) {
       var spDots = ch.points.map(function(pt){
         return '<circle cx="' + spSX(Number(pt.x)) + '" cy="' + spSY(Number(pt.y)) + '" r="4.5" fill="#1565c0" fill-opacity="0.62" stroke="#0a0f1e" stroke-width="0.7"/>';
       }).join('');
-      // linear regression trend line
-      var _spN = ch.points.length, _spSx = 0, _spSy = 0, _spSxy = 0, _spSx2 = 0;
-      for (var _gk = 0; _gk < _spN; _gk++) { _spSx += spXs[_gk]; _spSy += spYs[_gk]; _spSxy += spXs[_gk] * spYs[_gk]; _spSx2 += spXs[_gk] * spXs[_gk]; }
+      // linear regression trend line + R²
+      var _spN = ch.points.length, _spSx = 0, _spSy = 0, _spSxy = 0, _spSx2 = 0, _spSy2 = 0;
+      for (var _gk = 0; _gk < _spN; _gk++) { _spSx += spXs[_gk]; _spSy += spYs[_gk]; _spSxy += spXs[_gk] * spYs[_gk]; _spSx2 += spXs[_gk] * spXs[_gk]; _spSy2 += spYs[_gk] * spYs[_gk]; }
       var _spSlope = (_spN * _spSxy - _spSx * _spSy) / (_spN * _spSx2 - _spSx * _spSx);
       var _spInt   = (_spSy - _spSlope * _spSx) / _spN;
+      var _spRden  = Math.sqrt((_spN * _spSx2 - _spSx * _spSx) * (_spN * _spSy2 - _spSy * _spSy));
+      var _spR2    = _spRden ? Math.pow((_spN * _spSxy - _spSx * _spSy) / _spRden, 2) : null;
       var spTrend  = '';
       if (isFinite(_spSlope)) {
         spTrend = '<line x1="' + spSX(spXmin) + '" y1="' + spSY(_spSlope * spXmin + _spInt) + '" x2="' + spSX(spXmax) + '" y2="' + spSY(_spSlope * spXmax + _spInt) + '" stroke="#c8a800" stroke-width="1.8" stroke-dasharray="5,3"/>';
+      }
+      var spR2Lbl = '';
+      if (_spR2 != null && isFinite(_spR2)) {
+        var _spStrong = _spR2 >= 0.7 ? 'strong' : _spR2 >= 0.4 ? 'moderate' : 'weak';
+        spR2Lbl = '<rect x="' + (spPL + spPlotW - 96) + '" y="' + (spPT + 4) + '" width="92" height="15" rx="2" fill="#fffbe9" stroke="#c8a800" stroke-width="0.8"/>' +
+                  '<text x="' + (spPL + spPlotW - 50) + '" y="' + (spPT + 14.5) + '" text-anchor="middle" font-size="8.5" font-weight="bold" fill="#9a7d00" font-family="Arial,sans-serif">R&#178; = ' + _spR2.toFixed(2) + ' &#183; ' + _spStrong + '</text>';
       }
       // axis labels
       var spAx = '';
@@ -12493,15 +12500,22 @@ function generateStrategyBrief(sid) {
         '<svg width="100%" viewBox="0 0 ' + spW + ' ' + spH + '" xmlns="http://www.w3.org/2000/svg" style="display:block;">' +
         '<rect width="' + spW + '" height="' + spH + '" fill="#fafafa"/>' +
         '<rect x="' + spPL + '" y="' + spPT + '" width="' + spPlotW + '" height="' + spPlotH + '" fill="white" stroke="#ccc" stroke-width="1"/>' +
-        spGrid + spTrend + spDots + spAx +
+        spGrid + spTrend + spDots + spR2Lbl + spAx +
         '</svg>';
-      chartSec = sec(ch.title || 'Scatter Analysis',
+      return sec(ch.title || 'Scatter Analysis',
         spSvg +
         (ch.note   ? '<div style="font-size:7.5px;color:#888;font-family:Arial,sans-serif;margin-top:5px;">' + ch.note + '</div>' : '') +
         (ch.source ? '<div style="font-size:7px;color:#aaa;font-family:Arial,sans-serif;margin-top:2px;">Source: ' + ch.source + '</div>' : '')
       );
     }
+    return '';
   }
+  var factSec  = buildChartSvgSec(sig.factChart);
+  var chartSec = buildChartSvgSec(sig.chart);
+  var keySec   = sig.keyTakeaway
+    ? sec('&#9670; Key Takeaway',
+        '<div style="font-size:10px;line-height:1.7;color:#1a1a1a;font-family:Arial,sans-serif;background:#fbf6e9;border-left:3px solid #c8a800;padding:9px 12px;">' + sig.keyTakeaway + '</div>')
+    : '';
 
   // ── Geographic transmission path (HTML/CSS nodes) ────────────────────────────────────────────
   var geoSec = '';
@@ -12673,7 +12687,7 @@ function generateStrategyBrief(sid) {
 
   var briefHTML =
     '<div style="font-family:\'Times New Roman\',serif;color:#111;background:#fff;width:190mm;margin:0 auto;">' +
-    classBar + docHeader + subjectBlock + kjHTML + assessHTML + chartSec + geoSec + scSec + gccSec + confSec + actSec + evSec + footerBar +
+    classBar + docHeader + subjectBlock + kjHTML + assessHTML + factSec + chartSec + keySec + geoSec + scSec + gccSec + confSec + actSec + evSec + footerBar +
     '</div>';
 
 

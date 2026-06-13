@@ -8651,18 +8651,20 @@ var WL_SIGNALS = [
       {stage:'3RD ORDER', mechanism:'GCC construction materials import freight rates decline as bulk vessels reposition — unexpected logistics cost benefit',       example:'UAE cement and steel coil freight rates fell 12–15% Q1 2020 — direct consequence of Australia grain corridor vessel surplus',        lag:'4–7m',  strength:52}
     ],
     factChart:{
-      type:'line',
-      title:'① Australian Wheat Production — Annual Output (2000–2024)',
-      xLabel:'Year', yLabel:'Production (Million MT)',
+      type:'scatter',
+      title:'① ENSO State (Growing-Season SOI) vs Australian Wheat Production (2002–2023)',
+      xLabel:'Southern Oscillation Index — Jun–Nov mean (negative = El Niño / dry)',
+      yLabel:'Wheat Production (Million MT)',
       color:'#b8952a',
-      refLine:20.0,
-      refLineLabel:'GCC supply stress threshold (20M MT)',
-      refLineColor:'#e87a3c',
-      note:'Production below 20M MT (2002, 2006–07, 2018–19) forced GCC emergency Black Sea procurement at 18–25% premium. The 2022 record (40.5M MT, triple La Niña) masks a structural droughtification trend — the 2019 low of 14.5M MT defines the plausible El Niño floor.',
-      source:'USDA / ABARES Australian Crop Report (2000–2024)',
+      note:'Each point is one harvest year. La Niña years (SOI > +7) deliver 33–39M MT; El Niño years (SOI < −10) collapse to 10–17M MT. The fitted line quantifies the GCC exposure — a −10 SOI shift removes roughly 12M MT from the corridor that supplies 12% of Gulf wheat, forcing emergency procurement at an 18–25% cost premium.',
+      source:'NOAA Southern Oscillation Index (Jun–Nov mean) & ABARES Australian Crop Report',
       sourceUrl:'https://www.agriculture.gov.au/abares/research-topics/agricultural-outlook',
-      labels:['2000','2001','2002','2003','2004','2005','2006','2007','2008','2009','2010','2011','2012','2013','2014','2015','2016','2017','2018','2019','2020','2021','2022','2023','2024'],
-      values:[22.1,24.3,10.1,26.1,21.9,25.2,10.8,13.6,21.4,21.8,27.4,29.9,22.9,25.3,23.7,22.3,31.8,20.9,17.6,14.5,31.9,36.2,40.5,26.0,32.0]
+      points:[
+        {x:-16,y:10.1},{x:-13,y:13.6},{x:-11,y:26.0},{x:-9,y:17.3},{x:-7,y:21.4},
+        {x:-5,y:24.3},{x:-3,y:19.0},{x:-1,y:23.9},{x:1,y:31.0},{x:2,y:26.0},
+        {x:4,y:23.5},{x:6,y:29.9},{x:8,y:33.3},{x:10,y:35.1},{x:12,y:24.0},
+        {x:14,y:36.3},{x:16,y:39.3},{x:18,y:31.8}
+      ]
     },
     keyTakeaway:'Australia is the GCC\'s swing wheat supplier — ENSO determines whether 40M or 10M MT reaches global markets. Five El Niño droughts since 2000 drove production below the 20M MT GCC-stress threshold. The drought signal appears in bulk-vessel freight rates before official crop estimates: Panamax charter rates on the Australia–Gulf corridor drop 12–15% when grain volumes thin, as vessels migrate to iron-ore and coal routes — a 4–6 week leading indicator of harvest failure that precedes ABARES quarterly revisions.',
     brief_observation:'El Niño and a positive Indian Ocean Dipole (IOD) are simultaneously active across both Australian grain belts. ABARES\'s June 2026 crop report places growing-season rainfall 18–25% below average across New South Wales and Western Australia — the two provinces accounting for 65% of national wheat acreage. Soil moisture is at a 10-year low at this stage of the growing season. The Bureau of Meteorology projects dry-to-normal conditions persisting through the October–November grain-fill window. Australian production is currently tracking toward 20–24M MT, at or below the threshold that keeps GCC import premiums contained. If the El Niño intensifies — consistent with current ENSO ensemble forecasting — the 2019 outcome (14.5M MT, down 64% from the 2022 record) represents the plausible lower bound.',
@@ -8678,20 +8680,21 @@ var WL_SIGNALS = [
       'Track Panamax charter rates on the Australia–Asia corridor (Clarksons Platou monthly indicator) as the earliest quantitative signal of grain corridor compression: vessel migration from grain to ore/coal routes precedes official ABARES crop revisions by 4–6 weeks and provides a market-based confirmation of severity ahead of meteorological forecasts.'
     ],
     chart:{
-      type:'scatter',
-      title:'② ENSO State (Growing-Season SOI) vs Australian Wheat Production (2002–2023)',
-      xLabel:'Southern Oscillation Index — Jun–Nov mean (negative = El Niño / dry)',
-      yLabel:'Wheat Production (Million MT)',
+      type:'line',
+      title:'② Australian Wheat Production — Annual Output with 2026 Forecast',
+      xLabel:'Year', yLabel:'Production (Million MT)',
       color:'#b8952a',
-      note:'Each point is one harvest year. La Niña years (SOI > +7) deliver 33–39M MT; El Niño years (SOI < −10) collapse to 10–17M MT. The fitted line quantifies the GCC exposure — a −10 SOI shift removes roughly 12M MT from the corridor that supplies 12% of Gulf wheat, forcing emergency procurement at an 18–25% cost premium.',
-      source:'NOAA Southern Oscillation Index (Jun–Nov mean) & ABARES Australian Crop Report',
+      color2:'#e87a3c',
+      label2:'2026 forecast (El Niño + IOD, SOI ≈ −10)',
+      refLine:20.0,
+      refLineLabel:'GCC supply stress threshold (20M MT)',
+      refLineColor:'#e87a3c',
+      note:'Actual output 2000–2025 (gold). Orange dashed segment: regression-based 2026 forecast using El Niño + positive IOD signal (SOI ≈ −10 Jun–Nov). Regression: Production = 0.64 × SOI + 24.96, R² = 0.71. Five drought years below 20M MT threshold forced GCC emergency Black Sea procurement at 18–25% premium.',
+      source:'USDA / ABARES Australian Crop Report; NOAA SOI; regression derived from 2002–2023 scatter',
       sourceUrl:'https://www.agriculture.gov.au/abares/research-topics/agricultural-outlook',
-      points:[
-        {x:-16,y:10.1},{x:-13,y:13.6},{x:-11,y:26.0},{x:-9,y:17.3},{x:-7,y:21.4},
-        {x:-5,y:24.3},{x:-3,y:19.0},{x:-1,y:23.9},{x:1,y:31.0},{x:2,y:26.0},
-        {x:4,y:23.5},{x:6,y:29.9},{x:8,y:33.3},{x:10,y:35.1},{x:12,y:24.0},
-        {x:14,y:36.3},{x:16,y:39.3},{x:18,y:31.8}
-      ]
+      labels:['2000','2001','2002','2003','2004','2005','2006','2007','2008','2009','2010','2011','2012','2013','2014','2015','2016','2017','2018','2019','2020','2021','2022','2023','2024','2025','2026F'],
+      values:[22.1,24.3,10.1,26.1,21.9,25.2,10.8,13.6,21.4,21.8,27.4,29.9,22.9,25.3,23.7,22.3,31.8,20.9,17.6,14.5,31.9,36.2,40.5,26.0,32.0,28.0,null],
+      values2:[null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,28.0,18.5]
     }
   },
 
@@ -12372,7 +12375,8 @@ function generateStrategyBrief(sid) {
     if (!ch) return '';
     if ((ch.type === 'line' || ch.type === 'bar') && ch.labels && ch.values) {
       // ── SVG dual-axis line chart ───────────────────────────────────────────
-      var lcIsDual = !!(ch.values2 && ch.values2.length);
+      var lcHasV2  = !!(ch.values2 && ch.values2.length);
+      var lcIsDual = lcHasV2 && !!ch.dualAxis;
       var lcW = 520, lcH = 200;
       var lcPL = 54, lcPT = 18, lcPR = lcIsDual ? 54 : 14, lcPB = 44;
       var lcPlotW = lcW - lcPL - lcPR, lcPlotH = lcH - lcPT - lcPB;
@@ -12386,9 +12390,10 @@ function generateStrategyBrief(sid) {
         lcXpos.push(lcPL + (lcN <= 1 ? lcPlotW / 2 : (_lxi / (lcN - 1)) * lcPlotW));
       }
 
-      // Series 1 scale (left Y-axis)
-      var lcV1 = ch.values.map(function(v){ return isNaN(v) ? 0 : Number(v); });
-      var lcYmin1 = Math.min.apply(null, lcV1), lcYmax1 = Math.max.apply(null, lcV1);
+      // Series 1 scale (left Y-axis) — nulls kept for path-gap handling
+      var lcV1 = ch.values.map(function(v){ return (v === null || v === undefined || isNaN(Number(v))) ? null : Number(v); });
+      var lcV1Valid = lcV1.filter(function(v){ return v !== null; });
+      var lcYmin1 = Math.min.apply(null, lcV1Valid), lcYmax1 = Math.max.apply(null, lcV1Valid);
       var lcYr1 = lcYmax1 - lcYmin1 || Math.abs(lcYmax1) || 1;
       lcYmin1 -= lcYr1 * 0.1; lcYmax1 += lcYr1 * 0.1;
       var lcSY1 = function(v){ return lcPT + lcPlotH - (v - lcYmin1) / (lcYmax1 - lcYmin1) * lcPlotH; };
@@ -12404,14 +12409,20 @@ function generateStrategyBrief(sid) {
         }
       }
 
-      // Series 2 scale (right Y-axis)
+      // Series 2 — nulls kept for path-gap handling; scale shared with S1 when not dual-axis
       var lcV2 = [], lcYmin2 = 0, lcYmax2 = 1, lcSY2 = null;
-      if (lcIsDual) {
-        lcV2 = ch.values2.map(function(v){ return isNaN(v) ? 0 : Number(v); });
-        lcYmin2 = Math.min.apply(null, lcV2); lcYmax2 = Math.max.apply(null, lcV2);
-        var lcYr2 = lcYmax2 - lcYmin2 || Math.abs(lcYmax2) || 1;
-        lcYmin2 -= lcYr2 * 0.1; lcYmax2 += lcYr2 * 0.1;
-        lcSY2 = function(v){ return lcPT + lcPlotH - (v - lcYmin2) / (lcYmax2 - lcYmin2) * lcPlotH; };
+      if (lcHasV2) {
+        lcV2 = ch.values2.map(function(v){ return (v === null || v === undefined || isNaN(Number(v))) ? null : Number(v); });
+        if (lcIsDual) {
+          var lcV2Valid = lcV2.filter(function(v){ return v !== null; });
+          lcYmin2 = lcV2Valid.length ? Math.min.apply(null, lcV2Valid) : 0;
+          lcYmax2 = lcV2Valid.length ? Math.max.apply(null, lcV2Valid) : 1;
+          var lcYr2 = lcYmax2 - lcYmin2 || Math.abs(lcYmax2) || 1;
+          lcYmin2 -= lcYr2 * 0.1; lcYmax2 += lcYr2 * 0.1;
+          lcSY2 = function(v){ return lcPT + lcPlotH - (v - lcYmin2) / (lcYmax2 - lcYmin2) * lcPlotH; };
+        } else {
+          lcSY2 = lcSY1; // same axis as series 1
+        }
       }
 
       // Number formatter
@@ -12453,25 +12464,24 @@ function generateStrategyBrief(sid) {
         lcXLabels += '<text x="' + lcXpos[lcN - 1].toFixed(1) + '" y="' + (lcPT + lcPlotH + 13) + '" text-anchor="middle" font-size="7.5" fill="#888" font-family="Arial,sans-serif">' + ch.labels[lcN - 1] + '</text>';
       }
 
-      // Series 1 line path + dots
-      var lcPath1 = 'M ' + lcXpos[0].toFixed(1) + ',' + lcSY1(lcV1[0]).toFixed(1);
-      for (var _lp1 = 1; _lp1 < lcN; _lp1++) {
-        lcPath1 += ' L ' + lcXpos[_lp1].toFixed(1) + ',' + lcSY1(lcV1[_lp1]).toFixed(1);
-      }
-      var lcDots1 = '';
-      for (var _ld1 = 0; _ld1 < lcN; _ld1++) {
-        lcDots1 += '<circle cx="' + lcXpos[_ld1].toFixed(1) + '" cy="' + lcSY1(lcV1[_ld1]).toFixed(1) + '" r="3" fill="' + lcC1 + '" stroke="white" stroke-width="1.2"/>';
+      // Series 1 line path + dots — skip null values (creates visual gap)
+      var lcPath1 = '', lcDots1 = '', _lp1started = false;
+      for (var _lp1 = 0; _lp1 < lcN; _lp1++) {
+        if (lcV1[_lp1] === null) { _lp1started = false; continue; }
+        if (!_lp1started) { lcPath1 += 'M ' + lcXpos[_lp1].toFixed(1) + ',' + lcSY1(lcV1[_lp1]).toFixed(1); _lp1started = true; }
+        else { lcPath1 += ' L ' + lcXpos[_lp1].toFixed(1) + ',' + lcSY1(lcV1[_lp1]).toFixed(1); }
+        lcDots1 += '<circle cx="' + lcXpos[_lp1].toFixed(1) + '" cy="' + lcSY1(lcV1[_lp1]).toFixed(1) + '" r="3" fill="' + lcC1 + '" stroke="white" stroke-width="1.2"/>';
       }
 
-      // Series 2 line path + dots
+      // Series 2 line path + dots — skip null values
       var lcPath2 = '', lcDots2 = '';
-      if (lcIsDual) {
-        lcPath2 = 'M ' + lcXpos[0].toFixed(1) + ',' + lcSY2(lcV2[0]).toFixed(1);
-        for (var _lp2 = 1; _lp2 < lcN; _lp2++) {
-          lcPath2 += ' L ' + lcXpos[_lp2].toFixed(1) + ',' + lcSY2(lcV2[_lp2]).toFixed(1);
-        }
-        for (var _ld2 = 0; _ld2 < lcN; _ld2++) {
-          lcDots2 += '<circle cx="' + lcXpos[_ld2].toFixed(1) + '" cy="' + lcSY2(lcV2[_ld2]).toFixed(1) + '" r="3" fill="' + lcC2 + '" stroke="white" stroke-width="1.2"/>';
+      if (lcHasV2) {
+        var _lp2started = false;
+        for (var _lp2 = 0; _lp2 < lcN; _lp2++) {
+          if (lcV2[_lp2] === null) { _lp2started = false; continue; }
+          if (!_lp2started) { lcPath2 += 'M ' + lcXpos[_lp2].toFixed(1) + ',' + lcSY2(lcV2[_lp2]).toFixed(1); _lp2started = true; }
+          else { lcPath2 += ' L ' + lcXpos[_lp2].toFixed(1) + ',' + lcSY2(lcV2[_lp2]).toFixed(1); }
+          lcDots2 += '<circle cx="' + lcXpos[_lp2].toFixed(1) + '" cy="' + lcSY2(lcV2[_lp2]).toFixed(1) + '" r="3" fill="' + lcC2 + '" stroke="white" stroke-width="1.2"/>';
         }
       }
 
@@ -12485,9 +12495,9 @@ function generateStrategyBrief(sid) {
         lcAxLbls += '<text x="' + lcRX + '" y="' + lcMidY + '" text-anchor="middle" font-size="8" fill="' + lcC2 + '" font-family="Arial,sans-serif" transform="rotate(90 ' + lcRX + ' ' + lcMidY + ')">' + ch.label2 + '</text>';
       }
 
-      // Legend (inline SVG line swatches)
+      // Legend (inline SVG line swatches) — shown whenever a second series exists
       var lcLegend = '';
-      if (lcIsDual) {
+      if (lcHasV2) {
         lcLegend =
           '<div style="display:flex;flex-wrap:wrap;gap:16px;margin-bottom:6px;font-family:Arial,sans-serif;font-size:8px;color:#333;">' +
             '<div style="display:flex;align-items:center;gap:5px;">' +
@@ -12515,7 +12525,7 @@ function generateStrategyBrief(sid) {
           lcGrid + lcRTicks + lcXLabels + lcRefLine +
           '<path d="' + lcPath1 + '" fill="none" stroke="' + lcC1 + '" stroke-width="2.2" stroke-linejoin="round"/>' +
           lcDots1 +
-          (lcIsDual ? '<path d="' + lcPath2 + '" fill="none" stroke="' + lcC2 + '" stroke-width="2.2" stroke-dasharray="6,3" stroke-linejoin="round"/>' + lcDots2 : '') +
+          (lcHasV2 && lcPath2 ? '<path d="' + lcPath2 + '" fill="none" stroke="' + lcC2 + '" stroke-width="2.2" stroke-dasharray="6,3" stroke-linejoin="round"/>' + lcDots2 : '') +
           lcAxLbls +
         '</svg>';
 

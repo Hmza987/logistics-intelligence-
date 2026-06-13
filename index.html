@@ -8203,16 +8203,19 @@ var WL_SIGNALS = [
     timelineUnit:'months',
     factChart:{
       type:'line',
-      title:'① Lake Gatún Water Level — Semi-Annual (2018–2026)',
-      xLabel:'Period', yLabel:'Lake Level (m ASL)',
+      title:'① Lake Gatún — Annual Minimum Level (1965–2026)',
+      xLabel:'Year', yLabel:'Annual Min. Level (m ASL)',
       color:'#4a9fe8',
-      note:'The upstream fact — real ACP gauge data (semi-annual mean of daily readings). Operating norm ~26.5 m (87 ft). The 2023–24 El Niño drought pulled Gatún to 24.2 m (79.2 ft) in 2023, forcing draft and transit restrictions, before La Niña rains refilled it to ~26.6 m by 2026 and the canal restored normal operations. Chart ② converts level into the operational consequence.',
-      source:'Panama Canal Authority (ACP) — Gatún Lake daily level record, 1965–2026 (converted from feet)',
+      refLine:25.0,
+      refLineLabel:'Draft restriction threshold (82 ft / 25 m)',
+      refLineColor:'#e87a3c',
+      note:'Each point is the lowest daily reading in that calendar year (real ACP gauge data, converted from feet). The dashed orange line marks the 82 ft (25 m) draft-restriction threshold. Before 2010: 4 drought years below threshold in 45 years (~9%). From 2010–2024: 8 drought years in 15 years (53%). The 2025–26 La Niña recovery is real — but within a structural pattern where restriction-level drought recurs roughly once every 2–3 years now.',
+      source:'Panama Canal Authority (ACP) — Gatún Lake daily level record, 1965–2026',
       sourceUrl:'https://www.pancanal.com/eng/op/index.html',
-      labels:['H1-18','H2-18','H1-19','H2-19','H1-20','H2-20','H1-21','H2-21','H1-22','H2-22','H1-23','H2-23','H1-24','H2-24','H1-25','H2-25','H1-26'],
-      values:[26.2,26.6,25.1,24.9,25.0,26.3,26.2,26.5,26.2,26.7,25.4,24.4,24.7,26.3,26.5,26.6,26.6]
+      labels:['1965','1966','1967','1968','1969','1970','1971','1972','1973','1974','1975','1976','1977','1978','1979','1980','1981','1982','1983','1984','1985','1986','1987','1988','1989','1990','1991','1992','1993','1994','1995','1996','1997','1998','1999','2000','2001','2002','2003','2004','2005','2006','2007','2008','2009','2010','2011','2012','2013','2014','2015','2016','2017','2018','2019','2020','2021','2022','2023','2024','2025','2026'],
+      values:[25.06,25.47,25.97,25.69,25.72,26.02,25.62,25.66,25.03,25.34,25.24,24.89,24.56,25.76,25.76,25.81,25.96,25.78,24.87,25.78,25.67,25.65,25.6,25.3,25.15,25.66,25.56,25.36,25.73,25.49,25.5,25.87,25.08,23.94,25.99,25.76,25.36,26.48,25.31,25.76,25.65,25.79,25.69,25.33,25.37,25.34,25.82,25.7,25.48,24.8,24.44,23.87,24.84,25.65,24.19,24.52,25.8,25.85,24.15,24.44,26.09,25.94]
     },
-    keyTakeaway:'<b>Lake level leads; the vessel queue lags.</b> Gatún moves 2–4 months before transit cuts reach shippers, so the level — not the queue — is the early-warning gauge. Below <b>~25 m (≈82 ft)</b> the canal rations slots and cargo diverts to Cape/Suez. The GCC hit is indirect and delayed: Asian box-pool scarcity and a UAE/Oman warehousing surge land <b>2–3 quarters later</b>. Track monthly Gatún readings as the leading tripwire.',
+    keyTakeaway:'<b>This is now structural risk, not a one-off event.</b> Before 2010 Gatún fell below the 82 ft draft-restriction threshold in just <b>4 of 45 years</b> (~9%). From 2010–2024 it happened in <b>8 of 15 years</b> (53%). The ENSO cycle has not worsened, but El Niño events now pull the lake below the critical level far more often. The 2025–26 La Niña recovery confirms the cyclicality — not the absence of risk. Next moderate El Niño (forecast probability ~40% by late 2026) brings the next likely restriction window. Track monthly Gatún gauge as the leading tripwire: below <b>~25 m</b>, transit slots tighten and GCC importers face container scarcity in Asian hubs 2–3 quarters later.',
     chart:{
       type:'scatter',
       title:'② Lake Gatún Level → Permitted Daily Transits',
@@ -11138,6 +11141,19 @@ function wlRenderOneChart(els, ch, prevInst) {
       });
     }
     var opts = JSON.parse(JSON.stringify(baseOpts));
+    if (ch.refLine !== undefined) {
+      var refData = ch.labels.map(function(){ return ch.refLine; });
+      datasets.push({
+        label: ch.refLineLabel || 'Threshold',
+        data: refData,
+        borderColor: ch.refLineColor || '#e87a3c',
+        backgroundColor: 'transparent',
+        borderWidth: 1.5, pointRadius: 0, pointHoverRadius: 0,
+        fill: false, tension: 0,
+        borderDash: [6, 4], yAxisID: 'y'
+      });
+      opts.plugins.legend = { display:true, labels:{color:'#4a6278', font:{size:7}, boxWidth:20} };
+    }
     if (ch.values2) {
       opts.plugins.legend = { display:true, labels:{color:'#4a6278', font:{size:7}, boxWidth:20} };
     }
@@ -12324,6 +12340,17 @@ function generateStrategyBrief(sid) {
       lcYmin1 -= lcYr1 * 0.1; lcYmax1 += lcYr1 * 0.1;
       var lcSY1 = function(v){ return lcPT + lcPlotH - (v - lcYmin1) / (lcYmax1 - lcYmin1) * lcPlotH; };
 
+      // Reference line (horizontal threshold drawn on series-1 scale)
+      var lcRefLine = '';
+      if (ch.refLine !== undefined) {
+        var _refY = lcSY1(ch.refLine);
+        var _refColor = ch.refLineColor || '#e87a3c';
+        lcRefLine = '<line x1="' + lcPL + '" y1="' + _refY.toFixed(1) + '" x2="' + (lcPL + lcPlotW) + '" y2="' + _refY.toFixed(1) + '" stroke="' + _refColor + '" stroke-width="1.2" stroke-dasharray="5,4"/>';
+        if (ch.refLineLabel) {
+          lcRefLine += '<text x="' + (lcPL + lcPlotW - 3) + '" y="' + (_refY - 3).toFixed(1) + '" text-anchor="end" font-size="7" fill="' + _refColor + '" font-family="Arial,sans-serif">' + ch.refLineLabel + '</text>';
+        }
+      }
+
       // Series 2 scale (right Y-axis)
       var lcV2 = [], lcYmin2 = 0, lcYmax2 = 1, lcSY2 = null;
       if (lcIsDual) {
@@ -12432,7 +12459,7 @@ function generateStrategyBrief(sid) {
         '<svg width="100%" viewBox="0 0 ' + lcW + ' ' + lcH + '" xmlns="http://www.w3.org/2000/svg" style="display:block;">' +
           '<rect width="' + lcW + '" height="' + lcH + '" fill="#fafafa"/>' +
           '<rect x="' + lcPL + '" y="' + lcPT + '" width="' + lcPlotW + '" height="' + lcPlotH + '" fill="white" stroke="#ddd" stroke-width="1"/>' +
-          lcGrid + lcRTicks + lcXLabels +
+          lcGrid + lcRTicks + lcXLabels + lcRefLine +
           '<path d="' + lcPath1 + '" fill="none" stroke="' + lcC1 + '" stroke-width="2.2" stroke-linejoin="round"/>' +
           lcDots1 +
           (lcIsDual ? '<path d="' + lcPath2 + '" fill="none" stroke="' + lcC2 + '" stroke-width="2.2" stroke-dasharray="6,3" stroke-linejoin="round"/>' + lcDots2 : '') +

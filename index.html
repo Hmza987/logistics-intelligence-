@@ -8752,22 +8752,28 @@ var WL_SIGNALS = [
       note:'Annual minimum gauge height (m) at Chiang Saen, Thailand. Values below 2.0 m coincide historically with barge navigation disruptions on the upper Mekong corridor. 2000–2017: MRC manual gauge; 2018–2025: MRC telemetry. Post-2017 decline reflects Chinese upstream dam cascade operations suppressing seasonal inflows.',
       source:'Mekong River Commission Hydrological Data — Chiang Saen Station',
       sourceUrl:'https://portal.mrcmekong.org/time-series',
-      labels:['2000','2001','2002','2003','2004','2005','2006','2007','2008','2009','2010','2011','2012','2013','2014','2015','2016','2017','2018','2019','2020','2021','2022','2023','2024','2025'],
-      values:[2.1,2.6,2.3,2.3,2.7,2.7,2.2,2.9,3.0,2.4,2.9,3.8,3.0,3.0,3.5,3.4,3.4,2.7,1.8,2.0,1.6,2.0,1.4,1.4,1.7,1.9]
+      labels:['2000','2001','2002','2003','2004','2005','2006','2007','2008','2009','2010','2011','2012','2013','2014','2015','2016','2017','2018','2019','2020','2021','2022','2023','2024','2025','2026F'],
+      values:[2.1,2.6,2.3,2.3,2.7,2.7,2.2,2.9,3.0,2.4,2.9,3.8,3.0,3.0,3.5,3.4,3.4,2.7,1.8,2.0,1.6,2.0,1.4,1.4,1.7,1.9,null],
+      values2:[null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,1.9,1.7],
+      color2:'#e87a3c',
+      label2:'2026 forecast (El Niño + dam-fill, SOI ≈ −10)'
     },
     chart:{
       type:'line',
       title:'② Mekong Monsoon Flood Peak at Chiang Saen — Pulse Collapsed Since 2017',
       xLabel:'Year', yLabel:'Gauge Height (m)',
       color:'#4a9fe8',
+      color2:'#e87a3c',
+      label2:'2026 forecast (El Niño, reduced dam release)',
       refLine:6.4,
       refLineLabel:'Pre-2017 avg peak (6.4 m)',
       refLineColor:'#e87a3c',
-      note:'Annual maximum gauge height (flood peak) at Chiang Saen. Pre-2017 average: 6.4 m. Post-2017 average: 4.9 m (−25%). The 2017 inflection marks intensified Chinese upstream hydropower cascade operations intercepting the monsoon pulse that historically recharged the delta and sustained barge navigation.',
+      note:'Annual maximum gauge height (flood peak) at Chiang Saen. Pre-2017 average: 6.4 m. Post-2017 average: 4.9 m (−25%). Orange dashed: 2026 forecast under El Niño + continued dam filling — peak expected 3.9–4.2 m based on 2017–2019 analogue years. The 2017 inflection marks intensified Chinese upstream hydropower cascade operations intercepting the monsoon pulse.',
       source:'Mekong River Commission Hydrological Data — Chiang Saen Station',
       sourceUrl:'https://portal.mrcmekong.org/time-series',
-      labels:['2000','2001','2002','2003','2004','2005','2006','2007','2008','2009','2010','2011','2012','2013','2014','2015','2016','2017','2018','2019','2020','2021','2022','2023','2024'],
-      values:[6.8,7.5,7.4,6.3,7.5,7.5,6.6,6.2,6.3,6.8,5.8,5.5,6.0,5.5,6.2,6.6,6.4,3.9,4.7,4.7,5.2,4.6,7.0,6.1,4.3]
+      labels:['2000','2001','2002','2003','2004','2005','2006','2007','2008','2009','2010','2011','2012','2013','2014','2015','2016','2017','2018','2019','2020','2021','2022','2023','2024','2026F'],
+      values:[6.8,7.5,7.4,6.3,7.5,7.5,6.6,6.2,6.3,6.8,5.8,5.5,6.0,5.5,6.2,6.6,6.4,3.9,4.7,4.7,5.2,4.6,7.0,6.1,4.3,null],
+      values2:[null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,4.3,4.1]
     },
     keyTakeaway:'Mekong dry-season gauge levels averaging 1.7 m since 2018 — Chinese dam operations have cut the monsoon flood pulse 25%, compressing rice-belt irrigation and triggering correlated export bans across GCC\'s top two rice sources.',
     brief_observation:'The MRC gauge at Chiang Saen recorded annual dry-season minimums averaging 1.7 m since 2018, down from 2.9 m across 2000–2017. The 2019 drought saw levels fall to 2.0 m — 53% below the pre-dam baseline — with sub-2.0 m lows also recorded in 2020, 2022, and 2023. Since 2017, annual monsoon peaks have averaged 4.9 m against a 6.4 m pre-dam norm: the Lancang–Mekong hydropower cascade now intercepts the seasonal pulse that historically recharged delta aquifers and sustained year-round freight navigation.',

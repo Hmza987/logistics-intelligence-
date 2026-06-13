@@ -3107,6 +3107,7 @@ canvas { font-family: var(--f-mono); }
           <div class="map-legend-item"><div class="map-legend-dot" style="background:#7050c0"></div>Crisis hub</div>
           <div class="map-legend-item"><div class="map-legend-line" style="background:#a87838;height:5px"></div>Via Cape (dominant)</div>
           <div class="map-legend-item"><div class="map-legend-line" style="background:#6890a8"></div>Via Suez</div>
+          <div class="map-legend-item"><div class="map-legend-line" style="background:repeating-linear-gradient(90deg,#67e8f9 0,#67e8f9 5px,transparent 5px,transparent 9px)"></div>Arctic NSR (seasonal)</div>
         </div>
         <div class="src-badge" style="font-size:8px;flex-shrink:0">IMF PortWatch · Lloyd's</div>
       </div>
@@ -7497,6 +7498,21 @@ function initChokepointsMap() {
   BL_LANES.forEach(function(ln) {
     L.polyline(ln.pts, { color:ln.color, weight:ln.w, opacity:0.82, className:ln.cls }).addTo(chokepointsMap);
   });
+
+  // Arctic / Northern Sea Route (NSR) — drawn separately to bind hover tooltip
+  L.polyline([
+    [31.2,121.5],[38,133],[47,143],[56,153],[63,163],
+    [68,172],[72,175],[74,158],[75,135],[75,110],
+    [73,80],[71,58],[70,35],[71,26],[62,5],[51.9,4.5]
+  ], { color:'#67e8f9', weight:1.8, opacity:0.5, dashArray:'6 5', className:'bl-lane-arctic' })
+    .addTo(chokepointsMap)
+    .bindTooltip(
+      '<strong style="color:#67e8f9">Arctic / Northern Sea Route (NSR)</strong><br>' +
+      'Open ~90–120 days/year &middot; Jul–Oct only<br>' +
+      'Requires Arc4/Arc7 ice-class vessels<br>' +
+      '<span style="color:#7a8494">Not viable for current GCC crisis routing</span>',
+      { sticky: true, direction: 'top' }
+    );
 
   CHOKEPOINTS.forEach(function(cp) {
     var r = cp.r || 9;

@@ -3210,49 +3210,84 @@ canvas { font-family: var(--f-mono); }
 
     <div style="display:grid;grid-template-columns:repeat(5,1fr);gap:10px;margin:0 0 10px">
 
-      <div id="pdt-jeddah" style="background:#181c22;border-radius:4px;padding:10px 12px;border-top:2px solid #c02030">
-        <div style="font-family:'IBM Plex Mono',monospace;font-size:7px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:#c02030;margin-bottom:2px">Jeddah Islamic Port</div>
-        <div style="font-size:7px;color:#5a6880;margin-bottom:8px"><img src="https://flagcdn.com/16x12/sa.png" alt="SA" style="height:9px;vertical-align:middle;border-radius:1px"> Red Sea &middot; King Abdul Aziz</div>
-        <div style="font-family:'IBM Plex Mono',monospace;font-size:28px;font-weight:900;color:#c02030;line-height:1">16-20<span style="font-size:11px;color:#7a8494;font-weight:400"> days</span></div>
-        <div style="font-size:7px;color:#7a8494;margin-top:4px">pre-crisis: ~3-4d &bull; <span style="color:#c02030">Eid backlog + Med/Suez inflow compounding</span></div>
-        <div style="margin-top:6px;font-family:'IBM Plex Mono',monospace;font-size:7px;font-weight:700;color:#c02030;background:rgba(192,32,48,.15);padding:2px 6px;border-radius:2px;display:inline-block">CRITICAL</div>
-        <div style="font-size:6.5px;color:#4a5568;margin-top:5px">dubaicargos.com · Jun 2026 · 16+ days confirmed</div>
+      <!-- Jeddah Islamic Port — CRITICAL · arc 57% of 40d scale (17.2d avg) · pre-crisis 3.7d -->
+      <div id="pdt-jeddah" style="background:#181c22;border-radius:4px;padding:12px 10px 10px;text-align:center">
+        <div style="font-family:'IBM Plex Mono',monospace;font-size:7px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;color:#c02030;line-height:1.35;margin-bottom:1px">Jeddah<br>Islamic Port</div>
+        <div data-pdt="meta" style="font-size:6.5px;color:#5a6880;margin-bottom:5px"><img src="https://flagcdn.com/16x12/sa.png" alt="SA" style="height:9px;vertical-align:middle;border-radius:1px"> Red Sea &middot; King Abdul Aziz</div>
+        <svg viewBox="0 0 80 46" width="80" height="46" style="display:block;margin:0 auto;overflow:visible" aria-hidden="true">
+          <path d="M8 40 A32 32 0 0 1 72 40" fill="none" stroke="#1e2a38" stroke-width="8" stroke-linecap="round"/>
+          <path data-pdt="arc" d="M8 40 A32 32 0 0 1 72 40" fill="none" stroke="#c02030" stroke-width="8" stroke-linecap="round" stroke-dasharray="100.53" stroke-dashoffset="57.3"/>
+          <circle data-pdt="precrisis-dot" cx="9.4" cy="30.8" r="3" fill="#3dd68c"/>
+          <text data-pdt="precrisis-label" x="13.4" y="28.2" font-size="5.5" fill="#3dd68c" font-family="monospace,sans-serif">~3.7d</text>
+        </svg>
+        <div data-pdt="dwell" style="font-family:'IBM Plex Mono',monospace;font-size:19px;font-weight:900;color:#c02030;line-height:1;margin-top:3px">16–19<span style="font-size:9px;color:#7a8494;font-weight:400"> d</span></div>
+        <div data-pdt="detail" style="font-size:6.5px;color:#7a8494;margin-top:3px">Eid backlog + Med/Suez inflow</div>
+        <div data-pdt="badge" style="margin-top:5px;font-family:'IBM Plex Mono',monospace;font-size:7px;font-weight:700;color:#c02030;background:rgba(192,32,48,.15);padding:2px 6px;border-radius:2px;display:inline-block">CRITICAL</div>
+        <div data-pdt="src" style="font-size:6px;color:#4a5568;margin-top:4px">dubaicargos.com &middot; Jun 2026</div>
       </div>
 
-      <div id="pdt-yanbu" style="background:#181c22;border-radius:4px;padding:10px 12px;border-top:2px solid #e8673c">
-        <div style="font-family:'IBM Plex Mono',monospace;font-size:7px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:#e8673c;margin-bottom:2px">Yanbu Commercial Port</div>
-        <div style="font-size:7px;color:#5a6880;margin-bottom:8px"><img src="https://flagcdn.com/16x12/sa.png" alt="SA" style="height:9px;vertical-align:middle;border-radius:1px"> Red Sea &middot; overflow from Jeddah</div>
-        <div style="font-family:'IBM Plex Mono',monospace;font-size:28px;font-weight:900;color:#e8673c;line-height:1">~14<span style="font-size:11px;color:#7a8494;font-weight:400"> days</span></div>
-        <div style="font-size:7px;color:#7a8494;margin-top:4px">pre-crisis: ~3d &bull; <span style="color:#e8673c">absorbing Jeddah overflow surge</span></div>
-        <div style="margin-top:6px;font-family:'IBM Plex Mono',monospace;font-size:7px;font-weight:700;color:#e8673c;background:rgba(232,103,60,.12);padding:2px 6px;border-radius:2px;display:inline-block">HIGH</div>
-        <div style="font-size:6.5px;color:#4a5568;margin-top:5px">Mawani (Saudi Ports Authority) · Jun 2026 est.</div>
+      <!-- Yanbu Commercial Port — CRITICAL · arc 35% of 40d scale (14d avg) · pre-crisis 3.3d -->
+      <div id="pdt-yanbu" style="background:#181c22;border-radius:4px;padding:12px 10px 10px;text-align:center">
+        <div style="font-family:'IBM Plex Mono',monospace;font-size:7px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;color:#c02030;line-height:1.35;margin-bottom:1px">Yanbu<br>Commercial Port</div>
+        <div data-pdt="meta" style="font-size:6.5px;color:#5a6880;margin-bottom:5px"><img src="https://flagcdn.com/16x12/sa.png" alt="SA" style="height:9px;vertical-align:middle;border-radius:1px"> Red Sea &middot; Jeddah overflow</div>
+        <svg viewBox="0 0 80 46" width="80" height="46" style="display:block;margin:0 auto;overflow:visible" aria-hidden="true">
+          <path d="M8 40 A32 32 0 0 1 72 40" fill="none" stroke="#1e2a38" stroke-width="8" stroke-linecap="round"/>
+          <path data-pdt="arc" d="M8 40 A32 32 0 0 1 72 40" fill="none" stroke="#c02030" stroke-width="8" stroke-linecap="round" stroke-dasharray="100.53" stroke-dashoffset="65.3"/>
+          <circle data-pdt="precrisis-dot" cx="9.1" cy="31.7" r="3" fill="#3dd68c"/>
+          <text data-pdt="precrisis-label" x="13.1" y="29.2" font-size="5.5" fill="#3dd68c" font-family="monospace,sans-serif">~3.3d</text>
+        </svg>
+        <div data-pdt="dwell" style="font-family:'IBM Plex Mono',monospace;font-size:19px;font-weight:900;color:#c02030;line-height:1;margin-top:3px">13–15<span style="font-size:9px;color:#7a8494;font-weight:400"> d</span></div>
+        <div data-pdt="detail" style="font-size:6.5px;color:#7a8494;margin-top:3px">Absorbing Jeddah overflow surge</div>
+        <div data-pdt="badge" style="margin-top:5px;font-family:'IBM Plex Mono',monospace;font-size:7px;font-weight:700;color:#c02030;background:rgba(192,32,48,.15);padding:2px 6px;border-radius:2px;display:inline-block">CRITICAL</div>
+        <div data-pdt="src" style="font-size:6px;color:#4a5568;margin-top:4px">Mawani (Saudi Ports Authority) &middot; Jun 2026</div>
       </div>
 
-      <div id="pdt-sohar" style="background:#181c22;border-radius:4px;padding:10px 12px;border-top:2px solid #c02030">
-        <div style="font-family:'IBM Plex Mono',monospace;font-size:7px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:#c02030;margin-bottom:2px">Sohar Port (Oman)</div>
-        <div style="font-size:7px;color:#5a6880;margin-bottom:8px"><img src="https://flagcdn.com/16x12/om.png" alt="OM" style="height:9px;vertical-align:middle;border-radius:1px"> Gulf of Oman &middot; bypass hub</div>
-        <div style="font-family:'IBM Plex Mono',monospace;font-size:28px;font-weight:900;color:#c02030;line-height:1">18-22<span style="font-size:11px;color:#7a8494;font-weight:400"> days</span></div>
-        <div style="font-size:7px;color:#7a8494;margin-top:4px">pre-crisis: ~7-8d &bull; <span style="color:#c02030">+700% throughput · yard 94% full</span></div>
-        <div style="margin-top:6px;font-family:'IBM Plex Mono',monospace;font-size:7px;font-weight:700;color:#c02030;background:rgba(192,32,48,.15);padding:2px 6px;border-radius:2px;display:inline-block">CRITICAL</div>
-        <div style="font-size:6.5px;color:#4a5568;margin-top:5px">Vizion API · Sohar Port &amp; Freezone (OPAZ) · Jun 2026</div>
+      <!-- Port of Sohar — CRITICAL · arc 77.5% of 40d scale (31d avg) · pre-crisis 7.6d -->
+      <div id="pdt-sohar" style="background:#181c22;border-radius:4px;padding:12px 10px 10px;text-align:center">
+        <div style="font-family:'IBM Plex Mono',monospace;font-size:7px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;color:#c02030;line-height:1.35;margin-bottom:1px">Port of Sohar<br><span style="font-size:6px;color:#5a6878;font-weight:400;text-transform:none;letter-spacing:0">(Sohar Port &amp; Freezone)</span></div>
+        <div data-pdt="meta" style="font-size:6.5px;color:#5a6880;margin-bottom:5px"><img src="https://flagcdn.com/16x12/om.png" alt="OM" style="height:9px;vertical-align:middle;border-radius:1px"> Gulf of Oman &middot; bypass hub</div>
+        <svg viewBox="0 0 80 46" width="80" height="46" style="display:block;margin:0 auto;overflow:visible" aria-hidden="true">
+          <path d="M8 40 A32 32 0 0 1 72 40" fill="none" stroke="#1e2a38" stroke-width="8" stroke-linecap="round"/>
+          <path data-pdt="arc" d="M8 40 A32 32 0 0 1 72 40" fill="none" stroke="#c02030" stroke-width="8" stroke-linecap="round" stroke-dasharray="100.53" stroke-dashoffset="22.6"/>
+          <circle data-pdt="precrisis-dot" cx="13.5" cy="22.0" r="3" fill="#3dd68c"/>
+          <text data-pdt="precrisis-label" x="17.5" y="19.5" font-size="5.5" fill="#3dd68c" font-family="monospace,sans-serif">~7.6d</text>
+        </svg>
+        <div data-pdt="dwell" style="font-family:'IBM Plex Mono',monospace;font-size:19px;font-weight:900;color:#c02030;line-height:1;margin-top:3px">29–33<span style="font-size:9px;color:#7a8494;font-weight:400"> d</span></div>
+        <div data-pdt="detail" style="font-size:6.5px;color:#7a8494;margin-top:3px">+700% throughput &middot; yard 94% full</div>
+        <div data-pdt="badge" style="margin-top:5px;font-family:'IBM Plex Mono',monospace;font-size:7px;font-weight:700;color:#c02030;background:rgba(192,32,48,.15);padding:2px 6px;border-radius:2px;display:inline-block">CRITICAL</div>
+        <div data-pdt="src" style="font-size:6px;color:#4a5568;margin-top:4px">Vizion API &middot; OPAZ &middot; Jun 2026</div>
       </div>
 
-      <div id="pdt-khor_fakkan" style="background:#181c22;border-radius:4px;padding:10px 12px;border-top:2px solid #c02030">
-        <div style="font-family:'IBM Plex Mono',monospace;font-size:7px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:#c02030;margin-bottom:2px">Khor Fakkan (UAE)</div>
-        <div style="font-size:7px;color:#5a6880;margin-bottom:8px"><img src="https://flagcdn.com/16x12/ae.png" alt="AE" style="height:9px;vertical-align:middle;border-radius:1px"> Gulf of Oman &middot; <span style="color:#c02030;font-weight:700">imports only</span></div>
-        <div style="font-family:'IBM Plex Mono',monospace;font-size:28px;font-weight:900;color:#c02030;line-height:1">12-18<span style="font-size:11px;color:#7a8494;font-weight:400"> days</span></div>
-        <div style="font-size:7px;color:#7a8494;margin-top:4px">exports suspended &bull; <span style="color:#c02030">anchorage queue 8-12d</span></div>
-        <div style="margin-top:6px;font-family:'IBM Plex Mono',monospace;font-size:7px;font-weight:700;color:#c02030;background:rgba(192,32,48,.15);padding:2px 6px;border-radius:2px;display:inline-block">CRITICAL</div>
-        <div style="font-size:6.5px;color:#4a5568;margin-top:5px">Hutchison Ports / DP World · Jun 2026</div>
+      <!-- Khor Fakkan Container Terminal — CRITICAL · arc 32.5% of 40d scale (13d avg) · pre-crisis 2.2d -->
+      <div id="pdt-khor_fakkan" style="background:#181c22;border-radius:4px;padding:12px 10px 10px;text-align:center">
+        <div style="font-family:'IBM Plex Mono',monospace;font-size:7px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;color:#c02030;line-height:1.35;margin-bottom:1px">Khor Fakkan<br>Container Terminal</div>
+        <div data-pdt="meta" style="font-size:6.5px;color:#5a6880;margin-bottom:5px"><img src="https://flagcdn.com/16x12/ae.png" alt="AE" style="height:9px;vertical-align:middle;border-radius:1px"> Gulf of Oman &middot; <span style="color:#c02030;font-weight:700">imports only</span></div>
+        <svg viewBox="0 0 80 46" width="80" height="46" style="display:block;margin:0 auto;overflow:visible" aria-hidden="true">
+          <path d="M8 40 A32 32 0 0 1 72 40" fill="none" stroke="#1e2a38" stroke-width="8" stroke-linecap="round"/>
+          <path data-pdt="arc" d="M8 40 A32 32 0 0 1 72 40" fill="none" stroke="#c02030" stroke-width="8" stroke-linecap="round" stroke-dasharray="100.53" stroke-dashoffset="67.9"/>
+          <circle data-pdt="precrisis-dot" cx="8.5" cy="34.4" r="3" fill="#3dd68c"/>
+          <text data-pdt="precrisis-label" x="12.5" y="31.9" font-size="5.5" fill="#3dd68c" font-family="monospace,sans-serif">~2.2d</text>
+        </svg>
+        <div data-pdt="dwell" style="font-family:'IBM Plex Mono',monospace;font-size:19px;font-weight:900;color:#c02030;line-height:1;margin-top:3px">12–14<span style="font-size:9px;color:#7a8494;font-weight:400"> d</span></div>
+        <div data-pdt="detail" style="font-size:6.5px;color:#7a8494;margin-top:3px">Exports suspended &middot; anchorage queue 8–12d</div>
+        <div data-pdt="badge" style="margin-top:5px;font-family:'IBM Plex Mono',monospace;font-size:7px;font-weight:700;color:#c02030;background:rgba(192,32,48,.15);padding:2px 6px;border-radius:2px;display:inline-block">CRITICAL</div>
+        <div data-pdt="src" style="font-size:6px;color:#4a5568;margin-top:4px">Hutchison Ports &middot; Jun 2026</div>
       </div>
 
-      <div id="pdt-salalah" style="background:#181c22;border-radius:4px;padding:10px 12px;border-top:2px solid #e8673c">
-        <div style="font-family:'IBM Plex Mono',monospace;font-size:7px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:#e8673c;margin-bottom:2px">Salalah (Oman)</div>
-        <div style="font-size:7px;color:#5a6880;margin-bottom:8px"><img src="https://flagcdn.com/16x12/om.png" alt="OM" style="height:9px;vertical-align:middle;border-radius:1px"> Arabian Sea &middot; transshipment hub</div>
-        <div style="font-family:'IBM Plex Mono',monospace;font-size:28px;font-weight:900;color:#e8673c;line-height:1">~8<span style="font-size:11px;color:#7a8494;font-weight:400"> days</span></div>
-        <div style="font-size:7px;color:#7a8494;margin-top:4px">pre-crisis: ~3-4d &bull; <span style="color:#e8673c">+90% throughput · Cape vessel calls up</span></div>
-        <div style="margin-top:6px;font-family:'IBM Plex Mono',monospace;font-size:7px;font-weight:700;color:#e8673c;background:rgba(232,103,60,.12);padding:2px 6px;border-radius:2px;display:inline-block">HIGH</div>
-        <div style="font-size:6.5px;color:#4a5568;margin-top:5px">APM Terminals Salalah · Jun 2026 est.</div>
+      <!-- Port of Salalah — HIGH · arc 20% of 40d scale (8d avg) · pre-crisis 3.2d -->
+      <div id="pdt-salalah" style="background:#181c22;border-radius:4px;padding:12px 10px 10px;text-align:center">
+        <div style="font-family:'IBM Plex Mono',monospace;font-size:7px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;color:#e8673c;line-height:1.35;margin-bottom:1px">Port of Salalah<br><span style="font-size:6px;color:#5a6878;font-weight:400;text-transform:none;letter-spacing:0">(APM Terminals)</span></div>
+        <div data-pdt="meta" style="font-size:6.5px;color:#5a6880;margin-bottom:5px"><img src="https://flagcdn.com/16x12/om.png" alt="OM" style="height:9px;vertical-align:middle;border-radius:1px"> Arabian Sea &middot; transshipment hub</div>
+        <svg viewBox="0 0 80 46" width="80" height="46" style="display:block;margin:0 auto;overflow:visible" aria-hidden="true">
+          <path d="M8 40 A32 32 0 0 1 72 40" fill="none" stroke="#1e2a38" stroke-width="8" stroke-linecap="round"/>
+          <path data-pdt="arc" d="M8 40 A32 32 0 0 1 72 40" fill="none" stroke="#e8673c" stroke-width="8" stroke-linecap="round" stroke-dasharray="100.53" stroke-dashoffset="80.4"/>
+          <circle data-pdt="precrisis-dot" cx="9.0" cy="32.0" r="3" fill="#3dd68c"/>
+          <text data-pdt="precrisis-label" x="13.0" y="29.5" font-size="5.5" fill="#3dd68c" font-family="monospace,sans-serif">~3.2d</text>
+        </svg>
+        <div data-pdt="dwell" style="font-family:'IBM Plex Mono',monospace;font-size:19px;font-weight:900;color:#e8673c;line-height:1;margin-top:3px">7–9<span style="font-size:9px;color:#7a8494;font-weight:400"> d</span></div>
+        <div data-pdt="detail" style="font-size:6.5px;color:#7a8494;margin-top:3px">+90% throughput &middot; Cape vessel calls up</div>
+        <div data-pdt="badge" style="margin-top:5px;font-family:'IBM Plex Mono',monospace;font-size:7px;font-weight:700;color:#e8673c;background:rgba(232,103,60,.12);padding:2px 6px;border-radius:2px;display:inline-block">HIGH</div>
+        <div data-pdt="src" style="font-size:6px;color:#4a5568;margin-top:4px">APM Terminals Salalah &middot; Jun 2026</div>
       </div>
 
     </div>
@@ -4048,6 +4083,30 @@ function loadPortDwellModel() {
           '<span style="color:#a78bfa">&plusmn;' + ciPct + '% margin</span>' +
           ' &nbsp;&bull;&nbsp; ' +
           '<span style="color:#7a8494">pre-crisis ' + p.dwell_precrisis + 'd</span>';
+
+        // Arc fill — gauge scale = 40 days; clamp to 100%
+        var arcEl = card.querySelector('[data-pdt="arc"]');
+        if (arcEl) {
+          var pct = Math.min(p.dwell / 40, 1);
+          arcEl.setAttribute('stroke-dashoffset', ((1 - pct) * 100.53).toFixed(1));
+          arcEl.setAttribute('stroke', c);
+        }
+        // Pre-crisis dot and label
+        var dotEl  = card.querySelector('[data-pdt="precrisis-dot"]');
+        var dotLbl = card.querySelector('[data-pdt="precrisis-label"]');
+        if (dotEl && p.dwell_precrisis) {
+          var pPre  = Math.min(p.dwell_precrisis / 40, 1);
+          var theta = Math.PI * (1 - pPre);
+          var dotX  = (40 + 32 * Math.cos(theta)).toFixed(1);
+          var dotY  = (40 - 32 * Math.sin(theta)).toFixed(1);
+          dotEl.setAttribute('cx', dotX);
+          dotEl.setAttribute('cy', dotY);
+          if (dotLbl) {
+            dotLbl.setAttribute('x', (parseFloat(dotX) + 4).toFixed(1));
+            dotLbl.setAttribute('y', (parseFloat(dotY) - 2).toFixed(1));
+            dotLbl.textContent = '~' + p.dwell_precrisis + 'd';
+          }
+        }
       });
 
       // Update model date stamp in formula block
@@ -4083,23 +4142,21 @@ function loadPortDwellModel() {
       });
     });
 }
-// Tag card children with data-pdt so the updater can find them by role
+// Tag card children with data-pdt so the updater can find them by role.
+// Elements that already carry a data-pdt attribute (set in HTML) are skipped.
 function tagPortDwellCards() {
   ['jeddah','yanbu','sohar','khor_fakkan','salalah'].forEach(function(id) {
     var card = document.getElementById('pdt-' + id);
     if (!card) return;
     var divs = card.querySelectorAll('div');
-    // dwell = div with font-size:28px (big number)
     divs.forEach(function(d) {
+      if (d.hasAttribute('data-pdt')) return; // already tagged in HTML
       var fs = d.style.fontSize;
       if (fs === '28px') d.setAttribute('data-pdt','dwell');
-      // badge = small mono div with border-radius:2px and display:inline-block
       if (fs === '7px' && d.style.display === 'inline-block') d.setAttribute('data-pdt','badge');
-      // source = last small div (6.5px)
       if (fs === '6.5px') d.setAttribute('data-pdt','src');
     });
-    // detail = 7px colour note (second small div after badge)
-    var colorNotes = Array.from(divs).filter(function(d){ return d.style.fontSize==='7px' && !d.style.fontWeight; });
+    var colorNotes = Array.from(divs).filter(function(d){ return d.style.fontSize==='7px' && !d.style.fontWeight && !d.hasAttribute('data-pdt'); });
     if (colorNotes[1]) colorNotes[1].setAttribute('data-pdt','detail');
   });
 }

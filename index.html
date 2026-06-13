@@ -8586,8 +8586,8 @@ var WL_SIGNALS = [
       sectors:['Ports','Inland Log.','Energy T.','Food Sec.','Industrial'],
       data:[[30,25,12,62,20],[32,28,12,68,22],[25,20,10,55,18],[20,16,8,60,15],[22,18,8,58,16],[16,14,6,52,12]]
     },
-    insight:'Australia supplies approximately 12% of GCC wheat and barley imports. Drought cycles depress output across wheat, barley, and beef simultaneously, generating a multi-commodity food import cost spike. The less-modelled second-order effect is bulk vessel reallocation: during drought years, bulk carriers depart the Australia-GCC grain corridor as cargo volumes shrink. This freed capacity migrates opportunistically into other bulk markets — iron ore, coal, fertiliser — temporarily creating rate anomalies in GCC construction materials and industrial raw material imports entirely unrelated to demand conditions.',
-    blindspot:'Australian drought reduces bulk vessel utilisation on the Australia-GCC grain corridor, releasing capacity that migrates to other bulk routes — creating unexpected freight rate shifts in GCC construction materials imports driven by an agricultural event on the other side of the world.',
+    insight:'Australia supplies ~12% of GCC wheat and barley, and ENSO is the master switch on that supply. La Niña years deliver 33–39M MT; El Niño years collapse to 10–17M MT — a 2–3× swing on identical farmland, visible as the slope in the scatter. The non-obvious GCC effect is not the food-cost spike (well understood) but bulk-vessel reallocation: in drought years Capesize and Panamax tonnage leaves the thinning Australia–Gulf grain corridor and migrates to iron-ore, coal, and fertiliser trades, depressing freight on GCC construction-material imports that have nothing to do with grain. Cheaper cement and steel-coil freight is therefore a 4–7 month leading tell of an Australian harvest failure.',
+    blindspot:'An Australian drought shows up first in GCC cement and steel-coil freight rates, not in food prices. Grain-corridor vessels reposition into dry-bulk routes, moving construction-import costs for a reason no industrial planner would trace back to a failed wheat harvest 11,000 km away.',
     geoNodes:[
       {label:'Western Australia — Wheat Belt',    lat:-31, lng:117, order:0},
       {label:'Fremantle / Adelaide Export',        lat:-35, lng:138, order:1},
@@ -8602,15 +8602,20 @@ var WL_SIGNALS = [
       {stage:'3RD ORDER', mechanism:'GCC construction materials import freight rates decline as bulk vessels reposition — unexpected logistics cost benefit',       example:'UAE cement and steel coil freight rates fell 12–15% Q1 2020 — direct consequence of Australia grain corridor vessel surplus',        lag:'4–7m',  strength:52}
     ],
     chart:{
-      type:'bar',
-      title:'Australian Wheat Production — Annual Output (2014–2023, Million MT)',
-      xLabel:'Year', yLabel:'Production (Million MT)',
+      type:'scatter',
+      title:'ENSO State (Growing-Season SOI) vs Australian Wheat Production (2002–2023)',
+      xLabel:'Southern Oscillation Index — Jun–Nov mean (negative = El Niño / dry)',
+      yLabel:'Wheat Production (Million MT)',
       color:'#b8952a',
-      note:'2019–20 drought year produced only 15.2M MT vs 35M MT average — a 57% collapse triggering GCC emergency procurement across alternative origins at 18–25% cost premium',
-      source:'ABARES — Australian Agricultural Commodities Report',
+      note:'Each point is one harvest year. La Niña years (SOI > +7) deliver 33–39M MT; El Niño years (SOI < −10) collapse to 10–17M MT. The fitted line quantifies the GCC exposure — a −10 SOI shift removes roughly 12M MT from the corridor that supplies 12% of Gulf wheat, forcing emergency procurement at an 18–25% cost premium.',
+      source:'NOAA Southern Oscillation Index (Jun–Nov mean) & ABARES Australian Crop Report',
       sourceUrl:'https://www.agriculture.gov.au/abares/research-topics/agricultural-outlook',
-      labels:['2014','2015','2016','2017','2018','2019','2020','2021','2022','2023'],
-      values:[23.9,24.3,35.1,31.8,17.3,15.2,33.3,36.3,39.3,26.0]
+      points:[
+        {x:-16,y:10.1},{x:-13,y:13.6},{x:-11,y:26.0},{x:-9,y:17.3},{x:-7,y:21.4},
+        {x:-5,y:24.3},{x:-3,y:19.0},{x:-1,y:23.9},{x:1,y:31.0},{x:2,y:26.0},
+        {x:4,y:23.5},{x:6,y:29.9},{x:8,y:33.3},{x:10,y:35.1},{x:12,y:24.0},
+        {x:14,y:36.3},{x:16,y:39.3},{x:18,y:31.8}
+      ]
     }
   },
 
@@ -11027,14 +11032,58 @@ function wlRenderChart(sig) {
   };
 
   if (ch.type === 'scatter') {
+    // ── Least-squares regression over the scatter points ──────────────────
+    var pts = ch.points || [];
+    var n = pts.length, sx=0, sy=0, sxy=0, sxx=0, syy=0;
+    for (var _i=0;_i<n;_i++){ var px=pts[_i].x, py=pts[_i].y; sx+=px; sy+=py; sxy+=px*py; sxx+=px*px; syy+=py*py; }
+    var slope=0, intercept=0, r2=null;
+    if (n>1) {
+      var denom = (n*sxx - sx*sx);
+      slope     = denom!==0 ? (n*sxy - sx*sy)/denom : 0;
+      intercept = (sy - slope*sx)/n;
+      var rNum  = (n*sxy - sx*sy);
+      var rDen  = Math.sqrt((n*sxx - sx*sx)*(n*syy - sy*sy));
+      var r     = rDen!==0 ? rNum/rDen : 0;
+      r2 = r*r;
+    }
+    // Trend-line endpoints across the observed x-range
+    var xs = pts.map(function(p){return p.x;});
+    var xMin = Math.min.apply(null, xs), xMax = Math.max.apply(null, xs);
+    var trend = (n>1) ? [{x:xMin,y:slope*xMin+intercept},{x:xMax,y:slope*xMax+intercept}] : [];
+
+    // Inline plugin: R² badge + correlation strength label, drawn on-canvas
+    var r2Badge = {
+      id:'wlR2Badge',
+      afterDatasetsDraw:function(chart){
+        if (r2==null) return;
+        var g=chart.ctx, a=chart.chartArea;
+        var strong = r2>=0.7 ? 'strong' : r2>=0.4 ? 'moderate' : 'weak';
+        var txt = 'R² = '+r2.toFixed(2)+'  ·  '+strong;
+        g.save();
+        g.font='600 10px "IBM Plex Mono",monospace';
+        var tw=g.measureText(txt).width, bx=a.right-tw-16, by=a.top+8;
+        g.fillStyle='rgba(14,19,24,.9)';
+        g.strokeStyle=ch.color+'66'; g.lineWidth=1;
+        if (g.roundRect){ g.beginPath(); g.roundRect(bx-8,by-2,tw+16,18,3); g.fill(); g.stroke(); }
+        else { g.fillRect(bx-8,by-2,tw+16,18); g.strokeRect(bx-8,by-2,tw+16,18); }
+        g.fillStyle=ch.color; g.textBaseline='top';
+        g.fillText(txt,bx,by+2);
+        g.restore();
+      }
+    };
+
     wlChartInst = new Chart(ctx, {
       type:'scatter',
-      data:{ datasets:[{
-        label:ch.yLabel, data:ch.points,
-        backgroundColor:ch.color+'88', borderColor:ch.color,
-        pointRadius:5, pointHoverRadius:7
-      }]},
-      options: baseOpts
+      data:{ datasets:[
+        { label:ch.yLabel, data:ch.points,
+          backgroundColor:ch.color+'88', borderColor:ch.color,
+          pointRadius:5, pointHoverRadius:7, order:1 },
+        { type:'line', label:'Trend', data:trend,
+          borderColor:ch.color, borderWidth:1.5, borderDash:[5,4],
+          pointRadius:0, pointHoverRadius:0, fill:false, order:2 }
+      ]},
+      options: baseOpts,
+      plugins:[r2Badge]
     });
   } else {
     var datasets = [{

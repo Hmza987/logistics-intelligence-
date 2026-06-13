@@ -11041,7 +11041,7 @@ function renderWatchlistSignal(id) {
 
 
 
-var wlState = { activeGroup:null, activeTopic:null, activeSignal:null, activeTags:[], thinkTimers:[] };
+var wlState = { activeGroup:null, activeTopic:null, activeSignal:null, activeTags:[], thinkTimers:[], liveSigsByTopic:{} };
 var wlLiveCache = {}; // keyed by signal id — stores fetched live signal objects for expand/detail
 var wlInitialized = false;
 
@@ -12049,14 +12049,14 @@ function selectWLTopic(gid, tid) {
         return (s.topicIds||[]).indexOf(tid) !== -1;
       }).length;
     }
-    if (liveCount > 0) {
+    // Only inflate the thinking count when there are no curated signals for this topic
+    if (liveCount > 0 && !sigs.length) {
       var totalEl     = document.getElementById('wl-think-total');
       var breakdownEl = document.getElementById('wl-think-breakdown');
       if (totalEl) {
-        // Animate count up from curated to curated+live
         var start    = sigs.length;
         var end      = sigs.length + liveCount;
-        var duration = 600; // ms
+        var duration = 600;
         var startTs  = null;
         function countUp(ts) {
           if (!startTs) startTs = ts;
@@ -12099,15 +12099,17 @@ function selectWLTopic(gid, tid) {
         var h = navBack;
 
         // ── Live signals (auto-detected) ────────────────────────────────────
-        if (liveSigs.length) {
+        // Store live signals so selectWLSignal can surface them as a banner
+        liveSigs.forEach(function(s){ wlLiveCache[s.id] = s; });
+        wlState.liveSigsByTopic[tid] = liveSigs;
+
+        // Only show live signal cards when no curated signals cover this topic
+        if (liveSigs.length && !sigs.length) {
           h += '<div class="wl-live-section-hdr"><span class="wl-live-pulse"></span>Live &middot; Auto-Detected &middot; '+(liveData.scanDate||'Today')+'</div>';
           h += '<div class="wl-mosaic">';
           liveSigs.forEach(function(sig){
             var sc   = wlSysColor(sig.systemicImpact);
             var conf = wlConfLabel(sig.confidence);
-            // Store in cache for expand/detail rendering
-            wlLiveCache[sig.id] = sig;
-            // Executive summary = the GCC-tagged chain step (last step) — one sentence
             var gccStep = (sig.chain||[]).find(function(s){ return s.gcc; }) || (sig.chain||[]).slice(-1)[0];
             var execSummary = gccStep ? gccStep.label : (sig.insight ? sig.insight.split('.')[0]+'.' : '');
             h += '<div class="wl-mosaic-card wl-live" id="wl-live-card-'+sig.id+'">'+
@@ -12128,7 +12130,6 @@ function selectWLTopic(gid, tid) {
 
         // ── Curated signals ─────────────────────────────────────────────────
         if (sigs.length) {
-          if (liveSigs.length) h += '<div class="wl-curated-section-hdr">Curated Signals</div>';
           h += '<div class="wl-mosaic">';
           sigs.forEach(function(sig){
             var sc   = wlSysColor(sig.systemicImpact);
@@ -12242,10 +12243,28 @@ function selectWLSignal(sid) {
   // Evidence panel — geographic map + ① fact chart, ② conclusion chart, key takeaway
   wlRenderGeoMap(sig);
 
+  // Live alert banner — surface auto-detected signals that share this topic
+  var liveAlertHtml = '';
+  var topicLiveSigs = wlState.liveSigsByTopic[wlState.activeTopic] || [];
+  if (topicLiveSigs.length) {
+    var ls = topicLiveSigs[0];
+    var conf = wlConfLabel(ls.confidence);
+    var shortTitle = ls.title.length > 120 ? ls.title.slice(0, 120) + '…' : ls.title;
+    var gccStep = (ls.chain||[]).find(function(s){ return s.gcc; }) || (ls.chain||[]).slice(-1)[0];
+    var lsGcc = gccStep ? '<div style="font-size:9.5px;color:#c8d8e8;margin-top:5px;line-height:1.5">&#9656; ' + gccStep.label + '</div>' : '';
+    liveAlertHtml =
+      '<div style="border-left:3px solid #fbbf24;background:rgba(251,191,36,0.07);padding:10px 14px;margin-bottom:14px;border-radius:0 4px 4px 0">'+
+        '<div style="color:#fbbf24;font-size:8px;font-weight:700;letter-spacing:0.08em;margin-bottom:5px">&#9889; LIVE SIGNAL &middot; Auto-Detected &middot; ' + (ls.horizon||'') + '</div>'+
+        '<div style="font-size:10.5px;color:#d8e8f0;line-height:1.5">' + shortTitle + '</div>'+
+        lsGcc +
+      '</div>';
+  }
+
   // Exec summary + brief button
   var ep = document.getElementById('wl-exec-panel');
   if (ep) {
     ep.innerHTML =
+      liveAlertHtml +
       '<div class="wl-exec-summary">'+
         '<div class="wl-exec-label">&#9670; Executive Assessment</div>'+
         '<div class="wl-exec-text">'+sig.insight+'</div>'+

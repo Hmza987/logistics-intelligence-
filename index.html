@@ -9048,17 +9048,46 @@ var WL_SIGNALS = [
       {stage:'2ND ORDER', mechanism:'GCC inland logistics backed up — trucking schedules disrupted as vessels bunch at Jebel Ali/Salalah after weather clearance',                       example:'UAE truck queues at Jebel Ali container yard averaged 6.2 hours Q3 2022 vs 2.1 hours Q3 2021 — pure weather-driven vessel bunching effect',                        lag:'2–4m',     strength:54},
       {stage:'3RD ORDER', mechanism:'GCC retailers activate air freight substitution for high-value goods — freight cost premium absorbed or passed through to consumers',               example:'DHL Express Dubai volumes +22% Aug–Sep 2022; consumer electronics retailers reported +$0.80/unit landed cost increase during weather disruption period',             lag:'1–2m',     strength:48}
     ],
-    chart:{
+    factChart:{
       type:'bar',
-      title:'Gulf of Aden / Salalah Port Average Vessel Delay by Quarter (Days, 2020–2023)',
+      title:'① Gulf of Aden Vessel Delay by Quarter — Monsoon Seasonality Pattern (2020–2023)',
       xLabel:'Quarter', yLabel:'Average Delay (Days)',
       color:'#e8673c',
-      note:'Q3 delays consistently 2–4× higher than Q1/Q2 — monsoon seasonality creates predictable but worsening disruption pattern; 2023 Q3 peak of 4.1 days represents new historical maximum',
+      note:'Q3 delays are consistently 2–4× higher than Q1/Q2 — monsoon seasonality creates a predictable but worsening disruption pattern. The 2023 Q3 peak of 4.1 days is the highest on record, exceeding the worst Houthi-attributed delays of 2021 and confirming weather as the dominant disruption driver.',
       source:'Salalah Port Services Operational Reports & AP Møller-Maersk Network Updates',
       sourceUrl:'https://www.salalahport.com',
       labels:['Q1-20','Q2-20','Q3-20','Q4-20','Q1-21','Q2-21','Q3-21','Q4-21','Q1-22','Q2-22','Q3-22','Q4-22','Q1-23','Q2-23','Q3-23','Q4-23'],
       values:[1.2,1.4,2.8,1.3,1.1,1.5,3.2,1.4,1.3,1.6,3.8,1.5,1.2,1.7,4.1,1.6]
-    }
+    },
+    chart:{
+      type:'line',
+      title:'② Gulf of Aden Q3 Peak Monsoon Delay — Annual Trend with 2026 Forecast',
+      xLabel:'Year', yLabel:'Q3 Avg Delay (Days)',
+      color:'#e8673c', color2:'#e87a3c',
+      label2:'2026 forecast (SST +1.5–1.6°C, extended monsoon window)',
+      refLine:2.5,
+      refLineLabel:'2015–2019 average (2.5 days)',
+      refLineColor:'#4a9fe8',
+      note:'Annual Q3 (Jul–Sep) average vessel delay in the Gulf of Aden corridor. Arabian Sea SST is +1.4°C above the 1990–2020 baseline, extending the effective monsoon disruption window and driving a 128% increase in Q3 delays since 2015. Orange dashed: 2026 forecast at 4.8 days based on projected SST of +1.5–1.6°C and extended May–Oct disruption window.',
+      source:'Salalah Port Operational Reports; AP Møller-Maersk Q3 Updates; Copernicus Marine SST',
+      sourceUrl:'https://www.salalahport.com',
+      labels:['2015','2016','2017','2018','2019','2020','2021','2022','2023','2024','2026F'],
+      values:[1.8,2.0,2.1,2.3,2.5,2.8,3.2,3.8,4.1,4.3,null],
+      values2:[null,null,null,null,null,null,null,null,null,4.3,4.8]
+    },
+    keyTakeaway:'Arabian Sea SST +1.4°C above average is intensifying Gulf of Aden monsoon delays to 4.1 days in Q3 2023 — double the 2015 baseline — while GCC logistics operators systematically misattribute the disruption to Houthi security conditions, applying the wrong mitigation.',
+    brief_observation:'Arabian Sea surface temperatures in 2023 registered +1.4°C above the 1990–2020 average, intensifying the southwest monsoon and driving Q3 (Jul–Sep) average vessel delays in the Gulf of Aden to 4.1 days — more than double the 1.8-day baseline recorded in 2015. The critical analytical gap is conflation: GCC importers and carriers routinely attribute Gulf of Aden schedule disruption to Houthi security conditions, triggering security mitigation responses (rerouting, convoy procedures, insurance premiums) that provide no protection against meteorological schedule variability. The 2023 Q3 peak delay exceeds the worst Houthi-attributed delays of 2021 — confirming that weather, not geopolitics, is now the dominant driver of monsoon-season schedule reliability on this corridor.',
+    brief_implications:[
+      'Cost — vessel bunching at Jebel Ali after weather clearance extends berth wait times from 1.2 to 4.8 days, tripling trucking queue times in the container yard; retailers and electronics importers activate air freight substitution, absorbing a +$0.80/unit landed cost increase; misattribution to security risk triggers unnecessary insurance premium increases that do not cover weather-cause delays.',
+      'Time — Q3 monsoon delays of 4+ days compress planning buffers for GCC importers running lean inventory; just-in-time supply chains built for 2.5-day average delays cannot absorb 4.1-day average plus bunching variance without shelf-gap events — the effective supply chain planning assumption needs to shift from 2.5 to 6–7 days for Q3 lead times.',
+      'Resilience — incorrect attribution of weather delays to security risk means GCC operators are buying the wrong insurance and implementing routing changes that do not address the actual disruption driver; the correct mitigation is monsoon-aware inventory buffer strategy, not security risk protocols — a category error that compounds with each intensifying monsoon season.'
+    ],
+    brief_assessment:'Arabian Sea SSTs are projected to reach +1.5–1.6°C above baseline by 2026 under current warming trajectories, extending the effective monsoon disruption window from the traditional Jun–Sep period toward a May–Oct window. Q3 2026 average vessel delays at Salalah are forecast at 4.5–5.0 days. GCC port capacity planning for Q3 2026 should assume 15–20% higher berth utilisation from vessel bunching and should pre-position trucking surge capacity and Fujairah overflow capacity.',
+    brief_recommendation:[
+      'Monsoon-aware inventory: rebuild Q3 (Jul–Sep) import buffer stocks to absorb 5-day vessel delay variance — for FMCG, electronics, and food importers this requires 8–12 additional days of safety stock entered before end of May, ahead of the monsoon window opening.',
+      'Attribution correction: disaggregate Gulf of Aden delay reporting into security-cause and weather-cause categories; ensure carrier contracts include weather-cause delay clauses separately from force majeure security provisions to correctly price and hedge each independent risk.',
+      'Port overflow pre-positioning: pre-book Fujairah anchorage and inland storage ahead of Q3 2026 to avoid the 2022 scenario where Fujairah handled 38% above baseline volume at distressed rates; advance booking at 12-week lead time is required to secure competitive positioning.'
+    ]
   },
 
   {

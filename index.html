@@ -2188,13 +2188,33 @@ canvas { font-family: var(--f-mono); }
 
 /* ── Live auto-detected signal cards ────────────────────────── */
 .wl-live-section-hdr {
-  font-family:var(--f-mono); font-size:7.5px; letter-spacing:.14em;
-  color:#22d3ee; text-transform:uppercase;
-  display:flex; align-items:center; gap:8px;
   padding-bottom:10px; margin-bottom:14px;
   border-bottom:1px solid rgba(34,211,238,.15);
 }
-.wl-live-section-hdr::before { content:'⚡'; font-size:10px; }
+.wl-live-section-hdr-row {
+  font-family:var(--f-mono); font-size:7.5px; letter-spacing:.14em;
+  color:#22d3ee; text-transform:uppercase;
+  display:flex; align-items:center; gap:8px; margin-bottom:5px;
+}
+.wl-live-section-hdr-row::before { content:'⚡'; font-size:10px; }
+.wl-live-section-sub {
+  font-family:var(--f-mono); font-size:7px; color:rgba(34,211,238,.55);
+  letter-spacing:.06em; padding-left:2px;
+}
+.wl-live-promo-bar {
+  border-top:1px solid rgba(34,211,238,.1);
+  margin-top:10px; padding-top:8px;
+  display:flex; gap:14px;
+}
+.wl-live-promo-criterion {
+  display:flex; align-items:center; gap:5px;
+  font-family:var(--f-mono); font-size:6.5px; letter-spacing:.08em;
+  color:rgba(34,211,238,.5); text-transform:uppercase;
+}
+.wl-live-promo-dot {
+  width:5px; height:5px; border-radius:50%;
+  border:1px solid rgba(34,211,238,.45); flex-shrink:0;
+}
 .wl-live-pulse {
   width:6px; height:6px; border-radius:50%; background:#22d3ee;
   display:inline-block; margin-right:2px;
@@ -12377,7 +12397,10 @@ function selectWLTopic(gid, tid) {
         // ── Live signals (auto-detected) — always show when present ─────────
         if (liveSigs.length) {
           var scanLabel = (liveData && liveData.scanDate) ? new Date(liveData.scanDate).toLocaleDateString('en-GB',{day:'numeric',month:'short',year:'numeric'}) : 'Today';
-          h += '<div class="wl-live-section-hdr"><span class="wl-live-pulse"></span>Live &middot; Auto-Detected &middot; '+scanLabel+'</div>';
+          h += '<div class="wl-live-section-hdr">'+
+                 '<div class="wl-live-section-hdr-row"><span class="wl-live-pulse"></span>Live &middot; Auto-Detected &middot; '+scanLabel+'</div>'+
+                 '<div class="wl-live-section-sub">Signals meeting both criteria below are elevated to a full strategy brief</div>'+
+               '</div>';
           h += '<div class="wl-mosaic">';
           liveSigs.forEach(function(sig){
             var sc   = wlSysColor(sig.systemicImpact);
@@ -12393,8 +12416,12 @@ function selectWLTopic(gid, tid) {
                    '<div class="wl-mc-met"><span>CONFIDENCE</span><span class="wl-mc-met-val" style="color:'+conf.color+'">'+conf.label+'</span></div>'+
                    '<div class="wl-mc-met"><span>SYSTEMIC IMPACT</span><span class="wl-mc-met-val" style="color:'+sc+'">'+sig.systemicImpact+'/100</span></div>'+
                  '</div>'+
-                 '<div class="wl-mc-bar-bg" style="margin:8px 0 12px"><div class="wl-mc-bar-fill" style="width:'+sig.systemicImpact+'%;background:'+sc+'"></div></div>'+
+                 '<div class="wl-mc-bar-bg" style="margin:8px 0 10px"><div class="wl-mc-bar-fill" style="width:'+sig.systemicImpact+'%;background:'+sc+'"></div></div>'+
                  '<div class="wl-live-expand-btn" onclick="expandWLLiveSignal(\''+sig.id+'\',event)">&#9656; View full analysis</div>'+
+                 '<div class="wl-live-promo-bar">'+
+                   '<div class="wl-live-promo-criterion"><span class="wl-live-promo-dot"></span>Signal &amp; implications confirmed</div>'+
+                   '<div class="wl-live-promo-criterion"><span class="wl-live-promo-dot"></span>GCC logistics impact material</div>'+
+                 '</div>'+
                  '</div>';
           });
           h += '</div>';

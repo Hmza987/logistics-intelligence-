@@ -7621,9 +7621,11 @@ function initChokepointsMap() {
 
   // Arctic / Northern Sea Route (NSR) — drawn separately to bind hover tooltip
   L.polyline([
-    [31.2,121.5],[38,133],[47,143],[56,153],[63,163],
-    [68,172],[72,175],[74,158],[75,135],[75,110],
-    [73,80],[71,58],[70,35],[71,26],[62,5],[51.9,4.5]
+    [31.2,121.5],[38,133],[46,142],
+    [52,145],[57,148],[61,156],
+    [65,170],[69,177],[75,175],
+    [78,150],[78,120],[76,95],
+    [74,73],[71,56],[70,33],[71,26],[62,5],[51.9,4.5]
   ], { color:'#67e8f9', weight:1.8, opacity:0.5, dashArray:'6 5', className:'bl-lane-arctic' })
     .addTo(chokepointsMap)
     .bindTooltip(

@@ -11710,6 +11710,23 @@ function selectWLCategory(gid) {
   var g      = WL_GROUPS.find(function(x){ return x.id===gid; });
   var topics = WL_TOPICS[gid] || [];
   if (!g || !topw) return;
+
+  if (gid !== 'climate') {
+    topw.innerHTML =
+      '<div class="wl-nav-back" onclick="wlBackToCategories()">&#8592; Watchlist</div>' +
+      '<div class="wl-topics-header">' +
+        '<span class="wl-topics-cat-icon">'+g.icon+'</span>' +
+        '<span class="wl-topics-cat-name">'+g.title+'</span>' +
+      '</div>' +
+      '<div style="text-align:center;padding:60px 24px;color:#6a7a9a;">' +
+        '<div style="font-size:36px;margin-bottom:16px;opacity:.35;">&#9998;</div>' +
+        '<div style="font-size:9px;font-weight:700;letter-spacing:.16em;text-transform:uppercase;color:#4a5a7a;margin-bottom:12px;">Work in Progress</div>' +
+        '<div style="font-size:10px;line-height:1.8;color:#6a7a9a;max-width:320px;margin:0 auto;">Full signal analysis, topic breakdowns, and strategy briefs for this category are currently being built out. Check back in the next release.</div>' +
+      '</div>';
+    topw.className = 'wl-visible';
+    return;
+  }
+
   var h = '<div class="wl-nav-back" onclick="wlBackToCategories()">&#8592; Watchlist</div>' +
     '<div class="wl-topics-header">' +
       '<span class="wl-topics-cat-icon">'+g.icon+'</span>' +

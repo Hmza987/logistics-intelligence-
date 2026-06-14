@@ -8625,17 +8625,43 @@ var WL_SIGNALS = [
       {stage:'2ND ORDER', mechanism:'South Asian grain export capacity structural decline forces GCC to alternative global origins',                         example:'Pakistan wheat export capacity to GCC projected to fall 60–80% by 2040 — current ~3M MT/yr corridor at risk',                    lag:'10–20yr',  strength:62},
       {stage:'3RD ORDER', mechanism:'GCC food security infrastructure investment cycle triggered — new origin corridors, storage, and logistics required',  example:'Saudi Arabia strategic grain reserve expansion to 6 months announced 2023; new Australia / US Pacific corridor investment',        lag:'15–25yr',  strength:58}
     ],
-    chart:{
-      type:'line',
-      title:'Himalayan Glacier Mass Balance — Cumulative Loss (1970–2023)',
-      xLabel:'Year', yLabel:'Cumulative Mass Balance (m water equivalent)',
+    factChart:{
+      type:'bar',
+      title:'① Himalayan Glacier Annual Ice Loss Rate — Decade Average (m water eq./yr)',
+      xLabel:'Period', yLabel:'Annual Loss Rate (m w.e./yr)',
       color:'#4a9fe8',
-      note:'Accelerating since 2000 — rate of loss doubled vs 1970–2000 average; Karakoram "anomaly" now reversing, confirming system-wide collapse trajectory',
+      note:'The annual rate of ice loss has doubled since 2000 — from -0.38 m/yr in 2000–2005 to -0.97 m/yr in 2020–2023. The Karakoram "anomaly" (where some glaciers were briefly stable) has reversed, confirming system-wide accelerating collapse. The 2026F rate of -1.1 m/yr projects continued acceleration under current warming.',
       source:'World Glacier Monitoring Service (WGMS) — Global Glacier Change Bulletin',
       sourceUrl:'https://wgms.ch/products_ref_glaciers/',
-      labels:[1970,1975,1980,1985,1990,1995,2000,2005,2010,2015,2020,2023],
-      values:[0,-0.8,-1.6,-2.5,-3.5,-4.8,-6.2,-8.1,-10.5,-13.4,-17.2,-20.1]
-    }
+      labels:['1970s','1980s','1990s','2000–05','2005–10','2010–15','2015–20','2020–23','2026F'],
+      values:[-0.16,-0.17,-0.26,-0.38,-0.48,-0.58,-0.76,-0.97,-1.10]
+    },
+    chart:{
+      type:'line',
+      title:'② Himalayan Glacier Cumulative Mass Balance Loss (1970–2023) with 2026 Forecast',
+      xLabel:'Year', yLabel:'Cumulative Loss (m water equivalent)',
+      color:'#4a9fe8', color2:'#e87a3c',
+      label2:'2026 forecast (acceleration to −1.1 m/yr)',
+      note:'Cumulative Himalayan glacier mass balance loss since 1970 (WGMS). Orange dashed: 2026 forecast at −23.3 m based on projected annual loss rate of −1.1 m/yr — continuing the doubling-every-decade acceleration. Peak melt water (2025–2030) will temporarily mask the structural decline in Indus/Ganges dry-season flows.',
+      source:'World Glacier Monitoring Service (WGMS) — Global Glacier Change Bulletin',
+      sourceUrl:'https://wgms.ch/products_ref_glaciers/',
+      labels:[1970,1975,1980,1985,1990,1995,2000,2005,2010,2015,2020,2023,'2026F'],
+      values:[0,-0.8,-1.6,-2.5,-3.5,-4.8,-6.2,-8.1,-10.5,-13.4,-17.2,-20.1,null],
+      values2:[null,null,null,null,null,null,null,null,null,null,null,-20.1,-23.3]
+    },
+    keyTakeaway:'Himalayan glaciers losing ice twice as fast as in 2000 — rivers feeding 500M South Asian farmers are entering peak-water phase before long-term structural decline, creating a false-stability window that masks the supply risk to GCC\'s primary food procurement corridor.',
+    brief_observation:'The WGMS records Himalayan glacier mass balance at −20.1 m water equivalent cumulative loss since 1970, with the annual loss rate doubling from −0.38 m/yr in 2000–2005 to −0.97 m/yr in 2020–2023. The Karakoram anomaly — where some glaciers were temporarily stable — has now reversed, confirming system-wide accelerating collapse. The Indus, Ganges, and Brahmaputra rely on glacial melt for 30–60% of dry-season flow; these river systems are entering a peak-water phase (temporarily elevated melt flows 2025–2030) before long-run structural decline, which will progressively reduce the irrigation water sustaining Pakistan and Indian wheat and rice production — the GCC\'s two lowest-cost food origin corridors.',
+    brief_implications:[
+      'Food cost — Himalayan glacier retreat will progressively reduce Indus basin irrigation water availability; modelled impacts show Pakistan wheat yields declining 15–35% by 2040 as the Indus dry-season flow falls; as Pakistan transitions from surplus to deficit, GCC wheat procurement must migrate toward Black Sea, Australian, and South American origins with materially higher freight cost and longer transit profiles.',
+      'Supply resilience — the Indus-fed Pakistan corridor and the Ganges-fed Indian wheatbelt represent the GCC\'s two lowest-cost food origins; both face long-run structural yield compression from the same physical cause; multi-origin diversification within South Asia is insufficient for genuine risk reduction — the GCC requires origin diversification outside the entire Himalayan drainage basin.',
+      'Long-horizon planning — the peak-water phase (2025–2030) creates elevated irrigation flows that will produce stable or above-average Pakistani and Indian agricultural output in the near term, masking the structural transition underway and risk of GCC procurement planners systematically overestimating long-run South Asian supply availability in their baseline models.'
+    ],
+    brief_assessment:'At the current trajectory (−1.0 m water equivalent/year, accelerating), cumulative Himalayan glacier mass loss will reach −23 m by 2026 and −30 m by 2030. Peak-water from accelerating melt creates a false-stability window through 2028, during which South Asian agricultural output may appear robust — concealing the transition to structural long-run irrigation deficit that will materialise in the 2030–2040 window.',
+    brief_recommendation:[
+      'Origin diversification programme: initiate a 5-year strategy to pre-qualify non-Himalayan-basin grain origins for GCC sovereign reserves — Black Sea (Ukraine, Romania), South America (Argentina, Brazil), and Australia — with logistics testing to confirm port compatibility and landed cost benchmarks.',
+      'Peak-water monitoring: establish annual tracking of Indus and Ganges seasonal peak discharge (Jun–Aug melt season) as an early warning indicator of transition from peak-water to structural decline; a consistent 3-year declining trend in peak discharge should trigger accelerated procurement strategy review.',
+      'Policy and research engagement: GCC food security ministries should engage WGMS, World Bank, and IWMI glacial melt research to obtain country-specific modelled yield impact timelines for Pakistan and India; integrate into 20-year sovereign food reserve stress tests alongside conventional climate scenario planning.'
+    ]
   },
 
   {
@@ -9215,20 +9241,49 @@ var WL_SIGNALS = [
       {stage:'2ND ORDER', mechanism:'GCC offshore capex overage reduces hydrocarbon revenue reinvestment — government project cargo volumes contract',                                    example:'ARAMCO deferred 3 offshore field developments citing OSV cost escalation 2023; estimated $2.1B project cargo volume deferred from Dammam/Jubail',                   lag:'12–30m',strength:58},
       {stage:'3RD ORDER', mechanism:'GCC port cargo throughput model compressed — infrastructure development project cargo falls while consumer import volumes stable or rising',         example:'Jubail Industrial Port project cargo volumes −14% 2023 vs 2022 forecast; non-energy consumer cargo maintained — net port revenue mix shift to lower-margin volumes', lag:'18–36m',strength:52}
     ],
-    chart:{
+    factChart:{
       type:'line',
-      title:'Middle East OSV Day Rates vs North Sea Offshore Wind Investment (2018–2024)',
-      xLabel:'Year', yLabel:'Middle East PSV Day Rate (USD/day)',
+      title:'① Middle East OSV Day Rates vs North Sea Wind Investment (2018–2024)',
+      xLabel:'Year', yLabel:'ME PSV Day Rate (USD/day)',
       color:'#25a066', dualAxis:true,
-      label2:'North Sea Offshore Wind Investment Committed ($B, annual)',
+      label2:'N. Sea Wind Investment ($B)',
       color2:'#4a9fe8',
-      note:'OSV day rates in ME Gulf spiked 65% as North Sea wind buildout relocated vessels 2021–2023; R²≈0.81 between European renewable vessel demand and GCC OSV scarcity premium',
-      source:'Clarksons Research — Offshore Vessel Day Rate Database & BloombergNEF Offshore Wind Investment Report',
+      note:'R²=0.81 between European renewable vessel demand and GCC OSV scarcity premium. OSV day rates spiked 65% as North Sea wind buildout permanently reallocated 240+ specialist vessels from Middle East energy operations — the fleet cannot return to oil and gas support roles.',
+      source:'Clarksons Research — Offshore Vessel Day Rate Database & BloombergNEF Offshore Wind Investment',
       sourceUrl:'https://www.clarksons.com/services/research/',
       labels:[2018,2019,2020,2021,2022,2023,2024],
       values:[12500,11800,8200,10500,16800,21400,19800],
       values2:[26,32,18,25,44,58,72]
-    }
+    },
+    chart:{
+      type:'line',
+      title:'② Middle East OSV Day Rate Trend with 2026 Forecast (USD/day)',
+      xLabel:'Year', yLabel:'ME PSV Day Rate (USD/day)',
+      color:'#25a066', color2:'#e87a3c',
+      label2:'2026 forecast (N. Sea Round 4 installation phase)',
+      refLine:12000,
+      refLineLabel:'Pre-2021 baseline ($12,000/day)',
+      refLineColor:'#4a9fe8',
+      note:'Actual day rates 2018–2024 (green). Orange dashed: 2026 forecast at ~$20,500/day based on North Sea offshore wind investment exceeding $85B as UK/Dutch/German Round 4 projects enter installation phase, adding 40–60 specialist vessel-years of demand with no structural relief until 2030+.',
+      source:'Clarksons Research — Offshore Vessel Day Rate Database',
+      sourceUrl:'https://www.clarksons.com/services/research/',
+      labels:[2018,2019,2020,2021,2022,2023,2024,'2026F'],
+      values:[12500,11800,8200,10500,16800,21400,19800,null],
+      values2:[null,null,null,null,null,null,19800,20500]
+    },
+    keyTakeaway:'240+ specialist offshore support vessels have migrated permanently to North Sea wind contracts — Middle East OSV availability is down 18% and day rates up 65%, creating a structural vessel scarcity that constrains GCC offshore energy expansion independently of oil price.',
+    brief_observation:'The European offshore wind buildout has permanently reallocated 240+ specialist offshore support vessels (OSVs) from Middle East energy operations to North Sea and Baltic wind installation and maintenance contracts. North Sea offshore wind investment committed reached $72B in 2024 — the vessel demand from this pipeline exceeds Middle East offshore exploration budgets by a factor of 3. Middle East OSV day rates spiked 65% from $12,500 to $21,400/day as fleet availability fell 18%, with R²=0.81 between European renewable vessel demand and GCC OSV scarcity premium. This is a structural reallocation, not a cyclical shortage: specialist wind installation vessels cannot return to oil and gas support roles, and the North Sea pipeline commitment runs to 2035.',
+    brief_implications:[
+      'Cost — Middle East upstream operators (Saudi Aramco, ADNOC offshore programmes) face $18,000–22,000/day OSV rates versus the pre-2021 baseline of $11,500/day, adding $2–4M per offshore project for every 30-day vessel engagement; OSV cost inflation is compounding across GCC offshore capital programmes regardless of the oil price environment.',
+      'Time — critical-path offshore projects (subsea inspection, cable laying, platform supply) are experiencing 8–14 week scheduling delays as OSV availability windows have narrowed; GCC operators cannot wait for cheaper vessels — the North Sea wind pipeline keeps the specialist fleet constrained through at least 2030.',
+      'Resilience — GCC energy operators building offshore capacity for the 2025–2030 production plateau have no structural hedge against OSV scarcity; the energy transition that sustains Middle East export revenues simultaneously constrains the marine services sector needed to maintain and expand that production capacity.'
+    ],
+    brief_assessment:'North Sea offshore wind investment is forecast to exceed $85B annually by 2026 as UK, Dutch, and German Round 4 projects enter installation phase, adding an estimated 40–60 additional specialist vessel-years of demand. GCC offshore day rates are forecast at $19,000–22,000/day through 2027 with no structural relief until the first offshore wind asset generation enters maintenance cycle after 2030.',
+    brief_recommendation:[
+      'Long-term vessel contracting: GCC upstream operators should lock multi-year OSV contracts at current rates ($18,000–22,000/day) rather than relying on spot market availability; waiting for normalisation will result in continued project delays as the North Sea installation pipeline maintains fleet commitment through 2028.',
+      'Vessel scope audit: commission a review of GCC offshore project portfolios to identify tasks currently requiring specialist OSVs that could be re-engineered for standard platform supply vessels or remotely-operated alternatives — reducing critical dependence on the constrained specialist fleet.',
+      'Fleet investment: ADNOC and Saudi Aramco should evaluate direct OSV fleet ownership or joint ventures in purpose-built Middle East capacity; current day rate levels provide 25–35% return on new-build investment, making indigenous fleet development economically viable for the first time.'
+    ]
   },
 
   {

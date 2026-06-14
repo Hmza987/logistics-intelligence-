@@ -2166,6 +2166,7 @@ canvas { font-family: var(--f-mono); }
   border:1px solid var(--c-bd1); background:var(--c-s1);
   border-radius:var(--r); cursor:pointer; position:relative; overflow:hidden;
   transition:border-color var(--t),background var(--t);
+  display:flex; flex-direction:column;
 }
 .wl-mosaic-card::before {
   content:''; position:absolute; left:0; top:0; bottom:0; width:3px;
@@ -2179,7 +2180,7 @@ canvas { font-family: var(--f-mono); }
 .wl-mc-meta { display:flex; gap:10px; flex-wrap:wrap; margin-bottom:8px; }
 .wl-mc-met { font-family:var(--f-mono); font-size:7.5px; color:var(--c-tx2); display:flex; flex-direction:column; gap:2px; }
 .wl-mc-met-val { font-size:9px; color:var(--c-tx1); }
-.wl-mc-score { display:flex; align-items:baseline; gap:4px; margin-top:6px; }
+.wl-mc-score { display:flex; align-items:baseline; gap:4px; margin-top:auto; padding-top:10px; }
 .wl-mc-score-val { font-family:var(--f-mono); font-size:18px; font-weight:700; line-height:1; }
 .wl-mc-score-lbl { font-family:var(--f-mono); font-size:7px; color:var(--c-tx2); }
 .wl-mc-bar-bg { height:3px; background:var(--c-s2); border-radius:2px; overflow:hidden; margin-top:5px; }
@@ -12344,35 +12345,9 @@ function selectWLTopic(gid, tid) {
 
         var h = navBack;
 
-        // ── Live signals (auto-detected) ────────────────────────────────────
         // Store live signals so selectWLSignal can surface them as a banner
         liveSigs.forEach(function(s){ wlLiveCache[s.id] = s; });
         wlState.liveSigsByTopic[tid] = liveSigs;
-
-        // Only show live signal cards when no curated signals cover this topic
-        if (liveSigs.length && !sigs.length) {
-          h += '<div class="wl-live-section-hdr"><span class="wl-live-pulse"></span>Live &middot; Auto-Detected &middot; '+(liveData.scanDate||'Today')+'</div>';
-          h += '<div class="wl-mosaic">';
-          liveSigs.forEach(function(sig){
-            var sc   = wlSysColor(sig.systemicImpact);
-            var conf = wlConfLabel(sig.confidence);
-            var gccStep = (sig.chain||[]).find(function(s){ return s.gcc; }) || (sig.chain||[]).slice(-1)[0];
-            var execSummary = gccStep ? gccStep.label : (sig.insight ? sig.insight.split('.')[0]+'.' : '');
-            h += '<div class="wl-mosaic-card wl-live" id="wl-live-card-'+sig.id+'">'+
-                 '<div class="wl-mc-live-badge">&#9889; Auto-Detected Signal</div>'+
-                 '<div class="wl-mc-live-title">'+sig.title+'</div>'+
-                 '<div class="wl-live-exec-summary">'+execSummary+'</div>'+
-                 '<div class="wl-mc-meta">'+
-                   '<div class="wl-mc-met"><span>HORIZON</span><span class="wl-mc-met-val">'+sig.horizon+'</span></div>'+
-                   '<div class="wl-mc-met"><span>CONFIDENCE</span><span class="wl-mc-met-val" style="color:'+conf.color+'">'+conf.label+'</span></div>'+
-                   '<div class="wl-mc-met"><span>SYSTEMIC IMPACT</span><span class="wl-mc-met-val" style="color:'+sc+'">'+sig.systemicImpact+'/100</span></div>'+
-                 '</div>'+
-                 '<div class="wl-mc-bar-bg" style="margin:8px 0 12px"><div class="wl-mc-bar-fill" style="width:'+sig.systemicImpact+'%;background:'+sc+'"></div></div>'+
-                 '<div class="wl-live-expand-btn" onclick="expandWLLiveSignal(\''+sig.id+'\',event)">&#9656; View full analysis</div>'+
-                 '</div>';
-          });
-          h += '</div>';
-        }
 
         // ── Curated signals ─────────────────────────────────────────────────
         if (sigs.length) {
@@ -12394,6 +12369,32 @@ function selectWLTopic(gid, tid) {
                    '<span class="wl-mc-score-lbl">systemic impact</span>'+
                  '</div>'+
                  '<div class="wl-mc-bar-bg"><div class="wl-mc-bar-fill" style="width:'+sig.systemicImpact+'%;background:'+sc+'"></div></div>'+
+                 '</div>';
+          });
+          h += '</div>';
+        }
+
+        // ── Live signals (auto-detected) — always show when present ─────────
+        if (liveSigs.length) {
+          var scanLabel = (liveData && liveData.scanDate) ? new Date(liveData.scanDate).toLocaleDateString('en-GB',{day:'numeric',month:'short',year:'numeric'}) : 'Today';
+          h += '<div class="wl-live-section-hdr"><span class="wl-live-pulse"></span>Live &middot; Auto-Detected &middot; '+scanLabel+'</div>';
+          h += '<div class="wl-mosaic">';
+          liveSigs.forEach(function(sig){
+            var sc   = wlSysColor(sig.systemicImpact);
+            var conf = wlConfLabel(sig.confidence);
+            var gccStep = (sig.chain||[]).find(function(s){ return s.gcc; }) || (sig.chain||[]).slice(-1)[0];
+            var execSummary = gccStep ? gccStep.label : (sig.insight ? sig.insight.split('.')[0]+'.' : '');
+            h += '<div class="wl-mosaic-card wl-live" id="wl-live-card-'+sig.id+'">'+
+                 '<div class="wl-mc-live-badge">&#9889; Auto-Detected Signal</div>'+
+                 '<div class="wl-mc-live-title">'+sig.title+'</div>'+
+                 '<div class="wl-live-exec-summary">'+execSummary+'</div>'+
+                 '<div class="wl-mc-meta">'+
+                   '<div class="wl-mc-met"><span>HORIZON</span><span class="wl-mc-met-val">'+sig.horizon+'</span></div>'+
+                   '<div class="wl-mc-met"><span>CONFIDENCE</span><span class="wl-mc-met-val" style="color:'+conf.color+'">'+conf.label+'</span></div>'+
+                   '<div class="wl-mc-met"><span>SYSTEMIC IMPACT</span><span class="wl-mc-met-val" style="color:'+sc+'">'+sig.systemicImpact+'/100</span></div>'+
+                 '</div>'+
+                 '<div class="wl-mc-bar-bg" style="margin:8px 0 12px"><div class="wl-mc-bar-fill" style="width:'+sig.systemicImpact+'%;background:'+sc+'"></div></div>'+
+                 '<div class="wl-live-expand-btn" onclick="expandWLLiveSignal(\''+sig.id+'\',event)">&#9656; View full analysis</div>'+
                  '</div>';
           });
           h += '</div>';

@@ -7,6 +7,78 @@
   ],
   "signals": [
     {
+      "id": "persian_gulf_port_heat_stress",
+      "topicIds": ["temperature"],
+      "title": "Persian Gulf SST at 34.2°C — highest June reading on record — mandatory UAE midday labour ban compressing Jebel Ali throughput by 20% through September",
+      "category": "Climate / Marine Heatwave & Heat Stress",
+      "confidence": 84,
+      "horizon": "1–4 months",
+      "origin": "Persian Gulf / UAE & Saudi Arabia",
+      "systemicImpact": 67,
+      "dataEvidence": "Persian Gulf SST 34.2°C (+2.1°C above June baseline); UAE ambient temperature exceeding 50°C wet-bulb threshold; El Niño +1.02°C anomaly anchoring Arabian Peninsula heat dome through Q3 2026",
+      "chain": [
+        {
+          "order": 0,
+          "label": "Persian Gulf SST reaches 34.2°C — a June record — driven by a heat dome anchored by El Niño suppressing evaporative cooling over the Arabian Peninsula; UAE and Saudi Arabia record 50–51°C ambient temperatures, triggering the UAE Ministry of Human Resources mandatory outdoor work prohibition between 12:30pm and 3:00pm at all port and logistics facilities from June 15 through September 15",
+          "score": 0.88
+        },
+        {
+          "order": 1,
+          "label": "Jebel Ali (world's 9th busiest container terminal, ~19 million TEU/year) and Khalifa Port operate with crane operators, lashing crews, and truck drivers restricted during 2.5 peak midday hours, compressing productive berth hours by approximately 22%; daily throughput drops from ~28,000 TEU to an estimated 22,000 TEU; reefer cargo in open storage bays is exposed to 50°C+ ambient conditions, generating cold-chain integrity failures",
+          "score": 0.80
+        },
+        {
+          "order": 2,
+          "label": "Vessel turnaround at Jebel Ali extends from the standard 26–34 hours to 42–55 hours; feeder services to Khalifa Port Abu Dhabi, Dammam, Salalah, and Kuwait absorb 1.5–2.5 day schedule delays; King Abdullah Port (Jeddah) and Dammam terminals face the same UAE-level heat protocols under Saudi Arabia's parallel outdoor work ban, creating simultaneous throughput suppression across all three primary GCC entry points",
+          "score": 0.74
+        },
+        {
+          "order": 3,
+          "label": "GCC import backlogs accumulate 4–6 days of delayed vessel calls by peak August 2026; GCC retailers running back-to-school and Eid al-Adha inventory cycles — which represent the highest import volumes of the year — face a structural collision between climate-driven port capacity compression and peak demand; time-sensitive cargo such as electronics, pharmaceuticals, and chilled food absorbs the greatest cost impact from dwell-time extensions in 50°C terminal environments",
+          "score": 0.68,
+          "gcc": true
+        }
+      ],
+      "insight": "Unlike other signals in this dataset where the climate event is upstream and the GCC impact is indirect, Persian Gulf heat stress is a direct constraint on the terminals GCC importers depend on. The UAE outdoor work prohibition is legally mandated, so every fraction of a degree of Gulf warming tightens an existing enforcement threshold rather than creating a novel risk. What makes 2026 distinctive is the coincidence of record SST with the highest peak-demand import season, eliminating the scheduling flexibility that ports used in prior years to compensate for midday shutdowns.",
+      "blindspot": "Port throughput statistics will not reflect the full productivity loss because operators shift loading to night shifts and report aggregate daily TEU numbers. The real signal is vessel queue depth: when anchorage waiting times at Jebel Ali exceed 3–4 vessels, the throughput suppression has already been compounding for 2–3 weeks. By the time the queue is visible to GCC importers via vessel tracking, their Eid al-Adha cargo is already inside the delay window with no routing alternative."
+    },
+    {
+      "id": "red_sea_marine_heatwave_corridor",
+      "topicIds": ["temperature"],
+      "title": "Red Sea classified as Category III Marine Heatwave — SST at 32.4°C forcing vessel speed reductions and crew heat protocols on the Suez–Jebel Ali trunk corridor",
+      "category": "Climate / Marine Heatwave",
+      "confidence": 71,
+      "horizon": "2–5 months",
+      "origin": "Red Sea / Bab-el-Mandeb to Suez Canal",
+      "systemicImpact": 52,
+      "dataEvidence": "Red Sea SST 32.4°C (+2.8°C above June baseline); NOAA marine heatwave classification Category III (Severe) across >85% of Red Sea surface; deck temperatures on vessels in transit exceed 65°C in still-air conditions",
+      "chain": [
+        {
+          "order": 0,
+          "label": "Red Sea SST reaches 32.4°C — +2.8°C above the June 1991–2020 baseline — qualifying as a Category III (Severe) Marine Heatwave across more than 85% of the Red Sea surface; deck temperatures on container and tanker vessels transiting the 1,900km corridor between Bab-el-Mandeb and Suez regularly exceed 65°C in still-air conditions during midday hours, triggering international maritime crew heat stress protocols",
+          "score": 0.78
+        },
+        {
+          "order": 1,
+          "label": "IMO crew welfare guidelines require speed reduction or increased ventilation when sustained deck temperatures exceed 60°C and air temperatures breach 40°C — conditions now standard throughout the June–September Red Sea transit window; vessels on the Jebel Ali–Suez route (~1,950nm) reduce service speed from 18–20 knots to 15–17 knots, adding 12–18 hours to transit time and increasing fuel consumption by 8–12% as cooling systems work harder in 33°C seawater versus the designed 25–27°C baseline",
+          "score": 0.70
+        },
+        {
+          "order": 2,
+          "label": "The 12–18 hour transit extension per voyage accumulates across the ~85 weekly container sailings using the Red Sea–Suez corridor to connect Europe and Asia to the Gulf; shipping lines running tight 14–21 day schedules cannot absorb the delay without vessel rotation adjustments, leading to blanked departures or port omissions; Jeddah Islamic Port, which sits at the corridor midpoint, sees reduced service frequency as lines skip calls to recover schedule",
+          "score": 0.63
+        },
+        {
+          "order": 3,
+          "label": "GCC importers routing Europe-origin cargo via Suez face transit time extensions of 1–2 days on the standard 12–14 day Europe–Jebel Ali schedule; Saudi Arabia's Red Sea ports (Jeddah, KAEC, Yanbu) are most directly exposed to frequency reductions; for reefer cargo on the northbound Jebel Ali–Europe lane, the extended Red Sea transit in 32°C seawater increases vessel refrigeration load and the probability of cold-chain exceedance events by an estimated 15–20%, elevating insurance and replacement cargo costs",
+          "score": 0.57,
+          "gcc": true
+        }
+      ],
+      "insight": "The Red Sea marine heatwave is a direct cost and schedule multiplier on the world's most strategically significant shipping corridor for GCC trade. Unlike the Houthi-driven Red Sea rerouting that forced vessels around the Cape, the heatwave does not redirect vessels — it degrades the economics of using the corridor for all vessels that remain on it. The compounding mechanism is the mismatch between vessel cooling system design parameters (built for 25–27°C seawater) and current 32.4°C SST, meaning vessels incur a structural efficiency penalty on every voyage regardless of speed.",
+      "blindspot": "Insurance underwriters are not yet pricing Red Sea marine heatwave risk into cargo policies; standard marine cargo policies exclude temperature exceedance claims that originate from ambient operating conditions rather than equipment failure. As reefer cargo cold-chain breaches increase through Q3 2026, the absence of policy coverage will force GCC importers to absorb the replacement cost directly, a liability that procurement and logistics teams have not factored into landed cost models for European-origin temperature-sensitive goods."
+    },
+    {
       "id": "mekong_basin_drought_reefer_cascade",
       "topicIds": [
         "rainfall",

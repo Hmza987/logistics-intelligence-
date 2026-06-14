@@ -8870,6 +8870,11 @@ var WL_SIGNALS = [
       values:[4,34,46,71,53,18,19,27,27,37,62,85,71,89,null],
       values2:[null,null,null,null,null,null,null,null,null,null,null,null,null,89,105]
     },
+    satelliteImage:{
+      url:'https://nsidc.org/data/seaice_index/images/daily_images/N_daily_extent_hires.png',
+      caption:'Arctic sea ice extent — current daily satellite composite. White: active ice coverage. Orange line: 1981–2010 median extent for this date.',
+      source:'NASA / NSIDC Sea Ice Index · Updated daily · nsidc.org/sea-ice-today'
+    },
     keyTakeaway:'Arctic summer ice-free window now exceeds 140 days — a viable Asia-Europe bypass corridor is forming outside Gulf waters, structurally threatening UAE\'s Suez-corridor transshipment position over the next decade.',
     brief_observation:'The NSIDC September Arctic sea ice minimum has fallen from a 2000–2010 average of 5.9 M km² to 4.4 M km² in 2011–2024, with the 2012 record low of 3.41 M km² now likely to be broken within this decade under current warming trajectories. Commercial transits of the Northern Sea Route grew from 4 voyages in 2010 to 89 in 2023 (+2,125%), with COSCO, Sovcomflot, and South Korean operators now running regular container and bulk cargo services. The summer ice-free window has extended from approximately 90 days in 2010 to 140+ days currently; IPCC AR6 projects a seasonally ice-free Arctic by 2035–2050, making the NSR commercially viable for 6+ months annually without icebreaker escort.',
     brief_implications:[
@@ -12681,6 +12686,18 @@ function generateStrategyBrief(sid) {
   }
   var factSec  = buildChartSvgSec(sig.factChart);
   var chartSec = buildChartSvgSec(sig.chart);
+  var satImageSec = '';
+  if (sig.satelliteImage) {
+    satImageSec =
+      '<div style="padding:9px 22px;page-break-inside:avoid;">' +
+        '<div style="font-family:Arial,sans-serif;font-size:7.5px;font-weight:700;letter-spacing:.13em;color:#7a7a7a;text-transform:uppercase;border-bottom:1px solid #ccc;padding-bottom:3px;margin-bottom:10px;">Satellite Imagery</div>' +
+        '<div style="text-align:center;">' +
+          '<img src="' + sig.satelliteImage.url + '" style="max-width:100%;height:auto;border:1px solid #ddd;display:block;margin:0 auto;" />' +
+        '</div>' +
+        '<div style="font-size:7.5px;color:#444;text-align:center;margin-top:6px;font-family:Arial,sans-serif;line-height:1.5;">' + sig.satelliteImage.caption + '</div>' +
+        '<div style="font-size:6.5px;color:#888;text-align:center;margin-top:2px;font-family:Arial,sans-serif;">Source: ' + sig.satelliteImage.source + '</div>' +
+      '</div>';
+  }
   var keySec   = sig.keyTakeaway
     ? sec('&#9670; Key Takeaway',
         '<div style="font-size:10px;line-height:1.7;color:#1a1a1a;font-family:Arial,sans-serif;background:#fbf6e9;border-left:3px solid #c8a800;padding:9px 12px;">' + sig.keyTakeaway + '</div>')
@@ -12913,7 +12930,7 @@ function generateStrategyBrief(sid) {
 
   var briefHTML = useExecTemplate
     ? '<div style="font-family:Arial,sans-serif;color:#111;background:#fff;width:190mm;margin:0 auto;">' +
-      classBar + docHeader + subjectBlockClean + execSummaryHTML + briefAssessHTML + factSec + chartSec + keySec + briefRecHTML + footerBar +
+      classBar + docHeader + subjectBlockClean + execSummaryHTML + briefAssessHTML + factSec + chartSec + satImageSec + keySec + briefRecHTML + footerBar +
       '</div>'
     : '<div style="font-family:\'Times New Roman\',serif;color:#111;background:#fff;width:190mm;margin:0 auto;">' +
       classBar + docHeader + subjectBlock + kjHTML + assessHTML + factSec + chartSec + keySec + geoSec + scSec + gccSec + confSec + actSec + evSec + footerBar +
@@ -12960,7 +12977,13 @@ function generateStrategyBrief(sid) {
     '<div id="browser-tip" class="no-print">For best results use <b>Google Chrome</b> &rarr; File &rarr; Print &rarr; Save as PDF &nbsp;|&nbsp; Destination: <b>Save as PDF</b> &nbsp;|&nbsp; Layout: <b>Portrait</b></div>' +
     '<button class="print-btn no-print" onclick="window.print()">&#8659; Save as PDF</button>' +
     briefHTML +
-    '<scr'+'ipt>window.onload=function(){setTimeout(function(){window.print();},400);};</scr'+'ipt>' +
+    '<scr'+'ipt>window.onload=function(){' +
+      'var imgs=document.querySelectorAll("img");' +
+      'if(!imgs.length){setTimeout(window.print,400);return;}' +
+      'var n=0,t=imgs.length;' +
+      'function tryPrint(){if(++n>=t)setTimeout(window.print,300);}' +
+      'Array.prototype.forEach.call(imgs,function(i){if(i.complete)tryPrint();else{i.onload=tryPrint;i.onerror=tryPrint;}});' +
+    '};</scr'+'ipt>' +
     '</body></html>';
 
   var win = window.open('', '_blank');

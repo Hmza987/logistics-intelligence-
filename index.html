@@ -12483,6 +12483,28 @@ function selectWLSignal(sid) {
 
   if (!sig) return;
 
+  // ── WIP gate — only the climate group has full signal detail built out ──────
+  if (g && g.id !== 'climate') {
+    wlRenderHeader(sig);
+    // Hide chart/geo cards without touching innerHTML (preserves canvas elements)
+    ['wl-fact-card','wl-chart-card','wl-geo-card'].forEach(function(eid){
+      var el = document.getElementById(eid);
+      if (el) el.style.display = 'none';
+    });
+    // Replace exec panel with in-development notice
+    var epWip = document.getElementById('wl-exec-panel');
+    if (epWip) epWip.innerHTML =
+      '<div style="text-align:center;padding:44px 24px;color:#6a7a9a;">' +
+        '<div style="font-size:32px;margin-bottom:14px;opacity:.5;">&#9998;</div>' +
+        '<div style="font-size:9px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:#4a5a7a;margin-bottom:10px;">Signal In Development</div>' +
+        '<div style="font-size:10px;line-height:1.75;color:#6a7a9a;max-width:300px;margin:0 auto;">Full analysis, data charts, and strategy brief for this signal are currently being built out. Check back in the next release.</div>' +
+      '</div>';
+    // Hide brief download button
+    var bBtn = document.getElementById('wl-brief-btn');
+    if (bBtn) bBtn.style.display = 'none';
+    return;
+  }
+
   // Render signal header (title, meta, systemic impact bar)
   wlRenderHeader(sig);
 

@@ -1030,6 +1030,19 @@ a { color: inherit; text-decoration: none; }
 .delta-hi { background: rgba(192,57,43,.1);  color: var(--c-red-hi); }
 .delta-lo { background: rgba(26,122,74,.1);  color: var(--c-green-hi); }
 .delta-nu { background: rgba(50,60,75,.15);  color: var(--c-tx2); }
+/* View 2 route selector tabs */
+.v2-rt-btn {
+  display:flex; flex-direction:column; align-items:flex-start; gap:2px;
+  background:#1e252f; border:1px solid #2e3540; border-radius:4px;
+  padding:7px 12px; cursor:pointer; transition:border-color .15s,background .15s;
+  font-family:var(--f-mono); min-width:120px;
+}
+.v2-rt-btn:hover { background:#252d38; border-color:#4a5568; }
+.v2-rt-btn.v2-rt-active { background:#1a2030; border-color:#a78bfa; }
+.v2-rt-name { font-size:10px; color:var(--c-tx1); font-weight:600; letter-spacing:.03em; }
+.v2-rt-rate { font-size:13px; color:#f0c84b; font-weight:700; }
+.v2-rt-unavail { font-size:11px; color:var(--c-tx2); }
+.v2-rt-badge { font-size:8px; padding:1px 5px; border-radius:2px; background:rgba(167,139,250,.15); color:#a78bfa; font-weight:700; letter-spacing:.04em; }
 
 /* Scenario banner */
 .scenario-bar {
@@ -3835,6 +3848,7 @@ canvas { font-family: var(--f-mono); }
       <div class="sim-panel">
         <div class="sim-panel-title">&#9672; View 2 — End-to-End Landed Cost</div>
         <div class="sim-panel-sub" id="v2-sub">Port of origin &rarr; final GCC city including sea + port + inland trucking</div>
+        <div id="v2-route-tabs" style="display:flex;gap:6px;flex-wrap:wrap;margin:10px 0 14px;"></div>
         <div class="cost-breakdown" id="cost-breakdown"></div>
         <div class="src" style="margin-top:8px"><span>Sea: SeaRates spot + Freightos all-in Seabay &middot; Port: DP World/DPMC &middot; Trucking: ZATCA/TruKKer benchmarks</span><span class="src-badge">modelled</span></div>
       </div>
@@ -4075,6 +4089,7 @@ canvas { font-family: var(--f-mono); }
 var CHARTS = {};   // chart registry
 var mapReady = false;
 var activeScenario = 1;
+var lastSimState   = null;  // persists View 2 state for route-tab switching
 
 // ── TABS ──────────────────────────────────────────────────────────────────────
 var TAB_LABELS = { hormuz:'Hormuz Traffic', rates:'Container Rates', trucking:'GCC Trucking', simulator:'Scenario Simulator', watchlist:'Strategic Watchlist' };
@@ -5659,6 +5674,115 @@ function showCalibrating(callback) {
   }, 4000);
 }
 
+// ── View 2 route-tab helpers ───────────────────────────────────────────────────
+
+function renderV2RouteTabs(rows, selectedKey) {
+  var el2 = document.getElementById('v2-route-tabs');
+  if (!el2) return;
+  el2.innerHTML = rows.map(function(r) {
+    var isActive = r.key === selectedKey;
+    var isBest   = r.key === rows.filter(function(x){ return x.rm.avail && x.rate !== null; }).map(function(x){ return x.key; })[0];
+    var cls = 'v2-rt-btn' + (isActive ? ' v2-rt-active' : '');
+    var label = r.rm.label || ROUTE_NAMES[r.key] || r.key;
+    var rateStr = r.rm.avail && r.rate !== null ? '$' + fmtN(r.rate) : '<span class="v2-rt-unavail">Unavailable</span>';
+    var badge   = isBest && r.rm.avail ? '<span class="v2-rt-badge">&#9733; OPTIMAL</span>' : '';
+    return '<button class="'+cls+'" onclick="selectSimRoute(\''+r.key+'\')">'+
+      '<span class="v2-rt-name">'+label+'</span>'+
+      '<span class="v2-rt-rate">'+rateStr+'</span>'+
+      badge+
+    '</button>';
+  }).join('');
+}
+
+function selectSimRoute(key) {
+  if (!lastSimState) return;
+  lastSimState.selectedKey = key;
+  var row = lastSimState.rows.find(function(r){ return r.key === key; });
+  renderV2RouteTabs(lastSimState.rows, key);
+  if (row) renderV2CostBreakdown(row);
+}
+
+function renderV2CostBreakdown(row) {
+  if (!lastSimState || !row) return;
+  var s         = lastSimState;
+  var key       = row.key;
+  var rate      = row.rate || 0;
+  var name      = ROUTE_NAMES[key] || key;
+  var commNote  = s.commodity==='food'?' (incl. reefer)':s.commodity==='chemical'?' (incl. hazmat)':'';
+  var truck     = row.truckCost || 0;
+  // War-risk: use per-route override if present so Cape route reflects its lower war premium
+  var effWar    = row.rm.warOverride !== undefined ? row.rm.warOverride : s.warNum;
+  var warRiskPct = REG.b4_warrsk * Math.max(0, effWar - 1);
+  var warRisk    = Math.round((s.baseRates[key] || s.baseRates['cgh']) * warRiskPct * s.cSrg);
+  var totalFEU  = rate + s.origPort + s.destPort + truck;
+  var totalMo   = totalFEU * s.teu;
+  var dFEU      = totalFEU - s.preTotal;
+  var dMo       = totalMo - s.preMo;
+  var dPct      = Math.round((dFEU / s.preTotal) * 100);
+  var transitDays = row.rm.days || 25;
+  var etaDate     = addTransitDays(s.shipDate, transitDays);
+  var etaStr      = fmtShipDate(s.shipDate) + ' &rarr; ETA ' + fmtShipDate(etaDate) + ' (' + transitDays + 'd via ' + name + ')';
+  var freightPct  = row.mult ? Math.round((row.mult - 1) * 100) : 0;
+  var seasonPct   = s.seasonPct;
+
+  var subEl = document.getElementById('v2-sub');
+  if (subEl) subEl.innerHTML = (ORIG_NAMES[s.origin]||s.origin) + ' &rarr; ' + (DEST_NAMES[s.dest]||s.dest) +
+    ' &nbsp;&bull;&nbsp; ' + s.teu + ' TEU/month' +
+    ' &nbsp;&bull;&nbsp; ' + (COMM_NAMES[s.commodity]||s.commodity) +
+    ' &nbsp;&bull;&nbsp; ' + etaStr;
+
+  var items = [
+    {k:'Ocean freight (per FEU)',                           v:'$'+fmtN(rate),       s:'Regression-based &bull; '+name+commNote+' &bull; incl. war-risk ~$'+fmtN(warRisk), p:freightPct},
+    {k:'Seasonal adjustment',                               v:(seasonPct>=0?'+':'')+seasonPct+'%', s:s.seasonal.label+' &bull; '+s.seasonal.desc, p:seasonPct, seasonal:true},
+    {k:'Origin port handling (THC)',                        v:'$'+fmtN(s.origPort), s:(ORIG_NAMES[s.origin]||s.origin)+' terminal charges', p:0},
+    {k:'Destination port handling',                         v:'$'+fmtN(s.destPort), s:s.destCfg.port+' THC + customs clearance', p:0},
+    {k:'Inland trucking to '+(DEST_NAMES[s.dest]||s.dest), v:truck>0?'$'+fmtN(truck):'Port delivery', s:truck>0?'Door delivery':'Direct port destination', p:truck>0?30:0}
+  ];
+
+  var bd = document.getElementById('cost-breakdown');
+  if (!bd) return;
+  bd.innerHTML = items.map(function(it) {
+    if (it.seasonal) {
+      var sColor = it.p > 0 ? s.seasonal.color : it.p < 0 ? '#3dd68c' : '#7a8494';
+      var sVal   = (it.p > 0 ? '+' : '') + it.p + '%';
+      return '<div class="cost-row" style="border-left:2px solid '+sColor+'22;padding-left:10px">'+
+        '<div><div class="cost-key" style="color:'+sColor+'">'+it.k+'</div><div class="cost-sub">'+it.s+'</div></div>'+
+        '<div style="display:flex;align-items:center;gap:6px">'+
+          '<div class="cost-val" style="color:'+sColor+';font-size:15px">'+sVal+'</div>'+
+          '<span class="crisis-delta" style="background:'+sColor+'22;color:'+sColor+'">on sea freight</span>'+
+        '</div></div>';
+    }
+    var pc = it.p>100?'#e74c3c':it.p>30?'#fbbf24':it.p>0?'#f0c84b':'#7a8494';
+    var pt = it.p>0?'+'+it.p+'%':'baseline';
+    return '<div class="cost-row">'+
+      '<div><div class="cost-key">'+it.k+'</div><div class="cost-sub">'+it.s+'</div></div>'+
+      '<div style="display:flex;align-items:center;gap:6px">'+
+        '<div class="cost-val" style="color:#f0c84b">'+it.v+'</div>'+
+        '<span class="crisis-delta" style="background:rgba(58,67,81,.2);color:'+pc+'">'+pt+'</span>'+
+      '</div></div>';
+  }).join('') +
+  '<div class="cost-row" style="padding-top:10px;border-top:1px solid #2e3540;margin-top:4px">'+
+    '<div><div class="cost-key" style="color:#e8eaed;font-weight:700">Total per FEU (landed)</div>'+
+    '<div class="cost-sub">Pre-crisis baseline: $'+fmtN(s.preTotal)+'</div></div>'+
+    '<div style="display:flex;align-items:center;gap:6px">'+
+      '<div class="cost-val" style="color:#e8eaed;font-size:20px">$'+fmtN(totalFEU)+'</div>'+
+      '<span class="crisis-delta" style="background:'+(dFEU>0?'rgba(231,76,60,.12)':'rgba(61,214,140,.12)')+';color:'+(dFEU>0?'#e74c3c':'#3dd68c')+'">'+
+        (dFEU>0?'+':'')+dPct+'% vs pre-crisis'+
+      '</span>'+
+    '</div></div>'+
+  '<div class="cost-row" style="background:#181c22;margin:8px -16px -16px;padding:12px 16px;border-radius:0 0 6px 6px">'+
+    '<div><div class="cost-key" style="color:#a78bfa;font-weight:700">Monthly total ('+s.teu+' TEU/month)</div>'+
+    '<div class="cost-sub">Pre-crisis monthly: $'+fmtN(s.preMo)+'</div></div>'+
+    '<div style="display:flex;align-items:center;gap:8px">'+
+      '<div style="font-size:22px;font-weight:700;font-family:\'IBM Plex Mono\',monospace;color:#a78bfa">$'+fmtN(totalMo)+'</div>'+
+      '<div style="font-size:9px;font-family:\'IBM Plex Mono\',monospace;padding:3px 8px;border-radius:3px;background:'+(dMo>0?'rgba(231,76,60,.12)':'rgba(61,214,140,.12)')+';color:'+(dMo>0?'#e74c3c':'#3dd68c')+'">'+
+        (dMo>0 ? '+$'+fmtN(dMo)+'/month vs pre-crisis' : dMo<0 ? '&#x2212;$'+fmtN(Math.abs(dMo))+'/month saved vs pre-crisis' : 'at pre-crisis baseline')+
+      '</div>'+
+    '</div></div>';
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+
 function runSimulator() {
   var sc = SCENARIOS[activeScenario];
   if (!sc) return;
@@ -5847,11 +5971,7 @@ function runSimulator() {
   var bestName  = ROUTE_NAMES[bestKey];
   var origPort  = PORT_COSTS[origin] || 400;
   var destPort  = 280;
-  var commNote  = commodity==='food'?' (incl. reefer)':commodity==='chemical'?' (incl. hazmat)':'';
   var truck     = bestRow ? bestRow.truckCost : 0;
-  // War-risk is embedded in regression ocean freight; extract for display transparency
-  var warRiskPct = REG.b4_warrsk * Math.max(0, warNum - 1);
-  var warRisk    = Math.round((baseRates[bestKey]||baseRates['cgh']) * warRiskPct * cSrg);
   var totalFEU  = bestRate + origPort + destPort + truck;
   var totalMo   = totalFEU * teu;
   // Pre-crisis baseline: same seasonal mult applied so delta shows crisis premium only (not seasonal noise)
@@ -5864,68 +5984,18 @@ function runSimulator() {
   var dFEU      = totalFEU - preTotal;
   var dMo       = totalMo - preMo;
   var dPct      = Math.round((dFEU/preTotal)*100);
+  var seasonPct = Math.round((seasonal.mult - 1) * 100);
 
-  // ETA: shipment date + best route transit days
-  var transitDays = bestRow && bestRow.rm.days ? bestRow.rm.days : 25;
-  var etaDate     = addTransitDays(shipDate, transitDays);
-  var etaStr      = fmtShipDate(shipDate) + ' &rarr; ETA ' + fmtShipDate(etaDate) + ' (' + transitDays + 'd via ' + bestName + ')';
-
-  var seasonPct  = Math.round((seasonal.mult - 1) * 100);
-  var seasonAdj  = Math.round(bestRate * (seasonal.mult - 1) / seasonal.mult); // additive component
-
-  el('v2-sub', (ORIG_NAMES[origin]||origin) + ' &rarr; ' + (DEST_NAMES[dest]||dest) + ' &nbsp;&bull;&nbsp; ' + teu + ' TEU/month &nbsp;&bull;&nbsp; ' + (COMM_NAMES[commodity]||commodity) + ' &nbsp;&bull;&nbsp; ' + etaStr);
-
-  var freightPct = bestRow ? Math.round((bestRow.mult - 1) * 100) : 0;
-  var items = [
-    {k:'Ocean freight (per FEU)',         v:'$'+fmtN(bestRate),  s:'Regression-based &bull; '+bestName+commNote+' &bull; incl. war-risk ~$'+fmtN(warRisk), p: freightPct},
-    {k:'Seasonal adjustment',             v:(seasonPct>=0?'+':'')+seasonPct+'%', s:seasonal.label+' &bull; '+seasonal.desc, p: seasonPct, seasonal:true},
-    {k:'Origin port handling (THC)',       v:'$'+fmtN(origPort),  s:(ORIG_NAMES[origin]||origin)+' terminal charges', p:0},
-    {k:'Destination port handling',        v:'$'+fmtN(destPort),  s:destCfg.port+' THC + customs clearance', p:0},
-    {k:'Inland trucking to '+(DEST_NAMES[dest]||dest), v:truck>0?'$'+fmtN(truck):'Port delivery', s:truck>0?'Door delivery':'Direct port destination', p:truck>0?30:0}
-  ];
-
-  var bd = document.getElementById('cost-breakdown');
-  if (bd) {
-    bd.innerHTML = items.map(function(it) {
-      if (it.seasonal) {
-        // Seasonal row: percentage value, colour-coded by direction
-        var sColor = it.p > 0 ? seasonal.color : it.p < 0 ? '#3dd68c' : '#7a8494';
-        var sVal   = (it.p > 0 ? '+' : '') + it.p + '%';
-        return '<div class="cost-row" style="border-left:2px solid '+sColor+'22;padding-left:10px">'+
-          '<div><div class="cost-key" style="color:'+sColor+'">'+it.k+'</div><div class="cost-sub">'+it.s+'</div></div>'+
-          '<div style="display:flex;align-items:center;gap:6px">'+
-            '<div class="cost-val" style="color:'+sColor+';font-size:15px">'+sVal+'</div>'+
-            '<span class="crisis-delta" style="background:'+sColor+'22;color:'+sColor+'">on sea freight</span>'+
-          '</div></div>';
-      }
-      var pc = it.p>100?'#e74c3c':it.p>30?'#fbbf24':it.p>0?'#f0c84b':'#7a8494';
-      var pt = it.p>0?'+'+it.p+'%':'baseline';
-      return '<div class="cost-row">'+
-        '<div><div class="cost-key">'+it.k+'</div><div class="cost-sub">'+it.s+'</div></div>'+
-        '<div style="display:flex;align-items:center;gap:6px">'+
-          '<div class="cost-val" style="color:#f0c84b">'+it.v+'</div>'+
-          '<span class="crisis-delta" style="background:rgba(58,67,81,.2);color:'+pc+'">'+pt+'</span>'+
-        '</div></div>';
-    }).join('') +
-    '<div class="cost-row" style="padding-top:10px;border-top:1px solid #2e3540;margin-top:4px">'+
-      '<div><div class="cost-key" style="color:#e8eaed;font-weight:700">Total per FEU (landed)</div>'+
-      '<div class="cost-sub">Pre-crisis baseline: $'+fmtN(preTotal)+'</div></div>'+
-      '<div style="display:flex;align-items:center;gap:6px">'+
-        '<div class="cost-val" style="color:#e8eaed;font-size:20px">$'+fmtN(totalFEU)+'</div>'+
-        '<span class="crisis-delta" style="background:'+(dFEU>0?'rgba(231,76,60,.12)':'rgba(61,214,140,.12)')+';color:'+(dFEU>0?'#e74c3c':'#3dd68c')+'">'+
-          (dFEU>0?'+':'')+dPct+'% vs pre-crisis'+
-        '</span>'+
-      '</div></div>'+
-    '<div class="cost-row" style="background:#181c22;margin:8px -16px -16px;padding:12px 16px;border-radius:0 0 6px 6px">'+
-      '<div><div class="cost-key" style="color:#a78bfa;font-weight:700">Monthly total ('+teu+' TEU/month)</div>'+
-      '<div class="cost-sub">Pre-crisis monthly: $'+fmtN(preMo)+'</div></div>'+
-      '<div style="display:flex;align-items:center;gap:8px">'+
-        '<div style="font-size:22px;font-weight:700;font-family:\'IBM Plex Mono\',monospace;color:#a78bfa">$'+fmtN(totalMo)+'</div>'+
-        '<div style="font-size:9px;font-family:\'IBM Plex Mono\',monospace;padding:3px 8px;border-radius:3px;background:'+(dMo>0?'rgba(231,76,60,.12)':'rgba(61,214,140,.12)')+';color:'+(dMo>0?'#e74c3c':'#3dd68c')+'">'+
-          (dMo>0 ? '+$'+fmtN(dMo)+'/month vs pre-crisis' : dMo<0 ? '−$'+fmtN(Math.abs(dMo))+'/month saved vs pre-crisis' : 'at pre-crisis baseline')+
-        '</div>'+
-      '</div></div>';
-  }
+  // Store state for route-tab switching, then render tabs + breakdown
+  lastSimState = {
+    rows:rows, origin:origin, dest:dest, commodity:commodity, teu:teu,
+    shipDate:shipDate, seasonal:seasonal, cSrg:cSrg, warNum:warNum,
+    origPort:origPort, destPort:destPort, preTotal:preTotal, preMo:preMo,
+    destCfg:destCfg, baseRates:baseRates, seasonPct:seasonPct,
+    selectedKey:bestKey
+  };
+  renderV2RouteTabs(rows, bestKey);
+  if (bestRow) renderV2CostBreakdown(bestRow);
 
   // Annual grid
   var annTotal  = totalMo * 12;

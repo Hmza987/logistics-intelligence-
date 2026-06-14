@@ -7619,22 +7619,23 @@ function initChokepointsMap() {
     L.polyline(ln.pts, { color:ln.color, weight:ln.w, opacity:0.82, className:ln.cls }).addTo(chokepointsMap);
   });
 
-  // Arctic / Northern Sea Route (NSR) — drawn separately to bind hover tooltip
-  L.polyline([
-    [31.2,121.5],[38,133],[46,142],
-    [52,145],[57,148],[61,156],
-    [65,170],[69,177],[75,175],
-    [78,150],[78,120],[76,95],
-    [74,73],[71,56],[70,33],[71,26],[62,5],[51.9,4.5]
-  ], { color:'#67e8f9', weight:1.8, opacity:0.5, dashArray:'6 5', className:'bl-lane-arctic' })
-    .addTo(chokepointsMap)
-    .bindTooltip(
-      '<strong style="color:#67e8f9">Arctic / Northern Sea Route (NSR)</strong><br>' +
+  // Arctic / Northern Sea Route (NSR) — two segments to avoid Chukotka/antimeridian issue.
+  // The Bering Strait sits at -169°W (date line); Leaflet can't cross it in one polyline.
+  // Segment 1: East Asia → Pacific east of Kamchatka → Bering Sea (stops south of Chukotka).
+  // Segment 2: Chukchi Sea (north of Chukotka) → Arctic corridor → Rotterdam.
+  var _arcticStyle = { color:'#67e8f9', weight:1.8, opacity:0.5, dashArray:'6 5', className:'bl-lane-arctic' };
+  var _arcticTip   = '<strong style="color:#67e8f9">Arctic / Northern Sea Route (NSR)</strong><br>' +
       'Open ~90–120 days/year &middot; Jul–Oct only<br>' +
       'Requires Arc4/Arc7 ice-class vessels<br>' +
-      '<span style="color:#7a8494">Not viable for current GCC crisis routing</span>',
-      { sticky: true, direction: 'top' }
-    );
+      '<span style="color:#7a8494">Not viable for current GCC crisis routing</span>';
+  L.polyline([
+    [31.2,121.5],[35,129],[40,144],[44,150],
+    [49,156],[52,165],[57,165],[61,167],[64,168]
+  ], _arcticStyle).addTo(chokepointsMap).bindTooltip(_arcticTip, { sticky:true, direction:'top' });
+  L.polyline([
+    [70,177],[76,172],[78,150],[78,120],[76,95],
+    [74,73],[71,56],[70,33],[71,26],[62,5],[51.9,4.5]
+  ], _arcticStyle).addTo(chokepointsMap).bindTooltip(_arcticTip, { sticky:true, direction:'top' });
 
   CHOKEPOINTS.forEach(function(cp) {
     var r = cp.r || 9;

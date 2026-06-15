@@ -7594,23 +7594,25 @@ function initChokepointsMap() {
   chokepointsMapReady = true;
   chokepointsMap = true; // non-null sentinel — satisfies guard checks in other functions
 
-  var W = container.clientWidth  || 820;
+  // Use getBoundingClientRect for width since clientWidth can be 0 if container was hidden
+  var W = Math.round(container.getBoundingClientRect().width) || container.clientWidth || 820;
   var H = parseInt(container.style.height, 10) || 520;
 
-  // ── SVG canvas ──────────────────────────────────────────────────────────────
+  // ── SVG canvas — fills the full container, overflow clipped by CSS ──────────
   var svgSel = d3.select(container).append('svg')
-    .attr('width', '100%').attr('height', H)
+    .attr('width', '100%').attr('height', H).attr('overflow', 'hidden')
     .style('display', 'block').style('cursor', 'grab');
 
-  svgSel.append('defs').append('clipPath').attr('id', 'cp-world-clip')
-    .append('rect').attr('width', W).attr('height', H);
+  var g = svgSel.append('g');
 
-  var g = svgSel.append('g').attr('clip-path', 'url(#cp-world-clip)');
-
-  // ── Natural Earth I projection (equal-area, no Mercator polar exaggeration) ─
+  // ── Natural Earth I projection — scale fills container height exactly ────────
+  // At NE1 defaults (scale 153.5) the earth renders ~960 × 500 px.
+  // We pick the scale that fills both dimensions (no empty strips).
+  var scaleW = W   / (960  / 153.5);   // width-filling scale
+  var scaleH = H   / (500  / 153.5);   // height-filling scale
   var proj = d3.geoNaturalEarth1()
-    .scale(138)
-    .translate([W / 2, H / 2 + 18]);
+    .scale(Math.max(scaleW, scaleH))    // max → fills the shorter axis, clips the longer
+    .translate([W / 2, H / 2]);
   _cpProjection = proj;
 
   var pathGen = d3.geoPath().projection(proj);
@@ -7675,7 +7677,7 @@ function initChokepointsMap() {
 
       // Ocean sphere
       g.append('path').datum({ type:'Sphere' }).attr('d', pathGen)
-        .attr('fill', '#050d1a').attr('stroke', 'none');
+        .attr('fill', '#07121e').attr('stroke', '#0e1e2e').attr('stroke-width', 1);
 
       // Graticule (subtle grid)
       g.append('path').datum(d3.geoGraticule()())

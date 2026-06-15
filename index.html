@@ -4692,7 +4692,7 @@ function rotateIntelFeed() {
   var pool = INTEL_POOL.slice(1);
   _intelOffset = (_intelOffset + 1) % pool.length;
   var html = '';
-  for (var i = 0; i < Math.min(8, pool.length); i++) {
+  for (var i = 0; i < Math.min(4, pool.length); i++) {
     html += buildIntelHTML(pool[(_intelOffset + i) % pool.length]);
   }
   feed.style.opacity = '0';
@@ -8188,16 +8188,7 @@ window.addEventListener('load', function() {
         // Filter wiped everything — fall back to static pool
         if (filtered.length === 0) { _intelLiveActive = false; rotateIntelFeed(); return; }
         _intelLiveActive = true;
-        // Cap live items at 8; if fewer than 8, pad with static pool items
-        var liveItems = filtered.slice(0, 8);
-        var html = liveItems.map(buildLiveHTML).join('');
-        if (liveItems.length < 8) {
-          var pool = INTEL_POOL.slice(1);
-          var padCount = 8 - liveItems.length;
-          for (var pi = 0; pi < padCount; pi++) {
-            html += buildIntelHTML(pool[(_intelOffset + pi) % pool.length]);
-          }
-        }
+        var html = filtered.map(buildLiveHTML).join('');
         feed.style.opacity = '0';
         setTimeout(function() {
           feed.innerHTML = html;

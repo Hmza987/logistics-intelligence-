@@ -8126,6 +8126,12 @@ window.addEventListener('load', function() {
   // ── Live intelligence feed ─────────────────────────────────────────────────
   // Fetches breaking news from /api/news (GDELT + optionally NewsAPI).
   // Falls back to the static INTEL_POOL if the API is unavailable.
+  // Pre-populate immediately so the feed is never blank on load.
+  var _intelLiveActive = false; // true while live API data is showing
+  rotateIntelFeed();            // show static items right away
+  // Sub-rotation timer: advances static items every 90 s while live API is down
+  setInterval(function() { if (!_intelLiveActive) rotateIntelFeed(); }, 90000);
+
   function fetchLiveIntel() {
     var feed = document.getElementById('intel-feed');
     if (!feed) return;
@@ -8135,14 +8141,13 @@ window.addEventListener('load', function() {
       .then(function(r) { return r.ok ? r.json() : Promise.reject('HTTP ' + r.status); })
       .then(function(data) {
         if (!data.items || data.items.length === 0) {
+          _intelLiveActive = false;
           rotateIntelFeed();
           return;
         }
         // ── Client-side relevance filter ────────────────────────────────────
-        // Two-tier logic: pass if (A) a high-specificity GCC/carrier/port term
-        // matches, OR (B) BOTH a crisis term AND a logistics term match.
-        // Broad geo terms (dubai, gulf, saudi…) alone no longer pass — they
-        // pulled in unrelated political/tourism/sports content.
+        // Two-tier: pass if (A) high-specificity GCC/carrier/port term matches,
+        // OR (B) BOTH a crisis term AND a logistics term match.
         var _crisis = [
           'hormuz','strait of hormuz','persian gulf','irgc','iran','iranian',
           'houthi','red sea','bab el-mandeb',
@@ -8166,15 +8171,15 @@ window.addEventListener('load', function() {
           var hasLogistics = _logistics.some(function(kw) { return hay.indexOf(kw) !== -1; });
           return hasSpecific || (hasCrisis && hasLogistics);
         });
-        // If filter wipes everything (very broad news day), fall back to static pool
-        if (filtered.length === 0) { rotateIntelFeed(); return; }
+        // Filter wiped everything — fall back to static pool
+        if (filtered.length === 0) { _intelLiveActive = false; rotateIntelFeed(); return; }
+        _intelLiveActive = true;
         var html = filtered.map(buildLiveHTML).join('');
         feed.style.opacity = '0';
         setTimeout(function() {
           feed.innerHTML = html;
           feed.style.opacity = '1';
         }, 300);
-        // Update source badge to show live data source + timestamp
         if (srcEl) {
           var t = new Date(data.ts);
           var hhmm = t.getHours().toString().padStart(2,'0') + ':' + t.getMinutes().toString().padStart(2,'0');
@@ -8182,7 +8187,7 @@ window.addEventListener('load', function() {
         }
       })
       .catch(function() {
-        // API unavailable — fall back to static pool rotation
+        _intelLiveActive = false;
         _intelOffset = Math.floor(Math.random() * (INTEL_POOL.length - 1));
         rotateIntelFeed();
       });

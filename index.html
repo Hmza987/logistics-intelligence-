@@ -8146,30 +8146,44 @@ window.addEventListener('load', function() {
           return;
         }
         // ── Client-side relevance filter ────────────────────────────────────
-        // Two-tier: pass if (A) high-specificity GCC/carrier/port term matches,
-        // OR (B) BOTH a crisis term AND a logistics term match.
-        var _crisis = [
-          'hormuz','strait of hormuz','persian gulf','irgc','iran','iranian',
-          'houthi','red sea','bab el-mandeb',
-          'war risk','jwc','ceasefire','naval escort','sanctions','blockade'
-        ];
-        var _logistics = [
-          'container','freight rate','cargo','vessel diversion','tanker','shipping lane',
-          'supply chain','port congestion','logistics','feeder service','charter rate'
-        ];
-        var _specific = [
+        // Three-tier logic so Al Jazeera / Guardian crisis coverage passes:
+        // (A) Any high-specificity chokepoint/carrier/port term — always pass
+        // (B) "iran"/"iranian"/"tehran" paired with oil, shipping or military context
+        // (C) Broad geo terms (dubai, gulf…) only when paired with logistics/trade
+        // Pure political, sports, tourism articles are blocked.
+        var _alwaysPass = [
+          'hormuz','strait of hormuz','irgc','houthi','bab el-mandeb',
+          'war risk','jwc','naval escort','ceasefire','blockade',
           'jebel ali','sohar','salalah','khor fakkan','dammam','aqaba','khalifa port',
           'maersk','msc gulsun','cma cgm','hapag-lloyd','cosco','evergreen',
           'dp world','alphaliner','windward','unctad',
           'trans-arabian pipeline','ipsa pipeline','energy corridor',
           'ras tanura','abu ali terminal','adnoc','qatarenergy','aramco'
         ];
+        var _iranContext = [
+          'oil','shipping','tanker','cargo','vessel','naval','military',
+          'sanctions','missile','drone','strait','nuclear','persian gulf',
+          'gulf','blockade','freight','supply chain','port'
+        ];
+        var _gccLogistics = [
+          'container','freight','cargo','vessel','tanker','logistics',
+          'supply chain','port congestion','charter rate','shipping lane'
+        ];
+        var _gccGeo = [
+          'persian gulf','red sea','gulf of oman','arabian sea',
+          'dubai','abu dhabi','saudi','oman','qatar','uae','gcc','gulf'
+        ];
         var filtered = data.items.filter(function(item) {
           var hay = ((item.title || '') + ' ' + (item.description || '')).toLowerCase();
-          var hasSpecific  = _specific.some(function(kw)  { return hay.indexOf(kw) !== -1; });
-          var hasCrisis    = _crisis.some(function(kw)    { return hay.indexOf(kw) !== -1; });
-          var hasLogistics = _logistics.some(function(kw) { return hay.indexOf(kw) !== -1; });
-          return hasSpecific || (hasCrisis && hasLogistics);
+          // A — always pass on high-specificity terms
+          if (_alwaysPass.some(function(kw) { return hay.indexOf(kw) !== -1; })) return true;
+          // B — iran/iranian/tehran + any oil-shipping-military context
+          var hasIran = hay.indexOf('iran') !== -1 || hay.indexOf('iranian') !== -1 || hay.indexOf('tehran') !== -1;
+          if (hasIran && _iranContext.some(function(kw) { return hay.indexOf(kw) !== -1; })) return true;
+          // C — GCC geography + trade/logistics term (blocks tourism, sports)
+          var hasGeo = _gccGeo.some(function(kw) { return hay.indexOf(kw) !== -1; });
+          var hasLogistics = _gccLogistics.some(function(kw) { return hay.indexOf(kw) !== -1; });
+          return hasGeo && hasLogistics;
         });
         // Filter wiped everything — fall back to static pool
         if (filtered.length === 0) { _intelLiveActive = false; rotateIntelFeed(); return; }

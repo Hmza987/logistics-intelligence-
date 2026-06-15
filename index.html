@@ -65,6 +65,8 @@
 </style>
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/d3@7"></script>
+<script src="https://cdn.jsdelivr.net/npm/topojson-client@3"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
 <style>
 /* ═══════════════════════════════════════════════════════════════════════════
@@ -1448,15 +1450,31 @@ canvas { font-family: var(--f-mono); }
 .bl-lane-pacific   { stroke-dasharray: 24 6;  animation: bl-lane-flow 10s linear infinite; }
 .bl-lane-disrupted { stroke-dasharray:  4 10; animation: bl-lane-flow  3s linear infinite; }
 
-/* Bloomberg dark-navy canvas background (shows between tiles / unloaded areas) */
+/* Bloomberg dark-navy canvas background */
 #theatre-map, #chokepoints-map {
   background: #060d17 !important;
 }
-/* Blue-ocean filter: lifts CartoDB's dark-navy ocean to visible blue while land stays near-black */
-#chokepoints-map .leaflet-tile-pane {
-  filter: brightness(1.9) contrast(1.15) saturate(3) hue-rotate(195deg);
+/* D3 Natural Earth map — container needs relative positioning for overlays */
+#chokepoints-map { position:relative!important; overflow:hidden!important; }
+/* D3 floating tooltip */
+.cp-d3-tip {
+  background:rgba(7,11,17,.96); border:1px solid #1e2d3a; border-radius:4px;
+  padding:8px 10px; font-family:'IBM Plex Mono',monospace; font-size:9px;
+  color:#c8d4e0; box-shadow:0 4px 20px rgba(0,0,0,.75); line-height:1.55;
+  pointer-events:none; max-width:265px;
 }
-/* cpLabels pane must NOT inherit the tile-pane filter — handled by pane separation in JS */
+/* D3 port detail panel (slides in from map right edge) */
+.cp-d3-panel {
+  background:#080c12; border-left:1px solid #1e2d3a; font-family:'IBM Plex Mono',monospace;
+  box-shadow:-10px 0 40px rgba(0,0,0,.7);
+}
+.cp-d3-panel-close {
+  position:sticky; top:0; float:right; margin:6px 8px 0 0;
+  background:none; border:none; color:#3a5060; font-size:16px; cursor:pointer; z-index:10;
+}
+.cp-d3-panel-close:hover { color:#c8d4e0; }
+/* Live vessel-count badge overlay */
+.cp-live-badge { position:absolute; pointer-events:auto; }
 
 /* Chokepoint map status badges */
 .cp-status-popup {
@@ -4284,7 +4302,7 @@ function showTab(name, el) {
     if (name === 'rates') {
       if (!CHARTS['fChart']) initFreightChart();
       if (!chokepointsMapReady) setTimeout(initChokepointsMap, 200);
-      else if (chokepointsMap) chokepointsMap.invalidateSize();
+      // D3 SVG map — no invalidateSize needed
     }
     if (name === 'watchlist') {
       initWatchlist();
@@ -7276,37 +7294,37 @@ var GCC_PORTS_LIVE = [
 var pcLiveMarkers = [];
 
 function addLiveBadge(portCfg, data) {
-  if (!chokepointsMap) return;
-  var count = (data.inPort !== null && data.inPort !== undefined) ? data.inPort : '?';
-  var arrivals = data.arrivals || [];
-  var today = new Date().toISOString().slice(0, 10);
+  if (!_cpProjection) return;
+  var container = document.getElementById('chokepoints-map');
+  if (!container) return;
 
-  // Badge divIcon
+  var count    = (data.inPort !== null && data.inPort !== undefined) ? data.inPort : '?';
+  var arrivals = data.arrivals || [];
+  var today    = new Date().toISOString().slice(0, 10);
+
   var badgeHtml =
-    '<div class="pc-badge" title="Click for expected arrivals">' +
+    '<div class="pc-badge" title="Click for live port calls">' +
       '<span class="pc-badge-dot">&#9679;</span>' +
       '<span class="pc-badge-count">' + count + '</span>' +
       '<span class="pc-badge-label">in port</span>' +
     '</div>';
 
-  // Build arrival rows
   var rows = arrivals.slice(0, 8).map(function(a) {
-    var parts = (a.eta || '').split(/[sT]/);
-    var etaDate = parts[0] || '';
-    var etaTime = (parts[1] || '').slice(0, 5);
-    var isToday = etaDate === today;
+    var parts     = (a.eta || '').split(/[sT]/);
+    var etaDate   = parts[0] || '';
+    var etaTime   = (parts[1] || '').slice(0, 5);
+    var isToday   = etaDate === today;
     var isTomorrow = !isToday && etaDate > today;
-    var timeColor = isToday ? '#3dd68c' : (isTomorrow ? '#c8a840' : '#5a7080');
-    var typeMap = { Container:'#4a9fe8', Tanker:'#e07850', Passenger:'#9060c8',
-                    Cargo:'#7a8494', Fishing:'#4a8060', Vessel:'#5a6878' };
-    var typeColor = typeMap[a.type] || '#5a6878';
+    var timeColor  = isToday ? '#3dd68c' : (isTomorrow ? '#c8a840' : '#5a7080');
+    var typeMap    = { Container:'#4a9fe8', Tanker:'#e07850', Passenger:'#9060c8',
+                       Cargo:'#7a8494', Fishing:'#4a8060', Vessel:'#5a6878' };
+    var typeColor  = typeMap[a.type] || '#5a6878';
     return '<tr>' +
       '<td style="font-weight:600;color:#dde4ec;max-width:130px;overflow:hidden;white-space:nowrap;text-overflow:ellipsis" title="' + a.name + '">' + a.name + '</td>' +
       '<td style="color:' + typeColor + '">' + a.type + '</td>' +
       '<td style="color:' + timeColor + ';font-family:\'IBM Plex Mono\',monospace">' +
         (isToday ? etaTime : (isTomorrow ? 'Tomorrow ' + etaTime : etaDate)) +
-      '</td>' +
-    '</tr>';
+      '</td></tr>';
   }).join('');
 
   var moreCount = (data.expectedTotal && arrivals.length > 0 && data.expectedTotal > arrivals.length)
@@ -7318,54 +7336,44 @@ function addLiveBadge(portCfg, data) {
       (data.inPort !== null && data.inPort !== undefined
         ? '<div class="pc-popup-stat">&#9679; <b>' + data.inPort + '</b> in port' +
           (data.arrivals24h !== null && data.arrivals24h !== undefined
-            ? ' &nbsp;&#183;&nbsp; <b>' + data.arrivals24h + '</b> arrivals last 24 h'
-            : '') +
+            ? ' &nbsp;&#183;&nbsp; <b>' + data.arrivals24h + '</b> arrivals last 24 h' : '') +
           (data.arrivals24h !== null && data.arrivals24h !== undefined
-            ? ' &nbsp;&#183;&nbsp; <span style="color:#5a8090">~<b>' + Math.round(data.arrivals24h * 7) + '</b>/wk implied</span>'
-            : '') +
+            ? ' &nbsp;&#183;&nbsp; <span style="color:#5a8090">~<b>' + Math.round(data.arrivals24h * 7) + '</b>/wk implied</span>' : '') +
           '</div>'
         : '') +
       (arrivals.length > 0
         ? '<div class="pc-popup-sub">Expected Arrivals' + (data.expectedTotal ? ' — ' + data.expectedTotal + ' total' : '') + '</div>' +
-          '<table class="pc-popup-table">' +
-            '<thead><tr><th>Vessel</th><th>Type</th><th>ETA (UTC)</th></tr></thead>' +
-            '<tbody>' + rows + '</tbody>' +
-          '</table>' +
-          (moreCount > 0
-            ? '<div class="pc-popup-more">+' + moreCount + ' more — <a href="' + (data.sourceUrl || '#') + '" target="_blank" rel="noopener" style="color:#4a9fe8">view all &#8599;</a></div>'
-            : '')
-        : '<div style="color:#3a5060;font-size:9px;padding:4px 0">No arrivals data available</div>'
-      ) +
+          '<table class="pc-popup-table"><thead><tr><th>Vessel</th><th>Type</th><th>ETA (UTC)</th></tr></thead>' +
+          '<tbody>' + rows + '</tbody></table>' +
+          (moreCount > 0 ? '<div class="pc-popup-more">+' + moreCount + ' more — <a href="' + (data.sourceUrl || '#') + '" target="_blank" rel="noopener" style="color:#4a9fe8">view all &#8599;</a></div>' : '')
+        : '<div style="color:#3a5060;font-size:9px;padding:4px 0">No arrivals data available</div>') +
       '<div class="pc-popup-foot">Source: <a href="' + (data.sourceUrl || '#') + '" target="_blank" rel="noopener" style="color:#4a9fe8">myshiptracking.com</a>' +
         (data.asOf ? ' · ' + new Date(data.asOf).toLocaleTimeString('en-GB', {hour:'2-digit',minute:'2-digit'}) + ' UTC' : '') +
-      '</div>' +
-    '</div>';
+      '</div></div>';
 
-  var marker = L.marker([portCfg.lat, portCfg.lng], {
-    icon: L.divIcon({
-      html: badgeHtml,
-      className: '',
-      iconSize: [76, 20],
-      iconAnchor: [38, -6]   // float above the port name label
-    }),
-    zIndexOffset: 500,
-    interactive: true
+  // Position badge using the D3 projection
+  var pt = _cpProjection([portCfg.lng, portCfg.lat]);
+  if (!pt) return;
+
+  var el = document.createElement('div');
+  el.className   = 'cp-live-badge';
+  el.dataset.ll  = JSON.stringify([portCfg.lng, portCfg.lat]);
+  el.style.left  = (pt[0] - 38) + 'px';
+  el.style.top   = (pt[1] - 28) + 'px';
+  el.innerHTML   = badgeHtml;
+  el.addEventListener('click', function(e) {
+    e.stopPropagation();
+    if (_cpOpenPanel) _cpOpenPanel(popupHtml);
   });
 
-  marker.bindPopup(popupHtml, {
-    maxWidth: 340,
-    className: 'pc-popup',
-    autoPan: true
-  });
-
-  marker.addTo(chokepointsMap);
-  pcLiveMarkers.push(marker);
+  container.appendChild(el);
+  pcLiveMarkers.push(el);
 }
 
 function fetchLivePortCalls(bustCache) {
   if (!chokepointsMap) return;
   // Remove existing badges
-  pcLiveMarkers.forEach(function(m) { try { chokepointsMap.removeLayer(m); } catch(e){} });
+  pcLiveMarkers.forEach(function(el) { if (el && el.parentNode) el.parentNode.removeChild(el); });
   pcLiveMarkers = [];
 
   var pending = GCC_PORTS_LIVE.length;
@@ -7532,25 +7540,21 @@ function buildPortPopupHtml(p, info, status, live) {
   );
 }
 
-function openPortPopup(p, latlng) {
-  var info   = PORT_INFO[p.name] || { teu:'N/A', berths:'N/A', grad:'linear-gradient(135deg,#060c14 0%,#0a1422 100%)' };
-  var status = portStatus(p);
+function openPortPopup(p) {
+  if (!_cpOpenPanel) return;
+  var info    = PORT_INFO[p.name] || { teu:'N/A', berths:'N/A', grad:'linear-gradient(135deg,#060c14 0%,#0a1422 100%)' };
+  var status  = portStatus(p);
   var liveKey = PP_LIVE_KEYS[p.name];
-
-  var popup = L.popup({ maxWidth:360, minWidth:340, className:'pp-popup', autoPan:true, closeButton:true })
-    .setLatLng(latlng)
-    .setContent(buildPortPopupHtml(p, info, status, null))
-    .openOn(chokepointsMap);
-
+  _cpOpenPanel(buildPortPopupHtml(p, info, status, null));
   if (liveKey) {
     fetch('/api/port-calls?port=' + liveKey)
       .then(function(r) { if (!r.ok) throw new Error(r.status); return r.json(); })
       .then(function(live) {
-        var el = document.querySelector('.pp-live-section');
+        var el = document.querySelector('#chokepoints-map .pp-live-section');
         if (el) el.innerHTML = buildLiveSectionHtml(live);
       })
       .catch(function() {
-        var el = document.querySelector('.pp-live-section');
+        var el = document.querySelector('#chokepoints-map .pp-live-section');
         if (el) el.innerHTML = '<div class="pp-loading">Live data unavailable</div>';
       });
   }
@@ -7558,6 +7562,18 @@ function openPortPopup(p, latlng) {
 
 // ── GLOBAL CHOKEPOINTS MAP ────────────────────────────────────────────────────
 var chokepointsMap = null, chokepointsMapReady = false;
+var _cpProjection = null;   // D3 projection — exposed so addLiveBadge can project coords
+var _cpOpenPanel  = null;   // function(html) — opens the in-map detail panel
+
+function pcRadius(v)   { return Math.max(4, Math.min(19, Math.sqrt(v) * 1.75)); }
+function pcColor(pct)  {
+  if (pct >= 50)  return '#3dd68c';
+  if (pct >= 15)  return '#60b870';
+  if (pct >= -15) return '#7a8494';
+  if (pct >= -50) return '#dfa030';
+  if (pct >= -75) return '#e8673c';
+  return '#e03040';
+}
 
 // radius ∝ trade volume (px): Malacca 25%→16, Hormuz 20%→14, Suez 13%→12, BaM 10%→10, Gib 8%→9, Cape crisis→12, Bosporus 5%→8, Panama 5%→8
 var CHOKEPOINTS = [
@@ -7572,266 +7588,331 @@ var CHOKEPOINTS = [
 ];
 
 function initChokepointsMap() {
-  if (chokepointsMapReady) { if (chokepointsMap) chokepointsMap.invalidateSize(); return; }
-  var mapEl = document.getElementById('chokepoints-map');
-  if (!mapEl) return;
+  if (chokepointsMapReady) return;
+  var container = document.getElementById('chokepoints-map');
+  if (!container) return;
   chokepointsMapReady = true;
+  chokepointsMap = true; // non-null sentinel — satisfies guard checks in other functions
 
-  chokepointsMap = L.map('chokepoints-map', { center:[15,25], zoom:2, zoomControl:true, attributionControl:false, minZoom:2, maxZoom:7 });
+  var W = container.clientWidth  || 820;
+  var H = parseInt(container.style.height, 10) || 520;
 
-  // Base dark tiles (no labels) — CSS blue filter applied via #chokepoints-map .leaflet-tile-pane
-  L.tileLayer('https://cartodb-basemaps-{s}.global.ssl.fastly.net/dark_nolabels/{z}/{x}/{y}.png', { subdomains:'abcd', maxZoom:19 }).addTo(chokepointsMap);
+  // ── SVG canvas ──────────────────────────────────────────────────────────────
+  var svgSel = d3.select(container).append('svg')
+    .attr('width', '100%').attr('height', H)
+    .style('display', 'block').style('cursor', 'grab');
 
-  // English-only labels in a separate pane so they are NOT blue-filtered
-  chokepointsMap.createPane('cpLabels');
-  chokepointsMap.getPane('cpLabels').style.zIndex = 350;        // above tiles, below SVG overlays
-  chokepointsMap.getPane('cpLabels').style.pointerEvents = 'none';
-  L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/Reference/World_Boundaries_and_Places/MapServer/tile/{z}/{y}/{x}', {
-    maxZoom:18, pane:'cpLabels', opacity:0.75
-  }).addTo(chokepointsMap);
+  svgSel.append('defs').append('clipPath').attr('id', 'cp-world-clip')
+    .append('rect').attr('width', W).attr('height', H);
 
-  // Trade-proportional shipping lanes (width ∝ % global trade)
-  // Malacca 25% → w5 | Suez/Cape 12-15% → w3.5 | Trans-Atl 8% → w2.5 | PG disrupted → w1.5
-  var BL_LANES = [
-    // East Asia cluster (Malacca corridor — 25% global trade, widest)
-    { pts:[[35.7,139.7],[31.2,121.5],[22.3,114.2],[10.0,108.0],[1.3,103.85]],
-      color:'#5a7e95', w:5, cls:'bl-lane-pacific' },
-    // Asia → Europe via Suez (12-15% trade — steel blue)
-    { pts:[[1.3,103.85],[5,82],[8,72],[11.5,50],[12.6,43.5],[18,40],[25,36],
-           [30.0,32.55],[33,27],[35,20],[36,14],[35.97,-5.5],[44,-7],[51.9,4.5]],
-      color:'#6890a8', w:3.5, cls:'bl-lane' },
-    // Asia → Europe via Cape (crisis diversion — current primary route, muted amber, thicker)
-    { pts:[[1.3,103.85],[0,88],[-8,74],[-18,62],[-28,50],
-           [-34.2,18.5],[-28,5],[-18,-5],[-5,-14],[8,-18],
-           [25,-18],[35,-10],[35.97,-5.5],[44,-7],[51.9,4.5]],
-      color:'#a87838', w:5, cls:'bl-lane-cape' },
-    // Trans-Atlantic (8% trade — dark teal)
-    { pts:[[40.7,-74.0],[43,-55],[47,-38],[50,-22],[51.9,4.5]],
-      color:'#4a6878', w:2.5, cls:'bl-lane-slow' },
-    // US Gulf / Caribbean loop
-    { pts:[[29.5,-90.0],[24,-82],[18,-75],[9.1,-79.7],[15,-68],[40.7,-74.0]],
-      color:'#3a5868', w:2, cls:'bl-lane-slow' },
-    // Persian Gulf → Malacca (disrupted — thin dark red)
-    { pts:[[26.6,56.4],[20,62],[12,68],[5,76],[1.3,103.85]],
-      color:'#80342a', w:1.5, cls:'bl-lane-disrupted' },
-  ];
-  BL_LANES.forEach(function(ln) {
-    L.polyline(ln.pts, { color:ln.color, weight:ln.w, opacity:0.82, className:ln.cls }).addTo(chokepointsMap);
-  });
+  var g = svgSel.append('g').attr('clip-path', 'url(#cp-world-clip)');
 
-  // Arctic / Northern Sea Route (NSR) — single polyline joining at [70,170] (Chukchi Sea).
-  var _arcticStyle = { color:'#67e8f9', weight:1.8, opacity:0.5, dashArray:'6 5', className:'bl-lane-arctic' };
-  var _arcticTip   = '<strong style="color:#67e8f9">Arctic / Northern Sea Route (NSR)</strong><br>' +
-      'Open ~90–120 days/year &middot; Jul–Oct only<br>' +
-      'Requires Arc4/Arc7 ice-class vessels<br>' +
-      '<span style="color:#7a8494">Not viable for current GCC crisis routing</span>';
-  L.polyline([
-    [31.2,121.5],[35,129],[40,144],[44,150],
-    [49,156],[52,165],[57,168],[64,169],
-    [70,170],
-    [76,165],[78,148],[78,120],[76,95],
-    [74,73],[71,56],[70,33],[71,26],[62,5],[51.9,4.5]
-  ], _arcticStyle).addTo(chokepointsMap).bindTooltip(_arcticTip, { sticky:true, direction:'top' });
+  // ── Natural Earth I projection (equal-area, no Mercator polar exaggeration) ─
+  var proj = d3.geoNaturalEarth1()
+    .scale(138)
+    .translate([W / 2, H / 2 + 18]);
+  _cpProjection = proj;
 
-  CHOKEPOINTS.forEach(function(cp) {
-    var r = cp.r || 9;
-    // Outer ring (subtle, proportional)
-    L.circleMarker([cp.lat,cp.lng],{
-      radius: r + 5, color:cp.color, fillColor:'transparent',
-      weight:1, opacity:0.28, dashArray: cp.status==='OPEN' ? null : '3,4'
-    }).addTo(chokepointsMap);
+  var pathGen = d3.geoPath().projection(proj);
 
-    // Core dot — size proportional to trade volume
-    var bg = {'CLOSED':'rgba(160,48,32,.25)','HIGH THREAT':'rgba(192,120,48,.25)','RESTRICTED':'rgba(160,144,48,.2)','CRISIS HUB':'rgba(112,80,192,.25)','OPEN':'rgba(58,122,90,.2)'}[cp.status]||'rgba(90,130,160,.2)';
-    L.circleMarker([cp.lat,cp.lng],{
-      radius:r, color:cp.color, fillColor:cp.color, fillOpacity:0.82, weight:1.5, opacity:1
-    }).addTo(chokepointsMap).bindPopup(
-      '<div class="cp-status-popup"><strong>'+cp.name+'</strong><br>'+
-      '<div class="cp-stat-row"><span class="cp-stat-pill" style="background:'+bg+';color:'+cp.color+'">'+cp.status+'</span></div>'+
-      (cp.oil!=='—'?'<div style="margin-top:4px;color:#c8a840">&#8595; Oil flow: '+cp.oil+'</div>':'')+
-      '<div style="color:#7a8494;margin-top:2px">Trade: '+cp.trade+'</div>'+
-      '<div style="color:#7a8494;margin-top:2px">Transits: '+cp.transits+'</div>'+
-      '<div style="color:#e8eaed;margin-top:5px;font-size:9px;max-width:220px">'+cp.note+'</div></div>',
-      {maxWidth:260,className:'cp-popup'}
-    );
+  // ── Zoom / pan ──────────────────────────────────────────────────────────────
+  var currentZT = d3.zoomIdentity;
+  svgSel.call(
+    d3.zoom().scaleExtent([1, 8]).on('zoom', function(event) {
+      currentZT = event.transform;
+      g.attr('transform', currentZT);
+      svgSel.style('cursor', currentZT.k > 1 ? 'grabbing' : 'grab');
+      // Reposition live badge overlay divs after zoom/pan
+      container.querySelectorAll('.cp-live-badge').forEach(function(el) {
+        var ll = JSON.parse(el.dataset.ll);
+        var sp = currentZT.apply(proj(ll));
+        el.style.left = (sp[0] - 38) + 'px';
+        el.style.top  = (sp[1] - 28) + 'px';
+      });
+    })
+  );
 
-    // Permanent label — sober white
-    L.tooltip({permanent:true,direction:'top',offset:[0,-(r+4)],className:'cp-label-tip'})
-      .setContent('<span style="font-family:\'IBM Plex Mono\',monospace;font-size:8px;font-weight:600;color:#c8d4e0;letter-spacing:.04em">'+cp.name+'</span>')
-      .setLatLng([cp.lat,cp.lng]).addTo(chokepointsMap);
-  });
+  // ── Floating tooltip ────────────────────────────────────────────────────────
+  var tipEl = d3.select(container).append('div').attr('class', 'cp-d3-tip')
+    .style('position', 'absolute').style('display', 'none').style('z-index', '900');
 
-  // ── PORT CALLS LAYER ─────────────────────────────────────────────────────
-  // pre = modelled commercial vessel calls/week pre-crisis
-  // cur = AIS-calibrated 7 Jun 2026 · straits.live / VesselFinder / myshiptracking.com
-  // Key drivers: Hormuz at 11% of pre-crisis (10 transits/day vs 95) · Cape route 8/9 major carriers
-  var PORT_CALLS = [
-    // ── Asian export hubs (slight decline — some GCC-direct services suspended) ─
-    { name:'Shanghai',     country:'China',        lat:31.23, lng:121.48, pre:95,  cur:88  },
-    { name:'Busan',        country:'South Korea',  lat:35.10, lng:129.07, pre:85,  cur:80  },
-    { name:'Hong Kong',    country:'China',        lat:22.30, lng:114.17, pre:48,  cur:44  },
-    { name:'Singapore',    country:'Singapore',    lat:1.27,  lng:103.50, pre:185, cur:182 },  // slight up: Cape bunkering stop
-    { name:'Port Klang',   country:'Malaysia',     lat:2.95,  lng:101.18, pre:75,  cur:68  },
-    // ── Indian Ocean waypoint (surging — Cape route stop + congestion) ────────
-    { name:'Colombo',      country:'Sri Lanka',    lat:6.93,  lng:79.84,  pre:58,  cur:106 },  // 42.9% congestion rate (Portcast Jun 2026)
-    // ── Gulf ports INSIDE Hormuz (collapsed — Hormuz at 11% of pre-crisis) ────
-    { name:'Jebel Ali',    country:'UAE',          lat:24.98, lng:55.05,  pre:62,  cur:10  },  // straits.live: 5 cargo/24h; down from 14
-    { name:'Bandar Abbas', country:'Iran',         lat:27.20, lng:56.17,  pre:28,  cur:10  },  // straits.live: 22 cargo/24h incl. Iran domestic
-    { name:'Khalifa Port', country:'UAE',          lat:24.80, lng:54.58,  pre:22,  cur:2   },
-    { name:'Hamad Port',   country:'Qatar',        lat:24.92, lng:51.56,  pre:18,  cur:2   },
-    { name:'Bahrain Port', country:'Bahrain',      lat:26.21, lng:50.56,  pre:15,  cur:2   },
-    { name:'Shuwaikh',     country:'Kuwait',       lat:29.36, lng:47.95,  pre:20,  cur:1   },
-    { name:'Dammam',       country:'Saudi Arabia', lat:26.47, lng:50.12,  pre:35,  cur:4   },  // Hormuz 11% → 35×0.11=3.9; down from 7
-    // ── Gulf OUTSIDE Hormuz (surging — confirmed primary diversion hubs) ─────
-    { name:'Fujairah',     country:'UAE',          lat:25.13, lng:56.33,  pre:14,  cur:38  },  // straits.live: 38 total/24h · Inchcape 5 Jun
-    { name:'Salalah',      country:'Oman',         lat:17.00, lng:54.08,  pre:28,  cur:46  },  // primary Cape-diversion offload hub
-    { name:'Sohar',        country:'Oman',         lat:24.37, lng:56.68,  pre:10,  cur:62  },  // straits.live: 40/24h · primary container gateway
-    // ── Red Sea ───────────────────────────────────────────────────────────────
-    { name:'Jeddah',       country:'Saudi Arabia', lat:21.47, lng:39.08,  pre:48,  cur:88  },  // VesselFinder: 82/24h · +50% surge confirmed (Mar 2026)
-    { name:'Port of NEOM', country:'Saudi Arabia', lat:28.21, lng:35.43,  pre:2,   cur:4   },  // Kpler/Marinelink Jun 2026: RoRo-only, 2 regular vessels, no container activity
-    { name:'Port Said',    country:'Egypt',        lat:31.28, lng:32.20,  pre:85,  cur:58  },  // Suez throughput declining; down from 63
-    // ── East Africa (Cape route feeder — sustained surge) ─────────────────────
-    { name:'Djibouti',     country:'Djibouti',     lat:11.59, lng:43.10,  pre:32,  cur:18  },  // Red Sea disruption reducing transhipment; down from 21
-    { name:'Mombasa',      country:'Kenya',        lat:-4.05, lng:39.65,  pre:22,  cur:44  },
-    { name:'Dar es Salaam',country:'Tanzania',     lat:-6.85, lng:39.30,  pre:16,  cur:46  },
-    { name:'Maputo',       country:'Mozambique',   lat:-25.97,lng:32.57,  pre:8,   cur:20  },
-    // ── Cape route hubs (sustained surge — 8/9 major carriers full Cape) ──────
-    { name:'Durban',       country:'South Africa', lat:-29.87,lng:31.03,  pre:22,  cur:72  },  // VesselFinder 16/24h · myshiptracking 22/24h
-    { name:'Cape Town',    country:'South Africa', lat:-33.90,lng:18.40,  pre:18,  cur:50  },
-    { name:'Port Louis',   country:'Mauritius',    lat:-20.16,lng:57.50,  pre:12,  cur:40  },
-    // ── West Africa (Cape route waypoints — sustained surge) ──────────────────
-    { name:'Lomé',         country:'Togo',         lat:6.13,  lng:1.27,   pre:14,  cur:28  },
-    { name:'Ndayane',      country:'Senegal',      lat:14.46, lng:-17.04, pre:5,   cur:16  },
-    // ── North Africa / Atlantic gateway (surging — Cape vessels via Gibraltar) ─
-    { name:'Tanger Med',   country:'Morocco',      lat:35.85, lng:-5.48,  pre:52,  cur:110 },  // primary European entry for Cape-routed vessels
-    // ── European destination ports (broadly stable) ───────────────────────────
-    { name:'Rotterdam',    country:'Netherlands',  lat:51.91, lng:4.35,   pre:95,  cur:90  },
-    { name:'Hamburg',      country:'Germany',      lat:53.54, lng:9.85,   pre:55,  cur:50  },
-    { name:'Antwerp',      country:'Belgium',      lat:51.22, lng:4.18,   pre:78,  cur:73  },
-    { name:'Felixstowe',   country:'UK',           lat:51.95, lng:1.20,   pre:42,  cur:38  },
-  ];
-
-  function pcRadius(v) { return Math.max(4, Math.min(19, Math.sqrt(v) * 1.75)); }
-  function pcColor(pct) {
-    if (pct >= 50)  return '#3dd68c';
-    if (pct >= 15)  return '#60b870';
-    if (pct >= -15) return '#7a8494';
-    if (pct >= -50) return '#dfa030';
-    if (pct >= -75) return '#e8673c';
-    return '#e03040';
+  function showTip(html, ev) {
+    var r = container.getBoundingClientRect();
+    tipEl.html(html).style('display', 'block')
+      .style('left', Math.min(ev.clientX - r.left + 14, W - 275) + 'px')
+      .style('top',  (ev.clientY - r.top - 12) + 'px');
   }
+  function moveTip(ev) {
+    var r = container.getBoundingClientRect();
+    tipEl.style('left', Math.min(ev.clientX - r.left + 14, W - 275) + 'px')
+         .style('top',  (ev.clientY - r.top - 12) + 'px');
+  }
+  function hideTip() { tipEl.style('display', 'none'); }
 
-  PORT_CALLS.forEach(function(p) {
-    var pct = Math.round((p.cur - p.pre) / p.pre * 100);
-    var col = pcColor(pct);
-    var rCur = pcRadius(p.cur);
-    var rPre = pcRadius(p.pre);
-    var sign = pct >= 0 ? '+' : '';
-    var arrow = pct >= 15 ? '▲' : pct <= -15 ? '▼' : '─';
+  // ── Port detail panel (right-edge overlay, replaces Leaflet popup) ──────────
+  var panelEl = d3.select(container).append('div').attr('class', 'cp-d3-panel')
+    .style('position', 'absolute').style('top', '0').style('right', '0')
+    .style('width', '360px').style('max-height', H + 'px')
+    .style('overflow-y', 'auto').style('display', 'none').style('z-index', '850');
 
-    var tipHtml =
-      '<div style="font-family:IBM Plex Mono,monospace;font-size:9px;min-width:170px">' +
-        '<div style="font-weight:700;color:' + col + ';margin-bottom:4px;font-size:10px">' + p.name + '</div>' +
-        '<div style="color:#7a8494;font-size:8px">' + p.country + '</div>' +
-        '<div style="margin-top:5px;display:flex;justify-content:space-between">' +
-          '<span style="color:#c8d4e0">Current</span>' +
-          '<span style="color:#e8eaed;font-weight:700">' + p.cur + ' calls/wk</span>' +
-        '</div>' +
-        '<div style="display:flex;justify-content:space-between">' +
-          '<span style="color:#4a5568">Pre-crisis</span>' +
-          '<span style="color:#5a6878">' + p.pre + ' calls/wk</span>' +
-        '</div>' +
-        '<div style="margin-top:5px;font-weight:700;font-size:10px;color:' + col + '">' +
-          arrow + ' ' + sign + pct + '% vs pre-crisis' +
-        '</div>' +
-        '<div style="margin-top:3px;font-size:7px;color:#3a5060">○ dashed ring = pre-crisis volume</div>' +
-      '</div>';
+  panelEl.append('button').attr('class', 'cp-d3-panel-close').text('✕')
+    .on('click', function() { panelEl.style('display', 'none'); });
 
-    // Pre-crisis ghost ring (dashed outline only)
-    L.circleMarker([p.lat, p.lng], {
-      radius: rPre,
-      color: '#5a6878', weight: 1,
-      fill: false,
-      dashArray: '3 3',
-      opacity: 0.4,
-      interactive: false
-    }).addTo(chokepointsMap);
+  var panelBody = panelEl.append('div');
 
-    // Current port call circle — bindPopup (repeatable) + larger hit-target for small circles
-    (function(port) {
-      var pInfo   = PORT_INFO[port.name] || { teu:'N/A', berths:'N/A', grad:'linear-gradient(135deg,#060c14 0%,#0a1422 100%)' };
-      var pStat   = portStatus(port);
-      var liveKey = PP_LIVE_KEYS[port.name];
+  _cpOpenPanel = function(html) {
+    panelBody.html(html);
+    panelEl.style('display', 'block');
+  };
 
-      var cm = L.circleMarker([port.lat, port.lng], {
-        radius: rCur,
-        color: col, weight: 1.5,
-        fillColor: col, fillOpacity: 0.30,
-        interactive: true
-      })
-      .bindTooltip(tipHtml, {
-        sticky: false, direction: 'top',
-        className: 'cp-tip',
-        offset: [0, -(rCur + 4)]
-      })
-      .bindPopup(buildPortPopupHtml(port, pInfo, pStat, null), {
-        maxWidth: 360, minWidth: 340,
-        className: 'pp-popup',
-        autoPan: true,
-        closeButton: true
-      })
-      .addTo(chokepointsMap);
+  // ── Load world basemap + render all layers ─────────────────────────────────
+  fetch('https://cdn.jsdelivr.net/npm/world-atlas@2/countries-110m.json')
+    .then(function(r) { return r.json(); })
+    .then(function(world) {
 
-      // On each open: refresh live data for GCC ports
-      if (liveKey) {
-        cm.on('popupopen', function() {
-          fetch('/api/port-calls?port=' + liveKey)
-            .then(function(r) { if (!r.ok) throw new Error(r.status); return r.json(); })
-            .then(function(live) {
-              if (cm.isPopupOpen()) cm.setPopupContent(buildPortPopupHtml(port, pInfo, pStat, live));
-            })
-            .catch(function() { /* leave "Loading…" state on error */ });
-        });
+      var countries = topojson.feature(world, world.objects.countries);
+      var borders   = topojson.mesh(world, world.objects.countries, function(a, b) { return a !== b; });
+
+      // Ocean sphere
+      g.append('path').datum({ type:'Sphere' }).attr('d', pathGen)
+        .attr('fill', '#050d1a').attr('stroke', 'none');
+
+      // Graticule (subtle grid)
+      g.append('path').datum(d3.geoGraticule()())
+        .attr('d', pathGen).attr('fill', 'none')
+        .attr('stroke', '#081828').attr('stroke-width', 0.4);
+
+      // Land — dark blue-navy to match the original aesthetic
+      g.selectAll('.cp-cntry').data(countries.features)
+        .enter().append('path').attr('class', 'cp-cntry')
+        .attr('d', pathGen).attr('fill', '#0b1928').attr('stroke', 'none');
+
+      // Country borders
+      g.append('path').datum(borders).attr('d', pathGen)
+        .attr('fill', 'none').attr('stroke', '#1a2a40').attr('stroke-width', 0.5);
+
+      // Faint region labels for geographic orientation
+      var regionLabels = [
+        { t:'AFRICA',         ll:[ 0, 22] }, { t:'EUROPE',         ll:[52, 15] },
+        { t:'ASIA',           ll:[43, 88] }, { t:'NORTH AMERICA',  ll:[42,-98] },
+        { t:'SOUTH AMERICA',  ll:[-15,-58]}, { t:'INDIAN OCEAN',   ll:[-20, 75] },
+        { t:'ATLANTIC OCEAN', ll:[  8,-30]}, { t:'ARABIAN SEA',    ll:[ 14, 63] },
+        { t:'RED SEA',        ll:[ 21, 38]}, { t:'PACIFIC OCEAN',  ll:[  5,160] },
+      ];
+      regionLabels.forEach(function(lb) {
+        var pt = proj([lb.ll[1], lb.ll[0]]);
+        if (!pt) return;
+        g.append('text').attr('x', pt[0]).attr('y', pt[1])
+          .attr('text-anchor', 'middle')
+          .attr('font-family', "'IBM Plex Mono', monospace")
+          .attr('font-size', '8px').attr('fill', '#1e3558')
+          .attr('letter-spacing', '0.10em').attr('pointer-events', 'none')
+          .attr('font-weight', '600').text(lb.t);
+      });
+
+      // ── Shipping lanes ──────────────────────────────────────────────────────
+      var BL_LANES = [
+        { pts:[[35.7,139.7],[31.2,121.5],[22.3,114.2],[10.0,108.0],[1.3,103.85]],
+          color:'#5a7e95', w:5, cls:'bl-lane-pacific' },
+        { pts:[[1.3,103.85],[5,82],[8,72],[11.5,50],[12.6,43.5],[18,40],[25,36],
+               [30.0,32.55],[33,27],[35,20],[36,14],[35.97,-5.5],[44,-7],[51.9,4.5]],
+          color:'#6890a8', w:3.5, cls:'bl-lane' },
+        { pts:[[1.3,103.85],[0,88],[-8,74],[-18,62],[-28,50],
+               [-34.2,18.5],[-28,5],[-18,-5],[-5,-14],[8,-18],
+               [25,-18],[35,-10],[35.97,-5.5],[44,-7],[51.9,4.5]],
+          color:'#a87838', w:5, cls:'bl-lane-cape' },
+        { pts:[[40.7,-74.0],[43,-55],[47,-38],[50,-22],[51.9,4.5]],
+          color:'#4a6878', w:2.5, cls:'bl-lane-slow' },
+        { pts:[[29.5,-90.0],[24,-82],[18,-75],[9.1,-79.7],[15,-68],[40.7,-74.0]],
+          color:'#3a5868', w:2,   cls:'bl-lane-slow' },
+        { pts:[[26.6,56.4],[20,62],[12,68],[5,76],[1.3,103.85]],
+          color:'#80342a', w:1.5, cls:'bl-lane-disrupted' },
+      ];
+
+      function drawLine(ptsLatLng, attrs) {
+        var d = d3.line()
+          .x(function(p) { var xy = proj([p[1], p[0]]); return xy ? xy[0] : 0; })
+          .y(function(p) { var xy = proj([p[1], p[0]]); return xy ? xy[1] : 0; })
+          .defined(function(p) { return !!proj([p[1], p[0]]); })(ptsLatLng);
+        var el = g.append('path').attr('d', d).attr('fill', 'none');
+        Object.keys(attrs).forEach(function(k) { el.attr(k, attrs[k]); });
+        return el;
       }
 
-      // Invisible larger hit-target so small circles (r≤6px) are still clickable
-      if (rCur <= 6) {
-        L.circleMarker([port.lat, port.lng], {
-          radius: 10, fillOpacity: 0, opacity: 0, interactive: true
-        }).on('click', function() { cm.openPopup(); }).addTo(chokepointsMap);
-      }
-    })(p);
+      BL_LANES.forEach(function(ln) {
+        drawLine(ln.pts, { stroke:ln.color, 'stroke-width':ln.w, 'stroke-opacity':0.82, class:ln.cls });
+      });
 
-    // % change label — only for significant movers (±40%+)
-    if (Math.abs(pct) >= 40) {
-      L.marker([p.lat, p.lng], {
-        icon: L.divIcon({
-          html: '<div style="font-family:IBM Plex Mono,monospace;font-size:7px;font-weight:700;' +
-                'color:' + col + ';text-shadow:0 1px 3px #000,0 0 6px #000;white-space:nowrap;' +
-                'pointer-events:none;line-height:1">' + sign + pct + '%</div>',
-          iconSize: [36, 10],
-          iconAnchor: [18, rCur + 14],
-          className: ''
-        }),
-        interactive: false
-      }).addTo(chokepointsMap);
-    }
+      // Arctic NSR
+      var arcticPts = [
+        [31.2,121.5],[35,129],[40,144],[44,150],[49,156],[52,165],[57,168],[64,169],
+        [70,170],[76,165],[78,148],[78,120],[76,95],[74,73],[71,56],[70,33],[71,26],[62,5],[51.9,4.5]
+      ];
+      var arcticTip = '<strong style="color:#67e8f9">Arctic / Northern Sea Route (NSR)</strong><br>' +
+        'Open ~90–120 days/year &middot; Jul–Oct only<br>Requires Arc4/Arc7 ice-class vessels<br>' +
+        '<span style="color:#7a8494">Not viable for current GCC crisis routing</span>';
+      drawLine(arcticPts, { stroke:'#67e8f9', 'stroke-width':1.8, 'stroke-opacity':0.5, 'stroke-dasharray':'6 5', class:'bl-lane-arctic' })
+        .on('mouseover', function(ev) { showTip(arcticTip, ev); })
+        .on('mousemove', moveTip).on('mouseout', hideTip);
 
-    // Port name label (hover-visible via tooltip — permanent for key ports only)
-    var keyPorts = ['Jebel Ali','Cape Town','Durban','Colombo','Jeddah','Rotterdam','Singapore','Salalah','Sohar','Maputo','Lomé','Ndayane','Tanger Med','Hamad Port','Bahrain Port','Shuwaikh','Dammam'];
-    if (keyPorts.indexOf(p.name) >= 0) {
-      L.tooltip({
-        permanent: true, direction: 'bottom',
-        offset: [0, rCur + 3], className: 'cp-label-tip', interactive: false
-      }).setContent(
-        '<span style="font-family:\'IBM Plex Mono\',monospace;font-size:7px;color:' + col + ';letter-spacing:.03em;opacity:.85">' +
-        p.name + '</span>'
-      ).setLatLng([p.lat, p.lng]).addTo(chokepointsMap);
-    }
-  });
+      // ── Chokepoints ─────────────────────────────────────────────────────────
+      CHOKEPOINTS.forEach(function(cp) {
+        var pt = proj([cp.lng, cp.lat]);
+        if (!pt) return;
+        var r  = cp.r || 9;
+        var bg = { 'CLOSED':'rgba(160,48,32,.25)','HIGH THREAT':'rgba(192,120,48,.25)',
+                   'RESTRICTED':'rgba(160,144,48,.2)','CRISIS HUB':'rgba(112,80,192,.25)',
+                   'OPEN':'rgba(58,122,90,.2)' }[cp.status] || 'rgba(90,130,160,.2)';
+        var cpG = g.append('g').attr('transform', 'translate(' + pt[0] + ',' + pt[1] + ')');
 
-  // Fetch live port-call data and overlay badges on GCC ports
-  setTimeout(function() { fetchLivePortCalls(false); }, 800);
+        cpG.append('circle').attr('r', r + 5).attr('fill', 'none')
+          .attr('stroke', cp.color).attr('stroke-width', 1).attr('stroke-opacity', 0.28)
+          .attr('stroke-dasharray', cp.status === 'OPEN' ? null : '3 4');
+
+        cpG.append('circle').attr('r', r)
+          .attr('fill', cp.color).attr('fill-opacity', 0.82)
+          .attr('stroke', cp.color).attr('stroke-width', 1.5).style('cursor', 'pointer')
+          .on('mouseover', function(ev) {
+            showTip('<div class="cp-status-popup"><strong>' + cp.name + '</strong><br>' +
+              '<div class="cp-stat-row"><span class="cp-stat-pill" style="background:' + bg + ';color:' + cp.color + '">' + cp.status + '</span></div>' +
+              (cp.oil !== '—' ? '<div style="margin-top:4px;color:#c8a840">&#8595; Oil flow: ' + cp.oil + '</div>' : '') +
+              '<div style="color:#7a8494;margin-top:2px">Trade: ' + cp.trade + '</div>' +
+              '<div style="color:#7a8494;margin-top:2px">Transits: ' + cp.transits + '</div>' +
+              '<div style="color:#e8eaed;margin-top:5px;font-size:9px;max-width:220px">' + cp.note + '</div></div>', ev);
+          })
+          .on('mousemove', moveTip).on('mouseout', hideTip);
+
+        g.append('text').attr('x', pt[0]).attr('y', pt[1] - r - 5)
+          .attr('text-anchor', 'middle').attr('font-family', "'IBM Plex Mono', monospace")
+          .attr('font-size', '8px').attr('font-weight', '600').attr('fill', '#c8d4e0')
+          .attr('letter-spacing', '0.04em').attr('pointer-events', 'none').text(cp.name);
+      });
+
+      // ── Port calls ──────────────────────────────────────────────────────────
+      var PORT_CALLS = [
+        { name:'Shanghai',     country:'China',        lat:31.23, lng:121.48, pre:95,  cur:88  },
+        { name:'Busan',        country:'South Korea',  lat:35.10, lng:129.07, pre:85,  cur:80  },
+        { name:'Hong Kong',    country:'China',        lat:22.30, lng:114.17, pre:48,  cur:44  },
+        { name:'Singapore',    country:'Singapore',    lat:1.27,  lng:103.50, pre:185, cur:182 },
+        { name:'Port Klang',   country:'Malaysia',     lat:2.95,  lng:101.18, pre:75,  cur:68  },
+        { name:'Colombo',      country:'Sri Lanka',    lat:6.93,  lng:79.84,  pre:58,  cur:106 },
+        { name:'Jebel Ali',    country:'UAE',          lat:24.98, lng:55.05,  pre:62,  cur:10  },
+        { name:'Bandar Abbas', country:'Iran',         lat:27.20, lng:56.17,  pre:28,  cur:10  },
+        { name:'Khalifa Port', country:'UAE',          lat:24.80, lng:54.58,  pre:22,  cur:2   },
+        { name:'Hamad Port',   country:'Qatar',        lat:24.92, lng:51.56,  pre:18,  cur:2   },
+        { name:'Bahrain Port', country:'Bahrain',      lat:26.21, lng:50.56,  pre:15,  cur:2   },
+        { name:'Shuwaikh',     country:'Kuwait',       lat:29.36, lng:47.95,  pre:20,  cur:1   },
+        { name:'Dammam',       country:'Saudi Arabia', lat:26.47, lng:50.12,  pre:35,  cur:4   },
+        { name:'Fujairah',     country:'UAE',          lat:25.13, lng:56.33,  pre:14,  cur:38  },
+        { name:'Salalah',      country:'Oman',         lat:17.00, lng:54.08,  pre:28,  cur:46  },
+        { name:'Sohar',        country:'Oman',         lat:24.37, lng:56.68,  pre:10,  cur:62  },
+        { name:'Jeddah',       country:'Saudi Arabia', lat:21.47, lng:39.08,  pre:48,  cur:88  },
+        { name:'Port of NEOM', country:'Saudi Arabia', lat:28.21, lng:35.43,  pre:2,   cur:4   },
+        { name:'Port Said',    country:'Egypt',        lat:31.28, lng:32.20,  pre:85,  cur:58  },
+        { name:'Djibouti',     country:'Djibouti',     lat:11.59, lng:43.10,  pre:32,  cur:18  },
+        { name:'Mombasa',      country:'Kenya',        lat:-4.05, lng:39.65,  pre:22,  cur:44  },
+        { name:'Dar es Salaam',country:'Tanzania',     lat:-6.85, lng:39.30,  pre:16,  cur:46  },
+        { name:'Maputo',       country:'Mozambique',   lat:-25.97,lng:32.57,  pre:8,   cur:20  },
+        { name:'Durban',       country:'South Africa', lat:-29.87,lng:31.03,  pre:22,  cur:72  },
+        { name:'Cape Town',    country:'South Africa', lat:-33.90,lng:18.40,  pre:18,  cur:50  },
+        { name:'Port Louis',   country:'Mauritius',    lat:-20.16,lng:57.50,  pre:12,  cur:40  },
+        { name:'Lomé',         country:'Togo',         lat:6.13,  lng:1.27,   pre:14,  cur:28  },
+        { name:'Ndayane',      country:'Senegal',      lat:14.46, lng:-17.04, pre:5,   cur:16  },
+        { name:'Tanger Med',   country:'Morocco',      lat:35.85, lng:-5.48,  pre:52,  cur:110 },
+        { name:'Rotterdam',    country:'Netherlands',  lat:51.91, lng:4.35,   pre:95,  cur:90  },
+        { name:'Hamburg',      country:'Germany',      lat:53.54, lng:9.85,   pre:55,  cur:50  },
+        { name:'Antwerp',      country:'Belgium',      lat:51.22, lng:4.18,   pre:78,  cur:73  },
+        { name:'Felixstowe',   country:'UK',           lat:51.95, lng:1.20,   pre:42,  cur:38  },
+      ];
+
+      var keyPorts = ['Jebel Ali','Cape Town','Durban','Colombo','Jeddah','Rotterdam',
+                      'Singapore','Salalah','Sohar','Maputo','Lomé','Ndayane',
+                      'Tanger Med','Hamad Port','Bahrain Port','Shuwaikh','Dammam'];
+
+      PORT_CALLS.forEach(function(p) {
+        var pct  = Math.round((p.cur - p.pre) / p.pre * 100);
+        var col  = pcColor(pct);
+        var rCur = pcRadius(p.cur);
+        var rPre = pcRadius(p.pre);
+        var sign = pct >= 0 ? '+' : '';
+        var arrow = pct >= 15 ? '▲' : pct <= -15 ? '▼' : '─';
+        var pt   = proj([p.lng, p.lat]);
+        if (!pt) return;
+
+        var info    = PORT_INFO[p.name] || { teu:'N/A', berths:'N/A', grad:'linear-gradient(135deg,#060c14 0%,#0a1422 100%)' };
+        var pStat   = portStatus(p);
+        var liveKey = PP_LIVE_KEYS[p.name];
+
+        var tipHtml =
+          '<div style="font-family:IBM Plex Mono,monospace;font-size:9px;min-width:170px">' +
+          '<div style="font-weight:700;color:' + col + ';margin-bottom:4px;font-size:10px">' + p.name + '</div>' +
+          '<div style="color:#7a8494;font-size:8px">' + p.country + '</div>' +
+          '<div style="margin-top:5px;display:flex;justify-content:space-between">' +
+            '<span style="color:#c8d4e0">Current</span><span style="color:#e8eaed;font-weight:700">' + p.cur + ' calls/wk</span></div>' +
+          '<div style="display:flex;justify-content:space-between">' +
+            '<span style="color:#4a5568">Pre-crisis</span><span style="color:#5a6878">' + p.pre + ' calls/wk</span></div>' +
+          '<div style="margin-top:5px;font-weight:700;font-size:10px;color:' + col + '">' + arrow + ' ' + sign + pct + '% vs pre-crisis</div>' +
+          '<div style="margin-top:3px;font-size:7px;color:#3a5060">○ dashed ring = pre-crisis volume</div></div>';
+
+        var onPortClick = function() {
+          hideTip();
+          _cpOpenPanel(buildPortPopupHtml(p, info, pStat, null));
+          if (liveKey) {
+            fetch('/api/port-calls?port=' + liveKey)
+              .then(function(r) { return r.json(); })
+              .then(function(live) {
+                var el = panelEl.select('.pp-live-section').node();
+                if (el) el.innerHTML = buildLiveSectionHtml(live);
+              }).catch(function() {});
+          }
+        };
+
+        var pG = g.append('g').attr('transform', 'translate(' + pt[0] + ',' + pt[1] + ')');
+
+        // Pre-crisis ghost ring
+        pG.append('circle').attr('r', rPre)
+          .attr('fill', 'none').attr('stroke', '#5a6878')
+          .attr('stroke-width', 1).attr('stroke-dasharray', '3 3').attr('stroke-opacity', 0.4);
+
+        // Current circle
+        pG.append('circle').attr('r', rCur)
+          .attr('fill', col).attr('fill-opacity', 0.30)
+          .attr('stroke', col).attr('stroke-width', 1.5).style('cursor', 'pointer')
+          .on('mouseover', function(ev) { showTip(tipHtml, ev); })
+          .on('mousemove', moveTip).on('mouseout', hideTip)
+          .on('click', onPortClick);
+
+        // Larger hit-target for tiny circles
+        if (rCur <= 6) {
+          pG.append('circle').attr('r', 10)
+            .attr('fill', 'none').attr('stroke', 'none').style('cursor', 'pointer')
+            .on('click', onPortClick);
+        }
+
+        // % change label for big movers
+        if (Math.abs(pct) >= 40) {
+          g.append('text').attr('x', pt[0]).attr('y', pt[1] - rCur - 4)
+            .attr('text-anchor', 'middle').attr('font-family', "'IBM Plex Mono', monospace")
+            .attr('font-size', '7px').attr('font-weight', '700').attr('fill', col)
+            .attr('pointer-events', 'none').text(sign + pct + '%');
+        }
+
+        // Port name label for key ports
+        if (keyPorts.indexOf(p.name) >= 0) {
+          g.append('text').attr('x', pt[0]).attr('y', pt[1] + rCur + 10)
+            .attr('text-anchor', 'middle').attr('font-family', "'IBM Plex Mono', monospace")
+            .attr('font-size', '7px').attr('fill', col)
+            .attr('letter-spacing', '0.03em').attr('opacity', '0.85')
+            .attr('pointer-events', 'none').text(p.name);
+        }
+      });
+
+      // Fetch live vessel-count badges for GCC ports
+      setTimeout(function() { fetchLivePortCalls(false); }, 800);
+    })
+    .catch(function(err) {
+      console.warn('[chokepoints] TopoJSON load failed:', err);
+    });
 }
 
 // ── VESSEL ANIMATION ON HORMUZ MAP ────────────────────────────────────────────

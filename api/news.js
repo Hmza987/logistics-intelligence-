@@ -108,7 +108,7 @@ module.exports = async function handler(req, res) {
   var seen  = new Set();
 
   function addItem(item) {
-    if (items.length >= 15) return;
+    if (items.length >= 25) return;
     if (!item.url || seen.has(item.url)) return;
     if (!item.title || item.title === '[Removed]') return;
     seen.add(item.url);
@@ -161,7 +161,7 @@ module.exports = async function handler(req, res) {
   // ── 2. Al Jazeera RSS (excellent auto-coverage of Iran/Gulf/ME events) ─────────
   // AJ covers this region natively — no special event names needed. Any attack,
   // military movement, or shipping incident in the Gulf will appear here.
-  if (items.length < 10) {
+  if (items.length < 20) {
     var ajFeeds = [
       { url: 'https://www.aljazeera.com/xml/rss/all.xml',           name: 'Al Jazeera' },
       { url: 'https://www.aljazeera.com/feeds/news-feeds.rss',      name: 'Al Jazeera' }
@@ -187,7 +187,7 @@ module.exports = async function handler(req, res) {
 
   // ── 3. The Guardian API ────────────────────────────────────────────────────────
   // Same pattern-based approach: region + event-type, no named events.
-  if (items.length < 8) {
+  if (items.length < 20) {
     try {
       var guardianKey = process.env.GUARDIAN_API_KEY || 'test';
       var guardianUrl =
@@ -226,12 +226,12 @@ module.exports = async function handler(req, res) {
   }
 
   // ── 4. BBC Middle East + Business RSS ─────────────────────────────────────────
-  if (items.length < 8) {
+  if (items.length < 20) {
     var bbcFeeds = [
       { url: 'https://feeds.bbci.co.uk/news/world/middle_east/rss.xml', name: 'BBC Middle East' },
       { url: 'https://feeds.bbci.co.uk/news/business/rss.xml',          name: 'BBC Business'    }
     ];
-    for (var fi = 0; fi < bbcFeeds.length && items.length < 10; fi++) {
+    for (var fi = 0; fi < bbcFeeds.length && items.length < 20; fi++) {
       try {
         var br = await fetch(bbcFeeds[fi].url, {
           timeout: FETCH_TIMEOUT,
@@ -249,7 +249,7 @@ module.exports = async function handler(req, res) {
   }
 
   // ── 5. Reuters RSS World feed ──────────────────────────────────────────────────
-  if (items.length < 6) {
+  if (items.length < 20) {
     try {
       var rrss = await fetch('https://feeds.reuters.com/reuters/topNews', {
         timeout: FETCH_TIMEOUT,
@@ -269,7 +269,7 @@ module.exports = async function handler(req, res) {
   // ── 6. GDELT Doc API (last resort) ────────────────────────────────────────────
   // Queries use region + event-type patterns — not named events — so they remain
   // relevant indefinitely without manual updates.
-  if (items.length < 3) {
+  if (items.length < 20) {
     var GDELT_QUERIES = [
       'Iran military attack Gulf',
       'IRGC attack retaliation',
@@ -313,7 +313,7 @@ module.exports = async function handler(req, res) {
   });
 
   return res.status(200).json({
-    items: items.slice(0, 10),
+    items: items.slice(0, 20),
     ts:    new Date().toISOString(),
     src:   src,
     count: items.length

@@ -4601,11 +4601,11 @@ var INTEL_POOL = [
     src:'Aramco', srcUrl:'https://www.aramco.com/en/news-media' },
   // 8
   { dot:'#fbbf24', dotX:'', tagClass:'tag-watch', tagStyle:'', tag:'WATCH',
-    text:'UAE emergency trucking corridor via Oman: 2,400 trucks/day at Al Wajajah checkpoint (up from 850 pre-crisis). Border wait times 4–6 hrs. Saudi-Oman transit fees waived until June 1.',
+    text:'UAE emergency trucking corridor via Oman: 2,400 trucks/day at Al Wajajah checkpoint (up from 850 pre-crisis). Border wait times 4–6 hrs. Saudi-Oman transit fees waived under GCC emergency designation.',
     src:'UAE MoE', srcUrl:'https://www.moe.gov.ae' },
   // 9
   { dot:'#5aa3f5', dotX:'', tagClass:'tag-info', tagStyle:'', tag:'INFO',
-    text:'UNCTAD estimates $3–5B/day in global trade value transited Hormuz pre-crisis. Day 83 disruption represents ~$250B cumulative trade impact across Asia-GCC, Asia-Europe and energy corridors.',
+    text:'UNCTAD estimates $3–5B/day in global trade value transited Hormuz pre-crisis. Day 86 disruption represents ~$258B cumulative trade impact across Asia-GCC, Asia-Europe and energy corridors.',
     src:'UNCTAD', srcUrl:'https://unctad.org/topic/transport-and-trade-logistics/trade-disruptions' },
   // 10
   { dot:'#fbbf24', dotX:'', tagClass:'tag-watch', tagStyle:'', tag:'WATCH',
@@ -8139,23 +8139,32 @@ window.addEventListener('load', function() {
           return;
         }
         // ── Client-side relevance filter ────────────────────────────────────
-        // Keep only items with at least one keyword matching Hormuz / Iran war
-        // / GCC logistics. Silently drop irrelevant general-news bleed-through.
-        var RELEVANT_KW = [
-          'hormuz','strait','irgc','iran','iranian','tehran','persian gulf',
-          'red sea','houthi','bab el-mandeb',
-          'jebel ali','jeddah','sohar','salalah','khor fakkan','dammam','aqaba',
-          'dubai','abu dhabi','riyadh','muscat','doha','kuwait','manama',
-          'saudi','oman','qatar','uae','gcc','gulf',
-          'shipping','freight','container','cargo','vessel','tanker','port','logistics',
-          'brent','crude oil','energy corridor','lng','pipeline','aramco','adnoc',
-          'ceasefire','war risk','jwc','sanctions','naval','escort',
-          'maersk','msc','cma cgm','hapag','cosco','evergreen','msc gulsun',
-          'unctad','dp world','trukker','windward','alphaliner'
+        // Two-tier logic: pass if (A) a high-specificity GCC/carrier/port term
+        // matches, OR (B) BOTH a crisis term AND a logistics term match.
+        // Broad geo terms (dubai, gulf, saudi…) alone no longer pass — they
+        // pulled in unrelated political/tourism/sports content.
+        var _crisis = [
+          'hormuz','strait of hormuz','persian gulf','irgc','iran','iranian',
+          'houthi','red sea','bab el-mandeb',
+          'war risk','jwc','ceasefire','naval escort','sanctions','blockade'
+        ];
+        var _logistics = [
+          'container','freight rate','cargo','vessel diversion','tanker','shipping lane',
+          'supply chain','port congestion','logistics','feeder service','charter rate'
+        ];
+        var _specific = [
+          'jebel ali','sohar','salalah','khor fakkan','dammam','aqaba','khalifa port',
+          'maersk','msc gulsun','cma cgm','hapag-lloyd','cosco','evergreen',
+          'dp world','alphaliner','windward','unctad',
+          'trans-arabian pipeline','ipsa pipeline','energy corridor',
+          'ras tanura','abu ali terminal','adnoc','qatarenergy','aramco'
         ];
         var filtered = data.items.filter(function(item) {
           var hay = ((item.title || '') + ' ' + (item.description || '')).toLowerCase();
-          return RELEVANT_KW.some(function(kw) { return hay.indexOf(kw) !== -1; });
+          var hasSpecific  = _specific.some(function(kw)  { return hay.indexOf(kw) !== -1; });
+          var hasCrisis    = _crisis.some(function(kw)    { return hay.indexOf(kw) !== -1; });
+          var hasLogistics = _logistics.some(function(kw) { return hay.indexOf(kw) !== -1; });
+          return hasSpecific || (hasCrisis && hasLogistics);
         });
         // If filter wipes everything (very broad news day), fall back to static pool
         if (filtered.length === 0) { rotateIntelFeed(); return; }

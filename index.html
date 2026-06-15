@@ -4692,7 +4692,7 @@ function rotateIntelFeed() {
   var pool = INTEL_POOL.slice(1);
   _intelOffset = (_intelOffset + 1) % pool.length;
   var html = '';
-  for (var i = 0; i < Math.min(4, pool.length); i++) {
+  for (var i = 0; i < Math.min(8, pool.length); i++) {
     html += buildIntelHTML(pool[(_intelOffset + i) % pool.length]);
   }
   feed.style.opacity = '0';

@@ -2888,9 +2888,9 @@ canvas { font-family: var(--f-mono); }
 
 <!-- TABS (desktop) -->
 <div id="tabs">
-  <div class="tab active" onclick="showTab('hormuz',this)">&#9651; Hormuz Traffic <span class="tab-badge">LIVE</span></div>
-  <div class="tab" onclick="showTab('rates',this)">&#9671; Container Rates</div>
-  <div class="tab" onclick="showTab('trucking',this)">&#9672; GCC Trucking</div>
+  <div class="tab active" onclick="showTab('hormuz',this)">&#9651; Chokepoint Traffic <span class="tab-badge">LIVE</span></div>
+  <div class="tab" onclick="showTab('rates',this)">&#9671; Freight Rate Tracker</div>
+  <div class="tab" onclick="showTab('trucking',this)">&#9672; Corridor Performance Monitor</div>
   <div class="tab" onclick="showTab('simulator',this)">&#9670; Scenario Simulator</div>
   <div class="tab" onclick="showTab('watchlist',this)">&#8881; Strategic Watchlist</div>
 </div>
@@ -2898,7 +2898,7 @@ canvas { font-family: var(--f-mono); }
 <!-- MOBILE CURRENT-TAB INDICATOR -->
 <div id="mob-tab-indicator">
   <span style="font-size:12px">&#9651;</span>
-  <span class="mob-tab-name" id="mob-tab-indicator-name">Hormuz Traffic</span>
+  <span class="mob-tab-name" id="mob-tab-indicator-name">Chokepoint Traffic</span>
   <span class="mob-tab-chevron" onclick="openMobNav()">&#9776; Menu</span>
 </div>
 
@@ -2916,16 +2916,16 @@ canvas { font-family: var(--f-mono); }
     <div id="mob-nav-items">
       <button class="mob-nav-item active" id="mob-tab-hormuz" onclick="mobShowTab('hormuz')">
         <span class="mob-nav-icon">&#9651;</span>
-        <span class="mob-nav-label">Hormuz Traffic</span>
+        <span class="mob-nav-label">Chokepoint Traffic</span>
         <span class="tab-badge" style="margin-left:auto">LIVE</span>
       </button>
       <button class="mob-nav-item" id="mob-tab-rates" onclick="mobShowTab('rates')">
         <span class="mob-nav-icon">&#9671;</span>
-        <span class="mob-nav-label">Container Rates</span>
+        <span class="mob-nav-label">Freight Rate Tracker</span>
       </button>
       <button class="mob-nav-item" id="mob-tab-trucking" onclick="mobShowTab('trucking')">
         <span class="mob-nav-icon">&#9672;</span>
-        <span class="mob-nav-label">GCC Trucking</span>
+        <span class="mob-nav-label">Corridor Performance Monitor</span>
       </button>
       <button class="mob-nav-item" id="mob-tab-simulator" onclick="mobShowTab('simulator')">
         <span class="mob-nav-icon">&#9670;</span>
@@ -4050,9 +4050,9 @@ canvas { font-family: var(--f-mono); }
       <div class="sf-col">
         <div class="sf-col-title">Platform</div>
         <div class="sf-links">
-          <span class="sf-link" onclick="showTab('hormuz',document.querySelector('.tab'))">Hormuz Traffic</span>
-          <span class="sf-link" onclick="showTab('rates',document.querySelectorAll('.tab')[1])">Container Rates</span>
-          <span class="sf-link" onclick="showTab('trucking',document.querySelectorAll('.tab')[2])">GCC Trucking</span>
+          <span class="sf-link" onclick="showTab('hormuz',document.querySelector('.tab'))">Chokepoint Traffic</span>
+          <span class="sf-link" onclick="showTab('rates',document.querySelectorAll('.tab')[1])">Freight Rate Tracker</span>
+          <span class="sf-link" onclick="showTab('trucking',document.querySelectorAll('.tab')[2])">Corridor Performance Monitor</span>
           <span class="sf-link" onclick="showTab('simulator',document.querySelectorAll('.tab')[3])">Scenario Simulator</span>
           <span class="sf-link" onclick="showTab('watchlist',document.querySelectorAll('.tab')[4])">Strategic Watchlist</span>
         </div>
@@ -4092,7 +4092,7 @@ var activeScenario = 1;
 var lastSimState   = null;  // persists View 2 state for route-tab switching
 
 // ── TABS ──────────────────────────────────────────────────────────────────────
-var TAB_LABELS = { hormuz:'Hormuz Traffic', rates:'Container Rates', trucking:'GCC Trucking', simulator:'Scenario Simulator', watchlist:'Strategic Watchlist' };
+var TAB_LABELS = { hormuz:'Chokepoint Traffic', rates:'Freight Rate Tracker', trucking:'Corridor Performance Monitor', simulator:'Scenario Simulator', watchlist:'Strategic Watchlist' };
 var TAB_ICONS  = { hormuz:'&#9651;', rates:'&#9671;', trucking:'&#9672;', simulator:'&#9670;', watchlist:'&#8881;' };
 
 // ── Port Dwell Model — fetch model output and update the 5 dwell cards ──────
@@ -5303,7 +5303,7 @@ function getDestImpl(scenarioId, dest, bestKey) {
   var truck = di.truck[scenarioId] || di.truck[1];
   return {
     port:  { cat:'PORT OPERATIONS',  title: di.portName,       color: port.color,  metric: port.metric,  text: port.text  },
-    truck: { cat:'INLAND LOGISTICS', title: 'GCC Trucking — ' + (DEST_NAMES[dest]||dest), color: truck.color, metric: truck.metric, text: truck.text }
+    truck: { cat:'INLAND LOGISTICS', title: 'Corridor Performance — ' + (DEST_NAMES[dest]||dest), color: truck.color, metric: truck.metric, text: truck.text }
   };
 }
 // ─────────────────────────────────────────────────────────────────────────────

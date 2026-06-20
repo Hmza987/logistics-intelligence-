@@ -2765,11 +2765,9 @@ canvas { font-family: var(--f-mono); }
 .tf-comm-btn{font-size:10px;padding:5px 12px;border-radius:3px;cursor:pointer;background:rgba(255,255,255,0.03);border:1px solid var(--c-bd1);color:var(--c-tx1);transition:all 0.15s;}
 .tf-comm-btn.active{background:rgba(96,165,250,0.12);border-color:#60a5fa;color:#e8eaed;}
 .tf-comm-btn:hover:not(.active){border-color:var(--c-tx2);}
-.tf-map-panel{display:flex;gap:14px;margin-bottom:14px;}
-.tf-map-wrap{flex:1 1 62%;min-width:0;}
-#tf-world-map{height:430px;border-radius:4px;background:#0a0f16;}
-.tf-right-panel{flex:0 0 34%;min-width:260px;display:flex;flex-direction:column;gap:10px;}
-.tf-cp-grid{display:flex;flex-direction:column;gap:4px;max-height:220px;overflow-y:auto;}
+#tf-world-map{height:580px;border-radius:0 0 4px 4px;background:#0a0f16;}
+.tf-below-map{display:grid;grid-template-columns:62% 38%;gap:14px;margin-bottom:14px;}
+.tf-cp-grid{display:flex;flex-direction:column;gap:4px;max-height:300px;overflow-y:auto;}
 .tf-cp-row{display:flex;align-items:center;gap:8px;padding:5px 8px;border-radius:3px;background:rgba(255,255,255,0.02);border:1px solid var(--c-bd1);cursor:pointer;transition:all 0.15s;}
 .tf-cp-row:hover{background:rgba(255,255,255,0.04);}
 .tf-cp-row.disrupted{background:rgba(220,38,38,0.1);border-color:rgba(220,38,38,0.4);}
@@ -2818,7 +2816,7 @@ canvas { font-family: var(--f-mono); }
 .tf-legend-swatch{width:18px;height:3px;border-radius:2px;flex-shrink:0;}
 .tf-legend-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0;}
 @keyframes tf-flow{to{stroke-dashoffset:-24;}}
-@media(max-width:768px){.tf-map-panel{flex-direction:column;}.tf-right-panel{flex:none;min-width:0;}.tf-outputs{grid-template-columns:repeat(2,1fr);}.tf-method-body{grid-template-columns:1fr;}}
+@media(max-width:768px){.tf-below-map{grid-template-columns:1fr;}.tf-outputs{grid-template-columns:repeat(2,1fr);}.tf-method-body{grid-template-columns:1fr;}#tf-world-map{height:380px;}}
 </style>
 </head>
 <body>
@@ -4145,60 +4143,60 @@ canvas { font-family: var(--f-mono); }
     <div class="tf-comm-grid" id="tf-comm-grid"></div>
   </div>
 
-  <!-- Map + right controls -->
-  <div class="tf-map-panel">
+  <!-- Full-width world map -->
+  <div class="card" style="padding:0;overflow:hidden;position:relative;margin-bottom:14px">
+    <div style="padding:8px 14px;background:rgba(10,15,22,0.9);display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid var(--c-bd1)">
+      <div style="font-family:var(--f-mono);font-size:8px;letter-spacing:.1em;text-transform:uppercase;color:var(--c-tx2)">
+        &#9670; Trade Architecture &mdash; <span id="tf-map-comm-label" style="color:var(--c-tx1)">Select Commodity</span>
+      </div>
+      <div style="display:flex;align-items:center;gap:14px">
+        <div style="font-size:9px;color:var(--c-tx2)" id="tf-map-route-count"></div>
+        <button onclick="TF_MAP && TF_MAP.setView([20,10],2)" style="font-family:var(--f-mono);font-size:8px;padding:2px 8px;background:transparent;border:1px solid var(--c-bd1);color:var(--c-tx2);border-radius:2px;cursor:pointer">Atlantic view</button>
+        <button onclick="TF_MAP && TF_MAP.setView([20,160],2)" style="font-family:var(--f-mono);font-size:8px;padding:2px 8px;background:transparent;border:1px solid var(--c-bd1);color:var(--c-tx2);border-radius:2px;cursor:pointer">Pacific view</button>
+      </div>
+    </div>
+    <div id="tf-world-map"></div>
+    <div class="tf-map-legend">
+      <div class="tf-legend-item"><div class="tf-legend-swatch" style="background:#3dd68c"></div>Active route</div>
+      <div class="tf-legend-item"><div class="tf-legend-swatch" style="height:0;border-top:2px dashed #dc2626"></div>Disrupted</div>
+      <div class="tf-legend-item"><div class="tf-legend-swatch" style="height:0;border-top:2px dashed #f59e0b"></div>Alternative route</div>
+      <div class="tf-legend-item"><div class="tf-legend-dot" style="background:#3dd68c"></div>Open chokepoint</div>
+      <div class="tf-legend-item"><div class="tf-legend-dot" style="background:#dc2626"></div>Closed / disrupted</div>
+    </div>
+  </div>
 
-    <div class="tf-map-wrap">
-      <div class="card" style="padding:0;overflow:hidden;position:relative">
-        <div style="position:absolute;top:0;left:0;right:0;padding:8px 12px;background:rgba(10,15,22,0.85);z-index:500;display:flex;align-items:center;justify-content:space-between;pointer-events:none">
-          <div style="font-family:var(--f-mono);font-size:8px;letter-spacing:.1em;text-transform:uppercase;color:var(--c-tx2)">
-            &#9670; Trade Architecture &mdash; <span id="tf-map-comm-label" style="color:var(--c-tx1)">Select Commodity</span>
-          </div>
-          <div style="font-size:9px;color:var(--c-tx2)" id="tf-map-route-count"></div>
-        </div>
-        <div id="tf-world-map"></div>
-        <div class="tf-map-legend">
-          <div class="tf-legend-item"><div class="tf-legend-swatch" style="background:#3dd68c"></div>Active route</div>
-          <div class="tf-legend-item"><div class="tf-legend-swatch" style="background:#dc2626;height:2px;border-top:2px dashed #dc2626"></div>Disrupted</div>
-          <div class="tf-legend-item"><div class="tf-legend-swatch" style="background:#f59e0b;height:2px;border-top:2px dashed #f59e0b"></div>Alternative route</div>
-          <div class="tf-legend-item"><div class="tf-legend-dot" style="background:#60a5fa"></div>Open chokepoint</div>
-          <div class="tf-legend-item"><div class="tf-legend-dot" style="background:#dc2626"></div>Closed / disrupted</div>
-        </div>
+  <!-- Below-map: baseline metrics + disruption controls -->
+  <div class="tf-below-map">
+
+    <!-- Baseline metrics -->
+    <div class="card" id="tf-baseline-card">
+      <div class="card-label">&#9670; Baseline Metrics &mdash; <span id="tf-bl-comm">—</span></div>
+      <div id="tf-baseline-content">
+        <div style="font-size:9px;color:var(--c-tx2);padding:16px 0;text-align:center">Select a commodity to view baseline trade data</div>
       </div>
     </div>
 
-    <div class="tf-right-panel">
-
-      <!-- Baseline metrics -->
-      <div class="card" id="tf-baseline-card" style="flex:1">
-        <div class="card-label">&#9670; Baseline Metrics &mdash; <span id="tf-bl-comm">—</span></div>
-        <div id="tf-baseline-content">
-          <div style="font-size:9px;color:var(--c-tx2);padding:16px 0;text-align:center">Select a commodity to view baseline trade data</div>
-        </div>
+    <!-- Stress test controls -->
+    <div class="card">
+      <div class="card-label">&#9670; Chokepoint Disruption Control</div>
+      <div style="font-size:9px;color:var(--c-tx2);margin-bottom:8px;line-height:1.6">Click a chokepoint row to toggle disruption. Disruption level applies to all selected chokepoints.</div>
+      <div class="tf-section-micro">Disruption Level</div>
+      <div class="tf-disruption-level">
+        <button class="tf-lvl-btn" id="tf-lvl-25" onclick="setTFLevel(25,this)">25%</button>
+        <button class="tf-lvl-btn" id="tf-lvl-50" onclick="setTFLevel(50,this)">50%</button>
+        <button class="tf-lvl-btn" id="tf-lvl-75" onclick="setTFLevel(75,this)">75%</button>
+        <button class="tf-lvl-btn active" id="tf-lvl-100" onclick="setTFLevel(100,this)">Full Closure</button>
       </div>
-
-      <!-- Stress test controls -->
-      <div class="card">
-        <div class="card-label">&#9670; Chokepoint Disruption Control</div>
-        <div style="font-size:9px;color:var(--c-tx2);margin-bottom:8px;line-height:1.6">Click a chokepoint to toggle disruption. Select commodity first to see relevant chokepoints.</div>
-        <div class="tf-section-micro">Disruption Level</div>
-        <div class="tf-disruption-level">
-          <button class="tf-lvl-btn" id="tf-lvl-25" onclick="setTFLevel(25,this)">25%</button>
-          <button class="tf-lvl-btn" id="tf-lvl-50" onclick="setTFLevel(50,this)">50%</button>
-          <button class="tf-lvl-btn" id="tf-lvl-75" onclick="setTFLevel(75,this)">75%</button>
-          <button class="tf-lvl-btn active" id="tf-lvl-100" onclick="setTFLevel(100,this)">Full Closure</button>
-        </div>
-        <div class="tf-section-micro">Chokepoints</div>
-        <div class="tf-cp-grid" id="tf-cp-grid">
-          <div style="font-size:9px;color:var(--c-tx2);padding:8px 0">Select a commodity first</div>
-        </div>
-        <div style="margin-top:10px;display:flex;gap:8px">
-          <button onclick="runTFStressTest()" style="flex:1;font-family:var(--f-mono);font-size:9px;font-weight:700;letter-spacing:.1em;padding:7px 12px;background:rgba(220,38,38,0.15);border:1px solid rgba(220,38,38,0.4);color:#f87171;border-radius:3px;cursor:pointer;text-transform:uppercase">&#9670; Run Stress Test</button>
-          <button onclick="clearTFDisruptions()" style="font-family:var(--f-mono);font-size:9px;padding:7px 10px;background:transparent;border:1px solid var(--c-bd1);color:var(--c-tx2);border-radius:3px;cursor:pointer">Clear</button>
-        </div>
+      <div class="tf-section-micro">Chokepoints</div>
+      <div class="tf-cp-grid" id="tf-cp-grid">
+        <div style="font-size:9px;color:var(--c-tx2);padding:8px 0">Select a commodity first</div>
       </div>
-
+      <div style="margin-top:10px;display:flex;gap:8px">
+        <button onclick="runTFStressTest()" style="flex:1;font-family:var(--f-mono);font-size:9px;font-weight:700;letter-spacing:.1em;padding:7px 12px;background:rgba(220,38,38,0.15);border:1px solid rgba(220,38,38,0.4);color:#f87171;border-radius:3px;cursor:pointer;text-transform:uppercase">&#9670; Run Stress Test</button>
+        <button onclick="clearTFDisruptions()" style="font-family:var(--f-mono);font-size:9px;padding:7px 10px;background:transparent;border:1px solid var(--c-bd1);color:var(--c-tx2);border-radius:3px;cursor:pointer">Clear</button>
+      </div>
     </div>
+
   </div>
 
   <!-- Output metrics row -->
@@ -13754,6 +13752,30 @@ var TF_COMMODITIES = {
         fromCoord:[-5,12], toCoord:[32,122],
         vol:1.0, share:2, cps:['mozambique'], distNm:11200,
         waypoints:[[-5,12],[-15,8],[-34.5,19],[-20,42],[-10,50],[5,58],[10,65],[4,78],[2,102],[10,108],[20,115],[32,122]], altWp:{}
+      },
+      {
+        id:'us_europe', label:'US Gulf → Europe (North Atlantic)',
+        fromCoord:[29.5,-94.5], toCoord:[52,4.5],
+        vol:3.5, share:8, cps:[], distNm:5200,
+        waypoints:[[29.5,-94.5],[25,-82],[28,-70],[38,-55],[48,-28],[52,-8],[52,4.5]], altWp:{}
+      },
+      {
+        id:'us_asia_pac', label:'US Gulf → East Asia (via Panama + Pacific)',
+        fromCoord:[29.5,-94.5], toCoord:[35.7,139.7],
+        vol:1.8, share:4, cps:['panama'], distNm:12500,
+        waypoints:[[29.5,-94.5],[9.1,-79.7],[5,-90],[0,-110],[20,-150],[35.7,-220.3]], altWp:{}
+      },
+      {
+        id:'venezuela_china', label:'Venezuela → China (via Good Hope)',
+        fromCoord:[10.5,-62], toCoord:[22,114],
+        vol:0.8, share:2, cps:['mozambique','malacca'], distNm:15200,
+        waypoints:[[10.5,-62],[5,-40],[0,-18],[-10,-5],[-34.5,19],[-20,50],[-5,58],[2,78],[2,102],[10,108],[22,114]], altWp:{}
+      },
+      {
+        id:'canada_asia', label:'Canada (Trans Mountain) → East Asia (Trans-Pacific)',
+        fromCoord:[49.3,-123], toCoord:[35.7,139.7],
+        vol:0.4, share:1, cps:[], distNm:4600,
+        waypoints:[[49.3,-123],[50,-138],[46,-162],[42,-185],[35.7,-220.3]], altWp:{}
       }
     ]
   },
@@ -13802,11 +13824,17 @@ var TF_COMMODITIES = {
         altWp:{ malacca:[[25.4,51.5],[26.6,56.3],[20,65],[4,80],[-8.5,115.7],[5,120],[20,122],[32,122]], malacca_nm:350 }
       },
       {
-        id:'us_asia', label:'US Gulf LNG → East Asia (via Panama)',
+        id:'us_asia', label:'US Gulf LNG → East Asia (via Panama + Pacific)',
         fromCoord:[29.7,-93.9], toCoord:[32,122],
         vol:40.0, share:10, cps:['panama'], distNm:10200,
-        waypoints:[[29.7,-93.9],[9.1,-79.7],[8.0,-79.9],[-10,-85],[0,-100],[20,-130],[35,165],[35,145],[32,122]],
+        waypoints:[[29.7,-93.9],[9.1,-79.7],[5,-90],[0,-110],[20,-150],[32,-238.5]],
         altWp:{ panama:[[29.7,-93.9],[-56,-67],[22,18],[36,-5.4],[48,-5],[52,4]], panama_nm:12500 }
+      },
+      {
+        id:'us_europe_lng', label:'US Gulf LNG → Europe (North Atlantic)',
+        fromCoord:[29.7,-93.9], toCoord:[52,4],
+        vol:88.0, share:22, cps:[], distNm:5100,
+        waypoints:[[29.7,-93.9],[25,-82],[28,-70],[38,-55],[48,-28],[52,-8],[52,4]], altWp:{}
       },
       {
         id:'australia_asia', label:'Australia → East Asia',
@@ -13955,6 +13983,18 @@ var TF_COMMODITIES = {
         fromCoord:[-33,117], toCoord:[13,100],
         vol:14, share:7, cps:['malacca'], distNm:5200,
         waypoints:[[-33,117],[-20,108],[-8,104],[1.2,103.9],[8,100],[13,100]], altWp:{}
+      },
+      {
+        id:'canada_pac_wheat', label:'Canada (Pacific) → East Asia',
+        fromCoord:[54.3,-130.3], toCoord:[35.7,139.7],
+        vol:12, share:6, cps:[], distNm:4700,
+        waypoints:[[54.3,-130.3],[52,-145],[48,-165],[44,-185],[38,-210],[35.7,-220.3]], altWp:{}
+      },
+      {
+        id:'uspnw_asia_wheat', label:'US Pacific NW → East Asia',
+        fromCoord:[45.5,-122.7], toCoord:[35.7,139.7],
+        vol:8, share:4, cps:[], distNm:4500,
+        waypoints:[[45.5,-122.7],[45,-138],[42,-160],[40,-185],[35.7,-220.3]], altWp:{}
       }
     ]
   },
@@ -13986,10 +14026,10 @@ var TF_COMMODITIES = {
     ],
     routes:[
       {
-        id:'us_asia_corn', label:'US Gulf → East Asia (via Panama)',
+        id:'us_asia_corn', label:'US Gulf → East Asia (via Panama + Pacific)',
         fromCoord:[29.5,-90.5], toCoord:[32,122],
         vol:38, share:22, cps:['panama'], distNm:9800,
-        waypoints:[[29.5,-90.5],[9.1,-79.7],[8,-79.9],[5,-85],[0,-100],[20,-130],[35,165],[35,145],[32,122]],
+        waypoints:[[29.5,-90.5],[9.1,-79.7],[5,-88],[0,-108],[20,-148],[32,-238.5]],
         altWp:{ panama:[[29.5,-90.5],[-56,-67],[22,18],[36,-5.4],[48,-5],[20,5],[0,40],[-10,50],[2,102],[32,122]], panama_nm:12500 }
       },
       {
@@ -14072,10 +14112,10 @@ var TF_COMMODITIES = {
         waypoints:[[-23,-46],[-34.5,19],[-20,42],[0,40],[5,58],[10,65],[4,78],[2,102],[10,108],[32,122]], altWp:{}
       },
       {
-        id:'us_asia_soy', label:'US → Asia (via Panama)',
+        id:'us_asia_soy', label:'US → Asia (via Panama + Pacific)',
         fromCoord:[29.5,-90.5], toCoord:[32,122],
         vol:35, share:21, cps:['panama'], distNm:9800,
-        waypoints:[[29.5,-90.5],[9.1,-79.7],[5,-85],[0,-100],[20,-130],[35,165],[35,145],[32,122]],
+        waypoints:[[29.5,-90.5],[9.1,-79.7],[5,-88],[0,-108],[20,-148],[32,-238.5]],
         altWp:{ panama:[[29.5,-90.5],[-56,-67],[22,18],[36,-5.4],[2,102],[32,122]], panama_nm:12500 }
       }
     ]
@@ -14108,10 +14148,10 @@ var TF_COMMODITIES = {
     ],
     routes:[
       {
-        id:'chile_china', label:'Chile / Peru → China (via Panama)',
+        id:'chile_china', label:'Chile / Peru → China (via Panama + Pacific)',
         fromCoord:[-23,-70], toCoord:[32,122],
         vol:3.5, share:29, cps:['panama'], distNm:10500,
-        waypoints:[[-23,-70],[9.1,-79.7],[5,-85],[0,-100],[20,-130],[35,165],[35,145],[32,122]],
+        waypoints:[[-23,-70],[9.1,-79.7],[5,-88],[0,-108],[20,-148],[32,-238.5]],
         altWp:{ panama:[[-23,-70],[-56,-67],[22,18],[36,-5.4],[2,102],[32,122]], panama_nm:12500 }
       },
       {
@@ -14207,11 +14247,11 @@ var TF_COMMODITIES = {
         waypoints:[[24.5,54.5],[26.6,56.3],[15,52],[12.6,43.4],[20,38],[30.7,32.3],[36,18],[36,-5.4],[48,-5],[52,4]], altWp:{}
       },
       {
-        id:'china_usa_al', label:'China → USA',
+        id:'china_usa_al', label:'China → USA (Trans-Pacific)',
         fromCoord:[32,122], toCoord:[37.5,-122],
         vol:2.0, share:13, cps:['taiwan_strait'], distNm:5500,
-        waypoints:[[32,122],[24.5,120],[20,122],[30,165],[37.5,175],[37.5,-175],[37.5,-145],[37.5,-122]],
-        altWp:{ taiwan_strait:[[32,122],[28,130],[30,165],[37.5,-145],[37.5,-122]], taiwan_strait_nm:500 }
+        waypoints:[[32,122],[24.5,120],[30,145],[37.5,175],[37.5,200],[37.5,238]],
+        altWp:{ taiwan_strait:[[32,122],[28,130],[38,155],[37.5,200],[37.5,238]], taiwan_strait_nm:500 }
       }
     ]
   },
@@ -14275,11 +14315,11 @@ var TF_COMMODITIES = {
     ],
     routes:[
       {
-        id:'taiwan_usa', label:'Taiwan → USA',
+        id:'taiwan_usa', label:'Taiwan → USA (Trans-Pacific)',
         fromCoord:[25.0,121.0], toCoord:[37.5,-122],
         vol:40, share:6, cps:['taiwan_strait'], distNm:5500,
-        waypoints:[[25,121],[24.5,120],[20,122],[30,165],[37.5,175],[37.5,-175],[37.5,-145],[37.5,-122]],
-        altWp:{ taiwan_strait:[[25,121],[30,130],[30,165],[37.5,-145],[37.5,-122]], taiwan_strait_nm:500 }
+        waypoints:[[25,121],[24.5,120],[30,145],[37.5,175],[37.5,200],[37.5,238]],
+        altWp:{ taiwan_strait:[[25,121],[30,130],[38,155],[37.5,200],[37.5,238]], taiwan_strait_nm:500 }
       },
       {
         id:'taiwan_europe', label:'Taiwan → Europe',
@@ -14288,11 +14328,11 @@ var TF_COMMODITIES = {
         waypoints:[[25,121],[24.5,120],[20,118],[1.2,103.9],[5,78],[12.6,43.4],[30.7,32.3],[36,18],[36,-5.4],[48,-5],[52,4]], altWp:{}
       },
       {
-        id:'korea_usa', label:'South Korea → USA',
+        id:'korea_usa', label:'South Korea → USA (Trans-Pacific)',
         fromCoord:[35.1,129], toCoord:[37.5,-122],
         vol:25, share:4, cps:['taiwan_strait'], distNm:4800,
-        waypoints:[[35.1,129],[24.5,120],[30,165],[37.5,175],[37.5,-175],[37.5,-145],[37.5,-122]],
-        altWp:{ taiwan_strait:[[35.1,129],[38,135],[42,150],[37.5,-145],[37.5,-122]], taiwan_strait_nm:500 }
+        waypoints:[[35.1,129],[30,145],[37.5,175],[37.5,200],[37.5,238]],
+        altWp:{ taiwan_strait:[[35.1,129],[38,140],[42,158],[37.5,200],[37.5,238]], taiwan_strait_nm:500 }
       }
     ]
   },
@@ -14328,10 +14368,10 @@ var TF_COMMODITIES = {
         altWp:{ bab_el_mandeb:[[31,121],[24.5,120],[20,118],[1.2,103.9],[5,60],[-10,40],[-34.5,19],[-20,5],[5,-10],[36,-5.4],[48,-5],[52,4]], bab_el_mandeb_nm:6800 }
       },
       {
-        id:'china_usa_ev', label:'China → USA',
+        id:'china_usa_ev', label:'China → USA (Trans-Pacific)',
         fromCoord:[31,121], toCoord:[37.5,-122],
         vol:20, share:18, cps:['taiwan_strait'], distNm:6200,
-        waypoints:[[31,121],[24.5,120],[20,122],[30,165],[37.5,175],[37.5,-175],[37.5,-145],[37.5,-122]], altWp:{}
+        waypoints:[[31,121],[24.5,120],[30,145],[37.5,175],[37.5,200],[37.5,238]], altWp:{}
       }
     ]
   },
@@ -14549,6 +14589,22 @@ function clearTFRouteLayers() {
   TF_ALT_LAYERS = [];
 }
 
+// Draw one or more polyline segments (supports antimeridian-crossing routes).
+// route.waypoints  = [[lat,lng],...] for a single segment
+// route.segments   = [[[lat,lng],...], [[lat,lng],...]] for split routes
+// Extended coordinates (lng < -180 or lng > 180) render correctly in Leaflet
+// with worldCopyJump:true — use them for trans-Pacific routes.
+function tfDrawRoute(route, polylineOpts, tooltip) {
+  var segs = route.segments || [route.waypoints];
+  var layers = [];
+  segs.forEach(function(seg) {
+    var pl = L.polyline(seg, polylineOpts).addTo(TF_MAP);
+    if (tooltip) pl.bindTooltip(tooltip, { sticky:true });
+    layers.push(pl);
+  });
+  return layers;
+}
+
 function renderTFRoutes() {
   if (!TF_MAP_READY || !TF_MAP || !TF_ACTIVE_COMM) return;
   clearTFRouteLayers();
@@ -14562,35 +14618,33 @@ function renderTFRoutes() {
     var color = isAffected ? '#dc2626' : comm.color;
     var opacity = isAffected ? 0.4 : 0.65;
 
-    var pl = L.polyline(route.waypoints, {
-      color: color, weight: w, opacity: opacity,
-      dashArray: isAffected ? '6,5' : null
-    }).addTo(TF_MAP);
-    pl.bindTooltip(
+    var tooltip =
       '<b>' + route.label + '</b><br>' +
       route.vol + ' ' + comm.unit + ' (' + route.share + '% of global trade)<br>' +
-      'Via: ' + route.cps.map(function(c){ return TF_CP[c] ? TF_CP[c].name : c; }).join(', '),
-      { sticky: true }
-    );
-    TF_ROUTE_LAYERS.push(pl);
+      (route.cps.length ? 'Via: ' + route.cps.map(function(c){ return TF_CP[c] ? TF_CP[c].name : c; }).join(', ') : 'Open ocean — no major chokepoints');
 
-    // Origin / destination dots
-    var fromDot = L.circleMarker(route.fromCoord, { radius:4, color:comm.color, fillColor:comm.color, fillOpacity:1, weight:1 }).addTo(TF_MAP);
-    var toDot   = L.circleMarker(route.toCoord,   { radius:4, color:comm.color, fillColor:comm.color, fillOpacity:1, weight:1 }).addTo(TF_MAP);
+    var pls = tfDrawRoute(route, { color:color, weight:w, opacity:opacity, dashArray:isAffected?'6,5':null }, tooltip);
+    pls.forEach(function(pl){ TF_ROUTE_LAYERS.push(pl); });
+
+    // Origin / destination dots (use clamped coordinates for markers so they appear on main map)
+    var fromC = route.fromCoord;
+    var toC   = route.toCoord;
+    var fromDot = L.circleMarker(fromC, { radius:4, color:comm.color, fillColor:comm.color, fillOpacity:1, weight:1 }).addTo(TF_MAP);
+    var toDot   = L.circleMarker(toC,   { radius:4, color:comm.color, fillColor:comm.color, fillOpacity:1, weight:1 }).addTo(TF_MAP);
     TF_ROUTE_LAYERS.push(fromDot);
     TF_ROUTE_LAYERS.push(toDot);
 
-    // Show alternative route if disrupted
+    // Alternative route when disrupted
     if (isAffected && route.altWp) {
       var disrupting = route.cps.filter(function(cp){ return TF_DISRUPTIONS[cp]; });
       disrupting.forEach(function(cpId) {
-        var key = cpId;
-        if (route.altWp[key]) {
-          var alt = L.polyline(route.altWp[key], {
-            color:'#f59e0b', weight:Math.max(1,w-1), opacity:0.6, dashArray:'4,6'
-          }).addTo(TF_MAP);
-          alt.bindTooltip('Alternative route (via ' + (route.altWp[key + '_nm'] || TF_CP[cpId].altNm) + ' extra nm)', { sticky:true });
-          TF_ALT_LAYERS.push(alt);
+        if (route.altWp[cpId]) {
+          var altSegs = Array.isArray(route.altWp[cpId][0][0]) ? route.altWp[cpId] : [route.altWp[cpId]];
+          altSegs.forEach(function(seg) {
+            var alt = L.polyline(seg, { color:'#f59e0b', weight:Math.max(1,w-1), opacity:0.6, dashArray:'4,6' }).addTo(TF_MAP);
+            alt.bindTooltip('Alternative route (+' + (route.altWp[cpId+'_nm'] || TF_CP[cpId].altNm) + ' nm)', { sticky:true });
+            TF_ALT_LAYERS.push(alt);
+          });
         }
       });
     }
@@ -14600,8 +14654,7 @@ function renderTFRoutes() {
   Object.keys(TF_CP_MARKERS).forEach(function(cpId) {
     var m = TF_CP_MARKERS[cpId];
     var closed = !!TF_DISRUPTIONS[cpId];
-    var comm = TF_ACTIVE_COMM ? TF_COMMODITIES[TF_ACTIVE_COMM] : null;
-    var relevant = comm && comm.cpVols && comm.cpVols[cpId];
+    var relevant = TF_ACTIVE_COMM && TF_COMMODITIES[TF_ACTIVE_COMM].cpVols && TF_COMMODITIES[TF_ACTIVE_COMM].cpVols[cpId];
     m.setStyle({
       color: closed ? '#dc2626' : (relevant ? '#3dd68c' : '#60a5fa'),
       fillColor: closed ? '#dc2626' : (relevant ? '#3dd68c' : '#60a5fa'),
@@ -14609,7 +14662,6 @@ function renderTFRoutes() {
     });
   });
 
-  // Route count
   var rc = document.getElementById('tf-map-route-count');
   if (rc) rc.textContent = comm.routes.length + ' major routes shown';
 }

@@ -2816,7 +2816,11 @@ canvas { font-family: var(--f-mono); }
 .tf-legend-item{display:flex;align-items:center;gap:6px;margin-bottom:3px;font-size:8.5px;color:var(--c-tx1);}
 .tf-legend-swatch{width:18px;height:3px;border-radius:2px;flex-shrink:0;}
 .tf-legend-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0;}
-@keyframes tf-flow{to{stroke-dashoffset:-24;}}
+@keyframes tf-flow{to{stroke-dashoffset:-80;}}
+.tf-flow-lane     {stroke-dasharray:20 8; animation:tf-flow  9s linear infinite;}
+.tf-flow-fast     {stroke-dasharray:20 8; animation:tf-flow  6s linear infinite;}
+.tf-flow-disrupted{stroke-dasharray: 5 11;animation:tf-flow  3s linear infinite;}
+.tf-flow-alt      {stroke-dasharray:14 8; animation:tf-flow  6s linear infinite;}
 @media(max-width:768px){.tf-below-map{grid-template-columns:1fr;}.tf-outputs{grid-template-columns:repeat(2,1fr);}.tf-method-body{grid-template-columns:1fr;}#tf-world-map{height:380px;}}
 </style>
 </head>
@@ -14636,30 +14640,11 @@ function renderTFRoutes() {
       route.vol + ' ' + comm.unit + ' (' + route.share + '% of global trade)<br>' +
       (route.cps.length ? 'Via: ' + route.cps.map(function(c){ return TF_CP[c] ? TF_CP[c].name : c; }).join(', ') : 'Open ocean — no major chokepoints');
 
-    var pls = tfDrawRoute(route, { color:color, weight:w, opacity:opacity, dashArray:isAffected?'6,5':null }, tooltip);
-    pls.forEach(function(pl){
-      TF_ROUTE_LAYERS.push(pl);
-      // Add directional chevron arrows if PolylineDecorator is available
-      if (typeof L.polylineDecorator === 'function') {
-        var dec = L.polylineDecorator(pl, {
-          patterns: [{
-            offset: '8%',
-            repeat: '18%',
-            symbol: L.Symbol.arrowHead({
-              pixelSize: 9,
-              polygon: false,
-              pathOptions: {
-                stroke: true,
-                color: color,
-                weight: Math.max(1, w - 1),
-                opacity: isAffected ? 0.5 : 0.85
-              }
-            })
-          }]
-        }).addTo(TF_MAP);
-        TF_DECORATOR_LAYERS.push(dec);
-      }
-    });
+    // Pick animation class: fast for high-speed vessels (LNG/container), disrupted = urgent
+    var laneClass = isAffected ? 'tf-flow-disrupted'
+                  : (comm.vesselSpeed >= 18 ? 'tf-flow-fast' : 'tf-flow-lane');
+    var pls = tfDrawRoute(route, { color:color, weight:w, opacity:isAffected?0.55:0.75, className:laneClass }, tooltip);
+    pls.forEach(function(pl){ TF_ROUTE_LAYERS.push(pl); });
 
     // Origin / destination dots (use clamped coordinates for markers so they appear on main map)
     var fromC = route.fromCoord;
@@ -14676,7 +14661,7 @@ function renderTFRoutes() {
         if (route.altWp[cpId]) {
           var altSegs = Array.isArray(route.altWp[cpId][0][0]) ? route.altWp[cpId] : [route.altWp[cpId]];
           altSegs.forEach(function(seg) {
-            var alt = L.polyline(seg, { color:'#f59e0b', weight:Math.max(1,w-1), opacity:0.6, dashArray:'4,6' }).addTo(TF_MAP);
+            var alt = L.polyline(seg, { color:'#f59e0b', weight:Math.max(1,w-1), opacity:0.7, className:'tf-flow-alt' }).addTo(TF_MAP);
             alt.bindTooltip('Alternative route (+' + (route.altWp[cpId+'_nm'] || TF_CP[cpId].altNm) + ' nm)', { sticky:true });
             TF_ALT_LAYERS.push(alt);
           });

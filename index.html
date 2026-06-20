@@ -2821,6 +2821,7 @@ canvas { font-family: var(--f-mono); }
 .tf-flow-fast     {stroke-dasharray:20 8; animation:tf-flow  6s linear infinite;}
 .tf-flow-disrupted{stroke-dasharray: 5 11;animation:tf-flow  3s linear infinite;}
 .tf-flow-alt      {stroke-dasharray:14 8; animation:tf-flow  6s linear infinite;}
+.tf-flow-pipeline {stroke-dasharray: 6 3; animation:tf-flow 16s linear infinite;}
 @media(max-width:768px){.tf-below-map{grid-template-columns:1fr;}.tf-outputs{grid-template-columns:repeat(2,1fr);}.tf-method-body{grid-template-columns:1fr;}#tf-world-map{height:380px;}}
 </style>
 </head>
@@ -4174,6 +4175,7 @@ canvas { font-family: var(--f-mono); }
       <div class="tf-legend-item"><div class="tf-legend-swatch" style="background:#3dd68c"></div>Active route</div>
       <div class="tf-legend-item"><div class="tf-legend-swatch" style="height:0;border-top:2px dashed #dc2626"></div>Disrupted</div>
       <div class="tf-legend-item"><div class="tf-legend-swatch" style="height:0;border-top:2px dashed #f59e0b"></div>Alternative route</div>
+      <div class="tf-legend-item"><div class="tf-legend-swatch" style="height:0;border-top:2px dotted var(--c-tx1)"></div>Pipeline</div>
       <div class="tf-legend-item"><div class="tf-legend-dot" style="background:#3dd68c"></div>Open chokepoint</div>
       <div class="tf-legend-item"><div class="tf-legend-dot" style="background:#dc2626"></div>Closed / disrupted</div>
     </div>
@@ -13707,32 +13709,38 @@ var TF_COMMODITIES = {
     vesselType:'VLCC / Suezmax', vesselSpeed:13,
     elasticity:-0.05, elasticitySource:'Hamilton (2009)',
     exporters:[
-      { name:'Saudi Arabia', vol:7.2 },{ name:'USA',   vol:4.1 },
-      { name:'Iraq',         vol:3.4 },{ name:'Russia', vol:4.8 },
-      { name:'UAE',          vol:2.9 },{ name:'Kuwait', vol:1.8 }
+      { name:'Saudi Arabia', vol:7.2 },{ name:'Russia',      vol:5.2 },
+      { name:'USA',          vol:4.1 },{ name:'Iraq',         vol:3.4 },
+      { name:'UAE',          vol:2.9 },{ name:'Iran',         vol:1.5 },
+      { name:'Kuwait',       vol:1.8 },{ name:'Kazakhstan',   vol:1.0 },
+      { name:'Nigeria',      vol:1.2 },{ name:'Angola',       vol:1.1 },
+      { name:'Libya',        vol:0.8 },{ name:'Brazil',       vol:0.8 },
+      { name:'Mexico',       vol:0.7 },{ name:'Norway',       vol:0.5 },
+      { name:'Venezuela',    vol:0.4 }
     ],
     importers:[
       { name:'China',        vol:11.0 },{ name:'Europe (total)', vol:5.5 },
-      { name:'India',        vol:4.5  },{ name:'USA',            vol:3.0  },
-      { name:'South Korea',  vol:2.8  },{ name:'Japan',          vol:2.5  }
+      { name:'India',        vol:4.5  },{ name:'USA',            vol:3.0 },
+      { name:'South Korea',  vol:2.8  },{ name:'Japan',          vol:2.5 }
     ],
-    // Chokepoint volumes through which this commodity flows (documented sources)
     cpVols:{
       hormuz:         { vol:21.0, share:48, note:'EIA Chokepoints 2022 — includes crude, condensate & petroleum products' },
       malacca:        { vol:16.3, share:38, note:'MPA Singapore 2023 — all petroleum liquids' },
       bab_el_mandeb:  { vol:6.2,  share:14, note:'EIA 2022' },
       suez:           { vol:5.5,  share:13, note:'EIA 2022 (pre-Red Sea crisis baseline)' },
-      turkish_straits:{ vol:2.9,  share:7,  note:'EIA 2022; reduced post-Ukraine war' },
-      danish_straits: { vol:1.2,  share:3,  note:'Eurostat 2023 (reduced from 3.2M pre-war)' },
+      turkish_straits:{ vol:2.9,  share:7,  note:'EIA 2022; includes Russia Black Sea + Kazakhstan CPC; reduced post-2022' },
+      danish_straits: { vol:1.2,  share:3,  note:'Eurostat 2023 — Russia Baltic tanker exports (Primorsk/Ust-Luga)' },
+      gibraltar:      { vol:3.2,  share:7,  note:'Approx — Nigeria, Angola, Libya, N.Africa crude transiting to NW Europe' },
       panama:         { vol:0.8,  share:2,  note:'ACP Annual Report 2023' }
     },
     historicalRefs:[
-      { event:'Suez Crisis 1956',         duration:'6 months', impact:'+25% Brent',          note:'Canal closed; Cape rerouting caused lasting supply shock' },
-      { event:'Gulf War I — Kuwait 1990', duration:'7 months', impact:'+130% Brent (peak)',  note:'Iraq invasion; rapid demand destruction; SPR release' },
-      { event:'Hormuz tanker attacks 2019', duration:'Days',   impact:'+4% in 24 h',         note:'IRGC attacks; fear premium; no material volume loss' },
-      { event:'Suez — Ever Given 2021',   duration:'6 days',   impact:'+0.5% Brent',         note:'Short duration limited oil impact; containers far worse' }
+      { event:'Suez Crisis 1956',           duration:'6 months', impact:'+25% Brent',         note:'Canal closed; Cape rerouting caused lasting supply shock' },
+      { event:'Gulf War I — Kuwait 1990',   duration:'7 months', impact:'+130% Brent (peak)', note:'Iraq invasion; rapid demand destruction; SPR release' },
+      { event:'Hormuz tanker attacks 2019', duration:'Days',     impact:'+4% in 24 h',        note:'IRGC attacks; fear premium; no material volume loss' },
+      { event:'Suez — Ever Given 2021',     duration:'6 days',   impact:'+0.5% Brent',        note:'Short duration limited oil impact; containers far worse' }
     ],
     routes:[
+      // ── MIDDLE EAST ──────────────────────────────────────────────────────────
       {
         id:'me_eastasia', label:'Persian Gulf → East Asia',
         fromCoord:[26.0,51.0], toCoord:[32.0,122.0],
@@ -13755,18 +13763,87 @@ var TF_COMMODITIES = {
         waypoints:[[26,51],[26.6,56.3],[22,63],[22.8,69.7]], altWp:{}
       },
       {
-        id:'russia_europe', label:'Black Sea → Western Europe',
-        fromCoord:[44,33], toCoord:[52,4],
-        vol:2.9, share:7, cps:['turkish_straits'], distNm:3800,
-        waypoints:[[44,33],[41.1,29.1],[38,27],[36,18],[36,0],[36,-5.4],[48,-5],[52,4]],
-        altWp:{ turkish_straits:[[44,33],[52,36],[56,22],[55.6,10.8],[56,8],[52,4]], turkish_straits_nm:1200 }
+        id:'iran_china', label:'Iran (Kharg Island) → China',
+        fromCoord:[29.2,50.3], toCoord:[22,114],
+        vol:0.5, share:1, cps:['hormuz','malacca'], distNm:7200, mode:'sea',
+        waypoints:[[29.2,50.3],[26.6,56.3],[20,65],[10,72],[4,80],[2,102],[10,108],[22,114]], altWp:{}
       },
       {
-        id:'westafrica_asia', label:'West Africa → East Asia',
-        fromCoord:[-5,12], toCoord:[32,122],
-        vol:1.0, share:2, cps:['mozambique'], distNm:11200,
-        waypoints:[[-5,12],[-15,8],[-34.5,19],[-20,42],[-10,50],[5,58],[10,65],[4,78],[2,102],[10,108],[20,115],[32,122]], altWp:{}
+        id:'iraq_ceyhan', label:'Iraq Kirkuk → Ceyhan (Turkey) → Mediterranean',
+        fromCoord:[35.5,44.4], toCoord:[44,12],
+        vol:0.4, share:1, cps:[], distNm:1800, mode:'sea+pipeline',
+        waypoints:[[35.5,44.4],[37,38],[37.0,36.1],[36,34],[35,27],[37,18],[40,14],[44,12]], altWp:{}
       },
+      // ── RUSSIA / CASPIAN ──────────────────────────────────────────────────────
+      {
+        id:'russia_blacksea', label:'Russia (Novorossiysk) → Europe via Black Sea',
+        fromCoord:[44.7,37.8], toCoord:[52,4],
+        vol:0.8, share:2, cps:['turkish_straits'], distNm:3400,
+        waypoints:[[44.7,37.8],[41.1,29.1],[38,27],[36,18],[36,0],[36,-5.4],[48,-5],[52,4]],
+        altWp:{ turkish_straits:[[44.7,37.8],[47,34],[52,36],[56,22],[55.6,10.8],[56,8],[52,4]], turkish_straits_nm:1200 }
+      },
+      {
+        id:'russia_baltic', label:'Russia (Primorsk/Ust-Luga) → NW Europe via Baltic',
+        fromCoord:[60,28.7], toCoord:[52,4.5],
+        vol:0.6, share:1, cps:['danish_straits'], distNm:1600,
+        waypoints:[[60,28.7],[59,24],[57,20],[56,16],[55.6,10.8],[56,8],[52,4.5]], altWp:{}
+      },
+      {
+        id:'russia_espo_tanker', label:'Russia ESPO (Kozmino) → East Asia',
+        fromCoord:[42.9,133.5], toCoord:[35,127],
+        vol:0.9, share:2, cps:[], distNm:900, mode:'sea',
+        waypoints:[[42.9,133.5],[40,131],[37,129],[35.1,129],[35,127],[32,122]], altWp:{}
+      },
+      {
+        id:'russia_druzhba', label:'Druzhba Pipeline → Central / Western Europe',
+        fromCoord:[53,50], toCoord:[52,13],
+        vol:0.4, share:1, cps:[], distNm:4200, mode:'pipeline',
+        waypoints:[[53,50],[53,44],[53,36],[52,28],[52,22],[52,18],[52,15],[52,13],[51,12],[50,13]], altWp:{}
+      },
+      {
+        id:'russia_espo_pipeline', label:'ESPO Pipeline → China (Skovorodino–Mohe)',
+        fromCoord:[56,98], toCoord:[32,122],
+        vol:0.8, share:2, cps:[], distNm:4700, mode:'pipeline',
+        waypoints:[[56,98],[55,104],[55,110],[54,116],[53.9,121.7],[53.5,122],[50,122],[45,122],[40,122],[32,122]], altWp:{}
+      },
+      {
+        id:'kazakhstan_cpc', label:'Kazakhstan CPC Pipeline → Black Sea → Europe',
+        fromCoord:[47.2,53.5], toCoord:[52,4.5],
+        vol:1.0, share:2, cps:['turkish_straits'], distNm:5800, mode:'sea+pipeline',
+        waypoints:[[47.2,53.5],[46,50],[45,44],[44.7,37.8],[41.1,29.1],[38,27],[36,18],[36,-5.4],[48,-8],[52,4.5]], altWp:{}
+      },
+      // ── AFRICA ───────────────────────────────────────────────────────────────
+      {
+        id:'nigeria_europe', label:'Nigeria (Niger Delta) → Europe',
+        fromCoord:[4.4,7.2], toCoord:[52,4.5],
+        vol:0.7, share:2, cps:['gibraltar'], distNm:5400, mode:'sea',
+        waypoints:[[4.4,7.2],[5,0],[10,-5],[20,-15],[35,-8],[36,-5.4],[48,-8],[52,4.5]], altWp:{}
+      },
+      {
+        id:'nigeria_asia', label:'Nigeria → East Asia (via Good Hope)',
+        fromCoord:[4.4,7.2], toCoord:[22,114],
+        vol:0.5, share:1, cps:['mozambique','malacca'], distNm:11800, mode:'sea',
+        waypoints:[[4.4,7.2],[0,5],[-10,5],[-34.5,19],[-20,42],[-5,58],[2,78],[2,102],[10,108],[22,114]], altWp:{}
+      },
+      {
+        id:'angola_china', label:'Angola → China (via Good Hope)',
+        fromCoord:[-8.8,13.2], toCoord:[22,114],
+        vol:1.1, share:3, cps:['mozambique','malacca'], distNm:10500, mode:'sea',
+        waypoints:[[-8.8,13.2],[-15,8],[-34.5,19],[-20,42],[-5,58],[2,78],[2,102],[10,108],[22,114]], altWp:{}
+      },
+      {
+        id:'angola_europe', label:'Angola → Europe (North Atlantic)',
+        fromCoord:[-8.8,13.2], toCoord:[52,4.5],
+        vol:0.4, share:1, cps:[], distNm:5800, mode:'sea',
+        waypoints:[[-8.8,13.2],[-15,5],[-5,-8],[5,-15],[20,-18],[35,-8],[36,-5.4],[48,-8],[52,4.5]], altWp:{}
+      },
+      {
+        id:'libya_europe', label:'Libya (Ras Lanuf) → Mediterranean Europe',
+        fromCoord:[30.5,18.5], toCoord:[44,12],
+        vol:0.8, share:2, cps:[], distNm:1400, mode:'sea',
+        waypoints:[[30.5,18.5],[32,14],[36,13],[40,14],[44,12],[52,4.5]], altWp:{}
+      },
+      // ── AMERICAS ─────────────────────────────────────────────────────────────
       {
         id:'us_europe', label:'US Gulf → Europe (North Atlantic)',
         fromCoord:[29.5,-94.5], toCoord:[52,4.5],
@@ -13780,16 +13857,35 @@ var TF_COMMODITIES = {
         waypoints:[[29.5,-94.5],[9.1,-79.7],[5,-90],[0,-110],[20,-150],[35.7,-220.3]], altWp:{}
       },
       {
+        id:'mexico_usa', label:'Mexico (Campeche) → USA',
+        fromCoord:[19.5,-91.5], toCoord:[29.5,-94.5],
+        vol:0.7, share:2, cps:[], distNm:900, mode:'sea',
+        waypoints:[[19.5,-91.5],[22,-90],[26,-93],[29.5,-94.5]], altWp:{}
+      },
+      {
         id:'venezuela_china', label:'Venezuela → China (via Good Hope)',
         fromCoord:[10.5,-62], toCoord:[22,114],
-        vol:0.8, share:2, cps:['mozambique','malacca'], distNm:15200,
+        vol:0.4, share:1, cps:['mozambique','malacca'], distNm:15200,
         waypoints:[[10.5,-62],[5,-40],[0,-18],[-10,-5],[-34.5,19],[-20,50],[-5,58],[2,78],[2,102],[10,108],[22,114]], altWp:{}
       },
       {
-        id:'canada_asia', label:'Canada (Trans Mountain) → East Asia (Trans-Pacific)',
+        id:'brazil_china', label:'Brazil (Pre-salt) → China (via Good Hope)',
+        fromCoord:[-22,-40], toCoord:[22,114],
+        vol:0.5, share:1, cps:['mozambique','malacca'], distNm:12000, mode:'sea',
+        waypoints:[[-22,-40],[-33,-45],[-34.5,19],[-20,42],[-5,58],[2,78],[2,102],[10,108],[22,114]], altWp:{}
+      },
+      {
+        id:'canada_asia', label:'Canada Trans Mountain → East Asia (Trans-Pacific)',
         fromCoord:[49.3,-123], toCoord:[35.7,139.7],
         vol:0.4, share:1, cps:[], distNm:4600,
         waypoints:[[49.3,-123],[50,-138],[46,-162],[42,-185],[35.7,-220.3]], altWp:{}
+      },
+      // ── EUROPE / NORTH SEA ───────────────────────────────────────────────────
+      {
+        id:'norway_northsea', label:'Norway / North Sea → NW Europe',
+        fromCoord:[59,2], toCoord:[52,4.5],
+        vol:0.5, share:1, cps:[], distNm:800, mode:'sea',
+        waypoints:[[62,2],[60,2],[58,3],[56,4],[52,4.5]], altWp:{}
       }
     ]
   },
@@ -14633,17 +14729,23 @@ function renderTFRoutes() {
     var isAffected = disrupted && route.cps.some(function(cp){ return TF_DISRUPTIONS[cp]; });
     var w = Math.max(1.5, Math.min(8, (route.vol / maxVol) * 8));
     var color = isAffected ? '#dc2626' : comm.color;
-    var opacity = isAffected ? 0.4 : 0.65;
 
+    // Pick animation class based on mode and state
+    var isPipeline = route.mode === 'pipeline' || route.mode === 'sea+pipeline';
+    var laneClass = isAffected ? 'tf-flow-disrupted'
+                  : isPipeline ? 'tf-flow-pipeline'
+                  : (comm.vesselSpeed >= 18 ? 'tf-flow-fast' : 'tf-flow-lane');
+    var lineWeight = isPipeline ? Math.max(1.5, w * 0.6) : w;
+    var lineOpacity = isAffected ? 0.55 : isPipeline ? 0.8 : 0.75;
+    // Pipeline mode label suffix
+    var modeTag = isPipeline
+      ? (route.mode === 'sea+pipeline' ? ' — Pipeline + Tanker' : ' — Pipeline')
+      : '';
     var tooltip =
-      '<b>' + route.label + '</b><br>' +
+      '<b>' + route.label + '</b>' + modeTag + '<br>' +
       route.vol + ' ' + comm.unit + ' (' + route.share + '% of global trade)<br>' +
       (route.cps.length ? 'Via: ' + route.cps.map(function(c){ return TF_CP[c] ? TF_CP[c].name : c; }).join(', ') : 'Open ocean — no major chokepoints');
-
-    // Pick animation class: fast for high-speed vessels (LNG/container), disrupted = urgent
-    var laneClass = isAffected ? 'tf-flow-disrupted'
-                  : (comm.vesselSpeed >= 18 ? 'tf-flow-fast' : 'tf-flow-lane');
-    var pls = tfDrawRoute(route, { color:color, weight:w, opacity:isAffected?0.55:0.75, className:laneClass }, tooltip);
+    var pls = tfDrawRoute(route, { color:color, weight:lineWeight, opacity:lineOpacity, className:laneClass }, tooltip);
     pls.forEach(function(pl){ TF_ROUTE_LAYERS.push(pl); });
 
     // Origin / destination dots (use clamped coordinates for markers so they appear on main map)

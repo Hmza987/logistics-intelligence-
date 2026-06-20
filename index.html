@@ -65,6 +65,7 @@
 </style>
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/leaflet-polylinedecorator@1.6.0/dist/leaflet.polylineDecorator.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
 <style>
 /* ═══════════════════════════════════════════════════════════════════════════
@@ -14453,6 +14454,7 @@ var TF_ACTIVE_CAT = 'energy';
 var TF_DISRUPTIONS = {}; // { cpId: true }
 var TF_DISRUPTION_LEVEL = 100; // percentage
 var TF_ROUTE_LAYERS = [];
+var TF_DECORATOR_LAYERS = [];
 var TF_CP_MARKERS = {};
 var TF_ALT_LAYERS = [];
 
@@ -14594,6 +14596,8 @@ function selectTFCommodity(commId) {
 function clearTFRouteLayers() {
   TF_ROUTE_LAYERS.forEach(function(l){ if(TF_MAP) TF_MAP.removeLayer(l); });
   TF_ROUTE_LAYERS = [];
+  TF_DECORATOR_LAYERS.forEach(function(l){ if(TF_MAP) TF_MAP.removeLayer(l); });
+  TF_DECORATOR_LAYERS = [];
   TF_ALT_LAYERS.forEach(function(l){ if(TF_MAP) TF_MAP.removeLayer(l); });
   TF_ALT_LAYERS = [];
 }
@@ -14633,7 +14637,29 @@ function renderTFRoutes() {
       (route.cps.length ? 'Via: ' + route.cps.map(function(c){ return TF_CP[c] ? TF_CP[c].name : c; }).join(', ') : 'Open ocean — no major chokepoints');
 
     var pls = tfDrawRoute(route, { color:color, weight:w, opacity:opacity, dashArray:isAffected?'6,5':null }, tooltip);
-    pls.forEach(function(pl){ TF_ROUTE_LAYERS.push(pl); });
+    pls.forEach(function(pl){
+      TF_ROUTE_LAYERS.push(pl);
+      // Add directional chevron arrows if PolylineDecorator is available
+      if (typeof L.polylineDecorator === 'function') {
+        var dec = L.polylineDecorator(pl, {
+          patterns: [{
+            offset: '8%',
+            repeat: '18%',
+            symbol: L.Symbol.arrowHead({
+              pixelSize: 9,
+              polygon: false,
+              pathOptions: {
+                stroke: true,
+                color: color,
+                weight: Math.max(1, w - 1),
+                opacity: isAffected ? 0.5 : 0.85
+              }
+            })
+          }]
+        }).addTo(TF_MAP);
+        TF_DECORATOR_LAYERS.push(dec);
+      }
+    });
 
     // Origin / destination dots (use clamped coordinates for markers so they appear on main map)
     var fromC = route.fromCoord;

@@ -2752,6 +2752,73 @@ canvas { font-family: var(--f-mono); }
   font-family:var(--f-mono); font-size:7.5px; letter-spacing:.12em;
   color:rgba(212,160,23,.4); text-align:center; text-transform:uppercase;
 }
+
+/* ── TRADE FLOW STRESS TEST ─────────────────────────────────────────────────── */
+.tf-page-header{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:16px;padding-bottom:14px;border-bottom:1px solid var(--c-bd1);}
+.tf-page-title{font-family:var(--f-mono);font-size:10px;font-weight:700;letter-spacing:.15em;color:#60a5fa;text-transform:uppercase;margin-bottom:3px;}
+.tf-page-sub{font-size:10px;color:var(--c-tx1);margin-bottom:2px;}
+.tf-page-meta{font-family:var(--f-mono);font-size:8px;color:var(--c-tx2);letter-spacing:.06em;}
+.tf-cat-row{display:flex;gap:8px;margin-bottom:10px;flex-wrap:wrap;}
+.tf-cat-btn{font-family:var(--f-mono);font-size:8px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;padding:4px 10px;border-radius:3px;cursor:pointer;background:transparent;border:1px solid var(--c-bd1);color:var(--c-tx1);transition:all 0.15s;}
+.tf-cat-btn.active,.tf-cat-btn:hover{border-color:#60a5fa;color:#60a5fa;background:rgba(96,165,250,0.08);}
+.tf-comm-grid{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:14px;}
+.tf-comm-btn{font-size:10px;padding:5px 12px;border-radius:3px;cursor:pointer;background:rgba(255,255,255,0.03);border:1px solid var(--c-bd1);color:var(--c-tx1);transition:all 0.15s;}
+.tf-comm-btn.active{background:rgba(96,165,250,0.12);border-color:#60a5fa;color:#e8eaed;}
+.tf-comm-btn:hover:not(.active){border-color:var(--c-tx2);}
+.tf-map-panel{display:flex;gap:14px;margin-bottom:14px;}
+.tf-map-wrap{flex:1 1 62%;min-width:0;}
+#tf-world-map{height:430px;border-radius:4px;background:#0a0f16;}
+.tf-right-panel{flex:0 0 34%;min-width:260px;display:flex;flex-direction:column;gap:10px;}
+.tf-cp-grid{display:flex;flex-direction:column;gap:4px;max-height:220px;overflow-y:auto;}
+.tf-cp-row{display:flex;align-items:center;gap:8px;padding:5px 8px;border-radius:3px;background:rgba(255,255,255,0.02);border:1px solid var(--c-bd1);cursor:pointer;transition:all 0.15s;}
+.tf-cp-row:hover{background:rgba(255,255,255,0.04);}
+.tf-cp-row.disrupted{background:rgba(220,38,38,0.1);border-color:rgba(220,38,38,0.4);}
+.tf-cp-dot{width:8px;height:8px;border-radius:50%;background:#3dd68c;flex-shrink:0;transition:background 0.2s;}
+.tf-cp-row.disrupted .tf-cp-dot{background:#dc2626;}
+.tf-cp-name{font-size:9.5px;color:var(--c-tx1);flex:1;}
+.tf-cp-vol{font-family:var(--f-mono);font-size:8px;color:var(--c-tx2);}
+.tf-disruption-level{display:flex;gap:5px;flex-wrap:wrap;margin:6px 0 8px;}
+.tf-lvl-btn{font-family:var(--f-mono);font-size:8px;letter-spacing:.1em;padding:3px 8px;border-radius:3px;border:1px solid var(--c-bd1);background:transparent;color:var(--c-tx2);cursor:pointer;}
+.tf-lvl-btn.active{background:rgba(220,38,38,0.12);border-color:#dc2626;color:#f87171;}
+.tf-outputs{display:grid;grid-template-columns:repeat(5,1fr);gap:10px;margin-bottom:14px;}
+.tf-output-card{background:rgba(255,255,255,0.02);border:1px solid var(--c-bd1);border-radius:4px;padding:12px;}
+.tf-output-card.highlight{border-color:rgba(220,38,38,0.35);background:rgba(220,38,38,0.05);}
+.tf-output-label{font-family:var(--f-mono);font-size:7.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--c-tx2);margin-bottom:6px;}
+.tf-output-value{font-size:22px;font-weight:700;color:#e8eaed;line-height:1;margin-bottom:2px;}
+.tf-output-unit{font-size:9px;color:var(--c-tx2);}
+.tf-output-sub{font-size:8px;color:var(--c-tx2);margin-top:6px;line-height:1.55;}
+.tf-bl-row{display:flex;align-items:baseline;justify-content:space-between;padding:4px 0;border-bottom:1px solid rgba(255,255,255,0.04);}
+.tf-bl-key{font-size:9px;color:var(--c-tx2);}
+.tf-bl-val{font-family:var(--f-mono);font-size:10px;color:#e8eaed;font-weight:600;}
+.tf-section-micro{font-family:var(--f-mono);font-size:7.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--c-tx2);margin:10px 0 5px;}
+.tf-exp-row{display:flex;align-items:center;gap:8px;margin-bottom:5px;}
+.tf-exp-label{font-size:9px;color:var(--c-tx1);width:120px;flex-shrink:0;}
+.tf-exp-track{flex:1;height:5px;background:rgba(255,255,255,0.06);border-radius:3px;overflow:hidden;}
+.tf-exp-fill{height:100%;border-radius:3px;}
+.tf-exp-val{font-family:var(--f-mono);font-size:9px;color:var(--c-tx2);width:40px;text-align:right;}
+.tf-cp-bar-row{display:flex;align-items:center;gap:8px;margin-bottom:5px;}
+.tf-cp-bar-label{font-size:9px;color:var(--c-tx1);width:160px;flex-shrink:0;}
+.tf-cp-bar-track{flex:1;height:6px;background:rgba(255,255,255,0.06);border-radius:3px;overflow:hidden;}
+.tf-cp-bar-fill{height:100%;border-radius:3px;transition:width 0.4s ease;}
+.tf-cp-bar-val{font-family:var(--f-mono);font-size:9px;color:var(--c-tx2);width:80px;text-align:right;}
+.tf-method-toggle{display:flex;align-items:center;justify-content:space-between;cursor:pointer;padding:0;}
+.tf-method-title{font-family:var(--f-mono);font-size:9px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--c-tx2);}
+.tf-method-body{margin-top:14px;display:none;grid-template-columns:repeat(3,1fr);gap:14px;}
+.tf-method-body.open{display:grid;}
+.tf-method-section-title{font-family:var(--f-mono);font-size:8px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:#60a5fa;margin-bottom:8px;}
+.tf-method-item{font-size:9px;color:var(--c-tx1);line-height:1.7;margin-bottom:6px;}
+.tf-method-formula{font-family:var(--f-mono);font-size:8px;color:#93c5fd;background:rgba(96,165,250,0.06);border-radius:3px;padding:6px 8px;margin:6px 0;border-left:2px solid #60a5fa;line-height:1.65;}
+.tf-source-tag{font-size:7.5px;color:var(--c-tx2);font-style:italic;line-height:1.6;}
+.tf-alert-strip{background:rgba(220,38,38,0.08);border:1px solid rgba(220,38,38,0.25);border-radius:3px;padding:8px 12px;margin-bottom:14px;display:none;}
+.tf-alert-strip.visible{display:block;}
+.tf-alert-title{font-family:var(--f-mono);font-size:8px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:#f87171;margin-bottom:4px;}
+.tf-alert-body{font-size:9px;color:var(--c-tx1);line-height:1.65;}
+.tf-map-legend{position:absolute;bottom:10px;left:10px;z-index:900;background:rgba(10,15,22,0.9);border:1px solid var(--c-bd1);border-radius:4px;padding:8px 10px;}
+.tf-legend-item{display:flex;align-items:center;gap:6px;margin-bottom:3px;font-size:8.5px;color:var(--c-tx1);}
+.tf-legend-swatch{width:18px;height:3px;border-radius:2px;flex-shrink:0;}
+.tf-legend-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0;}
+@keyframes tf-flow{to{stroke-dashoffset:-24;}}
+@media(max-width:768px){.tf-map-panel{flex-direction:column;}.tf-right-panel{flex:none;min-width:0;}.tf-outputs{grid-template-columns:repeat(2,1fr);}.tf-method-body{grid-template-columns:1fr;}}
 </style>
 </head>
 <body>
@@ -2893,6 +2960,7 @@ canvas { font-family: var(--f-mono); }
   <div class="tab" onclick="showTab('trucking',this)">&#9672; Corridor Performance Monitor</div>
   <div class="tab" onclick="showTab('simulator',this)">&#9670; Scenario Simulator</div>
   <div class="tab" onclick="showTab('watchlist',this)">&#8881; Strategic Watchlist</div>
+  <div class="tab" onclick="showTab('stress',this)">&#9670; Trade Flow Stress Test</div>
 </div>
 
 <!-- MOBILE CURRENT-TAB INDICATOR -->
@@ -2934,6 +3002,10 @@ canvas { font-family: var(--f-mono); }
       <button class="mob-nav-item" id="mob-tab-watchlist" onclick="mobShowTab('watchlist')">
         <span class="mob-nav-icon">&#8881;</span>
         <span class="mob-nav-label">Strategic Watchlist</span>
+      </button>
+      <button class="mob-nav-item" id="mob-tab-stress" onclick="mobShowTab('stress')">
+        <span class="mob-nav-icon">&#9670;</span>
+        <span class="mob-nav-label">Trade Flow Stress Test</span>
       </button>
     </div>
     <div id="mob-nav-footer">
@@ -4036,6 +4108,232 @@ canvas { font-family: var(--f-mono); }
 
 </div>
 
+<!-- ============================================================ TAB 6: TRADE FLOW STRESS TEST -->
+<div class="page" id="page-stress">
+
+  <div class="tf-page-header">
+    <div>
+      <div class="tf-page-title">&#9670; Trade Flow Stress Test</div>
+      <div class="tf-page-sub">Chokepoint disruption modelling &middot; Transparent calculation methodology &middot; Documented data sources</div>
+      <div class="tf-page-meta">Based on observed trade volumes &middot; Derived calculations only &middot; No AI-generated scores &middot; All outputs are fully auditable</div>
+    </div>
+    <div style="text-align:right;flex-shrink:0">
+      <div style="font-family:var(--f-mono);font-size:8px;color:var(--c-tx2);line-height:1.9">
+        Sources: IEA &bull; EIA &bull; GIIGNL &bull; USDA FAS &bull; ICSG &bull; Clarksons<br>
+        Distances: Sea-Distances.org &bull; MarineTraffic verified routes<br>
+        Last updated: Jun 2026
+      </div>
+    </div>
+  </div>
+
+  <!-- Alert strip (appears when disruptions are active) -->
+  <div class="tf-alert-strip" id="tf-alert-strip">
+    <div class="tf-alert-title">&#9670; Stress Test Active &mdash; <span id="tf-active-count">0</span> chokepoint(s) disrupted</div>
+    <div class="tf-alert-body" id="tf-alert-body">—</div>
+  </div>
+
+  <!-- Commodity selector -->
+  <div class="card" style="margin-bottom:14px;padding:12px 16px">
+    <div class="card-label" style="margin-bottom:10px">&#9670; Select Commodity</div>
+    <div class="tf-cat-row" id="tf-cat-row">
+      <button class="tf-cat-btn active" onclick="filterTFCat('energy',this)">Energy</button>
+      <button class="tf-cat-btn" onclick="filterTFCat('agriculture',this)">Agriculture</button>
+      <button class="tf-cat-btn" onclick="filterTFCat('metals',this)">Metals</button>
+      <button class="tf-cat-btn" onclick="filterTFCat('manufacturing',this)">Manufacturing</button>
+      <button class="tf-cat-btn" onclick="filterTFCat('all',this)">All</button>
+    </div>
+    <div class="tf-comm-grid" id="tf-comm-grid"></div>
+  </div>
+
+  <!-- Map + right controls -->
+  <div class="tf-map-panel">
+
+    <div class="tf-map-wrap">
+      <div class="card" style="padding:0;overflow:hidden;position:relative">
+        <div style="position:absolute;top:0;left:0;right:0;padding:8px 12px;background:rgba(10,15,22,0.85);z-index:500;display:flex;align-items:center;justify-content:space-between;pointer-events:none">
+          <div style="font-family:var(--f-mono);font-size:8px;letter-spacing:.1em;text-transform:uppercase;color:var(--c-tx2)">
+            &#9670; Trade Architecture &mdash; <span id="tf-map-comm-label" style="color:var(--c-tx1)">Select Commodity</span>
+          </div>
+          <div style="font-size:9px;color:var(--c-tx2)" id="tf-map-route-count"></div>
+        </div>
+        <div id="tf-world-map"></div>
+        <div class="tf-map-legend">
+          <div class="tf-legend-item"><div class="tf-legend-swatch" style="background:#3dd68c"></div>Active route</div>
+          <div class="tf-legend-item"><div class="tf-legend-swatch" style="background:#dc2626;height:2px;border-top:2px dashed #dc2626"></div>Disrupted</div>
+          <div class="tf-legend-item"><div class="tf-legend-swatch" style="background:#f59e0b;height:2px;border-top:2px dashed #f59e0b"></div>Alternative route</div>
+          <div class="tf-legend-item"><div class="tf-legend-dot" style="background:#60a5fa"></div>Open chokepoint</div>
+          <div class="tf-legend-item"><div class="tf-legend-dot" style="background:#dc2626"></div>Closed / disrupted</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="tf-right-panel">
+
+      <!-- Baseline metrics -->
+      <div class="card" id="tf-baseline-card" style="flex:1">
+        <div class="card-label">&#9670; Baseline Metrics &mdash; <span id="tf-bl-comm">—</span></div>
+        <div id="tf-baseline-content">
+          <div style="font-size:9px;color:var(--c-tx2);padding:16px 0;text-align:center">Select a commodity to view baseline trade data</div>
+        </div>
+      </div>
+
+      <!-- Stress test controls -->
+      <div class="card">
+        <div class="card-label">&#9670; Chokepoint Disruption Control</div>
+        <div style="font-size:9px;color:var(--c-tx2);margin-bottom:8px;line-height:1.6">Click a chokepoint to toggle disruption. Select commodity first to see relevant chokepoints.</div>
+        <div class="tf-section-micro">Disruption Level</div>
+        <div class="tf-disruption-level">
+          <button class="tf-lvl-btn" id="tf-lvl-25" onclick="setTFLevel(25,this)">25%</button>
+          <button class="tf-lvl-btn" id="tf-lvl-50" onclick="setTFLevel(50,this)">50%</button>
+          <button class="tf-lvl-btn" id="tf-lvl-75" onclick="setTFLevel(75,this)">75%</button>
+          <button class="tf-lvl-btn active" id="tf-lvl-100" onclick="setTFLevel(100,this)">Full Closure</button>
+        </div>
+        <div class="tf-section-micro">Chokepoints</div>
+        <div class="tf-cp-grid" id="tf-cp-grid">
+          <div style="font-size:9px;color:var(--c-tx2);padding:8px 0">Select a commodity first</div>
+        </div>
+        <div style="margin-top:10px;display:flex;gap:8px">
+          <button onclick="runTFStressTest()" style="flex:1;font-family:var(--f-mono);font-size:9px;font-weight:700;letter-spacing:.1em;padding:7px 12px;background:rgba(220,38,38,0.15);border:1px solid rgba(220,38,38,0.4);color:#f87171;border-radius:3px;cursor:pointer;text-transform:uppercase">&#9670; Run Stress Test</button>
+          <button onclick="clearTFDisruptions()" style="font-family:var(--f-mono);font-size:9px;padding:7px 10px;background:transparent;border:1px solid var(--c-bd1);color:var(--c-tx2);border-radius:3px;cursor:pointer">Clear</button>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- Output metrics row -->
+  <div class="tf-outputs" id="tf-outputs">
+    <div class="tf-output-card" id="tf-out-vol">
+      <div class="tf-output-label">Trade Volume Impacted</div>
+      <div class="tf-output-value" id="tf-val-vol">—</div>
+      <div class="tf-output-unit" id="tf-unit-vol"></div>
+      <div class="tf-output-sub" id="tf-sub-vol">Run stress test to see results</div>
+    </div>
+    <div class="tf-output-card" id="tf-out-rrt">
+      <div class="tf-output-label">Re-routable Volume</div>
+      <div class="tf-output-value" id="tf-val-rrt">—</div>
+      <div class="tf-output-unit" id="tf-unit-rrt"></div>
+      <div class="tf-output-sub" id="tf-sub-rrt">Volume with viable alternative routes</div>
+    </div>
+    <div class="tf-output-card" id="tf-out-dist">
+      <div class="tf-output-label">Additional Distance</div>
+      <div class="tf-output-value" id="tf-val-dist">—</div>
+      <div class="tf-output-unit">nautical miles (weighted avg)</div>
+      <div class="tf-output-sub" id="tf-sub-dist">Extra nm via alternative route</div>
+    </div>
+    <div class="tf-output-card" id="tf-out-time">
+      <div class="tf-output-label">Additional Transit Time</div>
+      <div class="tf-output-value" id="tf-val-time">—</div>
+      <div class="tf-output-unit">days</div>
+      <div class="tf-output-sub" id="tf-sub-time">Calculation: extra nm &divide; (vessel speed &times; 24)</div>
+    </div>
+    <div class="tf-output-card" id="tf-out-cost">
+      <div class="tf-output-label">Additional Transport Cost</div>
+      <div class="tf-output-value" id="tf-val-cost">—</div>
+      <div class="tf-output-unit">% above baseline rate</div>
+      <div class="tf-output-sub" id="tf-sub-cost">Regression model &beta;&#8323; = 0.045 per 100 nm</div>
+    </div>
+  </div>
+
+  <!-- Regional exposure + Price impact -->
+  <div class="row col21" style="margin-bottom:14px">
+    <div class="card">
+      <div class="card-label">&#9670; Importing Region Exposure</div>
+      <div id="tf-exposure-content" style="font-size:9px;color:var(--c-tx2);padding:8px 0;line-height:1.7">Run stress test to see regional exposure breakdown</div>
+    </div>
+    <div class="card">
+      <div class="card-label">&#9670; Price Impact Estimate</div>
+      <div id="tf-price-content" style="font-size:9px;color:var(--c-tx2);padding:8px 0;line-height:1.7">Run stress test to see price impact analysis</div>
+    </div>
+  </div>
+
+  <!-- Chokepoint exposure bars -->
+  <div class="card" style="margin-bottom:14px">
+    <div class="card-label">&#9670; Chokepoint Exposure Database &mdash; <span id="tf-cpdb-label">Select commodity</span></div>
+    <div id="tf-cp-bars" style="padding:6px 0">
+      <div style="font-size:9px;color:var(--c-tx2)">Select a commodity to view chokepoint volume data</div>
+    </div>
+  </div>
+
+  <!-- Methodology panel -->
+  <div class="card">
+    <div class="tf-method-toggle" onclick="toggleTFMethodology()">
+      <div class="tf-method-title">&#9432; Methodology, Data Sources &amp; Assumptions</div>
+      <div style="font-family:var(--f-mono);font-size:8px;color:var(--c-tx2)" id="tf-method-chevron">&#9660; Show</div>
+    </div>
+    <div class="tf-method-body" id="tf-method-body">
+      <div>
+        <div class="tf-method-section-title">&#9670; Distance &amp; Transit Time</div>
+        <div class="tf-method-item">Route distances sourced from Sea-Distances.org and MarineTraffic port-to-port calculators for standard maritime routes.</div>
+        <div class="tf-method-formula">
+          Additional Time (days) =<br>
+          Extra Distance (nm) &divide; (Vessel Speed (kt) &times; 24)
+        </div>
+        <div class="tf-method-item">Fleet-average speeds: VLCC 13 kt &bull; LNG carrier 19 kt &bull; Capesize bulk 14 kt &bull; Panamax 14 kt &bull; Container 20 kt</div>
+        <div class="tf-source-tag">Source: Clarksons Research, MarineTraffic average voyage speed data 2023</div>
+      </div>
+      <div>
+        <div class="tf-method-section-title">&#9670; Transport Cost Multiplier</div>
+        <div class="tf-method-item">Uses the same documented regression model as the Scenario Simulator tab. The distance coefficient &beta;&#8323; is validated against observed freight rate data.</div>
+        <div class="tf-method-formula">
+          Cost Multiplier = max(0.5,<br>
+          &nbsp;&nbsp;1 + 0.009&times;(Brent&minus;72)<br>
+          &nbsp;&nbsp;+ 0.045&times;(ExtraNm&divide;100)<br>
+          &nbsp;&nbsp;+ 0.050&times;(Utilisation&minus;72))<br><br>
+          <span style="color:var(--c-tx2)">&beta;&#8323; = 0.045 per 100 nm &bull; Base Brent: $72/bbl<br>
+          Utilisation held at 72% baseline</span>
+        </div>
+        <div class="tf-source-tag">Regression: Stopford (2009) Maritime Economics; validated against FBX01 vs distance spread 2019&ndash;2023 (UNCTAD data)</div>
+      </div>
+      <div>
+        <div class="tf-method-section-title">&#9670; Price Impact Methodology</div>
+        <div class="tf-method-item"><strong style="color:#e8eaed">Method A &mdash; Historical Event References</strong><br>Documented outcomes from real disruption events. These are observed data, not predictions.</div>
+        <div class="tf-method-item"><strong style="color:#e8eaed">Method B &mdash; Elasticity-Based</strong></div>
+        <div class="tf-method-formula">
+          &Delta;P = (&Delta;Q &divide; Q) &times; (1 &divide; &epsilon;<sub>d</sub>) &times; P<br><br>
+          <span style="color:var(--c-tx2)">&Delta;Q = disrupted % of market<br>
+          &epsilon;<sub>d</sub> = short-run demand elasticity<br>
+          P = baseline commodity price</span>
+        </div>
+        <div class="tf-source-tag">Elasticities: crude oil &minus;0.05 (Hamilton 2009); LNG &minus;0.10 (Wood Mackenzie); agricultural &minus;0.15 to &minus;0.25 (IMF 2022)</div>
+      </div>
+      <div>
+        <div class="tf-method-section-title">&#9670; Volume Data Sources</div>
+        <div class="tf-method-item">
+          <strong style="color:#e8eaed">Crude Oil / Petroleum:</strong> EIA Chokepoints 2022; IEA OMR 2023<br>
+          <strong style="color:#e8eaed">LNG:</strong> GIIGNL Annual Report 2024<br>
+          <strong style="color:#e8eaed">Wheat / Corn / Rice / Soybeans:</strong> USDA FAS MY2022/23<br>
+          <strong style="color:#e8eaed">Copper:</strong> ICSG Copper Bulletin 2023<br>
+          <strong style="color:#e8eaed">Iron Ore / Coal:</strong> Clarksons Shipping Review 2023<br>
+          <strong style="color:#e8eaed">Nickel:</strong> INSG / NiPERA 2023<br>
+          <strong style="color:#e8eaed">Rare Earths:</strong> USGS Mineral Commodity Summaries 2023<br>
+          <strong style="color:#e8eaed">Semiconductors / EV Batteries:</strong> WSTS / BloombergNEF 2023
+        </div>
+      </div>
+      <div>
+        <div class="tf-method-section-title">&#9670; Routing Assumptions</div>
+        <div class="tf-method-item">Primary routes based on AIS vessel density data (MarineTraffic 2023). Alternative routes are the next-best viable commercial option per vessel type.<br><br>
+        VLCC (crude, iron ore): Cannot transit Panama; Suez at reduced draft. No bypass for Hormuz — product redistribution via Fujairah anchorage only.<br><br>
+        LNG Carriers &gt;80,000 DWT: Cannot use most secondary straits. Hormuz closure requires US Gulf supply substitution (significantly higher transit distances to Asia).</div>
+      </div>
+      <div>
+        <div class="tf-method-section-title">&#9670; What This Module Does NOT Do</div>
+        <div class="tf-method-item">
+          This module displays observed data and transparent calculations only. It does NOT:<br>
+          &bull; Generate AI predictions or confidence scores<br>
+          &bull; Assign vulnerability or resilience scores<br>
+          &bull; Account for demand destruction under prolonged disruptions<br>
+          &bull; Model strategic reserve drawdowns<br>
+          &bull; Predict geopolitical responses or supply substitution<br>
+          &bull; Distinguish spot vs. contract freight markets<br><br>
+          All outputs are mechanical calculations based on documented volumes and distances, fully auditable against the stated sources.
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div><!-- end page-stress -->
+
 <!-- ═══════════════════════════════════ SITE FOOTER ═══════════════════════════════════ -->
 <footer id="site-footer">
   <div class="sf-inner">
@@ -4092,8 +4390,8 @@ var activeScenario = 1;
 var lastSimState   = null;  // persists View 2 state for route-tab switching
 
 // ── TABS ──────────────────────────────────────────────────────────────────────
-var TAB_LABELS = { hormuz:'Chokepoint Traffic', rates:'Freight Rate Tracker', trucking:'Corridor Performance Monitor', simulator:'Scenario Simulator', watchlist:'Strategic Watchlist' };
-var TAB_ICONS  = { hormuz:'&#9651;', rates:'&#9671;', trucking:'&#9672;', simulator:'&#9670;', watchlist:'&#8881;' };
+var TAB_LABELS = { hormuz:'Chokepoint Traffic', rates:'Freight Rate Tracker', trucking:'Corridor Performance Monitor', simulator:'Scenario Simulator', watchlist:'Strategic Watchlist', stress:'Trade Flow Stress Test' };
+var TAB_ICONS  = { hormuz:'&#9651;', rates:'&#9671;', trucking:'&#9672;', simulator:'&#9670;', watchlist:'&#8881;', stress:'&#9670;' };
 
 // ── Port Dwell Model — fetch model output and update the 5 dwell cards ──────
 var pdtLoaded = false;
@@ -4288,6 +4586,9 @@ function showTab(name, el) {
     }
     if (name === 'watchlist') {
       initWatchlist();
+    }
+    if (name === 'stress') {
+      initTradeFlowTab();
     }
     if (name === 'trucking') {
       setTimeout(initGCCCorridorsMap, 100);
@@ -8243,7 +8544,7 @@ function closeMobNav() {
 function mobShowTab(name) {
   // Delegate to the main showTab function using the matching desktop tab element
   var desktopTabs = document.querySelectorAll('#tabs .tab');
-  var tabNames = ['hormuz', 'rates', 'trucking', 'simulator', 'watchlist'];
+  var tabNames = ['hormuz', 'rates', 'trucking', 'simulator', 'watchlist', 'stress'];
   var idx = tabNames.indexOf(name);
   if (idx !== -1) showTab(name, desktopTabs[idx]);
 
@@ -13359,6 +13660,1257 @@ function generateStrategyBrief(sid) {
   if (btn) { btn.innerHTML = '<span class="wl-brief-btn-icon">&#8659;</span> Download Strategy Brief'; btn.disabled = false; }
 }
 // ── END STRATEGIC WATCHLIST ───────────────────────────────────────────────────
+
+// ╔══════════════════════════════════════════════════════════════════════════════╗
+// ║  TRADE FLOW STRESS TEST — Tab 6                                            ║
+// ║  Design principle: observed data + derived calculations only.              ║
+// ║  No AI scoring, no black-box predictions, no arbitrary indices.            ║
+// ╚══════════════════════════════════════════════════════════════════════════════╝
+
+// ── Chokepoint database ───────────────────────────────────────────────────────
+var TF_CP = {
+  hormuz:         { name:'Strait of Hormuz',          lat:26.6,  lng:56.3,  alt:'No viable VLCC bypass; small tankers via Khor Fakkan only',   altNm:0 },
+  bab_el_mandeb:  { name:'Bab el-Mandeb',             lat:12.6,  lng:43.4,  alt:'Cape of Good Hope (+6,800 nm)',                              altNm:6800 },
+  suez:           { name:'Suez Canal',                lat:30.7,  lng:32.3,  alt:'Cape of Good Hope (+6,800 nm)',                              altNm:6800 },
+  malacca:        { name:'Strait of Malacca',         lat:1.2,   lng:103.9, alt:'Lombok Strait (+350 nm) or Sunda Strait (+600 nm)',          altNm:350 },
+  panama:         { name:'Panama Canal',              lat:9.1,   lng:-79.7, alt:'Cape Horn (+12,500 nm)',                                     altNm:12500 },
+  turkish_straits:{ name:'Turkish Straits / Bosphorus',lat:41.1, lng:29.1,  alt:'Overland BTC pipeline (crude only); no sea alt for tankers', altNm:0 },
+  danish_straits: { name:'Danish Straits',            lat:55.6,  lng:10.8,  alt:'Kiel Canal (limited draft) or northern route (+200 nm)',     altNm:200 },
+  gibraltar:      { name:'Strait of Gibraltar',       lat:36.0,  lng:-5.4,  alt:'No sea alternative; Med exports stranded',                   altNm:0 },
+  mozambique:     { name:'Mozambique Channel',        lat:-18.0, lng:39.5,  alt:'Eastern route around Madagascar (+400 nm)',                  altNm:400 },
+  lombok:         { name:'Lombok Strait',             lat:-8.5,  lng:115.7, alt:'Sunda Strait (+250 nm) or Malacca (if draft allows)',        altNm:250 },
+  sunda:          { name:'Sunda Strait',              lat:-6.0,  lng:105.9, alt:'Lombok Strait (+150 nm) or Malacca',                        altNm:150 },
+  taiwan_strait:  { name:'Taiwan Strait',             lat:24.5,  lng:120.0, alt:'Eastern Taiwan route (+500 nm)',                            altNm:500 },
+  oya:            { name:'Mozambique / Oya Channel',  lat:-20.5, lng:35.5,  alt:'Eastern Madagascar route (+400 nm)',                        altNm:400 }
+};
+
+// ── Commodity definitions & data ──────────────────────────────────────────────
+// All volumes from documented sources (see methodology panel for full citations).
+var TF_COMMODITIES = {
+
+  crude_oil: {
+    cat:'energy', name:'Crude Oil', unit:'M bbl/day', globalTrade:43.4,
+    globalTradeSource:'IEA Oil Market Report 2023',
+    priceLabel:'Brent spot ($/bbl)', color:'#f59e0b',
+    vesselType:'VLCC / Suezmax', vesselSpeed:13,
+    elasticity:-0.05, elasticitySource:'Hamilton (2009)',
+    exporters:[
+      { name:'Saudi Arabia', vol:7.2 },{ name:'USA',   vol:4.1 },
+      { name:'Iraq',         vol:3.4 },{ name:'Russia', vol:4.8 },
+      { name:'UAE',          vol:2.9 },{ name:'Kuwait', vol:1.8 }
+    ],
+    importers:[
+      { name:'China',        vol:11.0 },{ name:'Europe (total)', vol:5.5 },
+      { name:'India',        vol:4.5  },{ name:'USA',            vol:3.0  },
+      { name:'South Korea',  vol:2.8  },{ name:'Japan',          vol:2.5  }
+    ],
+    // Chokepoint volumes through which this commodity flows (documented sources)
+    cpVols:{
+      hormuz:         { vol:21.0, share:48, note:'EIA Chokepoints 2022 — includes crude, condensate & petroleum products' },
+      malacca:        { vol:16.3, share:38, note:'MPA Singapore 2023 — all petroleum liquids' },
+      bab_el_mandeb:  { vol:6.2,  share:14, note:'EIA 2022' },
+      suez:           { vol:5.5,  share:13, note:'EIA 2022 (pre-Red Sea crisis baseline)' },
+      turkish_straits:{ vol:2.9,  share:7,  note:'EIA 2022; reduced post-Ukraine war' },
+      danish_straits: { vol:1.2,  share:3,  note:'Eurostat 2023 (reduced from 3.2M pre-war)' },
+      panama:         { vol:0.8,  share:2,  note:'ACP Annual Report 2023' }
+    },
+    historicalRefs:[
+      { event:'Suez Crisis 1956',         duration:'6 months', impact:'+25% Brent',          note:'Canal closed; Cape rerouting caused lasting supply shock' },
+      { event:'Gulf War I — Kuwait 1990', duration:'7 months', impact:'+130% Brent (peak)',  note:'Iraq invasion; rapid demand destruction; SPR release' },
+      { event:'Hormuz tanker attacks 2019', duration:'Days',   impact:'+4% in 24 h',         note:'IRGC attacks; fear premium; no material volume loss' },
+      { event:'Suez — Ever Given 2021',   duration:'6 days',   impact:'+0.5% Brent',         note:'Short duration limited oil impact; containers far worse' }
+    ],
+    routes:[
+      {
+        id:'me_eastasia', label:'Persian Gulf → East Asia',
+        fromCoord:[26.0,51.0], toCoord:[32.0,122.0],
+        vol:11.0, share:25, cps:['hormuz','malacca'], distNm:6800,
+        waypoints:[[26,51],[26.6,56.3],[20,65],[10,72],[4,80],[2,102],[10,108],[20,115],[32,122]],
+        altWp:{ malacca:[[26,51],[26.6,56.3],[20,65],[4,80],[-8.5,115.7],[10,115],[20,118],[32,122]], malacca_nm:350 }
+      },
+      {
+        id:'me_europe', label:'Persian Gulf → Europe',
+        fromCoord:[26.0,51.0], toCoord:[52.0,4.5],
+        vol:3.5, share:8, cps:['hormuz','bab_el_mandeb','suez'], distNm:8200,
+        waypoints:[[26,51],[26.6,56.3],[15,52],[12.6,43.4],[20,38],[27,34],[30.7,32.3],[32,28],[36,18],[36,0],[36,-5.4],[48,-8],[52,4.5]],
+        altWp:{ bab_el_mandeb:[[26,51],[26.6,56.3],[15,52],[10,43],[0,38],[-10,40],[-34.5,19],[-20,5],[5,-10],[36,-5.4],[48,-8],[52,4.5]], bab_el_mandeb_nm:6800,
+               suez:[[26,51],[26.6,56.3],[15,52],[10,43],[0,38],[-10,40],[-34.5,19],[-20,5],[5,-10],[36,-5.4],[48,-8],[52,4.5]], suez_nm:6800 }
+      },
+      {
+        id:'me_india', label:'Persian Gulf → India',
+        fromCoord:[26,51], toCoord:[22.8,69.7],
+        vol:3.8, share:9, cps:['hormuz'], distNm:1400,
+        waypoints:[[26,51],[26.6,56.3],[22,63],[22.8,69.7]], altWp:{}
+      },
+      {
+        id:'russia_europe', label:'Black Sea → Western Europe',
+        fromCoord:[44,33], toCoord:[52,4],
+        vol:2.9, share:7, cps:['turkish_straits'], distNm:3800,
+        waypoints:[[44,33],[41.1,29.1],[38,27],[36,18],[36,0],[36,-5.4],[48,-5],[52,4]],
+        altWp:{ turkish_straits:[[44,33],[52,36],[56,22],[55.6,10.8],[56,8],[52,4]], turkish_straits_nm:1200 }
+      },
+      {
+        id:'westafrica_asia', label:'West Africa → East Asia',
+        fromCoord:[-5,12], toCoord:[32,122],
+        vol:1.0, share:2, cps:['mozambique'], distNm:11200,
+        waypoints:[[-5,12],[-15,8],[-34.5,19],[-20,42],[-10,50],[5,58],[10,65],[4,78],[2,102],[10,108],[20,115],[32,122]], altWp:{}
+      }
+    ]
+  },
+
+  lng: {
+    cat:'energy', name:'LNG', unit:'MT/year', globalTrade:404,
+    globalTradeSource:'GIIGNL Annual Report 2024',
+    priceLabel:'JKM spot ($/mmbtu)', color:'#34d399',
+    vesselType:'LNG Carrier (Q-Flex / Q-Max)', vesselSpeed:19,
+    elasticity:-0.10, elasticitySource:'Wood Mackenzie / GIIGNL',
+    exporters:[
+      { name:'USA',       vol:88.0 },{ name:'Qatar',     vol:81.6 },
+      { name:'Australia', vol:80.4 },{ name:'Russia',    vol:33.6 },
+      { name:'Malaysia',  vol:29.6 },{ name:'Nigeria',   vol:17.8 }
+    ],
+    importers:[
+      { name:'Europe (total)', vol:128.0 },{ name:'Japan',       vol:71.9 },
+      { name:'China',          vol:71.3  },{ name:'South Korea', vol:45.5 },
+      { name:'India',          vol:27.7  },{ name:'Taiwan',      vol:22.3 }
+    ],
+    cpVols:{
+      malacca:       { vol:150, share:37, note:'GIIGNL 2024 — Asia Pacific LNG flows' },
+      panama:        { vol:65,  share:16, note:'GIIGNL 2024 — US LNG to Asia' },
+      hormuz:        { vol:77,  share:19, note:'GIIGNL 2024 — Qatar LNG exports' },
+      suez:          { vol:20,  share:5,  note:'GIIGNL 2024 — Med LNG trade' },
+      bab_el_mandeb: { vol:25,  share:6,  note:'GIIGNL 2024 — Red Sea transit (Qatar → Europe)' }
+    },
+    historicalRefs:[
+      { event:'Qatar LNG supply disruption 2017 (blockade)', duration:'3+ years', impact:'+15–25% JKM',       note:'Saudi-led blockade; Qatar maintained LNG exports via longer routes' },
+      { event:'Red Sea disruptions 2024',                    duration:'Ongoing',  impact:'+30% Qatar premium', note:'Rerouting cost added to landed LNG price; spot market tightened' },
+      { event:'US LNG Freeport outage 2022',                 duration:'6 months', impact:'+20% TTF',           note:'Unrelated to chokepoints; supply-side shock reference only' }
+    ],
+    routes:[
+      {
+        id:'qatar_europe', label:'Qatar → Europe',
+        fromCoord:[25.4,51.5], toCoord:[52,4],
+        vol:35.0, share:9, cps:['hormuz','bab_el_mandeb','suez'], distNm:7800,
+        waypoints:[[25.4,51.5],[26.6,56.3],[15,52],[12.6,43.4],[20,38],[30.7,32.3],[32,28],[36,18],[36,-5.4],[48,-5],[52,4]],
+        altWp:{ bab_el_mandeb:[[25.4,51.5],[26.6,56.3],[15,56],[-10,45],[-34.5,19],[-20,5],[5,-10],[36,-5.4],[48,-5],[52,4]], bab_el_mandeb_nm:6800 }
+      },
+      {
+        id:'qatar_asia', label:'Qatar → East Asia',
+        fromCoord:[25.4,51.5], toCoord:[32,122],
+        vol:45.0, share:11, cps:['hormuz','malacca'], distNm:7200,
+        waypoints:[[25.4,51.5],[26.6,56.3],[20,65],[10,72],[4,80],[2,102],[10,108],[20,115],[32,122]],
+        altWp:{ malacca:[[25.4,51.5],[26.6,56.3],[20,65],[4,80],[-8.5,115.7],[5,120],[20,122],[32,122]], malacca_nm:350 }
+      },
+      {
+        id:'us_asia', label:'US Gulf LNG → East Asia (via Panama)',
+        fromCoord:[29.7,-93.9], toCoord:[32,122],
+        vol:40.0, share:10, cps:['panama'], distNm:10200,
+        waypoints:[[29.7,-93.9],[9.1,-79.7],[8.0,-79.9],[-10,-85],[0,-100],[20,-130],[35,165],[35,145],[32,122]],
+        altWp:{ panama:[[29.7,-93.9],[-56,-67],[22,18],[36,-5.4],[48,-5],[52,4]], panama_nm:12500 }
+      },
+      {
+        id:'australia_asia', label:'Australia → East Asia',
+        fromCoord:[-20,120], toCoord:[32,122],
+        vol:70.0, share:17, cps:['malacca','lombok'], distNm:4500,
+        waypoints:[[-20,120],[-8.5,115.7],[4,110],[10,108],[20,115],[32,122]], altWp:{}
+      }
+    ]
+  },
+
+  refined: {
+    cat:'energy', name:'Refined Products', unit:'M bbl/day', globalTrade:28,
+    globalTradeSource:'IEA Oil Market Report 2023',
+    priceLabel:'Singapore gasoil ($/bbl)', color:'#fb923c',
+    vesselType:'MR / LR2 Product Tanker', vesselSpeed:14,
+    elasticity:-0.06, elasticitySource:'IEA 2022',
+    exporters:[
+      { name:'Russia',       vol:2.5 },{ name:'USA',   vol:3.2 },
+      { name:'India',        vol:1.8 },{ name:'China', vol:1.5 },
+      { name:'South Korea',  vol:1.3 },{ name:'Saudi Arabia', vol:2.0 }
+    ],
+    importers:[
+      { name:'Europe',        vol:4.5 },{ name:'USA',         vol:2.5 },
+      { name:'West Africa',   vol:1.8 },{ name:'Middle East', vol:1.6 },
+      { name:'Latin America', vol:2.0 },{ name:'Southeast Asia',vol:2.2 }
+    ],
+    cpVols:{
+      hormuz:        { vol:4.0,  share:14, note:'EIA 2022 — petroleum products' },
+      malacca:       { vol:8.0,  share:29, note:'MPA 2023 — petroleum products' },
+      bab_el_mandeb: { vol:3.0,  share:11, note:'EIA 2022' },
+      suez:          { vol:3.5,  share:13, note:'EIA 2022' },
+      turkish_straits:{ vol:1.2, share:4,  note:'Eurostat 2023' }
+    },
+    historicalRefs:[
+      { event:'Red Sea crisis 2024', duration:'Ongoing', impact:'+8–12% diesel spot, Europe', note:'Rerouting of product tankers via Cape added cost premium' }
+    ],
+    routes:[
+      {
+        id:'me_europe_ref', label:'Middle East → Europe',
+        fromCoord:[26,51], toCoord:[52,4],
+        vol:3.5, share:13, cps:['hormuz','bab_el_mandeb','suez'], distNm:8200,
+        waypoints:[[26,51],[26.6,56.3],[15,52],[12.6,43.4],[20,38],[30.7,32.3],[32,28],[36,18],[36,-5.4],[48,-5],[52,4]],
+        altWp:{ bab_el_mandeb:[[26,51],[26.6,56.3],[15,52],[0,38],[-34.5,19],[-20,5],[5,-10],[36,-5.4],[48,-5],[52,4]], bab_el_mandeb_nm:6800 }
+      },
+      {
+        id:'asia_waf', label:'Asia → West Africa',
+        fromCoord:[1.3,103.8], toCoord:[5,3],
+        vol:1.8, share:6, cps:['malacca','mozambique'], distNm:9500,
+        waypoints:[[1.3,103.8],[-8.5,115.7],[-20,88],[-34.5,19],[-20,10],[5,3]], altWp:{}
+      }
+    ]
+  },
+
+  coal: {
+    cat:'energy', name:'Coal', unit:'MT/year', globalTrade:1230,
+    globalTradeSource:'Clarksons Shipping Review 2023',
+    priceLabel:'Newcastle thermal coal ($/MT)', color:'#94a3b8',
+    vesselType:'Capesize / Panamax', vesselSpeed:14,
+    elasticity:-0.20, elasticitySource:'IEA coal demand elasticity 2022',
+    exporters:[
+      { name:'Indonesia',    vol:500 },{ name:'Australia', vol:330 },
+      { name:'Russia',       vol:155 },{ name:'USA',       vol:80 },
+      { name:'South Africa', vol:60  },{ name:'Colombia',  vol:50 }
+    ],
+    importers:[
+      { name:'China',       vol:475 },{ name:'India',       vol:240 },
+      { name:'Japan',       vol:175 },{ name:'South Korea', vol:140 },
+      { name:'Europe',      vol:80  },{ name:'Taiwan',      vol:65  }
+    ],
+    cpVols:{
+      malacca:       { vol:580, share:47, note:'Clarksons 2023 — Indonesia + Australia coal to Asia' },
+      lombok:        { vol:280, share:23, note:'Clarksons 2023 — Capesize Australia→China' },
+      bab_el_mandeb: { vol:110, share:9,  note:'Clarksons 2023 — South Africa + Colombia to Europe/Asia' },
+      suez:          { vol:100, share:8,  note:'Clarksons 2023' },
+      turkish_straits:{ vol:25, share:2,  note:'Eurostat 2023 — Eastern Europe supply' }
+    },
+    historicalRefs:[
+      { event:'Indonesia export ban 2022 (palm oil/coal restrictions)', duration:'1 month', impact:'+8% Newcastle', note:'Indonesian domestic-supply policy; short duration' }
+    ],
+    routes:[
+      {
+        id:'indonesia_china', label:'Indonesia → China',
+        fromCoord:[-7,113], toCoord:[32,122],
+        vol:300, share:24, cps:['malacca'], distNm:3200,
+        waypoints:[[-7,113],[1.2,103.9],[10,108],[20,115],[32,122]],
+        altWp:{ malacca:[[-7,113],[-8.5,115.7],[4,110],[10,108],[20,115],[32,122]], malacca_nm:350 }
+      },
+      {
+        id:'australia_china', label:'Australia → China',
+        fromCoord:[-20,120], toCoord:[32,122],
+        vol:200, share:16, cps:['lombok','malacca'], distNm:4800,
+        waypoints:[[-20,120],[-8.5,115.7],[4,110],[10,108],[20,115],[32,122]], altWp:{}
+      },
+      {
+        id:'safrica_europe', label:'South Africa → Europe',
+        fromCoord:[-33.9,18.4], toCoord:[52,4],
+        vol:45, share:4, cps:['gibraltar'], distNm:7200,
+        waypoints:[[-33.9,18.4],[-20,10],[0,-5],[20,-15],[36,-5.4],[48,-5],[52,4]], altWp:{}
+      }
+    ]
+  },
+
+  wheat: {
+    cat:'agriculture', name:'Wheat', unit:'MT/year', globalTrade:195,
+    globalTradeSource:'USDA FAS Production, Supply & Distribution MY2022/23',
+    priceLabel:'CBOT wheat (USc/bu)', color:'#fbbf24',
+    vesselType:'Handymax / Panamax bulk', vesselSpeed:14,
+    elasticity:-0.20, elasticitySource:'USDA ERS 2022; IMF food elasticity study',
+    exporters:[
+      { name:'Russia',    vol:47 },{ name:'Australia', vol:26 },
+      { name:'Canada',    vol:23 },{ name:'USA',       vol:22 },
+      { name:'Ukraine',   vol:17 },{ name:'EU',        vol:35 }
+    ],
+    importers:[
+      { name:'Egypt',       vol:13 },{ name:'Turkey',    vol:10 },
+      { name:'Indonesia',   vol:11 },{ name:'Algeria',   vol:8  },
+      { name:'China',       vol:11 },{ name:'Nigeria',   vol:5  }
+    ],
+    cpVols:{
+      turkish_straits:{ vol:58, share:30, note:'USDA FAS 2023 — Russia + Ukraine + Romania Black Sea exports' },
+      bab_el_mandeb:  { vol:32, share:16, note:'USDA FAS 2023 — Black Sea wheat → Middle East / Africa' },
+      suez:           { vol:30, share:15, note:'USDA FAS 2023' },
+      malacca:        { vol:8,  share:4,  note:'USDA FAS 2023 — Australia wheat to SE Asia' },
+      panama:         { vol:5,  share:3,  note:'USDA FAS 2023 — US PNW wheat to Asia' }
+    },
+    historicalRefs:[
+      { event:'Ukraine war 2022 — Black Sea export disruption', duration:'3+ months', impact:'+60% CBOT wheat May 2022', note:'Black Sea Initiative eventually allowed resumption; Turkish Straits remained open but volumes reduced' },
+      { event:'Red Sea disruptions 2024',                       duration:'Ongoing',  impact:'+4–6% landed Middle East', note:'Suez detours added 15–18 days; cost increases partially absorbed by exporters' }
+    ],
+    routes:[
+      {
+        id:'blacksea_me', label:'Black Sea → Middle East / N. Africa',
+        fromCoord:[44,33], toCoord:[30,32],
+        vol:45, share:23, cps:['turkish_straits','bab_el_mandeb','suez'], distNm:2800,
+        waypoints:[[44,33],[41.1,29.1],[38,27],[36,18],[20,38],[12.6,43.4],[15,44],[25,36]],
+        altWp:{ turkish_straits:[[44,33],[52,36],[56,22],[55.6,10.8],[48,-5],[36,-5.4],[36,18],[20,38],[12.6,43.4],[25,36]], turkish_straits_nm:3500 }
+      },
+      {
+        id:'russia_asia', label:'Russia / Black Sea → Asia',
+        fromCoord:[44,33], toCoord:[20,78],
+        vol:12, share:6, cps:['turkish_straits','suez','bab_el_mandeb'], distNm:5500,
+        waypoints:[[44,33],[41.1,29.1],[38,27],[36,18],[12.6,43.4],[15,52],[20,62],[20,78]], altWp:{}
+      },
+      {
+        id:'australia_asia_w', label:'Australia → SE Asia',
+        fromCoord:[-33,117], toCoord:[13,100],
+        vol:14, share:7, cps:['malacca'], distNm:5200,
+        waypoints:[[-33,117],[-20,108],[-8,104],[1.2,103.9],[8,100],[13,100]], altWp:{}
+      }
+    ]
+  },
+
+  corn: {
+    cat:'agriculture', name:'Corn', unit:'MT/year', globalTrade:173,
+    globalTradeSource:'USDA FAS MY2022/23',
+    priceLabel:'CBOT corn (USc/bu)', color:'#f59e0b',
+    vesselType:'Panamax bulk', vesselSpeed:14,
+    elasticity:-0.18, elasticitySource:'USDA ERS; IMF',
+    exporters:[
+      { name:'USA',       vol:63 },{ name:'Brazil',    vol:53 },
+      { name:'Argentina', vol:20 },{ name:'Ukraine',   vol:15 },
+      { name:'EU',        vol:4  }
+    ],
+    importers:[
+      { name:'China',        vol:26 },{ name:'Mexico',      vol:17 },
+      { name:'Japan',        vol:15 },{ name:'South Korea', vol:12 },
+      { name:'Egypt',        vol:10 },{ name:'Vietnam',     vol:7  }
+    ],
+    cpVols:{
+      panama:        { vol:42, share:24, note:'ACP 2023 — US Gulf corn to Asia; ~64% of US corn exports pass Panama' },
+      bab_el_mandeb: { vol:18, share:10, note:'USDA FAS 2023 — Black Sea/South America corn to Asia/Middle East' },
+      suez:          { vol:16, share:9,  note:'USDA FAS 2023' },
+      malacca:       { vol:8,  share:5,  note:'USDA FAS 2023' }
+    },
+    historicalRefs:[
+      { event:'Panama drought 2023', duration:'3 months', impact:'+5% CBOT corn basis', note:'Canal restrictions added 10–12 days; vessels queue cost passed to grain exporters' }
+    ],
+    routes:[
+      {
+        id:'us_asia_corn', label:'US Gulf → East Asia (via Panama)',
+        fromCoord:[29.5,-90.5], toCoord:[32,122],
+        vol:38, share:22, cps:['panama'], distNm:9800,
+        waypoints:[[29.5,-90.5],[9.1,-79.7],[8,-79.9],[5,-85],[0,-100],[20,-130],[35,165],[35,145],[32,122]],
+        altWp:{ panama:[[29.5,-90.5],[-56,-67],[22,18],[36,-5.4],[48,-5],[20,5],[0,40],[-10,50],[2,102],[32,122]], panama_nm:12500 }
+      },
+      {
+        id:'brazil_china', label:'Brazil → China',
+        fromCoord:[-23,-46], toCoord:[32,122],
+        vol:35, share:20, cps:['malacca'], distNm:13500,
+        waypoints:[[-23,-46],[-33,-48],[-34.5,19],[-20,42],[-10,50],[5,58],[10,65],[4,78],[2,102],[10,108],[32,122]], altWp:{}
+      }
+    ]
+  },
+
+  rice: {
+    cat:'agriculture', name:'Rice', unit:'MT/year', globalTrade:56,
+    globalTradeSource:'USDA FAS MY2022/23',
+    priceLabel:'Thai 5% white rice ($/MT)', color:'#e2e8f0',
+    vesselType:'Handymax bulk', vesselSpeed:13,
+    elasticity:-0.15, elasticitySource:'FAO 2022; IMF food study',
+    exporters:[
+      { name:'India',     vol:22 },{ name:'Thailand', vol:9 },
+      { name:'Vietnam',   vol:8  },{ name:'Pakistan', vol:6 },
+      { name:'USA',       vol:3  },{ name:'Myanmar',  vol:2 }
+    ],
+    importers:[
+      { name:'West Africa', vol:5 },{ name:'China',       vol:4 },
+      { name:'Philippines', vol:4 },{ name:'Indonesia',   vol:3 },
+      { name:'Middle East', vol:5 },{ name:'Bangladesh',  vol:3 }
+    ],
+    cpVols:{
+      malacca:       { vol:28, share:50, note:'USDA FAS 2023 — Thailand/Vietnam rice to Middle East/Africa via Malacca' },
+      bab_el_mandeb: { vol:10, share:18, note:'USDA FAS 2023 — India/SE Asia rice to Middle East/Africa' },
+      suez:          { vol:8,  share:14, note:'USDA FAS 2023' }
+    },
+    historicalRefs:[
+      { event:'India export ban Aug 2023', duration:'Ongoing (partial)', impact:'+20–40% Thai rice spot', note:'Policy-driven supply restriction; not chokepoint-related; included as market reference' }
+    ],
+    routes:[
+      {
+        id:'sea_middleeast', label:'SE Asia → Middle East / Africa',
+        fromCoord:[13,100], toCoord:[25,55],
+        vol:18, share:32, cps:['malacca','bab_el_mandeb','suez'], distNm:5500,
+        waypoints:[[13,100],[1.2,103.9],[-5,88],[5,58],[12.6,43.4],[20,38],[27,34],[25,55]], altWp:{}
+      },
+      {
+        id:'sea_westafrica', label:'SE Asia → West Africa',
+        fromCoord:[13,100], toCoord:[5,3],
+        vol:5, share:9, cps:['malacca','mozambique'], distNm:9200,
+        waypoints:[[13,100],[1.2,103.9],[-20,88],[-34.5,19],[-20,10],[5,3]], altWp:{}
+      }
+    ]
+  },
+
+  soybeans: {
+    cat:'agriculture', name:'Soybeans', unit:'MT/year', globalTrade:170,
+    globalTradeSource:'USDA FAS MY2022/23',
+    priceLabel:'CBOT soybeans (USc/bu)', color:'#a3e635',
+    vesselType:'Panamax / Capesize bulk', vesselSpeed:14,
+    elasticity:-0.18, elasticitySource:'USDA ERS 2022',
+    exporters:[
+      { name:'Brazil', vol:101 },{ name:'USA',       vol:55 },
+      { name:'Argentina', vol:7 }
+    ],
+    importers:[
+      { name:'China', vol:99 },{ name:'EU', vol:15 },
+      { name:'Mexico', vol:6 },{ name:'Thailand', vol:4 }
+    ],
+    cpVols:{
+      malacca:       { vol:55, share:32, note:'USDA FAS 2023 — total Asia-bound soybeans via Malacca' },
+      panama:        { vol:38, share:22, note:'ACP 2023 — US soybeans to Asia' },
+      suez:          { vol:12, share:7,  note:'USDA FAS 2023' },
+      bab_el_mandeb: { vol:10, share:6,  note:'USDA FAS 2023' }
+    },
+    historicalRefs:[
+      { event:'Panama drought 2023', duration:'3 months', impact:'+3–4% FOB basis premium', note:'US exporters competed with Brazil through Malacca; congestion cost added' }
+    ],
+    routes:[
+      {
+        id:'brazil_china_soy', label:'Brazil → China',
+        fromCoord:[-23,-46], toCoord:[32,122],
+        vol:75, share:44, cps:['malacca'], distNm:13500,
+        waypoints:[[-23,-46],[-34.5,19],[-20,42],[0,40],[5,58],[10,65],[4,78],[2,102],[10,108],[32,122]], altWp:{}
+      },
+      {
+        id:'us_asia_soy', label:'US → Asia (via Panama)',
+        fromCoord:[29.5,-90.5], toCoord:[32,122],
+        vol:35, share:21, cps:['panama'], distNm:9800,
+        waypoints:[[29.5,-90.5],[9.1,-79.7],[5,-85],[0,-100],[20,-130],[35,165],[35,145],[32,122]],
+        altWp:{ panama:[[29.5,-90.5],[-56,-67],[22,18],[36,-5.4],[2,102],[32,122]], panama_nm:12500 }
+      }
+    ]
+  },
+
+  copper: {
+    cat:'metals', name:'Copper', unit:'MT/year', globalTrade:12,
+    globalTradeSource:'ICSG Copper Bulletin 2023',
+    priceLabel:'LME copper ($/MT)', color:'#f97316',
+    vesselType:'Panamax bulk / container', vesselSpeed:14,
+    elasticity:-0.12, elasticitySource:'ICSG demand study 2021',
+    exporters:[
+      { name:'Chile',    vol:5.2 },{ name:'Peru',      vol:2.7 },
+      { name:'DR Congo', vol:1.8 },{ name:'Australia', vol:0.9 },
+      { name:'Kazakhstan',vol:0.7 }
+    ],
+    importers:[
+      { name:'China', vol:8.5 },{ name:'Germany', vol:0.5 },
+      { name:'Japan', vol:0.5 },{ name:'South Korea', vol:0.5 },
+      { name:'EU total', vol:1.5 }
+    ],
+    cpVols:{
+      panama:        { vol:3.5, share:29, note:'ICSG 2023 — Chile/Peru copper concentrate to Asia' },
+      malacca:       { vol:4.0, share:33, note:'ICSG 2023 — all Asian copper imports via Malacca' },
+      suez:          { vol:1.5, share:13, note:'ICSG 2023 — Africa/Americas copper to Europe' },
+      mozambique:    { vol:1.0, share:8,  note:'ICSG 2023 — DRC copper to Asia' }
+    },
+    historicalRefs:[
+      { event:'Panama Canal drought 2023', duration:'3 months', impact:'+2–3% LME copper basis', note:'Delayed Chilean concentrate shipments to Asia; inventories drawn down' }
+    ],
+    routes:[
+      {
+        id:'chile_china', label:'Chile / Peru → China (via Panama)',
+        fromCoord:[-23,-70], toCoord:[32,122],
+        vol:3.5, share:29, cps:['panama'], distNm:10500,
+        waypoints:[[-23,-70],[9.1,-79.7],[5,-85],[0,-100],[20,-130],[35,165],[35,145],[32,122]],
+        altWp:{ panama:[[-23,-70],[-56,-67],[22,18],[36,-5.4],[2,102],[32,122]], panama_nm:12500 }
+      },
+      {
+        id:'chile_asia_alt', label:'Chile → Asia (via Cape / Suez)',
+        fromCoord:[-23,-70], toCoord:[35,129],
+        vol:1.0, share:8, cps:['suez'], distNm:15000,
+        waypoints:[[-23,-70],[-34,-58],[-34.5,19],[-20,42],[5,58],[12.6,43.4],[20,38],[30.7,32.3],[32,28],[36,18],[36,-5.4],[36,18],[35,129]], altWp:{}
+      },
+      {
+        id:'drc_china', label:'DR Congo → China',
+        fromCoord:[-11,27], toCoord:[32,122],
+        vol:1.2, share:10, cps:['mozambique','malacca'], distNm:10800,
+        waypoints:[[-11,27],[-18,40],[-20,42],[-10,50],[5,58],[10,65],[4,78],[2,102],[10,108],[32,122]], altWp:{}
+      }
+    ]
+  },
+
+  iron_ore: {
+    cat:'metals', name:'Iron Ore', unit:'MT/year', globalTrade:1594,
+    globalTradeSource:'Clarksons Shipping Review 2023',
+    priceLabel:'Iron ore 62% Fe CFR China ($/MT)', color:'#ef4444',
+    vesselType:'Capesize VLOC', vesselSpeed:14,
+    elasticity:-0.08, elasticitySource:'UNCTAD iron ore study 2022',
+    exporters:[
+      { name:'Australia', vol:905 },{ name:'Brazil',       vol:374 },
+      { name:'South Africa', vol:67 },{ name:'Canada',    vol:52 },
+      { name:'India',     vol:28  }
+    ],
+    importers:[
+      { name:'China',       vol:1179 },{ name:'Japan',      vol:100 },
+      { name:'South Korea', vol:74   },{ name:'Europe',     vol:80  },
+      { name:'India',       vol:20   }
+    ],
+    cpVols:{
+      malacca:  { vol:700, share:44, note:'Clarksons 2023 — Australia + SE Asia iron ore to China via Malacca' },
+      lombok:   { vol:400, share:25, note:'Clarksons 2023 — VLOC Capesize Australia→China bypass Malacca' },
+      mozambique:{ vol:65,share:4,  note:'Clarksons 2023 — South Africa iron ore to Asia' }
+    },
+    historicalRefs:[
+      { event:'Australia Vale tailings dam collapse 2019', duration:'6 months', impact:'+95% CFR China', note:'Supply shock; not chokepoint; included as supply disruption reference' }
+    ],
+    routes:[
+      {
+        id:'australia_china_io', label:'Australia → China (via Lombok)',
+        fromCoord:[-20,119], toCoord:[32,122],
+        vol:600, share:38, cps:['lombok'], distNm:3800,
+        waypoints:[[-20,119],[-8.5,115.7],[4,110],[10,108],[20,115],[32,122]],
+        altWp:{ lombok:[[-20,119],[1.2,103.9],[10,108],[20,115],[32,122]], lombok_nm:350 }
+      },
+      {
+        id:'australia_china_mal', label:'Australia → China (via Malacca)',
+        fromCoord:[-20,119], toCoord:[32,122],
+        vol:300, share:19, cps:['malacca'], distNm:4200,
+        waypoints:[[-20,119],[-6,105],[1.2,103.9],[10,108],[20,115],[32,122]], altWp:{}
+      },
+      {
+        id:'brazil_china_io', label:'Brazil → China',
+        fromCoord:[-19,-40], toCoord:[32,122],
+        vol:280, share:18, cps:['malacca'], distNm:14000,
+        waypoints:[[-19,-40],[-34.5,19],[-20,42],[0,40],[5,58],[10,65],[4,78],[2,102],[10,108],[32,122]], altWp:{}
+      }
+    ]
+  },
+
+  aluminium: {
+    cat:'metals', name:'Aluminium', unit:'MT/year', globalTrade:16,
+    globalTradeSource:'IAI / World Bureau of Metal Statistics 2023',
+    priceLabel:'LME aluminium ($/MT)', color:'#cbd5e1',
+    vesselType:'Handymax / Panamax bulk', vesselSpeed:13,
+    elasticity:-0.10, elasticitySource:'IAI 2022',
+    exporters:[
+      { name:'China',     vol:5.5 },{ name:'Canada',    vol:2.9 },
+      { name:'Russia',    vol:1.5 },{ name:'UAE (EMAL)',vol:1.4 },
+      { name:'Bahrain (ALBA)',vol:0.95 }
+    ],
+    importers:[
+      { name:'USA',     vol:5.0 },{ name:'Europe',      vol:4.0 },
+      { name:'Japan',   vol:2.0 },{ name:'South Korea', vol:1.0 }
+    ],
+    cpVols:{
+      malacca: { vol:5.0, share:31, note:'WBMS 2023 — Asia aluminium flows' },
+      hormuz:  { vol:2.0, share:13, note:'IAI 2023 — UAE/Bahrain primary aluminium' },
+      suez:    { vol:3.0, share:19, note:'IAI 2023 — Middle East / Russia to Europe' }
+    },
+    historicalRefs:[
+      { event:'Rusal sanctions 2018', duration:'3 months', impact:'+35% LME aluminium', note:'Supply-side sanctions shock; not chokepoint; reference for supply concentration risk' }
+    ],
+    routes:[
+      {
+        id:'uae_europe_al', label:'UAE / Bahrain → Europe',
+        fromCoord:[24.5,54.5], toCoord:[52,4],
+        vol:2.0, share:13, cps:['hormuz','bab_el_mandeb','suez'], distNm:7800,
+        waypoints:[[24.5,54.5],[26.6,56.3],[15,52],[12.6,43.4],[20,38],[30.7,32.3],[36,18],[36,-5.4],[48,-5],[52,4]], altWp:{}
+      },
+      {
+        id:'china_usa_al', label:'China → USA',
+        fromCoord:[32,122], toCoord:[37.5,-122],
+        vol:2.0, share:13, cps:['taiwan_strait'], distNm:5500,
+        waypoints:[[32,122],[24.5,120],[20,122],[30,165],[37.5,175],[37.5,-175],[37.5,-145],[37.5,-122]],
+        altWp:{ taiwan_strait:[[32,122],[28,130],[30,165],[37.5,-145],[37.5,-122]], taiwan_strait_nm:500 }
+      }
+    ]
+  },
+
+  nickel: {
+    cat:'metals', name:'Nickel', unit:'MT/year', globalTrade:3.2,
+    globalTradeSource:'INSG / NiPERA 2023',
+    priceLabel:'LME nickel ($/MT)', color:'#6b7280',
+    vesselType:'Handymax / MV', vesselSpeed:13,
+    elasticity:-0.12, elasticitySource:'INSG 2022',
+    exporters:[
+      { name:'Indonesia',  vol:1.6 },{ name:'Philippines', vol:0.3 },
+      { name:'Russia',     vol:0.2 },{ name:'Canada',      vol:0.15 }
+    ],
+    importers:[
+      { name:'China',   vol:1.8 },{ name:'Japan',   vol:0.15 },
+      { name:'Europe',  vol:0.25 }
+    ],
+    cpVols:{
+      malacca: { vol:1.8, share:56, note:'INSG 2023 — Indonesia nickel ore and NPI to China' },
+      lombok:  { vol:0.8, share:25, note:'INSG 2023 — Capesize and bulk carriers' }
+    },
+    historicalRefs:[
+      { event:'Indonesia nickel ore export ban 2020', duration:'Ongoing', impact:'+20% LME nickel 2020–2021', note:'Indonesian domestic processing mandate; not a chokepoint event; supply concentration reference' }
+    ],
+    routes:[
+      {
+        id:'indonesia_china_ni', label:'Indonesia → China',
+        fromCoord:[-2,118], toCoord:[32,122],
+        vol:1.6, share:50, cps:['malacca','lombok'], distNm:2800,
+        waypoints:[[-2,118],[1.2,103.9],[10,108],[20,115],[32,122]],
+        altWp:{ malacca:[[-2,118],[-8.5,115.7],[4,110],[10,108],[20,115],[32,122]], malacca_nm:350 }
+      }
+    ]
+  },
+
+  semiconductors: {
+    cat:'manufacturing', name:'Semiconductors', unit:'$B/year', globalTrade:700,
+    globalTradeSource:'WSTS World Semiconductor Trade Statistics 2023',
+    priceLabel:'PHLX Semiconductor Index (reference)', color:'#818cf8',
+    vesselType:'Container / air freight (high-value)', vesselSpeed:20,
+    elasticity:-0.08, elasticitySource:'Boston Consulting Group supply chain analysis 2022',
+    exporters:[
+      { name:'China',       vol:165 },{ name:'Taiwan',       vol:197 },
+      { name:'South Korea', vol:142 },{ name:'USA',          vol:80 },
+      { name:'Netherlands (ASML)', vol:65 }
+    ],
+    importers:[
+      { name:'China',   vol:420 },{ name:'USA',         vol:130 },
+      { name:'Europe',  vol:80  },{ name:'South Korea', vol:50  },
+      { name:'Japan',   vol:40  }
+    ],
+    cpVols:{
+      taiwan_strait: { vol:420, share:60, note:'WSTS / CSIS 2023 — Taiwan produces ~65% of world advanced logic nodes; strait is existential supply risk, not volume-transit' },
+      malacca:       { vol:280, share:40, note:'WSTS 2023 — SE Asia chip packaging/assembly; container vessels' },
+      suez:          { vol:80,  share:11, note:'WSTS 2023 — Europe-Asia semiconductor equipment and chips' }
+    },
+    historicalRefs:[
+      { event:'COVID chip shortage 2020–2022', duration:'2 years', impact:'Auto industry -$210B output loss', note:'Supply concentration risk (not chokepoint); reference for demand vs supply mismatch dynamics' },
+      { event:'Ever Given Suez 2021',          duration:'6 days', impact:'Minimal direct impact',             note:'Chips are mostly air freight; sea routes used for bulk components and equipment' }
+    ],
+    routes:[
+      {
+        id:'taiwan_usa', label:'Taiwan → USA',
+        fromCoord:[25.0,121.0], toCoord:[37.5,-122],
+        vol:40, share:6, cps:['taiwan_strait'], distNm:5500,
+        waypoints:[[25,121],[24.5,120],[20,122],[30,165],[37.5,175],[37.5,-175],[37.5,-145],[37.5,-122]],
+        altWp:{ taiwan_strait:[[25,121],[30,130],[30,165],[37.5,-145],[37.5,-122]], taiwan_strait_nm:500 }
+      },
+      {
+        id:'taiwan_europe', label:'Taiwan → Europe',
+        fromCoord:[25,121], toCoord:[52,4],
+        vol:15, share:2, cps:['taiwan_strait','malacca','suez'], distNm:11000,
+        waypoints:[[25,121],[24.5,120],[20,118],[1.2,103.9],[5,78],[12.6,43.4],[30.7,32.3],[36,18],[36,-5.4],[48,-5],[52,4]], altWp:{}
+      },
+      {
+        id:'korea_usa', label:'South Korea → USA',
+        fromCoord:[35.1,129], toCoord:[37.5,-122],
+        vol:25, share:4, cps:['taiwan_strait'], distNm:4800,
+        waypoints:[[35.1,129],[24.5,120],[30,165],[37.5,175],[37.5,-175],[37.5,-145],[37.5,-122]],
+        altWp:{ taiwan_strait:[[35.1,129],[38,135],[42,150],[37.5,-145],[37.5,-122]], taiwan_strait_nm:500 }
+      }
+    ]
+  },
+
+  ev_batteries: {
+    cat:'manufacturing', name:'EV Batteries', unit:'$B/year', globalTrade:110,
+    globalTradeSource:'BloombergNEF EV Battery Supply Chain 2023',
+    priceLabel:'BloombergNEF cell price index ($/kWh)', color:'#4ade80',
+    vesselType:'Container (Roro for modules)', vesselSpeed:20,
+    elasticity:-0.08, elasticitySource:'BloombergNEF 2023',
+    exporters:[
+      { name:'China (CATL, BYD)', vol:82 },{ name:'South Korea (LG, Samsung)', vol:18 },
+      { name:'Japan (Panasonic)', vol:8 }
+    ],
+    importers:[
+      { name:'USA',          vol:30 },{ name:'Europe',        vol:28 },
+      { name:'Southeast Asia',vol:15 }
+    ],
+    cpVols:{
+      malacca:       { vol:44, share:40, note:'BNEF 2023 — China battery exports via container; main sea corridor to Europe/Middle East' },
+      taiwan_strait: { vol:33, share:30, note:'BNEF 2023 — China and South Korea exports through the strait corridor' },
+      suez:          { vol:22, share:20, note:'BNEF 2023 — Asia battery cells to European gigafactories' }
+    },
+    historicalRefs:[
+      { event:'Red Sea disruptions 2024', duration:'Ongoing', impact:'+12–15 days transit to Europe', note:'Battery modules rerouted via Cape; EU gigafactory just-in-time delivery disrupted' }
+    ],
+    routes:[
+      {
+        id:'china_europe_ev', label:'China → Europe',
+        fromCoord:[31,121], toCoord:[52,4],
+        vol:35, share:32, cps:['taiwan_strait','malacca','suez','bab_el_mandeb'], distNm:10800,
+        waypoints:[[31,121],[24.5,120],[20,118],[1.2,103.9],[5,78],[12.6,43.4],[30.7,32.3],[36,18],[36,-5.4],[48,-5],[52,4]],
+        altWp:{ bab_el_mandeb:[[31,121],[24.5,120],[20,118],[1.2,103.9],[5,60],[-10,40],[-34.5,19],[-20,5],[5,-10],[36,-5.4],[48,-5],[52,4]], bab_el_mandeb_nm:6800 }
+      },
+      {
+        id:'china_usa_ev', label:'China → USA',
+        fromCoord:[31,121], toCoord:[37.5,-122],
+        vol:20, share:18, cps:['taiwan_strait'], distNm:6200,
+        waypoints:[[31,121],[24.5,120],[20,122],[30,165],[37.5,175],[37.5,-175],[37.5,-145],[37.5,-122]], altWp:{}
+      }
+    ]
+  },
+
+  rare_earths: {
+    cat:'manufacturing', name:'Rare Earths', unit:'MT/year (REO)', globalTrade:280000,
+    globalTradeSource:'USGS Mineral Commodity Summaries 2023',
+    priceLabel:'Neodymium oxide spot ($/kg ref.)', color:'#c084fc',
+    vesselType:'Container (bulk for oxide; breakbulk)', vesselSpeed:18,
+    elasticity:-0.05, elasticitySource:'USGS / Adamas Intelligence 2022',
+    exporters:[
+      { name:'China',     vol:180000 },{ name:'Australia', vol:40000 },
+      { name:'USA',       vol:30000  },{ name:'Myanmar',   vol:18000 }
+    ],
+    importers:[
+      { name:'China (refining)', vol:80000 },{ name:'Japan',  vol:20000 },
+      { name:'USA',      vol:30000 },{ name:'Europe', vol:20000 }
+    ],
+    cpVols:{
+      malacca:       { vol:140000, share:50, note:'USGS 2023 — main sea corridor for refined Chinese oxides/magnets' },
+      taiwan_strait: { vol:90000,  share:32, note:'USGS 2023 — high-value magnet exports from China and Myanmar concentrate' },
+      suez:          { vol:42000,  share:15, note:'USGS 2023 — China to European manufacturers' }
+    },
+    historicalRefs:[
+      { event:'China rare earth export controls 2010', duration:'3 months', impact:'+2,000% cerium, +500% neodymium', note:'Policy shock via export quota; not chokepoint; shows extreme price sensitivity from supply concentration' }
+    ],
+    routes:[
+      {
+        id:'china_europe_re', label:'China → Europe (oxides / magnets)',
+        fromCoord:[31,121], toCoord:[52,4],
+        vol:140000, share:50, cps:['taiwan_strait','malacca','suez'], distNm:10800,
+        waypoints:[[31,121],[24.5,120],[20,118],[1.2,103.9],[5,78],[12.6,43.4],[30.7,32.3],[36,18],[36,-5.4],[48,-5],[52,4]],
+        altWp:{ suez:[[31,121],[24.5,120],[20,118],[1.2,103.9],[5,60],[-10,40],[-34.5,19],[36,-5.4],[48,-5],[52,4]], suez_nm:6800 }
+      },
+      {
+        id:'aus_china_re', label:'Australia → China (concentrate)',
+        fromCoord:[-31,116], toCoord:[32,122],
+        vol:35000, share:13, cps:['lombok','malacca'], distNm:4200,
+        waypoints:[[-31,116],[-8.5,115.7],[4,110],[10,108],[20,115],[32,122]], altWp:{}
+      }
+    ]
+  }
+};
+
+// Ordered list for UI
+var TF_COMM_LIST = [
+  { id:'crude_oil',     cat:'energy' },
+  { id:'lng',           cat:'energy' },
+  { id:'refined',       cat:'energy' },
+  { id:'coal',          cat:'energy' },
+  { id:'wheat',         cat:'agriculture' },
+  { id:'corn',          cat:'agriculture' },
+  { id:'rice',          cat:'agriculture' },
+  { id:'soybeans',      cat:'agriculture' },
+  { id:'copper',        cat:'metals' },
+  { id:'iron_ore',      cat:'metals' },
+  { id:'aluminium',     cat:'metals' },
+  { id:'nickel',        cat:'metals' },
+  { id:'semiconductors',cat:'manufacturing' },
+  { id:'ev_batteries',  cat:'manufacturing' },
+  { id:'rare_earths',   cat:'manufacturing' }
+];
+
+// ── State ─────────────────────────────────────────────────────────────────────
+var TF_MAP = null;
+var TF_MAP_READY = false;
+var TF_INITIALIZED = false;
+var TF_ACTIVE_COMM = null;
+var TF_ACTIVE_CAT = 'energy';
+var TF_DISRUPTIONS = {}; // { cpId: true }
+var TF_DISRUPTION_LEVEL = 100; // percentage
+var TF_ROUTE_LAYERS = [];
+var TF_CP_MARKERS = {};
+var TF_ALT_LAYERS = [];
+
+// ── Init ──────────────────────────────────────────────────────────────────────
+function initTradeFlowTab() {
+  if (TF_INITIALIZED) {
+    if (TF_MAP) TF_MAP.invalidateSize();
+    return;
+  }
+  TF_INITIALIZED = true;
+  buildTFCommGrid();
+  buildTFCPGrid();
+  initTFMap();
+  filterTFCat('energy', document.querySelector('.tf-cat-btn.active'));
+}
+
+function initTFMap() {
+  if (TF_MAP_READY || !document.getElementById('tf-world-map')) return;
+  TF_MAP = L.map('tf-world-map', { center:[15,25], zoom:2, minZoom:1, maxZoom:5, worldCopyJump:true });
+  L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
+    attribution:'&copy; OpenStreetMap contributors &copy; CARTO',
+    subdomains:'abcd', maxZoom:19
+  }).addTo(TF_MAP);
+  TF_MAP_READY = true;
+  // Place all chokepoint markers
+  Object.keys(TF_CP).forEach(function(cpId) {
+    var cp = TF_CP[cpId];
+    var marker = L.circleMarker([cp.lat, cp.lng], {
+      radius:7, color:'#60a5fa', fillColor:'#60a5fa', fillOpacity:0.85,
+      weight:2, className:'tf-cp-marker-' + cpId
+    }).addTo(TF_MAP);
+    marker.bindTooltip('<b>' + cp.name + '</b><br>' + cp.alt, { className:'leaflet-tooltip', sticky:true });
+    marker.on('click', function() { toggleTFChokepoint(cpId); });
+    TF_CP_MARKERS[cpId] = marker;
+  });
+  // Auto-select first commodity
+  selectTFCommodity('crude_oil');
+}
+
+// ── Commodity grid ─────────────────────────────────────────────────────────────
+function buildTFCommGrid() {
+  var grid = document.getElementById('tf-comm-grid');
+  if (!grid) return;
+  grid.innerHTML = '';
+  TF_COMM_LIST.forEach(function(c) {
+    var d = TF_COMMODITIES[c.id];
+    if (!d) return;
+    var btn = document.createElement('button');
+    btn.className = 'tf-comm-btn' + (c.id === TF_ACTIVE_COMM ? ' active' : '');
+    btn.dataset.cat = c.cat;
+    btn.dataset.id = c.id;
+    btn.textContent = d.name;
+    btn.style.display = (TF_ACTIVE_CAT === 'all' || TF_ACTIVE_CAT === c.cat) ? '' : 'none';
+    btn.onclick = function() { selectTFCommodity(c.id); };
+    grid.appendChild(btn);
+  });
+}
+
+function filterTFCat(cat, el) {
+  TF_ACTIVE_CAT = cat;
+  document.querySelectorAll('.tf-cat-btn').forEach(function(b){ b.classList.remove('active'); });
+  if (el) el.classList.add('active');
+  document.querySelectorAll('.tf-comm-btn').forEach(function(b) {
+    b.style.display = (cat === 'all' || b.dataset.cat === cat) ? '' : 'none';
+  });
+  // Auto-select first visible
+  var first = document.querySelector('.tf-comm-btn[style=""],.tf-comm-btn:not([style*="none"])');
+  if (first && first.dataset && first.dataset.id) {
+    if (TF_ACTIVE_COMM !== first.dataset.id) selectTFCommodity(first.dataset.id);
+  }
+}
+
+// ── Chokepoint control grid ────────────────────────────────────────────────────
+function buildTFCPGrid() {
+  var grid = document.getElementById('tf-cp-grid');
+  if (!grid) return;
+  grid.innerHTML = '';
+  Object.keys(TF_CP).forEach(function(cpId) {
+    var cp = TF_CP[cpId];
+    var row = document.createElement('div');
+    row.className = 'tf-cp-row' + (TF_DISRUPTIONS[cpId] ? ' disrupted' : '');
+    row.id = 'tf-cprow-' + cpId;
+    row.innerHTML =
+      '<div class="tf-cp-dot"></div>' +
+      '<div class="tf-cp-name">' + cp.name + '</div>' +
+      '<div class="tf-cp-vol" id="tf-cpvol-' + cpId + '">—</div>';
+    row.onclick = (function(id){ return function(){ toggleTFChokepoint(id); }; })(cpId);
+    grid.appendChild(row);
+  });
+}
+
+function updateCPGridVolumes() {
+  if (!TF_ACTIVE_COMM) return;
+  var comm = TF_COMMODITIES[TF_ACTIVE_COMM];
+  Object.keys(TF_CP).forEach(function(cpId) {
+    var el = document.getElementById('tf-cpvol-' + cpId);
+    if (!el) return;
+    var cv = comm.cpVols && comm.cpVols[cpId];
+    if (cv) {
+      el.textContent = cv.share + '% of ' + comm.unit;
+    } else {
+      el.textContent = 'n/a';
+    }
+  });
+}
+
+// ── Select commodity ───────────────────────────────────────────────────────────
+function selectTFCommodity(commId) {
+  TF_ACTIVE_COMM = commId;
+  var comm = TF_COMMODITIES[commId];
+  if (!comm) return;
+
+  // Update active button
+  document.querySelectorAll('.tf-comm-btn').forEach(function(b) {
+    b.classList.toggle('active', b.dataset.id === commId);
+  });
+
+  // Map label
+  var lbl = document.getElementById('tf-map-comm-label');
+  if (lbl) lbl.textContent = comm.name;
+
+  // Render routes
+  renderTFRoutes();
+
+  // Baseline panel
+  renderTFBaseline(comm);
+
+  // CP volume grid
+  updateCPGridVolumes();
+
+  // Chokepoint bars
+  renderTFCPBars(comm);
+
+  // Clear outputs
+  clearTFOutputs();
+}
+
+// ── Map routes ─────────────────────────────────────────────────────────────────
+function clearTFRouteLayers() {
+  TF_ROUTE_LAYERS.forEach(function(l){ if(TF_MAP) TF_MAP.removeLayer(l); });
+  TF_ROUTE_LAYERS = [];
+  TF_ALT_LAYERS.forEach(function(l){ if(TF_MAP) TF_MAP.removeLayer(l); });
+  TF_ALT_LAYERS = [];
+}
+
+function renderTFRoutes() {
+  if (!TF_MAP_READY || !TF_MAP || !TF_ACTIVE_COMM) return;
+  clearTFRouteLayers();
+  var comm = TF_COMMODITIES[TF_ACTIVE_COMM];
+  var maxVol = Math.max.apply(null, comm.routes.map(function(r){ return r.vol; }));
+  var disrupted = Object.keys(TF_DISRUPTIONS).length > 0;
+
+  comm.routes.forEach(function(route) {
+    var isAffected = disrupted && route.cps.some(function(cp){ return TF_DISRUPTIONS[cp]; });
+    var w = Math.max(1.5, Math.min(8, (route.vol / maxVol) * 8));
+    var color = isAffected ? '#dc2626' : comm.color;
+    var opacity = isAffected ? 0.4 : 0.65;
+
+    var pl = L.polyline(route.waypoints, {
+      color: color, weight: w, opacity: opacity,
+      dashArray: isAffected ? '6,5' : null
+    }).addTo(TF_MAP);
+    pl.bindTooltip(
+      '<b>' + route.label + '</b><br>' +
+      route.vol + ' ' + comm.unit + ' (' + route.share + '% of global trade)<br>' +
+      'Via: ' + route.cps.map(function(c){ return TF_CP[c] ? TF_CP[c].name : c; }).join(', '),
+      { sticky: true }
+    );
+    TF_ROUTE_LAYERS.push(pl);
+
+    // Origin / destination dots
+    var fromDot = L.circleMarker(route.fromCoord, { radius:4, color:comm.color, fillColor:comm.color, fillOpacity:1, weight:1 }).addTo(TF_MAP);
+    var toDot   = L.circleMarker(route.toCoord,   { radius:4, color:comm.color, fillColor:comm.color, fillOpacity:1, weight:1 }).addTo(TF_MAP);
+    TF_ROUTE_LAYERS.push(fromDot);
+    TF_ROUTE_LAYERS.push(toDot);
+
+    // Show alternative route if disrupted
+    if (isAffected && route.altWp) {
+      var disrupting = route.cps.filter(function(cp){ return TF_DISRUPTIONS[cp]; });
+      disrupting.forEach(function(cpId) {
+        var key = cpId;
+        if (route.altWp[key]) {
+          var alt = L.polyline(route.altWp[key], {
+            color:'#f59e0b', weight:Math.max(1,w-1), opacity:0.6, dashArray:'4,6'
+          }).addTo(TF_MAP);
+          alt.bindTooltip('Alternative route (via ' + (route.altWp[key + '_nm'] || TF_CP[cpId].altNm) + ' extra nm)', { sticky:true });
+          TF_ALT_LAYERS.push(alt);
+        }
+      });
+    }
+  });
+
+  // Update chokepoint markers
+  Object.keys(TF_CP_MARKERS).forEach(function(cpId) {
+    var m = TF_CP_MARKERS[cpId];
+    var closed = !!TF_DISRUPTIONS[cpId];
+    var comm = TF_ACTIVE_COMM ? TF_COMMODITIES[TF_ACTIVE_COMM] : null;
+    var relevant = comm && comm.cpVols && comm.cpVols[cpId];
+    m.setStyle({
+      color: closed ? '#dc2626' : (relevant ? '#3dd68c' : '#60a5fa'),
+      fillColor: closed ? '#dc2626' : (relevant ? '#3dd68c' : '#60a5fa'),
+      radius: relevant ? 9 : 6
+    });
+  });
+
+  // Route count
+  var rc = document.getElementById('tf-map-route-count');
+  if (rc) rc.textContent = comm.routes.length + ' major routes shown';
+}
+
+// ── Chokepoint toggle ─────────────────────────────────────────────────────────
+function toggleTFChokepoint(cpId) {
+  if (TF_DISRUPTIONS[cpId]) {
+    delete TF_DISRUPTIONS[cpId];
+  } else {
+    TF_DISRUPTIONS[cpId] = true;
+  }
+  var row = document.getElementById('tf-cprow-' + cpId);
+  if (row) row.classList.toggle('disrupted', !!TF_DISRUPTIONS[cpId]);
+  renderTFRoutes();
+  updateTFAlertStrip();
+}
+
+function setTFLevel(pct, el) {
+  TF_DISRUPTION_LEVEL = pct;
+  document.querySelectorAll('.tf-lvl-btn').forEach(function(b){ b.classList.remove('active'); });
+  if (el) el.classList.add('active');
+}
+
+function clearTFDisruptions() {
+  TF_DISRUPTIONS = {};
+  document.querySelectorAll('.tf-cp-row').forEach(function(r){ r.classList.remove('disrupted'); });
+  renderTFRoutes();
+  updateTFAlertStrip();
+  clearTFOutputs();
+}
+
+function updateTFAlertStrip() {
+  var strip = document.getElementById('tf-alert-strip');
+  var cnt = Object.keys(TF_DISRUPTIONS).length;
+  if (!strip) return;
+  if (cnt === 0) { strip.classList.remove('visible'); return; }
+  strip.classList.add('visible');
+  var el = document.getElementById('tf-active-count');
+  if (el) el.textContent = cnt;
+  var body = document.getElementById('tf-alert-body');
+  if (body) {
+    var names = Object.keys(TF_DISRUPTIONS).map(function(id){ return TF_CP[id] ? TF_CP[id].name : id; });
+    body.textContent = 'Disrupted: ' + names.join(' · ') + '. Run stress test to see calculated impacts.';
+  }
+}
+
+// ── Baseline panel ─────────────────────────────────────────────────────────────
+function renderTFBaseline(comm) {
+  var el = document.getElementById('tf-baseline-content');
+  var lbl = document.getElementById('tf-bl-comm');
+  if (lbl) lbl.textContent = comm.name;
+  if (!el) return;
+  var fmt = function(v, u) { return '<span class="tf-bl-val">' + v + '</span> <span style="font-size:8px;color:var(--c-tx2)">' + u + '</span>'; };
+  var rows = [
+    { k:'Global seaborne trade', v:comm.globalTrade + ' ' + comm.unit },
+    { k:'Source', v:comm.globalTradeSource },
+    { k:'Price reference', v:comm.priceLabel },
+    { k:'Typical vessel', v:comm.vesselType },
+    { k:'Avg fleet speed', v:comm.vesselSpeed + ' knots' },
+    { k:'Demand elasticity (ε_d)', v:comm.elasticity + ' (' + comm.elasticitySource + ')' }
+  ];
+  var html = rows.map(function(r){
+    return '<div class="tf-bl-row"><div class="tf-bl-key">' + r.k + '</div><div class="tf-bl-val" style="font-size:9px;max-width:130px;text-align:right">' + r.v + '</div></div>';
+  }).join('');
+
+  html += '<div class="tf-section-micro">Top Exporters</div>';
+  comm.exporters.forEach(function(e) {
+    html += '<div class="tf-bl-row"><div class="tf-bl-key">' + e.name + '</div><div class="tf-bl-val">' + e.vol + ' <span style="font-size:8px;font-weight:400;color:var(--c-tx2)">' + comm.unit + '</span></div></div>';
+  });
+  html += '<div class="tf-section-micro">Top Importers</div>';
+  comm.importers.forEach(function(i) {
+    html += '<div class="tf-bl-row"><div class="tf-bl-key">' + i.name + '</div><div class="tf-bl-val">' + i.vol + ' <span style="font-size:8px;font-weight:400;color:var(--c-tx2)">' + comm.unit + '</span></div></div>';
+  });
+  el.innerHTML = html;
+}
+
+// ── CP bars ───────────────────────────────────────────────────────────────────
+function renderTFCPBars(comm) {
+  var el = document.getElementById('tf-cp-bars');
+  var lbl = document.getElementById('tf-cpdb-label');
+  if (lbl) lbl.textContent = comm.name;
+  if (!el || !comm.cpVols) return;
+  var cpItems = Object.keys(comm.cpVols).map(function(id) {
+    return { id:id, name: TF_CP[id] ? TF_CP[id].name : id, d:comm.cpVols[id] };
+  }).sort(function(a,b){ return b.d.share - a.d.share; });
+  var html = cpItems.map(function(item) {
+    return '<div class="tf-cp-bar-row">' +
+      '<div class="tf-cp-bar-label">' + item.name + '</div>' +
+      '<div class="tf-cp-bar-track"><div class="tf-cp-bar-fill" style="width:' + item.d.share + '%;background:' + (item.d.share > 30 ? '#ef4444' : item.d.share > 15 ? '#f59e0b' : '#3dd68c') + '"></div></div>' +
+      '<div class="tf-cp-bar-val">' + item.d.vol + ' ' + comm.unit + ' (' + item.d.share + '%)</div>' +
+    '</div>' +
+    '<div style="font-size:7.5px;color:var(--c-tx2);margin-bottom:6px;font-style:italic">' + item.d.note + '</div>';
+  }).join('');
+  el.innerHTML = html || '<div style="font-size:9px;color:var(--c-tx2)">No chokepoint data for this commodity</div>';
+}
+
+// ── Stress test calculation engine ─────────────────────────────────────────────
+// All formulas are fully transparent — see methodology panel for sources.
+function runTFStressTest() {
+  if (!TF_ACTIVE_COMM) { alert('Please select a commodity first.'); return; }
+  var cpIds = Object.keys(TF_DISRUPTIONS);
+  if (cpIds.length === 0) { alert('Select at least one chokepoint to disrupt.'); return; }
+  var comm = TF_COMMODITIES[TF_ACTIVE_COMM];
+  var level = TF_DISRUPTION_LEVEL / 100;
+
+  // Step 1 — volume impacted: sum of flows through disrupted chokepoints
+  // (avoid double-counting: use route-level analysis)
+  var affectedRoutes = comm.routes.filter(function(r) {
+    return r.cps.some(function(cp){ return TF_DISRUPTIONS[cp]; });
+  });
+  var totalImpacted = 0;
+  affectedRoutes.forEach(function(r) { totalImpacted += r.vol * level; });
+
+  // Step 2 — re-routable vs stranded
+  var reroutable = 0, stranded = 0, totalAltNm = 0, altCount = 0;
+  affectedRoutes.forEach(function(r) {
+    var hasSomeAlt = false;
+    var maxAltNm = 0;
+    r.cps.forEach(function(cpId) {
+      if (!TF_DISRUPTIONS[cpId]) return;
+      var cp = TF_CP[cpId];
+      if (cp.altNm > 0) {
+        hasSomeAlt = true;
+        maxAltNm = Math.max(maxAltNm, cp.altNm);
+      }
+    });
+    if (hasSomeAlt) {
+      reroutable += r.vol * level;
+      totalAltNm += maxAltNm;
+      altCount++;
+    } else {
+      stranded += r.vol * level;
+    }
+  });
+
+  // Step 3 — additional distance (weighted average across affected reroutable routes)
+  var avgExtraNm = altCount > 0 ? Math.round(totalAltNm / altCount) : 0;
+
+  // Step 4 — additional transit time
+  // Formula: Extra Days = Extra nm / (Vessel Speed kt × 24)
+  var extraDays = avgExtraNm > 0 ? (avgExtraNm / (comm.vesselSpeed * 24)) : 0;
+
+  // Step 5 — additional cost multiplier
+  // Using the platform's documented regression model (β₃ = 0.045 per 100nm)
+  // Holding Brent at 72 baseline and utilisation at 72% (distance effect only)
+  var costMult = avgExtraNm > 0 ? Math.max(0, 0.045 * (avgExtraNm / 100)) : 0;
+  var costPct = Math.round(costMult * 100);
+
+  // Step 6 — impacted pct of global trade
+  var impactedPct = Math.round((totalImpacted / comm.globalTrade) * 100);
+  var rrtPct = Math.round((reroutable / comm.globalTrade) * 100);
+
+  // Display outputs
+  var fmtVol = function(v) {
+    if (typeof v === 'number') {
+      if (comm.unit === 'MT/year' || comm.unit === 'MT/year (REO)') {
+        return v > 100000 ? (v/1000).toFixed(0)+'k' : v > 1000 ? (v/1000).toFixed(1)+'k' : v.toFixed(0);
+      }
+      return v.toFixed(1);
+    }
+    return v;
+  };
+
+  setTFOut('tf-val-vol', fmtVol(totalImpacted), comm.unit, impactedPct + '% of global ' + comm.name + ' trade at ' + TF_DISRUPTION_LEVEL + '% disruption level', true);
+  setTFOut('tf-val-rrt', fmtVol(reroutable), comm.unit, rrtPct + '% of global trade re-routable · ' + fmtVol(stranded) + ' ' + comm.unit + ' stranded (no viable alternative)', false);
+  setTFOut('tf-val-dist', avgExtraNm > 0 ? avgExtraNm.toLocaleString() : '0', 'nautical miles (weighted avg)', avgExtraNm > 0 ? 'Weighted avg of longest viable alternatives per disrupted chokepoint' : 'No alternative routes available for selected chokepoints', avgExtraNm > 3000);
+  setTFOut('tf-val-time', extraDays > 0 ? extraDays.toFixed(1) : '0', 'days', 'Calculation: ' + avgExtraNm.toLocaleString() + ' nm ÷ (' + comm.vesselSpeed + ' kt × 24 h/day)', extraDays > 14);
+  setTFOut('tf-val-cost', costPct > 0 ? '+' + costPct : '0', '% above baseline rate', 'β₃ = 0.045 per 100 nm · Extra nm: ' + avgExtraNm.toLocaleString() + ' · Formula: 0.045 × (' + avgExtraNm + ' ÷ 100) = ' + costMult.toFixed(3), costPct > 20);
+
+  // Disrupted chokepoint names
+  var cpNames = cpIds.map(function(id){ return TF_CP[id] ? TF_CP[id].name : id; }).join(', ');
+
+  // Regional exposure
+  renderTFRegionalExposure(comm, affectedRoutes, totalImpacted, level);
+
+  // Price impact
+  renderTFPriceImpact(comm, impactedPct, cpNames);
+
+  // Flash outputs
+  document.querySelectorAll('.tf-output-card').forEach(function(c) {
+    c.style.transition = 'border-color 0.3s';
+  });
+}
+
+function setTFOut(valId, val, unit, sub, highlight) {
+  var el = document.getElementById(valId);
+  var card = el ? el.closest('.tf-output-card') : null;
+  if (el) el.textContent = val;
+  if (card) {
+    card.classList.toggle('highlight', !!highlight);
+    var subEl = card.querySelector('.tf-output-sub');
+    var unitEl = card.querySelector('.tf-output-unit');
+    if (subEl) subEl.textContent = sub;
+    if (unitEl && unit) unitEl.textContent = unit;
+  }
+}
+
+function clearTFOutputs() {
+  ['tf-val-vol','tf-val-rrt','tf-val-dist','tf-val-time','tf-val-cost'].forEach(function(id){
+    var el = document.getElementById(id);
+    if (el) el.textContent = '—';
+  });
+  var subs = ['tf-sub-vol','tf-sub-rrt','tf-sub-dist','tf-sub-time','tf-sub-cost'];
+  var defaults = ['Run stress test','Volume with viable alternative routes','Extra nm via alternative route','Calculation: extra nm ÷ (vessel speed × 24)','β₃ = 0.045 per 100 nm'];
+  subs.forEach(function(id, i) {
+    var el = document.getElementById(id);
+    if (el) el.textContent = defaults[i] || '';
+  });
+  document.querySelectorAll('.tf-output-card').forEach(function(c){ c.classList.remove('highlight'); });
+  var ex = document.getElementById('tf-exposure-content');
+  if (ex) ex.innerHTML = '<span style="color:var(--c-tx2)">Run stress test to see regional exposure breakdown</span>';
+  var px = document.getElementById('tf-price-content');
+  if (px) px.innerHTML = '<span style="color:var(--c-tx2)">Run stress test to see price impact analysis</span>';
+}
+
+// ── Regional exposure ──────────────────────────────────────────────────────────
+function renderTFRegionalExposure(comm, affectedRoutes, totalImpacted, level) {
+  var el = document.getElementById('tf-exposure-content');
+  if (!el) return;
+
+  // Aggregate by destination
+  var destMap = {};
+  affectedRoutes.forEach(function(r) {
+    var key = r.label.split('→')[1] ? r.label.split('→')[1].trim() : 'Other';
+    destMap[key] = (destMap[key] || 0) + r.vol * level;
+  });
+  var total = totalImpacted || 1;
+  var items = Object.keys(destMap).sort(function(a,b){ return destMap[b]-destMap[a]; });
+
+  var html = '<div style="margin-bottom:8px;font-size:8.5px;color:var(--c-tx2)">Volume disrupted per destination region at ' + TF_DISRUPTION_LEVEL + '% closure level</div>';
+  items.forEach(function(dest) {
+    var v = destMap[dest];
+    var pct = Math.round((v / total) * 100);
+    html += '<div class="tf-exp-row">' +
+      '<div class="tf-exp-label">' + dest + '</div>' +
+      '<div class="tf-exp-track"><div class="tf-exp-fill" style="width:' + pct + '%;background:#f59e0b"></div></div>' +
+      '<div class="tf-exp-val">' + (typeof v==='number' ? (comm.unit.indexOf('MT')===0 ? (v>100?v.toFixed(0):v.toFixed(1)) : v.toFixed(1)) : v) + ' ' + comm.unit + '</div>' +
+    '</div>';
+  });
+
+  // Summary note
+  html += '<div style="margin-top:10px;font-size:8px;color:var(--c-tx2);line-height:1.65">' +
+    'Note: Exposure is calculated from primary route analysis. Secondary sourcing (spot market substitution, strategic reserves) may reduce actual shortfalls but timelines vary by region.' +
+  '</div>';
+  el.innerHTML = html;
+}
+
+// ── Price impact ───────────────────────────────────────────────────────────────
+function renderTFPriceImpact(comm, impactedPct, cpNames) {
+  var el = document.getElementById('tf-price-content');
+  if (!el) return;
+
+  // Method B: Elasticity-based estimate
+  // ΔP/P = (ΔQ/Q) / |ε_d|  — result expressed as % price change
+  // dQoverQ expressed as fraction (e.g. 0.42 for 42%), then divided by |ε_d|
+  // gives the price change fraction; ×100 converts to percentage points.
+  var dQoverQ = impactedPct / 100 * (TF_DISRUPTION_LEVEL / 100);
+  var priceImpactPct = Math.round(dQoverQ / Math.abs(comm.elasticity) * 100);
+
+  var html = '<div class="tf-section-micro" style="margin-bottom:8px">Method A — Historical Event Reference</div>';
+  if (comm.historicalRefs && comm.historicalRefs.length) {
+    comm.historicalRefs.forEach(function(ref) {
+      html += '<div style="padding:7px 0;border-bottom:1px solid rgba(255,255,255,0.05)">' +
+        '<div style="font-size:9px;color:#e8eaed;font-weight:600">' + ref.event + '</div>' +
+        '<div style="font-size:8px;color:var(--c-tx2);margin-top:2px">' +
+          'Duration: ' + ref.duration + ' &bull; Observed price impact: <span style="color:#f59e0b">' + ref.impact + '</span>' +
+        '</div>' +
+        '<div style="font-size:8px;color:var(--c-tx2);margin-top:2px;font-style:italic">' + ref.note + '</div>' +
+      '</div>';
+    });
+  } else {
+    html += '<div style="font-size:9px;color:var(--c-tx2)">No historical events documented for this commodity</div>';
+  }
+
+  html += '<div class="tf-section-micro" style="margin-top:12px;margin-bottom:8px">Method B — Elasticity-Based Estimate (Current Disruption)</div>';
+  html += '<div style="font-size:9px;color:var(--c-tx2);line-height:1.7;margin-bottom:8px">' +
+    'Disrupted: <span style="color:#e8eaed">' + cpNames + '</span><br>' +
+    'Volume impacted: <span style="color:#e8eaed">' + impactedPct + '% of global trade</span><br>' +
+    'Disruption level applied: <span style="color:#e8eaed">' + TF_DISRUPTION_LEVEL + '%</span>' +
+  '</div>';
+  html += '<div style="font-family:var(--f-mono);font-size:8px;color:#93c5fd;background:rgba(96,165,250,0.06);border-radius:3px;padding:7px 9px;border-left:2px solid #60a5fa;line-height:1.7;margin-bottom:8px">' +
+    'ΔP/P = (ΔQ/Q) × (1/ε_d)<br>' +
+    '= (' + (dQoverQ*100).toFixed(1) + '%) × (1/' + comm.elasticity + ')<br>' +
+    '= <span style="color:#fbbf24">+' + priceImpactPct + '% estimated price impact</span>' +
+  '</div>';
+  html += '<div style="font-size:7.5px;color:var(--c-tx2);line-height:1.65;font-style:italic">' +
+    'Elasticity ε_d = ' + comm.elasticity + ' (' + comm.elasticitySource + '). ' +
+    'This is a short-run partial equilibrium estimate only. It does not account for strategic reserves, demand destruction, or supply-side response. ' +
+    'Use Method A (historical events) as the primary credibility anchor.' +
+  '</div>';
+  el.innerHTML = html;
+}
+
+// ── Methodology toggle ─────────────────────────────────────────────────────────
+function toggleTFMethodology() {
+  var body = document.getElementById('tf-method-body');
+  var chev = document.getElementById('tf-method-chevron');
+  if (!body) return;
+  body.classList.toggle('open');
+  if (chev) chev.textContent = body.classList.contains('open') ? '▲ Hide' : '▼ Show';
+}
 
 
 // ── Cover / Landing Page ──────────────────────────────────────────────────────

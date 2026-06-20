@@ -2813,6 +2813,8 @@ canvas { font-family: var(--f-mono); }
 .tf-alert-title{font-family:var(--f-mono);font-size:8px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:#f87171;margin-bottom:4px;}
 .tf-alert-body{font-size:9px;color:var(--c-tx1);line-height:1.65;}
 .tf-map-legend{position:absolute;bottom:10px;left:10px;z-index:900;background:rgba(10,15,22,0.9);border:1px solid var(--c-bd1);border-radius:4px;padding:8px 10px;}
+#tf-world-map .leaflet-tooltip{background:rgba(6,14,24,0.97);border:1px solid var(--c-bd1);border-radius:5px;color:var(--c-tx1);font-family:var(--f-mono);font-size:10px;padding:9px 12px;min-width:180px;box-shadow:0 6px 18px rgba(0,0,0,0.65);pointer-events:none;}
+#tf-world-map .leaflet-tooltip::before{display:none;}
 .tf-legend-item{display:flex;align-items:center;gap:6px;margin-bottom:3px;font-size:8.5px;color:var(--c-tx1);}
 .tf-legend-swatch{width:18px;height:3px;border-radius:2px;flex-shrink:0;}
 .tf-legend-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0;}
@@ -14550,6 +14552,7 @@ var TF_ROUTE_LAYERS = [];
 var TF_DECORATOR_LAYERS = [];
 var TF_CP_MARKERS = {};
 var TF_ALT_LAYERS = [];
+var TF_PIPELINE_COLOR = '#94a3b8';
 
 // ── Init ──────────────────────────────────────────────────────────────────────
 function initTradeFlowTab() {
@@ -14721,31 +14724,44 @@ function renderTFRoutes() {
   comm.routes.forEach(function(route) {
     var isAffected = disrupted && route.cps.some(function(cp){ return TF_DISRUPTIONS[cp]; });
     var w = Math.max(1.5, Math.min(8, (route.vol / maxVol) * 8));
-    var color = isAffected ? '#dc2626' : comm.color;
-
-    // Pick animation class based on mode and state
     var isPipeline = route.mode === 'pipeline' || route.mode === 'sea+pipeline';
+    var color = isAffected ? '#dc2626' : isPipeline ? TF_PIPELINE_COLOR : comm.color;
     var laneClass = isAffected ? 'tf-flow-disrupted'
                   : isPipeline ? 'tf-flow-pipeline'
                   : (comm.vesselSpeed >= 18 ? 'tf-flow-fast' : 'tf-flow-lane');
     var lineWeight = isPipeline ? Math.max(1.5, w * 0.6) : w;
-    var lineOpacity = isAffected ? 0.55 : isPipeline ? 0.8 : 0.75;
-    // Pipeline mode label suffix
-    var modeTag = isPipeline
-      ? (route.mode === 'sea+pipeline' ? ' — Pipeline + Tanker' : ' — Pipeline')
-      : '';
+    var lineOpacity = isAffected ? 0.55 : isPipeline ? 0.85 : 0.75;
+    var modeLabel = isPipeline
+      ? (route.mode === 'sea+pipeline' ? 'Sea + Pipeline' : 'Pipeline')
+      : 'Seaborne';
+    var cpNames = route.cps.map(function(c){ return TF_CP[c] ? TF_CP[c].name : c; });
+    var labelColor = isAffected ? '#dc2626' : isPipeline ? TF_PIPELINE_COLOR : comm.color;
     var tooltip =
-      '<b>' + route.label + '</b>' + modeTag + '<br>' +
-      route.vol + ' ' + comm.unit + ' (' + route.share + '% of global trade)<br>' +
-      (route.cps.length ? 'Via: ' + route.cps.map(function(c){ return TF_CP[c] ? TF_CP[c].name : c; }).join(', ') : 'Open ocean — no major chokepoints');
+      '<div style="min-width:170px">' +
+      '<div style="font-weight:700;color:' + labelColor + ';margin-bottom:3px;font-size:11px">' + route.label + '</div>' +
+      '<div style="color:#64748b;font-size:8.5px;margin-bottom:7px;letter-spacing:.06em">' + modeLabel.toUpperCase() + (isAffected ? ' · DISRUPTED' : '') + '</div>' +
+      '<div style="display:flex;justify-content:space-between;gap:16px;margin-bottom:2px">' +
+        '<span style="color:#64748b">Volume</span>' +
+        '<span style="color:#e2e8f0;font-weight:600">' + route.vol + ' ' + comm.unit + '</span>' +
+      '</div>' +
+      '<div style="display:flex;justify-content:space-between;gap:16px;margin-bottom:7px">' +
+        '<span style="color:#64748b">Global share</span>' +
+        '<span style="color:#e2e8f0;font-weight:600">' + route.share + '%</span>' +
+      '</div>' +
+      (cpNames.length
+        ? '<div style="color:#64748b;font-size:8.5px;margin-bottom:2px">VIA CHOKEPOINTS</div>' +
+          '<div style="color:#3dd68c;font-size:9px">' + cpNames.join(' &middot; ') + '</div>'
+        : '<div style="color:#475569;font-size:8.5px">Open ocean &mdash; no major chokepoints</div>') +
+      '</div>';
     var pls = tfDrawRoute(route, { color:color, weight:lineWeight, opacity:lineOpacity, className:laneClass }, tooltip);
     pls.forEach(function(pl){ TF_ROUTE_LAYERS.push(pl); });
 
-    // Origin / destination dots (use clamped coordinates for markers so they appear on main map)
+    // Origin / destination dots
     var fromC = route.fromCoord;
     var toC   = route.toCoord;
-    var fromDot = L.circleMarker(fromC, { radius:4, color:comm.color, fillColor:comm.color, fillOpacity:1, weight:1 }).addTo(TF_MAP);
-    var toDot   = L.circleMarker(toC,   { radius:4, color:comm.color, fillColor:comm.color, fillOpacity:1, weight:1 }).addTo(TF_MAP);
+    var dotColor = isPipeline ? TF_PIPELINE_COLOR : comm.color;
+    var fromDot = L.circleMarker(fromC, { radius:4, color:dotColor, fillColor:dotColor, fillOpacity:1, weight:1 }).addTo(TF_MAP);
+    var toDot   = L.circleMarker(toC,   { radius:4, color:dotColor, fillColor:dotColor, fillOpacity:1, weight:1 }).addTo(TF_MAP);
     TF_ROUTE_LAYERS.push(fromDot);
     TF_ROUTE_LAYERS.push(toDot);
 
@@ -14802,7 +14818,7 @@ function buildTFLegend() {
   var html = '';
   html += '<div class="tf-legend-item"><div class="tf-legend-swatch" style="background:' + color + '"></div>Active route</div>';
   if (hasPipeline) {
-    html += '<div class="tf-legend-item"><div class="tf-legend-swatch" style="height:0;border-top:2px dotted ' + color + '"></div>Pipeline</div>';
+    html += '<div class="tf-legend-item"><div class="tf-legend-swatch" style="height:0;border-top:2px dotted ' + TF_PIPELINE_COLOR + '"></div>Pipeline</div>';
   }
   if (hasDisrupted) {
     html += '<div class="tf-legend-item"><div class="tf-legend-swatch" style="height:0;border-top:2px dashed #dc2626"></div>Disrupted</div>';

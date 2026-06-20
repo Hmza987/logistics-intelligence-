@@ -4130,31 +4130,40 @@ canvas { font-family: var(--f-mono); }
     <div class="tf-alert-body" id="tf-alert-body">—</div>
   </div>
 
-  <!-- Commodity selector -->
-  <div class="card" style="margin-bottom:14px;padding:12px 16px">
-    <div class="card-label" style="margin-bottom:10px">&#9670; Select Commodity</div>
-    <div class="tf-cat-row" id="tf-cat-row">
-      <button class="tf-cat-btn active" onclick="filterTFCat('energy',this)">Energy</button>
-      <button class="tf-cat-btn" onclick="filterTFCat('agriculture',this)">Agriculture</button>
-      <button class="tf-cat-btn" onclick="filterTFCat('metals',this)">Metals</button>
-      <button class="tf-cat-btn" onclick="filterTFCat('manufacturing',this)">Manufacturing</button>
-      <button class="tf-cat-btn" onclick="filterTFCat('all',this)">All</button>
-    </div>
-    <div class="tf-comm-grid" id="tf-comm-grid"></div>
-  </div>
-
-  <!-- Full-width world map -->
+  <!-- Full-width world map with integrated commodity selector -->
   <div class="card" style="padding:0;overflow:hidden;position:relative;margin-bottom:14px">
-    <div style="padding:8px 14px;background:rgba(10,15,22,0.9);display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid var(--c-bd1)">
-      <div style="font-family:var(--f-mono);font-size:8px;letter-spacing:.1em;text-transform:uppercase;color:var(--c-tx2)">
-        &#9670; Trade Architecture &mdash; <span id="tf-map-comm-label" style="color:var(--c-tx1)">Select Commodity</span>
+
+    <!-- Row 1: category filter + map view buttons -->
+    <div style="padding:6px 14px;display:flex;align-items:center;justify-content:space-between;gap:10px;border-bottom:1px solid var(--c-bd1);background:rgba(6,14,24,0.95)">
+      <div style="display:flex;align-items:center;gap:6px;flex-wrap:wrap">
+        <span style="font-family:var(--f-mono);font-size:7px;letter-spacing:.1em;text-transform:uppercase;color:var(--c-tx2);white-space:nowrap">Category</span>
+        <div class="tf-cat-row" id="tf-cat-row" style="margin-bottom:0;gap:4px">
+          <button class="tf-cat-btn active" onclick="filterTFCat('energy',this)">Energy</button>
+          <button class="tf-cat-btn" onclick="filterTFCat('agriculture',this)">Agriculture</button>
+          <button class="tf-cat-btn" onclick="filterTFCat('metals',this)">Metals</button>
+          <button class="tf-cat-btn" onclick="filterTFCat('manufacturing',this)">Manufacturing</button>
+          <button class="tf-cat-btn" onclick="filterTFCat('all',this)">All</button>
+        </div>
       </div>
-      <div style="display:flex;align-items:center;gap:14px">
-        <div style="font-size:9px;color:var(--c-tx2)" id="tf-map-route-count"></div>
-        <button onclick="TF_MAP && TF_MAP.setView([20,10],2)" style="font-family:var(--f-mono);font-size:8px;padding:2px 8px;background:transparent;border:1px solid var(--c-bd1);color:var(--c-tx2);border-radius:2px;cursor:pointer">Atlantic view</button>
-        <button onclick="TF_MAP && TF_MAP.setView([20,160],2)" style="font-family:var(--f-mono);font-size:8px;padding:2px 8px;background:transparent;border:1px solid var(--c-bd1);color:var(--c-tx2);border-radius:2px;cursor:pointer">Pacific view</button>
+      <div style="display:flex;align-items:center;gap:8px;flex-shrink:0">
+        <button onclick="TF_MAP && TF_MAP.setView([20,10],2)" style="font-family:var(--f-mono);font-size:8px;padding:2px 8px;background:transparent;border:1px solid var(--c-bd1);color:var(--c-tx2);border-radius:2px;cursor:pointer">Atlantic</button>
+        <button onclick="TF_MAP && TF_MAP.setView([20,160],2)" style="font-family:var(--f-mono);font-size:8px;padding:2px 8px;background:transparent;border:1px solid var(--c-bd1);color:var(--c-tx2);border-radius:2px;cursor:pointer">Pacific</button>
       </div>
     </div>
+
+    <!-- Row 2: commodity buttons -->
+    <div style="padding:5px 14px;border-bottom:1px solid var(--c-bd1);background:rgba(8,12,20,0.9)">
+      <div class="tf-comm-grid" id="tf-comm-grid" style="margin-bottom:0;gap:4px"></div>
+    </div>
+
+    <!-- Row 3: map title + route count -->
+    <div style="padding:5px 14px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid var(--c-bd1);background:rgba(10,15,22,0.95)">
+      <div style="font-family:var(--f-mono);font-size:8px;letter-spacing:.08em;text-transform:uppercase;color:var(--c-tx2)">
+        &#9670; Trade Architecture &mdash; <span id="tf-map-comm-label" style="color:var(--c-tx1)">Select a commodity above</span>
+      </div>
+      <div style="font-size:9px;color:var(--c-tx2)" id="tf-map-route-count"></div>
+    </div>
+
     <div id="tf-world-map"></div>
     <div class="tf-map-legend">
       <div class="tf-legend-item"><div class="tf-legend-swatch" style="background:#3dd68c"></div>Active route</div>

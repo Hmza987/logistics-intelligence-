@@ -4171,14 +4171,7 @@ canvas { font-family: var(--f-mono); }
     </div>
 
     <div id="tf-world-map"></div>
-    <div class="tf-map-legend">
-      <div class="tf-legend-item"><div class="tf-legend-swatch" style="background:#3dd68c"></div>Active route</div>
-      <div class="tf-legend-item"><div class="tf-legend-swatch" style="height:0;border-top:2px dashed #dc2626"></div>Disrupted</div>
-      <div class="tf-legend-item"><div class="tf-legend-swatch" style="height:0;border-top:2px dashed #f59e0b"></div>Alternative route</div>
-      <div class="tf-legend-item"><div class="tf-legend-swatch" style="height:0;border-top:2px dotted var(--c-tx1)"></div>Pipeline</div>
-      <div class="tf-legend-item"><div class="tf-legend-dot" style="background:#3dd68c"></div>Open chokepoint</div>
-      <div class="tf-legend-item"><div class="tf-legend-dot" style="background:#dc2626"></div>Closed / disrupted</div>
-    </div>
+    <div class="tf-map-legend" id="tf-map-legend"></div>
   </div>
 
   <!-- Below-map: baseline metrics + disruption controls -->
@@ -14786,6 +14779,44 @@ function renderTFRoutes() {
 
   var rc = document.getElementById('tf-map-route-count');
   if (rc) rc.textContent = comm.routes.length + ' major routes shown';
+  buildTFLegend();
+}
+
+function buildTFLegend() {
+  var el = document.getElementById('tf-map-legend');
+  if (!el) return;
+  var comm = TF_ACTIVE_COMM ? TF_COMMODITIES[TF_ACTIVE_COMM] : null;
+  if (!comm) { el.innerHTML = ''; return; }
+  var color = comm.color;
+  var hasPipeline = comm.routes.some(function(r){ return r.mode === 'pipeline' || r.mode === 'sea+pipeline'; });
+  var activeDisruptions = Object.keys(TF_DISRUPTIONS).filter(function(cp){
+    return comm.routes.some(function(r){ return r.cps.indexOf(cp) !== -1; });
+  });
+  var hasDisrupted = activeDisruptions.length > 0;
+  var hasAlt = hasDisrupted && comm.routes.some(function(r){
+    return r.cps.some(function(cp){ return TF_DISRUPTIONS[cp]; }) &&
+           r.altWp && Object.keys(r.altWp).filter(function(k){ return k.indexOf('_nm') === -1; }).length > 0;
+  });
+  var hasCPs = comm.cpVols && Object.keys(comm.cpVols).length > 0;
+
+  var html = '';
+  html += '<div class="tf-legend-item"><div class="tf-legend-swatch" style="background:' + color + '"></div>Active route</div>';
+  if (hasPipeline) {
+    html += '<div class="tf-legend-item"><div class="tf-legend-swatch" style="height:0;border-top:2px dotted ' + color + '"></div>Pipeline</div>';
+  }
+  if (hasDisrupted) {
+    html += '<div class="tf-legend-item"><div class="tf-legend-swatch" style="height:0;border-top:2px dashed #dc2626"></div>Disrupted</div>';
+  }
+  if (hasAlt) {
+    html += '<div class="tf-legend-item"><div class="tf-legend-swatch" style="height:0;border-top:2px dashed #f59e0b"></div>Alternative route</div>';
+  }
+  if (hasCPs) {
+    html += '<div class="tf-legend-item"><div class="tf-legend-dot" style="background:#3dd68c"></div>Open chokepoint</div>';
+    if (hasDisrupted) {
+      html += '<div class="tf-legend-item"><div class="tf-legend-dot" style="background:#dc2626"></div>Closed / disrupted</div>';
+    }
+  }
+  el.innerHTML = html;
 }
 
 // ── Chokepoint toggle ─────────────────────────────────────────────────────────

@@ -15014,38 +15014,33 @@ var TF_GCC_DATA = [
     }
   },
   {
-    id:'qatar', name:'Qatar', role:'World’s Largest LNG Exporter',
+    id:'qatar', name:'Qatar', role:'Crude & Condensate Producer',
     resilience:20, resColor:'#dc2626',
-    cps:['hormuz','malacca','bab_el_mandeb','suez'],
+    cps:['hormuz','malacca','bab_el_mandeb'],
     normal:{
-      stats:[{val:'77 MT/yr',lbl:'LNG exports'},{val:'23.9 Tcm',lbl:'gas reserves (3rd largest)'}],
-      facts:'North Field: world’s largest single gas reservoir \xb7 14 LNG trains at Ras Laffan \xb7 Expanding to 126 MT/yr by 2027 \xb7 Contract buyers: Japan (35%), S.Korea (15%), EU (25%)',
-      bypass:'⚠ No bypass — all LNG exports are 100% Hormuz-dependent',bypassClass:'gcc-no-bypass'
+      stats:[{val:'0.6 Mb/d',lbl:'crude production'},{val:'25 Gb',lbl:'proven reserves'}],
+      facts:'Al-Shaheen offshore: ~300 kbd (TotalEnergies/QatarEnergy) \xb7 Dukhan onshore: ~80 kbd (since 1940) \xb7 Halul Island crude export terminal \xb7 ~800 kbd condensate at Ras Laffan \xb7 Total liquids: ~1.4 Mb/d',
+      bypass:'⚠ No bypass — crude & condensate exports 100% transit Hormuz',bypassClass:'gcc-no-bypass'
     },
     scenarios:{
       'hormuz':{
-        stats:[{val:'77 MT/yr',lbl:'LNG exports HALTED'},{val:'19%',lbl:'of global LNG supply removed'}],
-        insight:'Total LNG export suspension — no pipeline bypass exists. ~$200M/day revenue lost. All long-term contracts (Japan 35%, S.Korea 15%, EU 25%) triggered force majeure. Global LNG spot prices surge immediately.',
-        bypass:'⚠ No bypass — all 14 LNG trains at Ras Laffan effectively idled',bypassClass:'gcc-no-bypass'
+        stats:[{val:'0.6 Mb/d',lbl:'crude stranded'},{val:'~800 kbd',lbl:'condensate halted'}],
+        insight:'All crude and condensate exports halted — Halul Island terminal and Ras Laffan condensate both transit Hormuz with no bypass. Total liquids at risk: ~1.4 Mb/d (~$100M/day at $70/bbl). No alternative route exists.',
+        bypass:'⚠ No bypass — 100% Hormuz exposure for all Qatar liquids',bypassClass:'gcc-no-bypass'
       },
       'bab_el_mandeb':{
-        stats:[{val:'~20 MT/yr',lbl:'Europe LNG blocked'},{val:'+8,000 nm',lbl:'Europe route via CoGH'}],
-        insight:'Qatar LNG to Europe rerouted via Cape of Good Hope (+8,000 nm, +25 days). LNG carrier operating costs increase ~$3–4M per voyage. Asian cargoes via Malacca remain unaffected.',
-        bypass:'▶ CoGH rerouting for Europe LNG only (+25 days)',bypassClass:'gcc-bypass'
-      },
-      'suez':{
-        stats:[{val:'~5 MT/yr',lbl:'Med LNG blocked'},{val:'Italy/Spain/Turkey',lbl:'contracts disrupted'}],
-        insight:'Mediterranean LNG deliveries (Italy, Spain, Turkey) must reroute via Cape of Good Hope or be cancelled. Qatar’s spot LNG trade to Med buyers halted until alternative routing is confirmed.',
-        bypass:'▶ CoGH rerouting for Med cargoes',bypassClass:'gcc-bypass'
+        stats:[{val:'~150 kbd',lbl:'Europe condensate blocked'},{val:'+8,000 nm',lbl:'via Cape of Good Hope'}],
+        insight:'Condensate cargoes to European petrochemical buyers diverted via Cape of Good Hope (+8,000 nm, +25 days). Asia-bound crude and condensate via Malacca continues normally — ~85% of exports unaffected.',
+        bypass:'▶ CoGH rerouting for Europe condensate only (+25 days)',bypassClass:'gcc-bypass'
       },
       'malacca':{
-        stats:[{val:'~35 MT/yr',lbl:'Asia LNG disrupted'},{val:'Japan/S.Korea/China',lbl:'primary offtakers at risk'}],
-        insight:'Asia-bound LNG (Japan 35%, S.Korea 15%, China 15%) rerouted via Lombok or Sunda Straits (+300–500 nm, +2–3 days). LNG carrier size constrains Lombok depth clearance — scheduling delays expected.',
-        bypass:'▶ Lombok Strait alternative for Asia cargoes (+2-3 days)',bypassClass:'gcc-bypass'
+        stats:[{val:'~0.5 Mb/d',lbl:'Asia crude disrupted'},{val:'~650 kbd',lbl:'condensate rerouted'}],
+        insight:'Asia-bound crude and condensate (Japan ~25%, China ~20%, S.Korea ~15%) rerouted via Lombok Strait (+300 nm, +1–2 days). Europe-bound condensate via Red Sea unaffected. Total rerouting manageable — no Hormuz dependency.',
+        bypass:'▶ Lombok/Sunda alternative for Asia cargoes (+1-2 days)',bypassClass:'gcc-bypass'
       },
       'bab_el_mandeb,hormuz':{
-        stats:[{val:'77 MT/yr',lbl:'ALL exports halted'},{val:'FORCE MAJEURE',lbl:'all contracts'}],
-        insight:'Complete LNG export shutdown — Hormuz blocks all exports with no bypass; Bab-el-Mandeb closure is moot. All long-term contracts enter force majeure. European TTF and Asian JKM spot prices surge simultaneously.',
+        stats:[{val:'~1.4 Mb/d',lbl:'total liquids halted'},{val:'No exit',lbl:'for all cargoes'}],
+        insight:'Complete shutdown. Hormuz blocks all crude and condensate at source — Halul Island and Ras Laffan terminals fully stranded. Bab-el-Mandeb closure is secondary; no liquids reach the Red Sea regardless.',
         bypass:'⚠ Total shutdown — no exit route exists',bypassClass:'gcc-no-bypass'
       }
     }

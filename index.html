@@ -15285,6 +15285,31 @@ var TF_OIL_TERMINALS = [
     hormuzExposed:false, bypassRole:false,
     note:'South Korea’s primary crude import complex. ~75% of imports originate from GCC countries — the highest GCC share of any major economy outside Japan. S-OIL refinery at Onsan is partly Aramco-owned (63% stake), creating a direct Saudi–Korean supply chain. SPR maintained at 90-day reserve level. All GCC cargoes transit Malacca or Lombok Straits for East Asian delivery.',
     color:'#60a5fa', grad:'linear-gradient(135deg,#050d18 0%,#091830 60%,#030c12 100%)'
+  },
+  // AUSTRALIA TERMINALS
+  { coord:[-20.66,116.71], name:'Dampier / NW Shelf Terminal', country:'Australia', type:'export',
+    capacity:'~100 kbd (NW Shelf fields)', berths:'2 offshore SPMs', storage:'~8 MMbbl',
+    operator:'Woodside Energy', vesselTypes:'Suezmax · Aframax',
+    grade:'NW Shelf Blend · Van Gogh Crude · Pyrenees',
+    hormuzExposed:false, bypassRole:false,
+    note:'Australia’s primary crude export hub. Woodside-operated light sweet crude (36–42 API) from the North West Shelf fields exported to Japan, South Korea and China. Direct Indian Ocean access — no major chokepoint dependency, though Lombok Strait routing adds ~200 nm vs Malacca. NW Shelf production in gradual decline since 2010 peak at ~220 kbd.',
+    color:'#f59e0b', grad:'linear-gradient(135deg,#1a1000 0%,#2a1c00 60%,#120c00 100%)'
+  },
+  { coord:[-27.45,153.16], name:'Lytton Refinery Terminal', country:'Australia', type:'import',
+    capacity:'109 kbd', berths:'2 (Suezmax-capable)', storage:'~3 MMbbl',
+    operator:'Ampol Energy', vesselTypes:'Suezmax · Aframax',
+    grade:'Malaysian Blend · Arab Medium · Kimanis',
+    hormuzExposed:false, bypassRole:false,
+    note:'Australia’s largest active refinery (est. 1965), Brisbane. Imports Malaysian and Middle East crude. Australia’s refining sector contracted sharply — Kwinana and Altona both closed in 2021, leaving Lytton and Geelong as the country’s only operating refineries. Supported by the government’s Minimum Stockholding Obligation (MSO) fuel-security mandate.',
+    color:'#60a5fa', grad:'linear-gradient(135deg,#050d18 0%,#091830 60%,#030c12 100%)'
+  },
+  { coord:[-38.13,144.36], name:'Geelong Terminal (Viva Energy)', country:'Australia', type:'import',
+    capacity:'128 kbd', berths:'2 SPMs', storage:'~5 MMbbl',
+    operator:'Viva Energy (ex-Shell)', vesselTypes:'Suezmax · Aframax',
+    grade:'Arab Light · Tapis · Kimanis Blend',
+    hormuzExposed:false, bypassRole:false,
+    note:'Victoria’s sole remaining refinery, built by Shell in 1954 and Viva Energy’s flagship asset since 2014. Imports Arab Light and SE Asian crudes. Together with Lytton, supplies ~70% of Australia’s domestic refined fuel needs. MSO mandate requires minimum 24-day stockholding of key transport fuels.',
+    color:'#60a5fa', grad:'linear-gradient(135deg,#050d18 0%,#091830 60%,#030c12 100%)'
   }
 ];
 
@@ -15336,6 +15361,31 @@ function renderTFTerminals() {
   TF_TERMINAL_LAYERS.forEach(function(l) { if (TF_MAP) TF_MAP.removeLayer(l); });
   TF_TERMINAL_LAYERS = [];
   if (!TF_MAP || !TF_ACTIVE_COMM || TF_ACTIVE_COMM !== 'crude_oil') return;
+
+  // Pass 1: feeder spurs — connect each terminal to nearest trade lane hub
+  var comm = TF_COMMODITIES[TF_ACTIVE_COMM];
+  var fromHubs = [], toHubs = [], seenF = {}, seenT = {};
+  comm.routes.forEach(function(r) {
+    var fk = r.fromCoord[0].toFixed(1) + ',' + r.fromCoord[1].toFixed(1);
+    var tk = r.toCoord[0].toFixed(1)   + ',' + r.toCoord[1].toFixed(1);
+    if (!seenF[fk]) { seenF[fk] = true; fromHubs.push(r.fromCoord); }
+    if (!seenT[tk]) { seenT[tk] = true; toHubs.push(r.toCoord); }
+  });
+  TF_OIL_TERMINALS.forEach(function(t) {
+    var hubs = (t.type === 'export') ? fromHubs : toHubs;
+    var minD = Infinity, best = null;
+    hubs.forEach(function(h) {
+      var d = (h[0]-t.coord[0])*(h[0]-t.coord[0]) + (h[1]-t.coord[1])*(h[1]-t.coord[1]);
+      if (d < minD) { minD = d; best = h; }
+    });
+    if (best && minD > 0.25) {
+      var sc = t.bypassRole ? '#3dd68c' : (t.type === 'export' ? '#f59e0b' : '#60a5fa');
+      var spur = L.polyline([t.coord, best], { color:sc, weight:1, opacity:0.35, dashArray:'3,5', interactive:false }).addTo(TF_MAP);
+      TF_TERMINAL_LAYERS.push(spur);
+    }
+  });
+
+  // Pass 2: terminal markers (rendered on top of spurs)
   TF_OIL_TERMINALS.forEach(function(t) {
     var ringColor = t.bypassRole ? '#3dd68c' : (t.type === 'export' ? '#f59e0b' : '#60a5fa');
     var m = L.circleMarker(t.coord, {

@@ -13689,7 +13689,11 @@ function generateStrategyBrief(sid) {
 
 // ── Chokepoint database ───────────────────────────────────────────────────────
 var TF_CP = {
-  hormuz:         { name:'Strait of Hormuz',          lat:26.6,  lng:56.3,  alt:'Saudi Petroline → Yanbu (4.8 Mb/d) + UAE ADCOP → Fujairah (1.5 Mb/d) = 6.3 Mb/d pipeline bypass; remaining ~12.5 Mb/d (Iraq/Kuwait/Iran) stranded', altNm:500, bypassCapacity:6.3 },
+  hormuz:         { name:'Strait of Hormuz',          lat:26.6,  lng:56.3,
+    alt:'Saudi Petroline → Yanbu (4.8 Mb/d) + UAE ADCOP → Fujairah (1.5 Mb/d) = 6.3 Mb/d pipeline bypass; remaining ~12.5 Mb/d (Iraq/Kuwait/Iran) stranded',
+    altNm:500,
+    altNmIfDisrupted:{ bab_el_mandeb:5600 },
+    bypassCapacity:6.3 },
   bab_el_mandeb:  { name:'Bab el-Mandeb',             lat:12.6,  lng:43.4,  alt:'Cape of Good Hope (+6,800 nm)',                              altNm:6800 },
   suez:           { name:'Suez Canal',                lat:30.7,  lng:32.3,  alt:'Cape of Good Hope (+6,800 nm)',                              altNm:6800 },
   malacca:        { name:'Strait of Malacca',         lat:1.2,   lng:103.9, alt:'Lombok Strait (+350 nm) or Sunda Strait (+600 nm)',          altNm:350 },
@@ -15113,9 +15117,18 @@ function runTFStressTest() {
     r.cps.forEach(function(cpId) {
       if (!TF_DISRUPTIONS[cpId]) return;
       var cp = TF_CP[cpId];
-      if (cp.altNm > 0) {
+      // Base bypass distance, escalated if co-disrupted CPs block the bypass route
+      // e.g. Hormuz altNm=500 (Yanbu→Indian Ocean) but if Bab-el-Mandeb also closed,
+      // Yanbu ships must go Cape of Good Hope → altNm jumps to 5600
+      var effectiveAltNm = cp.altNm;
+      if (cp.altNmIfDisrupted) {
+        Object.keys(cp.altNmIfDisrupted).forEach(function(modCpId) {
+          if (TF_DISRUPTIONS[modCpId]) effectiveAltNm = Math.max(effectiveAltNm, cp.altNmIfDisrupted[modCpId]);
+        });
+      }
+      if (effectiveAltNm > 0) {
         hasSomeAlt = true;
-        if (cp.altNm > maxAltNm) maxAltNm = cp.altNm;
+        if (effectiveAltNm > maxAltNm) maxAltNm = effectiveAltNm;
       }
       if (cpBypassBudget[cpId] !== undefined) constrainedCp = cpId;
     });

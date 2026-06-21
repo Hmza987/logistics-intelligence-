@@ -16243,44 +16243,88 @@ function renderTFPriceImpact(comm, impactedPct, cpNames) {
   var el = document.getElementById('tf-price-content');
   if (!el) return;
 
-  // Method B: Elasticity-based estimate
-  // ΔP/P = (ΔQ/Q) / |ε_d|  — result expressed as % price change
-  // dQoverQ expressed as fraction (e.g. 0.42 for 42%), then divided by |ε_d|
-  // gives the price change fraction; ×100 converts to percentage points.
   var dQoverQ = impactedPct / 100 * (TF_DISRUPTION_LEVEL / 100);
   var priceImpactPct = Math.round(dQoverQ / Math.abs(comm.elasticity) * 100);
+  var basePrice = comm.basePrice || 72;
+  var dollarImpact = Math.round(basePrice * priceImpactPct / 100);
+  var estPrice = basePrice + dollarImpact;
+  var impactColor = priceImpactPct > 50 ? '#dc2626' : priceImpactPct > 20 ? '#f59e0b' : '#fbbf24';
 
-  var html = '<div class="tf-section-micro" style="margin-bottom:8px">Method A — Historical Event Reference</div>';
+  // Historical precedent range (parse % from impact strings)
+  var histMin = null, histMax = null;
+  if (comm.historicalRefs && comm.historicalRefs.length) {
+    comm.historicalRefs.forEach(function(ref) {
+      var m = ref.impact.match(/\+(\d+(?:\.\d+)?)/);
+      if (m) {
+        var v = parseFloat(m[1]);
+        if (histMin === null || v < histMin) histMin = v;
+        if (histMax === null || v > histMax) histMax = v;
+      }
+    });
+  }
+
+  var html = '';
+
+  // ── Headline: $/bbl ──
+  html += '<div style="text-align:center;padding:16px 0 12px">' +
+    '<div style="font-family:var(--f-mono);font-size:36px;font-weight:700;color:' + impactColor + ';letter-spacing:-.02em;line-height:1">+$' + dollarImpact + '</div>' +
+    '<div style="font-size:8.5px;color:#475569;margin-top:5px;letter-spacing:.04em">PER BARREL ESTIMATED IMPACT &nbsp;&middot;&nbsp; BRENT BASELINE $' + basePrice + '</div>' +
+  '</div>';
+
+  // ── Two summary rows ──
+  html += '<div style="border-top:1px solid rgba(255,255,255,0.07);padding:7px 2px;display:flex;justify-content:space-between;align-items:center">' +
+    '<span style="font-size:8.5px;color:#64748b">Estimated Brent price</span>' +
+    '<span style="font-size:11px;font-weight:700;color:' + impactColor + ';font-family:var(--f-mono)">$' + estPrice + '/bbl</span>' +
+  '</div>';
+  html += '<div style="border-top:1px solid rgba(255,255,255,0.07);padding:7px 2px;display:flex;justify-content:space-between;align-items:center">' +
+    '<span style="font-size:8.5px;color:#64748b">Elasticity model</span>' +
+    '<span style="font-size:9px;color:' + impactColor + ';font-family:var(--f-mono)">+' + priceImpactPct + '%</span>' +
+  '</div>';
+  if (histMin !== null) {
+    html += '<div style="border-top:1px solid rgba(255,255,255,0.07);padding:7px 2px;display:flex;justify-content:space-between;align-items:center">' +
+      '<span style="font-size:8.5px;color:#64748b">Historical precedents</span>' +
+      '<span style="font-size:9px;color:#94a3b8">+' + (histMin < 1 ? histMin.toFixed(1) : Math.round(histMin)) + '% &ndash; +' + Math.round(histMax) + '% Brent</span>' +
+    '</div>';
+  }
+  html += '<div style="border-top:1px solid rgba(255,255,255,0.07);padding:7px 2px;display:flex;justify-content:space-between;align-items:center">' +
+    '<span style="font-size:8.5px;color:#64748b">' + cpNames + ' &middot; ' + TF_DISRUPTION_LEVEL + '% disruption</span>' +
+    '<span style="font-size:9px;color:#64748b">' + impactedPct + '% global trade</span>' +
+  '</div>';
+
+  // ── Methodology toggle ──
+  html += '<div onclick="(function(btn){var d=document.getElementById(\'tf-pi-method\');var open=d.style.display!==\'none\';d.style.display=open?\'none\':\'block\';btn.querySelector(\'.tf-pi-chev\').textContent=open?\'▾ Methodology & historical precedents\':\'▴ Methodology & historical precedents\';})(this)" ' +
+    'style="border-top:1px solid rgba(255,255,255,0.07);padding:9px 2px 4px;cursor:pointer">' +
+    '<span class="tf-pi-chev" style="font-size:8px;color:#334155;letter-spacing:.05em">▾ Methodology &amp; historical precedents</span>' +
+  '</div>';
+
+  // ── Collapsible detail (hidden by default) ──
+  html += '<div id="tf-pi-method" style="display:none;padding-top:6px">';
+  html += '<div class="tf-section-micro" style="margin-bottom:8px">Method A — Historical Event Reference</div>';
   if (comm.historicalRefs && comm.historicalRefs.length) {
     comm.historicalRefs.forEach(function(ref) {
       html += '<div style="padding:7px 0;border-bottom:1px solid rgba(255,255,255,0.05)">' +
         '<div style="font-size:9px;color:#e8eaed;font-weight:600">' + ref.event + '</div>' +
-        '<div style="font-size:8px;color:var(--c-tx2);margin-top:2px">' +
-          'Duration: ' + ref.duration + ' &bull; Observed price impact: <span style="color:#f59e0b">' + ref.impact + '</span>' +
-        '</div>' +
+        '<div style="font-size:8px;color:var(--c-tx2);margin-top:2px">Duration: ' + ref.duration + ' &bull; Observed price impact: <span style="color:#f59e0b">' + ref.impact + '</span></div>' +
         '<div style="font-size:8px;color:var(--c-tx2);margin-top:2px;font-style:italic">' + ref.note + '</div>' +
       '</div>';
     });
   } else {
     html += '<div style="font-size:9px;color:var(--c-tx2)">No historical events documented for this commodity</div>';
   }
-
-  html += '<div class="tf-section-micro" style="margin-top:12px;margin-bottom:8px">Method B — Elasticity-Based Estimate (Current Disruption)</div>';
+  html += '<div class="tf-section-micro" style="margin-top:12px;margin-bottom:8px">Method B — Elasticity-Based Estimate</div>';
   html += '<div style="font-size:9px;color:var(--c-tx2);line-height:1.7;margin-bottom:8px">' +
-    'Disrupted: <span style="color:#e8eaed">' + cpNames + '</span><br>' +
-    'Volume impacted: <span style="color:#e8eaed">' + impactedPct + '% of global trade</span><br>' +
-    'Disruption level applied: <span style="color:#e8eaed">' + TF_DISRUPTION_LEVEL + '%</span>' +
+    'Volume impacted: <span style="color:#e8eaed">' + impactedPct + '% of global trade</span> &middot; Disruption level: <span style="color:#e8eaed">' + TF_DISRUPTION_LEVEL + '%</span>' +
   '</div>';
   html += '<div style="font-family:var(--f-mono);font-size:8px;color:#93c5fd;background:rgba(96,165,250,0.06);border-radius:3px;padding:7px 9px;border-left:2px solid #60a5fa;line-height:1.7;margin-bottom:8px">' +
-    'ΔP/P = (ΔQ/Q) × (1/ε_d)<br>' +
-    '= (' + (dQoverQ*100).toFixed(1) + '%) × (1/' + comm.elasticity + ')<br>' +
-    '= <span style="color:#fbbf24">+' + priceImpactPct + '% estimated price impact</span>' +
+    '&Delta;P/P = (&Delta;Q/Q) &times; (1/&epsilon;_d)<br>' +
+    '= (' + (dQoverQ*100).toFixed(1) + '%) &times; (1/' + comm.elasticity + ')<br>' +
+    '= <span style="color:#fbbf24">+' + priceImpactPct + '% &rarr; +$' + dollarImpact + '/bbl</span>' +
   '</div>';
   html += '<div style="font-size:7.5px;color:var(--c-tx2);line-height:1.65;font-style:italic">' +
-    'Elasticity ε_d = ' + comm.elasticity + ' (' + comm.elasticitySource + '). ' +
-    'This is a short-run partial equilibrium estimate only. It does not account for strategic reserves, demand destruction, or supply-side response. ' +
-    'Use Method A (historical events) as the primary credibility anchor.' +
+    '&epsilon;_d = ' + comm.elasticity + ' (' + comm.elasticitySource + '). Short-run partial equilibrium only &mdash; does not account for SPR release, demand destruction, or supply-side response.' +
   '</div>';
+  html += '</div>'; // end tf-pi-method
+
   el.innerHTML = html;
 }
 

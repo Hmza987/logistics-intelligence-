@@ -14832,8 +14832,8 @@ function renderTFRoutes() {
     var fromC = route.fromCoord;
     var toC   = route.toCoord;
     var dotColor = isPipeline ? TF_PIPELINE_COLOR : comm.color;
-    var fromDot = L.circleMarker(fromC, { radius:4, color:dotColor, fillColor:dotColor, fillOpacity:1, weight:1 }).addTo(TF_MAP);
-    var toDot   = L.circleMarker(toC,   { radius:4, color:dotColor, fillColor:dotColor, fillOpacity:1, weight:1 }).addTo(TF_MAP);
+    var fromDot = L.circleMarker(fromC, { radius:4, color:dotColor, fillColor:dotColor, fillOpacity:1, weight:1, interactive:false }).addTo(TF_MAP);
+    var toDot   = L.circleMarker(toC,   { radius:4, color:dotColor, fillColor:dotColor, fillOpacity:1, weight:1, interactive:false }).addTo(TF_MAP);
     TF_ROUTE_LAYERS.push(fromDot);
     TF_ROUTE_LAYERS.push(toDot);
 
@@ -15164,6 +15164,7 @@ function toggleTFChokepoint(cpId) {
   var row = document.getElementById('tf-cprow-' + cpId);
   if (row) row.classList.toggle('disrupted', !!TF_DISRUPTIONS[cpId]);
   renderTFRoutes();
+  renderTFTerminals();
   updateTFAlertStrip();
   updateTFCPChips();
   renderGCCImpact();
@@ -15185,6 +15186,7 @@ function clearTFDisruptions() {
   TF_DISRUPTIONS = {};
   document.querySelectorAll('.tf-cp-row').forEach(function(r){ r.classList.remove('disrupted'); });
   renderTFRoutes();
+  renderTFTerminals();
   updateTFAlertStrip();
   clearTFOutputs();
   updateTFCPChips();

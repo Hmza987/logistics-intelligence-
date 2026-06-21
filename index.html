@@ -14956,7 +14956,7 @@ var TF_GCC_DATA = [
     scenarios:{
       'hormuz':{
         stats:[{val:'5.2 Mb/d',lbl:'stranded (no bypass)'},{val:'4.8 Mb/d',lbl:'rerouted via Yanbu'}],
-        insight:'Petroline running at 100% capacity (4.8 Mb/d). Remaining 5.2 Mb/d of Arabian Gulf flows stranded — Kuwait and Iraqi crude cannot exit either. ~$520M/day revenue at risk at $72/bbl.',
+        insight:'Petroline running at 100% capacity (4.8 Mb/d). Remaining 5.2 Mb/d of Arabian Gulf flows stranded — Kuwait and Iraqi crude cannot exit either. ~$374M/day revenue at risk at $72/bbl.',
         bypass:'▶ Petroline → Yanbu at 100% capacity — no further rerouting',bypassClass:'gcc-bypass'
       },
       'bab_el_mandeb':{
@@ -14978,6 +14978,31 @@ var TF_GCC_DATA = [
         stats:[{val:'~9.6 Mb/d',lbl:'at risk'},{val:'+5,600 nm',lbl:'Yanbu bypass via CoGH only'}],
         insight:'Dual disruption. 5.2 Mb/d stranded at Hormuz; Petroline 4.8 Mb/d reaches Yanbu but Red Sea exit also blocked — all bypass cargoes must continue via Cape of Good Hope (+5,600 nm, +20 days). Near-total export paralysis.',
         bypass:'⚠ Only exit: Yanbu → Cape of Good Hope → Asia',bypassClass:'gcc-no-bypass'
+      },
+      'bab_el_mandeb,suez':{
+        stats:[{val:'4.8 Mb/d',lbl:'Yanbu cargoes fully stranded'},{val:'5.2 Mb/d',lbl:'Gulf flows via Hormuz+Malacca'}],
+        insight:'Both Red Sea exits sealed — Bab-el-Mandeb blocks the southern passage, Suez blocks the northern exit. Petroline 4.8 Mb/d arrives at Yanbu but cannot leave the Red Sea. Gulf exports (5.2 Mb/d via Hormuz) remain fully operational via Indian Ocean and Malacca. ~48% of production stranded.',
+        bypass:'⚠ Yanbu fully isolated — both Red Sea exits blocked · Gulf flows normal',bypassClass:'gcc-no-bypass'
+      },
+      'bab_el_mandeb,malacca':{
+        stats:[{val:'5.2 Mb/d',lbl:'Gulf flows via Lombok (+2-4d)'},{val:'4.8 Mb/d',lbl:'Yanbu → Europe only (Asia blocked)'}],
+        insight:'Gulf exports (5.2 Mb/d) exit Hormuz and reroute via Lombok for Asia (+2 days). Yanbu flows lose Asia access — Bab-el-Mandeb blocks Red Sea southward exit; Malacca also closed. Petroline flows reach Europe via Suez only. Saudi Asia supply significantly constrained.',
+        bypass:'⚠ Yanbu → Asia severed · Gulf via Lombok · Yanbu Europe via Suez only',bypassClass:'gcc-no-bypass'
+      },
+      'hormuz,malacca':{
+        stats:[{val:'5.2 Mb/d',lbl:'stranded at Hormuz'},{val:'4.8 Mb/d',lbl:'Yanbu → Lombok only (+2-4d)'}],
+        insight:'5.2 Mb/d trapped at Hormuz with no bypass. Petroline 4.8 Mb/d reaches Yanbu and exits via Bab-el-Mandeb (open). Malacca closure forces all Asia cargoes via Lombok (+2 days). European supply from Yanbu via Suez unaffected. ~52% of production halted at source.',
+        bypass:'▶ Petroline → Yanbu → Lombok viable · 5.2 Mb/d stranded',bypassClass:'gcc-no-bypass'
+      },
+      'hormuz,suez':{
+        stats:[{val:'5.2 Mb/d',lbl:'stranded at Hormuz'},{val:'~1.3 Mb/d',lbl:'Europe supply severed'}],
+        insight:'5.2 Mb/d trapped at Hormuz. Petroline 4.8 Mb/d reaches Yanbu — Suez blocked but Bab-el-Mandeb (open) allows exit via Indian Ocean to Asia via Malacca. European buyers cut off from Saudi supply. ~$94M/day Europe revenue at risk.',
+        bypass:'▶ Yanbu → Bab-el-Mandeb → Asia viable · Europe supply severed',bypassClass:'gcc-no-bypass'
+      },
+      'malacca,suez':{
+        stats:[{val:'~5.6 Mb/d',lbl:'Asia via Lombok (+2-4d)'},{val:'~1.3 Mb/d',lbl:'Europe via CoGH (+22d)'}],
+        insight:'Hormuz open — all Saudi exports exit the Gulf. Asia-bound crude (~5.6 Mb/d) rerouted via Lombok Strait (+2 days). Europe-bound crude (~1.3 Mb/d) diverted via Cape of Good Hope (+22 days). Higher shipping costs but no export halt.',
+        bypass:'▶ Lombok for Asia · CoGH for Europe — all exports continue',bypassClass:'gcc-bypass'
       }
     }
   },
@@ -15010,6 +15035,16 @@ var TF_GCC_DATA = [
         stats:[{val:'2.5 Mb/d',lbl:'stranded at Hormuz'},{val:'+5,600 nm',lbl:'Fujairah → Asia via CoGH'}],
         insight:'ADCOP 1.5 Mb/d reaches Fujairah but Red Sea exit blocked. All Fujairah cargoes must divert via Cape of Good Hope. Jebel Ali port and Dubai trade hub effectively isolated from global supply chains.',
         bypass:'⚠ Only viable: Fujairah → Cape of Good Hope',bypassClass:'gcc-no-bypass'
+      },
+      'hormuz,malacca':{
+        stats:[{val:'2.5 Mb/d',lbl:'stranded at Hormuz'},{val:'1.5 Mb/d',lbl:'Fujairah → Lombok only'}],
+        insight:'2.5 Mb/d offshore flows trapped in Gulf. ADCOP 1.5 Mb/d reaches Fujairah — Malacca closure forces all Asia cargoes via Lombok (+1 days). European cargoes from Fujairah via Bab-el-Mandeb unaffected. Dubai re-export trade to SE Asia severely disrupted. ~63% of production stranded.',
+        bypass:'▶ ADCOP → Fujairah → Lombok (Asia) · 2.5 Mb/d stranded',bypassClass:'gcc-no-bypass'
+      },
+      'bab_el_mandeb,malacca':{
+        stats:[{val:'~3.0 Mb/d',lbl:'Asia via Lombok (+1-2d)'},{val:'~1.0 Mb/d',lbl:'Europe via CoGH (+20d)'}],
+        insight:'Hormuz open — all UAE exports exit the Gulf. Asia-bound crude (~3.0 Mb/d) rerouted via Lombok Strait (+1 days). Europe-bound cargo (~1.0 Mb/d) diverted via Cape of Good Hope (+20 days). Jebel Ali re-export trade disrupted across both corridors. No export halt — higher costs only.',
+        bypass:'▶ Lombok for Asia · CoGH for Europe — exports continue at higher cost',bypassClass:'gcc-bypass'
       }
     }
   },
@@ -15042,6 +15077,16 @@ var TF_GCC_DATA = [
         stats:[{val:'~1.4 Mb/d',lbl:'total liquids halted'},{val:'No exit',lbl:'for all cargoes'}],
         insight:'Complete shutdown. Hormuz blocks all crude and condensate at source — Halul Island and Ras Laffan terminals fully stranded. Bab-el-Mandeb closure is secondary; no liquids reach the Red Sea regardless.',
         bypass:'⚠ Total shutdown — no exit route exists',bypassClass:'gcc-no-bypass'
+      },
+      'bab_el_mandeb,malacca':{
+        stats:[{val:'~1.15 Mb/d',lbl:'Asia flows via Lombok (+1-2d)'},{val:'~150 kbd',lbl:'Europe condensate via CoGH (+25d)'}],
+        insight:'Qatar liquids continue to exit Hormuz — no source blockade. Asia-bound crude and condensate (~1.15 Mb/d) rerouted via Lombok Strait (+1 days). Europe condensate (~150 kbd) diverted via Cape of Good Hope (+25 days). All exports continue at added cost.',
+        bypass:'▶ Lombok for Asia · CoGH for Europe — all Qatar exports continue',bypassClass:'gcc-bypass'
+      },
+      'hormuz,malacca':{
+        stats:[{val:'~1.4 Mb/d',lbl:'total liquids halted'},{val:'No exit',lbl:'for all cargoes'}],
+        insight:'Complete shutdown. Hormuz blocks all crude and condensate at source — Malacca closure is moot as no liquids escape the Gulf. Total liquids at risk: ~1.4 Mb/d. No alternative route.',
+        bypass:'⚠ Total shutdown — Hormuz blocks all Qatar liquids',bypassClass:'gcc-no-bypass'
       }
     }
   },
@@ -15105,13 +15150,13 @@ var TF_GCC_DATA = [
         bypass:'▶ Oman acts as bypass node for GCC neighbours',bypassClass:'gcc-safe'
       },
       'bab_el_mandeb':{
-        stats:[{val:'~5 MT/yr',lbl:'Europe LNG disrupted'},{val:'+8,000 nm',lbl:'via CoGH'}],
-        insight:'Oman LNG Europe cargoes (Total/Shell contracts) rerouted via Cape of Good Hope (+8,000 nm). Asian LNG deliveries (60%+ of output) and all crude exports continue normally from Mina Al-Fahal.',
+        stats:[{val:'UNAFFECTED',lbl:'crude oil (Asia-bound)'},{val:'~5 MT/yr',lbl:'Europe LNG rerouted via CoGH'}],
+        insight:'Crude exports to Asia continue unaffected from Mina Al-Fahal — no Red Sea dependency. Europe LNG cargoes (Total/Shell contracts) rerouted via Cape of Good Hope (+8,000 nm, +25 days). Asian LNG deliveries (60%+ of output) also unaffected.',
         bypass:'▶ CoGH for Europe LNG only — Asia unaffected',bypassClass:'gcc-bypass'
       },
       'malacca':{
-        stats:[{val:'~6 MT/yr',lbl:'Asia LNG rerouted'},{val:'Lombok',lbl:'alternative route'}],
-        insight:'Asia-bound LNG and crude rerouted via Lombok Strait (+300 nm, +1–2 days). Impact manageable given direct Indian Ocean access. Oman remains significantly less exposed than any other GCC state.',
+        stats:[{val:'~1.0 Mb/d',lbl:'crude rerouted via Lombok'},{val:'~6 MT/yr',lbl:'Asia LNG also rerouted'}],
+        insight:'~1.0 Mb/d crude rerouted via Lombok Strait (+300 nm, +1–2 days). Asia LNG (~6 MT/yr) also rerouted via Lombok. Direct Indian Ocean access — no Gulf chokepoint dependency. Oman remains the least exposed GCC state.',
         bypass:'▶ Lombok Strait: minor rerouting (+1-2 days)',bypassClass:'gcc-bypass'
       }
     }

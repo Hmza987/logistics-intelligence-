@@ -13704,8 +13704,8 @@ var TF_CP = {
 var TF_COMMODITIES = {
 
   crude_oil: {
-    cat:'energy', name:'Crude Oil', unit:'M bbl/day', globalTrade:43.4,
-    globalTradeSource:'IEA Oil Market Report 2023',
+    cat:'energy', name:'Crude Oil', unit:'M bbl/day', globalTrade:100.0,
+    globalTradeSource:'IEA Oil Market Report 2024 — global petroleum liquids supply (crude + condensate + NGL)',
     priceLabel:'Brent spot ($/bbl)', color:'#f59e0b',
     vesselType:'VLCC / Suezmax', vesselSpeed:13,
     elasticity:-0.05, elasticitySource:'Hamilton (2009)',
@@ -16118,7 +16118,7 @@ function runTFStressTest() {
   var partialBypass = reroutable > 0 && stranded > 0;
 
   setTFOut('tf-val-vol', fmtVol(totalImpacted), comm.unit,
-    impactedPct + '% of global ' + comm.name + ' trade at ' + TF_DISRUPTION_LEVEL + '% disruption level', true);
+    impactedPct + '% of global ' + comm.name + ' supply at ' + TF_DISRUPTION_LEVEL + '% disruption level', true);
 
   // Build the bypass description from disrupted CPs that have bypassCapacity
   var bypassDesc = '';
@@ -16130,10 +16130,10 @@ function runTFStressTest() {
   setTFOut('tf-val-rrt',
     allStranded ? fmtVol(stranded) : fmtVol(reroutable), comm.unit,
     allStranded
-      ? strandedPct + '% of global trade fully stranded — no maritime bypass exists for closed chokepoint(s)'
+      ? strandedPct + '% of global supply fully stranded — no maritime bypass exists for closed chokepoint(s)'
       : partialBypass
         ? rrtPct + '% re-routable via pipeline bypass · ' + fmtVol(stranded) + ' ' + comm.unit + ' stranded — ' + (bypassDesc || 'no bypass for remaining volume')
-        : rrtPct + '% of global trade re-routable · ' + fmtVol(stranded) + ' ' + comm.unit + ' stranded (no viable alternative)',
+        : rrtPct + '% of global supply re-routable · ' + fmtVol(stranded) + ' ' + comm.unit + ' stranded (no viable alternative)',
     allStranded || partialBypass);
 
   if (avgExtraNm > 0) {
@@ -16151,7 +16151,7 @@ function runTFStressTest() {
     setTFOut('tf-val-time', 'No bypass', '',
       'Supply fully cut off at source — transit time model inapplicable', false);
     setTFOut('tf-val-cost', '+' + Math.min(elasticityPrice, 999) + '%', 'price shock estimate',
-      'Supply shock model: ' + strandedPct + '% of global trade cut off ÷ |ε ' + comm.elasticity + '| → +' + elasticityPrice + '% price impact estimate (elasticity model; actual impact depends on SPR release & demand destruction)', true);
+      'Supply shock model: ' + strandedPct + '% of global supply cut off ÷ |ε ' + comm.elasticity + '| → +' + elasticityPrice + '% price impact estimate (elasticity model; actual impact depends on SPR release & demand destruction)', true);
   } else {
     setTFOut('tf-val-dist', '0', 'nautical miles', 'No re-routable volume — distance model not applicable', false);
     setTFOut('tf-val-time', '0', 'days', 'No re-routable volume', false);
@@ -16248,15 +16248,15 @@ function renderTFPriceImpact(comm, impactedPct, cpNames) {
   var dQoverQ   = impactedPct / 100 * (TF_DISRUPTION_LEVEL / 100);
   var rawPct    = dQoverQ / Math.abs(comm.elasticity) * 100;
 
-  // Calibrated stress model — Hamilton (2009) elasticity gives raw +860% for a 43%
-  // supply shock, which is unphysical. Real Feb 2026 Hormuz closure (43% trade) produced
-  // a peak of +64% (+$46/bbl, Brent $72→$118). Calibration factors below account for
-  // SPR release, demand destruction, and partial bypass activation:
-  //   Low (strong response):   mitFactor 0.045 → Hormuz 100% ≈ +$28/bbl
-  //   High (prolonged closure): mitFactor 0.130 → Hormuz 100% ≈ +$80/bbl
+  // Calibrated stress model — Hamilton (2009) elasticity gives raw +376% for an 18.8%
+  // supply shock (Hormuz, 100% disruption), which is unphysical without mitigation.
+  // Real Feb 2026 Hormuz closure produced peak +64% (+$46/bbl, Brent $72→$118).
+  // Calibration factors below account for SPR release, demand destruction, bypass activation:
+  //   Low (strong response):    mitFactor 0.10 → Hormuz 100% ≈ +$27/bbl → ~$99/bbl
+  //   High (prolonged closure): mitFactor 0.27 → Hormuz 100% ≈ +$73/bbl → ~$145/bbl
   // Consistent with Goldman Sachs Q3 $120/bbl and JPMorgan $120–150 estimates (Jun 2026).
-  var mitLow  = 0.045;
-  var mitHigh = 0.130;
+  var mitLow  = 0.10;
+  var mitHigh = 0.27;
   var impLowPct  = Math.round(rawPct * mitLow);
   var impHighPct = Math.round(rawPct * mitHigh);
   var dolLow  = Math.round(basePrice * impLowPct  / 100);
@@ -16291,7 +16291,7 @@ function renderTFPriceImpact(comm, impactedPct, cpNames) {
   '</div>';
   html += '<div style="border-top:1px solid rgba(255,255,255,0.07);padding:7px 2px;display:flex;justify-content:space-between;align-items:center">' +
     '<span style="font-size:8.5px;color:#64748b">' + cpNames + ' &middot; ' + TF_DISRUPTION_LEVEL + '% disruption</span>' +
-    '<span style="font-size:9px;color:#64748b">' + impactedPct + '% global trade</span>' +
+    '<span style="font-size:9px;color:#64748b">' + impactedPct + '% of global supply</span>' +
   '</div>';
 
   // ── Methodology toggle ──

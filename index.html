@@ -15179,13 +15179,6 @@ function renderGCCImpact() {
       bodyHtml += '<div class="gcc-insight">' + scenario.insight + '</div>';
     } else if (!isDisrupted) {
       bodyHtml = '<div class="gcc-insight" style="margin-bottom:8px">' + c.normal.facts + '</div>';
-      if (c.cps.length) {
-        bodyHtml += '<div class="gcc-cptags">';
-        c.cps.forEach(function(cp){ bodyHtml += '<span class="gcc-cp-tag">' + (TF_CP_SHORT[cp]||cp) + '</span>'; });
-        bodyHtml += '</div>';
-      } else {
-        bodyHtml += '<div class="gcc-cptags"><span class="gcc-safe">&#10003; Exports bypass Hormuz naturally</span></div>';
-      }
     } else {
       if (c.cps.length) {
         bodyHtml += '<div class="gcc-cptags">';
@@ -15203,9 +15196,10 @@ function renderGCCImpact() {
       '<div class="gcc-card-hdr"><div>' +
         '<div class="gcc-name">' + c.name + '</div>' +
         '<div class="gcc-role">' + c.role + '</div>' +
-      '</div><div class="gcc-res-wrap"><div class="gcc-res-label">Resilience</div>' +
-      '<div class="gcc-res-bar"><div class="gcc-res-fill" style="width:' + c.resilience + '%;background:' + c.resColor + '"></div></div>' +
-      '</div></div>' +
+      '</div>' + ((isDisrupted || scenario) ?
+        '<div class="gcc-res-wrap"><div class="gcc-res-label">Resilience</div>' +
+        '<div class="gcc-res-bar"><div class="gcc-res-fill" style="width:' + c.resilience + '%;background:' + c.resColor + '"></div></div>' +
+        '</div>' : '') + '</div>' +
       '<div class="gcc-metrics">' + statsHtml + '</div>' +
       bodyHtml +
       '<div class="' + (data.bypassClass||'gcc-bypass') + '">' + (data.bypass||'') + '</div>' +

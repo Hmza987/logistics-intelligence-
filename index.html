@@ -15335,6 +15335,23 @@ var TF_OIL_TERMINALS = [
     hormuzExposed:false, bypassRole:false,
     note:'Washington State’s refinery cluster draws from two primary sources: Alaska North Slope crude by tanker from Valdez (~200 kbd) and Canadian heavy crude via Trans Mountain Expansion pipeline (Westridge terminal, ~150 kbd). WA refineries supply ~40% of Pacific Northwest gasoline and jet fuel. BP Cherry Point is the largest crude-receiving terminal in the US Pacific Northwest.'  ,
     color:'#60a5fa', grad:'linear-gradient(135deg,#050d18 0%,#091830 60%,#030c12 100%)'
+  },
+  // US ADDITIONAL EXPORT TERMINALS
+  { coord:[27.74,-97.28], name:'Corpus Christi Export Hub', country:'USA', type:'export',
+    capacity:'~2.0 Mb/d (combined terminals)', berths:'12+ (Moda Ingleside · South Texas Gateway · Enterprise)', storage:'~40 MMbbl (Ingleside area)',
+    operator:'Moda Midstream · South Texas Gateway · Enterprise Products', vesselTypes:'Suezmax · Aframax (VLCC via lightering)',
+    grade:'WTI Midland · WTI Houston · Eagle Ford Condensate',
+    hormuzExposed:false, bypassRole:false,
+    note:'America’s #1 crude export port by volume since 2022, handling ~2 Mb/d of Permian Basin and Eagle Ford shale crude. Cannot directly load fully-laden VLCCs — uses reverse lightering offshore to top up Suezmax loads. Moda Ingleside Energy Center (MIEC) and South Texas Gateway are the largest single terminals. US shale revolution made Corpus Christi a global pricing hub for WTI Midland.',
+    color:'#f59e0b', grad:'linear-gradient(135deg,#1a1000 0%,#2a1c00 60%,#120c00 100%)'
+  },
+  { coord:[28.88,-90.02], name:'LOOP — Louisiana Offshore Oil Port', country:'USA', type:'export',
+    capacity:'~1.5 Mb/d (bidirectional)', berths:'3 monobuoys (VLCC-capable)', storage:'~50 MMbbl (Clovelly salt caverns)',
+    operator:'LOOP LLC (Valero · Marathon · Shell)', vesselTypes:'VLCC · Suezmax',
+    grade:'WTI · Mars Blend · Louisiana Light Sweet (LLS)',
+    hormuzExposed:false, bypassRole:false,
+    note:'The only terminal in the contiguous US capable of loading fully-laden VLCCs at full draught. Originally built in 1981 as an import facility; converted to export following the 2015 crude export ban repeal. Connected to Clovelly salt cavern hub (50 MMbbl strategic storage). VLCC capability gives LOOP a pricing premium over Corpus Christi for long-haul Asian cargoes — directly competing with GCC VLCC economics.',
+    color:'#f59e0b', grad:'linear-gradient(135deg,#1a1000 0%,#2a1c00 60%,#120c00 100%)'
   }
 ];
 

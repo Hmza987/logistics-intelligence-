@@ -15701,6 +15701,59 @@ var TF_GCC_DATA = [
   }
 ];
 
+// Scenario-specific resilience scores per country.
+// Keys are sorted comma-joined CP ids (same as combinedKey in renderGCCImpact).
+// Rationale: baseline scores reflect normal operations; disruption scores reflect
+// bypass availability, export volume at risk, and compound route elimination effects.
+var GCC_RES_SCORES = {
+  saudi: {
+    // Single CP
+    hormuz:        30,  // 5.2 Mb/d stranded; Petroline helps but most flows cut
+    bab_el_mandeb: 50,  // Yanbu reroutes via Cape; costly but no halt
+    suez:          58,  // Europe only; Gulf and Asia flows unaffected
+    malacca:       45,  // China/Japan/Korea flows disrupted; Lombok adds time
+    // Dual CP
+    'bab_el_mandeb,hormuz': 8,   // Yanbu bypass also trapped; near-total paralysis
+    'bab_el_mandeb,suez':   20,  // Yanbu fully isolated — both Red Sea exits sealed
+    'bab_el_mandeb,malacca':35,  // Gulf via Lombok; Yanbu → Europe only
+    'hormuz,malacca':       18,  // 5.2 Mb/d stranded + Asia disrupted
+    'hormuz,suez':          28,  // 5.2 Mb/d stranded; Europe supply cut
+    'malacca,suez':         48   // No export halt; higher costs only
+  },
+  uae: {
+    hormuz:        35,  // ADCOP 1.5 Mb/d helps; 2.5 Mb/d offshore stranded
+    bab_el_mandeb: 55,  // Europe via Cape; Dubai hub disrupted
+    malacca:       58,  // Lombok alternative; manageable
+    'bab_el_mandeb,hormuz': 12,  // ADCOP → Fujairah → Cape only; near-total isolation
+    'hormuz,malacca':       22,  // 2.5 Mb/d stranded; Asia via Lombok only
+    'bab_el_mandeb,malacca':42   // All exports continue via Cape+Lombok; higher cost
+  },
+  qatar: {
+    hormuz:        5,   // 100% stranded — no bypass exists for any Qatar liquid
+    bab_el_mandeb: 60,  // 85% unaffected; Europe condensate via Cape
+    malacca:       60,  // Lombok; manageable
+    'bab_el_mandeb,hormuz': 3,   // Complete shutdown; Bab redundant (Hormuz blocks all)
+    'bab_el_mandeb,malacca':55,  // Lombok + Cape; all exports continue
+    'hormuz,malacca':       3    // Complete shutdown; Malacca moot (Hormuz blocks all)
+  },
+  kuwait: {
+    hormuz:         8,  // All exports halted; no bypass exists
+    malacca:       48,  // Lombok alternative; ~30% Europe unaffected
+    'hormuz,malacca': 5 // Complete shutdown
+  },
+  bahrain: {
+    hormuz:         8   // Refinery feedstock cut; ALBA smelter threatened
+  },
+  oman: {
+    hormuz:        90,  // Mina Al-Fahal outside Hormuz — strategic advantage
+    bab_el_mandeb: 78,  // Asia crude unaffected; Europe LNG via Cape (+cost)
+    malacca:       75,  // Lombok rerouting; least exposed GCC state
+    'bab_el_mandeb,hormuz': 82,  // Still outside both; Sohar becomes key hub
+    'bab_el_mandeb,malacca':70,
+    'hormuz,malacca':       72
+  }
+};
+
 function renderGCCImpact() {
   var disruptions = TF_DISRUPTIONS || {};
   var activeCPs = Object.keys(disruptions);
@@ -15741,6 +15794,34 @@ function renderGCCImpact() {
     var data = scenario || c.normal;
     var cardStyle = isDisrupted ? 'border-color:rgba(220,38,38,0.5);background:rgba(220,38,38,0.05);' : '';
 
+    // Dynamic resilience score based on active disruptions
+    var resScore, resColor;
+    if (isDisrupted && GCC_RES_SCORES[c.id]) {
+      var combinedKey = relevantActive.slice().sort().join(',');
+      var scores = GCC_RES_SCORES[c.id];
+      if (scores[combinedKey] !== undefined) {
+        resScore = scores[combinedKey];
+      } else {
+        // Unhandled combination — check all single and dual sub-combinations, take minimum
+        resScore = c.resilience;
+        relevantActive.forEach(function(cp) {
+          if (scores[cp] !== undefined) resScore = Math.min(resScore, scores[cp]);
+        });
+        for (var _i = 0; _i < relevantActive.length; _i++) {
+          for (var _j = _i + 1; _j < relevantActive.length; _j++) {
+            var dualKey = [relevantActive[_i], relevantActive[_j]].sort().join(',');
+            if (scores[dualKey] !== undefined) resScore = Math.min(resScore, scores[dualKey]);
+          }
+        }
+        // Small additional penalty per CP beyond the worst sub-combo
+        resScore = Math.max(3, resScore - Math.max(0, relevantActive.length - 2) * 4);
+      }
+      resColor = resScore >= 70 ? '#3dd68c' : resScore >= 40 ? '#f59e0b' : '#dc2626';
+    } else {
+      resScore = c.resilience;
+      resColor = c.resColor;
+    }
+
     var statsHtml = '';
     (data.stats || []).forEach(function(s) {
       var col = '#e8eaed';
@@ -15776,7 +15857,7 @@ function renderGCCImpact() {
         '<div class="gcc-role">' + c.role + '</div>' +
       '</div>' + ((isDisrupted || scenario) ?
         '<div class="gcc-res-wrap"><div class="gcc-res-label">Resilience</div>' +
-        '<div class="gcc-res-bar"><div class="gcc-res-fill" style="width:' + c.resilience + '%;background:' + c.resColor + '"></div></div>' +
+        '<div class="gcc-res-bar"><div class="gcc-res-fill" style="width:' + resScore + '%;background:' + resColor + '"></div></div>' +
         '</div>' : '') + '</div>' +
       '<div class="gcc-metrics">' + statsHtml + '</div>' +
       bodyHtml +

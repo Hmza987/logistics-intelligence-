@@ -4158,8 +4158,12 @@ canvas { font-family: var(--f-mono); }
           <button class="tf-cat-btn" onclick="filterTFCat('all',this)">All</button>
         </div>
       </div>
-      <!-- Chokepoint quick-select chips — scrollable, updates per commodity -->
-      <div id="tf-cp-chips" style="flex:1;display:flex;align-items:center;gap:4px;overflow-x:auto;min-width:0;padding:0 4px"></div>
+      <!-- Chokepoint quick-select chips — own visual box, scrollable -->
+      <div style="flex:1;min-width:0;display:flex;align-items:center;gap:6px;border:1px solid rgba(255,255,255,0.09);border-radius:3px;background:rgba(255,255,255,0.03);padding:3px 10px;overflow:hidden">
+        <span style="font-family:var(--f-mono);font-size:7px;letter-spacing:.09em;text-transform:uppercase;color:#334155;white-space:nowrap;flex-shrink:0">Chokepoints</span>
+        <div style="width:1px;height:12px;background:rgba(255,255,255,0.08);flex-shrink:0"></div>
+        <div id="tf-cp-chips" style="flex:1;display:flex;align-items:center;gap:4px;overflow-x:auto;min-width:0"></div>
+      </div>
       <div style="display:flex;align-items:center;gap:8px;flex-shrink:0">
         <button onclick="TF_MAP && TF_MAP.setView([20,10],2)" style="font-family:var(--f-mono);font-size:8px;padding:2px 8px;background:transparent;border:1px solid var(--c-bd1);color:var(--c-tx2);border-radius:2px;cursor:pointer">Atlantic</button>
         <button onclick="TF_MAP && TF_MAP.setView([20,160],2)" style="font-family:var(--f-mono);font-size:8px;padding:2px 8px;background:transparent;border:1px solid var(--c-bd1);color:var(--c-tx2);border-radius:2px;cursor:pointer">Pacific</button>
@@ -14929,7 +14933,7 @@ function updateTFCPChips() {
   var cpIds = Object.keys(comm.cpVols).sort(function(a,b){
     return comm.cpVols[b].share - comm.cpVols[a].share;
   });
-  var html = '<span style="font-family:var(--f-mono);font-size:7px;letter-spacing:.08em;color:#334155;white-space:nowrap;flex-shrink:0;padding-right:4px">CHOKEPOINTS</span>';
+  var html = '';
   cpIds.forEach(function(id){
     var on = !!TF_DISRUPTIONS[id];
     var lbl = TF_CP_SHORT[id] || (TF_CP[id] ? TF_CP[id].name : id);

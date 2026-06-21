@@ -4221,38 +4221,12 @@ canvas { font-family: var(--f-mono); }
     </div>
   </div>
 
-  <!-- Below-map: baseline metrics + disruption controls -->
-  <div class="tf-below-map">
-
-    <!-- Baseline metrics -->
-    <div class="card" id="tf-baseline-card">
-      <div class="card-label">&#9670; Baseline Metrics &mdash; <span id="tf-bl-comm">—</span></div>
-      <div id="tf-baseline-content">
-        <div style="font-size:9px;color:var(--c-tx2);padding:16px 0;text-align:center">Select a commodity to view baseline trade data</div>
-      </div>
+  <!-- Baseline metrics (full width) -->
+  <div class="card" id="tf-baseline-card" style="margin-bottom:14px">
+    <div class="card-label">&#9670; Baseline Metrics &mdash; <span id="tf-bl-comm">—</span></div>
+    <div id="tf-baseline-content">
+      <div style="font-size:9px;color:var(--c-tx2);padding:16px 0;text-align:center">Select a commodity to view baseline trade data</div>
     </div>
-
-    <!-- Stress test controls -->
-    <div class="card">
-      <div class="card-label">&#9670; Chokepoint Disruption Control</div>
-      <div style="font-size:9px;color:var(--c-tx2);margin-bottom:8px;line-height:1.6">Click a chokepoint row to toggle disruption. Disruption level applies to all selected chokepoints.</div>
-      <div class="tf-section-micro">Disruption Level</div>
-      <div class="tf-disruption-level">
-        <button class="tf-lvl-btn" id="tf-lvl-25" onclick="setTFLevel(25,this)">25%</button>
-        <button class="tf-lvl-btn" id="tf-lvl-50" onclick="setTFLevel(50,this)">50%</button>
-        <button class="tf-lvl-btn" id="tf-lvl-75" onclick="setTFLevel(75,this)">75%</button>
-        <button class="tf-lvl-btn active" id="tf-lvl-100" onclick="setTFLevel(100,this)">Full Closure</button>
-      </div>
-      <div class="tf-section-micro">Chokepoints</div>
-      <div class="tf-cp-grid" id="tf-cp-grid">
-        <div style="font-size:9px;color:var(--c-tx2);padding:8px 0">Select a commodity first</div>
-      </div>
-      <div style="margin-top:10px;display:flex;gap:8px">
-        <button onclick="runTFStressTest()" style="flex:1;font-family:var(--f-mono);font-size:9px;font-weight:700;letter-spacing:.1em;padding:7px 12px;background:rgba(220,38,38,0.15);border:1px solid rgba(220,38,38,0.4);color:#f87171;border-radius:3px;cursor:pointer;text-transform:uppercase">&#9670; Run Stress Test</button>
-        <button onclick="clearTFDisruptions()" style="font-family:var(--f-mono);font-size:9px;padding:7px 10px;background:transparent;border:1px solid var(--c-bd1);color:var(--c-tx2);border-radius:3px;cursor:pointer">Clear</button>
-      </div>
-    </div>
-
   </div>
 
   <!-- Regional exposure + Price impact -->

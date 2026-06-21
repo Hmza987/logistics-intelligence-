@@ -15070,7 +15070,83 @@ var TF_OIL_TERMINALS = [
     note:'Canadian Pacific coast terminal, opened May 2024 as Trans Mountain Expansion (TMX) terminus. Size-limited to Aframax tankers (max ~80,000 DWT) due to First Narrows bridge draft restrictions. Larger cargoes require offshore transshipment to VLCCs at Watson Island. Provides Alberta oil sands direct Pacific access, bypassing US Gulf routing. First significant Canadian crude export pathway to Asia.',
     color:'#3dd68c', grad:'linear-gradient(135deg,#031e12 0%,#063220 60%,#021410 100%)'
   },
-  // IMPORT TERMINALS
+
+  // AFRICA + MEDITERRANEAN EXPORT TERMINALS
+  { coord:[36.89,6.90], name:'Skikda Terminal', country:'Algeria', type:'export',
+    capacity:'~450 kbd (crude + products)', berths:'3 crude loading berths', storage:'~8 MMbbl',
+    operator:'Sonatrach', vesselTypes:'VLCC · Suezmax · Aframax',
+    grade:'Saharan Blend (44 API) · Zarzaitine',
+    hormuzExposed:false, bypassRole:false,
+    note:'The primary Algerian crude and petroleum products export terminal. Sonatrach loads Saharan Blend (44 API, 0.1% sulphur) — among the most prized light sweet grades globally. Med destination via Strait of Gibraltar. Co-located with Skikda LNG facilities (the largest in Africa). No Hormuz, Bab-el-Mandeb, or Malacca dependency — full Atlantic and Mediterranean access.',
+    color:'#f59e0b', grad:'linear-gradient(135deg,#0e0a00 0%,#1a1200 60%,#0a0800 100%)'
+  },
+  { coord:[30.62,18.73], name:'Es Sider Terminal', country:'Libya', type:'export',
+    capacity:'0.5 Mb/d (design)', berths:'3 tanker berths', storage:'~5 MMbbl',
+    operator:'Waha Oil Company (NOC Libya)', vesselTypes:'Suezmax · Aframax',
+    grade:'Es Sider crude (36 API, light sweet)',
+    hormuzExposed:false, bypassRole:false,
+    note:'North Africa’s largest oil export terminal historically. Handles Libyan crude from the Sirte Basin via Waha, Zueitina, and Ras Lanuf pipeline systems. Subject to recurring force majeure events from political instability (2011, 2014–2016, 2019–2020 closures). Es Sider light sweet crude is highly prized by European refiners. No major chokepoint dependency on Mediterranean routes to Europe.',
+    color:'#f59e0b', grad:'linear-gradient(135deg,#0e0a00 0%,#1a1200 60%,#0a0800 100%)'
+  },
+  { coord:[31.03,29.52], name:'Sidi Kreir / SUMED', country:'Egypt', type:'export',
+    capacity:'2.4 Mb/d (SUMED pipeline)', berths:'4 offshore SBMs', storage:'~18 MMbbl',
+    operator:'SUMED Pipeline Co. (Egypt, Saudi Arabia, UAE, Kuwait, Qatar)', vesselTypes:'VLCC · Suezmax',
+    grade:'Transit: Arab Light · Basrah · Murban; Egypt: El Morgan · GPC',
+    hormuzExposed:false, bypassRole:true,
+    note:'Mediterranean terminus of the Suez—Mediterranean (SUMED) pipeline (320 km, two 42-inch lines). VLCCs too large for the Suez Canal (draft >20.1 m) offload at Ain Sukhna on the Red Sea; SUMED carries crude to Sidi Kreir for reloading. Also Egypt’s primary crude export point for domestic production. Critical Suez bypass — owned jointly by GCC states and Egypt.',
+    color:'#3dd68c', grad:'linear-gradient(135deg,#031e12 0%,#063220 60%,#021410 100%)'
+  },
+  // RUSSIA BALTIC
+  { coord:[60.38,28.57], name:'Primorsk Terminal', country:'Russia', type:'export',
+    capacity:'~600 kbd', berths:'4 offshore SPMs', storage:'~10 MMbbl',
+    operator:'Transneft', vesselTypes:'Suezmax · Aframax',
+    grade:'Urals blend',
+    hormuzExposed:false, bypassRole:false,
+    note:'Russia’s primary Baltic crude export terminal, operational since 2001 via the Baltic Pipeline System (BPS-1 and BPS-2). Danish Straits are the key chokepoint for North Sea and Atlantic access. Post-2022 EU sanctions eliminated European buyers; flows redirected to India and Turkey at substantial discount. Baltic winter conditions can limit operations. Ust-Luga handles complementary petroleum product exports on the same corridor.',
+    color:'#dc2626', grad:'linear-gradient(135deg,#1c0608 0%,#2e0e10 60%,#140408 100%)'
+  },
+  // SOUTHEAST ASIA EXPORT
+  { coord:[19.42,93.55], name:'Kyaukpyu (Maday Island)', country:'Myanmar', type:'import',
+    capacity:'0.44 Mb/d (22 MT/yr pipeline capacity)', berths:'2 offshore SBMs', storage:'~3 MMbbl (onshore)',
+    operator:'CNPC / CITIC (Sino-Myanmar Pipeline)', vesselTypes:'VLCC · Suezmax',
+    grade:'Arab Light · Basrah Heavy · West African grades',
+    hormuzExposed:false, bypassRole:false,
+    note:'Deep-sea crude relay terminal feeding the China—Myanmar crude oil pipeline (793 km to Kunming). VLCCs from the Middle East and Africa offload here; pipeline bypasses the Malacca Strait entirely for supply to Yunnan, Guizhou, and Chongqing provinces. Strategically critical for China’s Malacca Strait diversification. Post-2021 coup disruptions have intermittently affected throughput. One of China’s key energy security investments in Southeast Asia.',
+    color:'#60a5fa', grad:'linear-gradient(135deg,#050d18 0%,#091830 60%,#030c12 100%)'
+  },
+  { coord:[4.48,103.52], name:'Kerteh Terminal', country:'Malaysia', type:'export',
+    capacity:'~400 kbd', berths:'2 offshore SBMs', storage:'~5 MMbbl',
+    operator:'PETRONAS', vesselTypes:'Suezmax · Aframax',
+    grade:'Tapis crude (46 API, ultra-low S) · Miri Light · Labuan blend',
+    hormuzExposed:false, bypassRole:false,
+    note:'PETRONAS primary crude export terminal on Malaysia’s east coast (Terengganu). Tapis crude (46 API, ultra-low sulphur) is a premium light sweet grade that historically set the Singapore crude benchmark and remains an important regional reference grade. Also handles Miri (Sarawak) crude offloads. Malacca Strait applies for westbound Asian routes. South China Sea production is increasingly moving to FPSO-based operations.',
+    color:'#f59e0b', grad:'linear-gradient(135deg,#1a1000 0%,#2a1c00 60%,#120c00 100%)'
+  },
+  // AMERICAS EXPORT
+  { coord:[19.70,-91.90], name:'Cayo Arcas Terminal', country:'Mexico', type:'export',
+    capacity:'~1.0 Mb/d', berths:'4 offshore SBMs', storage:'~6 MMbbl (floating)',
+    operator:'Pemex', vesselTypes:'VLCC · Suezmax',
+    grade:'Maya heavy (22 API, 3.5% S) · Isthmus · Olmeca',
+    hormuzExposed:false, bypassRole:false,
+    note:'Pemex primary crude export terminal in the Bay of Campeche, Gulf of Mexico. Floating loading platform with no fixed pier. Maya heavy crude (22 API, 3.5% sulphur) goes primarily to US Gulf Coast refineries configured for heavy sour processing. Peak exports were ~2 Mb/d in 2003 from the Cantarell super-giant field; current output ~1 Mb/d following Cantarell’s decline. No major chokepoint dependency on US Gulf routes.',
+    color:'#f59e0b', grad:'linear-gradient(135deg,#1a1000 0%,#2a1c00 60%,#120c00 100%)'
+  },
+  { coord:[9.40,-75.68], name:'Coveñas Terminal', country:'Colombia', type:'export',
+    capacity:'~350 kbd', berths:'2 offshore SPMs', storage:'~4 MMbbl',
+    operator:'Ecopetrol', vesselTypes:'Suezmax · Aframax',
+    grade:'Vasconia (medium sour, 24 API) · Caño Limón crude',
+    hormuzExposed:false, bypassRole:false,
+    note:'Colombia’s primary crude export terminal on the Caribbean coast. Endpoint of the Ocensa pipeline (0.25 Mb/d, from Rubiales and Cusiana fields) and Caño Limón–Coveñas pipeline. Vasconia medium crude is exported to US Gulf Coast refineries and increasingly to Asian buyers. No major chokepoint dependency from Caribbean routes. Pipeline infrastructure has historically been subject to insurgent attacks.',
+    color:'#f59e0b', grad:'linear-gradient(135deg,#1a1000 0%,#2a1c00 60%,#120c00 100%)'
+  },
+  { coord:[7.00,-58.50], name:'Stabroek FPSOs (Guyana)', country:'Guyana', type:'export',
+    capacity:'0.65+ Mb/d (rising to 1.2 Mb/d by 2027)', berths:'FPSO offloading (Liza Destiny, Unity, Prosperity)', storage:'Onboard FPSO storage',
+    operator:'ExxonMobil (45%) · Hess (30%) · CNOOC (25%)', vesselTypes:'Suezmax (shuttle offtake)',
+    grade:'Liza light crude (32–35 API, <0.5% S)',
+    hormuzExposed:false, bypassRole:false,
+    note:'The world’s fastest-growing new crude producer. Guyana went from zero to 0.65+ Mb/d in five years (2019–2024). Liza crude is a high-quality light sweet grade prized by Asian and US refiners. No chokepoint dependency — direct Atlantic access to all markets. ExxonMobil-operated Stabroek block is one of the largest offshore discoveries in decades. Represents a structural shift in Atlantic Basin crude supply away from West Africa.',
+    color:'#f59e0b', grad:'linear-gradient(135deg,#1a1000 0%,#2a1c00 60%,#120c00 100%)'
+  },  // IMPORT TERMINALS
   { coord:[29.90,122.10], name:'Ningbo-Zhoushan Port', country:'China', type:'import',
     capacity:'520 MT/yr (~10.4 Mb/d)', berths:'65+ oil berths', storage:'~200 MMbbl',
     operator:'CNOOC \xb7 Sinopec \xb7 PetroChina \xb7 Ningbo Port Group', vesselTypes:'VLCC 320,000 DWT',
@@ -15135,7 +15211,74 @@ var TF_OIL_TERMINALS = [
     note:'India’s southernmost major refinery terminal. BPCL Kochi is the closest Indian refinery to the Persian Gulf (~1,200 nm via Arabian Sea) — shortest route of any GCC crude import point. Expanded to 15.5 MTPA in 2015. Supplies Kerala, Tamil Nadu, and Karnataka via the Kochi–Coimbatore–Karur pipeline corridor. LNG regasification terminal co-located.',
     color:'#60a5fa', grad:'linear-gradient(135deg,#050d18 0%,#091830 60%,#030c12 100%)'
   },
-  { coord:[35.70,127.50], name:'Ulsan / Yeosu Import Hub', country:'South Korea', type:'import',
+  // SOUTHEAST ASIA IMPORT
+  { coord:[12.70,101.13], name:'Map Ta Phut Terminal', country:'Thailand', type:'import',
+    capacity:'~250 kbd (combined refinery input)', berths:'6 industrial liquid berths', storage:'~8 MMbbl',
+    operator:'PTT · IRPC · Thai Oil', vesselTypes:'Suezmax · Aframax',
+    grade:'Arab Light · Murban · Indonesian Minas',
+    hormuzExposed:false, bypassRole:false,
+    note:'Thailand’s primary crude import hub on the Gulf of Thailand eastern seaboard. Serves IRPC (215 kbd) and PTT Global Chemical / Thai Oil refinery complexes. Approximately 75% of crude from the Middle East (Saudi Arabia, UAE, Kuwait). Malacca Strait is the primary chokepoint for all Gulf crude deliveries. Map Ta Phut also handles major petrochemical feedstocks — a dual crude-industrial terminal with port-wide throughput of ~120 MT/yr.',
+    color:'#60a5fa', grad:'linear-gradient(135deg,#050d18 0%,#091830 60%,#030c12 100%)'
+  },
+  { coord:[19.81,105.90], name:'Nghi Son Refinery Terminal', country:'Vietnam', type:'import',
+    capacity:'~0.2 Mb/d (10 MTPA)', berths:'2 tanker berths', storage:'~5 MMbbl',
+    operator:'Nghi Son Refinery (PetroVietnam 25.1% · Kuwait Petroleum 35.1% · Idemitsu 35.1%)', vesselTypes:'Suezmax · Aframax',
+    grade:'Kuwait Export Crude (primary) · Azeri Light',
+    hormuzExposed:false, bypassRole:false,
+    note:'Vietnam’s largest refinery complex (10 MTPA, operational from 2018). Kuwait Petroleum Corporation holds 35.1% equity, creating a direct Kuwait–Vietnam crude supply chain. Located on the Gulf of Tonkin — South China Sea access without Malacca dependency. The older Dung Quat refinery (4 MTPA, PetroVietnam, Quang Ngai) supplements domestic processing using Bach Ho field crude. Vietnam is a net crude exporter but net refined products importer.',
+    color:'#60a5fa', grad:'linear-gradient(135deg,#050d18 0%,#091830 60%,#030c12 100%)'
+  },
+  { coord:[-7.70,109.00], name:'Cilacap Refinery Terminal', country:'Indonesia', type:'import',
+    capacity:'~350 kbd (17.5 MTPA)', berths:'3 berths + offshore SBM', storage:'~10 MMbbl',
+    operator:'Pertamina', vesselTypes:'Suezmax · Aframax',
+    grade:'Azeri Light · Arab Light · Basrah Light · Tapis (Malaysia)',
+    hormuzExposed:false, bypassRole:false,
+    note:'Pertamina’s largest refinery, handling roughly one-third of Indonesia’s national crude throughput. South Java coast provides direct Indian Ocean access — no Malacca Strait dependency for imports from the Gulf or African origins. Mixed feedstock of imported GCC grades and domestic Indonesian production (Duri, Minas). Cilacap is the primary aviation fuel (Avtur) production point for Indonesian domestic distribution.',
+    color:'#60a5fa', grad:'linear-gradient(135deg,#050d18 0%,#091830 60%,#030c12 100%)'
+  },
+  { coord:[1.27,103.71], name:'Singapore Jurong Island', country:'Singapore', type:'import',
+    capacity:'~1.4 Mb/d (refining) + massive trading hub', berths:'50+ (Jurong Island complex)', storage:'~100 MMbbl (tank farms)',
+    operator:'ExxonMobil · Shell · SRC (Chevron/Shell JV)', vesselTypes:'VLCC · Suezmax · Aframax',
+    grade:'All grades — blending and trading hub',
+    hormuzExposed:false, bypassRole:false,
+    note:'The world’s third-largest oil refining and trading centre. Jurong Island hosts ExxonMobil (592 kbd), Shell (500 kbd), and SRC refineries plus massive commercial tank farm storage. Singapore crude and products stock levels are the primary Asian oil market indicator. Malacca Strait is the critical supply chokepoint. Singapore blends, stores, and redistributes crude and products across Asia-Pacific and is the pricing hub for APAC refined products.',
+    color:'#60a5fa', grad:'linear-gradient(135deg,#050d18 0%,#091830 60%,#030c12 100%)'
+  },
+  // CHINA ADDITIONAL IMPORT HUBS
+  { coord:[36.10,120.42], name:'Qingdao (Shandong Hub)', country:'China', type:'import',
+    capacity:'~2.0 Mb/d (Shandong aggregate)', berths:'20+ (Dongjiakou deepwater + Huangdao)', storage:'~120 MMbbl',
+    operator:'Sinopec · 80+ independent teapot refiners', vesselTypes:'VLCC 320,000 DWT',
+    grade:'Russian ESPO · Arab Light · Iranian Light (via intermediary) · Iraqi Basrah',
+    hormuzExposed:false, bypassRole:false,
+    note:'China’s largest crude import hub by aggregate volume, driven by ~80 independent ’teapot’ refiners in Shandong province. Dongjiakou deepwater terminal handles VLCCs at 21 m draft. Post-2022 sanctions, Shandong teapots dramatically increased Russian and Iranian imports at discount pricing. Commercially the most flexible crude hub globally — teapots switch origins rapidly based on spot availability. SPR storage facilities co-located.',
+    color:'#60a5fa', grad:'linear-gradient(135deg,#050d18 0%,#091830 60%,#030c12 100%)'
+  },
+  { coord:[38.90,121.65], name:'Dalian Import Hub', country:'China', type:'import',
+    capacity:'~1.0 Mb/d', berths:'8 (Datao Island deepwater)', storage:'~80 MMbbl (incl. major SPR)',
+    operator:'PetroChina · CNOOC', vesselTypes:'VLCC · Suezmax',
+    grade:'Russian ESPO · Arab Light · Iraqi Basrah Heavy',
+    hormuzExposed:false, bypassRole:false,
+    note:'PetroChina’s primary north China crude import terminal. Datao Island houses deepwater VLCC berths expanded in 2020. One of China’s largest Strategic Petroleum Reserve (SPR) complexes is co-located. ESPO crude from Kozmino, Russia, is a primary supply stream via direct Pacific crossing. PetroChina Dalian Petrochemical (0.41 Mb/d) is the anchor refinery. Dalian also serves as a transshipment point for northeast China inland pipeline distribution.',
+    color:'#60a5fa', grad:'linear-gradient(135deg,#050d18 0%,#091830 60%,#030c12 100%)'
+  },
+  // OTHER EAST ASIA IMPORT
+  { coord:[25.10,121.30], name:'Taiwan CPC (Mailiao / Kaohsiung)', country:'Taiwan', type:'import',
+    capacity:'~0.9 Mb/d (45 MT/yr combined)', berths:'4 (Mailiao + Kaohsiung SBMs)', storage:'~25 MMbbl',
+    operator:'CPC Corporation Taiwan · Formosa Petrochemical (Mailiao)', vesselTypes:'VLCC · Suezmax',
+    grade:'Arab Light · Murban · West African grades',
+    hormuzExposed:false, bypassRole:false,
+    note:'Taiwan imports virtually all crude oil — zero domestic production of scale. Formosa Plastics Mailiao complex (0.54 Mb/d, Yunlin) and CPC Kaohsiung refinery are the main entry points. Approximately 50% of imports from GCC countries; Saudi Arabia is the largest single supplier. All cargoes transit Malacca or Lombok en route from the Gulf. SPR maintained at ~60-day level. Taiwan’s refining is also used for regional products exports.',
+    color:'#60a5fa', grad:'linear-gradient(135deg,#050d18 0%,#091830 60%,#030c12 100%)'
+  },
+  // EUROPE + MEDITERRANEAN IMPORT
+  { coord:[45.67,13.77], name:'Trieste / TAL Terminal', country:'Italy', type:'import',
+    capacity:'~430 kbd (TAL pipeline)', berths:'4 (VLCC-capable, SIOT terminal)', storage:'~20 MMbbl',
+    operator:'Trans Alpine Pipeline (TAL) · SIOT', vesselTypes:'VLCC · Suezmax',
+    grade:'Arab Light · CPC Blend (Tengiz) · Azeri Light · Libyan grades',
+    hormuzExposed:false, bypassRole:false,
+    note:'Mediterranean terminus of the Trans-Alpine Pipeline (TAL, 753 km), supplying landlocked Austrian, Bavarian (Germany), and Czech refineries that have no direct sea access. VLCCs offload at Trieste SIOT terminal; pipeline delivers to Ingolstadt (Germany), Schwechat (Vienna), and Litvinov (Czech Republic). Central European energy security hub — the only cost-effective crude supply route for inland refineries in Austria, southern Germany, and the Czech Republic.',
+    color:'#60a5fa', grad:'linear-gradient(135deg,#060e1a 0%,#0c1a2e 60%,#040c14 100%)'
+  },  { coord:[35.70,127.50], name:'Ulsan / Yeosu Import Hub', country:'South Korea', type:'import',
     capacity:'~2.8 Mb/d (Ulsan + Yeosu combined)', berths:'12 VLCC berths', storage:'~50 MMbbl',
     operator:'SK Innovation \xb7 GS Caltex \xb7 S-OIL', vesselTypes:'VLCC \xb7 Suezmax',
     grade:'Arab Light \xb7 Murban \xb7 Kuwait Export Crude \xb7 Qatar Marine',

@@ -4176,6 +4176,40 @@ canvas { font-family: var(--f-mono); }
     <div class="tf-map-legend" id="tf-map-legend"></div>
   </div>
 
+  <!-- Output metrics row — directly below map -->
+  <div class="tf-outputs" id="tf-outputs">
+    <div class="tf-output-card" id="tf-out-vol">
+      <div class="tf-output-label">Trade Volume Impacted</div>
+      <div class="tf-output-value" id="tf-val-vol">—</div>
+      <div class="tf-output-unit" id="tf-unit-vol"></div>
+      <div class="tf-output-sub" id="tf-sub-vol">Run stress test to see results</div>
+    </div>
+    <div class="tf-output-card" id="tf-out-rrt">
+      <div class="tf-output-label">Re-routable Volume</div>
+      <div class="tf-output-value" id="tf-val-rrt">—</div>
+      <div class="tf-output-unit" id="tf-unit-rrt"></div>
+      <div class="tf-output-sub" id="tf-sub-rrt">Volume with viable alternative routes</div>
+    </div>
+    <div class="tf-output-card" id="tf-out-dist">
+      <div class="tf-output-label">Additional Distance</div>
+      <div class="tf-output-value" id="tf-val-dist">—</div>
+      <div class="tf-output-unit">nautical miles (weighted avg)</div>
+      <div class="tf-output-sub" id="tf-sub-dist">Extra nm via alternative route</div>
+    </div>
+    <div class="tf-output-card" id="tf-out-time">
+      <div class="tf-output-label">Additional Transit Time</div>
+      <div class="tf-output-value" id="tf-val-time">—</div>
+      <div class="tf-output-unit">days</div>
+      <div class="tf-output-sub" id="tf-sub-time">Calculation: extra nm &divide; (vessel speed &times; 24)</div>
+    </div>
+    <div class="tf-output-card" id="tf-out-cost">
+      <div class="tf-output-label">Additional Transport Cost</div>
+      <div class="tf-output-value" id="tf-val-cost">—</div>
+      <div class="tf-output-unit">% above baseline rate</div>
+      <div class="tf-output-sub" id="tf-sub-cost">Regression model &beta;&#8323; = 0.045 per 100 nm</div>
+    </div>
+  </div>
+
   <!-- Below-map: baseline metrics + disruption controls -->
   <div class="tf-below-map">
 
@@ -4208,40 +4242,6 @@ canvas { font-family: var(--f-mono); }
       </div>
     </div>
 
-  </div>
-
-  <!-- Output metrics row -->
-  <div class="tf-outputs" id="tf-outputs">
-    <div class="tf-output-card" id="tf-out-vol">
-      <div class="tf-output-label">Trade Volume Impacted</div>
-      <div class="tf-output-value" id="tf-val-vol">—</div>
-      <div class="tf-output-unit" id="tf-unit-vol"></div>
-      <div class="tf-output-sub" id="tf-sub-vol">Run stress test to see results</div>
-    </div>
-    <div class="tf-output-card" id="tf-out-rrt">
-      <div class="tf-output-label">Re-routable Volume</div>
-      <div class="tf-output-value" id="tf-val-rrt">—</div>
-      <div class="tf-output-unit" id="tf-unit-rrt"></div>
-      <div class="tf-output-sub" id="tf-sub-rrt">Volume with viable alternative routes</div>
-    </div>
-    <div class="tf-output-card" id="tf-out-dist">
-      <div class="tf-output-label">Additional Distance</div>
-      <div class="tf-output-value" id="tf-val-dist">—</div>
-      <div class="tf-output-unit">nautical miles (weighted avg)</div>
-      <div class="tf-output-sub" id="tf-sub-dist">Extra nm via alternative route</div>
-    </div>
-    <div class="tf-output-card" id="tf-out-time">
-      <div class="tf-output-label">Additional Transit Time</div>
-      <div class="tf-output-value" id="tf-val-time">—</div>
-      <div class="tf-output-unit">days</div>
-      <div class="tf-output-sub" id="tf-sub-time">Calculation: extra nm &divide; (vessel speed &times; 24)</div>
-    </div>
-    <div class="tf-output-card" id="tf-out-cost">
-      <div class="tf-output-label">Additional Transport Cost</div>
-      <div class="tf-output-value" id="tf-val-cost">—</div>
-      <div class="tf-output-unit">% above baseline rate</div>
-      <div class="tf-output-sub" id="tf-sub-cost">Regression model &beta;&#8323; = 0.045 per 100 nm</div>
-    </div>
   </div>
 
   <!-- Regional exposure + Price impact -->

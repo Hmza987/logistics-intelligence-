@@ -13689,7 +13689,7 @@ function generateStrategyBrief(sid) {
 
 // ── Chokepoint database ───────────────────────────────────────────────────────
 var TF_CP = {
-  hormuz:         { name:'Strait of Hormuz',          lat:26.6,  lng:56.3,  alt:'No viable VLCC bypass; small tankers via Khor Fakkan only',   altNm:0 },
+  hormuz:         { name:'Strait of Hormuz',          lat:26.6,  lng:56.3,  alt:'Saudi Petroline → Yanbu (4.8 Mb/d) + UAE ADCOP → Fujairah (1.5 Mb/d) = 6.3 Mb/d pipeline bypass; remaining ~12.5 Mb/d (Iraq/Kuwait/Iran) stranded', altNm:500, bypassCapacity:6.3 },
   bab_el_mandeb:  { name:'Bab el-Mandeb',             lat:12.6,  lng:43.4,  alt:'Cape of Good Hope (+6,800 nm)',                              altNm:6800 },
   suez:           { name:'Suez Canal',                lat:30.7,  lng:32.3,  alt:'Cape of Good Hope (+6,800 nm)',                              altNm:6800 },
   malacca:        { name:'Strait of Malacca',         lat:1.2,   lng:103.9, alt:'Lombok Strait (+350 nm) or Sunda Strait (+600 nm)',          altNm:350 },
@@ -13790,6 +13790,18 @@ var TF_COMMODITIES = {
         fromCoord:[26,51], toCoord:[22.8,69.7],
         vol:3.8, share:9, cps:['hormuz'], distNm:1400,
         waypoints:[[26,51],[26.6,56.3],[22,63],[22.8,69.7]], altWp:{}
+      },
+      {
+        id:'saudi_petroline', label:'Saudi Petroline — Abqaiq → Yanbu (Hormuz bypass)',
+        fromCoord:[26.5,49.7], toCoord:[24.1,38.1],
+        vol:4.8, share:11, cps:[], distNm:1200, mode:'pipeline',
+        waypoints:[[26.5,49.7],[25.8,47.0],[24.8,44.0],[24.2,40.5],[24.1,38.1]], altWp:{}
+      },
+      {
+        id:'uae_adcop', label:'UAE ADCOP — Habshan → Fujairah (Hormuz bypass)',
+        fromCoord:[23.5,53.8], toCoord:[25.1,56.3],
+        vol:1.5, share:3, cps:[], distNm:400, mode:'pipeline',
+        waypoints:[[23.5,53.8],[24.2,55.0],[25.1,56.3]], altWp:{}
       },
       {
         id:'iran_china', label:'Iran (Kharg Island) → China',
@@ -15081,24 +15093,50 @@ function runTFStressTest() {
   affectedRoutes.forEach(function(r) { totalImpacted += r.vol * level; });
 
   // Step 2 — re-routable vs stranded
+  // Chokepoints with bypassCapacity (e.g. Hormuz via Petroline + ADCOP) have a hard volume cap
+  // on what can physically bypass. Volume exceeding that cap is stranded.
   var reroutable = 0, stranded = 0, totalAltNm = 0, altCount = 0;
+
+  // Build per-CP bypass budget scaled by disruption level
+  var cpBypassBudget = {};
+  Object.keys(TF_DISRUPTIONS).forEach(function(cpId) {
+    var cp = TF_CP[cpId];
+    if (cp && typeof cp.bypassCapacity === 'number') {
+      cpBypassBudget[cpId] = cp.bypassCapacity * level;
+    }
+  });
+
   affectedRoutes.forEach(function(r) {
     var hasSomeAlt = false;
     var maxAltNm = 0;
+    var constrainedCp = null;
     r.cps.forEach(function(cpId) {
       if (!TF_DISRUPTIONS[cpId]) return;
       var cp = TF_CP[cpId];
       if (cp.altNm > 0) {
         hasSomeAlt = true;
-        maxAltNm = Math.max(maxAltNm, cp.altNm);
+        if (cp.altNm > maxAltNm) maxAltNm = cp.altNm;
       }
+      if (cpBypassBudget[cpId] !== undefined) constrainedCp = cpId;
     });
+
+    var routeVol = r.vol * level;
     if (hasSomeAlt) {
-      reroutable += r.vol * level;
-      totalAltNm += maxAltNm;
-      altCount++;
+      if (constrainedCp !== null) {
+        // Capacity-constrained pipeline bypass — draw from budget
+        var budget = cpBypassBudget[constrainedCp];
+        var canRoute = Math.min(routeVol, Math.max(0, budget));
+        cpBypassBudget[constrainedCp] = Math.max(0, budget - canRoute);
+        reroutable += canRoute;
+        stranded   += (routeVol - canRoute);
+        if (canRoute > 0) { totalAltNm += maxAltNm; altCount++; }
+      } else {
+        reroutable += routeVol;
+        totalAltNm += maxAltNm;
+        altCount++;
+      }
     } else {
-      stranded += r.vol * level;
+      stranded += routeVol;
     }
   });
 
@@ -15117,7 +15155,8 @@ function runTFStressTest() {
 
   // Step 6 — impacted pct of global trade
   var impactedPct = Math.round((totalImpacted / comm.globalTrade) * 100);
-  var rrtPct = Math.round((reroutable / comm.globalTrade) * 100);
+  var rrtPct      = Math.round((reroutable   / comm.globalTrade) * 100);
+  var strandedPct = Math.round((stranded     / comm.globalTrade) * 100);
 
   // Display outputs
   var fmtVol = function(v) {
@@ -15130,11 +15169,49 @@ function runTFStressTest() {
     return v;
   };
 
-  setTFOut('tf-val-vol', fmtVol(totalImpacted), comm.unit, impactedPct + '% of global ' + comm.name + ' trade at ' + TF_DISRUPTION_LEVEL + '% disruption level', true);
-  setTFOut('tf-val-rrt', fmtVol(reroutable), comm.unit, rrtPct + '% of global trade re-routable · ' + fmtVol(stranded) + ' ' + comm.unit + ' stranded (no viable alternative)', false);
-  setTFOut('tf-val-dist', avgExtraNm > 0 ? avgExtraNm.toLocaleString() : '0', 'nautical miles (weighted avg)', avgExtraNm > 0 ? 'Weighted avg of longest viable alternatives per disrupted chokepoint' : 'No alternative routes available for selected chokepoints', avgExtraNm > 3000);
-  setTFOut('tf-val-time', extraDays > 0 ? extraDays.toFixed(1) : '0', 'days', 'Calculation: ' + avgExtraNm.toLocaleString() + ' nm ÷ (' + comm.vesselSpeed + ' kt × 24 h/day)', extraDays > 14);
-  setTFOut('tf-val-cost', costPct > 0 ? '+' + costPct : '0', '% above baseline rate', 'β₃ = 0.045 per 100 nm · Extra nm: ' + avgExtraNm.toLocaleString() + ' · Formula: 0.045 × (' + avgExtraNm + ' ÷ 100) = ' + costMult.toFixed(3), costPct > 20);
+  var allStranded   = stranded > 0 && reroutable === 0;
+  var partialBypass = reroutable > 0 && stranded > 0;
+
+  setTFOut('tf-val-vol', fmtVol(totalImpacted), comm.unit,
+    impactedPct + '% of global ' + comm.name + ' trade at ' + TF_DISRUPTION_LEVEL + '% disruption level', true);
+
+  // Build the bypass description from disrupted CPs that have bypassCapacity
+  var bypassDesc = '';
+  Object.keys(TF_DISRUPTIONS).forEach(function(cpId) {
+    var cp = TF_CP[cpId];
+    if (cp && typeof cp.bypassCapacity === 'number') bypassDesc = cp.alt;
+  });
+
+  setTFOut('tf-val-rrt',
+    allStranded ? fmtVol(stranded) : fmtVol(reroutable), comm.unit,
+    allStranded
+      ? strandedPct + '% of global trade fully stranded — no maritime bypass exists for closed chokepoint(s)'
+      : partialBypass
+        ? rrtPct + '% re-routable via pipeline bypass · ' + fmtVol(stranded) + ' ' + comm.unit + ' stranded — ' + (bypassDesc || 'no bypass for remaining volume')
+        : rrtPct + '% of global trade re-routable · ' + fmtVol(stranded) + ' ' + comm.unit + ' stranded (no viable alternative)',
+    allStranded || partialBypass);
+
+  if (avgExtraNm > 0) {
+    setTFOut('tf-val-dist', avgExtraNm.toLocaleString(), 'nautical miles (weighted avg)',
+      'Weighted avg of longest viable alternatives per disrupted chokepoint', avgExtraNm > 3000);
+    setTFOut('tf-val-time', extraDays.toFixed(1), 'days',
+      'Calculation: ' + avgExtraNm.toLocaleString() + ' nm ÷ (' + comm.vesselSpeed + ' kt × 24 h/day)', extraDays > 14);
+    setTFOut('tf-val-cost', costPct > 0 ? '+' + costPct : '0', '% above baseline rate',
+      'β₃ = 0.045 per 100 nm · Extra nm: ' + avgExtraNm.toLocaleString() + ' · Formula: 0.045 × (' + avgExtraNm + ' ÷ 100) = ' + costMult.toFixed(3), costPct > 20);
+  } else if (allStranded) {
+    // No detour possible — use price-elasticity model to estimate supply-shock price impact
+    var elasticityPrice = Math.round(strandedPct / Math.abs(comm.elasticity));
+    setTFOut('tf-val-dist', 'No bypass', '',
+      'Selected chokepoint(s) have no viable maritime bypass — rerouting is not possible', false);
+    setTFOut('tf-val-time', 'No bypass', '',
+      'Supply fully cut off at source — transit time model inapplicable', false);
+    setTFOut('tf-val-cost', '+' + Math.min(elasticityPrice, 999) + '%', 'price shock estimate',
+      'Supply shock model: ' + strandedPct + '% of global trade cut off ÷ |ε ' + comm.elasticity + '| → +' + elasticityPrice + '% price impact estimate (elasticity model; actual impact depends on SPR release & demand destruction)', true);
+  } else {
+    setTFOut('tf-val-dist', '0', 'nautical miles', 'No re-routable volume — distance model not applicable', false);
+    setTFOut('tf-val-time', '0', 'days', 'No re-routable volume', false);
+    setTFOut('tf-val-cost', '0', '% above baseline rate', 'No re-routable volume — cost uplift not applicable', false);
+  }
 
   // Disrupted chokepoint names
   var cpNames = cpIds.map(function(id){ return TF_CP[id] ? TF_CP[id].name : id; }).join(', ');

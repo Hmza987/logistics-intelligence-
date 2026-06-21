@@ -13777,8 +13777,9 @@ var TF_COMMODITIES = {
       panama:         { vol:0.8,  share:2,  note:'ACP Annual Report 2023' }
     },
     historicalRefs:[
-      { event:'Suez Crisis 1956',           duration:'6 months', impact:'+25% Brent',         note:'Canal closed; Cape rerouting caused lasting supply shock' },
+      { event:'Hormuz de facto closure — Feb 2026 (ongoing)', duration:'4+ months (ongoing Jun 2026)', impact:'+$46/bbl peak (+64% Brent)', note:'Military action Feb 28; Brent $72→$118 by end-Q1; Goldman Q3 forecast $120/bbl; JPMorgan near-term risk $120–$150; eased to ~$80 by Jun 21 on renegotiation uncertainty' },
       { event:'Gulf War I — Kuwait 1990',   duration:'7 months', impact:'+130% Brent (peak)', note:'Iraq invasion; rapid demand destruction; SPR release' },
+      { event:'Suez Crisis 1956',           duration:'6 months', impact:'+25% Brent',         note:'Canal closed; Cape rerouting caused lasting supply shock' },
       { event:'Hormuz tanker attacks 2019', duration:'Days',     impact:'+4% in 24 h',        note:'IRGC attacks; fear premium; no material volume loss' },
       { event:'Suez — Ever Given 2021',     duration:'6 days',   impact:'+0.5% Brent',        note:'Short duration limited oil impact; containers far worse' }
     ],
@@ -16243,87 +16244,86 @@ function renderTFPriceImpact(comm, impactedPct, cpNames) {
   var el = document.getElementById('tf-price-content');
   if (!el) return;
 
-  var dQoverQ = impactedPct / 100 * (TF_DISRUPTION_LEVEL / 100);
-  var priceImpactPct = Math.round(dQoverQ / Math.abs(comm.elasticity) * 100);
-  var basePrice = comm.basePrice || 72;
-  var dollarImpact = Math.round(basePrice * priceImpactPct / 100);
-  var estPrice = basePrice + dollarImpact;
-  var impactColor = priceImpactPct > 50 ? '#dc2626' : priceImpactPct > 20 ? '#f59e0b' : '#fbbf24';
+  var basePrice = comm.basePrice || 72;  // pre-crisis Brent baseline (Feb 2026: $72/bbl)
+  var dQoverQ   = impactedPct / 100 * (TF_DISRUPTION_LEVEL / 100);
+  var rawPct    = dQoverQ / Math.abs(comm.elasticity) * 100;
 
-  // Historical precedent range (parse % from impact strings)
-  var histMin = null, histMax = null;
-  if (comm.historicalRefs && comm.historicalRefs.length) {
-    comm.historicalRefs.forEach(function(ref) {
-      var m = ref.impact.match(/\+(\d+(?:\.\d+)?)/);
-      if (m) {
-        var v = parseFloat(m[1]);
-        if (histMin === null || v < histMin) histMin = v;
-        if (histMax === null || v > histMax) histMax = v;
-      }
-    });
-  }
+  // Calibrated stress model — Hamilton (2009) elasticity gives raw +860% for a 43%
+  // supply shock, which is unphysical. Real Feb 2026 Hormuz closure (43% trade) produced
+  // a peak of +64% (+$46/bbl, Brent $72→$118). Calibration factors below account for
+  // SPR release, demand destruction, and partial bypass activation:
+  //   Low (strong response):   mitFactor 0.045 → Hormuz 100% ≈ +$28/bbl
+  //   High (prolonged closure): mitFactor 0.130 → Hormuz 100% ≈ +$80/bbl
+  // Consistent with Goldman Sachs Q3 $120/bbl and JPMorgan $120–150 estimates (Jun 2026).
+  var mitLow  = 0.045;
+  var mitHigh = 0.130;
+  var impLowPct  = Math.round(rawPct * mitLow);
+  var impHighPct = Math.round(rawPct * mitHigh);
+  var dolLow  = Math.round(basePrice * impLowPct  / 100);
+  var dolHigh = Math.round(basePrice * impHighPct / 100);
+  var estLow  = basePrice + dolLow;
+  var estHigh = basePrice + dolHigh;
+
+  var rangeColor = impHighPct > 80 ? '#dc2626' : impHighPct > 40 ? '#f59e0b' : '#fbbf24';
 
   var html = '';
 
-  // ── Headline: $/bbl ──
-  html += '<div style="text-align:center;padding:16px 0 12px">' +
-    '<div style="font-family:var(--f-mono);font-size:36px;font-weight:700;color:' + impactColor + ';letter-spacing:-.02em;line-height:1">+$' + dollarImpact + '</div>' +
-    '<div style="font-size:8.5px;color:#475569;margin-top:5px;letter-spacing:.04em">PER BARREL ESTIMATED IMPACT &nbsp;&middot;&nbsp; BRENT BASELINE $' + basePrice + '</div>' +
+  // ── Headline: $/bbl range ──
+  html += '<div style="text-align:center;padding:14px 0 10px">' +
+    '<div style="font-family:var(--f-mono);font-size:28px;font-weight:700;color:' + rangeColor + ';letter-spacing:-.02em;line-height:1">' +
+      '+$' + dolLow + ' &ndash; +$' + dolHigh +
+    '</div>' +
+    '<div style="font-size:8.5px;color:#475569;margin-top:5px;letter-spacing:.04em">PER BARREL ESTIMATED RANGE &nbsp;&middot;&nbsp; BRENT BASELINE $' + basePrice + '</div>' +
   '</div>';
 
-  // ── Two summary rows ──
+  // ── Summary rows ──
   html += '<div style="border-top:1px solid rgba(255,255,255,0.07);padding:7px 2px;display:flex;justify-content:space-between;align-items:center">' +
-    '<span style="font-size:8.5px;color:#64748b">Estimated Brent price</span>' +
-    '<span style="font-size:11px;font-weight:700;color:' + impactColor + ';font-family:var(--f-mono)">$' + estPrice + '/bbl</span>' +
+    '<span style="font-size:8.5px;color:#64748b">Estimated Brent range</span>' +
+    '<span style="font-size:10px;font-weight:700;color:' + rangeColor + ';font-family:var(--f-mono)">$' + estLow + ' &ndash; $' + estHigh + ' /bbl</span>' +
   '</div>';
   html += '<div style="border-top:1px solid rgba(255,255,255,0.07);padding:7px 2px;display:flex;justify-content:space-between;align-items:center">' +
-    '<span style="font-size:8.5px;color:#64748b">Elasticity model</span>' +
-    '<span style="font-size:9px;color:' + impactColor + ';font-family:var(--f-mono)">+' + priceImpactPct + '%</span>' +
+    '<span style="font-size:8.5px;color:#64748b">Observed (Feb&ndash;Jun 2026)</span>' +
+    '<span style="font-size:9px;color:#94a3b8">$72 &rarr; $118 peak &middot; $80 current</span>' +
   '</div>';
-  if (histMin !== null) {
-    html += '<div style="border-top:1px solid rgba(255,255,255,0.07);padding:7px 2px;display:flex;justify-content:space-between;align-items:center">' +
-      '<span style="font-size:8.5px;color:#64748b">Historical precedents</span>' +
-      '<span style="font-size:9px;color:#94a3b8">+' + (histMin < 1 ? histMin.toFixed(1) : Math.round(histMin)) + '% &ndash; +' + Math.round(histMax) + '% Brent</span>' +
-    '</div>';
-  }
+  html += '<div style="border-top:1px solid rgba(255,255,255,0.07);padding:7px 2px;display:flex;justify-content:space-between;align-items:center">' +
+    '<span style="font-size:8.5px;color:#64748b">Analyst consensus (Goldman / JPM)</span>' +
+    '<span style="font-size:9px;color:#94a3b8">$100 &ndash; $150 /bbl</span>' +
+  '</div>';
   html += '<div style="border-top:1px solid rgba(255,255,255,0.07);padding:7px 2px;display:flex;justify-content:space-between;align-items:center">' +
     '<span style="font-size:8.5px;color:#64748b">' + cpNames + ' &middot; ' + TF_DISRUPTION_LEVEL + '% disruption</span>' +
     '<span style="font-size:9px;color:#64748b">' + impactedPct + '% global trade</span>' +
   '</div>';
 
   // ── Methodology toggle ──
-  html += '<div onclick="(function(btn){var d=document.getElementById(\'tf-pi-method\');var open=d.style.display!==\'none\';d.style.display=open?\'none\':\'block\';btn.querySelector(\'.tf-pi-chev\').textContent=open?\'▾ Methodology & historical precedents\':\'▴ Methodology & historical precedents\';})(this)" ' +
+  html += '<div onclick="(function(btn){var d=document.getElementById(\'tf-pi-method\');var open=d.style.display!==\'none\';d.style.display=open?\'none\':\'block\';btn.querySelector(\'.tf-pi-chev\').textContent=open?\'▾ Methodology &amp; historical precedents\':\'▴ Methodology &amp; historical precedents\';})(this)" ' +
     'style="border-top:1px solid rgba(255,255,255,0.07);padding:9px 2px 4px;cursor:pointer">' +
     '<span class="tf-pi-chev" style="font-size:8px;color:#334155;letter-spacing:.05em">▾ Methodology &amp; historical precedents</span>' +
   '</div>';
 
-  // ── Collapsible detail (hidden by default) ──
+  // ── Collapsible detail ──
   html += '<div id="tf-pi-method" style="display:none;padding-top:6px">';
-  html += '<div class="tf-section-micro" style="margin-bottom:8px">Method A — Historical Event Reference</div>';
+  html += '<div class="tf-section-micro" style="margin-bottom:8px">Historical Event Reference</div>';
   if (comm.historicalRefs && comm.historicalRefs.length) {
     comm.historicalRefs.forEach(function(ref) {
       html += '<div style="padding:7px 0;border-bottom:1px solid rgba(255,255,255,0.05)">' +
         '<div style="font-size:9px;color:#e8eaed;font-weight:600">' + ref.event + '</div>' +
-        '<div style="font-size:8px;color:var(--c-tx2);margin-top:2px">Duration: ' + ref.duration + ' &bull; Observed price impact: <span style="color:#f59e0b">' + ref.impact + '</span></div>' +
+        '<div style="font-size:8px;color:var(--c-tx2);margin-top:2px">Duration: ' + ref.duration + ' &bull; Price impact: <span style="color:#f59e0b">' + ref.impact + '</span></div>' +
         '<div style="font-size:8px;color:var(--c-tx2);margin-top:2px;font-style:italic">' + ref.note + '</div>' +
       '</div>';
     });
-  } else {
-    html += '<div style="font-size:9px;color:var(--c-tx2)">No historical events documented for this commodity</div>';
   }
-  html += '<div class="tf-section-micro" style="margin-top:12px;margin-bottom:8px">Method B — Elasticity-Based Estimate</div>';
-  html += '<div style="font-size:9px;color:var(--c-tx2);line-height:1.7;margin-bottom:8px">' +
-    'Volume impacted: <span style="color:#e8eaed">' + impactedPct + '% of global trade</span> &middot; Disruption level: <span style="color:#e8eaed">' + TF_DISRUPTION_LEVEL + '%</span>' +
-  '</div>';
-  html += '<div style="font-family:var(--f-mono);font-size:8px;color:#93c5fd;background:rgba(96,165,250,0.06);border-radius:3px;padding:7px 9px;border-left:2px solid #60a5fa;line-height:1.7;margin-bottom:8px">' +
-    '&Delta;P/P = (&Delta;Q/Q) &times; (1/&epsilon;_d)<br>' +
-    '= (' + (dQoverQ*100).toFixed(1) + '%) &times; (1/' + comm.elasticity + ')<br>' +
-    '= <span style="color:#fbbf24">+' + priceImpactPct + '% &rarr; +$' + dollarImpact + '/bbl</span>' +
+  html += '<div class="tf-section-micro" style="margin-top:12px;margin-bottom:6px">Calibrated Stress Model</div>';
+  html += '<div style="font-family:var(--f-mono);font-size:8px;color:#93c5fd;background:rgba(96,165,250,0.06);border-radius:3px;padding:7px 9px;border-left:2px solid #60a5fa;line-height:1.8;margin-bottom:8px">' +
+    'Raw &Delta;P/P = (' + (dQoverQ*100).toFixed(1) + '%) &times; (1/&epsilon; ' + comm.elasticity + ') = ' + Math.round(rawPct) + '%<br>' +
+    'Calibration (Feb 2026 Hormuz): 43% shock &rarr; +64% observed<br>' +
+    'Mitigation range: 0.045 &ndash; 0.130 &times; raw shock<br>' +
+    '&rarr; <span style="color:#fbbf24">+' + impLowPct + '% &ndash; +' + impHighPct + '% &rarr; +$' + dolLow + ' &ndash; +$' + dolHigh + '/bbl</span>' +
   '</div>';
   html += '<div style="font-size:7.5px;color:var(--c-tx2);line-height:1.65;font-style:italic">' +
-    '&epsilon;_d = ' + comm.elasticity + ' (' + comm.elasticitySource + '). Short-run partial equilibrium only &mdash; does not account for SPR release, demand destruction, or supply-side response.' +
+    'Mitigation factors reflect SPR release, demand destruction, and bypass activation. ' +
+    'Calibrated to Feb&ndash;Jun 2026 observed Hormuz data. &epsilon;_d = ' + comm.elasticity + ' (' + comm.elasticitySource + ').' +
   '</div>';
-  html += '</div>'; // end tf-pi-method
+  html += '</div>';
 
   el.innerHTML = html;
 }

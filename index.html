@@ -4148,7 +4148,7 @@ canvas { font-family: var(--f-mono); }
 
   <div class="tf-page-header">
     <div>
-      <div class="tf-page-title">&#9670; Trade Flow Stress Test</div>
+      <div class="tf-page-title">&#9670; Trade Explorer Lab</div>
       <div class="tf-page-sub">Chokepoint disruption modelling &middot; Transparent calculation methodology &middot; Documented data sources</div>
       <div class="tf-page-meta">Based on observed trade volumes &middot; Derived calculations only &middot; No AI-generated scores &middot; All outputs are fully auditable</div>
     </div>
@@ -4169,15 +4169,6 @@ canvas { font-family: var(--f-mono); }
 
   <!-- Full-width world map with integrated commodity selector -->
   <div class="card" style="padding:0;overflow:hidden;position:relative;margin-bottom:14px">
-
-    <!-- WIP overlay — shown when a non-crude-oil commodity is selected -->
-    <div id="tf-wip-screen" style="display:none;position:absolute;inset:0;z-index:50;background:rgba(6,10,18,0.93);display:none;align-items:center;justify-content:center;flex-direction:column;gap:16px;text-align:center;padding:40px">
-      <div style="font-family:var(--f-mono);font-size:10px;letter-spacing:.18em;text-transform:uppercase;color:#334155">Work in Progress</div>
-      <div id="tf-wip-name" style="font-size:22px;font-weight:700;color:#e8eaed;letter-spacing:-.01em"></div>
-      <div style="font-size:11px;color:#475569;max-width:380px;line-height:1.7">Full trade flow modelling, route data, and chokepoint stress-test for this commodity is under development. Only <span style="color:#f59e0b;font-weight:600">Crude Oil</span> is available in this release.</div>
-      <div style="width:48px;height:1px;background:rgba(255,255,255,0.08)"></div>
-      <div style="font-size:9px;color:#1e293b;letter-spacing:.1em;text-transform:uppercase">Select Crude Oil above to continue</div>
-    </div>
 
     <!-- Row 1: category filter + map view buttons -->
     <div style="padding:6px 14px;display:flex;align-items:center;justify-content:space-between;gap:10px;border-bottom:1px solid var(--c-bd1);background:rgba(6,14,24,0.95)">
@@ -4202,23 +4193,36 @@ canvas { font-family: var(--f-mono); }
       <div class="tf-comm-grid" id="tf-comm-grid" style="margin-bottom:0;gap:4px"></div>
     </div>
 
-    <!-- Row 3: chokepoint quick-select (own row, same weight as category row) -->
-    <div style="padding:6px 14px;display:flex;align-items:center;gap:6px;flex-wrap:wrap;border-bottom:1px solid var(--c-bd1);background:rgba(6,14,24,0.95)">
-      <span style="font-family:var(--f-mono);font-size:7px;letter-spacing:.1em;text-transform:uppercase;color:var(--c-tx2);white-space:nowrap;flex-shrink:0">Chokepoints</span>
-      <div id="tf-cp-chips" style="display:flex;align-items:center;gap:4px;flex-wrap:wrap"></div>
-    </div>
+    <!-- Everything below the commodity row is wrapped so the WIP overlay only covers this area -->
+    <div id="tf-map-lower-rows" style="position:relative;overflow:hidden">
 
-    <!-- Row 3: map title + route count -->
-    <div style="padding:5px 14px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid var(--c-bd1);background:rgba(10,15,22,0.95)">
-      <div style="font-family:var(--f-mono);font-size:8px;letter-spacing:.08em;text-transform:uppercase;color:var(--c-tx2)">
-        &#9670; Trade Architecture &mdash; <span id="tf-map-comm-label" style="color:var(--c-tx1)">Select a commodity above</span>
+      <!-- WIP overlay — covers map body only; commodity buttons above remain clickable -->
+      <div id="tf-wip-screen" style="display:none;position:absolute;inset:0;z-index:50;background:rgba(6,10,18,0.96);align-items:center;justify-content:center;flex-direction:column;gap:14px;text-align:center;padding:40px">
+        <div style="font-family:var(--f-mono);font-size:9px;letter-spacing:.18em;text-transform:uppercase;color:#334155">Work in Progress</div>
+        <div id="tf-wip-name" style="font-size:20px;font-weight:700;color:#e8eaed;letter-spacing:-.01em"></div>
+        <div style="font-size:10px;color:#475569;max-width:360px;line-height:1.75">Full trade flow modelling, route data, and chokepoint stress-test for this commodity is under development.<br><br>Only <span style="color:#f59e0b;font-weight:600">Crude Oil</span> is available in this release.</div>
+        <div style="width:40px;height:1px;background:rgba(255,255,255,0.07);margin:4px 0"></div>
+        <div style="font-size:8.5px;color:#1e293b;letter-spacing:.1em;text-transform:uppercase">&#8593; Select Crude Oil above to continue</div>
       </div>
-      <div style="font-size:9px;color:var(--c-tx2)" id="tf-map-route-count"></div>
-    </div>
 
-    <div id="tf-world-map"></div>
-    <div class="tf-map-legend" id="tf-map-legend"></div>
-  </div>
+      <!-- Row 3: chokepoint quick-select -->
+      <div style="padding:6px 14px;display:flex;align-items:center;gap:6px;flex-wrap:wrap;border-bottom:1px solid var(--c-bd1);background:rgba(6,14,24,0.95)">
+        <span style="font-family:var(--f-mono);font-size:7px;letter-spacing:.1em;text-transform:uppercase;color:var(--c-tx2);white-space:nowrap;flex-shrink:0">Chokepoints</span>
+        <div id="tf-cp-chips" style="display:flex;align-items:center;gap:4px;flex-wrap:wrap"></div>
+      </div>
+
+      <!-- Map title + route count -->
+      <div style="padding:5px 14px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid var(--c-bd1);background:rgba(10,15,22,0.95)">
+        <div style="font-family:var(--f-mono);font-size:8px;letter-spacing:.08em;text-transform:uppercase;color:var(--c-tx2)">
+          &#9670; Trade Architecture &mdash; <span id="tf-map-comm-label" style="color:var(--c-tx1)">Select a commodity above</span>
+        </div>
+        <div style="font-size:9px;color:var(--c-tx2)" id="tf-map-route-count"></div>
+      </div>
+
+      <div id="tf-world-map"></div>
+      <div class="tf-map-legend" id="tf-map-legend"></div>
+    </div><!-- /tf-map-lower-rows -->
+  </div><!-- /map card -->
 
   <!-- Output metrics row — directly below map -->
   <div class="tf-outputs" id="tf-outputs">
@@ -4263,13 +4267,13 @@ canvas { font-family: var(--f-mono); }
   </div>
 
   <!-- Price impact -->
-  <div class="card" style="margin-bottom:14px">
+  <div class="card" id="tf-price-card" style="margin-bottom:14px">
     <div class="card-label">&#9670; Price Impact Estimate</div>
     <div id="tf-price-content" style="font-size:9px;color:var(--c-tx2);padding:8px 0;line-height:1.7">Run stress test to see price impact analysis</div>
   </div>
 
   <!-- GCC Country Impact -->
-  <div class="card" style="margin-bottom:14px">
+  <div class="card" id="tf-gcc-card" style="margin-bottom:14px">
     <div class="card-label" style="margin-bottom:10px">&#9670; Key Insights &mdash; GCC Country Exposure</div>
     <div class="gcc-grid" id="tf-gcc-grid"></div>
     <div id="gcc-footer" style="font-size:7.5px;color:var(--c-tx2);margin-top:10px;border-top:1px solid var(--c-bd1);padding-top:8px">
@@ -4278,7 +4282,7 @@ canvas { font-family: var(--f-mono); }
   </div>
 
   <!-- Methodology panel -->
-  <div class="card">
+  <div class="card" id="tf-method-card">
     <div class="tf-method-toggle" onclick="toggleTFMethodology()">
       <div class="tf-method-title">&#9432; Methodology, Data Sources &amp; Assumptions</div>
       <div style="font-family:var(--f-mono);font-size:8px;color:var(--c-tx2)" id="tf-method-chevron">&#9660; Show</div>
@@ -14746,14 +14750,20 @@ function selectTFCommodity(commId) {
   });
 
   // WIP gate — show overlay for any commodity other than crude_oil
+  var isWip = commId !== 'crude_oil';
   var wipScreen = document.getElementById('tf-wip-screen');
   if (wipScreen) {
-    var isWip = commId !== 'crude_oil';
     wipScreen.style.display = isWip ? 'flex' : 'none';
     var wipName = document.getElementById('tf-wip-name');
     if (wipName) wipName.textContent = comm.name;
-    if (isWip) return;  // skip all rendering for WIP commodities
   }
+  // Toggle all panels below the map card
+  var d = isWip ? 'none' : '';
+  ['tf-outputs','tf-baseline-card','tf-price-card','tf-gcc-card','tf-method-card','tf-alert-strip'].forEach(function(id) {
+    var el = document.getElementById(id);
+    if (el) el.style.display = d;
+  });
+  if (isWip) return;  // skip all rendering for WIP commodities
 
   // Map label
   var lbl = document.getElementById('tf-map-comm-label');

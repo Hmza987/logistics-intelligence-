@@ -13778,6 +13778,7 @@ var TF_COMMODITIES = {
     },
     historicalRefs:[
       { event:'Hormuz de facto closure — Feb 2026 (ongoing)', duration:'4+ months (ongoing Jun 2026)', impact:'+$46/bbl peak (+64% Brent)', note:'Military action Feb 28; Brent $72→$118 by end-Q1; Goldman Q3 forecast $120/bbl; JPMorgan near-term risk $120–$150; eased to ~$80 by Jun 21 on renegotiation uncertainty' },
+      { event:'Houthi Red Sea attacks — Bab-el-Mandeb partial closure (Nov 2023–)', duration:'18+ months (ongoing)', impact:'+5–12% Brent (+$4–9/bbl)', note:'50–60% volume reduction through Bab-el-Mandeb; tankers rerouted +9,000 nm via Cape of Good Hope (+20–25 days). Oil markets more resilient than containers: crude can bypass Cape at ~3× freight cost; price uplift modest vs severe freight disruption. Key lesson: Bab closure alone has limited crude price impact because all cargoes can reroute — but Bab closure compounds Hormuz shock by eliminating the Yanbu bypass exit.' },
       { event:'Gulf War I — Kuwait 1990',   duration:'7 months', impact:'+130% Brent (peak)', note:'Iraq invasion; rapid demand destruction; SPR release' },
       { event:'Suez Crisis 1956',           duration:'6 months', impact:'+25% Brent',         note:'Canal closed; Cape rerouting caused lasting supply shock' },
       { event:'Hormuz tanker attacks 2019', duration:'Days',     impact:'+4% in 24 h',        note:'IRGC attacks; fear premium; no material volume loss' },
@@ -16244,19 +16245,35 @@ function renderTFPriceImpact(comm, impactedPct, cpNames) {
   var el = document.getElementById('tf-price-content');
   if (!el) return;
 
-  var basePrice = comm.basePrice || 72;  // pre-crisis Brent baseline (Feb 2026: $72/bbl)
-  var dQoverQ   = impactedPct / 100 * (TF_DISRUPTION_LEVEL / 100);
-  var rawPct    = dQoverQ / Math.abs(comm.elasticity) * 100;
+  var basePrice = comm.basePrice || 72;
 
-  // Calibrated stress model — Hamilton (2009) elasticity gives raw +376% for an 18.8%
-  // supply shock (Hormuz, 100% disruption), which is unphysical without mitigation.
-  // Real Feb 2026 Hormuz closure produced peak +64% (+$46/bbl, Brent $72→$118).
-  // Calibration factors below account for SPR release, demand destruction, bypass activation:
-  //   Low (strong response):    mitFactor 0.10 → Hormuz 100% ≈ +$27/bbl → ~$99/bbl
-  //   High (prolonged closure): mitFactor 0.27 → Hormuz 100% ≈ +$73/bbl → ~$145/bbl
-  // Consistent with Goldman Sachs Q3 $120/bbl and JPMorgan $120–150 estimates (Jun 2026).
-  var mitLow  = 0.10;
-  var mitHigh = 0.27;
+  // ── Compound closure detection ─────────────────────────────────────────────
+  var cpIds = Object.keys(TF_DISRUPTIONS);
+  var numDisruptions = cpIds.length;
+  var hormuzClosed = !!TF_DISRUPTIONS['hormuz'];
+  var babClosed    = !!TF_DISRUPTIONS['bab_el_mandeb'];
+
+  // When Hormuz + Bab-el-Mandeb co-disrupted: Saudi Petroline → Yanbu (4.8 Mb/d)
+  // exits into the Red Sea. If Bab is also closed, that bypass route is eliminated →
+  // 4.8 Mb/d additional stranded on top of the Hormuz volume disruption.
+  var yanbuElimPct = 0;
+  if (hormuzClosed && babClosed) {
+    yanbuElimPct = Math.round((4.8 / (comm.globalTrade || 100)) * 100 * (TF_DISRUPTION_LEVEL / 100));
+  }
+  var effectivePct = impactedPct + yanbuElimPct;
+
+  // ── Mitigation factors ─────────────────────────────────────────────────────
+  // Single CP: mitLow=0.10, mitHigh=0.27 — calibrated to Feb 2026 Hormuz data
+  //   Hormuz 100% (19% supply) → +$27–73/bbl (Goldman $120, JPM $120–150 confirm range)
+  // Compound (×1.5 per extra CP): bypass options exhausted, panic premium amplified
+  //   Dual (Hormuz+BaB) → Yanbu bypass gone, Cape rerouting under extreme pressure
+  //   Triple → near-catastrophic, no precedent, model estimate only
+  var compoundFactor = numDisruptions > 1 ? Math.min(1.0 + (numDisruptions - 1) * 0.5, 2.5) : 1.0;
+  var mitLow  = 0.10 * compoundFactor;
+  var mitHigh = 0.27 * compoundFactor;
+
+  var dQoverQ   = effectivePct / 100 * (TF_DISRUPTION_LEVEL / 100);
+  var rawPct    = dQoverQ / Math.abs(comm.elasticity) * 100;
   var impLowPct  = Math.round(rawPct * mitLow);
   var impHighPct = Math.round(rawPct * mitHigh);
   var dolLow  = Math.round(basePrice * impLowPct  / 100);
@@ -16276,6 +16293,17 @@ function renderTFPriceImpact(comm, impactedPct, cpNames) {
     '<div style="font-size:8.5px;color:#475569;margin-top:5px;letter-spacing:.04em">PER BARREL ESTIMATED RANGE &nbsp;&middot;&nbsp; BRENT BASELINE $' + basePrice + '</div>' +
   '</div>';
 
+  // ── Compound effect banner ──
+  if (numDisruptions > 1) {
+    var compoundNote = (hormuzClosed && babClosed)
+      ? 'Yanbu bypass (4.8 Mb/d) exits Red Sea &rarr; also blocked by Bab-el-Mandeb &rarr; +' + yanbuElimPct + '% additional supply stranded; bypass options exhausted'
+      : 'Multiple chokepoints closed &rarr; bypass routes reduced; panic premium amplified';
+    html += '<div style="background:rgba(220,38,38,0.08);border:1px solid rgba(220,38,38,0.25);border-radius:4px;padding:6px 8px;margin-bottom:4px">' +
+      '<div style="font-size:8px;color:#fca5a5;font-weight:700;letter-spacing:.05em">&#9888;&#xFE0E; COMPOUND CLOSURE &mdash; ' + numDisruptions + ' CHOKEPOINTS</div>' +
+      '<div style="font-size:7.5px;color:#f87171;margin-top:2px;line-height:1.5">' + compoundNote + '</div>' +
+    '</div>';
+  }
+
   // ── Summary rows ──
   html += '<div style="border-top:1px solid rgba(255,255,255,0.07);padding:7px 2px;display:flex;justify-content:space-between;align-items:center">' +
     '<span style="font-size:8.5px;color:#64748b">Estimated Brent range</span>' +
@@ -16285,13 +16313,20 @@ function renderTFPriceImpact(comm, impactedPct, cpNames) {
     '<span style="font-size:8.5px;color:#64748b">Observed (Feb&ndash;Jun 2026)</span>' +
     '<span style="font-size:9px;color:#94a3b8">$72 &rarr; $118 peak &middot; $80 current</span>' +
   '</div>';
-  html += '<div style="border-top:1px solid rgba(255,255,255,0.07);padding:7px 2px;display:flex;justify-content:space-between;align-items:center">' +
-    '<span style="font-size:8.5px;color:#64748b">Analyst consensus (Goldman / JPM)</span>' +
-    '<span style="font-size:9px;color:#94a3b8">$100 &ndash; $150 /bbl</span>' +
-  '</div>';
+  if (numDisruptions <= 1) {
+    html += '<div style="border-top:1px solid rgba(255,255,255,0.07);padding:7px 2px;display:flex;justify-content:space-between;align-items:center">' +
+      '<span style="font-size:8.5px;color:#64748b">Analyst consensus (Goldman / JPM)</span>' +
+      '<span style="font-size:9px;color:#94a3b8">$100 &ndash; $150 /bbl</span>' +
+    '</div>';
+  } else {
+    html += '<div style="border-top:1px solid rgba(255,255,255,0.07);padding:7px 2px;display:flex;justify-content:space-between;align-items:center">' +
+      '<span style="font-size:8.5px;color:#64748b">No historical precedent for dual major CP closure</span>' +
+      '<span style="font-size:9px;color:#94a3b8">Model estimate only</span>' +
+    '</div>';
+  }
   html += '<div style="border-top:1px solid rgba(255,255,255,0.07);padding:7px 2px;display:flex;justify-content:space-between;align-items:center">' +
     '<span style="font-size:8.5px;color:#64748b">' + cpNames + ' &middot; ' + TF_DISRUPTION_LEVEL + '% disruption</span>' +
-    '<span style="font-size:9px;color:#64748b">' + impactedPct + '% of global supply</span>' +
+    '<span style="font-size:9px;color:#64748b">' + effectivePct + '% effective supply impact</span>' +
   '</div>';
 
   // ── Methodology toggle ──
@@ -16313,15 +16348,20 @@ function renderTFPriceImpact(comm, impactedPct, cpNames) {
     });
   }
   html += '<div class="tf-section-micro" style="margin-top:12px;margin-bottom:6px">Calibrated Stress Model</div>';
+  var compoundLine = numDisruptions > 1
+    ? 'Compound factor (' + numDisruptions + ' CPs): mitigation \xd7' + compoundFactor.toFixed(1) + '; Yanbu bypass +'+ yanbuElimPct +'% stranded<br>'
+    : '';
   html += '<div style="font-family:var(--f-mono);font-size:8px;color:#93c5fd;background:rgba(96,165,250,0.06);border-radius:3px;padding:7px 9px;border-left:2px solid #60a5fa;line-height:1.8;margin-bottom:8px">' +
-    'Raw &Delta;P/P = (' + (dQoverQ*100).toFixed(1) + '%) &times; (1/&epsilon; ' + comm.elasticity + ') = ' + Math.round(rawPct) + '%<br>' +
-    'Calibration (Feb 2026 Hormuz): 43% shock &rarr; +64% observed<br>' +
-    'Mitigation range: 0.045 &ndash; 0.130 &times; raw shock<br>' +
-    '&rarr; <span style="color:#fbbf24">+' + impLowPct + '% &ndash; +' + impHighPct + '% &rarr; +$' + dolLow + ' &ndash; +$' + dolHigh + '/bbl</span>' +
+    'Effective supply impact: ' + effectivePct + '% (route vol' + (yanbuElimPct > 0 ? ' + Yanbu elim' : '') + ')<br>' +
+    'Raw ΔP/P = (' + (dQoverQ*100).toFixed(1) + '%) \xd7 (1/ε ' + comm.elasticity + ') = ' + Math.round(rawPct) + '%<br>' +
+    compoundLine +
+    'Mitigation range: ' + mitLow.toFixed(2) + ' – ' + mitHigh.toFixed(2) + ' \xd7 raw shock<br>' +
+    '→ <span style="color:#fbbf24">+' + impLowPct + '% – +' + impHighPct + '% → +$' + dolLow + ' – +$' + dolHigh + '/bbl</span>' +
   '</div>';
   html += '<div style="font-size:7.5px;color:var(--c-tx2);line-height:1.65;font-style:italic">' +
-    'Mitigation factors reflect SPR release, demand destruction, and bypass activation. ' +
-    'Calibrated to Feb&ndash;Jun 2026 observed Hormuz data. &epsilon;_d = ' + comm.elasticity + ' (' + comm.elasticitySource + ').' +
+    'Single-CP mitigation (0.10–0.27) calibrated to Feb–Jun 2026 Hormuz closure: 19% supply shock → +64% peak observed. ' +
+    'Compound factor (\xd7' + compoundFactor.toFixed(1) + ' per extra CP) reflects bypass exhaustion and amplified panic premium. ' +
+    'ε_d = ' + comm.elasticity + ' (' + comm.elasticitySource + ').' +
   '</div>';
   html += '</div>';
 

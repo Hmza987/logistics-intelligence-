@@ -13728,7 +13728,26 @@ var TF_COMMODITIES = {
         { name:'Mexico',       vals:[0.1, 0.0, 0.0, 0.6, 0.0, 0.0] },
         { name:'Norway',       vals:[0.0, 0.5, 0.0, 0.0, 0.0, 0.0] },
         { name:'Venezuela',    vals:[0.4, 0.0, 0.0, 0.0, 0.0, 0.0] }
-      ]
+      ],
+      // Per-cell chokepoint dependencies — which straits/canals does each bilateral corridor transit?
+      // Columns: China | Europe | India | USA | S.Korea | Japan
+      matrixCps:{
+        'Saudi Arabia':{ 'China':['hormuz','malacca'], 'Europe':['hormuz','bab_el_mandeb','suez'], 'India':['hormuz'], 'USA':['hormuz'], 'S. Korea':['hormuz','malacca'], 'Japan':['hormuz','malacca'] },
+        'Russia':      { 'China':[], 'Europe':['turkish_straits'], 'India':['turkish_straits','bab_el_mandeb','suez'], 'USA':[], 'S. Korea':[], 'Japan':[] },
+        'USA':         { 'China':['panama'], 'Europe':[], 'India':['bab_el_mandeb','suez'], 'USA':[], 'S. Korea':['panama'], 'Japan':['panama'] },
+        'Iraq':        { 'China':['hormuz','malacca'], 'Europe':['hormuz','bab_el_mandeb','suez'], 'India':['hormuz'], 'USA':['hormuz'], 'S. Korea':['hormuz','malacca'], 'Japan':['hormuz','malacca'] },
+        'UAE':         { 'China':['hormuz','malacca'], 'Europe':['hormuz','bab_el_mandeb','suez'], 'India':['hormuz'], 'USA':['hormuz'], 'S. Korea':['hormuz','malacca'], 'Japan':['hormuz','malacca'] },
+        'Kuwait':      { 'China':['hormuz','malacca'], 'Europe':['hormuz','bab_el_mandeb','suez'], 'India':['hormuz'], 'USA':['hormuz'], 'S. Korea':['hormuz','malacca'], 'Japan':['hormuz','malacca'] },
+        'Iran':        { 'China':['hormuz','malacca'], 'Europe':[], 'India':['hormuz'], 'USA':[], 'S. Korea':[], 'Japan':[] },
+        'Kazakhstan':  { 'China':[], 'Europe':['turkish_straits'], 'India':[], 'USA':[], 'S. Korea':[], 'Japan':[] },
+        'Nigeria':     { 'China':['mozambique','malacca'], 'Europe':['gibraltar'], 'India':['mozambique'], 'USA':[], 'S. Korea':[], 'Japan':[] },
+        'Angola':      { 'China':['mozambique','malacca'], 'Europe':[], 'India':['mozambique'], 'USA':[], 'S. Korea':[], 'Japan':[] },
+        'Libya':       { 'China':[], 'Europe':[], 'India':[], 'USA':[], 'S. Korea':[], 'Japan':[] },
+        'Brazil':      { 'China':['mozambique','malacca'], 'Europe':[], 'India':['mozambique'], 'USA':[], 'S. Korea':[], 'Japan':[] },
+        'Mexico':      { 'China':[], 'Europe':[], 'India':[], 'USA':[], 'S. Korea':[], 'Japan':[] },
+        'Norway':      { 'China':[], 'Europe':[], 'India':[], 'USA':[], 'S. Korea':[], 'Japan':[] },
+        'Venezuela':   { 'China':['mozambique','malacca'], 'Europe':[], 'India':['mozambique'], 'USA':[], 'S. Korea':[], 'Japan':[] }
+      }
     },
     cpVols:{
       hormuz:         { vol:21.0, share:48, note:'EIA Chokepoints 2022 — includes crude, condensate & petroleum products' },
@@ -14878,6 +14897,7 @@ function toggleTFChokepoint(cpId) {
     runTFStressTest();
   } else if (TF_ACTIVE_COMM) {
     clearTFOutputs();
+    renderTFBaseline(TF_ACTIVE_COMM);
   }
 }
 
@@ -14946,56 +14966,114 @@ function buildTFMatrix(comm) {
   var maxVal = 0;
   mat.rows.forEach(function(row){ row.vals.forEach(function(v){ if(v>maxVal) maxVal=v; }); });
 
-  function cellBg(v) {
-    if(!v) return '';
-    var a = 0.12 + (v/maxVal)*0.76;
-    return 'background:rgba('+cr+','+cg+','+cb+','+a.toFixed(2)+')';
+  var disruptions = TF_DISRUPTIONS || {};
+  var hasDisruption = Object.keys(disruptions).length > 0;
+  var level = (typeof TF_DISRUPTION_LEVEL !== 'undefined' ? TF_DISRUPTION_LEVEL : 100) / 100;
+
+  function isCellDisrupted(exporterName, importerName) {
+    if (!hasDisruption || !mat.matrixCps || !mat.matrixCps[exporterName]) return false;
+    var cps = mat.matrixCps[exporterName][importerName] || [];
+    return cps.some(function(cp){ return disruptions[cp]; });
   }
-  function cellTx(v) {
-    if(!v) return 'color:#1e293b';
+
+  function cellBg(v, disrupted) {
+    if (!v) return '';
+    var a = 0.12 + (v/maxVal)*0.76;
+    return disrupted
+      ? 'background:rgba(220,38,38,'+a.toFixed(2)+')'
+      : 'background:rgba('+cr+','+cg+','+cb+','+a.toFixed(2)+')';
+  }
+  function cellTx(v, disrupted) {
+    if (!v) return 'color:#1e293b';
+    if (disrupted) return (v/maxVal)>0.45 ? 'color:#fff1f2;font-weight:700' : 'color:#fca5a5;font-weight:600';
     return (v/maxVal)>0.45 ? 'color:#0c1220;font-weight:700' : 'color:#e2e8f0;font-weight:600';
   }
 
+  // Compute disrupted volume per importer column
+  var colGaps = mat.importers.map(function(imp, j) {
+    return mat.rows.reduce(function(s, row) {
+      return s + (isCellDisrupted(row.name, imp) ? (row.vals[j]||0) : 0);
+    }, 0);
+  });
+  var totalGap = colGaps.reduce(function(s,v){return s+v;},0);
+
   var colStyle = 'text-align:center;padding:3px 4px;color:#475569;font-size:7px;font-weight:500;white-space:nowrap;border-bottom:1px solid rgba(255,255,255,0.06)';
-  var html = '<div style="margin-top:8px"><div style="font-size:7px;color:#475569;font-weight:500;letter-spacing:.06em;margin-bottom:6px">TRADE FLOW MATRIX &mdash; '+comm.unit+'</div>';
+
+  var html = '<div style="margin-top:8px">';
+  html += '<div style="font-size:7px;color:#475569;font-weight:500;letter-spacing:.06em;margin-bottom:6px;display:flex;align-items:center;gap:8px">TRADE FLOW MATRIX &mdash; '+comm.unit;
+  if (hasDisruption && totalGap > 0) html += '<span style="color:#f87171;letter-spacing:.08em">&#9670; DISRUPTION ACTIVE</span>';
+  html += '</div>';
   html += '<div style="overflow-x:auto"><table style="width:100%;border-collapse:separate;border-spacing:1px;font-family:var(--f-mono)">';
 
-  // Header row
+  // Header
   html += '<thead><tr>';
   html += '<th style="text-align:left;padding:3px 8px 3px 0;color:#334155;font-size:7px;font-weight:500;white-space:nowrap;min-width:76px"></th>';
-  mat.importers.forEach(function(imp){
-    html += '<th style="'+colStyle+'">'+imp+'</th>';
+  mat.importers.forEach(function(imp, j) {
+    var gapStyle = (hasDisruption && colGaps[j] > 0) ? 'color:#f87171' : 'color:#475569';
+    html += '<th style="'+colStyle+';'+gapStyle+'">'+imp+'</th>';
   });
   html += '<th style="'+colStyle.replace('#475569','#334155')+'">TOTAL</th>';
   html += '</tr></thead>';
 
   // Data rows
   html += '<tbody>';
-  mat.rows.forEach(function(row){
+  mat.rows.forEach(function(row) {
     var rowTotal = row.vals.reduce(function(s,v){return s+(v||0);},0);
     html += '<tr>';
     html += '<td style="padding:2px 8px 2px 0;color:#94a3b8;font-size:7.5px;white-space:nowrap">'+row.name+'</td>';
-    row.vals.forEach(function(v){
-      html += '<td style="text-align:center;padding:2px 3px;border-radius:2px;font-size:8px;min-width:36px;'+cellBg(v)+';'+cellTx(v)+'">'+(v?v.toFixed(1):'<span style="color:#1e293b">·</span>')+'</td>';
+    row.vals.forEach(function(v, j) {
+      var dis = v > 0 && isCellDisrupted(row.name, mat.importers[j]);
+      html += '<td style="text-align:center;padding:2px 3px;border-radius:2px;font-size:8px;min-width:36px;'+cellBg(v,dis)+';'+cellTx(v,dis)+'">';
+      if (v) {
+        html += v.toFixed(1);
+        if (dis) html += '<sup style="font-size:5.5px;color:#f87171;margin-left:1px">!</sup>';
+      } else {
+        html += '<span style="color:#1e293b">·</span>';
+      }
+      html += '</td>';
     });
     html += '<td style="text-align:right;padding:2px 6px;color:#475569;font-size:7.5px">'+rowTotal.toFixed(1)+'</td>';
     html += '</tr>';
   });
   html += '</tbody>';
 
-  // Footer: column totals
-  html += '<tfoot><tr>';
+  // Footer totals
+  html += '<tfoot>';
+  html += '<tr>';
   html += '<td style="padding:3px 8px 3px 0;color:#334155;font-size:7px;font-weight:500;border-top:1px solid rgba(255,255,255,0.08)">TOTAL</td>';
   var grandTotal = 0;
-  mat.importers.forEach(function(_,j){
+  mat.importers.forEach(function(_, j) {
     var ct = mat.rows.reduce(function(s,row){return s+(row.vals[j]||0);},0);
     grandTotal += ct;
     html += '<td style="text-align:center;padding:3px 4px;color:#64748b;font-size:7.5px;border-top:1px solid rgba(255,255,255,0.08)">'+ct.toFixed(1)+'</td>';
   });
   html += '<td style="text-align:right;padding:3px 6px;color:#64748b;font-size:7.5px;border-top:1px solid rgba(255,255,255,0.08)">'+grandTotal.toFixed(1)+'</td>';
-  html += '</tr></tfoot>';
-  html += '</table></div>';
-  html += '<div style="font-size:7px;color:#334155;margin-top:5px">Major documented bilateral flows only &mdash; rows may not sum to total export volume (some goes to unlisted destinations). Sources: IEA, EIA, Vortexa 2023.</div>';
+  html += '</tr>';
+
+  // AT RISK row — only shown when disruptions are active
+  if (hasDisruption && totalGap > 0) {
+    html += '<tr>';
+    html += '<td style="padding:4px 8px 3px 0;color:#f87171;font-size:7px;font-weight:700;letter-spacing:.06em;border-top:1px solid rgba(220,38,38,0.35);white-space:nowrap">&#9660; AT RISK</td>';
+    colGaps.forEach(function(gap) {
+      var scaled = (gap * level);
+      html += '<td style="text-align:center;padding:4px 3px 3px;border-radius:2px;font-size:8px;font-weight:700;border-top:1px solid rgba(220,38,38,0.35);';
+      if (gap > 0) {
+        var a = 0.08 + (gap / Math.max(...colGaps)) * 0.25;
+        html += 'background:rgba(220,38,38,'+a.toFixed(2)+');color:#f87171">'+scaled.toFixed(1);
+      } else {
+        html += 'color:#1e293b">·';
+      }
+      html += '</td>';
+    });
+    html += '<td style="text-align:right;padding:4px 6px 3px;color:#f87171;font-size:7.5px;font-weight:700;border-top:1px solid rgba(220,38,38,0.35)">'+(totalGap*level).toFixed(1)+'</td>';
+    html += '</tr>';
+  }
+
+  html += '</tfoot></table></div>';
+  html += '<div style="font-size:7px;color:#334155;margin-top:5px">Major documented bilateral flows only — rows may not sum to total export volume. Sources: IEA, EIA, Vortexa 2023.</div>';
+  if (hasDisruption && totalGap > 0) {
+    html += '<div style="font-size:7px;color:#64748b;margin-top:3px">&#9650; Red cells = corridor transits disrupted chokepoint(s). AT RISK shows exposed volume ('+comm.unit+') — pipeline bypass capacity not deducted here; see KPI cards above.</div>';
+  }
   html += '</div>';
   return html;
 }
@@ -15208,6 +15286,9 @@ function runTFStressTest() {
 
   // Price impact
   renderTFPriceImpact(comm, impactedPct, cpNames);
+
+  // Refresh trade flow matrix to highlight disrupted bilateral corridors
+  renderTFBaseline(comm);
 
   // Flash outputs
   document.querySelectorAll('.tf-output-card').forEach(function(c) {

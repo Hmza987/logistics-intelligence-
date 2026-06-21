@@ -2771,6 +2771,8 @@ canvas { font-family: var(--f-mono); }
 .tf-comm-btn{font-size:10px;padding:5px 12px;border-radius:3px;cursor:pointer;background:rgba(255,255,255,0.03);border:1px solid var(--c-bd1);color:var(--c-tx1);transition:all 0.15s;}
 .tf-comm-btn.active{background:rgba(96,165,250,0.12);border-color:#60a5fa;color:#e8eaed;}
 .tf-comm-btn:hover:not(.active){border-color:var(--c-tx2);}
+.tf-comm-btn.wip{opacity:0.38;cursor:default;border-style:dashed;}
+.tf-comm-btn.wip:hover{border-color:rgba(255,255,255,0.12);}
 #tf-world-map{height:580px;border-radius:0 0 4px 4px;background:#0a0f16;}
 .tf-below-map{display:grid;grid-template-columns:62% 38%;gap:14px;margin-bottom:14px;}
 .tf-cp-grid{display:flex;flex-direction:column;gap:4px;max-height:300px;overflow-y:auto;}
@@ -2993,7 +2995,7 @@ canvas { font-family: var(--f-mono); }
   <div class="tab" onclick="showTab('trucking',this)">&#9672; Corridor Performance Monitor</div>
   <div class="tab" onclick="showTab('simulator',this)">&#9670; Scenario Simulator</div>
   <div class="tab" onclick="showTab('watchlist',this)">&#8881; Strategic Watchlist</div>
-  <div class="tab" onclick="showTab('stress',this)">&#9670; Trade Flow Stress Test</div>
+  <div class="tab" onclick="showTab('stress',this)">&#9670; Trade Explorer Lab</div>
 </div>
 
 <!-- MOBILE CURRENT-TAB INDICATOR -->
@@ -3038,7 +3040,7 @@ canvas { font-family: var(--f-mono); }
       </button>
       <button class="mob-nav-item" id="mob-tab-stress" onclick="mobShowTab('stress')">
         <span class="mob-nav-icon">&#9670;</span>
-        <span class="mob-nav-label">Trade Flow Stress Test</span>
+        <span class="mob-nav-label">Trade Explorer Lab</span>
       </button>
     </div>
     <div id="mob-nav-footer">
@@ -4167,6 +4169,15 @@ canvas { font-family: var(--f-mono); }
 
   <!-- Full-width world map with integrated commodity selector -->
   <div class="card" style="padding:0;overflow:hidden;position:relative;margin-bottom:14px">
+
+    <!-- WIP overlay — shown when a non-crude-oil commodity is selected -->
+    <div id="tf-wip-screen" style="display:none;position:absolute;inset:0;z-index:50;background:rgba(6,10,18,0.93);display:none;align-items:center;justify-content:center;flex-direction:column;gap:16px;text-align:center;padding:40px">
+      <div style="font-family:var(--f-mono);font-size:10px;letter-spacing:.18em;text-transform:uppercase;color:#334155">Work in Progress</div>
+      <div id="tf-wip-name" style="font-size:22px;font-weight:700;color:#e8eaed;letter-spacing:-.01em"></div>
+      <div style="font-size:11px;color:#475569;max-width:380px;line-height:1.7">Full trade flow modelling, route data, and chokepoint stress-test for this commodity is under development. Only <span style="color:#f59e0b;font-weight:600">Crude Oil</span> is available in this release.</div>
+      <div style="width:48px;height:1px;background:rgba(255,255,255,0.08)"></div>
+      <div style="font-size:9px;color:#1e293b;letter-spacing:.1em;text-transform:uppercase">Select Crude Oil above to continue</div>
+    </div>
 
     <!-- Row 1: category filter + map view buttons -->
     <div style="padding:6px 14px;display:flex;align-items:center;justify-content:space-between;gap:10px;border-bottom:1px solid var(--c-bd1);background:rgba(6,14,24,0.95)">
@@ -14663,10 +14674,12 @@ function buildTFCommGrid() {
     var d = TF_COMMODITIES[c.id];
     if (!d) return;
     var btn = document.createElement('button');
-    btn.className = 'tf-comm-btn' + (c.id === TF_ACTIVE_COMM ? ' active' : '');
+    var isWip = c.id !== 'crude_oil';
+    btn.className = 'tf-comm-btn' + (c.id === TF_ACTIVE_COMM ? ' active' : '') + (isWip ? ' wip' : '');
     btn.dataset.cat = c.cat;
     btn.dataset.id = c.id;
-    btn.textContent = d.name;
+    btn.textContent = isWip ? d.name + ' ·· WIP' : d.name;
+    btn.title = isWip ? 'Work in progress — coming soon' : '';
     btn.style.display = (TF_ACTIVE_CAT === 'all' || TF_ACTIVE_CAT === c.cat) ? '' : 'none';
     btn.onclick = function() { selectTFCommodity(c.id); };
     grid.appendChild(btn);
@@ -14731,6 +14744,16 @@ function selectTFCommodity(commId) {
   document.querySelectorAll('.tf-comm-btn').forEach(function(b) {
     b.classList.toggle('active', b.dataset.id === commId);
   });
+
+  // WIP gate — show overlay for any commodity other than crude_oil
+  var wipScreen = document.getElementById('tf-wip-screen');
+  if (wipScreen) {
+    var isWip = commId !== 'crude_oil';
+    wipScreen.style.display = isWip ? 'flex' : 'none';
+    var wipName = document.getElementById('tf-wip-name');
+    if (wipName) wipName.textContent = comm.name;
+    if (isWip) return;  // skip all rendering for WIP commodities
+  }
 
   // Map label
   var lbl = document.getElementById('tf-map-comm-label');

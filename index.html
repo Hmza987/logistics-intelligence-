@@ -14619,6 +14619,7 @@ var TF_DECORATOR_LAYERS = [];
 var TF_CP_MARKERS = {};
 var TF_ALT_LAYERS = [];
 var TF_PIPELINE_COLOR = '#94a3b8';
+var TF_TERMINAL_LAYERS = [];
 
 // ── Init ──────────────────────────────────────────────────────────────────────
 function initTradeFlowTab() {
@@ -14741,6 +14742,7 @@ function selectTFCommodity(commId) {
 
   // Render routes
   renderTFRoutes();
+  renderTFTerminals();
 
   // Baseline panel
   renderTFBaseline(comm);
@@ -14902,7 +14904,254 @@ function buildTFLegend() {
       html += '<div class="tf-legend-item"><div class="tf-legend-dot" style="background:#dc2626"></div>Closed / disrupted</div>';
     }
   }
+  if (TF_ACTIVE_COMM === 'crude_oil') {
+    html += '<div style="border-top:1px solid #0e1a24;margin:5px 0 4px"></div>';
+    html += '<div class="tf-legend-item"><div class="tf-legend-dot" style="background:#0a1018;border:2px solid #f59e0b;box-sizing:border-box"></div>Export terminal</div>';
+    html += '<div class="tf-legend-item"><div class="tf-legend-dot" style="background:#0a1018;border:2px solid #3dd68c;box-sizing:border-box"></div>Bypass terminal</div>';
+    html += '<div class="tf-legend-item"><div class="tf-legend-dot" style="background:#0a1018;border:2px solid #60a5fa;box-sizing:border-box"></div>Import terminal</div>';
+    html += '<div style="color:#334155;font-size:7.5px;margin-top:3px;font-family:\'IBM Plex Mono\',monospace">Click terminal to expand</div>';
+  }
   el.innerHTML = html;
+}
+
+// ── Terminal data (crude oil) ──────────────────────────────────────────────────
+var TF_OIL_TERMINALS = [
+  // GCC EXPORT TERMINALS
+  { coord:[26.64,50.16], name:'Ras Tanura', country:'Saudi Arabia', type:'export',
+    capacity:'6.0 Mb/d', berths:'18 (4 piers + 3 offshore SPMs)', storage:'33 MMbbl',
+    operator:'Saudi Aramco', vesselTypes:'VLCC \xb7 Suezmax \xb7 Aframax',
+    grade:'Arab Light \xb7 Arab Heavy \xb7 Arab Extra Light',
+    hormuzExposed:true, bypassRole:false,
+    note:'World’s largest crude oil export terminal. Four loading piers and three offshore SPMs handle 4–6 simultaneous VLCCs. Throughput record of 6.5 Mb/d achieved in 2022. Destination for ~10% of global seaborne crude trade. No alternative route if Hormuz closes.',
+    color:'#f59e0b', grad:'linear-gradient(135deg,#1a1000 0%,#2a1c00 60%,#120c00 100%)'
+  },
+  { coord:[27.04,49.78], name:'Ju’aymah Terminal', country:'Saudi Arabia', type:'export',
+    capacity:'3.0 Mb/d', berths:'4 offshore SPMs', storage:'Offshore only',
+    operator:'Saudi Aramco', vesselTypes:'VLCC (primary)',
+    grade:'Arab Heavy \xb7 Berri crude',
+    hormuzExposed:true, bypassRole:false,
+    note:'Offshore single-point mooring complex north of Ras Tanura. Handles Arab Heavy crude from the Berri and Marjan fields. Part of the Abqaiq–Ras Tanura trunk pipeline. Can simultaneously load 2 VLCCs. 100% Hormuz-dependent with no bypass option.',
+    color:'#f59e0b', grad:'linear-gradient(135deg,#1a1000 0%,#2a1c00 60%,#120c00 100%)'
+  },
+  { coord:[24.09,38.06], name:'Yanbu Export Terminal', country:'Saudi Arabia', type:'export',
+    capacity:'4.8 Mb/d', berths:'6 (2 VLCC + 4 Suezmax)', storage:'14 MMbbl',
+    operator:'Saudi Aramco / TAQA', vesselTypes:'VLCC \xb7 Suezmax',
+    grade:'Arab Light \xb7 Arab Medium',
+    hormuzExposed:false, bypassRole:true,
+    note:'East–West Petroline terminus on the Red Sea. Saudi Arabia’s sole major Hormuz bypass — 4.8 Mb/d flows from Abqaiq without entering the Strait. Also serves Yanbu Industrial City refinery (400 kbd). When Bab-el-Mandeb is open, all Yanbu cargo reaches Asia normally. Critical for Asia-bound diversification under Hormuz stress.',
+    color:'#3dd68c', grad:'linear-gradient(135deg,#031e12 0%,#063220 60%,#021410 100%)'
+  },
+  { coord:[25.12,56.34], name:'Fujairah Oil Terminal', country:'UAE', type:'export',
+    capacity:'1.5 Mb/d (ADCOP terminus)', berths:'12 oil berths', storage:'10 MMbbl (Phase 1)',
+    operator:'ADNOC / Fujairah National Group', vesselTypes:'VLCC \xb7 Suezmax',
+    grade:'Murban \xb7 Das Blend',
+    hormuzExposed:false, bypassRole:true,
+    note:'UAE’s dedicated Hormuz bypass terminal. ADCOP (Abu Dhabi Crude Oil Pipeline, 400 km) delivers 1.5 Mb/d from Habshan directly to the Gulf of Oman. Also world’s second-largest bunkering port — 140+ storage tanks. Phase 2 expansion targets 2.4 Mb/d. Strategic redundancy when Hormuz faces disruption risk.',
+    color:'#3dd68c', grad:'linear-gradient(135deg,#031e12 0%,#063220 60%,#021410 100%)'
+  },
+  { coord:[29.05,48.12], name:'Mina Al-Ahmadi', country:'Kuwait', type:'export',
+    capacity:'1.2 Mb/d', berths:'6 jetties (Sea Island platform)', storage:'20 MMbbl',
+    operator:'Kuwait Petroleum Corporation (KPC)', vesselTypes:'VLCC \xb7 Suezmax',
+    grade:'Kuwait Export Crude (KEC) \xb7 Kuwait Blend',
+    hormuzExposed:true, bypassRole:false,
+    note:'Kuwait’s primary crude export terminal. The Sea Island offshore platform can simultaneously handle 2 VLCCs at 50,000 bbl/hr each. KEC is a medium-sour grade (30.5 API, 2.5% sulphur) sold mainly to Asian refiners. No Hormuz bypass exists — 100% chokepoint-dependent. Adjacent to KNPC Al-Ahmadi refinery.',
+    color:'#f59e0b', grad:'linear-gradient(135deg,#1a1000 0%,#2a1c00 60%,#120c00 100%)'
+  },
+  { coord:[25.68,52.42], name:'Halul Island Terminal', country:'Qatar', type:'export',
+    capacity:'~300 kbd (crude)', berths:'3 tanker berths', storage:'~5 MMbbl',
+    operator:'QatarEnergy', vesselTypes:'Suezmax \xb7 Aframax',
+    grade:'Al-Shaheen crude \xb7 Dukhan crude',
+    hormuzExposed:true, bypassRole:false,
+    note:'Qatar’s only crude oil export terminal, located 90 km offshore in the Persian Gulf. Ships Al-Shaheen (~300 kbd, TotalEnergies-operated) and Dukhan onshore crude (~80 kbd, since 1940). Entirely distinct from Ras Laffan LNG terminal. 100% Hormuz-dependent — no bypass route of any kind exists.',
+    color:'#f59e0b', grad:'linear-gradient(135deg,#1a1000 0%,#2a1c00 60%,#120c00 100%)'
+  },
+  { coord:[23.63,58.52], name:'Mina Al-Fahal', country:'Oman', type:'export',
+    capacity:'1.0 Mb/d', berths:'4 (2 VLCC + 2 Suezmax)', storage:'8 MMbbl',
+    operator:'OQ (Oman Oil Company)', vesselTypes:'VLCC \xb7 Suezmax',
+    grade:'Oman Blend \xb7 Oman Export Blend (OEB)',
+    hormuzExposed:false, bypassRole:false,
+    note:'Oman’s sole crude export terminal, situated entirely outside the Strait of Hormuz in the Gulf of Oman. Direct Indian Ocean access — exports flow unimpeded to Asian refiners. The GCC’s most resilient crude terminal. Oman Blend (33 API, medium sour) is an important benchmark for Asian buyers; spot price referenced against Dubai/Oman official selling price.',
+    color:'#3dd68c', grad:'linear-gradient(135deg,#031e12 0%,#063220 60%,#021410 100%)'
+  },
+  { coord:[26.17,50.62], name:'Sitra Terminal', country:'Bahrain', type:'import',
+    capacity:'267 kbd (refinery input)', berths:'6 tanker berths', storage:'~4 MMbbl',
+    operator:'BAPCO Energies', vesselTypes:'Suezmax \xb7 Aframax',
+    grade:'Arab Light (Saudi blend)',
+    hormuzExposed:true, bypassRole:false,
+    note:'Bahrain’s primary crude import and products export terminal. Receives Arab Light crude via the Bahrain–Saudi pipeline (BNSPL, ~227 kbd) and by tanker. BAPCO Sitra refinery (267 kbd) is one of the oldest in the region, operating since 1936. Also handles refined product exports (jet, gasoil, naphtha). 100% Hormuz-dependent.',
+    color:'#60a5fa', grad:'linear-gradient(135deg,#060e1a 0%,#0c1a2e 60%,#040c14 100%)'
+  },
+  // NON-GCC EXPORT TERMINALS
+  { coord:[29.22,50.32], name:'Kharg Island', country:'Iran', type:'export',
+    capacity:'5.0 Mb/d (design capacity)', berths:'17 (T-jetties + SPMs)', storage:'25 MMbbl',
+    operator:'NIOC / Kharg Terminal Company', vesselTypes:'VLCC \xb7 Suezmax',
+    grade:'Iranian Heavy \xb7 Iranian Light \xb7 Foroozan',
+    hormuzExposed:true, bypassRole:false,
+    note:'Iran’s primary crude terminal, accounting for 85–90% of exports pre-sanctions. Currently operating at ~1.4 Mb/d under US sanctions. Strategic vulnerability: located inside the Hormuz zone and a potential target in conflict scenarios. T-jetties can load VLCCs at 50,000 bbl/hr. Goreh–Jask pipeline (1 Mb/d) under construction to provide Red Sea access without transiting Hormuz.',
+    color:'#dc2626', grad:'linear-gradient(135deg,#1c0608 0%,#2e0e10 60%,#140408 100%)'
+  },
+  { coord:[36.84,35.92], name:'Ceyhan Terminal', country:'Turkey', type:'export',
+    capacity:'1.6 Mb/d', berths:'3 (2 SPM + 1 jetty)', storage:'~6 MMbbl',
+    operator:'Botas International / BTC Co.', vesselTypes:'Suezmax \xb7 Aframax',
+    grade:'Azeri Light (BTC) \xb7 Kirkuk crude (ITP)',
+    hormuzExposed:false, bypassRole:false,
+    note:'Mediterranean terminus for two pipelines: BTC (Baku–Tbilisi–Ceyhan, ~1.1 Mb/d Azerbaijani crude) and Kirkuk–Ceyhan (Iraqi Kurdish crude, intermittent ~300–500 kbd). Bypasses Black Sea and Bosphorus entirely. Azeri Light (37 API, low sulphur) is a premium grade. Capacity expansion to 2.0 Mb/d underway.',
+    color:'#3dd68c', grad:'linear-gradient(135deg,#031410 0%,#062a20 60%,#020e0c 100%)'
+  },
+  { coord:[44.72,37.80], name:'Novorossiysk (CPC Terminal)', country:'Russia', type:'export',
+    capacity:'1.2 Mb/d', berths:'3 offshore SPMs', storage:'~12 MMbbl',
+    operator:'Caspian Pipeline Consortium (CPC)', vesselTypes:'Suezmax \xb7 Aframax',
+    grade:'CPC Blend (Tengiz/Kashagan) \xb7 Urals',
+    hormuzExposed:false, bypassRole:false,
+    note:'Russia’s largest Black Sea crude terminal. CPC pipeline carries ~1.0 Mb/d of Kazakh Tengiz crude alongside Russian volumes from the Novorossiysk port. Faces Bosphorus/Turkish Straits constraint for Mediterranean access — tanker convoy depth limits apply. Weather closures average 30–40 days per year due to Black Sea storm conditions (Bora wind).',
+    color:'#dc2626', grad:'linear-gradient(135deg,#1c0608 0%,#2e0e10 60%,#140408 100%)'
+  },
+  { coord:[42.88,133.54], name:'Kozmino (ESPO Terminal)', country:'Russia', type:'export',
+    capacity:'1.2 Mb/d', berths:'3 tanker berths', storage:'~10 MMbbl',
+    operator:'Transneft', vesselTypes:'Suezmax \xb7 Aframax',
+    grade:'ESPO Blend (38 API, low sulphur)',
+    hormuzExposed:false, bypassRole:false,
+    note:'Pacific terminus of the East Siberia–Pacific Ocean (ESPO) pipeline (4,734 km from Taishet). No major chokepoint dependency — direct Pacific access to Chinese, Japanese, and Korean buyers. Post-2022 sanctions shifted Russian export strategy eastward; ESPO now handles 30%+ of Russia’s seaborne crude. Preferred by Chinese independent refiners (‘teapots’) for premium light-sweet grades.',
+    color:'#dc2626', grad:'linear-gradient(135deg,#1c0608 0%,#2e0e10 60%,#140408 100%)'
+  },
+  { coord:[4.42,7.18], name:'Bonny Terminal', country:'Nigeria', type:'export',
+    capacity:'~800 kbd', berths:'3 offshore SPMs + FSO', storage:'Offshore FSO vessels',
+    operator:'NNPC / Shell JV (SPDC)', vesselTypes:'VLCC \xb7 Suezmax',
+    grade:'Bonny Light (35 API) \xb7 Brass crude',
+    hormuzExposed:false, bypassRole:false,
+    note:'Nigeria’s primary crude terminal. Bonny Light (low-sulphur, 35 API) is a premium grade prized by European refiners for low refining cost. No major chokepoint dependency on Atlantic routes. Recurring production disruptions from Niger Delta pipeline sabotage average 100–200 kbd of shut-in capacity. NLNG plant co-located at Bonny Island.',
+    color:'#f59e0b', grad:'linear-gradient(135deg,#101000 0%,#201e00 60%,#0c0c00 100%)'
+  },
+  { coord:[-8.80,13.20], name:'Malongo / Cabinda Terminal', country:'Angola', type:'export',
+    capacity:'~1.1 Mb/d', berths:'4 offshore FPSOs + SPMs', storage:'Offshore FPSOs',
+    operator:'TotalEnergies / Sonangol', vesselTypes:'VLCC \xb7 Suezmax',
+    grade:'Cabinda crude \xb7 Girassol blend \xb7 Dalia',
+    hormuzExposed:false, bypassRole:false,
+    note:'Angola’s primary offshore crude loading. Ships Cabinda and deepwater grades (medium sweet, ~32 API) favoured by Chinese and Indian refiners. Operates via FPSOs and shuttle tankers — no fixed pier infrastructure. ~60% of exports go to China. No major chokepoint dependency on direct Cape of Good Hope routes to Asia.',
+    color:'#f59e0b', grad:'linear-gradient(135deg,#101000 0%,#201e00 60%,#0c0c00 100%)'
+  },
+  { coord:[29.50,-94.50], name:'US Gulf Export Hub', country:'USA', type:'export',
+    capacity:'3.5+ Mb/d (port aggregate)', berths:'20+ (Houston + Corpus Christi + Beaumont)', storage:'~220 MMbbl (commercial + SPR)',
+    operator:'Enterprise Products \xb7 ExxonMobil \xb7 Valero', vesselTypes:'VLCC \xb7 Suezmax \xb7 Aframax',
+    grade:'WTI Midland \xb7 WTI Houston \xb7 Eagle Ford',
+    hormuzExposed:false, bypassRole:false,
+    note:'Largest US crude export complex spanning Houston Ship Channel, Beaumont, and Corpus Christi. WTI Midland is a global benchmark grade loaded here. Corpus Christi Southside deepwater SPM (50 ft) handles partial VLCC loadings; full VLCC requires offshore lightering. Strategic Petroleum Reserve (SPR) at Freeport/Bryan Mound is accessible via pipeline for emergency releases. Panama Canal provides Asia access.',
+    color:'#3dd68c', grad:'linear-gradient(135deg,#031e12 0%,#063220 60%,#021410 100%)'
+  },
+  { coord:[49.30,-123.00], name:'Westridge Terminal (TMX)', country:'Canada', type:'export',
+    capacity:'590 kbd', berths:'3 berths (Aframax max)', storage:'~4.5 MMbbl',
+    operator:'Trans Mountain Corporation', vesselTypes:'Aframax (size-constrained)',
+    grade:'Diluted Bitumen (DilBit) \xb7 Synthetic Crude Oil',
+    hormuzExposed:false, bypassRole:false,
+    note:'Canadian Pacific coast terminal, opened May 2024 as Trans Mountain Expansion (TMX) terminus. Size-limited to Aframax tankers (max ~80,000 DWT) due to First Narrows bridge draft restrictions. Larger cargoes require offshore transshipment to VLCCs at Watson Island. Provides Alberta oil sands direct Pacific access, bypassing US Gulf routing. First significant Canadian crude export pathway to Asia.',
+    color:'#3dd68c', grad:'linear-gradient(135deg,#031e12 0%,#063220 60%,#021410 100%)'
+  },
+  // IMPORT TERMINALS
+  { coord:[29.90,122.10], name:'Ningbo-Zhoushan Port', country:'China', type:'import',
+    capacity:'520 MT/yr (~10.4 Mb/d)', berths:'65+ oil berths', storage:'~200 MMbbl',
+    operator:'CNOOC \xb7 Sinopec \xb7 PetroChina \xb7 Ningbo Port Group', vesselTypes:'VLCC 320,000 DWT',
+    grade:'All grades: Saudi Arab Light, UAE Murban, Russian ESPO, Iraqi Basrah',
+    hormuzExposed:false, bypassRole:false,
+    note:'World’s largest crude oil import port by volume. Handles ~30% of China’s total crude imports. Zhoushan Laoganshan terminal: dedicated deepwater berths at 25 m draft for 300,000 DWT VLCCs. SPR (Strategic Petroleum Reserve) facilities co-located nearby. Critical endpoint for the Saudi–China, UAE–China, and Russia–China trade corridors.',
+    color:'#60a5fa', grad:'linear-gradient(135deg,#050d18 0%,#091830 60%,#030c12 100%)'
+  },
+  { coord:[35.50,140.05], name:'Tokyo Bay Oil Complex', country:'Japan', type:'import',
+    capacity:'~1.2 Mb/d (Chiba-Kisarazu complex)', berths:'8 VLCC berths', storage:'~60 MMbbl',
+    operator:'Eneos Holdings (JXTG)', vesselTypes:'VLCC \xb7 Suezmax',
+    grade:'Arab Light \xb7 Arab Extra Light \xb7 Kuwait Export Crude',
+    hormuzExposed:false, bypassRole:false,
+    note:'Japan’s primary crude import terminal complex in Tokyo Bay. Japan is 100% import-dependent — zero domestic crude production of scale. ~80% of imports originate from GCC countries, making Japan the world’s most GCC-dependent major economy for crude. SPR maintained at 90+ days at Mutsu-Ogawara, Goto Island, and Shibushi. All cargoes transit Malacca or Lombok Straits en route from the Gulf.',
+    color:'#60a5fa', grad:'linear-gradient(135deg,#050d18 0%,#091830 60%,#030c12 100%)'
+  },
+  { coord:[51.90,4.00], name:'Europoort Oil Terminal', country:'Netherlands', type:'import',
+    capacity:'~6 Mb/d (receiving capacity)', berths:'55+ (VLCC + Suezmax + product)', storage:'~85 MMbbl',
+    operator:'Vopak \xb7 Shell Pernis \xb7 Q8', vesselTypes:'VLCC \xb7 Suezmax \xb7 Aframax',
+    grade:'Urals (pre-2022) \xb7 Arab Light \xb7 CPC Blend \xb7 Forties \xb7 WTI',
+    hormuzExposed:false, bypassRole:false,
+    note:'Europe’s largest crude oil import hub. Rotterdam forms the ARA (Amsterdam-Rotterdam-Antwerp) benchmark storage complex — the reference point for Brent crude pricing. Rhine barge network distributes inland to Rhine-Ruhr refineries in Germany and beyond. Pre-sanctions Russian Urals supplied ~25% of Rotterdam crude; replaced post-2022 by GCC, US, Norwegian, and North Sea grades at 10–20% freight premium.',
+    color:'#60a5fa', grad:'linear-gradient(135deg,#060e1a 0%,#0c1a2e 60%,#040c14 100%)'
+  },
+  { coord:[22.46,69.40], name:'Vadinar / Jamnagar Terminal', country:'India', type:'import',
+    capacity:'1.6 Mb/d (Vadinar + Sikka)', berths:'10 (VLCC + Suezmax)', storage:'~35 MMbbl',
+    operator:'Reliance Industries (Vadinar) \xb7 HPCL (Sikka)', vesselTypes:'VLCC \xb7 Suezmax',
+    grade:'Arab Light \xb7 Iraqi Basrah Heavy \xb7 Russian ESPO \xb7 Nigerian Bonny Light',
+    hormuzExposed:false, bypassRole:false,
+    note:'India’s largest crude import complex. Vadinar feeds Reliance Jamnagar — world’s largest single-site refinery complex (1.24 Mb/d). India imports ~5 Mb/d: Saudi, UAE, Iraq (~40%), Russia (~35% post-2022). Short Gulf–India route (~1,400 nm via Hormuz) makes India acutely GCC-dependent. Western route via Bab-el-Mandeb is secondary; most cargo comes directly from the Gulf.',
+    color:'#60a5fa', grad:'linear-gradient(135deg,#050d18 0%,#091830 60%,#030c12 100%)'
+  },
+  { coord:[35.70,127.50], name:'Ulsan / Yeosu Import Hub', country:'South Korea', type:'import',
+    capacity:'~2.8 Mb/d (Ulsan + Yeosu combined)', berths:'12 VLCC berths', storage:'~50 MMbbl',
+    operator:'SK Innovation \xb7 GS Caltex \xb7 S-OIL', vesselTypes:'VLCC \xb7 Suezmax',
+    grade:'Arab Light \xb7 Murban \xb7 Kuwait Export Crude \xb7 Qatar Marine',
+    hormuzExposed:false, bypassRole:false,
+    note:'South Korea’s primary crude import complex. ~75% of imports originate from GCC countries — the highest GCC share of any major economy outside Japan. S-OIL refinery at Onsan is partly Aramco-owned (63% stake), creating a direct Saudi–Korean supply chain. SPR maintained at 90-day reserve level. All GCC cargoes transit Malacca or Lombok Straits for East Asian delivery.',
+    color:'#60a5fa', grad:'linear-gradient(135deg,#050d18 0%,#091830 60%,#030c12 100%)'
+  }
+];
+
+function buildTerminalPopupHtml(t) {
+  var isBypass = t.bypassRole;
+  var isExport = t.type === 'export';
+  var typeLabel = isBypass ? 'BYPASS TERMINAL' : (isExport ? 'EXPORT TERMINAL' : 'IMPORT TERMINAL');
+  var typeColor = isBypass ? '#3dd68c' : (isExport ? '#f59e0b' : '#60a5fa');
+  var typeBg    = isBypass ? 'rgba(61,214,140,.14)' : (isExport ? 'rgba(245,158,11,.14)' : 'rgba(96,165,250,.14)');
+  var horRow = '';
+  if (isExport) {
+    if (t.hormuzExposed) {
+      horRow = '<div class="pp-row"><span class="pp-lbl">Hormuz exposure</span><span class="pp-val" style="color:#dc2626">&#9679; Exposed — no bypass</span></div>';
+    } else if (isBypass) {
+      horRow = '<div class="pp-row"><span class="pp-lbl">Hormuz exposure</span><span class="pp-val" style="color:#3dd68c">&#9679; Bypass terminal</span></div>';
+    } else {
+      horRow = '<div class="pp-row"><span class="pp-lbl">Hormuz exposure</span><span class="pp-val" style="color:#3dd68c">&#9679; No Hormuz dependency</span></div>';
+    }
+  }
+  return (
+    '<div class="pp-hdr" style="background:' + t.grad + '">' +
+      '<div class="pp-hdr-grid"></div>' +
+      '<div class="pp-hdr-fade"></div>' +
+      '<div class="pp-hdr-content">' +
+        '<div>' +
+          '<div class="pp-name">' + t.name + '</div>' +
+          '<div class="pp-country">' + t.country + '</div>' +
+        '</div>' +
+        '<div class="pp-status-badge" style="color:' + typeColor + ';background:' + typeBg + '">' + typeLabel + '</div>' +
+      '</div>' +
+    '</div>' +
+    '<div class="pp-body">' +
+      '<div class="pp-section-head">Capacity &amp; Infrastructure</div>' +
+      '<div class="pp-row"><span class="pp-lbl">&#9646; Daily throughput</span><span class="pp-val">' + t.capacity + '</span></div>' +
+      '<div class="pp-row"><span class="pp-lbl">&#9875; Berths / SPMs</span><span class="pp-val" style="max-width:185px;text-align:right;font-size:8px">' + t.berths + '</span></div>' +
+      '<div class="pp-row"><span class="pp-lbl">&#9632; Storage capacity</span><span class="pp-val">' + t.storage + '</span></div>' +
+      '<div class="pp-section-head">Operations</div>' +
+      '<div class="pp-row"><span class="pp-lbl">Operator</span><span class="pp-val" style="max-width:185px;text-align:right;line-height:1.35;font-size:8px">' + t.operator + '</span></div>' +
+      '<div class="pp-row"><span class="pp-lbl">Vessel types</span><span class="pp-val">' + t.vesselTypes + '</span></div>' +
+      '<div class="pp-row"><span class="pp-lbl">Crude grade</span><span class="pp-val" style="max-width:185px;text-align:right;font-size:8px;line-height:1.35">' + t.grade + '</span></div>' +
+      horRow +
+      '<div class="pp-section-head">Strategic Note</div>' +
+      '<div style="font-family:\'IBM Plex Mono\',monospace;font-size:8px;color:#94a3b8;line-height:1.55;padding:4px 0 2px">' + t.note + '</div>' +
+    '</div>'
+  );
+}
+
+function renderTFTerminals() {
+  TF_TERMINAL_LAYERS.forEach(function(l) { if (TF_MAP) TF_MAP.removeLayer(l); });
+  TF_TERMINAL_LAYERS = [];
+  if (!TF_MAP || !TF_ACTIVE_COMM || TF_ACTIVE_COMM !== 'crude_oil') return;
+  TF_OIL_TERMINALS.forEach(function(t) {
+    var ringColor = t.bypassRole ? '#3dd68c' : (t.type === 'export' ? '#f59e0b' : '#60a5fa');
+    var m = L.circleMarker(t.coord, {
+      radius: 7, color: ringColor, fillColor: '#0a1018', fillOpacity: 1, weight: 2
+    });
+    m.bindTooltip('<span style="font-family:\'IBM Plex Mono\',monospace;font-size:9px;color:#e2e8f0;letter-spacing:.02em">' + t.name + '</span><br><span style="font-size:8px;color:#64748b">' + t.country + ' \xb7 ' + (t.bypassRole ? 'Bypass' : t.type === 'export' ? 'Export' : 'Import') + ' terminal</span>', { sticky: false, direction: 'top', offset: [0, -9], opacity: 1 });
+    m.on('click', function() {
+      L.popup({ maxWidth: 360, minWidth: 340, className: 'pp-popup', autoPan: true, closeButton: true })
+        .setLatLng(t.coord)
+        .setContent(buildTerminalPopupHtml(t))
+        .openOn(TF_MAP);
+    });
+    m.addTo(TF_MAP);
+    TF_TERMINAL_LAYERS.push(m);
+  });
 }
 
 // ── Chokepoint toggle ─────────────────────────────────────────────────────────

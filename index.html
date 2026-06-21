@@ -2761,6 +2761,11 @@ canvas { font-family: var(--f-mono); }
 .tf-page-meta{font-family:var(--f-mono);font-size:8px;color:var(--c-tx2);letter-spacing:.06em;}
 .tf-cat-row{display:flex;gap:8px;margin-bottom:10px;flex-wrap:wrap;}
 .tf-cat-btn{font-family:var(--f-mono);font-size:8px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;padding:4px 10px;border-radius:3px;cursor:pointer;background:transparent;border:1px solid var(--c-bd1);color:var(--c-tx1);transition:all 0.15s;}
+.tf-cp-chip{display:inline-flex;align-items:center;padding:2px 8px;font-family:var(--f-mono);font-size:7px;letter-spacing:.07em;text-transform:uppercase;color:#475569;background:transparent;border:1px solid rgba(255,255,255,0.08);border-radius:2px;cursor:pointer;white-space:nowrap;transition:border-color .15s,color .15s,background .15s;flex-shrink:0;}
+.tf-cp-chip:hover{border-color:rgba(255,255,255,0.28);color:var(--c-tx1);}
+.tf-cp-chip.active{background:rgba(220,38,38,0.14);border-color:rgba(220,38,38,0.5);color:#f87171;}
+#tf-cp-chips{scrollbar-width:none;}
+#tf-cp-chips::-webkit-scrollbar{display:none;}
 .tf-cat-btn.active,.tf-cat-btn:hover{border-color:#60a5fa;color:#60a5fa;background:rgba(96,165,250,0.08);}
 .tf-comm-grid{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:14px;}
 .tf-comm-btn{font-size:10px;padding:5px 12px;border-radius:3px;cursor:pointer;background:rgba(255,255,255,0.03);border:1px solid var(--c-bd1);color:var(--c-tx1);transition:all 0.15s;}
@@ -4141,9 +4146,9 @@ canvas { font-family: var(--f-mono); }
   <!-- Full-width world map with integrated commodity selector -->
   <div class="card" style="padding:0;overflow:hidden;position:relative;margin-bottom:14px">
 
-    <!-- Row 1: category filter + map view buttons -->
-    <div style="padding:6px 14px;display:flex;align-items:center;justify-content:space-between;gap:10px;border-bottom:1px solid var(--c-bd1);background:rgba(6,14,24,0.95)">
-      <div style="display:flex;align-items:center;gap:6px;flex-wrap:wrap">
+    <!-- Row 1: category filter | chokepoint chips | map view buttons -->
+    <div style="padding:6px 14px;display:flex;align-items:center;gap:10px;border-bottom:1px solid var(--c-bd1);background:rgba(6,14,24,0.95)">
+      <div style="display:flex;align-items:center;gap:6px;flex-shrink:0">
         <span style="font-family:var(--f-mono);font-size:7px;letter-spacing:.1em;text-transform:uppercase;color:var(--c-tx2);white-space:nowrap">Category</span>
         <div class="tf-cat-row" id="tf-cat-row" style="margin-bottom:0;gap:4px">
           <button class="tf-cat-btn active" onclick="filterTFCat('energy',this)">Energy</button>
@@ -4153,6 +4158,8 @@ canvas { font-family: var(--f-mono); }
           <button class="tf-cat-btn" onclick="filterTFCat('all',this)">All</button>
         </div>
       </div>
+      <!-- Chokepoint quick-select chips — scrollable, updates per commodity -->
+      <div id="tf-cp-chips" style="flex:1;display:flex;align-items:center;gap:4px;overflow-x:auto;min-width:0;padding:0 4px"></div>
       <div style="display:flex;align-items:center;gap:8px;flex-shrink:0">
         <button onclick="TF_MAP && TF_MAP.setView([20,10],2)" style="font-family:var(--f-mono);font-size:8px;padding:2px 8px;background:transparent;border:1px solid var(--c-bd1);color:var(--c-tx2);border-radius:2px;cursor:pointer">Atlantic</button>
         <button onclick="TF_MAP && TF_MAP.setView([20,160],2)" style="font-family:var(--f-mono);font-size:8px;padding:2px 8px;background:transparent;border:1px solid var(--c-bd1);color:var(--c-tx2);border-radius:2px;cursor:pointer">Pacific</button>
@@ -14707,6 +14714,9 @@ function selectTFCommodity(commId) {
   // Chokepoint bars
   renderTFCPBars(comm);
 
+  // Header chip strip
+  updateTFCPChips();
+
   // Clear outputs
   clearTFOutputs();
 }
@@ -14869,6 +14879,7 @@ function toggleTFChokepoint(cpId) {
   if (row) row.classList.toggle('disrupted', !!TF_DISRUPTIONS[cpId]);
   renderTFRoutes();
   updateTFAlertStrip();
+  updateTFCPChips();
 }
 
 function setTFLevel(pct, el) {
@@ -14883,6 +14894,7 @@ function clearTFDisruptions() {
   renderTFRoutes();
   updateTFAlertStrip();
   clearTFOutputs();
+  updateTFCPChips();
 }
 
 function updateTFAlertStrip() {
@@ -14901,6 +14913,31 @@ function updateTFAlertStrip() {
 }
 
 // ── Baseline panel ─────────────────────────────────────────────────────────────
+var TF_CP_SHORT = {
+  hormuz:'Hormuz', bab_el_mandeb:'Bab el-Mandeb', suez:'Suez Canal',
+  malacca:'Malacca', panama:'Panama', turkish_straits:'Bosphorus',
+  danish_straits:'Danish Str.', gibraltar:'Gibraltar',
+  mozambique:'Mozambique', lombok:'Lombok', sunda:'Sunda',
+  taiwan_strait:'Taiwan Str.', oya:'Oya Ch.'
+};
+
+function updateTFCPChips() {
+  var el = document.getElementById('tf-cp-chips');
+  if (!el) return;
+  var comm = TF_ACTIVE_COMM ? TF_COMMODITIES[TF_ACTIVE_COMM] : null;
+  if (!comm || !comm.cpVols) { el.innerHTML = ''; return; }
+  var cpIds = Object.keys(comm.cpVols).sort(function(a,b){
+    return comm.cpVols[b].share - comm.cpVols[a].share;
+  });
+  var html = '<span style="font-family:var(--f-mono);font-size:7px;letter-spacing:.08em;color:#334155;white-space:nowrap;flex-shrink:0;padding-right:4px">CHOKEPOINTS</span>';
+  cpIds.forEach(function(id){
+    var on = !!TF_DISRUPTIONS[id];
+    var lbl = TF_CP_SHORT[id] || (TF_CP[id] ? TF_CP[id].name : id);
+    html += '<button class="tf-cp-chip'+(on?' active':'')+'" onclick="toggleTFChokepoint(\''+id+'\')">'+lbl+'</button>';
+  });
+  el.innerHTML = html;
+}
+
 function buildTFMatrix(comm) {
   var mat = comm.matrix;
   var hex = comm.color;

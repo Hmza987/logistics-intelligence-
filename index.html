@@ -2761,9 +2761,9 @@ canvas { font-family: var(--f-mono); }
 .tf-page-meta{font-family:var(--f-mono);font-size:8px;color:var(--c-tx2);letter-spacing:.06em;}
 .tf-cat-row{display:flex;gap:8px;margin-bottom:10px;flex-wrap:wrap;}
 .tf-cat-btn{font-family:var(--f-mono);font-size:8px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;padding:4px 10px;border-radius:3px;cursor:pointer;background:transparent;border:1px solid var(--c-bd1);color:var(--c-tx1);transition:all 0.15s;}
-.tf-cp-chip{display:inline-flex;align-items:center;padding:2px 8px;font-family:var(--f-mono);font-size:7px;letter-spacing:.07em;text-transform:uppercase;color:#475569;background:transparent;border:1px solid rgba(255,255,255,0.08);border-radius:2px;cursor:pointer;white-space:nowrap;transition:border-color .15s,color .15s,background .15s;flex-shrink:0;}
-.tf-cp-chip:hover{border-color:rgba(255,255,255,0.28);color:var(--c-tx1);}
-.tf-cp-chip.active{background:rgba(220,38,38,0.14);border-color:rgba(220,38,38,0.5);color:#f87171;}
+.tf-cp-chip{font-family:var(--f-mono);font-size:8px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;padding:4px 10px;border-radius:3px;cursor:pointer;background:transparent;border:1px solid rgba(255,255,255,0.15);color:#64748b;transition:all 0.15s;white-space:nowrap;}
+.tf-cp-chip:hover{border-color:rgba(255,255,255,0.35);color:var(--c-tx1);}
+.tf-cp-chip.active{background:rgba(220,38,38,0.15);border-color:rgba(220,38,38,0.5);color:#f87171;font-weight:700;}
 #tf-cp-chips{scrollbar-width:none;}
 #tf-cp-chips::-webkit-scrollbar{display:none;}
 .tf-cat-btn.active,.tf-cat-btn:hover{border-color:#60a5fa;color:#60a5fa;background:rgba(96,165,250,0.08);}
@@ -4169,11 +4169,10 @@ canvas { font-family: var(--f-mono); }
       <div class="tf-comm-grid" id="tf-comm-grid" style="margin-bottom:0;gap:4px"></div>
     </div>
 
-    <!-- Row 3: chokepoint quick-select (own row, visually distinct) -->
-    <div style="padding:5px 14px;border-bottom:1px solid var(--c-bd1);background:rgba(4,8,16,0.97);display:flex;align-items:center;gap:8px">
-      <span style="font-family:var(--f-mono);font-size:7px;letter-spacing:.1em;text-transform:uppercase;color:#334155;white-space:nowrap;flex-shrink:0">Chokepoints</span>
-      <div style="width:1px;height:12px;background:rgba(255,255,255,0.1);flex-shrink:0"></div>
-      <div id="tf-cp-chips" style="flex:1;display:flex;align-items:center;gap:4px;overflow-x:auto;min-width:0"></div>
+    <!-- Row 3: chokepoint quick-select (own row, same weight as category row) -->
+    <div style="padding:6px 14px;display:flex;align-items:center;gap:6px;flex-wrap:wrap;border-bottom:1px solid var(--c-bd1);background:rgba(6,14,24,0.95)">
+      <span style="font-family:var(--f-mono);font-size:7px;letter-spacing:.1em;text-transform:uppercase;color:var(--c-tx2);white-space:nowrap;flex-shrink:0">Chokepoints</span>
+      <div id="tf-cp-chips" style="display:flex;align-items:center;gap:4px;flex-wrap:wrap"></div>
     </div>
 
     <!-- Row 3: map title + route count -->
@@ -14885,6 +14884,11 @@ function toggleTFChokepoint(cpId) {
   renderTFRoutes();
   updateTFAlertStrip();
   updateTFCPChips();
+  if (TF_ACTIVE_COMM && Object.keys(TF_DISRUPTIONS).length > 0) {
+    runTFStressTest();
+  } else if (TF_ACTIVE_COMM) {
+    clearTFOutputs();
+  }
 }
 
 function setTFLevel(pct, el) {

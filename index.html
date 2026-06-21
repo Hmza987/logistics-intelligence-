@@ -4146,9 +4146,9 @@ canvas { font-family: var(--f-mono); }
   <!-- Full-width world map with integrated commodity selector -->
   <div class="card" style="padding:0;overflow:hidden;position:relative;margin-bottom:14px">
 
-    <!-- Row 1: category filter | chokepoint chips | map view buttons -->
-    <div style="padding:6px 14px;display:flex;align-items:center;gap:10px;border-bottom:1px solid var(--c-bd1);background:rgba(6,14,24,0.95)">
-      <div style="display:flex;align-items:center;gap:6px;flex-shrink:0">
+    <!-- Row 1: category filter + map view buttons -->
+    <div style="padding:6px 14px;display:flex;align-items:center;justify-content:space-between;gap:10px;border-bottom:1px solid var(--c-bd1);background:rgba(6,14,24,0.95)">
+      <div style="display:flex;align-items:center;gap:6px;flex-wrap:wrap">
         <span style="font-family:var(--f-mono);font-size:7px;letter-spacing:.1em;text-transform:uppercase;color:var(--c-tx2);white-space:nowrap">Category</span>
         <div class="tf-cat-row" id="tf-cat-row" style="margin-bottom:0;gap:4px">
           <button class="tf-cat-btn active" onclick="filterTFCat('energy',this)">Energy</button>
@@ -4157,12 +4157,6 @@ canvas { font-family: var(--f-mono); }
           <button class="tf-cat-btn" onclick="filterTFCat('manufacturing',this)">Manufacturing</button>
           <button class="tf-cat-btn" onclick="filterTFCat('all',this)">All</button>
         </div>
-      </div>
-      <!-- Chokepoint quick-select chips — own visual box, scrollable -->
-      <div style="flex:1;min-width:0;display:flex;align-items:center;gap:6px;border:1px solid rgba(255,255,255,0.09);border-radius:3px;background:rgba(255,255,255,0.03);padding:3px 10px;overflow:hidden">
-        <span style="font-family:var(--f-mono);font-size:7px;letter-spacing:.09em;text-transform:uppercase;color:#334155;white-space:nowrap;flex-shrink:0">Chokepoints</span>
-        <div style="width:1px;height:12px;background:rgba(255,255,255,0.08);flex-shrink:0"></div>
-        <div id="tf-cp-chips" style="flex:1;display:flex;align-items:center;gap:4px;overflow-x:auto;min-width:0"></div>
       </div>
       <div style="display:flex;align-items:center;gap:8px;flex-shrink:0">
         <button onclick="TF_MAP && TF_MAP.setView([20,10],2)" style="font-family:var(--f-mono);font-size:8px;padding:2px 8px;background:transparent;border:1px solid var(--c-bd1);color:var(--c-tx2);border-radius:2px;cursor:pointer">Atlantic</button>
@@ -4173,6 +4167,13 @@ canvas { font-family: var(--f-mono); }
     <!-- Row 2: commodity buttons -->
     <div style="padding:5px 14px;border-bottom:1px solid var(--c-bd1);background:rgba(8,12,20,0.9)">
       <div class="tf-comm-grid" id="tf-comm-grid" style="margin-bottom:0;gap:4px"></div>
+    </div>
+
+    <!-- Row 3: chokepoint quick-select (own row, visually distinct) -->
+    <div style="padding:5px 14px;border-bottom:1px solid var(--c-bd1);background:rgba(4,8,16,0.97);display:flex;align-items:center;gap:8px">
+      <span style="font-family:var(--f-mono);font-size:7px;letter-spacing:.1em;text-transform:uppercase;color:#334155;white-space:nowrap;flex-shrink:0">Chokepoints</span>
+      <div style="width:1px;height:12px;background:rgba(255,255,255,0.1);flex-shrink:0"></div>
+      <div id="tf-cp-chips" style="flex:1;display:flex;align-items:center;gap:4px;overflow-x:auto;min-width:0"></div>
     </div>
 
     <!-- Row 3: map title + route count -->

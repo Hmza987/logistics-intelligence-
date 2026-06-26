@@ -3848,7 +3848,7 @@ canvas { font-family: var(--f-mono); }
         </select>
       </div>
       <div class="sim-field">
-        <label>Volume (TEU / month)</label>
+        <label>Volume (FEU / month)</label>
         <input type="number" id="inp-teu" value="50" min="1" max="10000" onchange="simAutoRun()"/>
       </div>
       <div class="sim-field">
@@ -4270,6 +4270,18 @@ canvas { font-family: var(--f-mono); }
   <div class="card" id="tf-price-card" style="margin-bottom:14px">
     <div class="card-label">&#9670; Price Impact Estimate</div>
     <div id="tf-price-content" style="font-size:9px;color:var(--c-tx2);padding:8px 0;line-height:1.7">Run stress test to see price impact analysis</div>
+  </div>
+
+  <!-- Fleet Tonnage Panel (crude oil only) -->
+  <div class="card" id="tf-fleet-card" style="margin-bottom:14px">
+    <div class="card-label">&#9670; Fleet Deployment &mdash; Crude Oil Tanker Market</div>
+    <div id="tf-fleet-content"><div style="font-size:9px;color:var(--c-tx2);padding:8px 0">Select crude oil to view fleet deployment data</div></div>
+  </div>
+
+  <!-- Strategic Stockpile Panel (crude oil only) -->
+  <div class="card" id="tf-stockpile-card" style="margin-bottom:14px">
+    <div class="card-label">&#9670; Strategic Oil Stockpile Runway</div>
+    <div id="tf-stockpile-content"><div style="font-size:9px;color:var(--c-tx2);padding:8px 0">Select crude oil and run a stress test to view stockpile draw-down analysis</div></div>
   </div>
 
   <!-- GCC Country Impact -->
@@ -5718,8 +5730,9 @@ var BASE_RATES  = {
   SIN: {direct:750,  redsea:1200, oman:1000, cgh:820 },  // Singapore→ GCC  · recal. from expired Jun 2026 data
   ICD: {direct:420,  redsea:560,  oman:660,  cgh:490 }   // Mundra → GCC    · recal. from expired Jun 2026 data
 };
-var PORT_COSTS  = {SHA:450,HAM:520,ROT:500,SIN:380,ICD:320};
+var PORT_COSTS  = {SHA:220,HAM:395,ROT:330,SIN:290,ICD:200}; // SHA: FreightAmigo Apr-2026 estimate; HAM: Eurogate §5.1+§13+1.5% social (Mar-2025); ROT: FreightAmigo estimate (ECT tariff not available); SIN: OOCL SGD390 (Jul-2023); ICD: Hapag-Lloyd INR16700
 var DEST_CONFIG = {DXB:{port:'Jebel Ali',truck_direct:0,truck_jeddah:2800,truck_sohar:650,truck_cgh:2800},RUH:{port:'Riyadh',truck_direct:1900,truck_jeddah:1100,truck_sohar:2200,truck_cgh:1100},DMM:{port:'Dammam',truck_direct:600,truck_jeddah:900,truck_sohar:2800,truck_cgh:900},DOH:{port:'Hamad Port',truck_direct:1200,truck_jeddah:3200,truck_sohar:3500,truck_cgh:3200},BAH:{port:'Manama',truck_direct:900,truck_jeddah:3000,truck_sohar:3000,truck_cgh:3000},KWI:{port:'Kuwait',truck_direct:1600,truck_jeddah:4000,truck_sohar:4200,truck_cgh:4000},MCT:{port:'Sohar',truck_direct:200,truck_jeddah:1400,truck_sohar:0,truck_cgh:1400},NOM:{port:'Port of NEOM',truck_direct:2200,truck_jeddah:0,truck_sohar:2300,truck_cgh:0}};
+var DEST_THC    = {DXB:300,DOH:275,MCT:213,KWI:124,BAH:188,DMM:267,RUH:267,NOM:267}; // DXB: DP World AED1100 (user-confirmed); DOH: Mwani Qatar QAR1000; MCT: Hapag-Lloyd OMR82; KWI: KPA KWD38; BAH: Hapag-Lloyd BHD71; DMM/RUH/NOM: Mawani SAR481 + est. extras
 var COMM_SRG    = {general:1.0,consumer:1.05,auto:1.08,pharma:1.15,food:1.30,industrial:1.12,chemical:1.35};
 var COMM_NAMES  = {general:'General / mixed cargo',consumer:'Consumer goods / FMCG',auto:'Automotive parts',pharma:'Pharmaceuticals',food:'Food & perishables (reefer)',industrial:'Industrial / machinery',chemical:'Chemicals / hazmat'};
 var ORIG_NAMES  = {SHA:'Shanghai',HAM:'Hamburg',ROT:'Rotterdam',SIN:'Singapore',ICD:'Mundra / Nhava Sheva'};
@@ -6297,7 +6310,7 @@ function runSimulator() {
   var bestKey   = bestRow ? bestRow.key : 'cgh';
   var bestName  = ROUTE_NAMES[bestKey];
   var origPort  = PORT_COSTS[origin] || 400;
-  var destPort  = 280;
+  var destPort  = DEST_THC[dest] || 280;
   var truck     = bestRow ? bestRow.truckCost : 0;
   var totalFEU  = bestRate + origPort + destPort + truck;
   var totalMo   = totalFEU * teu;
@@ -14759,7 +14772,7 @@ function selectTFCommodity(commId) {
   }
   // Toggle all panels below the map card
   var d = isWip ? 'none' : '';
-  ['tf-outputs','tf-baseline-card','tf-price-card','tf-gcc-card','tf-method-card','tf-alert-strip'].forEach(function(id) {
+  ['tf-outputs','tf-baseline-card','tf-price-card','tf-fleet-card','tf-stockpile-card','tf-gcc-card','tf-method-card','tf-alert-strip'].forEach(function(id) {
     var el = document.getElementById(id);
     if (el) el.style.display = d;
   });
@@ -14775,6 +14788,8 @@ function selectTFCommodity(commId) {
 
   // Baseline panel
   renderTFBaseline(comm);
+  renderTFFleet(comm);
+  renderTFStockpile();
 
   // CP volume grid
   updateCPGridVolumes();
@@ -15382,6 +15397,55 @@ var TF_OIL_TERMINALS = [
     note:'The only terminal in the contiguous US capable of loading fully-laden VLCCs at full draught. Originally built in 1981 as an import facility; converted to export following the 2015 crude export ban repeal. Connected to Clovelly salt cavern hub (50 MMbbl strategic storage). VLCC capability gives LOOP a pricing premium over Corpus Christi for long-haul Asian cargoes — directly competing with GCC VLCC economics.',
     color:'#f59e0b', grad:'linear-gradient(135deg,#1a1000 0%,#2a1c00 60%,#120c00 100%)'
   }
+];
+
+// ── Fleet data (crude oil tanker market) ──────────────────────────────────────
+var TF_FLEET_DATA = {
+  crude_oil: {
+    classes: [
+      { name:'VLCC', fullName:'Very Large Crude Carrier',
+        size:'200–320k DWT', cargo:'~2.0M bbl', globalFleet:925,
+        corridorVessels:300, corridorNote:'Hormuz / Persian Gulf mainlane',
+        role:'Primary', roleColor:'#f59e0b',
+        routes:'Middle East Gulf → East Asia, Europe',
+        frtBaseline:42, frtCrisis:260, frtUnit:'WS (Platts MEG→China)', frtPeakDate:'Feb 2026',
+        hormuzImpact:'Up to ~300 VLCCs idled or diverted to Cape of Good Hope; +30–45 days per voyage reduces effective fleet capacity ∲20%' },
+      { name:'Suezmax', fullName:'Suezmax Tanker',
+        size:'120–200k DWT', cargo:'~1.0M bbl', globalFleet:620,
+        corridorVessels:85, corridorNote:'West Africa, Black Sea, short-haul ME',
+        role:'Secondary', roleColor:'#94a3b8',
+        routes:'West Africa → Europe/Asia; Black Sea → Med',
+        frtBaseline:55, frtCrisis:140, frtUnit:'WS (Platts W.Africa→Cont)', frtPeakDate:'Feb 2026',
+        hormuzImpact:'Partial exposure; some vessels diverted to fill Hormuz supply gap via alternative origins (West Africa, North Sea)' },
+      { name:'Aframax', fullName:'Aframax Tanker',
+        size:'80–120k DWT', cargo:'~700k bbl', globalFleet:1050,
+        corridorVessels:55, corridorNote:'Intraregional GCC, STS operations',
+        role:'Supplementary', roleColor:'#475569',
+        routes:'Persian Gulf STS, Indian Ocean short-haul',
+        frtBaseline:70, frtCrisis:200, frtUnit:'WS (Platts AG→East)', frtPeakDate:'Feb 2026',
+        hormuzImpact:'Gulf STS operations cease; vessels pivot to non-Hormuz corridors' }
+    ],
+    sources:'Clarksons Research 2024 (fleet counts); Platts Dirty Tanker Assessments (Worldscale rates, Feb 2026); EIA Chokepoints 2022'
+  }
+};
+
+// ── Strategic stockpile data (crude oil) ──────────────────────────────────────
+var TF_STOCKPILE_DATA = [
+  { name:'United States', abbr:'US',
+    sprM:347, commercialM:452, consumption:20.4, meImports:1.2, criticalDays:30,
+    source:'EIA Weekly Petroleum Status Report, Jun 2026',
+    note:'US is net petroleum exporter. Hormuz disruption raises prices but does not directly cut supply; ME crude imports (~1.2 Mb/d) represent only ~6% of US consumption.',
+    noteColor:'#3dd68c' },
+  { name:'OECD Europe', abbr:'EU',
+    sprM:650, commercialM:520, consumption:13.5, meImports:2.8, criticalDays:45,
+    source:'IEA Oil Market Report, Apr 2026; IEA Strategic Stockholding Data',
+    note:'IEA 90-day strategic obligation. ME crude ~21% of European imports; alternatives include North Sea, West Africa, US — providing partial buffer.',
+    noteColor:'#fbbf24' },
+  { name:'China (est.)', abbr:'CN',
+    sprM:360, commercialM:1000, consumption:16.2, meImports:6.5, criticalDays:40,
+    source:'EIA Today in Energy Apr 2026 (govt-held ~360 Mb, commercial ~1,000 Mb as of Dec 2025); Kpler: total >1.5 Bb',
+    note:'China does not publish official data. EIA estimates govt-held SPR ~360 Mb; commercial (refineries + storage) ~1,000 Mb as of Dec 2025 — China added ~1.1 Mb/d to stocks throughout 2025. ME crude ~40% of imports; limited bypass options at this volume.',
+    noteColor:'#f87171' }
 ];
 
 function buildTerminalPopupHtml(t) {
@@ -16282,6 +16346,10 @@ function runTFStressTest() {
   // Price impact
   renderTFPriceImpact(comm, impactedPct, cpNames);
 
+  // Fleet tonnage + stockpile panels
+  renderTFFleet(comm);
+  renderTFStockpile();
+
   // Refresh trade flow matrix to highlight disrupted bilateral corridors
   renderTFBaseline(comm);
 
@@ -16479,6 +16547,155 @@ function renderTFPriceImpact(comm, impactedPct, cpNames) {
   '</div>';
   html += '</div>';
 
+  el.innerHTML = html;
+}
+
+// ── Fleet Tonnage Panel ───────────────────────────────────────────────────────
+function renderTFFleet(comm) {
+  var el = document.getElementById('tf-fleet-content');
+  if (!el) return;
+  var data = TF_FLEET_DATA[TF_ACTIVE_COMM];
+  if (!data) { el.innerHTML = '<div style="font-size:9px;color:var(--c-tx2);padding:8px 0">No fleet data for this commodity</div>'; return; }
+
+  var hormuzDisrupted = !!TF_DISRUPTIONS['hormuz'];
+  var level = TF_DISRUPTION_LEVEL / 100;
+  var html = '';
+
+  html += '<div style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:12px">';
+  data.classes.forEach(function(cls) {
+    var rateChange = Math.round(((cls.frtCrisis - cls.frtBaseline) / cls.frtBaseline) * 100);
+    var displacedFraction = cls.name === 'VLCC' ? 0.95 : cls.name === 'Suezmax' ? 0.40 : 0.25;
+    var displaced = hormuzDisrupted ? Math.round(cls.corridorVessels * level * displacedFraction) : 0;
+    var borderCol = (hormuzDisrupted && cls.name === 'VLCC') ? 'rgba(220,38,38,0.45)' : 'var(--c-bd1)';
+
+    html += '<div style="border:1px solid ' + borderCol + ';border-radius:4px;padding:10px;background:rgba(6,10,18,0.7)">';
+
+    html += '<div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:8px">'
+          + '<div><div style="font-size:12px;font-weight:700;color:#e8eaed;font-family:var(--f-mono)">' + cls.name + '</div>'
+          + '<div style="font-size:7.5px;color:var(--c-tx2);margin-top:1px">' + cls.size + ' &bull; ' + cls.cargo + '</div></div>'
+          + '<div style="font-family:var(--f-mono);font-size:7px;padding:2px 6px;border-radius:10px;background:rgba(255,255,255,0.05);color:' + cls.roleColor + ';white-space:nowrap">' + cls.role + '</div>'
+          + '</div>';
+
+    html += '<div style="font-size:7.5px;color:var(--c-tx2);margin-bottom:3px">Global active fleet</div>'
+          + '<div style="font-size:18px;font-weight:700;color:#e8eaed;font-family:var(--f-mono);line-height:1;margin-bottom:8px">' + cls.globalFleet.toLocaleString() + ' <span style="font-size:8px;font-weight:400;color:var(--c-tx2)">vessels</span></div>';
+
+    html += '<div style="border-top:1px solid rgba(255,255,255,0.05);padding-top:7px;margin-bottom:8px">'
+          + '<div style="font-size:7.5px;color:var(--c-tx2);margin-bottom:2px">' + cls.corridorNote + '</div>'
+          + '<div style="font-size:11px;font-weight:600;color:' + cls.roleColor + ';font-family:var(--f-mono)">' + cls.corridorVessels + ' <span style="font-size:8px;font-weight:400;color:var(--c-tx2)">vessels on corridor</span></div>'
+          + '</div>';
+
+    html += '<div style="border-top:1px solid rgba(255,255,255,0.05);padding-top:7px">'
+          + '<div class="tf-section-micro" style="margin:0 0 4px">Freight Rate — ' + cls.frtUnit + '</div>'
+          + '<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:2px">'
+          +   '<span style="font-size:8px;color:var(--c-tx2)">Baseline</span>'
+          +   '<span style="font-size:9px;font-family:var(--f-mono);color:#94a3b8">WS ' + cls.frtBaseline + '</span>'
+          + '</div>'
+          + '<div style="display:flex;justify-content:space-between;align-items:center">'
+          +   '<span style="font-size:8px;color:var(--c-tx2)">' + cls.frtPeakDate + ' peak</span>'
+          +   '<span style="font-size:9px;font-family:var(--f-mono);color:#ef4444">WS ' + cls.frtCrisis + ' <span style="font-size:7.5px;color:#f87171">+' + rateChange + '%</span></span>'
+          + '</div>'
+          + '</div>';
+
+    if (hormuzDisrupted && displaced > 0) {
+      html += '<div style="margin-top:8px;padding:5px 7px;background:rgba(220,38,38,0.1);border-radius:3px;border-left:2px solid #dc2626">'
+            + '<div style="font-size:7.5px;color:#fca5a5;font-weight:700;margin-bottom:2px">~' + displaced + ' vessels displaced</div>'
+            + '<div style="font-size:7px;color:#f87171;line-height:1.45">' + cls.hormuzImpact + '</div>'
+            + '</div>';
+    }
+
+    html += '</div>';
+  });
+  html += '</div>';
+
+  html += '<div style="display:flex;gap:16px;flex-wrap:wrap;margin-bottom:10px;padding-bottom:10px;border-bottom:1px solid rgba(255,255,255,0.05)">';
+  data.classes.forEach(function(cls) {
+    html += '<div style="font-size:7.5px;color:var(--c-tx2)"><span style="color:' + cls.roleColor + ';font-weight:600">' + cls.name + ':</span> ' + cls.routes + '</div>';
+  });
+  html += '</div>';
+
+  html += '<div class="tf-source-tag">' + data.sources + '</div>';
+  el.innerHTML = html;
+}
+
+// ── Strategic Stockpile Runway ────────────────────────────────────────────────
+function renderTFStockpile() {
+  var el = document.getElementById('tf-stockpile-content');
+  if (!el) return;
+
+  var hormuzDisrupted = !!TF_DISRUPTIONS['hormuz'];
+  var level = TF_DISRUPTION_LEVEL / 100;
+  var html = '';
+
+  if (hormuzDisrupted) {
+    html += '<div style="background:rgba(220,38,38,0.08);border:1px solid rgba(220,38,38,0.2);border-radius:4px;padding:7px 10px;margin-bottom:12px">'
+          + '<div style="font-size:8px;color:#fca5a5;font-weight:700;letter-spacing:.05em">&#9888;&#xFE0E; STRESS TEST ACTIVE &mdash; HORMUZ ' + TF_DISRUPTION_LEVEL + '% DISRUPTED</div>'
+          + '<div style="font-size:7.5px;color:#f87171;margin-top:2px">Countdown shows days until each region hits its critical buffer threshold at current ME import shortfall</div>'
+          + '</div>';
+  }
+
+  html += '<div style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:12px">';
+
+  TF_STOCKPILE_DATA.forEach(function(r) {
+    var totalM = r.sprM + r.commercialM;
+    var normalDays = Math.round(totalM / r.consumption);
+    var availableBuffer = totalM - (r.criticalDays * r.consumption);
+    var drawRate = r.meImports * level;
+    var daysToBuffer = (hormuzDisrupted && drawRate > 0) ? Math.round(availableBuffer / drawRate) : null;
+
+    var urgencyColor = !daysToBuffer ? '#60a5fa'
+      : daysToBuffer < 30 ? '#dc2626'
+      : daysToBuffer < 60 ? '#ef4444'
+      : daysToBuffer < 120 ? '#f59e0b'
+      : '#3dd68c';
+    var borderStyle = (hormuzDisrupted && daysToBuffer !== null)
+      ? (daysToBuffer < 30 ? 'rgba(220,38,38,0.5)' : daysToBuffer < 60 ? 'rgba(239,68,68,0.35)' : daysToBuffer < 120 ? 'rgba(245,158,11,0.3)' : 'rgba(61,214,140,0.2)')
+      : 'var(--c-bd1)';
+
+    html += '<div style="border:1px solid ' + borderStyle + ';border-radius:4px;padding:10px;background:rgba(6,10,18,0.7)">';
+
+    html += '<div style="font-size:11px;font-weight:700;color:#e8eaed;font-family:var(--f-mono);margin-bottom:1px">' + r.name + '</div>'
+          + '<div style="font-size:7.5px;color:var(--c-tx2);margin-bottom:9px">' + r.consumption + ' Mb/d consumption</div>';
+
+    // SPR bar
+    var sprFillPct = Math.min(100, Math.round(r.sprM / (r.consumption * 50) * 100));
+    html += '<div style="font-size:7.5px;color:var(--c-tx2);margin-bottom:2px;display:flex;justify-content:space-between"><span>SPR</span><span style="color:#e2e8f0">' + r.sprM + ' M bbl</span></div>'
+          + '<div style="height:5px;background:rgba(255,255,255,0.06);border-radius:2px;margin-bottom:5px"><div style="height:100%;width:' + sprFillPct + '%;background:#60a5fa;border-radius:2px"></div></div>';
+    // Commercial bar
+    var comFillPct = Math.min(100, Math.round(r.commercialM / (r.consumption * 30) * 100));
+    html += '<div style="font-size:7.5px;color:var(--c-tx2);margin-bottom:2px;display:flex;justify-content:space-between"><span>Commercial</span><span style="color:#e2e8f0">' + r.commercialM + ' M bbl</span></div>'
+          + '<div style="height:5px;background:rgba(255,255,255,0.06);border-radius:2px;margin-bottom:9px"><div style="height:100%;width:' + comFillPct + '%;background:#475569;border-radius:2px"></div></div>';
+
+    // Normal days of cover
+    html += '<div style="border-top:1px solid rgba(255,255,255,0.05);padding-top:7px;margin-bottom:' + (daysToBuffer !== null ? '8px' : '0') + '">'
+          + '<div style="font-size:7.5px;color:var(--c-tx2);margin-bottom:2px">Days of forward cover</div>'
+          + '<div style="font-size:18px;font-weight:700;color:#e8eaed;font-family:var(--f-mono);line-height:1">' + normalDays + ' <span style="font-size:8px;font-weight:400;color:var(--c-tx2)">days</span></div>'
+          + '</div>';
+
+    // Crisis countdown
+    if (daysToBuffer !== null) {
+      var countLabel = daysToBuffer > 365 ? '>365' : String(daysToBuffer);
+      html += '<div style="border-top:1px solid rgba(255,255,255,0.05);padding-top:7px">'
+            + '<div style="font-size:7.5px;color:var(--c-tx2);margin-bottom:2px">Days to critical buffer (' + r.criticalDays + 'd threshold)</div>'
+            + '<div style="font-size:20px;font-weight:700;color:' + urgencyColor + ';font-family:var(--f-mono);line-height:1;margin-bottom:2px">' + countLabel + ' <span style="font-size:8px;font-weight:400">days</span></div>'
+            + '<div style="font-size:7.5px;color:var(--c-tx2)">Drawing ' + drawRate.toFixed(1) + ' Mb/d from reserves</div>'
+            + '</div>';
+    }
+
+    html += '</div>';
+  });
+
+  html += '</div>';
+
+  html += '<div style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:10px">';
+  TF_STOCKPILE_DATA.forEach(function(r) {
+    html += '<div style="font-size:7.5px;color:var(--c-tx2);line-height:1.55;border-left:2px solid rgba(255,255,255,0.07);padding-left:7px">'
+          + '<span style="color:' + r.noteColor + ';font-weight:600">ME imports: ' + r.meImports + ' Mb/d</span><br>'
+          + r.note
+          + '</div>';
+  });
+  html += '</div>';
+
+  html += '<div class="tf-source-tag">Sources: ' + TF_STOCKPILE_DATA.map(function(r){ return r.source; }).join(' &bull; ') + '</div>';
   el.innerHTML = html;
 }
 

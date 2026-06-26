@@ -16552,66 +16552,23 @@ function renderTFPriceImpact(comm, impactedPct, cpNames) {
   el.innerHTML = html;
 }
 
-// ── Vessel silhouette SVG ─────────────────────────────────────────────────────
-function tfVesselSVG(type, accentColor) {
-  var W = 260, H = 78;
-  var hull  = '#1e293b', deck = '#334155', sup = '#475569', win = '#93c5fd', pipe = '#64748b';
-  accentColor = accentColor || '#f59e0b';
-  var cfg = {
-    vlcc:    { len:228, deckY:30, wlY:53, btY:68, brgW:34, nTanks:11 },
-    suezmax: { len:185, deckY:31, wlY:53, btY:68, brgW:30, nTanks:9 },
-    aframax: { len:148, deckY:32, wlY:54, btY:68, brgW:26, nTanks:7 }
-  };
-  var c = cfg[type] || cfg.vlcc;
-  var bowX = 14;
-  var hullEnd = bowX + c.len;
-  var brgStart = hullEnd - c.brgW;
-  var brgTop = c.deckY - 20;
-  var bowTip = bowX - 10;
+// ── Vessel photo (Wikimedia Commons, CC-licensed) ────────────────────────────
+var TF_VESSEL_PHOTOS = {
+  // AbQaiq VLCC supertanker — U.S. Navy photo, public domain
+  vlcc:    'https://upload.wikimedia.org/wikipedia/commons/thumb/7/75/Supertanker_AbQaiq.jpg/960px-Supertanker_AbQaiq.jpg',
+  // Oil Tanker Stride in Colon, Panama — CC BY-SA 4.0
+  suezmax: 'https://upload.wikimedia.org/wikipedia/commons/thumb/c/c1/Oil_Tanker_Stride_in_Colon_Panama_2016_0698.jpg/960px-Oil_Tanker_Stride_in_Colon_Panama_2016_0698.jpg',
+  // Kakariki crude oil tanker (46,700 DWT) — CC0 public domain, Bernard Spragg
+  aframax: 'https://upload.wikimedia.org/wikipedia/commons/thumb/9/9c/Kakariki._Crude_Oil_Tanker._%2822223331981%29.jpg/960px-Kakariki._Crude_Oil_Tanker._%2822223331981%29.jpg'
+};
 
-  var s = '<svg viewBox="0 0 ' + W + ' ' + H + '" xmlns="http://www.w3.org/2000/svg" style="width:100%;display:block;border-radius:3px 3px 0 0">';
-  // Background gradient
-  s += '<defs><linearGradient id="sea_' + type + '" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#050d18"/><stop offset="100%" stop-color="#0a1628"/></linearGradient></defs>';
-  s += '<rect width="' + W + '" height="' + H + '" fill="url(#sea_' + type + ')"/>';
-  // Water shimmer lines
-  s += '<line x1="0" y1="' + c.wlY + '" x2="' + W + '" y2="' + c.wlY + '" stroke="#1e3a5f" stroke-width="1.5" opacity="0.7"/>';
-  s += '<line x1="0" y1="' + (c.wlY+4) + '" x2="' + W + '" y2="' + (c.wlY+4) + '" stroke="#1e3a5f" stroke-width="0.6" opacity="0.3"/>';
-  // Below waterline shadow
-  s += '<path d="M ' + bowTip + ' ' + c.wlY + ' L ' + hullEnd + ' ' + c.wlY + ' L ' + hullEnd + ' ' + c.btY + ' L ' + bowX + ' ' + c.btY + ' Z" fill="' + hull + '" opacity="0.8"/>';
-  // Hull freeboard (above waterline)
-  s += '<path d="M ' + bowTip + ' ' + c.wlY + ' L ' + (bowX+2) + ' ' + c.deckY + ' L ' + hullEnd + ' ' + c.deckY + ' L ' + hullEnd + ' ' + c.wlY + ' Z" fill="' + deck + '"/>';
-  // Accent stripe along hull
-  s += '<line x1="' + bowTip + '" y1="' + (c.wlY-3) + '" x2="' + hullEnd + '" y2="' + (c.wlY-3) + '" stroke="' + accentColor + '" stroke-width="1" opacity="0.4"/>';
-  // Deck top strip
-  s += '<rect x="' + (bowX+2) + '" y="' + (c.deckY-3) + '" width="' + c.len + '" height="3" fill="' + sup + '"/>';
-  // Central catwalk / pipeline
-  s += '<line x1="' + (bowX+12) + '" y1="' + (c.deckY-5) + '" x2="' + (brgStart-4) + '" y2="' + (c.deckY-5) + '" stroke="' + pipe + '" stroke-width="1" opacity="0.8"/>';
-  // Tank manifolds (T-shaped vents)
-  var tankSpan = brgStart - bowX - 20;
-  for (var i = 0; i < c.nTanks; i++) {
-    var mx = Math.round(bowX + 14 + (i * tankSpan / (c.nTanks - 1)));
-    s += '<line x1="' + mx + '" y1="' + (c.deckY-3) + '" x2="' + mx + '" y2="' + (c.deckY-9) + '" stroke="' + pipe + '" stroke-width="1.5"/>';
-    s += '<line x1="' + (mx-4) + '" y1="' + (c.deckY-9) + '" x2="' + (mx+4) + '" y2="' + (c.deckY-9) + '" stroke="' + pipe + '" stroke-width="1.5"/>';
-  }
-  // Superstructure / accommodation block
-  s += '<rect x="' + brgStart + '" y="' + brgTop + '" width="' + c.brgW + '" height="' + (c.deckY - brgTop) + '" fill="' + sup + '" rx="1"/>';
-  // Bridge wings (wider than block)
-  s += '<rect x="' + (brgStart-4) + '" y="' + (brgTop+4) + '" width="' + (c.brgW+8) + '" height="4" fill="#64748b" rx="1"/>';
-  // Bridge windows
-  for (var w = 0; w < 4; w++) {
-    var wx = brgStart + 3 + w * Math.round(c.brgW * 0.24);
-    s += '<rect x="' + wx + '" y="' + (brgTop+8) + '" width="' + Math.round(c.brgW * 0.15) + '" height="3" fill="' + win + '" rx="0.5" opacity="0.85"/>';
-  }
-  // Funnel
-  var fnnX = hullEnd - 8;
-  s += '<rect x="' + fnnX + '" y="' + (brgTop-8) + '" width="5" height="10" fill="#dc2626" rx="1"/>';
-  // Funnel exhaust puff
-  s += '<circle cx="' + (fnnX+2) + '" cy="' + (brgTop-10) + '" r="2.5" fill="#1e293b" opacity="0.5"/>';
-  s += '<circle cx="' + (fnnX+5) + '" cy="' + (brgTop-14) + '" r="3" fill="#1e293b" opacity="0.3"/>';
-  // Bow anchor / hawsepipe dots
-  s += '<circle cx="' + (bowX+6) + '" cy="' + (c.wlY-8) + '" r="2" fill="#64748b"/>';
-  s += '</svg>';
-  return s;
+function tfVesselSVG(type) {
+  var src = TF_VESSEL_PHOTOS[type] || TF_VESSEL_PHOTOS.vlcc;
+  return '<div style="position:relative;height:150px;overflow:hidden;background:#050d18">'
+    + '<img src="' + src + '" alt="' + type.toUpperCase() + ' tanker" '
+    +   'style="width:100%;height:100%;object-fit:cover;object-position:center 40%;display:block;filter:brightness(0.82) saturate(0.7)">'
+    + '<div style="position:absolute;inset:0;background:linear-gradient(to bottom,transparent 40%,rgba(6,10,18,0.85) 100%)"></div>'
+    + '</div>';
 }
 
 // ── Fleet Tonnage Panel ───────────────────────────────────────────────────────

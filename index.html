@@ -16813,10 +16813,26 @@ function renderTFFleet(comm) {
     html += '<div style="font-size:7.5px;color:var(--c-tx2);margin-bottom:3px">Global active fleet</div>'
           + '<div style="font-size:18px;font-weight:700;color:#e8eaed;font-family:var(--f-mono);line-height:1;margin-bottom:8px">' + cls.globalFleet.toLocaleString() + ' <span style="font-size:8px;font-weight:400;color:var(--c-tx2)">vessels</span></div>';
 
-    html += '<div style="border-top:1px solid rgba(255,255,255,0.05);padding-top:7px;margin-bottom:8px">'
-          + '<div style="font-size:7.5px;color:var(--c-tx2);margin-bottom:2px">' + cls.corridorNote + '</div>'
-          + '<div style="font-size:11px;font-weight:600;color:' + cls.roleColor + ';font-family:var(--f-mono)">' + cls.corridorVessels + ' <span style="font-size:8px;font-weight:400;color:var(--c-tx2)">vessels on corridor</span></div>'
-          + '</div>';
+    html += '<div style="border-top:1px solid rgba(255,255,255,0.05);padding-top:7px;margin-bottom:8px">';
+    html += '<div style="font-size:7px;color:var(--c-tx2);font-family:var(--f-mono);letter-spacing:.12em;text-transform:uppercase;margin-bottom:7px">Vessels by Corridor</div>';
+    if (cls.corridorBreakdown) {
+      var cbDefs = [{id:'hormuz',l:'Hormuz'},{id:'malacca',l:'Malacca'},{id:'suez',l:'Suez Canal'},{id:'bab',l:'Bab-el-Mandeb'},{id:'bosphorus',l:'Bosphorus'},{id:'gibraltar',l:'Gibraltar'},{id:'danish',l:'Danish Str.'},{id:'panama',l:'Panama'}];
+      var cbMax = Math.max.apply(null, cbDefs.map(function(d){ return cls.corridorBreakdown[d.id]||0; }));
+      cbDefs.forEach(function(d) {
+        var v = cls.corridorBreakdown[d.id]||0;
+        if (!v) return;
+        var pct = cbMax > 0 ? Math.round(v/cbMax*100) : 0;
+        html += '<div style="display:flex;align-items:center;gap:5px;margin-bottom:4px">'
+              + '<div style="font-size:7px;color:var(--c-tx2);font-family:var(--f-mono);width:76px;flex-shrink:0">' + d.l + '</div>'
+              + '<div style="flex:1;height:3px;background:rgba(255,255,255,0.07);border-radius:2px"><div style="height:100%;width:' + pct + '%;background:' + cls.roleColor + ';border-radius:2px;opacity:.75"></div></div>'
+              + '<div style="font-size:8px;font-weight:700;color:' + cls.roleColor + ';font-family:var(--f-mono);width:24px;text-align:right;flex-shrink:0">' + v + '</div>'
+              + '</div>';
+      });
+    } else {
+      html += '<div style="font-size:7.5px;color:var(--c-tx2);margin-bottom:3px">' + cls.corridorNote + '</div>'
+            + '<div style="font-size:11px;font-weight:600;color:' + cls.roleColor + ';font-family:var(--f-mono)">' + cls.corridorVessels + ' <span style="font-size:8px;font-weight:400;color:var(--c-tx2)">vessels</span></div>';
+    }
+    html += '</div>';
 
     html += '<div style="border-top:1px solid rgba(255,255,255,0.05);padding-top:7px">'
           + '<div class="tf-section-micro" style="margin:0 0 4px">Freight Rate — ' + cls.frtUnit + '</div>'
@@ -16840,53 +16856,6 @@ function renderTFFleet(comm) {
     html += '</div></div>';  // close inner padding + outer card
   });
   html += '</div>';
-
-  // Corridor distribution table
-  var corridorDefs = [
-    {id:'hormuz',    label:'Hormuz'},
-    {id:'malacca',   label:'Malacca Str.'},
-    {id:'suez',      label:'Suez Canal'},
-    {id:'bab',       label:'Bab-el-Mandeb'},
-    {id:'bosphorus', label:'Bosphorus'},
-    {id:'gibraltar', label:'Gibraltar'},
-    {id:'danish',    label:'Danish Str.'},
-    {id:'panama',    label:'Panama'}
-  ];
-  var hasCorrData = data.classes.some(function(c){ return !!c.corridorBreakdown; });
-  if (hasCorrData) {
-    var maxTotal = 0;
-    corridorDefs.forEach(function(cp) {
-      var t = 0;
-      data.classes.forEach(function(cls){ t += (cls.corridorBreakdown && cls.corridorBreakdown[cp.id]) ? cls.corridorBreakdown[cp.id] : 0; });
-      if (t > maxTotal) maxTotal = t;
-    });
-    var colTemplate = '120px' + data.classes.map(function(){ return ' 60px'; }).join('') + ' 60px 1fr';
-    html += '<div style="margin:14px 0;border-top:1px solid rgba(255,255,255,0.06);padding-top:14px">';
-    html += '<div style="font-size:8px;font-family:var(--f-mono);color:var(--c-gold);letter-spacing:.18em;text-transform:uppercase;margin-bottom:10px">&#9670; Capacity by Corridor</div>';
-    // Header
-    html += '<div style="display:grid;grid-template-columns:' + colTemplate + ';gap:0 6px;padding-bottom:6px;border-bottom:1px solid rgba(255,255,255,0.06)">';
-    html += '<div style="font-size:7px;color:var(--c-tx2);font-family:var(--f-mono)">CHOKEPOINT</div>';
-    data.classes.forEach(function(cls){
-      html += '<div style="font-size:7px;color:' + cls.roleColor + ';font-family:var(--f-mono);text-align:right">' + cls.name + '</div>';
-    });
-    html += '<div style="font-size:7px;color:var(--c-tx2);font-family:var(--f-mono);text-align:right">TOTAL</div><div></div></div>';
-    // Rows
-    corridorDefs.forEach(function(cp) {
-      var vals = data.classes.map(function(cls){ return (cls.corridorBreakdown && cls.corridorBreakdown[cp.id]) ? cls.corridorBreakdown[cp.id] : 0; });
-      var total = vals.reduce(function(a,b){ return a+b; }, 0);
-      if (total === 0) return;
-      var pct = maxTotal > 0 ? Math.round(total / maxTotal * 100) : 0;
-      html += '<div style="display:grid;grid-template-columns:' + colTemplate + ';gap:0 6px;align-items:center;padding:5px 0;border-bottom:1px solid rgba(255,255,255,0.03)">';
-      html += '<div style="font-size:8px;color:var(--c-tx1);font-family:var(--f-mono)">' + cp.label + '</div>';
-      vals.forEach(function(v, i){
-        html += '<div style="font-size:9px;font-weight:600;color:' + (v > 0 ? data.classes[i].roleColor : 'rgba(255,255,255,0.18)') + ';font-family:var(--f-mono);text-align:right">' + (v > 0 ? v : '—') + '</div>';
-      });
-      html += '<div style="font-size:9px;font-weight:700;color:#e8eaed;font-family:var(--f-mono);text-align:right">' + total + '</div>';
-      html += '<div style="padding-left:10px"><div style="height:3px;background:rgba(255,255,255,0.07);border-radius:2px"><div style="height:100%;width:' + pct + '%;background:var(--c-gold);opacity:.6;border-radius:2px"></div></div></div>';
-      html += '</div>';
-    });
-    html += '</div>';
-  }
 
   html += '<div style="display:flex;gap:16px;flex-wrap:wrap;margin-bottom:10px;padding-bottom:10px;border-bottom:1px solid rgba(255,255,255,0.05)">';
   data.classes.forEach(function(cls) {

@@ -15615,23 +15615,53 @@ var TF_FLEET_DATA = {
         routes:'Middle East Gulf → East Asia, Europe',
         frtBaseline:42, frtCrisis:260, frtUnit:'WS (Platts MEG→China)', frtPeakDate:'Feb 2026',
         hormuzImpact:'Up to ~300 VLCCs idled or diverted to Cape of Good Hope; +30–45 days per voyage reduces effective fleet capacity ∲20%',
-        corridorBreakdown:{ hormuz:300, malacca:195, bab:15, suez:10, gibraltar:20, bosphorus:0, danish:0, panama:0 } },
+        corridorBreakdown:{ hormuz:300, malacca:195, bab:15, suez:10, gibraltar:20, bosphorus:0, danish:0, panama:0 },
+        routeAllocation:[
+          { route:'ME Gulf → East Asia',    vessels:400, exposure:{ hormuz:0.95, malacca:0.70, suez:0.05 },                 note:'Primary VLCC corridor — Hormuz to China / Japan / Korea via Malacca' },
+          { route:'W. Africa → Asia',       vessels:130, exposure:{ malacca:0.90 },                                          note:'Nigerian / Angolan crude to China and India via Cape of Good Hope' },
+          { route:'Americas → Asia',        vessels:80,  exposure:{ malacca:0.80 },                                          note:'US Gulf (WTI) and Brazil (Lula/Santos) crude to China and Asia' },
+          { route:'W. Africa → Europe',     vessels:70,  exposure:{},                                                        note:'Shorter-haul West African crude to NW European refineries' },
+          { route:'ME Gulf → Europe',       vessels:60,  exposure:{ hormuz:0.95, bab_el_mandeb:0.20, suez:0.20 },           note:'Persian Gulf crude to Med and NW Europe via Suez or Cape' },
+          { route:'Russia / Other',         vessels:40,  exposure:{ hormuz:0.15, malacca:0.30 },                             note:'Sanctioned Russian Far East crude and miscellaneous spot voyages' },
+          { route:'Drydock / Storage',      vessels:145, exposure:{},                                                        note:'Dry dock, repair, laid up, or floating storage charter' }
+        ] },
       { name:'Suezmax', fullName:'Suezmax Tanker',
         size:'120–200k DWT', cargo:'~1.0M bbl', globalFleet:620,
-        corridorVessels:85, corridorNote:'West Africa, Black Sea, short-haul ME',
+        corridorVessels:323, corridorNote:'Multi-corridor · Suez · Black Sea · W.Africa',
         role:'Secondary', roleColor:'#94a3b8',
         routes:'West Africa → Europe/Asia; Black Sea → Med',
         frtBaseline:55, frtCrisis:140, frtUnit:'WS (Platts W.Africa→Cont)', frtPeakDate:'Feb 2026',
         hormuzImpact:'Partial exposure; some vessels diverted to fill Hormuz supply gap via alternative origins (West Africa, North Sea)',
-        corridorBreakdown:{ hormuz:40, malacca:55, bab:45, suez:80, gibraltar:30, bosphorus:12, danish:4, panama:0 } },
+        corridorBreakdown:{ hormuz:30, malacca:40, bab:65, suez:80, gibraltar:55, bosphorus:45, danish:8, panama:0 },
+        routeAllocation:[
+          { route:'W. Africa → Europe',     vessels:120, exposure:{},                                                        note:'Primary Suezmax lane — Nigerian/Angolan crude to Rotterdam, Lavera' },
+          { route:'Black Sea → Med / Eur',  vessels:100, exposure:{},                                                        note:'Turkish / Russian Urals via Bosphorus to Med refineries and NW Europe' },
+          { route:'ME Gulf → India / Med',  vessels:85,  exposure:{ hormuz:0.80, bab_el_mandeb:0.65, suez:0.65 },           note:'Short-haul Persian Gulf crude to Indian refineries and Eastern Med' },
+          { route:'W. Africa → Asia',       vessels:70,  exposure:{ malacca:0.85 },                                          note:'West African crude to China and India via Cape of Good Hope' },
+          { route:'Russia → Asia (Cape)',   vessels:60,  exposure:{ malacca:0.75 },                                          note:'Post-sanctions Russian crude via Cape of Good Hope to Asian buyers' },
+          { route:'North Sea → Europe',     vessels:55,  exposure:{},                                                        note:'North Sea Brent / Forties to NW European and Baltic refineries' },
+          { route:'Americas → Europe',      vessels:45,  exposure:{},                                                        note:'US Gulf / Colombian crude to European refineries; some reverse flows' },
+          { route:'Drydock / Storage',      vessels:85,  exposure:{},                                                        note:'Dry dock, repair, laid up, or floating storage charter' }
+        ] },
       { name:'Aframax', fullName:'Aframax Tanker',
         size:'80–120k DWT', cargo:'~700k bbl', globalFleet:1050,
-        corridorVessels:55, corridorNote:'Intraregional GCC, STS operations',
+        corridorVessels:425, corridorNote:'Black Sea · Baltic · Med · Persian Gulf STS',
         role:'Supplementary', roleColor:'#475569',
-        routes:'Persian Gulf STS, Indian Ocean short-haul',
+        routes:'Black Sea · Baltic · Med · Persian Gulf STS',
         frtBaseline:70, frtCrisis:200, frtUnit:'WS (Platts AG→East)', frtPeakDate:'Feb 2026',
         hormuzImpact:'Gulf STS operations cease; vessels pivot to non-Hormuz corridors',
-        corridorBreakdown:{ hormuz:55, malacca:40, bab:30, suez:45, gibraltar:18, bosphorus:35, danish:14, panama:10 } }
+        corridorBreakdown:{ hormuz:50, malacca:70, bab:35, suez:60, gibraltar:45, bosphorus:90, danish:55, panama:20 },
+        routeAllocation:[
+          { route:'Black Sea → Med / Eur',  vessels:185, exposure:{},                                                        note:'Dominant Aframax trade — Russian Urals / CPC Blend via Bosphorus to Med' },
+          { route:'Baltic → NW Europe',     vessels:140, exposure:{ danish_straits:0.80 },                                   note:'Russian Baltic (Primorsk) and North Sea crude to NW European refineries' },
+          { route:'SE Asia intraregional',  vessels:110, exposure:{ malacca:0.70 },                                          note:'Indonesian / Malaysian crude to China, Japan and regional refineries' },
+          { route:'Americas intraregional', vessels:100, exposure:{},                                                        note:'Caribbean, Colombian, US East Coast and Gulf Coast crude movements' },
+          { route:'Mediterranean intra',    vessels:90,  exposure:{ bab_el_mandeb:0.35, suez:0.30 },                        note:'Intra-Mediterranean crude and dirty products movements' },
+          { route:'ME Gulf → India / STS',  vessels:80,  exposure:{ hormuz:0.90, bab_el_mandeb:0.40, suez:0.35 },           note:'Persian Gulf STS operations and short-haul to Indian West Coast' },
+          { route:'North Sea → Europe',     vessels:75,  exposure:{ danish_straits:0.15 },                                   note:'North Sea Ekofisk / Statfjord and UK crude to European refineries' },
+          { route:'Russia Pacific (ESPO)',  vessels:65,  exposure:{ malacca:0.85 },                                          note:'ESPO Blend from Kozmino to China and NE Asian buyers' },
+          { route:'Drydock / Storage',      vessels:205, exposure:{},                                                        note:'Dry dock, repair, laid up, or floating storage charter' }
+        ] }
     ],
     sources:'Clarksons Research 2024 (fleet counts); Platts Dirty Tanker Assessments (Worldscale rates, Feb 2026); EIA Chokepoints 2022'
   }
@@ -16798,12 +16828,12 @@ function renderTFFleet(comm) {
     var borderCol = (hormuzDisrupted && cls.name === 'VLCC') ? 'rgba(220,38,38,0.45)' : 'var(--c-bd1)';
 
     var vesselType = cls.name.toLowerCase().replace(' ','');
-    html += '<div style="border:1px solid ' + borderCol + ';border-radius:4px;overflow:hidden;background:rgba(6,10,18,0.7)">';
+    html += '<div style="border:1px solid ' + borderCol + ';border-radius:4px;overflow:hidden;background:rgba(6,10,18,0.7);display:flex;flex-direction:column">';
 
     // Vessel silhouette SVG
     html += tfVesselSVG(vesselType, cls.roleColor);
 
-    html += '<div style="padding:10px">';
+    html += '<div style="padding:10px;display:flex;flex-direction:column;flex:1">';
     html += '<div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:8px">'
           + '<div><div style="font-size:12px;font-weight:700;color:#e8eaed;font-family:var(--f-mono)">' + cls.name + '</div>'
           + '<div style="font-size:7.5px;color:var(--c-tx2);margin-top:1px">' + cls.size + ' &bull; ' + cls.cargo + '</div></div>'
@@ -16813,28 +16843,81 @@ function renderTFFleet(comm) {
     html += '<div style="font-size:7.5px;color:var(--c-tx2);margin-bottom:3px">Global active fleet</div>'
           + '<div style="font-size:18px;font-weight:700;color:#e8eaed;font-family:var(--f-mono);line-height:1;margin-bottom:8px">' + cls.globalFleet.toLocaleString() + ' <span style="font-size:8px;font-weight:400;color:var(--c-tx2)">vessels</span></div>';
 
-    html += '<div style="border-top:1px solid rgba(255,255,255,0.05);padding-top:7px;margin-bottom:8px">';
-    html += '<div style="font-size:7px;color:var(--c-tx2);font-family:var(--f-mono);letter-spacing:.12em;text-transform:uppercase;margin-bottom:7px">Vessels by Corridor</div>';
-    if (cls.corridorBreakdown) {
-      var cbDefs = [{id:'hormuz',l:'Hormuz'},{id:'malacca',l:'Malacca'},{id:'suez',l:'Suez Canal'},{id:'bab',l:'Bab-el-Mandeb'},{id:'bosphorus',l:'Bosphorus'},{id:'gibraltar',l:'Gibraltar'},{id:'danish',l:'Danish Str.'},{id:'panama',l:'Panama'}];
-      var cbMax = Math.max.apply(null, cbDefs.map(function(d){ return cls.corridorBreakdown[d.id]||0; }));
-      cbDefs.forEach(function(d) {
-        var v = cls.corridorBreakdown[d.id]||0;
-        if (!v) return;
-        var pct = cbMax > 0 ? Math.round(v/cbMax*100) : 0;
-        html += '<div style="display:flex;align-items:center;gap:5px;margin-bottom:4px">'
-              + '<div style="font-size:7px;color:var(--c-tx2);font-family:var(--f-mono);width:76px;flex-shrink:0">' + d.l + '</div>'
-              + '<div style="flex:1;height:3px;background:rgba(255,255,255,0.07);border-radius:2px"><div style="height:100%;width:' + pct + '%;background:' + cls.roleColor + ';border-radius:2px;opacity:.75"></div></div>'
-              + '<div style="font-size:8px;font-weight:700;color:' + cls.roleColor + ';font-family:var(--f-mono);width:24px;text-align:right;flex-shrink:0">' + v + '</div>'
+    if (cls.routeAllocation) {
+      var raTotal = cls.routeAllocation.reduce(function(s,r){ return s + r.vessels; }, 0);
+      var raMax   = Math.max.apply(null, cls.routeAllocation.map(function(r){ return r.vessels; }));
+      html += '<div style="border-top:1px solid rgba(255,255,255,0.05);padding-top:7px;margin-bottom:8px">'
+            + '<div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:8px">'
+            +   '<div style="font-size:9px;color:var(--c-tx2);font-family:var(--f-mono);letter-spacing:.12em;text-transform:uppercase">Fleet by Trade Route</div>'
+            +   '<div style="font-size:8px;color:var(--c-tx2);opacity:.5;font-family:var(--f-mono)">Clarksons · Jun 2026</div>'
+            + '</div>';
+      var activeDisruptions = Object.keys(TF_DISRUPTIONS).filter(function(cp){ return TF_DISRUPTIONS[cp]; });
+      var cpLabel = { hormuz:'Hormuz', bab_el_mandeb:'Bab el-Mandeb', suez:'Suez Canal', malacca:'Malacca', danish_straits:'Danish Str.', panama:'Panama' };
+      var anyDisruption = activeDisruptions.length > 0;
+      var totalDisrupted = 0;
+      cls.routeAllocation.forEach(function(r) {
+        var isDock = /drydock|storage/i.test(r.route);
+        var undisruptedFrac = 1;
+        if (!isDock && r.exposure) {
+          activeDisruptions.forEach(function(cpId) {
+            if (r.exposure[cpId]) undisruptedFrac *= (1 - r.exposure[cpId] * level);
+          });
+        }
+        var disruptedV = Math.round(r.vessels * (1 - undisruptedFrac));
+        totalDisrupted += disruptedV;
+        var displayV = r.vessels - disruptedV;
+        var barPct   = raMax > 0 ? Math.round(r.vessels   / raMax * 100) : 0;
+        var disPct   = raMax > 0 ? Math.round(disruptedV  / raMax * 100) : 0;
+        var remPct   = barPct - disPct;
+        var vpct     = Math.round(displayV / raTotal * 100);
+        var isHit    = disruptedV > 0;
+        var barCol   = isDock ? '#8b5cf6' : cls.roleColor;
+        var txCol    = isDock ? '#8b5cf6' : (isHit ? '#ef4444' : cls.roleColor);
+        var lblCol   = isHit ? '#ef4444' : 'var(--c-tx2)';
+        html += '<div style="display:flex;align-items:center;gap:6px;margin-bottom:6px" title="' + r.note + '">'
+              + '<div style="font-size:9px;color:' + lblCol + ';font-family:var(--f-mono);width:120px;flex-shrink:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">' + r.route + '</div>'
+              + '<div style="flex:1;height:4px;background:rgba(255,255,255,0.06);border-radius:2px;overflow:hidden;display:flex">';
+        if (isHit) {
+          html += '<div style="width:' + remPct + '%;background:' + cls.roleColor + ';opacity:.8"></div>'
+                + '<div style="width:' + disPct + '%;background:#ef4444;opacity:.75"></div>';
+        } else {
+          html += '<div style="width:' + barPct + '%;background:' + barCol + ';border-radius:2px;opacity:' + (isDock ? '.5' : '.8') + '"></div>';
+        }
+        html += '</div>'
+              + '<div style="font-size:10px;font-weight:700;color:' + txCol + ';font-family:var(--f-mono);width:28px;text-align:right;flex-shrink:0">' + displayV + '</div>'
+              + '<div style="font-size:8px;color:var(--c-tx2);font-family:var(--f-mono);width:24px;text-align:right;flex-shrink:0">(' + vpct + '%)</div>'
               + '</div>';
       });
-    } else {
-      html += '<div style="font-size:7.5px;color:var(--c-tx2);margin-bottom:3px">' + cls.corridorNote + '</div>'
-            + '<div style="font-size:11px;font-weight:600;color:' + cls.roleColor + ';font-family:var(--f-mono)">' + cls.corridorVessels + ' <span style="font-size:8px;font-weight:400;color:var(--c-tx2)">vessels</span></div>';
-    }
-    html += '</div>';
 
-    html += '<div style="border-top:1px solid rgba(255,255,255,0.05);padding-top:7px">'
+      if (anyDisruption && totalDisrupted > 0) {
+        var reroutedV  = Math.round(totalDisrupted * 0.65);
+        var idledV     = totalDisrupted - reroutedV;
+        var rerouteBar = raMax > 0 ? Math.round(reroutedV / raMax * 100) : 0;
+        var idleBar    = raMax > 0 ? Math.round(idledV    / raMax * 100) : 0;
+        var activeNames = activeDisruptions.map(function(cp){ return cpLabel[cp] || cp; }).join(' + ');
+        var hasHormuz = TF_DISRUPTIONS['hormuz'];
+        html += '<div style="border-top:1px solid rgba(239,68,68,0.25);padding-top:6px;margin-top:2px">'
+              + '<div style="font-size:7px;color:#ef4444;font-family:var(--f-mono);letter-spacing:.1em;text-transform:uppercase;margin-bottom:5px">▲ ' + activeNames + ' closure impact</div>'
+              + '<div style="display:flex;align-items:center;gap:6px;margin-bottom:5px">'
+              +   '<div style="font-size:9px;color:#f59e0b;font-family:var(--f-mono);width:120px;flex-shrink:0">' + (hasHormuz ? '→ Cape reroute' : '→ Alt. reroute') + '</div>'
+              +   '<div style="flex:1;height:4px;background:rgba(255,255,255,0.06);border-radius:2px"><div style="width:' + rerouteBar + '%;height:100%;background:#f59e0b;border-radius:2px;opacity:.85"></div></div>'
+              +   '<div style="font-size:10px;font-weight:700;color:#f59e0b;font-family:var(--f-mono);width:28px;text-align:right;flex-shrink:0">' + reroutedV + '</div>'
+              +   '<div style="font-size:8px;color:var(--c-tx2);font-family:var(--f-mono);width:24px;text-align:right;flex-shrink:0">(' + Math.round(reroutedV/raTotal*100) + '%)</div>'
+              + '</div>'
+              + '<div style="display:flex;align-items:center;gap:6px">'
+              +   '<div style="font-size:9px;color:#ef4444;font-family:var(--f-mono);width:120px;flex-shrink:0">→ Idled / Stranded</div>'
+              +   '<div style="flex:1;height:4px;background:rgba(255,255,255,0.06);border-radius:2px"><div style="width:' + idleBar + '%;height:100%;background:#ef4444;border-radius:2px;opacity:.85"></div></div>'
+              +   '<div style="font-size:10px;font-weight:700;color:#ef4444;font-family:var(--f-mono);width:28px;text-align:right;flex-shrink:0">' + idledV + '</div>'
+              +   '<div style="font-size:8px;color:var(--c-tx2);font-family:var(--f-mono);width:24px;text-align:right;flex-shrink:0">(' + Math.round(idledV/raTotal*100) + '%)</div>'
+              + '</div>'
+              + '</div>';
+      }
+
+      html += '<div style="font-size:7.5px;color:var(--c-tx2);opacity:.45;margin-top:5px;font-family:var(--f-mono);font-style:italic">Total: ' + raTotal.toLocaleString() + ' vessels · Clarksons Research 2024 · live feed requires Kpler API</div>'
+            + '</div>';
+    }
+
+    html += '<div style="border-top:1px solid rgba(255,255,255,0.05);padding-top:7px;margin-top:auto">'
           + '<div class="tf-section-micro" style="margin:0 0 4px">Freight Rate — ' + cls.frtUnit + '</div>'
           + '<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:2px">'
           +   '<span style="font-size:8px;color:var(--c-tx2)">Baseline</span>'

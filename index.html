@@ -15614,21 +15614,24 @@ var TF_FLEET_DATA = {
         role:'Primary', roleColor:'#f59e0b',
         routes:'Middle East Gulf → East Asia, Europe',
         frtBaseline:42, frtCrisis:260, frtUnit:'WS (Platts MEG→China)', frtPeakDate:'Feb 2026',
-        hormuzImpact:'Up to ~300 VLCCs idled or diverted to Cape of Good Hope; +30–45 days per voyage reduces effective fleet capacity ∲20%' },
+        hormuzImpact:'Up to ~300 VLCCs idled or diverted to Cape of Good Hope; +30–45 days per voyage reduces effective fleet capacity ∲20%',
+        corridorBreakdown:{ hormuz:300, malacca:195, bab:15, suez:10, gibraltar:20, bosphorus:0, danish:0, panama:0 } },
       { name:'Suezmax', fullName:'Suezmax Tanker',
         size:'120–200k DWT', cargo:'~1.0M bbl', globalFleet:620,
         corridorVessels:85, corridorNote:'West Africa, Black Sea, short-haul ME',
         role:'Secondary', roleColor:'#94a3b8',
         routes:'West Africa → Europe/Asia; Black Sea → Med',
         frtBaseline:55, frtCrisis:140, frtUnit:'WS (Platts W.Africa→Cont)', frtPeakDate:'Feb 2026',
-        hormuzImpact:'Partial exposure; some vessels diverted to fill Hormuz supply gap via alternative origins (West Africa, North Sea)' },
+        hormuzImpact:'Partial exposure; some vessels diverted to fill Hormuz supply gap via alternative origins (West Africa, North Sea)',
+        corridorBreakdown:{ hormuz:40, malacca:55, bab:45, suez:80, gibraltar:30, bosphorus:12, danish:4, panama:0 } },
       { name:'Aframax', fullName:'Aframax Tanker',
         size:'80–120k DWT', cargo:'~700k bbl', globalFleet:1050,
         corridorVessels:55, corridorNote:'Intraregional GCC, STS operations',
         role:'Supplementary', roleColor:'#475569',
         routes:'Persian Gulf STS, Indian Ocean short-haul',
         frtBaseline:70, frtCrisis:200, frtUnit:'WS (Platts AG→East)', frtPeakDate:'Feb 2026',
-        hormuzImpact:'Gulf STS operations cease; vessels pivot to non-Hormuz corridors' }
+        hormuzImpact:'Gulf STS operations cease; vessels pivot to non-Hormuz corridors',
+        corridorBreakdown:{ hormuz:55, malacca:40, bab:30, suez:45, gibraltar:18, bosphorus:35, danish:14, panama:10 } }
     ],
     sources:'Clarksons Research 2024 (fleet counts); Platts Dirty Tanker Assessments (Worldscale rates, Feb 2026); EIA Chokepoints 2022'
   }
@@ -16837,6 +16840,53 @@ function renderTFFleet(comm) {
     html += '</div></div>';  // close inner padding + outer card
   });
   html += '</div>';
+
+  // Corridor distribution table
+  var corridorDefs = [
+    {id:'hormuz',    label:'Hormuz'},
+    {id:'malacca',   label:'Malacca Str.'},
+    {id:'suez',      label:'Suez Canal'},
+    {id:'bab',       label:'Bab-el-Mandeb'},
+    {id:'bosphorus', label:'Bosphorus'},
+    {id:'gibraltar', label:'Gibraltar'},
+    {id:'danish',    label:'Danish Str.'},
+    {id:'panama',    label:'Panama'}
+  ];
+  var hasCorrData = data.classes.some(function(c){ return !!c.corridorBreakdown; });
+  if (hasCorrData) {
+    var maxTotal = 0;
+    corridorDefs.forEach(function(cp) {
+      var t = 0;
+      data.classes.forEach(function(cls){ t += (cls.corridorBreakdown && cls.corridorBreakdown[cp.id]) ? cls.corridorBreakdown[cp.id] : 0; });
+      if (t > maxTotal) maxTotal = t;
+    });
+    var colTemplate = '120px' + data.classes.map(function(){ return ' 60px'; }).join('') + ' 60px 1fr';
+    html += '<div style="margin:14px 0;border-top:1px solid rgba(255,255,255,0.06);padding-top:14px">';
+    html += '<div style="font-size:8px;font-family:var(--f-mono);color:var(--c-gold);letter-spacing:.18em;text-transform:uppercase;margin-bottom:10px">&#9670; Capacity by Corridor</div>';
+    // Header
+    html += '<div style="display:grid;grid-template-columns:' + colTemplate + ';gap:0 6px;padding-bottom:6px;border-bottom:1px solid rgba(255,255,255,0.06)">';
+    html += '<div style="font-size:7px;color:var(--c-tx2);font-family:var(--f-mono)">CHOKEPOINT</div>';
+    data.classes.forEach(function(cls){
+      html += '<div style="font-size:7px;color:' + cls.roleColor + ';font-family:var(--f-mono);text-align:right">' + cls.name + '</div>';
+    });
+    html += '<div style="font-size:7px;color:var(--c-tx2);font-family:var(--f-mono);text-align:right">TOTAL</div><div></div></div>';
+    // Rows
+    corridorDefs.forEach(function(cp) {
+      var vals = data.classes.map(function(cls){ return (cls.corridorBreakdown && cls.corridorBreakdown[cp.id]) ? cls.corridorBreakdown[cp.id] : 0; });
+      var total = vals.reduce(function(a,b){ return a+b; }, 0);
+      if (total === 0) return;
+      var pct = maxTotal > 0 ? Math.round(total / maxTotal * 100) : 0;
+      html += '<div style="display:grid;grid-template-columns:' + colTemplate + ';gap:0 6px;align-items:center;padding:5px 0;border-bottom:1px solid rgba(255,255,255,0.03)">';
+      html += '<div style="font-size:8px;color:var(--c-tx1);font-family:var(--f-mono)">' + cp.label + '</div>';
+      vals.forEach(function(v, i){
+        html += '<div style="font-size:9px;font-weight:600;color:' + (v > 0 ? data.classes[i].roleColor : 'rgba(255,255,255,0.18)') + ';font-family:var(--f-mono);text-align:right">' + (v > 0 ? v : '—') + '</div>';
+      });
+      html += '<div style="font-size:9px;font-weight:700;color:#e8eaed;font-family:var(--f-mono);text-align:right">' + total + '</div>';
+      html += '<div style="padding-left:10px"><div style="height:3px;background:rgba(255,255,255,0.07);border-radius:2px"><div style="height:100%;width:' + pct + '%;background:var(--c-gold);opacity:.6;border-radius:2px"></div></div></div>';
+      html += '</div>';
+    });
+    html += '</div>';
+  }
 
   html += '<div style="display:flex;gap:16px;flex-wrap:wrap;margin-bottom:10px;padding-bottom:10px;border-bottom:1px solid rgba(255,255,255,0.05)">';
   data.classes.forEach(function(cls) {

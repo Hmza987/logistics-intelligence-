@@ -4464,22 +4464,37 @@ canvas { font-family: var(--f-mono); }
 
   <!-- Fleet Tonnage Panel (crude oil only) -->
   <div class="card" id="tf-fleet-card" style="margin-bottom:14px">
-    <div class="card-label">&#9670; Fleet Deployment &mdash; Crude Oil Tanker Market</div>
-    <div id="tf-fleet-content"><div style="font-size:9px;color:var(--c-tx2);padding:8px 0">Select crude oil to view fleet deployment data</div></div>
+    <div class="tf-method-toggle" onclick="toggleTFAccordion('tf-fleet-body','tf-fleet-chev')">
+      <div class="card-label" style="margin-bottom:0">&#9670; Fleet Deployment &mdash; Crude Oil Tanker Market</div>
+      <div style="font-family:var(--f-mono);font-size:8px;color:var(--c-tx2)" id="tf-fleet-chev">&#9660; Show</div>
+    </div>
+    <div id="tf-fleet-body" style="display:none;margin-top:14px">
+      <div id="tf-fleet-content"><div style="font-size:9px;color:var(--c-tx2);padding:8px 0">Select crude oil to view fleet deployment data</div></div>
+    </div>
   </div>
 
   <!-- Strategic Stockpile Panel (crude oil only) -->
   <div class="card" id="tf-stockpile-card" style="margin-bottom:14px">
-    <div class="card-label">&#9670; Strategic Oil Stockpile Runway</div>
-    <div id="tf-stockpile-content"><div style="font-size:9px;color:var(--c-tx2);padding:8px 0">Select crude oil and run a stress test to view stockpile draw-down analysis</div></div>
+    <div class="tf-method-toggle" onclick="toggleTFAccordion('tf-stockpile-body','tf-stockpile-chev')">
+      <div class="card-label" style="margin-bottom:0">&#9670; Strategic Oil Stockpile Runway</div>
+      <div style="font-family:var(--f-mono);font-size:8px;color:var(--c-tx2)" id="tf-stockpile-chev">&#9660; Show</div>
+    </div>
+    <div id="tf-stockpile-body" style="display:none;margin-top:14px">
+      <div id="tf-stockpile-content"><div style="font-size:9px;color:var(--c-tx2);padding:8px 0">Select crude oil and run a stress test to view stockpile draw-down analysis</div></div>
+    </div>
   </div>
 
   <!-- GCC Country Impact -->
   <div class="card" id="tf-gcc-card" style="margin-bottom:14px">
-    <div class="card-label" style="margin-bottom:10px">&#9670; Key Insights &mdash; GCC Country Exposure</div>
-    <div class="gcc-grid" id="tf-gcc-grid"></div>
-    <div id="gcc-footer" style="font-size:7.5px;color:var(--c-tx2);margin-top:10px;border-top:1px solid var(--c-bd1);padding-top:8px">
-      Baseline data &#8212; toggle a chokepoint chip above to see scenario-specific implications.
+    <div class="tf-method-toggle" onclick="toggleTFAccordion('tf-gcc-body','tf-gcc-chev')">
+      <div class="card-label" style="margin-bottom:0">&#9670; Key Insights &mdash; GCC Country Exposure</div>
+      <div style="font-family:var(--f-mono);font-size:8px;color:var(--c-tx2)" id="tf-gcc-chev">&#9660; Show</div>
+    </div>
+    <div id="tf-gcc-body" style="display:none;margin-top:14px">
+      <div class="gcc-grid" id="tf-gcc-grid"></div>
+      <div id="gcc-footer" style="font-size:7.5px;color:var(--c-tx2);margin-top:10px;border-top:1px solid var(--c-bd1);padding-top:8px">
+        Baseline data &#8212; toggle a chokepoint chip above to see scenario-specific implications.
+      </div>
     </div>
   </div>
 
@@ -16922,6 +16937,15 @@ function toggleTFMethodology() {
   if (!body) return;
   body.classList.toggle('open');
   if (chev) chev.textContent = body.classList.contains('open') ? '▲ Hide' : '▼ Show';
+}
+
+function toggleTFAccordion(bodyId, chevId) {
+  var body = document.getElementById(bodyId);
+  var chev = document.getElementById(chevId);
+  if (!body) return;
+  var open = body.style.display !== 'none';
+  body.style.display = open ? 'none' : 'block';
+  if (chev) chev.textContent = open ? '▼ Show' : '▲ Hide';
 }
 
 

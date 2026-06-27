@@ -4465,7 +4465,7 @@ canvas { font-family: var(--f-mono); }
   <!-- Fleet Tonnage Panel (crude oil only) -->
   <div class="card" id="tf-fleet-card" style="margin-bottom:14px">
     <div class="tf-method-toggle" onclick="toggleTFAccordion('tf-fleet-body','tf-fleet-chev')">
-      <div class="card-label" style="margin-bottom:0">&#9670; Fleet Deployment &mdash; Crude Oil Tanker Market</div>
+      <div class="card-label" style="margin-bottom:0" id="tf-fleet-card-label">&#9670; Fleet Deployment &mdash; Crude Oil Tanker Market</div>
       <div style="font-family:var(--f-mono);font-size:8px;color:var(--c-tx2)" id="tf-fleet-chev">&#9660; Show</div>
     </div>
     <div id="tf-fleet-body" style="display:none;margin-top:14px">
@@ -4476,7 +4476,7 @@ canvas { font-family: var(--f-mono); }
   <!-- Strategic Stockpile Panel (crude oil only) -->
   <div class="card" id="tf-stockpile-card" style="margin-bottom:14px">
     <div class="tf-method-toggle" onclick="toggleTFAccordion('tf-stockpile-body','tf-stockpile-chev')">
-      <div class="card-label" style="margin-bottom:0">&#9670; Strategic Oil Stockpile Runway</div>
+      <div class="card-label" style="margin-bottom:0" id="tf-stockpile-card-label">&#9670; Strategic Oil Stockpile Runway</div>
       <div style="font-family:var(--f-mono);font-size:8px;color:var(--c-tx2)" id="tf-stockpile-chev">&#9660; Show</div>
     </div>
     <div id="tf-stockpile-body" style="display:none;margin-top:14px">
@@ -4487,7 +4487,7 @@ canvas { font-family: var(--f-mono); }
   <!-- GCC Country Impact -->
   <div class="card" id="tf-gcc-card" style="margin-bottom:14px">
     <div class="tf-method-toggle" onclick="toggleTFAccordion('tf-gcc-body','tf-gcc-chev')">
-      <div class="card-label" style="margin-bottom:0">&#9670; Key Insights &mdash; GCC Country Exposure</div>
+      <div class="card-label" style="margin-bottom:0" id="tf-gcc-card-label">&#9670; Key Insights &mdash; GCC Country Exposure</div>
       <div style="font-family:var(--f-mono);font-size:8px;color:var(--c-tx2)" id="tf-gcc-chev">&#9660; Show</div>
     </div>
     <div id="tf-gcc-body" style="display:none;margin-top:14px">
@@ -14341,6 +14341,7 @@ var TF_COMMODITIES = {
     cat:'agriculture', name:'Wheat', unit:'MT/year', globalTrade:195,
     globalTradeSource:'USDA FAS Production, Supply & Distribution MY2022/23',
     priceLabel:'CBOT wheat (USc/bu)', color:'#fbbf24',
+    basePrice:580,
     vesselType:'Handymax / Panamax bulk', vesselSpeed:14,
     elasticity:-0.20, elasticitySource:'USDA ERS 2022; IMF food elasticity study',
     exporters:[
@@ -14967,8 +14968,8 @@ function selectTFCommodity(commId) {
     b.classList.toggle('active', b.dataset.id === commId);
   });
 
-  // WIP gate — show overlay for any commodity other than crude_oil
-  var isWip = commId !== 'crude_oil';
+  // WIP gate — show overlay for any commodity other than crude_oil or wheat
+  var isWip = !(commId === 'crude_oil' || commId === 'wheat');
   var wipScreen = document.getElementById('tf-wip-screen');
   if (wipScreen) {
     wipScreen.style.display = isWip ? 'flex' : 'none';
@@ -15667,6 +15668,67 @@ var TF_FLEET_DATA = {
         ] }
     ],
     sources:'Clarksons Research 2024 (fleet counts); Platts Dirty Tanker Assessments (Worldscale rates, Feb 2026); EIA Chokepoints 2022'
+  },
+
+  wheat: {
+    classes:[
+      { name:'Panamax', fullName:'Panamax Bulk Carrier',
+        size:'65–82k DWT', cargo:'~62,000 MT grain', globalFleet:2700,
+        corridorVessels:1200, corridorNote:'Black Sea · US Gulf · Australia · Americas',
+        role:'Primary', roleColor:'#f59e0b',
+        routes:'Black Sea → MENA; Australia → SE Asia; Americas → Asia',
+        frtBaseline:18, frtCrisis:52, frtUnit:'$/MT (BSE BPI Black Sea→Egypt)', frtPeakDate:'May 2022',
+        cpRateExposure:{ turkish_straits:0.75, bab_el_mandeb:0.40, suez:0.35, malacca:0.15, danish_straits:0.05, panama:0.10, hormuz:0 },
+        grainImpact:'Turkish Straits closure halts ~30% of global wheat trade; 480 Panamaxes on Black Sea corridors diverted or idled. Cape rerouting adds 14–21 days per voyage.',
+        routeAllocation:[
+          { route:'Black Sea → MENA / Africa',    vessels:480, exposure:{ turkish_straits:0.95, bab_el_mandeb:0.55, suez:0.50 }, note:'Primary grain corridor — Russia/Ukraine/Romania via Turkish Straits to Egypt, Algeria, Sudan, Yemen' },
+          { route:'Australia → SE Asia / India',  vessels:280, exposure:{ malacca:0.70 },                                         note:'Australian wheat to Indonesia, Malaysia, Bangladesh and Indian subcontinent via Malacca' },
+          { route:'Americas → Asia',              vessels:220, exposure:{ panama:0.15 },                                           note:'US PNW, Canada (Pacific) and Argentina to China, Japan and South Korea (mostly trans-Pacific, limited Panama)' },
+          { route:'US Gulf → MENA / EU',          vessels:180, exposure:{ bab_el_mandeb:0.20, suez:0.18 },                        note:'US Gulf Hard Red Winter wheat to Egypt, Turkey and European millers via Atlantic / Suez' },
+          { route:'Black Sea → Asia (via Suez)',  vessels:170, exposure:{ turkish_straits:0.95, suez:0.70, bab_el_mandeb:0.65, malacca:0.40 }, note:'Russia/Ukraine wheat to Bangladesh, Indonesia, China via Turkish Straits, Suez and Malacca' },
+          { route:'Americas → Europe',            vessels:150, exposure:{},                                                        note:'Argentine and US wheat to Spanish, Italian and UK millers — Atlantic route, no major chokepoints' },
+          { route:'India / Other Spot',           vessels:150, exposure:{ bab_el_mandeb:0.15, suez:0.12 },                        note:'Indian wheat exports when policy permits; spot cargoes from Kazakhstan / minor origins' },
+          { route:'Drydock / Storage',            vessels:1070, exposure:{},                                                       note:'Dry dock, repair, laid up, or on non-grain charters' }
+        ] },
+      { name:'Supramax', fullName:'Supramax / Ultramax Bulk Carrier',
+        size:'50–63k DWT', cargo:'~46,000 MT grain', globalFleet:3800,
+        corridorVessels:1500, corridorNote:'Black Sea · Med · SE Asia · W Africa',
+        role:'Secondary', roleColor:'#94a3b8',
+        routes:'Black Sea · Med · SE Asia intra · Americas · W Africa',
+        frtBaseline:14, frtCrisis:40, frtUnit:'$/MT (BSE BSI Black Sea→Med)', frtPeakDate:'May 2022',
+        cpRateExposure:{ turkish_straits:0.65, bab_el_mandeb:0.35, suez:0.30, malacca:0.20, danish_straits:0.05, panama:0.08, hormuz:0 },
+        grainImpact:'Highly flexible — pivot quickly between grain and other dry bulk. Turkish Straits closure removes 520 Supramaxes from Black Sea grain lanes; many shift to Americas origins.',
+        routeAllocation:[
+          { route:'Black Sea → MENA / Africa',    vessels:520, exposure:{ turkish_straits:0.90, bab_el_mandeb:0.50, suez:0.45 }, note:'Dominant Supramax grain lane — smaller lots to Morocco, Tunisia, Libya, Saudi Red Sea ports' },
+          { route:'SE Asia intraregional',        vessels:480, exposure:{ malacca:0.65 },                                        note:'Intraregional grain and feed flows between Indonesia, Philippines, Vietnam, Thailand via Malacca' },
+          { route:'Americas → Various',           vessels:420, exposure:{},                                                       note:'Argentina, Brazil and US Gulf grain to multiple destinations — South Asia, Europe, Africa' },
+          { route:'Black Sea → Asia',             vessels:320, exposure:{ turkish_straits:0.90, suez:0.65, bab_el_mandeb:0.60, malacca:0.35 }, note:'Russian wheat to Bangladesh, Sri Lanka, Vietnam via Suez and Malacca — long-haul Supramax trade' },
+          { route:'Australia / Pacific',          vessels:300, exposure:{ malacca:0.30 },                                        note:'Australian barley and wheat to SE Asia, Japan, South Korea — partly via Malacca, partly direct' },
+          { route:'W. Africa → Europe',           vessels:280, exposure:{},                                                       note:'West African maize and grain imports; return legs to Europe with grain from France and Germany' },
+          { route:'Indian Subcontinent',          vessels:250, exposure:{ bab_el_mandeb:0.20, suez:0.15 },                       note:'Bangladesh / Pakistan / India wheat import flows from Black Sea and European origins' },
+          { route:'Mediterranean intra',          vessels:220, exposure:{ bab_el_mandeb:0.30, suez:0.25 },                       note:'Short-haul intra-Med grain including French wheat to N Africa and Spanish exports' },
+          { route:'Drydock / Storage',            vessels:810, exposure:{},                                                       note:'Dry dock, repair, laid up, or on non-grain charters (coal, fertiliser, minor bulks)' }
+        ] },
+      { name:'Handymax', fullName:'Handymax / Handysize Bulk Carrier',
+        size:'28–38k DWT', cargo:'~26,000 MT grain', globalFleet:3600,
+        corridorVessels:1200, corridorNote:'Med · Black Sea minor ports · SE Asia intra · Indian Ocean',
+        role:'Supplementary', roleColor:'#475569',
+        routes:'Med intra · Black Sea minor ports · SE Asia intra · Indian Ocean',
+        frtBaseline:12, frtCrisis:32, frtUnit:'$/MT (BSE BHSI Black Sea→Med)', frtPeakDate:'May 2022',
+        cpRateExposure:{ turkish_straits:0.55, bab_el_mandeb:0.25, suez:0.22, malacca:0.15, danish_straits:0.08, panama:0.05, hormuz:0 },
+        grainImpact:'Serve ports too shallow or remote for Panamax/Supramax. Black Sea closure displaces ~440 Handymaxes and fragments final-mile delivery chains to smaller MENA ports.',
+        routeAllocation:[
+          { route:'Black Sea → MENA',             vessels:440, exposure:{ turkish_straits:0.85, bab_el_mandeb:0.45, suez:0.40 }, note:'Smaller Black Sea ports (Odessa, Constanta, Burgas) to smaller MENA and North African receivers' },
+          { route:'Mediterranean intra',          vessels:390, exposure:{ bab_el_mandeb:0.25, suez:0.20 },                       note:'Intra-Mediterranean grain redistribution — French, Spanish, Italian wheat to Egypt, Libya, Lebanon' },
+          { route:'SE Asia intraregional',        vessels:360, exposure:{ malacca:0.60 },                                        note:'Small-lot grain flows across SE Asia archipelago — Philippines, Indonesia, Vietnam local trade' },
+          { route:'Americas intraregional',       vessels:310, exposure:{},                                                       note:'Caribbean, Central America and US Gulf coastal grain distribution' },
+          { route:'W. Africa / Indian Ocean',     vessels:280, exposure:{},                                                       note:'West and East African port grain deliveries; Indian Ocean island supply routes' },
+          { route:'Indian Subcontinent',          vessels:250, exposure:{ bab_el_mandeb:0.20, suez:0.15 },                       note:'Pakistan, Bangladesh and Sri Lanka grain deliveries; Indian coastal redistribution' },
+          { route:'N. Europe / Baltic',           vessels:220, exposure:{ danish_straits:0.40 },                                  note:'Baltic and North Sea grain exports from Germany, Poland, France via Danish Straits' },
+          { route:'Drydock / Storage',            vessels:1350, exposure:{},                                                      note:'Dry dock, repair, laid up, or on non-grain charters (steel, aggregates, fertiliser)' }
+        ] }
+    ],
+    sources:'Clarksons Research 2024 (fleet counts); Baltic Exchange BPI/BSI/BHSI freight assessments; USDA FAS MY2022/23 (trade routes)'
   }
 };
 
@@ -15689,6 +15751,28 @@ var TF_STOCKPILE_DATA = [
     source:'EIA Today in Energy Apr 2026 (govt-held ~360 Mb, commercial ~1,000 Mb as of Dec 2025); Kpler: total >1.5 Bb',
     note:'China does not publish official data. EIA estimates govt-held SPR ~360 Mb; commercial (refineries + storage) ~1,000 Mb as of Dec 2025 — China added ~1.1 Mb/d to stocks throughout 2025. ME crude ~40% of imports; limited bypass options at this volume.',
     noteColor:'#f87171' }
+];
+
+// ── Grain stockpile data (wheat — MENA key importers) ─────────────────────────
+var TF_GRAIN_STOCKPILE_DATA = [
+  { name:'Egypt', abbr:'EG',
+    govtLabel:'Strategic grain reserve', commercialLabel:'Commercial / miller stocks',
+    govtMT:3.5, commercialMT:1.5, consumptionMTyr:22.5, blackSeaImportsMTyr:7.8, criticalDays:30,
+    source:'USDA FAS PSD MY2024/25; GASC strategic reserve disclosures; Egyptian Ministry of Supply',
+    note:'Egypt is the world\'s largest wheat importer. ~60% sourced from Black Sea (Russia + Ukraine). GASC holds 3–4 months\' strategic buffer in government silos. Turkish Straits closure is a direct food security trigger.',
+    noteColor:'#f87171' },
+  { name:'Algeria / Morocco', abbr:'ALG/MA',
+    govtLabel:'State reserve (OAIC/ONICL)', commercialLabel:'Port & miller stocks',
+    govtMT:2.2, commercialMT:0.9, consumptionMTyr:14.5, blackSeaImportsMTyr:4.2, criticalDays:45,
+    source:'USDA FAS PSD MY2024/25; OAIC (Algeria) and ONICL (Morocco) public disclosures',
+    note:'Algeria and Morocco together import ~8 MT/yr; ~50% from Black Sea/EU. Algeria holds 3–4 month mandatory state reserve via OAIC. Morocco diversifies to France and Argentina but remains sensitive to Turkish Straits closure.',
+    noteColor:'#fbbf24' },
+  { name:'GCC + Gulf MENA', abbr:'GCC',
+    govtLabel:'Strategic food reserve (SFR)', commercialLabel:'Commercial / port stocks',
+    govtMT:1.8, commercialMT:0.6, consumptionMTyr:8.5, blackSeaImportsMTyr:2.5, criticalDays:60,
+    source:'USDA FAS PSD MY2024/25; GCC Secretariat food security reports; Saudi SAGO disclosures',
+    note:'Saudi Arabia (SAGO), UAE and Kuwait hold 3–6 month strategic food reserves. GCC imports ~5 MT/yr of wheat, ~30–40% from Black Sea origins. Saudi SAGO has diversified to Australian and US origins post-2022 Ukraine shock.',
+    noteColor:'#3dd68c' }
 ];
 
 function buildTerminalPopupHtml(t) {
@@ -15819,6 +15903,111 @@ function clearTFDisruptions() {
   updateTFCPChips();
   renderGCCImpact();
 }
+
+// ── MENA Food Security — Wheat country exposure ────────────────────────────────
+var TF_WHEAT_GCC_DATA = [
+  {
+    id:'egypt', name:'Egypt', role:'World\'s Largest Wheat Importer',
+    resilience:35, resColor:'#dc2626',
+    cps:['turkish_straits','bab_el_mandeb','suez'],
+    normal:{
+      stats:[{val:'13.5 MT',lbl:'wheat imports/yr'},{val:'60%',lbl:'sourced from Black Sea'}],
+      facts:'GASC strategic reserve ~3–4 months · Largest buyer of Russian/Ukrainian wheat · 100M population, subsidised bread programme (baladi) relies entirely on imported grain · Port Said and Alexandria handle 95% of grain arrivals',
+      bypass:'▶ Alternative: Australian, US and EU wheat at ~15–20% price premium'
+    },
+    scenarios:{
+      'turkish_straits':{
+        stats:[{val:'~7.8 MT/yr',lbl:'supply at risk'},{val:'~55 days',lbl:'est. reserve runway'}],
+        insight:'Turkish Straits closure directly cuts Egypt\'s primary supply lane. GASC has ~3.5 MT govt reserve (57 days). Emergency procurement switches to Australian/US origins adds $30–45/MT premium and 21–28 days lead time. Bread subsidy programme faces cost shock; potential political risk.',
+        bypass:'⚠ Emergency switch to Australian/US/EU wheat — significant price premium'
+      },
+      'bab_el_mandeb':{
+        stats:[{val:'+18 days',lbl:'Red Sea detour via CoGH'},{val:'+$12–18/MT',lbl:'freight cost increase'}],
+        insight:'Black Sea cargoes that cleared Turkish Straits face Cape of Good Hope rerouting. ~7.8 MT/yr supply path lengthened by 18 days. No physical supply cut but significant cost inflation on landed price — GASC tender premiums rise sharply.',
+        bypass:'▶ Cargo still arrives via CoGH — cost impact, not volume cut'
+      },
+      'suez':{
+        stats:[{val:'+15–18 days',lbl:'Cape routing delay'},{val:'$10–14/MT',lbl:'additional freight'}],
+        insight:'Suez closure forces Cape of Good Hope routing for all Black Sea and European wheat. Egypt still receives supply but at higher cost and longer lead times. GASC emergency reserve buffer reduces pressure — 45–60 day window available.',
+        bypass:'▶ CoGH viable; reserve cover buys 45–60 day buffer'
+      },
+      'bab_el_mandeb,suez':{
+        stats:[{val:'Both Red Sea exits sealed',lbl:''},{val:'~73 days',lbl:'reserve runway at current drawdown'}],
+        insight:'Both southern exits sealed. All Black Sea wheat must route via Cape of Good Hope. Freight surcharge of $20–28/MT compounds supply anxiety. Egypt\'s 5.0 MT total reserve provides ~73 days of buffer at normal consumption. Emergency tenders at premium will be triggered.',
+        bypass:'⚠ Cape of Good Hope only — $20–28/MT surcharge; reserve buffer critical'
+      },
+      'turkish_straits,bab_el_mandeb':{
+        stats:[{val:'Primary supply halted',lbl:''},{val:'~55 days',lbl:'reserve runway — critical'}],
+        insight:'Turkish Straits cuts the primary supply lane; Bab el-Mandeb makes Cape rerouting of surviving cargoes also costly. Emergency procurement from Australia/USA essential. Bread subsidy financing gap opens within 60 days. High food security risk.',
+        bypass:'⚠ No viable low-cost alternative — full premium sourcing required'
+      },
+      'turkish_straits,suez':{
+        stats:[{val:'Black Sea fully severed',lbl:''},{val:'~55 days',lbl:'reserve runway — critical'}],
+        insight:'Turkish Straits + Suez closure severs both the primary supply source and the efficient transit route. Remaining supply must come from Americas/Australia via Atlantic — 28–35 days longer. Reserve runway of ~55 days is tight. GASC emergency procurement activated.',
+        bypass:'⚠ Atlantic/Americas routing required — 28–35 day additional lead time'
+      }
+    }
+  },
+  {
+    id:'saudi', name:'Saudi Arabia', role:'GCC Food Security Anchor',
+    resilience:60, resColor:'#f59e0b',
+    cps:['turkish_straits','bab_el_mandeb','suez'],
+    normal:{
+      stats:[{val:'3.0 MT',lbl:'wheat imports/yr'},{val:'6 months',lbl:'SAGO strategic buffer'}],
+      facts:'SAGO (Saudi Grains Organisation) holds 6-month strategic grain reserve · Post-2022: diversified to Australia, Canada, USA · Jeddah Islamic Port and Dammam handle bulk grain · No domestic wheat production since 2008 groundwater ban · Population 36M',
+      bypass:'▶ SAGO reserve: 6-month buffer (strongest in GCC) · Diversified supplier base'
+    },
+    scenarios:{
+      'turkish_straits':{
+        stats:[{val:'~35%',lbl:'supply at risk (Black Sea origin)'},{val:'>6 months',lbl:'SAGO reserve cover'}],
+        insight:'Saudi Arabia diversified away from Black Sea post-Ukraine 2022. Only ~35% of imports now from Black Sea origins. SAGO\'s 6-month strategic reserve provides strong buffer. Emergency procurement from Australia/US is well-established. Moderate price impact only.',
+        bypass:'▶ Well-positioned — SAGO reserve + diversified origins'
+      },
+      'bab_el_mandeb':{
+        stats:[{val:'Jeddah supply chain disrupted',lbl:''},{val:'+12–16 days',lbl:'Cape routing delay'}],
+        insight:'Jeddah Islamic Port (Red Sea) is a primary grain import hub. Bab el-Mandeb closure forces either Cape of Good Hope rerouting or diversion to Dammam (Arabian Gulf). Saudi Arabia\'s dual-coast logistics (Jeddah + Dammam) provides meaningful resilience.',
+        bypass:'▶ Diversion to Dammam (Arabian Gulf) via Hormuz partially compensates'
+      },
+      'hormuz':{
+        stats:[{val:'Dammam supply disrupted',lbl:''},{val:'Jeddah fully operational',lbl:''}],
+        insight:'Hormuz closure affects Dammam (Arabian Gulf) grain arrivals but Jeddah (Red Sea) remains fully operational. Saudi Arabia\'s dual-port system provides strong resilience. SAGO can reroute 100% of grain imports via Jeddah if needed.',
+        bypass:'▶ Full switch to Jeddah routing — strong resilience'
+      },
+      'bab_el_mandeb,hormuz':{
+        stats:[{val:'Both major ports disrupted',lbl:''},{val:'4–5 months',lbl:'SAGO cover + inland divert'}],
+        insight:'Dual disruption affects both Jeddah (Bab el-Mandeb) and Dammam (Hormuz) grain corridors. SAGO strategic reserve of 6 months provides critical buffer. Land bridge from Jordan/Kuwait possible but limited in scale. Severe logistics stress but not immediate food security crisis.',
+        bypass:'⚠ Both ports disrupted — land bridge + reserve drawdown only option'
+      }
+    }
+  },
+  {
+    id:'turkey', name:'Turkey', role:'Transit Hub + Major Importer',
+    resilience:50, resColor:'#f59e0b',
+    cps:['turkish_straits','bab_el_mandeb','suez'],
+    normal:{
+      stats:[{val:'10.0 MT',lbl:'wheat imports/yr'},{val:'~25%',lbl:'of global Black Sea transit'}],
+      facts:'Turkish Straits controller — exports ~3 MT/yr re-milled flour · Imports ~10 MT/yr (mostly Black Sea and EU) · Istanbul Strait handles 50,000+ grain vessels/yr · 85M population, subsidised bread · TOPRAK MAHSULLERI OFISI (TMO) state grain buffer',
+      bypass:'▶ Domestic reserve + EU origin alternative — but strategic leverage cuts both ways'
+    },
+    scenarios:{
+      'turkish_straits':{
+        stats:[{val:'Turkish Straits CLOSED',lbl:''},{val:'Geopolitical control',lbl:'Turkey controls closure'}],
+        insight:'Turkish Straits closure is primarily a geopolitical decision by Turkey (under Montreux Convention). Domestic supply is not directly threatened — Turkey controls the closure and retains domestic access. Export flour business (~3 MT) is disrupted. Regional food security leverage is very high.',
+        bypass:'▶ Turkey controls the Straits — closure is a policy decision, not a supply risk'
+      },
+      'bab_el_mandeb':{
+        stats:[{val:'+16–18 days',lbl:'re-export flour supply chains'},{val:'$10–14/MT',lbl:'freight increase'}],
+        insight:'Turkey\'s flour re-export business to MENA (via Red Sea) is disrupted. Domestic supply from Black Sea via Turkish Straits (open) remains unaffected. Cost inflation on re-export flour makes Turkish millers less competitive vs. Australian/European alternatives.',
+        bypass:'▶ Domestic supply unaffected — re-export flour business disrupted'
+      },
+      'suez':{
+        stats:[{val:'Flour exports to Asia disrupted',lbl:''},{val:'Domestic supply unaffected',lbl:''}],
+        insight:'Turkish Straits open (domestic imports unaffected). Suez closure disrupts Turkey\'s flour export business to East Africa and South Asia. Cape of Good Hope routing makes Turkish flour uncompetitive on these lanes. Moderate economic impact, no food security risk.',
+        bypass:'▶ Domestic supply secure — flour export competitiveness reduced'
+      }
+    }
+  }
+];
 
 // ── GCC Country Impact ─────────────────────────────────────────────────────────
 var TF_GCC_DATA = [
@@ -16101,8 +16290,17 @@ function renderGCCImpact() {
   var grid = document.getElementById('tf-gcc-grid');
   if (!grid) return;
 
+  // Use wheat-specific MENA food security data when wheat tab is active
+  var gccData = (TF_ACTIVE_COMM === 'wheat') ? TF_WHEAT_GCC_DATA : TF_GCC_DATA;
+  var gccCardLabel = document.getElementById('tf-gcc-card-label');
+  if (gccCardLabel) {
+    gccCardLabel.innerHTML = TF_ACTIVE_COMM === 'wheat'
+      ? '&#9670; Key Insights &mdash; MENA Food Security Exposure'
+      : '&#9670; Key Insights &mdash; GCC Country Exposure';
+  }
+
   var html = '';
-  TF_GCC_DATA.forEach(function(c) {
+  gccData.forEach(function(c) {
     var relevantActive = c.cps.filter(function(cp){ return disruptions[cp]; });
     var isDisrupted = relevantActive.length > 0;
     var scenario = null;
@@ -16715,7 +16913,7 @@ function renderTFPriceImpact(comm, impactedPct, cpNames) {
     '<div style="font-family:var(--f-mono);font-size:28px;font-weight:700;color:' + rangeColor + ';letter-spacing:-.02em;line-height:1">' +
       '+$' + dolLow + ' &ndash; +$' + dolHigh +
     '</div>' +
-    '<div style="font-size:8.5px;color:#475569;margin-top:5px;letter-spacing:.04em">PER BARREL ESTIMATED RANGE &nbsp;&middot;&nbsp; BRENT BASELINE $' + basePrice + '</div>' +
+    '<div style="font-size:8.5px;color:#475569;margin-top:5px;letter-spacing:.04em">' + (comm.unit.indexOf('MT') !== -1 ? 'PER BUSHEL ESTIMATED RANGE &nbsp;&middot;&nbsp; CBOT BASELINE ' + basePrice + ' USc/bu' : 'PER BARREL ESTIMATED RANGE &nbsp;&middot;&nbsp; BRENT BASELINE $' + basePrice) + '</div>' +
   '</div>';
 
   // ── Compound effect banner ──
@@ -16730,24 +16928,46 @@ function renderTFPriceImpact(comm, impactedPct, cpNames) {
   }
 
   // ── Summary rows ──
+  var isGrain = comm.unit && comm.unit.indexOf('MT') !== -1;
+  var priceUnit = isGrain ? ' USc/bu' : ' /bbl';
+  var priceRangeLbl = isGrain ? 'Estimated CBOT range' : 'Estimated Brent range';
+  var priceRangeVal = isGrain ? (estLow + ' &ndash; ' + estHigh + priceUnit) : ('$' + estLow + ' &ndash; $' + estHigh + priceUnit);
   html += '<div style="border-top:1px solid rgba(255,255,255,0.07);padding:7px 2px;display:flex;justify-content:space-between;align-items:center">' +
-    '<span style="font-size:8.5px;color:#64748b">Estimated Brent range</span>' +
-    '<span style="font-size:10px;font-weight:700;color:' + rangeColor + ';font-family:var(--f-mono)">$' + estLow + ' &ndash; $' + estHigh + ' /bbl</span>' +
+    '<span style="font-size:8.5px;color:#64748b">' + priceRangeLbl + '</span>' +
+    '<span style="font-size:10px;font-weight:700;color:' + rangeColor + ';font-family:var(--f-mono)">' + priceRangeVal + '</span>' +
   '</div>';
-  html += '<div style="border-top:1px solid rgba(255,255,255,0.07);padding:7px 2px;display:flex;justify-content:space-between;align-items:center">' +
-    '<span style="font-size:8.5px;color:#64748b">Observed (Feb&ndash;Jun 2026)</span>' +
-    '<span style="font-size:9px;color:#94a3b8">$72 &rarr; $118 peak &middot; $80 current</span>' +
-  '</div>';
-  if (numDisruptions <= 1) {
+  if (isGrain) {
     html += '<div style="border-top:1px solid rgba(255,255,255,0.07);padding:7px 2px;display:flex;justify-content:space-between;align-items:center">' +
-      '<span style="font-size:8.5px;color:#64748b">Analyst consensus (Goldman / JPM)</span>' +
-      '<span style="font-size:9px;color:#94a3b8">$100 &ndash; $150 /bbl</span>' +
+      '<span style="font-size:8.5px;color:#64748b">Observed (May 2022 peak)</span>' +
+      '<span style="font-size:9px;color:#94a3b8">580 &rarr; 1,294 USc/bu peak &middot; 580 current</span>' +
     '</div>';
+    if (numDisruptions <= 1) {
+      html += '<div style="border-top:1px solid rgba(255,255,255,0.07);padding:7px 2px;display:flex;justify-content:space-between;align-items:center">' +
+        '<span style="font-size:8.5px;color:#64748b">Ukraine war 2022 precedent</span>' +
+        '<span style="font-size:9px;color:#94a3b8">+60% CBOT (Mar&ndash;May 2022)</span>' +
+      '</div>';
+    } else {
+      html += '<div style="border-top:1px solid rgba(255,255,255,0.07);padding:7px 2px;display:flex;justify-content:space-between;align-items:center">' +
+        '<span style="font-size:8.5px;color:#64748b">No precedent for dual grain chokepoint closure</span>' +
+        '<span style="font-size:9px;color:#94a3b8">Model estimate only</span>' +
+      '</div>';
+    }
   } else {
     html += '<div style="border-top:1px solid rgba(255,255,255,0.07);padding:7px 2px;display:flex;justify-content:space-between;align-items:center">' +
-      '<span style="font-size:8.5px;color:#64748b">No historical precedent for dual major CP closure</span>' +
-      '<span style="font-size:9px;color:#94a3b8">Model estimate only</span>' +
+      '<span style="font-size:8.5px;color:#64748b">Observed (Feb&ndash;Jun 2026)</span>' +
+      '<span style="font-size:9px;color:#94a3b8">$72 &rarr; $118 peak &middot; $80 current</span>' +
     '</div>';
+    if (numDisruptions <= 1) {
+      html += '<div style="border-top:1px solid rgba(255,255,255,0.07);padding:7px 2px;display:flex;justify-content:space-between;align-items:center">' +
+        '<span style="font-size:8.5px;color:#64748b">Analyst consensus (Goldman / JPM)</span>' +
+        '<span style="font-size:9px;color:#94a3b8">$100 &ndash; $150 /bbl</span>' +
+      '</div>';
+    } else {
+      html += '<div style="border-top:1px solid rgba(255,255,255,0.07);padding:7px 2px;display:flex;justify-content:space-between;align-items:center">' +
+        '<span style="font-size:8.5px;color:#64748b">No historical precedent for dual major CP closure</span>' +
+        '<span style="font-size:9px;color:#94a3b8">Model estimate only</span>' +
+      '</div>';
+    }
   }
   html += '<div style="border-top:1px solid rgba(255,255,255,0.07);padding:7px 2px;display:flex;justify-content:space-between;align-items:center">' +
     '<span style="font-size:8.5px;color:#64748b">' + cpNames + ' &middot; ' + TF_DISRUPTION_LEVEL + '% disruption</span>' +
@@ -16800,7 +17020,13 @@ var TF_VESSEL_PHOTOS = {
   // Oil Tanker Stride in Colon, Panama — CC BY-SA 4.0
   suezmax: 'https://upload.wikimedia.org/wikipedia/commons/thumb/c/c1/Oil_Tanker_Stride_in_Colon_Panama_2016_0698.jpg/960px-Oil_Tanker_Stride_in_Colon_Panama_2016_0698.jpg',
   // Kakariki crude oil tanker (46,700 DWT) — CC0 public domain, Bernard Spragg
-  aframax: 'https://upload.wikimedia.org/wikipedia/commons/thumb/9/9c/Kakariki._Crude_Oil_Tanker._%2822223331981%29.jpg/960px-Kakariki._Crude_Oil_Tanker._%2822223331981%29.jpg'
+  aframax: 'https://upload.wikimedia.org/wikipedia/commons/thumb/9/9c/Kakariki._Crude_Oil_Tanker._%2822223331981%29.jpg/960px-Kakariki._Crude_Oil_Tanker._%2822223331981%29.jpg',
+  // Panamax bulk carrier Federal Pioneer — CC BY-SA 3.0 Wikipedia
+  panamax: 'https://upload.wikimedia.org/wikipedia/commons/thumb/4/4e/Federal_Pioneer_-_Flickr_-_Dave_Wilson_Photography_UK.jpg/960px-Federal_Pioneer_-_Flickr_-_Dave_Wilson_Photography_UK.jpg',
+  // Supramax bulk carrier — CC BY-SA 2.0 Wikimedia Commons
+  supramax:'https://upload.wikimedia.org/wikipedia/commons/thumb/0/0f/Bulk_carrier_ship_at_sea.jpg/960px-Bulk_carrier_ship_at_sea.jpg',
+  // Handymax bulk carrier — CC BY 2.0 Bernard Spragg
+  handymax:'https://upload.wikimedia.org/wikipedia/commons/thumb/5/5c/Bulk_Carrier_%2849898701497%29.jpg/960px-Bulk_Carrier_%2849898701497%29.jpg'
 };
 
 function tfVesselSVG(type) {
@@ -16819,6 +17045,13 @@ function renderTFFleet(comm) {
   var data = TF_FLEET_DATA[TF_ACTIVE_COMM];
   if (!data) { el.innerHTML = '<div style="font-size:9px;color:var(--c-tx2);padding:8px 0">No fleet data for this commodity</div>'; return; }
 
+  var fleetLbl = document.getElementById('tf-fleet-card-label');
+  if (fleetLbl) {
+    fleetLbl.innerHTML = TF_ACTIVE_COMM === 'wheat'
+      ? '&#9670; Fleet Deployment &mdash; Grain Bulk Carrier Market'
+      : '&#9670; Fleet Deployment &mdash; Crude Oil Tanker Market';
+  }
+
   var hormuzDisrupted = !!TF_DISRUPTIONS['hormuz'];
   var level = TF_DISRUPTION_LEVEL / 100;
   var html = '';
@@ -16831,6 +17064,7 @@ function renderTFFleet(comm) {
     var borderCol = (hormuzDisrupted && cls.name === 'VLCC') ? 'rgba(220,38,38,0.45)' : 'var(--c-bd1)';
 
     var activeDisruptions = Object.keys(TF_DISRUPTIONS).filter(function(cp){ return TF_DISRUPTIONS[cp]; });
+    var anyDisruption = activeDisruptions.length > 0;
     var vesselType = cls.name.toLowerCase().replace(' ','');
     html += '<div style="border:1px solid ' + borderCol + ';border-radius:4px;overflow:hidden;background:rgba(6,10,18,0.7);display:flex;flex-direction:column">';
 
@@ -16855,8 +17089,7 @@ function renderTFFleet(comm) {
             +   '<div style="font-size:9px;color:var(--c-tx2);font-family:var(--f-mono);letter-spacing:.12em;text-transform:uppercase">Fleet by Trade Route</div>'
             +   '<div style="font-size:8px;color:var(--c-tx2);opacity:.5;font-family:var(--f-mono)">Clarksons · Jun 2026</div>'
             + '</div>';
-      var cpLabel = { hormuz:'Hormuz', bab_el_mandeb:'Bab el-Mandeb', suez:'Suez Canal', malacca:'Malacca', danish_straits:'Danish Str.', panama:'Panama' };
-      var anyDisruption = activeDisruptions.length > 0;
+      var cpLabel = { hormuz:'Hormuz', bab_el_mandeb:'Bab el-Mandeb', suez:'Suez Canal', malacca:'Malacca', danish_straits:'Danish Str.', panama:'Panama', turkish_straits:'Turkish Str.' };
       var totalDisrupted = 0;
       cls.routeAllocation.forEach(function(r) {
         var isDock = /drydock|storage/i.test(r.route);
@@ -16920,7 +17153,10 @@ function renderTFFleet(comm) {
             + '</div>';
     }
 
-    // Dynamic WS freight rate — responds to active disruption scenarios
+    // Dynamic freight rate — responds to active disruption scenarios
+    // WS (Worldscale) for tankers; $/MT for bulk carriers
+    var frtIsDollar = cls.frtUnit && cls.frtUnit.indexOf('$/MT') !== -1;
+    var frtPrefix = frtIsDollar ? '$' : 'WS ';
     var wsStressFactor = 0;
     if (activeDisruptions.length > 0 && cls.cpRateExposure) {
       var wsUndisrupted = 1;
@@ -16940,22 +17176,25 @@ function renderTFFleet(comm) {
           + '<div class="tf-section-micro" style="margin:0 0 4px">Freight Rate — ' + cls.frtUnit + '</div>'
           + '<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:2px">'
           +   '<span style="font-size:8px;color:var(--c-tx2)">Baseline</span>'
-          +   '<span style="font-size:9px;font-family:var(--f-mono);color:#94a3b8">WS ' + cls.frtBaseline + '</span>'
+          +   '<span style="font-size:9px;font-family:var(--f-mono);color:#94a3b8">' + frtPrefix + cls.frtBaseline + '</span>'
           + '</div>'
           + '<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:2px">'
           +   '<span style="font-size:8px;color:var(--c-tx2)">' + wsCurrentLabel + '</span>'
-          +   '<span style="font-size:9px;font-family:var(--f-mono);color:' + wsCurrentColor + '">WS ' + wsCurrentVal + (wsCurrentChange > 0 ? ' <span style="font-size:7.5px;color:' + wsCurrentChangeColor + '">+' + wsCurrentChange + '%</span>' : '') + '</span>'
+          +   '<span style="font-size:9px;font-family:var(--f-mono);color:' + wsCurrentColor + '">' + frtPrefix + wsCurrentVal + (wsCurrentChange > 0 ? ' <span style="font-size:7.5px;color:' + wsCurrentChangeColor + '">+' + wsCurrentChange + '%</span>' : '') + '</span>'
           + '</div>'
           + '<div style="display:flex;justify-content:space-between;align-items:center">'
           +   '<span style="font-size:8px;color:var(--c-tx2);opacity:.6">' + cls.frtPeakDate + ' peak</span>'
-          +   '<span style="font-size:9px;font-family:var(--f-mono);color:#ef4444;opacity:.5">WS ' + cls.frtCrisis + ' <span style="font-size:7.5px;color:#f87171">+' + rateChange + '%</span></span>'
+          +   '<span style="font-size:9px;font-family:var(--f-mono);color:#ef4444;opacity:.5">' + frtPrefix + cls.frtCrisis + ' <span style="font-size:7.5px;color:#f87171">+' + rateChange + '%</span></span>'
           + '</div>'
           + '</div>';
 
-    if (hormuzDisrupted && displaced > 0) {
+    // Vessel impact note — grainImpact for bulk carriers, hormuzImpact for tankers
+    var impactText = cls.grainImpact || (hormuzDisrupted && displaced > 0 ? cls.hormuzImpact : null);
+    var showImpact = cls.grainImpact ? anyDisruption : (hormuzDisrupted && displaced > 0);
+    if (showImpact && impactText) {
       html += '<div style="margin-top:8px;padding:5px 7px;background:rgba(220,38,38,0.1);border-radius:3px;border-left:2px solid #dc2626">'
-            + '<div style="font-size:7.5px;color:#fca5a5;font-weight:700;margin-bottom:2px">~' + displaced + ' vessels displaced</div>'
-            + '<div style="font-size:7px;color:#f87171;line-height:1.45">' + cls.hormuzImpact + '</div>'
+            + (displaced > 0 ? '<div style="font-size:7.5px;color:#fca5a5;font-weight:700;margin-bottom:2px">~' + displaced + ' vessels displaced</div>' : '')
+            + '<div style="font-size:7px;color:#f87171;line-height:1.45">' + impactText + '</div>'
             + '</div>';
     }
 
@@ -16974,9 +17213,115 @@ function renderTFFleet(comm) {
 }
 
 // ── Strategic Stockpile Runway ────────────────────────────────────────────────
+function renderTFGrainStockpile(el) {
+  var lbl = document.getElementById('tf-stockpile-card-label');
+  if (lbl) lbl.innerHTML = '&#9670; Strategic Grain Reserve Runway';
+  var activeDisruptions = Object.keys(TF_DISRUPTIONS).filter(function(cp){ return TF_DISRUPTIONS[cp]; });
+  var level = TF_DISRUPTION_LEVEL / 100;
+  var tsDisrupted = !!TF_DISRUPTIONS['turkish_straits'];
+  var babDisrupted = !!TF_DISRUPTIONS['bab_el_mandeb'];
+  var suezDisrupted = !!TF_DISRUPTIONS['suez'];
+  var anyDisruption = activeDisruptions.length > 0;
+  var html = '';
+
+  var cpNameMap = { turkish_straits:'Turkish Straits', bab_el_mandeb:'Bab el-Mandeb', suez:'Suez Canal', malacca:'Malacca', danish_straits:'Danish Str.', panama:'Panama', hormuz:'Hormuz' };
+
+  if (anyDisruption) {
+    var cpNames = activeDisruptions.map(function(cp){ return cpNameMap[cp] || cp; }).join(' + ');
+    html += '<div style="background:rgba(220,38,38,0.08);border:1px solid rgba(220,38,38,0.2);border-radius:4px;padding:7px 10px;margin-bottom:12px">'
+          + '<div style="font-size:8px;color:#fca5a5;font-weight:700;letter-spacing:.05em">&#9888;&#xFE0E; STRESS TEST ACTIVE &mdash; ' + cpNames.toUpperCase() + ' ' + TF_DISRUPTION_LEVEL + '% DISRUPTED</div>'
+          + '<div style="font-size:7.5px;color:#f87171;margin-top:2px">Countdown shows estimated days until each importer hits critical buffer threshold at current Black Sea supply shortfall</div>'
+          + '</div>';
+  }
+
+  html += '<div style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:12px">';
+
+  TF_GRAIN_STOCKPILE_DATA.forEach(function(r) {
+    var totalMT = r.govtMT + r.commercialMT;
+    var normalDays = Math.round((totalMT / r.consumptionMTyr) * 365);
+    var availableBuffer = totalMT - (r.criticalDays * r.consumptionMTyr / 365);
+
+    // Estimate disrupted supply: Turkish Straits = primary lever; Bab/Suez add freight but not volume cut
+    var disruptedSupplyFrac = 0;
+    if (tsDisrupted) disruptedSupplyFrac = Math.min(1, disruptedSupplyFrac + (r.blackSeaImportsMTyr / r.consumptionMTyr) * level);
+    var drawRate = r.blackSeaImportsMTyr * (tsDisrupted ? level : 0) / 365; // MT/day shortfall
+    var daysToBuffer = (anyDisruption && drawRate > 0) ? Math.round(availableBuffer / drawRate) : null;
+
+    var urgencyColor = !daysToBuffer ? '#60a5fa'
+      : daysToBuffer < 30 ? '#dc2626'
+      : daysToBuffer < 60 ? '#ef4444'
+      : daysToBuffer < 120 ? '#f59e0b'
+      : '#3dd68c';
+    var borderStyle = (anyDisruption && daysToBuffer !== null)
+      ? (daysToBuffer < 30 ? 'rgba(220,38,38,0.5)' : daysToBuffer < 60 ? 'rgba(239,68,68,0.35)' : daysToBuffer < 120 ? 'rgba(245,158,11,0.3)' : 'rgba(61,214,140,0.2)')
+      : 'var(--c-bd1)';
+
+    html += '<div style="border:1px solid ' + borderStyle + ';border-radius:4px;padding:10px;background:rgba(6,10,18,0.7)">';
+    html += '<div style="font-size:11px;font-weight:700;color:#e8eaed;font-family:var(--f-mono);margin-bottom:1px">' + r.name + '</div>'
+          + '<div style="font-size:7.5px;color:var(--c-tx2);margin-bottom:9px">' + r.consumptionMTyr.toFixed(1) + ' MT/yr consumption</div>';
+
+    var govtFillPct = Math.min(100, Math.round(r.govtMT / 6 * 100));
+    html += '<div style="font-size:7.5px;color:var(--c-tx2);margin-bottom:2px;display:flex;justify-content:space-between"><span>' + r.govtLabel + '</span><span style="color:#e2e8f0">' + r.govtMT.toFixed(1) + ' MT</span></div>'
+          + '<div style="height:5px;background:rgba(255,255,255,0.06);border-radius:2px;margin-bottom:5px"><div style="height:100%;width:' + govtFillPct + '%;background:#fbbf24;border-radius:2px"></div></div>';
+
+    var comFillPct = Math.min(100, Math.round(r.commercialMT / 4 * 100));
+    html += '<div style="font-size:7.5px;color:var(--c-tx2);margin-bottom:2px;display:flex;justify-content:space-between"><span>' + r.commercialLabel + '</span><span style="color:#e2e8f0">' + r.commercialMT.toFixed(1) + ' MT</span></div>'
+          + '<div style="height:5px;background:rgba(255,255,255,0.06);border-radius:2px;margin-bottom:9px"><div style="height:100%;width:' + comFillPct + '%;background:#475569;border-radius:2px"></div></div>';
+
+    html += '<div style="border-top:1px solid rgba(255,255,255,0.05);padding-top:7px;margin-bottom:' + (daysToBuffer !== null ? '8px' : '0') + '">'
+          + '<div style="font-size:7.5px;color:var(--c-tx2);margin-bottom:2px">Days of forward cover</div>'
+          + '<div style="font-size:18px;font-weight:700;color:#e8eaed;font-family:var(--f-mono);line-height:1">' + normalDays + ' <span style="font-size:8px;font-weight:400;color:var(--c-tx2)">days</span></div>'
+          + '</div>';
+
+    if (daysToBuffer !== null) {
+      var countLabel = daysToBuffer > 365 ? '>365' : String(daysToBuffer);
+      html += '<div style="border-top:1px solid rgba(255,255,255,0.05);padding-top:7px">'
+            + '<div style="font-size:7.5px;color:var(--c-tx2);margin-bottom:2px">Days to critical buffer (' + r.criticalDays + 'd threshold)</div>'
+            + '<div style="font-size:20px;font-weight:700;color:' + urgencyColor + ';font-family:var(--f-mono);line-height:1;margin-bottom:2px">' + countLabel + ' <span style="font-size:8px;font-weight:400">days</span></div>'
+            + '<div style="font-size:7.5px;color:var(--c-tx2)">Shortfall: ' + (drawRate * 365).toFixed(1) + ' MT/yr Black Sea supply at risk</div>'
+            + '</div>';
+    }
+
+    html += '</div>';
+  });
+
+  html += '</div>';
+
+  // Freight cost impact row (Bab/Suez)
+  if (babDisrupted || suezDisrupted) {
+    var freightExtra = (babDisrupted && suezDisrupted) ? 22 : (babDisrupted ? 15 : 12);
+    var freightCost = (babDisrupted && suezDisrupted) ? '$20–28' : (babDisrupted ? '$12–18' : '$10–14');
+    html += '<div style="background:rgba(245,158,11,0.07);border:1px solid rgba(245,158,11,0.2);border-radius:4px;padding:7px 10px;margin-bottom:12px">'
+          + '<div style="font-size:8px;color:#fbbf24;font-weight:700;margin-bottom:3px">&#9650;&#xFE0E; Cape of Good Hope rerouting — freight cost impact</div>'
+          + '<div style="display:flex;gap:18px">'
+          + '<div><div style="font-size:11px;font-weight:700;color:#e8eaed;font-family:var(--f-mono)">+' + freightExtra + ' days</div><div style="font-size:7.5px;color:var(--c-tx2)">Extra transit time</div></div>'
+          + '<div><div style="font-size:11px;font-weight:700;color:#fbbf24;font-family:var(--f-mono)">' + freightCost + '/MT</div><div style="font-size:7.5px;color:var(--c-tx2)">Additional freight</div></div>'
+          + '<div style="flex:1;font-size:7.5px;color:var(--c-tx2);line-height:1.65;align-self:center">Bab el-Mandeb and/or Suez closure adds freight cost but does not cut physical wheat volumes — supply still arrives via Cape route at higher landed price for MENA importers.</div>'
+          + '</div>'
+          + '</div>';
+  }
+
+  html += '<div style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:10px">';
+  TF_GRAIN_STOCKPILE_DATA.forEach(function(r) {
+    html += '<div style="font-size:7.5px;color:var(--c-tx2);line-height:1.55;border-left:2px solid rgba(255,255,255,0.07);padding-left:7px">'
+          + '<span style="color:' + r.noteColor + ';font-weight:600">Black Sea imports: ' + r.blackSeaImportsMTyr.toFixed(1) + ' MT/yr</span><br>'
+          + r.note
+          + '</div>';
+  });
+  html += '</div>';
+  html += '<div class="tf-source-tag">Sources: ' + TF_GRAIN_STOCKPILE_DATA.map(function(r){ return r.source; }).join(' &bull; ') + '</div>';
+  el.innerHTML = html;
+}
+
 function renderTFStockpile() {
   var el = document.getElementById('tf-stockpile-content');
   if (!el) return;
+
+  // Branch to grain renderer for wheat
+  if (TF_ACTIVE_COMM === 'wheat') { renderTFGrainStockpile(el); return; }
+
+  var lbl = document.getElementById('tf-stockpile-card-label');
+  if (lbl) lbl.innerHTML = '&#9670; Strategic Oil Stockpile Runway';
 
   var hormuzDisrupted = !!TF_DISRUPTIONS['hormuz'];
   var level = TF_DISRUPTION_LEVEL / 100;

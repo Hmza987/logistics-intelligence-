@@ -15614,6 +15614,7 @@ var TF_FLEET_DATA = {
         role:'Primary', roleColor:'#f59e0b',
         routes:'Middle East Gulf → East Asia, Europe',
         frtBaseline:42, frtCrisis:260, frtUnit:'WS (Platts MEG→China)', frtPeakDate:'Feb 2026',
+        cpRateExposure:{ hormuz:0.95, bab_el_mandeb:0.20, suez:0.10, malacca:0.15, danish_straits:0, panama:0 },
         hormuzImpact:'Up to ~300 VLCCs idled or diverted to Cape of Good Hope; +30–45 days per voyage reduces effective fleet capacity ∲20%',
         corridorBreakdown:{ hormuz:300, malacca:195, bab:15, suez:10, gibraltar:20, bosphorus:0, danish:0, panama:0 },
         routeAllocation:[
@@ -15631,6 +15632,7 @@ var TF_FLEET_DATA = {
         role:'Secondary', roleColor:'#94a3b8',
         routes:'West Africa → Europe/Asia; Black Sea → Med',
         frtBaseline:55, frtCrisis:140, frtUnit:'WS (Platts W.Africa→Cont)', frtPeakDate:'Feb 2026',
+        cpRateExposure:{ hormuz:0.45, bab_el_mandeb:0.65, suez:0.60, malacca:0.20, danish_straits:0.10, panama:0 },
         hormuzImpact:'Partial exposure; some vessels diverted to fill Hormuz supply gap via alternative origins (West Africa, North Sea)',
         corridorBreakdown:{ hormuz:30, malacca:40, bab:65, suez:80, gibraltar:55, bosphorus:45, danish:8, panama:0 },
         routeAllocation:[
@@ -15649,6 +15651,7 @@ var TF_FLEET_DATA = {
         role:'Supplementary', roleColor:'#475569',
         routes:'Black Sea · Baltic · Med · Persian Gulf STS',
         frtBaseline:70, frtCrisis:200, frtUnit:'WS (Platts AG→East)', frtPeakDate:'Feb 2026',
+        cpRateExposure:{ hormuz:0.60, bab_el_mandeb:0.40, suez:0.35, malacca:0.25, danish_straits:0.30, panama:0.10 },
         hormuzImpact:'Gulf STS operations cease; vessels pivot to non-Hormuz corridors',
         corridorBreakdown:{ hormuz:50, malacca:70, bab:35, suez:60, gibraltar:45, bosphorus:90, danish:55, panama:20 },
         routeAllocation:[
@@ -16827,6 +16830,7 @@ function renderTFFleet(comm) {
     var displaced = hormuzDisrupted ? Math.round(cls.corridorVessels * level * displacedFraction) : 0;
     var borderCol = (hormuzDisrupted && cls.name === 'VLCC') ? 'rgba(220,38,38,0.45)' : 'var(--c-bd1)';
 
+    var activeDisruptions = Object.keys(TF_DISRUPTIONS).filter(function(cp){ return TF_DISRUPTIONS[cp]; });
     var vesselType = cls.name.toLowerCase().replace(' ','');
     html += '<div style="border:1px solid ' + borderCol + ';border-radius:4px;overflow:hidden;background:rgba(6,10,18,0.7);display:flex;flex-direction:column">';
 
@@ -16851,7 +16855,6 @@ function renderTFFleet(comm) {
             +   '<div style="font-size:9px;color:var(--c-tx2);font-family:var(--f-mono);letter-spacing:.12em;text-transform:uppercase">Fleet by Trade Route</div>'
             +   '<div style="font-size:8px;color:var(--c-tx2);opacity:.5;font-family:var(--f-mono)">Clarksons · Jun 2026</div>'
             + '</div>';
-      var activeDisruptions = Object.keys(TF_DISRUPTIONS).filter(function(cp){ return TF_DISRUPTIONS[cp]; });
       var cpLabel = { hormuz:'Hormuz', bab_el_mandeb:'Bab el-Mandeb', suez:'Suez Canal', malacca:'Malacca', danish_straits:'Danish Str.', panama:'Panama' };
       var anyDisruption = activeDisruptions.length > 0;
       var totalDisrupted = 0;
@@ -16917,15 +16920,35 @@ function renderTFFleet(comm) {
             + '</div>';
     }
 
+    // Dynamic WS freight rate — responds to active disruption scenarios
+    var wsStressFactor = 0;
+    if (activeDisruptions.length > 0 && cls.cpRateExposure) {
+      var wsUndisrupted = 1;
+      activeDisruptions.forEach(function(cpId) {
+        var exp = cls.cpRateExposure[cpId] || 0;
+        wsUndisrupted *= (1 - exp * level);
+      });
+      wsStressFactor = 1 - wsUndisrupted;
+    }
+    var wsCurrentVal = Math.round(cls.frtBaseline + (cls.frtCrisis - cls.frtBaseline) * wsStressFactor);
+    var wsCurrentChange = Math.round(((wsCurrentVal - cls.frtBaseline) / cls.frtBaseline) * 100);
+    var wsCurrentColor = wsStressFactor < 0.2 ? '#94a3b8' : wsStressFactor < 0.5 ? '#f59e0b' : wsStressFactor < 0.8 ? '#f97316' : '#ef4444';
+    var wsCurrentChangeColor = wsStressFactor < 0.2 ? '#64748b' : wsStressFactor < 0.5 ? '#fbbf24' : wsStressFactor < 0.8 ? '#fb923c' : '#f87171';
+    var wsCurrentLabel = activeDisruptions.length > 0 ? 'Current est.' : 'No disruption';
+
     html += '<div style="border-top:1px solid rgba(255,255,255,0.05);padding-top:7px;margin-top:auto">'
           + '<div class="tf-section-micro" style="margin:0 0 4px">Freight Rate — ' + cls.frtUnit + '</div>'
           + '<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:2px">'
           +   '<span style="font-size:8px;color:var(--c-tx2)">Baseline</span>'
           +   '<span style="font-size:9px;font-family:var(--f-mono);color:#94a3b8">WS ' + cls.frtBaseline + '</span>'
           + '</div>'
+          + '<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:2px">'
+          +   '<span style="font-size:8px;color:var(--c-tx2)">' + wsCurrentLabel + '</span>'
+          +   '<span style="font-size:9px;font-family:var(--f-mono);color:' + wsCurrentColor + '">WS ' + wsCurrentVal + (wsCurrentChange > 0 ? ' <span style="font-size:7.5px;color:' + wsCurrentChangeColor + '">+' + wsCurrentChange + '%</span>' : '') + '</span>'
+          + '</div>'
           + '<div style="display:flex;justify-content:space-between;align-items:center">'
-          +   '<span style="font-size:8px;color:var(--c-tx2)">' + cls.frtPeakDate + ' peak</span>'
-          +   '<span style="font-size:9px;font-family:var(--f-mono);color:#ef4444">WS ' + cls.frtCrisis + ' <span style="font-size:7.5px;color:#f87171">+' + rateChange + '%</span></span>'
+          +   '<span style="font-size:8px;color:var(--c-tx2);opacity:.6">' + cls.frtPeakDate + ' peak</span>'
+          +   '<span style="font-size:9px;font-family:var(--f-mono);color:#ef4444;opacity:.5">WS ' + cls.frtCrisis + ' <span style="font-size:7.5px;color:#f87171">+' + rateChange + '%</span></span>'
           + '</div>'
           + '</div>';
 

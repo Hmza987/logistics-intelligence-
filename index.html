@@ -5074,6 +5074,62 @@ function initHormuzCharts() {
   // Bar chart
   var hCtx = document.getElementById('hChart');
   if (!hCtx) return;
+  // Inline annotation plugin: event lines + MoU background band
+  var hAnnotationPlugin = {
+    id: 'hAnnotation',
+    afterDraw: function(chart) {
+      var ctx = chart.ctx;
+      var ca = chart.chartArea;
+      var meta = chart.getDatasetMeta(0);
+      if (!meta.data.length) return;
+
+      // Background band: Jun 17–26 = MoU window (green tint)
+      var x17 = meta.data[2].x; // 06/17 index 2
+      var x26 = meta.data[11].x; // 06/26 index 11
+      var barW = meta.data[0].width || 14;
+      ctx.save();
+      ctx.fillStyle = 'rgba(95,168,106,0.07)';
+      ctx.fillRect(x17 - barW/2, ca.top, x26 - x17 + barW, ca.bottom - ca.top);
+      ctx.restore();
+
+      // Event lines
+      var events = [
+        { idx:2,  label:'MoU signed',      color:'#5fa86a', align:'center' },
+        { idx:7,  label:'Iran reclosure',   color:'#fbbf24', align:'center' },
+        { idx:12, label:'2nd strike',       color:'#e74c3c', align:'center' }
+      ];
+      events.forEach(function(ev) {
+        var x = meta.data[ev.idx].x;
+        ctx.save();
+        ctx.strokeStyle = ev.color;
+        ctx.globalAlpha = 0.6;
+        ctx.lineWidth = 1;
+        ctx.setLineDash([3, 4]);
+        ctx.beginPath();
+        ctx.moveTo(x, ca.top);
+        ctx.lineTo(x, ca.bottom);
+        ctx.stroke();
+        ctx.globalAlpha = 0.85;
+        ctx.fillStyle = ev.color;
+        ctx.font = 'bold 7px IBM Plex Mono, monospace';
+        ctx.textAlign = 'center';
+        ctx.fillText(ev.label, x, ca.top - 5);
+        ctx.restore();
+      });
+
+      // Peak label on Jun 24 bar (index 9)
+      var x24 = meta.data[9];
+      if (x24) {
+        ctx.save();
+        ctx.fillStyle = 'rgba(90,163,245,0.9)';
+        ctx.font = 'bold 7.5px IBM Plex Mono, monospace';
+        ctx.textAlign = 'center';
+        ctx.fillText('49 peak', x24.x, x24.y - 5);
+        ctx.restore();
+      }
+    }
+  };
+
   CHARTS['hChart'] = new Chart(hCtx, {
     type: 'bar',
     data: {
@@ -5087,7 +5143,8 @@ function initHormuzCharts() {
         borderRadius: 2
       }]
     },
-    options: chartDefaults({ x: xScale(), y: yScale(TICK_COLOR, {beginAtZero:true, max:60}) })
+    options: chartDefaults({ x: xScale(), y: yScale(TICK_COLOR, {beginAtZero:true, max:60}) }),
+    plugins: [hAnnotationPlugin]
   });
 
   // Donut

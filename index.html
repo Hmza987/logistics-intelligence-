@@ -3150,11 +3150,7 @@ canvas { font-family: var(--f-mono); }
       btn.disabled = false;
       btn.textContent = 'Authenticate →';
       // Always return to the cover/landing page
-      var cover = document.getElementById('cover');
-      if (cover) {
-        cover.classList.remove('cv-out');
-        cover.style.display = '';
-      }
+      if (typeof window.cvShowCover === 'function') window.cvShowCover();
     }, 380);
   }
 
@@ -18547,6 +18543,15 @@ function initCvTicker() {
       });
     }, 300);
   }
+
+  window.cvShowCover = function() {
+    cover.classList.remove('cv-out');
+    cover.style.display = 'flex';
+    cover.style.opacity  = '1';
+    cover.style.animation = 'none';
+    // one-frame timeout lets the browser clear the animation before restoring
+    requestAnimationFrame(function() { cover.style.animation = ''; });
+  };
 
   window.cvGoTab = function(tabId) {
     var tabMap = {'hormuz':0,'rates':1,'trucking':2,'simulator':3,'watchlist':4,'stress':5};

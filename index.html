@@ -3141,6 +3141,15 @@ canvas { font-family: var(--f-mono); }
   var pendingTab = 'hormuz';
 
   function hideOverlay() {
+    // Restore landing page immediately (synchronous, before overlay starts fading)
+    var cv = document.getElementById('cover');
+    if (cv) {
+      cv.classList.remove('cv-out');
+      cv.style.display   = 'flex';
+      cv.style.opacity   = '1';
+      cv.style.animation = 'none';
+      requestAnimationFrame(function(){ cv.style.animation = ''; });
+    }
     overlay.classList.add('gcc-auth-hide');
     setTimeout(function(){
       overlay.classList.remove('gcc-auth-active','gcc-auth-visible','gcc-auth-hide');
@@ -3149,8 +3158,6 @@ canvas { font-family: var(--f-mono); }
       errMsg.classList.remove('gcc-auth-err-show');
       btn.disabled = false;
       btn.textContent = 'Authenticate →';
-      // Always return to the cover/landing page
-      if (typeof window.cvShowCover === 'function') window.cvShowCover();
     }, 380);
   }
 

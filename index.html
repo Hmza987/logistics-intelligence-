@@ -2038,7 +2038,15 @@ canvas { font-family: var(--f-mono); }
 }
 .cv-nav-card.cv-nc-wip { cursor: default; opacity: .75; }
 .cv-nav-card.cv-nc-wip:hover { border-color: #1E1E1B; transform: none; }
-.cv-nc-gradient { position: absolute; inset: 0; }
+.cv-nc-img {
+  position: absolute;
+  inset: 0;
+  background-size: cover;
+  background-position: center 40%;
+  filter: brightness(.48) saturate(.55);
+  transition: filter .35s;
+}
+.cv-nav-card:hover .cv-nc-img { filter: brightness(.62) saturate(.72); }
 .cv-nc-overlay {
   position: absolute;
   inset: 0;
@@ -3204,7 +3212,7 @@ canvas { font-family: var(--f-mono); }
 
       <!-- 01 Chokepoint Traffic -->
       <div class="cv-nav-card" onclick="cvGoTab('hormuz')">
-        <div class="cv-nc-gradient" style="background:radial-gradient(120% 110% at 28% 18%,#2C302D,#0C0E0D)"></div>
+        <div class="cv-nc-img" style="background-image:url('https://upload.wikimedia.org/wikipedia/commons/thumb/f/f5/Strait_of_Hormuz_%28MODIS_2020-12-04%29.jpg/960px-Strait_of_Hormuz_%28MODIS_2020-12-04%29.jpg')"></div>
         <div class="cv-nc-overlay"></div>
         <div class="cv-nc-body">
           <div class="cv-nc-num">01</div>
@@ -3216,7 +3224,7 @@ canvas { font-family: var(--f-mono); }
 
       <!-- 02 Freight Rate Tracker -->
       <div class="cv-nav-card" onclick="cvGoTab('rates')">
-        <div class="cv-nc-gradient" style="background:linear-gradient(155deg,#1B2422,#0A0C0C)"></div>
+        <div class="cv-nc-img" style="background-image:url('https://upload.wikimedia.org/wikipedia/commons/thumb/5/56/Aerial_photograph_of_a_cargo_ship.jpg/960px-Aerial_photograph_of_a_cargo_ship.jpg')"></div>
         <div class="cv-nc-overlay"></div>
         <div class="cv-nc-body">
           <div class="cv-nc-num">02</div>
@@ -3228,7 +3236,7 @@ canvas { font-family: var(--f-mono); }
 
       <!-- 03 Corridor Performance -->
       <div class="cv-nav-card" onclick="cvGoTab('trucking')">
-        <div class="cv-nc-gradient" style="background:linear-gradient(155deg,#3A3A35,#15140F)"></div>
+        <div class="cv-nc-img" style="background-image:url('https://upload.wikimedia.org/wikipedia/commons/thumb/a/aa/Russia_-_Trucks_on_the_road.jpg/960px-Russia_-_Trucks_on_the_road.jpg')"></div>
         <div class="cv-nc-overlay"></div>
         <div class="cv-nc-body">
           <div class="cv-nc-num">03</div>
@@ -3240,7 +3248,7 @@ canvas { font-family: var(--f-mono); }
 
       <!-- 04 Scenario Simulator -->
       <div class="cv-nav-card" onclick="cvGoTab('simulator')">
-        <div class="cv-nc-gradient" style="background:linear-gradient(155deg,#141B26,#0A0C10)"></div>
+        <div class="cv-nc-img" style="background-image:url('https://upload.wikimedia.org/wikipedia/commons/thumb/4/4c/Antenna_radar_3d_VRRVY_Finland.jpg/960px-Antenna_radar_3d_VRRVY_Finland.jpg');background-size:cover;background-position:center"></div>
         <div class="cv-nc-overlay"></div>
         <div class="cv-nc-body">
           <div class="cv-nc-num">04</div>
@@ -3252,7 +3260,7 @@ canvas { font-family: var(--f-mono); }
 
       <!-- 05 Strategic Watchlist -->
       <div class="cv-nav-card" onclick="cvGoTab('watchlist')">
-        <div class="cv-nc-gradient" style="background:linear-gradient(155deg,#20261F,#0B0D0A)"></div>
+        <div class="cv-nc-img" style="background-image:url('https://upload.wikimedia.org/wikipedia/commons/thumb/f/fd/Bulk_carrier_Bonneville_at_CBH_Grain_Jetty%2C_October_2021_01.jpg/960px-Bulk_carrier_Bonneville_at_CBH_Grain_Jetty%2C_October_2021_01.jpg');background-size:cover;background-position:center"></div>
         <div class="cv-nc-overlay"></div>
         <div class="cv-nc-body">
           <div class="cv-nc-num">05</div>
@@ -3264,8 +3272,8 @@ canvas { font-family: var(--f-mono); }
 
       <!-- 06 Trade Explorer Lab -->
       <div class="cv-nav-card cv-nc-wip" onclick="cvGoTab('stress')">
-        <div class="cv-nc-gradient" style="background:linear-gradient(155deg,#24221D,#0C0B09)"></div>
-        <div class="cv-nc-overlay"></div>
+        <div class="cv-nc-img" style="background-image:url('https://upload.wikimedia.org/wikipedia/commons/thumb/f/fd/Bulk_carrier_Bonneville_at_CBH_Grain_Jetty%2C_October_2021_01.jpg/960px-Bulk_carrier_Bonneville_at_CBH_Grain_Jetty%2C_October_2021_01.jpg');background-size:cover;background-position:center"></div>
+        <div class="cv-nc-overlay" style="background:linear-gradient(to top,rgba(9,5,2,.92) 0%,rgba(9,5,2,.1) 100%)"></div>
         <div class="cv-nc-wip-tag">In&nbsp;Development</div>
         <div class="cv-nc-body">
           <div class="cv-nc-num">06</div>

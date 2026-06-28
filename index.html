@@ -3246,10 +3246,48 @@ canvas { font-family: var(--f-mono); }
         <div class="cv-nc-arrow">&#8594;</div>
       </div>
 
-      <!-- 04 Scenario Simulator -->
+      <!-- 04 Scenario Simulator — regression + convexity visualization -->
       <div class="cv-nav-card" onclick="cvGoTab('simulator')">
-        <div class="cv-nc-img" style="background-image:url('https://upload.wikimedia.org/wikipedia/commons/thumb/4/4c/Antenna_radar_3d_VRRVY_Finland.jpg/960px-Antenna_radar_3d_VRRVY_Finland.jpg');background-size:cover;background-position:center"></div>
-        <div class="cv-nc-overlay"></div>
+        <div class="cv-nc-img" style="background:linear-gradient(160deg,#020c1a 0%,#040f1e 100%);filter:none"></div>
+        <svg style="position:absolute;inset:0;width:100%;height:100%" viewBox="0 0 300 185" preserveAspectRatio="xMidYMid meet">
+          <line x1="32" y1="14" x2="32" y2="128" stroke="rgba(255,255,255,.07)" stroke-width=".7"/>
+          <line x1="32" y1="128" x2="282" y2="128" stroke="rgba(255,255,255,.07)" stroke-width=".7"/>
+          <line x1="32" y1="98"  x2="282" y2="98"  stroke="rgba(255,255,255,.04)" stroke-width=".5" stroke-dasharray="3,5"/>
+          <line x1="32" y1="68"  x2="282" y2="68"  stroke="rgba(255,255,255,.04)" stroke-width=".5" stroke-dasharray="3,5"/>
+          <line x1="32" y1="38"  x2="282" y2="38"  stroke="rgba(255,255,255,.04)" stroke-width=".5" stroke-dasharray="3,5"/>
+          <path d="M40,125 L276,26 L276,44 L40,136 Z" fill="rgba(184,149,42,.07)"/>
+          <circle cx="48"  cy="120" r="2.2" fill="rgba(148,163,184,.62)"/>
+          <circle cx="66"  cy="112" r="1.9" fill="rgba(148,163,184,.52)"/>
+          <circle cx="83"  cy="104" r="2.2" fill="rgba(148,163,184,.62)"/>
+          <circle cx="99"  cy="97"  r="1.8" fill="rgba(148,163,184,.48)"/>
+          <circle cx="116" cy="88"  r="2.2" fill="rgba(148,163,184,.62)"/>
+          <circle cx="133" cy="82"  r="1.9" fill="rgba(148,163,184,.52)"/>
+          <circle cx="149" cy="74"  r="2.2" fill="rgba(148,163,184,.62)"/>
+          <circle cx="166" cy="67"  r="1.8" fill="rgba(148,163,184,.48)"/>
+          <circle cx="183" cy="60"  r="2.2" fill="rgba(148,163,184,.62)"/>
+          <circle cx="199" cy="53"  r="1.9" fill="rgba(148,163,184,.52)"/>
+          <circle cx="216" cy="46"  r="2.2" fill="rgba(148,163,184,.62)"/>
+          <circle cx="233" cy="39"  r="1.9" fill="rgba(148,163,184,.52)"/>
+          <circle cx="249" cy="33"  r="2.2" fill="rgba(148,163,184,.62)"/>
+          <circle cx="266" cy="27"  r="1.8" fill="rgba(148,163,184,.48)"/>
+          <circle cx="57"  cy="126" r="1.5" fill="rgba(148,163,184,.38)"/>
+          <circle cx="75"  cy="107" r="1.5" fill="rgba(148,163,184,.38)"/>
+          <circle cx="108" cy="93"  r="1.5" fill="rgba(148,163,184,.38)"/>
+          <circle cx="141" cy="77"  r="1.5" fill="rgba(148,163,184,.38)"/>
+          <circle cx="173" cy="64"  r="1.5" fill="rgba(148,163,184,.38)"/>
+          <circle cx="206" cy="50"  r="1.5" fill="rgba(148,163,184,.38)"/>
+          <circle cx="242" cy="36"  r="1.5" fill="rgba(148,163,184,.38)"/>
+          <line x1="40" y1="127" x2="276" y2="25" stroke="#b8952a" stroke-width="1.8" opacity=".9"/>
+          <path d="M40,126 Q158,56 276,19" fill="none" stroke="rgba(96,165,250,.72)" stroke-width="1.5"/>
+          <text x="22" y="131" font-size="7" fill="rgba(255,255,255,.2)" font-family="monospace">P</text>
+          <text x="279" y="131" font-size="7" fill="rgba(255,255,255,.2)" font-family="monospace">Q</text>
+          <text x="190" y="86" font-size="7.5" fill="rgba(184,149,42,.75)" font-family="monospace">R&#178;&#61;0.94</text>
+          <line x1="40"  y1="150" x2="56"  y2="150" stroke="#b8952a" stroke-width="1.6"/>
+          <text x="59"  y="153" font-size="6.5" fill="rgba(255,255,255,.28)" font-family="monospace">OLS regression</text>
+          <line x1="152" y1="150" x2="168" y2="150" stroke="rgba(96,165,250,.72)" stroke-width="1.3"/>
+          <text x="171" y="153" font-size="6.5" fill="rgba(255,255,255,.28)" font-family="monospace">price convexity</text>
+        </svg>
+        <div class="cv-nc-overlay" style="background:linear-gradient(to top,rgba(2,8,18,.95) 0%,rgba(2,8,18,.2) 55%,transparent 100%)"></div>
         <div class="cv-nc-body">
           <div class="cv-nc-num">04</div>
           <div class="cv-nc-title">Scenario Simulator</div>
@@ -3260,8 +3298,8 @@ canvas { font-family: var(--f-mono); }
 
       <!-- 05 Strategic Watchlist -->
       <div class="cv-nav-card" onclick="cvGoTab('watchlist')">
-        <div class="cv-nc-img" style="background-image:url('https://upload.wikimedia.org/wikipedia/commons/thumb/f/fd/Bulk_carrier_Bonneville_at_CBH_Grain_Jetty%2C_October_2021_01.jpg/960px-Bulk_carrier_Bonneville_at_CBH_Grain_Jetty%2C_October_2021_01.jpg');background-size:cover;background-position:center"></div>
-        <div class="cv-nc-overlay"></div>
+        <div class="cv-nc-img" style="background-image:url('https://upload.wikimedia.org/wikipedia/commons/thumb/4/4c/Antenna_radar_3d_VRRVY_Finland.jpg/960px-Antenna_radar_3d_VRRVY_Finland.jpg');background-size:cover;background-position:center"></div>
+        <div class="cv-nc-overlay" style="background:linear-gradient(to top,rgba(4,2,9,.92) 0%,rgba(4,2,9,.1) 100%)"></div>
         <div class="cv-nc-body">
           <div class="cv-nc-num">05</div>
           <div class="cv-nc-title">Strategic Watchlist</div>

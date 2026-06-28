@@ -9,11 +9,14 @@
 #gcc-auth-overlay {
   position:fixed; inset:0; z-index:999999;
   background:#05070f;
-  display:flex; align-items:center; justify-content:center; flex-direction:column;
+  display:none; align-items:center; justify-content:center; flex-direction:column;
   font-family:'IBM Plex Mono',monospace;
-  transition:opacity .4s ease;
+  opacity:0;
+  transition:opacity .35s ease;
 }
-#gcc-auth-overlay.gcc-auth-hide { opacity:0; pointer-events:none; }
+#gcc-auth-overlay.gcc-auth-active  { display:flex; }
+#gcc-auth-overlay.gcc-auth-visible { opacity:1; }
+#gcc-auth-overlay.gcc-auth-hide    { opacity:0; pointer-events:none; }
 .gcc-auth-logo {
   font-size:10px; letter-spacing:.22em; color:#4a6a8a; text-transform:uppercase;
   margin-bottom:6px;
@@ -3113,12 +3116,13 @@ canvas { font-family: var(--f-mono); }
      State lives only in JS memory; refresh always requires password.
      ════════════════════════════════════════════════════════════════════════ -->
 <div id="gcc-auth-overlay">
+  <button id="gcc-auth-back" onclick="gccHideAuth()" style="position:absolute;top:22px;left:28px;background:none;border:none;color:#2d4a62;font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:.12em;cursor:pointer;padding:0">&#8592;&nbsp;BACK TO OVERVIEW</button>
   <div class="gcc-auth-title">GCC Logistics Intelligence Platform <span style="font-size:11px;font-weight:400;color:#4a6a8a;letter-spacing:.12em;vertical-align:middle;">BETA</span></div>
   <div class="gcc-auth-card">
     <label class="gcc-auth-label" for="gcc-auth-pwd">Access Code</label>
     <input class="gcc-auth-input" id="gcc-auth-pwd" type="password"
            placeholder="&#x2022;&#x2022;&#x2022;&#x2022;&#x2022;&#x2022;&#x2022;&#x2022;"
-           autocomplete="current-password" autofocus/>
+           autocomplete="current-password"/>
     <button class="gcc-auth-btn" id="gcc-auth-btn" type="button">
       Authenticate &#8594;
     </button>
@@ -3130,10 +3134,45 @@ canvas { font-family: var(--f-mono); }
 </div>
 <script>
 (function(){
-  var overlay = document.getElementById('gcc-auth-overlay');
-  var input   = document.getElementById('gcc-auth-pwd');
-  var btn     = document.getElementById('gcc-auth-btn');
-  var errMsg  = document.getElementById('gcc-auth-err');
+  var overlay  = document.getElementById('gcc-auth-overlay');
+  var input    = document.getElementById('gcc-auth-pwd');
+  var btn      = document.getElementById('gcc-auth-btn');
+  var errMsg   = document.getElementById('gcc-auth-err');
+  var pendingTab = 'hormuz';
+
+  function hideOverlay() {
+    overlay.classList.add('gcc-auth-hide');
+    setTimeout(function(){
+      overlay.classList.remove('gcc-auth-active','gcc-auth-visible','gcc-auth-hide');
+      overlay.style.display = '';
+      input.value = '';
+      errMsg.classList.remove('gcc-auth-err-show');
+      btn.disabled = false;
+      btn.textContent = 'Authenticate →';
+    }, 380);
+  }
+
+  window.gccHideAuth = hideOverlay;
+
+  window.gccShowAuth = function(tabId) {
+    // Already authenticated this session — skip the modal
+    if (sessionStorage.getItem('gcc_authed') === '1') {
+      if (typeof cvGoTab === 'function') cvGoTab(tabId || 'hormuz');
+      return;
+    }
+    pendingTab = tabId || 'hormuz';
+    errMsg.classList.remove('gcc-auth-err-show');
+    input.value = '';
+    btn.disabled = false;
+    btn.textContent = 'Authenticate →';
+    overlay.classList.add('gcc-auth-active');
+    requestAnimationFrame(function(){
+      requestAnimationFrame(function(){
+        overlay.classList.add('gcc-auth-visible');
+        input.focus();
+      });
+    });
+  };
 
   function attempt() {
     var pwd = input.value;
@@ -3150,16 +3189,11 @@ canvas { font-family: var(--f-mono); }
     .then(function(r){ return r.json(); })
     .then(function(d){
       if (d.ok) {
-        sessionStorage.removeItem('cv_seen');
-        // Always reveal the landing page after auth, even if cv_seen hid it
-        var coverEl = document.getElementById('cover');
-        if (coverEl) {
-          coverEl.classList.remove('cv-out');
-          coverEl.style.opacity = '1';
-          coverEl.style.display = '';
-        }
-        overlay.classList.add('gcc-auth-hide');
-        setTimeout(function(){ overlay.style.display='none'; }, 420);
+        sessionStorage.setItem('gcc_authed', '1');
+        hideOverlay();
+        setTimeout(function(){
+          if (typeof cvGoTab === 'function') cvGoTab(pendingTab);
+        }, 420);
       } else {
         errMsg.classList.add('gcc-auth-err-show');
         input.value = '';
@@ -3169,21 +3203,17 @@ canvas { font-family: var(--f-mono); }
       }
     })
     .catch(function(){
-      // Network error or no DASHBOARD_PASSWORD set — allow through
-      sessionStorage.removeItem('cv_seen');
-      var coverEl = document.getElementById('cover');
-      if (coverEl) {
-        coverEl.classList.remove('cv-out');
-        coverEl.style.opacity = '1';
-        coverEl.style.display = '';
-      }
-      overlay.classList.add('gcc-auth-hide');
-      setTimeout(function(){ overlay.style.display='none'; }, 420);
+      // No server / DASHBOARD_PASSWORD not set — allow through
+      sessionStorage.setItem('gcc_authed', '1');
+      hideOverlay();
+      setTimeout(function(){
+        if (typeof cvGoTab === 'function') cvGoTab(pendingTab);
+      }, 420);
     });
   }
 
   btn.addEventListener('click', attempt);
-  input.addEventListener('keydown', function(e){ if(e.key==='Enter') attempt(); });
+  input.addEventListener('keydown', function(e){ if(e.key==='Escape') gccHideAuth(); if(e.key==='Enter') attempt(); });
 })();
 </script>
 
@@ -3241,7 +3271,7 @@ canvas { font-family: var(--f-mono); }
         <div class="cv-headline">Read the Gulf<br>before it moves.</div>
         <div class="cv-hero-sub">One intelligence layer over the region's chokepoints, freight markets and trade corridors &mdash; so your next decision is grounded in what's happening right now.</div>
         <div class="cv-hero-ctas">
-          <button class="cv-cta-primary" onclick="cvGoTab('hormuz')">Enter platform &nbsp;&rarr;</button>
+          <button class="cv-cta-primary" onclick="gccShowAuth('hormuz')">Enter platform &nbsp;&rarr;</button>
           <button class="cv-cta-secondary" onclick="window.location.href='mailto:hamza.elmounhi@gmail.com'">Book a briefing</button>
         </div>
         <div class="cv-hero-trust">Trusted by GCC operators, traders &amp; risk desks</div>
@@ -3273,7 +3303,7 @@ canvas { font-family: var(--f-mono); }
     <div id="cv-nav-grid">
 
       <!-- 01 Chokepoint Traffic -->
-      <div class="cv-nav-card" onclick="cvGoTab('hormuz')">
+      <div class="cv-nav-card" onclick="gccShowAuth('hormuz')">
         <div class="cv-nc-img" style="background-image:url('https://upload.wikimedia.org/wikipedia/commons/thumb/f/f5/Strait_of_Hormuz_%28MODIS_2020-12-04%29.jpg/960px-Strait_of_Hormuz_%28MODIS_2020-12-04%29.jpg')"></div>
         <div class="cv-nc-overlay"></div>
         <div class="cv-nc-body">
@@ -3285,7 +3315,7 @@ canvas { font-family: var(--f-mono); }
       </div>
 
       <!-- 02 Freight Rate Tracker -->
-      <div class="cv-nav-card" onclick="cvGoTab('rates')">
+      <div class="cv-nav-card" onclick="gccShowAuth('rates')">
         <div class="cv-nc-img" style="background-image:url('https://upload.wikimedia.org/wikipedia/commons/thumb/5/56/Aerial_photograph_of_a_cargo_ship.jpg/960px-Aerial_photograph_of_a_cargo_ship.jpg')"></div>
         <div class="cv-nc-overlay"></div>
         <div class="cv-nc-body">
@@ -3297,7 +3327,7 @@ canvas { font-family: var(--f-mono); }
       </div>
 
       <!-- 03 Corridor Performance -->
-      <div class="cv-nav-card" onclick="cvGoTab('trucking')">
+      <div class="cv-nav-card" onclick="gccShowAuth('trucking')">
         <div class="cv-nc-img" style="background-image:url('https://upload.wikimedia.org/wikipedia/commons/thumb/a/aa/Russia_-_Trucks_on_the_road.jpg/960px-Russia_-_Trucks_on_the_road.jpg')"></div>
         <div class="cv-nc-overlay"></div>
         <div class="cv-nc-body">
@@ -3309,7 +3339,7 @@ canvas { font-family: var(--f-mono); }
       </div>
 
       <!-- 04 Scenario Simulator — regression + convexity visualization -->
-      <div class="cv-nav-card" onclick="cvGoTab('simulator')">
+      <div class="cv-nav-card" onclick="gccShowAuth('simulator')">
         <div class="cv-nc-img" style="background:linear-gradient(160deg,#020c1a 0%,#040f1e 100%);filter:none"></div>
         <svg style="position:absolute;inset:0;width:100%;height:100%" viewBox="0 0 300 185" preserveAspectRatio="xMidYMid meet">
           <line x1="32" y1="14" x2="32" y2="128" stroke="rgba(255,255,255,.07)" stroke-width=".7"/>
@@ -3359,7 +3389,7 @@ canvas { font-family: var(--f-mono); }
       </div>
 
       <!-- 05 Strategic Watchlist -->
-      <div class="cv-nav-card" onclick="cvGoTab('watchlist')">
+      <div class="cv-nav-card" onclick="gccShowAuth('watchlist')">
         <div class="cv-nc-img" style="background-image:url('https://upload.wikimedia.org/wikipedia/commons/thumb/4/4c/Antenna_radar_3d_VRRVY_Finland.jpg/960px-Antenna_radar_3d_VRRVY_Finland.jpg');background-size:cover;background-position:center"></div>
         <div class="cv-nc-overlay" style="background:linear-gradient(to top,rgba(4,2,9,.92) 0%,rgba(4,2,9,.1) 100%)"></div>
         <div class="cv-nc-body">
@@ -3371,7 +3401,7 @@ canvas { font-family: var(--f-mono); }
       </div>
 
       <!-- 06 Trade Explorer Lab -->
-      <div class="cv-nav-card cv-nc-wip" onclick="cvGoTab('stress')">
+      <div class="cv-nav-card cv-nc-wip" onclick="gccShowAuth('stress')">
         <div class="cv-nc-img" style="background-image:url('https://upload.wikimedia.org/wikipedia/commons/thumb/f/fd/Bulk_carrier_Bonneville_at_CBH_Grain_Jetty%2C_October_2021_01.jpg/960px-Bulk_carrier_Bonneville_at_CBH_Grain_Jetty%2C_October_2021_01.jpg');background-size:cover;background-position:center"></div>
         <div class="cv-nc-overlay" style="background:linear-gradient(to top,rgba(9,5,2,.92) 0%,rgba(9,5,2,.1) 100%)"></div>
         <div class="cv-nc-wip-tag">In&nbsp;Development</div>

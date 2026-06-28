@@ -3139,6 +3139,7 @@ canvas { font-family: var(--f-mono); }
   var btn      = document.getElementById('gcc-auth-btn');
   var errMsg   = document.getElementById('gcc-auth-err');
   var pendingTab = 'hormuz';
+  var _authed  = false; // in-memory only — resets on every page load/refresh
 
   function hideOverlay() {
     // Restore landing page immediately (synchronous, before overlay starts fading)
@@ -3172,7 +3173,7 @@ canvas { font-family: var(--f-mono); }
 
   window.gccShowAuth = function(tabId) {
     // Already authenticated this session — skip the modal
-    if (sessionStorage.getItem('gcc_authed') === '1') {
+    if (_authed) {
       if (typeof cvGoTab === 'function') cvGoTab(tabId || 'hormuz');
       return;
     }
@@ -3207,7 +3208,7 @@ canvas { font-family: var(--f-mono); }
     .then(function(r){ return r.json(); })
     .then(function(d){
       if (d.ok) {
-        sessionStorage.setItem('gcc_authed', '1');
+        _authed = true;
         hideOverlay();
         setTimeout(function(){
           if (typeof cvGoTab === 'function') cvGoTab(pendingTab);

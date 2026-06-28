@@ -2970,6 +2970,13 @@ canvas { font-family: var(--f-mono); }
     .then(function(d){
       if (d.ok) {
         sessionStorage.removeItem('cv_seen');
+        // Always reveal the landing page after auth, even if cv_seen hid it
+        var coverEl = document.getElementById('cover');
+        if (coverEl) {
+          coverEl.classList.remove('cv-out');
+          coverEl.style.opacity = '1';
+          coverEl.style.display = '';
+        }
         overlay.classList.add('gcc-auth-hide');
         setTimeout(function(){ overlay.style.display='none'; }, 420);
       } else {
@@ -2983,6 +2990,12 @@ canvas { font-family: var(--f-mono); }
     .catch(function(){
       // Network error or no DASHBOARD_PASSWORD set — allow through
       sessionStorage.removeItem('cv_seen');
+      var coverEl = document.getElementById('cover');
+      if (coverEl) {
+        coverEl.classList.remove('cv-out');
+        coverEl.style.opacity = '1';
+        coverEl.style.display = '';
+      }
       overlay.classList.add('gcc-auth-hide');
       setTimeout(function(){ overlay.style.display='none'; }, 420);
     });
@@ -3250,30 +3263,30 @@ canvas { font-family: var(--f-mono); }
       <!-- Status chips -->
       <div class="card" style="margin-bottom:14px">
         <div class="card-label">Strait of Hormuz &mdash; Daily Transit Monitor</div>
-        <div class="card-sub">IMF PortWatch AIS-verified (chokepoint6) &middot; UNCTAD baseline ~130/day &middot; May 11–17 IMF confirmed &middot; May 18–24 est. &middot; dark fleet not in AIS count</div>
+        <div class="card-sub">Kpler + Windward AIS synthesis &middot; UNCTAD baseline ~130/day &middot; Jun 15–24 Windward confirmed &middot; Jun 25–28 Kpler est. &middot; dark fleet partially excluded</div>
         <div class="chips">
-          <span class="chip chip-r"><span class="chip-dot" style="background:#e74c3c"></span>AIS-verified: ~2–6/day &mdash; Day 83</span>
-          <span class="chip chip-r"><span class="chip-dot" style="background:#e74c3c"></span>Major carriers suspended</span>
-          <span class="chip chip-a"><span class="chip-dot" style="background:#fbbf24"></span>IRGC escort-only passage</span>
+          <span class="chip chip-r"><span class="chip-dot" style="background:#e74c3c"></span>AIS-visible: ~5/day &mdash; Day 121 &middot; volatile</span>
+          <span class="chip chip-r"><span class="chip-dot" style="background:#e74c3c"></span>Major carriers re-suspended post-Jun 27</span>
+          <span class="chip chip-a"><span class="chip-dot" style="background:#fbbf24"></span>IRGC: all-corridor control reinstated Jun 25</span>
           <span class="chip chip-b"><span class="chip-dot" style="background:#5aa3f5"></span>Cape of Good Hope reroute active</span>
-          <span class="chip chip-r"><span class="chip-dot" style="background:#e74c3c"></span>~147 containerships trapped (470K TEU)</span>
+          <span class="chip chip-r"><span class="chip-dot" style="background:#e74c3c"></span>2nd merchant vessel struck Jun 27 &middot; IMO plans paused</span>
         </div>
         <div class="metrics">
-          <div class="metric"><div class="val red"><span id="m-transits">4</span><a href="https://portwatch.imf.org" target="_blank" rel="noopener" class="src-lnk" title="Source: IMF PortWatch">↗</a></div><div class="lbl">Transits Today</div><div class="chg red" id="m-transits-chg">vs 130/day baseline</div></div>
-          <div class="metric"><div class="val red" id="m-decline">-96%</div><div class="lbl">vs 130/day baseline</div><div class="chg muted">throughput collapse</div></div>
-          <div class="metric"><div class="val red"><span id="m-tankers">4</span><a href="https://portwatch.imf.org" target="_blank" rel="noopener" class="src-lnk" title="Source: IMF PortWatch">↗</a></div><div class="lbl">Tankers (24h)</div><div class="chg muted">crude + product</div></div>
-          <div class="metric"><div class="val red"><span id="m-containers">0</span><a href="https://portwatch.imf.org" target="_blank" rel="noopener" class="src-lnk" title="Source: IMF PortWatch">↗</a></div><div class="lbl">Container Ships</div><div class="chg muted">24h window</div></div>
+          <div class="metric"><div class="val red"><span id="m-transits">5</span><a href="https://www.kpler.com" target="_blank" rel="noopener" class="src-lnk" title="Source: Kpler satellite+AIS">↗</a></div><div class="lbl">Transits Today</div><div class="chg red" id="m-transits-chg">peaked 49 Jun 24 · MoU volatile</div></div>
+          <div class="metric"><div class="val red" id="m-decline">-96%</div><div class="lbl">vs 130/day baseline</div><div class="chg muted">post-Jun 27 strike</div></div>
+          <div class="metric"><div class="val red"><span id="m-tankers">4</span><a href="https://www.kpler.com" target="_blank" rel="noopener" class="src-lnk" title="Source: Kpler satellite+AIS">↗</a></div><div class="lbl">Tankers (24h)</div><div class="chg muted">Chinese-linked &middot; crude</div></div>
+          <div class="metric"><div class="val red"><span id="m-containers">0</span><a href="https://www.kpler.com" target="_blank" rel="noopener" class="src-lnk" title="Source: Kpler satellite+AIS">↗</a></div><div class="lbl">Container Ships</div><div class="chg muted">suspended post-Jun 27</div></div>
         </div>
         <!-- 14-day chart -->
         <div style="position:relative;height:120px">
           <canvas id="hChart" role="img" aria-label="Daily Hormuz crossings past 14 days"></canvas>
         </div>
-        <div class="src"><span>IMF PortWatch (chokepoint6) &middot; Kpler satellite+AIS &middot; straits.live API &middot; S&P Global CAS &middot; Jun 2026</span><span class="src-badge">real data</span></div>
+        <div class="src"><span>Kpler (satellite+AIS) &middot; Windward AI &middot; straits.live &middot; Lloyd's List &middot; CNBC &middot; Jun 28 2026</span><span class="src-badge">real data</span></div>
 
         <!-- Dark fleet caveat -->
         <div style="margin-top:10px;padding:10px 12px;background:rgba(251,191,36,.06);border:1px solid rgba(251,191,36,.18);border-left:3px solid #fbbf24;border-radius:3px;font-size:10.5px;line-height:1.6;color:#c8a830">
-          <span style="font-weight:700;color:#fbbf24;letter-spacing:.03em">&#9888; DATA LIMITATION &mdash; DARK FLEET</span><br>
-          IMF PortWatch counts only AIS-transmitting vessels. Due to GPS jamming and IRGC-directed AIS-off protocols, a significant share of transits are invisible to AIS tracking. <strong style="color:#e8d080">Windward AI imagery (May 11)</strong> detected <strong style="color:#e8d080">9 transits</strong> and <strong style="color:#e8d080">21 dark tankers</strong> at anchor in Iranian waters — roughly <strong style="color:#e8d080">3–4× the IMF AIS count</strong> for the same period. The <strong style="color:#e8d080">IRGC Navy</strong> separately claimed <strong style="color:#e8d080">31–35 vessels/day</strong> on May 22–23 (Bernama), but this figure is <strong style="color:#e74c3c">unverified self-reporting</strong>. <strong style="color:#e8d080">Kpler</strong> (satellite + AIS synthesis) is the most credible independent tracker and is monitored for updated daily counts — <a href="https://www.kpler.com" target="_blank" rel="noopener" style="color:#e8d080">kpler.com ↗</a>.
+          <span style="font-weight:700;color:#fbbf24;letter-spacing:.03em">&#9888; DATA LIMITATION &mdash; DARK FLEET &amp; AIS GAPS</span><br>
+          AIS counts only transmitting vessels. Post-MoU, dark-fleet share fell but did not disappear. <strong style="color:#e8d080">Windward AI (Jun 24)</strong> recorded <strong style="color:#e8d080">49 AIS-visible transits</strong> vs <strong style="color:#e8d080">Kpler's 70</strong> for the same day — a gap of ~21 vessels transiting dark or with spoofed positions. On <strong style="color:#e8d080">Jun 25</strong>, Windward identified <strong style="color:#e8d080">5 vessels exhibiting IRGC turn-back behaviour</strong> on the southern corridor, with a 6th losing AIS signal mid-transit. The post-Jun 27 count of ~5 AIS-visible likely understates actual traffic by <strong style="color:#e8d080">1.3–1.8×</strong> based on the Jun 24 Kpler/Windward ratio. <strong style="color:#e8d080">Kpler</strong> (satellite + AIS synthesis) remains the most credible independent tracker — <a href="https://www.kpler.com" target="_blank" rel="noopener" style="color:#e8d080">kpler.com ↗</a>.
         </div>
       </div>
 
@@ -3289,15 +3302,15 @@ canvas { font-family: var(--f-mono); }
             <div style="flex:1">
               <div class="vtype-row">
                 <div class="vtype-left"><span>&#128738;</span><div><div class="vtype-name">Crude Tankers</div><div class="vtype-sub">VLCC/Suezmax</div></div></div>
-                <div><div class="vtype-count red" id="m-vt-crude">2</div><div class="vtype-pct red" id="m-vt-crude-pct">50% &bull; was 38%</div></div>
+                <div><div class="vtype-count red" id="m-vt-crude">3</div><div class="vtype-pct red" id="m-vt-crude-pct">60% &bull; was 38%</div></div>
               </div>
               <div class="vtype-row">
                 <div class="vtype-left"><span>&#9981;</span><div><div class="vtype-name">Product Tankers</div><div class="vtype-sub">MR/LR1/LR2</div></div></div>
-                <div><div class="vtype-count amb" id="m-vt-product">1</div><div class="vtype-pct amb" id="m-vt-product-pct">25% &bull; was 18%</div></div>
+                <div><div class="vtype-count amb" id="m-vt-product">1</div><div class="vtype-pct amb" id="m-vt-product-pct">20% &bull; was 18%</div></div>
               </div>
               <div class="vtype-row">
                 <div class="vtype-left"><span>&#10052;</span><div><div class="vtype-name">LNG / LPG</div><div class="vtype-sub">Gas carriers</div></div></div>
-                <div><div class="vtype-count pur" id="m-vt-lng">1</div><div class="vtype-pct pur" id="m-vt-lng-pct">25% &bull; was 12%</div></div>
+                <div><div class="vtype-count pur" id="m-vt-lng">0</div><div class="vtype-pct pur" id="m-vt-lng-pct">0% &bull; was 12%</div></div>
               </div>
               <div class="vtype-row">
                 <div class="vtype-left"><span>&#128230;</span><div><div class="vtype-name">Containers</div><div class="vtype-sub">Feeder to Panamax</div></div></div>
@@ -3305,7 +3318,7 @@ canvas { font-family: var(--f-mono); }
               </div>
               <div class="vtype-row">
                 <div class="vtype-left"><span>&#9875;</span><div><div class="vtype-name">Bulk / Other</div><div class="vtype-sub">Dry bulk, general</div></div></div>
-                <div><div class="vtype-count muted" id="m-vt-bulk">0</div><div class="vtype-pct muted" id="m-vt-bulk-pct">0% &bull; was 17%</div></div>
+                <div><div class="vtype-count muted" id="m-vt-bulk">1</div><div class="vtype-pct muted" id="m-vt-bulk-pct">20% &bull; was 17%</div></div>
               </div>
             </div>
           </div>
@@ -3347,7 +3360,7 @@ canvas { font-family: var(--f-mono); }
         </iframe>
         <div class="mapstats">
           <div class="mapstat"><span>Source:</span> <span style="color:#3dd68c">MarineTraffic live AIS &bull; auto-refresh</span></div>
-          <div class="mapstat"><span>AIS transits today:</span> <span id="snap-transits" class="red">2</span> <span>/ 130 baseline &nbsp;<span style="color:#7a8494;font-size:8px">(dark fleet excluded)</span></span></div>
+          <div class="mapstat"><span>AIS transits today:</span> <span id="snap-transits" class="red">5</span> <span>/ 130 baseline &nbsp;<span style="color:#7a8494;font-size:8px">(dark fleet partially excluded)</span></span></div>
           <div style="margin-left:auto;font-size:7px;color:#7a8494;font-family:'IBM Plex Mono',monospace">MarineTraffic &copy; &middot; AIS data &middot; Jun 2026</div>
         </div>
       </div>
@@ -3359,7 +3372,7 @@ canvas { font-family: var(--f-mono); }
       <!-- Live Intel -->
       <div class="card">
         <div class="card-label">Live Intelligence Feed <span style="font-size:9px;color:#3d4451;font-weight:400;margin-left:6px">&#8635; updates every 3 min</span></div>
-        <div class="news-item" id="intel-alert"><div class="news-dot" style="background:#e74c3c"></div><div><span class="news-tag tag-alert">ALERT</span><div class="news-text">All Hormuz transits suspended for commercial shipping. 15 ships (109K TEU) trapped. Full booking stop for Upper Gulf (Maersk Op. Update 31, May 18). <a href="https://www.maersk.com/news" target="_blank" rel="noopener" class="intel-src">Maersk ↗</a></div></div></div>
+        <div class="news-item" id="intel-alert"><div class="news-dot" style="background:#e74c3c"></div><div><span class="news-tag tag-alert">ALERT</span><div class="news-text">IRGC enforces all-corridor control since Jun 25 southern-route crackdown. <strong style="color:#e8eaed">Second merchant vessel struck Jun 27</strong> — IMO crew-evacuation plans paused. MoU 60-day window under stress; nuclear talks postponed. Traffic peaked at 49 transits Jun 24 (Windward) before reverting. JWC war-risk listing extended through Jun 30+. <a href="https://www.lloydslist.com/hot-topics/strait-of-hormuz-crisis" target="_blank" rel="noopener" class="intel-src">Lloyd's List ↗</a></div></div></div>
         <div id="intel-feed">
           <!-- populated by rotateIntelFeed() on load -->
         </div>
@@ -3371,32 +3384,32 @@ canvas { font-family: var(--f-mono); }
         <div class="card-label">Energy &amp; Risk Signals</div>
         <div class="metrics" style="flex-wrap:wrap">
           <div class="metric" style="min-width:120px">
-            <div class="val amb"><span id="m-brent">$101.80</span><a href="https://www.investing.com/commodities/brent-oil" target="_blank" rel="noopener" class="src-lnk" title="Source: investing.com">↗</a></div>
+            <div class="val amb"><span id="m-brent">$73.20</span><a href="https://www.investing.com/commodities/brent-oil" target="_blank" rel="noopener" class="src-lnk" title="Source: investing.com">↗</a></div>
             <div class="lbl">Brent Crude / bbl</div>
-            <div class="chg grn" id="m-brent-chg">-2.7% day &bull; peace-deal optimism</div>
+            <div class="chg red" id="m-brent-chg">-4.3% Jun 26 &bull; Jun 27 strike adds upside risk</div>
           </div>
           <div class="metric" style="min-width:120px">
-            <div class="val red">3% hull<a href="https://www.lloydslist.com/hot-topics/strait-of-hormuz-crisis" target="_blank" rel="noopener" class="src-lnk" title="Source: Lloyd's List · LMA">↗</a></div>
+            <div class="val amb">~2% hull<a href="https://www.lloydslist.com/hot-topics/strait-of-hormuz-crisis" target="_blank" rel="noopener" class="src-lnk" title="Source: Lloyd's List · LMA">↗</a></div>
             <div class="lbl">War-Risk Insurance</div>
-            <div class="chg red">VLCC &asymp;$4.1M/voyage &bull; 6 P&amp;I clubs out</div>
+            <div class="chg amb">halved post-MoU &bull; re-escalating &bull; Lloyd's Jun 19 consortium</div>
           </div>
         </div>
         <div class="dv"></div>
         <div style="font-size:9px;color:#7a8494;line-height:1.6">
-          <div style="margin-bottom:5px">Brent futures <span class="grn">-6%+ for the week</span> on peace-deal optimism despite physical closure. Market pricing in ~50–60% probability of diplomatic resolution within 14 days.</div>
-          <div>Bypass pipelines handling <span class="amb">~7M bbl/day</span> vs ~20M bbl/day normal Hormuz flow &mdash; only 35% coverage capacity.</div>
+          <div style="margin-bottom:5px">Brent settled <span class="red">$71.99 Jun 26</span> (-4.3%) as tankers exited post-MoU, briefly restoring ~75% of pre-war Gulf export volumes. Jun 27 second vessel strike adds upside risk; market re-pricing disruption probability.</div>
+          <div>War-risk premiums <span class="amb">halved from ~5% to ~2%</span> hull value after Jun 17 MoU. Lloyd's new Chubb-led consortium (Jun 19) adds $200M hull + $200M cargo capacity. Re-escalation risk post-Jun 27.</div>
         </div>
-        <div class="src"><span>oilprice.com &middot; investing.com &middot; Lloyd's List &middot; LMA &middot; Jun 21 2026</span><span class="src-badge">real data</span></div>
+        <div class="src"><span>CNBC &middot; investing.com &middot; Lloyd's List &middot; Insurance Business &middot; Jun 28 2026</span><span class="src-badge">real data</span></div>
       </div>
 
       <!-- War-risk context -->
       <div class="card">
         <div class="card-label">Carrier Posture</div>
-        <div class="news-item"><div class="news-dot" style="background:#e74c3c"></div><div><div class="news-text"><strong style="color:#e8eaed">MSC</strong> &mdash; Rerouting via CoGH &middot; $1,200/TEU surcharge &middot; 15 ships stranded (109K TEU)</div></div></div>
-        <div class="news-item"><div class="news-dot" style="background:#e74c3c"></div><div><div class="news-text"><strong style="color:#e8eaed">Maersk</strong> &mdash; All Hormuz transits suspended &middot; $1,000/TEU surcharge &middot; 4 ships stranded (70K TEU)</div></div></div>
-        <div class="news-item"><div class="news-dot" style="background:#fbbf24"></div><div><div class="news-text"><strong style="color:#e8eaed">CMA CGM</strong> &mdash; Rerouting via CoGH &middot; Gulf calls via escorted convoys only</div></div></div>
-        <div class="news-item"><div class="news-dot" style="background:#fbbf24"></div><div><div class="news-text"><strong style="color:#e8eaed">ONE / Evergreen / Yang Ming</strong> &mdash; All suspending Hormuz &middot; Cape diversions in effect</div></div></div>
-        <div class="src"><span>straits.live carrier tracker &middot; May 23 2026</span><span class="src-badge">real data</span></div>
+        <div class="news-item"><div class="news-dot" style="background:#e74c3c"></div><div><div class="news-text"><strong style="color:#e8eaed">MSC</strong> &mdash; Briefly resumed Hormuz Jun 18–24 &middot; suspended again post-Jun 27 strike &middot; Cape diversions restored &middot; $1,200/TEU surcharge</div></div></div>
+        <div class="news-item"><div class="news-dot" style="background:#e74c3c"></div><div><div class="news-text"><strong style="color:#e8eaed">Maersk</strong> &mdash; Partial advisory resumption Jun 19 &middot; booking pause reinstated Jun 27 &middot; $1,000/TEU surcharge</div></div></div>
+        <div class="news-item"><div class="news-dot" style="background:#fbbf24"></div><div><div class="news-text"><strong style="color:#e8eaed">CMA CGM</strong> &mdash; Resumed escorted transits Jun 18–25 &middot; pausing evaluation post-Jun 27 vessel strike</div></div></div>
+        <div class="news-item"><div class="news-dot" style="background:#fbbf24"></div><div><div class="news-text"><strong style="color:#e8eaed">ONE / Evergreen / Yang Ming</strong> &mdash; Cautious MoU resumption Jun 18–25 &middot; re-suspended post-Jun 27</div></div></div>
+        <div class="src"><span>straits.live &middot; Lloyd's List &middot; carrier ops updates &middot; Jun 28 2026</span><span class="src-badge">real data</span></div>
       </div>
 
     </div>
@@ -3546,7 +3559,7 @@ canvas { font-family: var(--f-mono); }
         Dwell times estimated using <span style="color:#c9b8ff">queueing theory</span> (M/M/c) calibrated against vessel traffic observations
         (anchor counts, berth utilisation, arrival rates) and confirmed port congestion reports.
         Margin of error: <span style="color:#a78bfa">&plusmn;8–10%</span> &nbsp;&bull;&nbsp;
-        <span id="pdt-model-date" style="color:#4a5668">model run: 2026-06-04</span>
+        <span id="pdt-model-date" style="color:#4a5668">model run: 2026-06-26</span>
       </div>
       <!-- Calibrated params — hidden placeholder, updated by JS -->
       <div id="pdt-calib-params" style="display:none"></div>
@@ -3560,12 +3573,12 @@ canvas { font-family: var(--f-mono); }
         <div data-pdt="meta" style="font-size:6.5px;color:#5a6880;margin-bottom:5px"><img src="https://flagcdn.com/16x12/sa.png" alt="SA" style="height:9px;vertical-align:middle;border-radius:1px"> Red Sea &middot; King Abdul Aziz</div>
         <svg viewBox="0 0 80 46" width="80" height="46" style="display:block;margin:0 auto;overflow:visible" aria-hidden="true">
           <path d="M8 40 A32 32 0 0 1 72 40" fill="none" stroke="#1e2a38" stroke-width="8" stroke-linecap="round"/>
-          <path data-pdt="arc" d="M8 40 A32 32 0 0 1 72 40" fill="none" stroke="#c02030" stroke-width="8" stroke-linecap="round" stroke-dasharray="100.53" stroke-dashoffset="57.3"/>
+          <path data-pdt="arc" d="M8 40 A32 32 0 0 1 72 40" fill="none" stroke="#c02030" stroke-width="8" stroke-linecap="round" stroke-dasharray="100.53" stroke-dashoffset="54.0"/>
           <circle data-pdt="precrisis-dot" cx="9.4" cy="30.8" r="3" fill="#3dd68c"/>
           <text data-pdt="precrisis-label" x="13.4" y="28.2" font-size="5.5" fill="#3dd68c" font-family="monospace,sans-serif">~3.7d</text>
         </svg>
-        <div data-pdt="dwell" style="font-family:'IBM Plex Mono',monospace;font-size:19px;font-weight:900;color:#c02030;line-height:1;margin-top:3px">16–19<span style="font-size:9px;color:#7a8494;font-weight:400"> d</span></div>
-        <div data-pdt="detail" style="font-size:6.5px;color:#7a8494;margin-top:3px">Eid backlog + Med/Suez inflow</div>
+        <div data-pdt="dwell" style="font-family:'IBM Plex Mono',monospace;font-size:19px;font-weight:900;color:#c02030;line-height:1;margin-top:3px">17–20<span style="font-size:9px;color:#7a8494;font-weight:400"> d</span></div>
+        <div data-pdt="detail" style="font-size:6.5px;color:#7a8494;margin-top:3px">Red Sea diversion surge · backlog partially clearing</div>
         <div data-pdt="badge" style="margin-top:5px;font-family:'IBM Plex Mono',monospace;font-size:7px;font-weight:700;color:#c02030;background:rgba(192,32,48,.15);padding:2px 6px;border-radius:2px;display:inline-block">CRITICAL</div>
         <div data-pdt="src" style="font-size:6px;color:#4a5568;margin-top:4px">dubaicargos.com &middot; Jun 2026</div>
       </div>
@@ -3576,12 +3589,12 @@ canvas { font-family: var(--f-mono); }
         <div data-pdt="meta" style="font-size:6.5px;color:#5a6880;margin-bottom:5px"><img src="https://flagcdn.com/16x12/sa.png" alt="SA" style="height:9px;vertical-align:middle;border-radius:1px"> Red Sea &middot; Jeddah overflow</div>
         <svg viewBox="0 0 80 46" width="80" height="46" style="display:block;margin:0 auto;overflow:visible" aria-hidden="true">
           <path d="M8 40 A32 32 0 0 1 72 40" fill="none" stroke="#1e2a38" stroke-width="8" stroke-linecap="round"/>
-          <path data-pdt="arc" d="M8 40 A32 32 0 0 1 72 40" fill="none" stroke="#c02030" stroke-width="8" stroke-linecap="round" stroke-dasharray="100.53" stroke-dashoffset="65.3"/>
+          <path data-pdt="arc" d="M8 40 A32 32 0 0 1 72 40" fill="none" stroke="#c02030" stroke-width="8" stroke-linecap="round" stroke-dasharray="100.53" stroke-dashoffset="61.6"/>
           <circle data-pdt="precrisis-dot" cx="9.1" cy="31.7" r="3" fill="#3dd68c"/>
           <text data-pdt="precrisis-label" x="13.1" y="29.2" font-size="5.5" fill="#3dd68c" font-family="monospace,sans-serif">~3.3d</text>
         </svg>
-        <div data-pdt="dwell" style="font-family:'IBM Plex Mono',monospace;font-size:19px;font-weight:900;color:#c02030;line-height:1;margin-top:3px">13–15<span style="font-size:9px;color:#7a8494;font-weight:400"> d</span></div>
-        <div data-pdt="detail" style="font-size:6.5px;color:#7a8494;margin-top:3px">Absorbing Jeddah overflow surge</div>
+        <div data-pdt="dwell" style="font-family:'IBM Plex Mono',monospace;font-size:19px;font-weight:900;color:#c02030;line-height:1;margin-top:3px">14–17<span style="font-size:9px;color:#7a8494;font-weight:400"> d</span></div>
+        <div data-pdt="detail" style="font-size:6.5px;color:#7a8494;margin-top:3px">Pipeline rerouting + Jeddah overflow · exports at capacity</div>
         <div data-pdt="badge" style="margin-top:5px;font-family:'IBM Plex Mono',monospace;font-size:7px;font-weight:700;color:#c02030;background:rgba(192,32,48,.15);padding:2px 6px;border-radius:2px;display:inline-block">CRITICAL</div>
         <div data-pdt="src" style="font-size:6px;color:#4a5568;margin-top:4px">Mawani (Saudi Ports Authority) &middot; Jun 2026</div>
       </div>
@@ -3592,30 +3605,30 @@ canvas { font-family: var(--f-mono); }
         <div data-pdt="meta" style="font-size:6.5px;color:#5a6880;margin-bottom:5px"><img src="https://flagcdn.com/16x12/om.png" alt="OM" style="height:9px;vertical-align:middle;border-radius:1px"> Gulf of Oman &middot; bypass hub</div>
         <svg viewBox="0 0 80 46" width="80" height="46" style="display:block;margin:0 auto;overflow:visible" aria-hidden="true">
           <path d="M8 40 A32 32 0 0 1 72 40" fill="none" stroke="#1e2a38" stroke-width="8" stroke-linecap="round"/>
-          <path data-pdt="arc" d="M8 40 A32 32 0 0 1 72 40" fill="none" stroke="#c02030" stroke-width="8" stroke-linecap="round" stroke-dasharray="100.53" stroke-dashoffset="22.6"/>
+          <path data-pdt="arc" d="M8 40 A32 32 0 0 1 72 40" fill="none" stroke="#c02030" stroke-width="8" stroke-linecap="round" stroke-dasharray="100.53" stroke-dashoffset="40.2"/>
           <circle data-pdt="precrisis-dot" cx="13.5" cy="22.0" r="3" fill="#3dd68c"/>
           <text data-pdt="precrisis-label" x="17.5" y="19.5" font-size="5.5" fill="#3dd68c" font-family="monospace,sans-serif">~7.6d</text>
         </svg>
-        <div data-pdt="dwell" style="font-family:'IBM Plex Mono',monospace;font-size:19px;font-weight:900;color:#c02030;line-height:1;margin-top:3px">29–33<span style="font-size:9px;color:#7a8494;font-weight:400"> d</span></div>
-        <div data-pdt="detail" style="font-size:6.5px;color:#7a8494;margin-top:3px">+700% throughput &middot; yard 94% full</div>
+        <div data-pdt="dwell" style="font-family:'IBM Plex Mono',monospace;font-size:19px;font-weight:900;color:#c02030;line-height:1;margin-top:3px">22–26<span style="font-size:9px;color:#7a8494;font-weight:400"> d</span></div>
+        <div data-pdt="detail" style="font-size:6.5px;color:#7a8494;margin-top:3px">Easing from peak · +400% throughput · yard 86% full</div>
         <div data-pdt="badge" style="margin-top:5px;font-family:'IBM Plex Mono',monospace;font-size:7px;font-weight:700;color:#c02030;background:rgba(192,32,48,.15);padding:2px 6px;border-radius:2px;display:inline-block">CRITICAL</div>
         <div data-pdt="src" style="font-size:6px;color:#4a5568;margin-top:4px">Vizion API &middot; OPAZ &middot; Jun 2026</div>
       </div>
 
-      <!-- Khor Fakkan Container Terminal — CRITICAL · arc 32.5% of 40d scale (13d avg) · pre-crisis 2.2d -->
+      <!-- Khor Fakkan Container Terminal — HIGH · arc 20% of 40d scale (8d avg) · pre-crisis 2.2d -->
       <div id="pdt-khor_fakkan" style="background:#181c22;border-radius:4px;padding:12px 10px 10px;text-align:center">
-        <div style="font-family:'IBM Plex Mono',monospace;font-size:7px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;color:#c02030;line-height:1.35;margin-bottom:1px">Khor Fakkan<br>Container Terminal</div>
-        <div data-pdt="meta" style="font-size:6.5px;color:#5a6880;margin-bottom:5px"><img src="https://flagcdn.com/16x12/ae.png" alt="AE" style="height:9px;vertical-align:middle;border-radius:1px"> Gulf of Oman &middot; <span style="color:#c02030;font-weight:700">imports only</span></div>
+        <div style="font-family:'IBM Plex Mono',monospace;font-size:7px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;color:#e8673c;line-height:1.35;margin-bottom:1px">Khor Fakkan<br>Container Terminal</div>
+        <div data-pdt="meta" style="font-size:6.5px;color:#5a6880;margin-bottom:5px"><img src="https://flagcdn.com/16x12/ae.png" alt="AE" style="height:9px;vertical-align:middle;border-radius:1px"> Gulf of Oman &middot; <span style="color:#3dd68c;font-weight:700">6 berths operational</span></div>
         <svg viewBox="0 0 80 46" width="80" height="46" style="display:block;margin:0 auto;overflow:visible" aria-hidden="true">
           <path d="M8 40 A32 32 0 0 1 72 40" fill="none" stroke="#1e2a38" stroke-width="8" stroke-linecap="round"/>
-          <path data-pdt="arc" d="M8 40 A32 32 0 0 1 72 40" fill="none" stroke="#c02030" stroke-width="8" stroke-linecap="round" stroke-dasharray="100.53" stroke-dashoffset="67.9"/>
+          <path data-pdt="arc" d="M8 40 A32 32 0 0 1 72 40" fill="none" stroke="#e8673c" stroke-width="8" stroke-linecap="round" stroke-dasharray="100.53" stroke-dashoffset="80.4"/>
           <circle data-pdt="precrisis-dot" cx="8.5" cy="34.4" r="3" fill="#3dd68c"/>
           <text data-pdt="precrisis-label" x="12.5" y="31.9" font-size="5.5" fill="#3dd68c" font-family="monospace,sans-serif">~2.2d</text>
         </svg>
-        <div data-pdt="dwell" style="font-family:'IBM Plex Mono',monospace;font-size:19px;font-weight:900;color:#c02030;line-height:1;margin-top:3px">12–14<span style="font-size:9px;color:#7a8494;font-weight:400"> d</span></div>
-        <div data-pdt="detail" style="font-size:6.5px;color:#7a8494;margin-top:3px">Exports suspended &middot; anchorage queue 8–12d</div>
-        <div data-pdt="badge" style="margin-top:5px;font-family:'IBM Plex Mono',monospace;font-size:7px;font-weight:700;color:#c02030;background:rgba(192,32,48,.15);padding:2px 6px;border-radius:2px;display:inline-block">CRITICAL</div>
-        <div data-pdt="src" style="font-size:6px;color:#4a5568;margin-top:4px">Hutchison Ports &middot; Jun 2026</div>
+        <div data-pdt="dwell" style="font-family:'IBM Plex Mono',monospace;font-size:19px;font-weight:900;color:#e8673c;line-height:1;margin-top:3px">7–9<span style="font-size:9px;color:#7a8494;font-weight:400"> d</span></div>
+        <div data-pdt="detail" style="font-size:6.5px;color:#7a8494;margin-top:3px">Exports resumed · all berths active · calls surging</div>
+        <div data-pdt="badge" style="margin-top:5px;font-family:'IBM Plex Mono',monospace;font-size:7px;font-weight:700;color:#e8673c;background:rgba(232,103,60,.12);padding:2px 6px;border-radius:2px;display:inline-block">HIGH</div>
+        <div data-pdt="src" style="font-size:6px;color:#4a5568;margin-top:4px">Lloyd's List · Jun 26 2026</div>
       </div>
 
       <!-- Port of Salalah — HIGH · arc 20% of 40d scale (8d avg) · pre-crisis 3.2d -->
@@ -3624,18 +3637,18 @@ canvas { font-family: var(--f-mono); }
         <div data-pdt="meta" style="font-size:6.5px;color:#5a6880;margin-bottom:5px"><img src="https://flagcdn.com/16x12/om.png" alt="OM" style="height:9px;vertical-align:middle;border-radius:1px"> Arabian Sea &middot; transshipment hub</div>
         <svg viewBox="0 0 80 46" width="80" height="46" style="display:block;margin:0 auto;overflow:visible" aria-hidden="true">
           <path d="M8 40 A32 32 0 0 1 72 40" fill="none" stroke="#1e2a38" stroke-width="8" stroke-linecap="round"/>
-          <path data-pdt="arc" d="M8 40 A32 32 0 0 1 72 40" fill="none" stroke="#e8673c" stroke-width="8" stroke-linecap="round" stroke-dasharray="100.53" stroke-dashoffset="80.4"/>
+          <path data-pdt="arc" d="M8 40 A32 32 0 0 1 72 40" fill="none" stroke="#e8673c" stroke-width="8" stroke-linecap="round" stroke-dasharray="100.53" stroke-dashoffset="74.1"/>
           <circle data-pdt="precrisis-dot" cx="9.0" cy="32.0" r="3" fill="#3dd68c"/>
           <text data-pdt="precrisis-label" x="13.0" y="29.5" font-size="5.5" fill="#3dd68c" font-family="monospace,sans-serif">~3.2d</text>
         </svg>
-        <div data-pdt="dwell" style="font-family:'IBM Plex Mono',monospace;font-size:19px;font-weight:900;color:#e8673c;line-height:1;margin-top:3px">7–9<span style="font-size:9px;color:#7a8494;font-weight:400"> d</span></div>
-        <div data-pdt="detail" style="font-size:6.5px;color:#7a8494;margin-top:3px">+90% throughput &middot; Cape vessel calls up</div>
+        <div data-pdt="dwell" style="font-family:'IBM Plex Mono',monospace;font-size:19px;font-weight:900;color:#e8673c;line-height:1;margin-top:3px">9–12<span style="font-size:9px;color:#7a8494;font-weight:400"> d</span></div>
+        <div data-pdt="detail" style="font-size:6.5px;color:#7a8494;margin-top:3px">+120% throughput · Cape rerouting calls steady</div>
         <div data-pdt="badge" style="margin-top:5px;font-family:'IBM Plex Mono',monospace;font-size:7px;font-weight:700;color:#e8673c;background:rgba(232,103,60,.12);padding:2px 6px;border-radius:2px;display:inline-block">HIGH</div>
-        <div data-pdt="src" style="font-size:6px;color:#4a5568;margin-top:4px">APM Terminals Salalah &middot; Jun 2026</div>
+        <div data-pdt="src" style="font-size:6px;color:#4a5568;margin-top:4px">APM Terminals Salalah &middot; Jun 26 2026</div>
       </div>
 
     </div>
-    <div class="src"><span>dubaicargos.com (Jeddah) &middot; Vizion API &middot; Mawani &middot; Sohar Port &amp; Freezone (OPAZ) &middot; APM Terminals Salalah &middot; Hutchison Ports</span><span class="src-badge">Jun 2026 · verified + estimated</span></div>
+    <div class="src"><span>dubaicargos.com (Jeddah) &middot; Vizion API &middot; Mawani &middot; Sohar Port &amp; Freezone (OPAZ) &middot; APM Terminals Salalah &middot; Lloyd's List (Khor Fakkan)</span><span class="src-badge">Jun 26 2026 · verified + estimated</span></div>
   </div>
 
   <div class="card" id="ftl-pricing-card" style="margin-bottom:14px">
@@ -3750,20 +3763,18 @@ canvas { font-family: var(--f-mono); }
           <span style="font-family:'IBM Plex Mono',monospace;font-size:7px;font-weight:700;letter-spacing:.1em;color:#e03040;background:rgba(224,48,64,.15);padding:3px 7px;border-radius:2px">HEAVY</span>
         </div>
         <!-- Traffic bar -->
-        <div style="height:8px;background:#111820;border-radius:2px;overflow:hidden;margin-bottom:10px">
-          <div style="width:92%;height:100%;background:linear-gradient(90deg,#e03040,#c02030);border-radius:2px"></div>
-        </div>
+        <div id="cpt-albatha" style="margin-bottom:6px"></div>
         <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px">
           <div style="text-align:center">
-            <div style="font-family:'IBM Plex Mono',monospace;font-size:10px;font-weight:700;color:#e03040">~100 min</div>
-            <div style="font-family:'IBM Plex Mono',monospace;font-size:6px;color:#4a5568;text-transform:uppercase;letter-spacing:.05em">wait time</div>
+            <div id="cpt-albatha-wait" style="font-family:'IBM Plex Mono',monospace;font-size:10px;font-weight:700;color:#e03040">~120 min</div>
+            <div style="font-family:'IBM Plex Mono',monospace;font-size:6px;color:#4a5568;text-transform:uppercase;letter-spacing:.05em">M/M/c est. now</div>
           </div>
           <div style="text-align:center">
-            <div style="font-family:'IBM Plex Mono',monospace;font-size:10px;font-weight:700;color:#f0c84b">1,780</div>
+            <div style="font-family:'IBM Plex Mono',monospace;font-size:10px;font-weight:700;color:#f0c84b">1,950</div>
             <div style="font-family:'IBM Plex Mono',monospace;font-size:6px;color:#4a5568;text-transform:uppercase;letter-spacing:.05em">trucks/day</div>
           </div>
           <div style="text-align:center">
-            <div style="font-family:'IBM Plex Mono',monospace;font-size:10px;font-weight:700;color:#e03040">&#8593; +45%</div>
+            <div style="font-family:'IBM Plex Mono',monospace;font-size:10px;font-weight:700;color:#e03040">&#8593; +58%</div>
             <div style="font-family:'IBM Plex Mono',monospace;font-size:6px;color:#4a5568;text-transform:uppercase;letter-spacing:.05em">vs pre-crisis</div>
           </div>
         </div>
@@ -3777,24 +3788,22 @@ canvas { font-family: var(--f-mono); }
         <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:10px">
           <div>
             <div style="font-family:'IBM Plex Mono',monospace;font-size:8px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:#f0c84b">King Fahd Causeway</div>
-            <div style="font-family:'IBM Plex Mono',monospace;font-size:7px;color:#5a6880;margin-top:1px"><img src="https://flagcdn.com/16x12/sa.png" alt="SA" style="height:10px;vertical-align:middle;border-radius:1px"> &rarr; <img src="https://flagcdn.com/16x12/bh.png" alt="BH" style="height:10px;vertical-align:middle;border-radius:1px"> &nbsp;&bull; 26 km bridge</div>
+            <div style="font-family:'IBM Plex Mono',monospace;font-size:7px;color:#5a6880;margin-top:1px"><img src="https://flagcdn.com/16x12/sa.png" alt="SA" style="height:10px;vertical-align:middle;border-radius:1px"> &rarr; <img src="https://flagcdn.com/16x12/bh.png" alt="BH" style="height:10px;vertical-align:middle;border-radius:1px"> &nbsp;&bull; 26 km bridge · reopened Apr 8</div>
           </div>
           <span style="font-family:'IBM Plex Mono',monospace;font-size:7px;font-weight:700;letter-spacing:.1em;color:#f0c84b;background:rgba(240,200,75,.13);padding:3px 7px;border-radius:2px">MODERATE</span>
         </div>
-        <div style="height:8px;background:#111820;border-radius:2px;overflow:hidden;margin-bottom:10px">
-          <div style="width:58%;height:100%;background:linear-gradient(90deg,#c09a30,#f0c84b);border-radius:2px"></div>
-        </div>
+        <div id="cpt-kfahd" style="margin-bottom:6px"></div>
         <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px">
           <div style="text-align:center">
-            <div style="font-family:'IBM Plex Mono',monospace;font-size:10px;font-weight:700;color:#f0c84b">~35 min</div>
-            <div style="font-family:'IBM Plex Mono',monospace;font-size:6px;color:#4a5568;text-transform:uppercase;letter-spacing:.05em">wait time</div>
+            <div id="cpt-kfahd-wait" style="font-family:'IBM Plex Mono',monospace;font-size:10px;font-weight:700;color:#f0c84b">~50 min</div>
+            <div style="font-family:'IBM Plex Mono',monospace;font-size:6px;color:#4a5568;text-transform:uppercase;letter-spacing:.05em">M/M/c est. now</div>
           </div>
           <div style="text-align:center">
-            <div style="font-family:'IBM Plex Mono',monospace;font-size:10px;font-weight:700;color:#f0c84b">590</div>
+            <div style="font-family:'IBM Plex Mono',monospace;font-size:10px;font-weight:700;color:#f0c84b">680</div>
             <div style="font-family:'IBM Plex Mono',monospace;font-size:6px;color:#4a5568;text-transform:uppercase;letter-spacing:.05em">trucks/day</div>
           </div>
           <div style="text-align:center">
-            <div style="font-family:'IBM Plex Mono',monospace;font-size:10px;font-weight:700;color:#f0c84b">&#8593; +20%</div>
+            <div style="font-family:'IBM Plex Mono',monospace;font-size:10px;font-weight:700;color:#f0c84b">&#8593; +28%</div>
             <div style="font-family:'IBM Plex Mono',monospace;font-size:6px;color:#4a5568;text-transform:uppercase;letter-spacing:.05em">vs pre-crisis</div>
           </div>
         </div>
@@ -3802,7 +3811,7 @@ canvas { font-family: var(--f-mono); }
       </div>
       </a>
 
-      <!-- Salwa — MODERATE -->
+      <!-- Salwa — HEAVY -->
       <a href="https://www.google.com/maps/place/Abu+Samra+Border+Crossing/@24.7440,51.0620,16z/data=!5m1!1e1" target="_blank" style="text-decoration:none;color:inherit">
       <div style="background:var(--c-s1);padding:12px 14px;cursor:pointer;transition:background .15s" onmouseover="this.style.background='#1c2330'" onmouseout="this.style.background='var(--c-s1)'">
         <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:10px">
@@ -3812,20 +3821,18 @@ canvas { font-family: var(--f-mono); }
           </div>
           <span style="font-family:'IBM Plex Mono',monospace;font-size:7px;font-weight:700;letter-spacing:.1em;color:#e03040;background:rgba(224,48,64,.15);padding:3px 7px;border-radius:2px">HEAVY</span>
         </div>
-        <div style="height:8px;background:#111820;border-radius:2px;overflow:hidden;margin-bottom:10px">
-          <div style="width:82%;height:100%;background:linear-gradient(90deg,#e03040,#c02030);border-radius:2px"></div>
-        </div>
+        <div id="cpt-salwa" style="margin-bottom:6px"></div>
         <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px">
           <div style="text-align:center">
-            <div style="font-family:'IBM Plex Mono',monospace;font-size:10px;font-weight:700;color:#e03040">~40 min</div>
-            <div style="font-family:'IBM Plex Mono',monospace;font-size:6px;color:#4a5568;text-transform:uppercase;letter-spacing:.05em">wait time</div>
+            <div id="cpt-salwa-wait" style="font-family:'IBM Plex Mono',monospace;font-size:10px;font-weight:700;color:#e03040">~55 min</div>
+            <div style="font-family:'IBM Plex Mono',monospace;font-size:6px;color:#4a5568;text-transform:uppercase;letter-spacing:.05em">M/M/c est. now</div>
           </div>
           <div style="text-align:center">
-            <div style="font-family:'IBM Plex Mono',monospace;font-size:10px;font-weight:700;color:#f0c84b">530</div>
+            <div style="font-family:'IBM Plex Mono',monospace;font-size:10px;font-weight:700;color:#f0c84b">620</div>
             <div style="font-family:'IBM Plex Mono',monospace;font-size:6px;color:#4a5568;text-transform:uppercase;letter-spacing:.05em">trucks/day</div>
           </div>
           <div style="text-align:center">
-            <div style="font-family:'IBM Plex Mono',monospace;font-size:10px;font-weight:700;color:#e03040">&#8593; +35%</div>
+            <div style="font-family:'IBM Plex Mono',monospace;font-size:10px;font-weight:700;color:#e03040">&#8593; +52%</div>
             <div style="font-family:'IBM Plex Mono',monospace;font-size:6px;color:#4a5568;text-transform:uppercase;letter-spacing:.05em">vs pre-crisis</div>
           </div>
         </div>
@@ -3833,30 +3840,28 @@ canvas { font-family: var(--f-mono); }
       </div>
       </a>
 
-      <!-- Al Nuwaiseeb — MODERATE -->
+      <!-- Al Nuwaiseeb — HEAVY -->
       <a href="https://www.google.com/maps/place/Al+Nuwaiseeb+Border+Port/@28.8222,47.8798,16z/data=!5m1!1e1" target="_blank" style="text-decoration:none;color:inherit">
       <div style="background:var(--c-s1);padding:12px 14px;cursor:pointer;transition:background .15s" onmouseover="this.style.background='#1c2330'" onmouseout="this.style.background='var(--c-s1)'">
         <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:10px">
           <div>
-            <div style="font-family:'IBM Plex Mono',monospace;font-size:8px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:#f0c84b">Al Nuwaiseeb</div>
-            <div style="font-family:'IBM Plex Mono',monospace;font-size:7px;color:#5a6880;margin-top:1px"><img src="https://flagcdn.com/16x12/kw.png" alt="KW" style="height:10px;vertical-align:middle;border-radius:1px"> &rarr; <img src="https://flagcdn.com/16x12/sa.png" alt="SA" style="height:10px;vertical-align:middle;border-radius:1px"> &nbsp;&bull; Al-Khafji crossing</div>
+            <div style="font-family:'IBM Plex Mono',monospace;font-size:8px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:#e03040">Al Nuwaiseeb</div>
+            <div style="font-family:'IBM Plex Mono',monospace;font-size:7px;color:#5a6880;margin-top:1px"><img src="https://flagcdn.com/16x12/kw.png" alt="KW" style="height:10px;vertical-align:middle;border-radius:1px"> &rarr; <img src="https://flagcdn.com/16x12/sa.png" alt="SA" style="height:10px;vertical-align:middle;border-radius:1px"> &nbsp;&bull; Al-Khafji · Kuwait land lifeline</div>
           </div>
-          <span style="font-family:'IBM Plex Mono',monospace;font-size:7px;font-weight:700;letter-spacing:.1em;color:#f0c84b;background:rgba(240,200,75,.13);padding:3px 7px;border-radius:2px">MODERATE</span>
+          <span style="font-family:'IBM Plex Mono',monospace;font-size:7px;font-weight:700;letter-spacing:.1em;color:#e03040;background:rgba(224,48,64,.15);padding:3px 7px;border-radius:2px">HEAVY</span>
         </div>
-        <div style="height:8px;background:#111820;border-radius:2px;overflow:hidden;margin-bottom:10px">
-          <div style="width:52%;height:100%;background:linear-gradient(90deg,#c09a30,#f0c84b);border-radius:2px"></div>
-        </div>
+        <div id="cpt-nuwaiseeb" style="margin-bottom:6px"></div>
         <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px">
           <div style="text-align:center">
-            <div style="font-family:'IBM Plex Mono',monospace;font-size:10px;font-weight:700;color:#f0c84b">~25 min</div>
-            <div style="font-family:'IBM Plex Mono',monospace;font-size:6px;color:#4a5568;text-transform:uppercase;letter-spacing:.05em">wait time</div>
+            <div id="cpt-nuwaiseeb-wait" style="font-family:'IBM Plex Mono',monospace;font-size:10px;font-weight:700;color:#e03040">~70 min</div>
+            <div style="font-family:'IBM Plex Mono',monospace;font-size:6px;color:#4a5568;text-transform:uppercase;letter-spacing:.05em">M/M/c est. now</div>
           </div>
           <div style="text-align:center">
-            <div style="font-family:'IBM Plex Mono',monospace;font-size:10px;font-weight:700;color:#f0c84b">520</div>
+            <div style="font-family:'IBM Plex Mono',monospace;font-size:10px;font-weight:700;color:#f0c84b">780</div>
             <div style="font-family:'IBM Plex Mono',monospace;font-size:6px;color:#4a5568;text-transform:uppercase;letter-spacing:.05em">trucks/day</div>
           </div>
           <div style="text-align:center">
-            <div style="font-family:'IBM Plex Mono',monospace;font-size:10px;font-weight:700;color:#f0c84b">&#8593; +25%</div>
+            <div style="font-family:'IBM Plex Mono',monospace;font-size:10px;font-weight:700;color:#e03040">&#8593; +65%</div>
             <div style="font-family:'IBM Plex Mono',monospace;font-size:6px;color:#4a5568;text-transform:uppercase;letter-spacing:.05em">vs pre-crisis</div>
           </div>
         </div>
@@ -3874,20 +3879,18 @@ canvas { font-family: var(--f-mono); }
           </div>
           <span style="font-family:'IBM Plex Mono',monospace;font-size:7px;font-weight:700;letter-spacing:.1em;color:#c02030;background:rgba(192,32,48,.2);padding:3px 7px;border-radius:2px">CRITICAL</span>
         </div>
-        <div style="height:8px;background:#111820;border-radius:2px;overflow:hidden;margin-bottom:10px">
-          <div style="width:98%;height:100%;background:linear-gradient(90deg,#c02030,#900020);border-radius:2px"></div>
-        </div>
+        <div id="cpt-sohargate" style="margin-bottom:6px"></div>
         <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px">
           <div style="text-align:center">
-            <div style="font-family:'IBM Plex Mono',monospace;font-size:10px;font-weight:700;color:#c02030">3.5-5 hrs</div>
-            <div style="font-family:'IBM Plex Mono',monospace;font-size:6px;color:#4a5568;text-transform:uppercase;letter-spacing:.05em">gate queue</div>
+            <div id="cpt-sohargate-wait" style="font-family:'IBM Plex Mono',monospace;font-size:10px;font-weight:700;color:#c02030">2.5-4 hrs</div>
+            <div style="font-family:'IBM Plex Mono',monospace;font-size:6px;color:#4a5568;text-transform:uppercase;letter-spacing:.05em">gate est. now</div>
           </div>
           <div style="text-align:center">
-            <div style="font-family:'IBM Plex Mono',monospace;font-size:10px;font-weight:700;color:#c02030">3,200+</div>
+            <div style="font-family:'IBM Plex Mono',monospace;font-size:10px;font-weight:700;color:#c02030">3,800+</div>
             <div style="font-family:'IBM Plex Mono',monospace;font-size:6px;color:#4a5568;text-transform:uppercase;letter-spacing:.05em">gate moves/day</div>
           </div>
           <div style="text-align:center">
-            <div style="font-family:'IBM Plex Mono',monospace;font-size:10px;font-weight:700;color:#c02030">&#8593;&#8593; +700%</div>
+            <div style="font-family:'IBM Plex Mono',monospace;font-size:10px;font-weight:700;color:#c02030">&#8593;&#8593; +400%</div>
             <div style="font-family:'IBM Plex Mono',monospace;font-size:6px;color:#4a5568;text-transform:uppercase;letter-spacing:.05em">throughput</div>
           </div>
         </div>
@@ -3905,20 +3908,18 @@ canvas { font-family: var(--f-mono); }
           </div>
           <span style="font-family:'IBM Plex Mono',monospace;font-size:7px;font-weight:700;letter-spacing:.1em;color:#c02030;background:rgba(192,32,48,.2);padding:3px 7px;border-radius:2px">CRITICAL</span>
         </div>
-        <div style="height:8px;background:#111820;border-radius:2px;overflow:hidden;margin-bottom:10px">
-          <div style="width:99%;height:100%;background:linear-gradient(90deg,#c02030,#900020);border-radius:2px"></div>
-        </div>
+        <div id="cpt-jeddahgate" style="margin-bottom:6px"></div>
         <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px">
           <div style="text-align:center">
-            <div style="font-family:'IBM Plex Mono',monospace;font-size:10px;font-weight:700;color:#c02030">4-5 hrs</div>
-            <div style="font-family:'IBM Plex Mono',monospace;font-size:6px;color:#4a5568;text-transform:uppercase;letter-spacing:.05em">gate wait</div>
+            <div id="cpt-jeddahgate-wait" style="font-family:'IBM Plex Mono',monospace;font-size:10px;font-weight:700;color:#c02030">3.5-4.5 hrs</div>
+            <div style="font-family:'IBM Plex Mono',monospace;font-size:6px;color:#4a5568;text-transform:uppercase;letter-spacing:.05em">gate est. now</div>
           </div>
           <div style="text-align:center">
-            <div style="font-family:'IBM Plex Mono',monospace;font-size:10px;font-weight:700;color:#f0c84b">~950</div>
+            <div style="font-family:'IBM Plex Mono',monospace;font-size:10px;font-weight:700;color:#f0c84b">~1,100</div>
             <div style="font-family:'IBM Plex Mono',monospace;font-size:6px;color:#4a5568;text-transform:uppercase;letter-spacing:.05em">trucks/day</div>
           </div>
           <div style="text-align:center">
-            <div style="font-family:'IBM Plex Mono',monospace;font-size:10px;font-weight:700;color:#c02030">&#8593; +55%</div>
+            <div style="font-family:'IBM Plex Mono',monospace;font-size:10px;font-weight:700;color:#c02030">&#8593; +62%</div>
             <div style="font-family:'IBM Plex Mono',monospace;font-size:6px;color:#4a5568;text-transform:uppercase;letter-spacing:.05em">vs pre-crisis</div>
           </div>
         </div>
@@ -3927,9 +3928,30 @@ canvas { font-family: var(--f-mono); }
       </a>
 
     </div>
+    <!-- ── Popular-times methodology note ──────────────────────────── -->
+    <div style="padding:8px 14px 10px;border-top:1px solid #1a2232;margin-top:2px">
+      <div style="font-family:'IBM Plex Mono',monospace;font-size:6.5px;color:#3a4a5e;font-weight:700;letter-spacing:.1em;text-transform:uppercase;margin-bottom:5px">◈ Methodology &amp; Caveats — Hourly Wait Estimates</div>
+      <div style="font-family:'IBM Plex Mono',monospace;font-size:6.5px;color:#4a5668;line-height:1.85">
+        <span style="color:#a78bfa">Model:</span> M/M/c queueing (multi-server Erlang C), simplified via M/M/1 utilisation-ratio proxy:
+        <span style="color:#c9b8ff;letter-spacing:.04em"> W(t) = W̄ &times; [&rho;(t) &frasl; (1&minus;&rho;(t))] &frasl; [&rho;̄ &frasl; (1&minus;&rho;̄)]</span>
+        &nbsp;&bull;&nbsp; Hourly arrival shape inferred from regional crossing-behaviour literature (ZATCA 2024 flow reports, naqlapp.com seasonal data, GCC MoT engineering surveys).
+        &nbsp;&bull;&nbsp; Base utilisation &rho;̄ and average wait W̄ calibrated against ZATCA &frasl; MoT daily crossing averages (Jun 26 2026).
+        &nbsp;&bull;&nbsp; <span style="color:#f0c84b">Margin: &plusmn;25&ndash;35%</span> &mdash; model does not capture convoy arrivals, batch customs clearances, or lane closures.
+        &nbsp;&bull;&nbsp; Pattern shown is a <span style="color:#f0c84b">typical weekday</span>; Thu&ndash;Fri peaks at King Fahd Causeway may be 40&ndash;60% higher.
+        &nbsp;&bull;&nbsp; <span style="color:#c04060">&#9632; Dark bars = active truck-ban window</span> &mdash; arrivals structurally suppressed; convoys held at city staging areas and released as a surge when the ban lifts.
+        Schedules encoded: <span style="color:#c9b8ff">Al Bat&apos;ha</span> UAE 06:30–09:00 &amp; 15:00–19:00 &nbsp;|&nbsp;
+        <span style="color:#c9b8ff">Salwa</span> Qatar 07:30–10:00, 12:30–15:00 &amp; 17:00–00:00 &nbsp;|&nbsp;
+        <span style="color:#c9b8ff">Nuwaiseeb</span> Kuwait 06:30–09:00 &amp; 12:30–15:30 &nbsp;|&nbsp;
+        <span style="color:#c9b8ff">Jeddah gate</span> SA 06:00–09:00, 12:00–15:00 &amp; 17:00–01:00 &nbsp;|&nbsp;
+        King Fahd &amp; Sohar: no confirmed ban.
+        * &ldquo;ban hrs&rdquo; shown when current hour falls in a restricted window &mdash; exempt essential-goods permits may still move.
+        &nbsp;&bull;&nbsp; <span style="color:#e03040">Not live telemetry.</span>
+        For real-time border status: <span style="color:#60a5fa">ZATCA Unified Customs Portal &middot; naqlapp.com &middot; Oman MOT e-gate</span>
+      </div>
+    </div>
     <div class="src" style="padding:5px 14px">
       <span>Wait times estimated from ZATCA / MoT crossing data &bull; click any card to open live Google Maps traffic in new tab</span>
-      <span class="src-badge">estimated · jun 2026</span>
+      <span class="src-badge">estimated · jun 26 2026</span>
     </div>
   </div>
 
@@ -4878,8 +4900,9 @@ function yScale(color, opts) {
 // Dark fleet note: Windward imagery found 9 transits May 11 + 21 dark tankers
 // at anchor May 10. True count > AIS figure. IRGC claims 35/day (unverified).
 // MoU peace deal in advanced talks — high probability but NOT yet signed
-var L14 = ['05/11','05/12','05/13','05/14','05/15','05/16','05/17','05/18','05/19','05/20','05/21','05/22','05/23','05/24'];
-var CROSS = [7,8,6,7,5,4,2,3,4,3,4,5,5,6];
+var L14 = ['06/15','06/16','06/17','06/18','06/19','06/20','06/21','06/22','06/23','06/24','06/25','06/26','06/27','06/28'];
+/* Jun 17: MoU signed · Jun 22: Iran re-closure claim · Jun 24: peak 49 AIS / 70 Kpler · Jun 27: second vessel strike */
+var CROSS = [4, 5, 8, 12, 25, 28, 21, 12, 22, 49, 43, 30, 8, 5];
 // ↑ May 11-17: IMF PortWatch AIS-verified | May 18-24: estimated (official data pending)
 
 function initHormuzCharts() {
@@ -4893,13 +4916,13 @@ function initHormuzCharts() {
       datasets: [{
         label: 'Daily transits',
         data: CROSS,
-        backgroundColor: CROSS.map(function(v){ return v<=4?'rgba(192,57,43,0.7)':v<=8?'rgba(217,119,6,0.65)':'rgba(45,125,210,0.55)'; }),
-        borderColor: CROSS.map(function(v){ return v<=4?'#e74c3c':v<=8?'#fbbf24':'#5aa3f5'; }),
+        backgroundColor: CROSS.map(function(v){ return v<=8?'rgba(192,57,43,0.7)':v<=20?'rgba(217,119,6,0.65)':'rgba(45,125,210,0.55)'; }),
+        borderColor: CROSS.map(function(v){ return v<=8?'#e74c3c':v<=20?'#fbbf24':'#5aa3f5'; }),
         borderWidth: 1,
         borderRadius: 2
       }]
     },
-    options: chartDefaults({ x: xScale(), y: yScale(TICK_COLOR, {beginAtZero:true, max:15}) })
+    options: chartDefaults({ x: xScale(), y: yScale(TICK_COLOR, {beginAtZero:true, max:60}) })
   });
 
   // Donut
@@ -4910,7 +4933,7 @@ function initHormuzCharts() {
     data: {
       labels: ['Crude','Product','LNG/LPG','Container','Bulk'],
       datasets: [{
-        data: [50,25,25,0,0],
+        data: [60,20,0,0,20],
         backgroundColor: ['#e74c3cbb','#fbbf24bb','#a78bfabb','#5aa3f5bb','#74849499'],
         borderColor: ['#e74c3c','#fbbf24','#a78bfa','#5aa3f5','#748494'],
         borderWidth: 1
@@ -4927,10 +4950,10 @@ function initHormuzCharts() {
     data: {
       labels: L14,
       datasets: [
-        { label:'Tankers',    data:[4,5,4,4,3,2,1,2,2,2,2,3,3,4], backgroundColor:'#e74c3c88', stack:'s' },
-        { label:'Containers', data:[0,0,0,0,0,0,0,0,0,0,0,0,0,0], backgroundColor:'#5aa3f588', stack:'s' },
-        { label:'LNG/LPG',   data:[1,1,1,1,1,1,1,1,1,1,1,1,1,1], backgroundColor:'#a78bfa88', stack:'s' },
-        { label:'Other',     data:[2,2,1,2,1,1,0,0,1,0,1,1,1,1], backgroundColor:'#74849488', stack:'s' }
+        { label:'Tankers',    data:[3, 4, 6, 9,18,20,15, 8,15,35,30,20, 5, 4], backgroundColor:'#e74c3c88', stack:'s' },
+        { label:'Containers', data:[0, 0, 0, 0, 2, 3, 2, 0, 2, 6, 5, 3, 0, 0], backgroundColor:'#5aa3f588', stack:'s' },
+        { label:'LNG/LPG',   data:[1, 1, 1, 1, 2, 2, 2, 2, 2, 4, 4, 4, 1, 0], backgroundColor:'#a78bfa88', stack:'s' },
+        { label:'Other',     data:[0, 0, 1, 2, 3, 3, 2, 2, 3, 4, 4, 3, 2, 1], backgroundColor:'#74849488', stack:'s' }
       ]
     },
     options: chartDefaults({
@@ -14427,16 +14450,16 @@ var TF_COMMODITIES = {
       },
       // ── North America – Pacific ────────────────────────────────────────────
       {
-        id:'canada_pac_wheat', label:'Canada (Pacific) → East Asia',
-        fromCoord:[54.3,-130.3], toCoord:[35.7,139.7],
+        id:'canada_pac_wheat', label:'Canada (Pacific) → NE Asia / China',
+        fromCoord:[54.3,-130.3], toCoord:[37,121],
         vol:12, share:6, cps:[], distNm:4700,
-        waypoints:[[54.3,-130.3],[52,-145],[48,-165],[44,-185],[38,-210],[35.7,-220.3]], altWp:{}
+        waypoints:[[54.3,-130.3],[52,-145],[48,-165],[44,-185],[38,-210],[37,-239]], altWp:{}
       },
       {
-        id:'uspnw_asia_wheat', label:'US Pacific NW → East Asia',
-        fromCoord:[45.5,-122.7], toCoord:[35.7,139.7],
+        id:'uspnw_asia_wheat', label:'US Pacific NW → NE Asia / China',
+        fromCoord:[45.5,-122.7], toCoord:[37,121],
         vol:8, share:4, cps:[], distNm:4500,
-        waypoints:[[45.5,-122.7],[45,-138],[42,-160],[40,-185],[35.7,-220.3]], altWp:{}
+        waypoints:[[45.5,-122.7],[45,-138],[42,-160],[40,-185],[37,-239]], altWp:{}
       },
       // ── North America – Gulf / Atlantic ───────────────────────────────────
       {
@@ -14478,17 +14501,29 @@ var TF_COMMODITIES = {
         waypoints:[[-32,115.7],[-25,108],[-12,95],[-5,78],[8,55],[12.6,43.4],[15,42],[21.5,39.2]], altWp:{}
       },
       {
-        id:'australia_ne_asia', label:'Australia → NE Asia (Japan / Korea)',
-        fromCoord:[-32.9,151.8], toCoord:[35.4,139.6],
-        vol:5, share:3, cps:[], distNm:4000,
-        waypoints:[[-32.9,151.8],[-20,153],[-5,155],[10,152],[25,142],[35.4,139.6]], altWp:{}
+        id:'australia_ne_asia', label:'Australia → NE Asia / China (Philippine Sea)',
+        fromCoord:[-32.9,151.8], toCoord:[37,121],
+        vol:5, share:3, cps:[], distNm:4500,
+        waypoints:[[-32.9,151.8],[-10,152],[5,140],[15,135],[22,122],[30,121],[37,121]], altWp:{}
+      },
+      {
+        id:'australia_japan', label:'Australia → Japan (direct Pacific)',
+        fromCoord:[-34.47,150.90], toCoord:[35.4,139.6],
+        vol:3, share:2, cps:[], distNm:4000,
+        waypoints:[[-34.47,150.90],[-20,153],[-5,155],[10,152],[25,142],[35.4,139.6]], altWp:{}
       },
       // ── India ─────────────────────────────────────────────────────────────
       {
-        id:'india_gcc', label:'India → Gulf / Middle East',
-        fromCoord:[22.9,70.2], toCoord:[21.5,39.2],
-        vol:5, share:3, cps:['bab_el_mandeb'], distNm:2300,
-        waypoints:[[22.9,70.2],[18,64],[12,52],[12.6,43.4],[15,43],[21.5,39.2]], altWp:{}
+        id:'india_gcc', label:'India → Arabian Gulf (via Hormuz)',
+        fromCoord:[22.9,70.2], toCoord:[25,54],
+        vol:5, share:3, cps:['hormuz'], distNm:1800,
+        waypoints:[[22.9,70.2],[22,62],[23,57],[24,55],[25,54]], altWp:{}
+      },
+      {
+        id:'australia_gulf', label:'Australia → Arabian Gulf (Indian Ocean + Hormuz)',
+        fromCoord:[-32,115.7], toCoord:[25,54],
+        vol:4, share:2, cps:['hormuz'], distNm:6000,
+        waypoints:[[-32,115.7],[-20,105],[-10,85],[-2,68],[8,58],[20,58],[22,57],[24,55],[25,54]], altWp:{}
       }
     ]
   },
@@ -16226,7 +16261,59 @@ var TF_GRAIN_TERMINALS = [
     grade:'CWRS (Canadian) · US HRW · US DNS · Australian ASW',
     gradeLabel:'Grain type', bosphorusExposed:false, hormuzExposed:false, bypassRole:false,
     note:'Japan imports ~5.5 MT/yr — entirely imported by policy (no domestic wheat support). Government maintains a 2.3 MT strategic reserve (~3 months supply). Origins: USA ~50%, Canada ~33%, Australia ~17%. Pacific routes — minimal chokepoint risk.',
-    color:'#60a5fa', grad:'linear-gradient(135deg,#1e3a5f 0%,#0a1018 60%)' }
+    color:'#60a5fa', grad:'linear-gradient(135deg,#1e3a5f 0%,#0a1018 60%)' },
+  // ── CHINA IMPORT HUBS ────────────────────────────────────────────────────
+  { coord:[39.02,117.72], name:'Tianjin Port — China Grain Terminal', country:'China',
+    type:'import', capacity:'8 MT/yr',
+    berths:'4 berths · 80,000 DWT',
+    storage:'~350,000 t (Sinograin + COFCO)',
+    operator:'Sinograin (CNFGC) · COFCO International · Tianjin Port Group',
+    vesselTypes:'Panamax · Supramax',
+    grade:'Australian APW · Canadian CWRS · US HRW (seasonal)',
+    gradeLabel:'Grain type', bosphorusExposed:false, hormuzExposed:false, bypassRole:false,
+    note:'China\'s primary northern wheat import hub serving Beijing\'s National Reserve Bureau (NRB). China imports ~11 MT/yr — primarily Australia (3.5 MT), Canada (2.5 MT) and France. Sinograin holds large strategic reserves; imports driven by quality/price arbitrage rather than food security necessity.',
+    color:'#60a5fa', grad:'linear-gradient(135deg,#7c2d12 0%,#0a1018 60%)' },
+  { coord:[36.07,120.37], name:'Qingdao Port — Grain & Agri-bulk Terminal', country:'China',
+    type:'import', capacity:'6 MT/yr',
+    berths:'3 berths · 75,000 DWT',
+    storage:'~250,000 t (COFCO + Qingdao Port Group)',
+    operator:'COFCO International · Qingdao Port (International) Co.',
+    vesselTypes:'Panamax · Supramax',
+    grade:'Australian APW/H · Canadian CWRS · US HRW',
+    gradeLabel:'Grain type', bosphorusExposed:false, hormuzExposed:false, bypassRole:false,
+    note:'Qingdao is China\'s leading east-coast agri-bulk hub serving Shandong Province\'s large flour milling and feed industry. COFCO operates the largest integrated grain terminal complex. Primary origins: Australia, Canada and the US PNW via trans-Pacific routes.',
+    color:'#60a5fa', grad:'linear-gradient(135deg,#7c2d12 0%,#0a1018 60%)' },
+  { coord:[31.22,121.47], name:'Shanghai / Yangshan — China Grain Hub', country:'China',
+    type:'import', capacity:'5 MT/yr',
+    berths:'3 berths · 70,000 DWT',
+    storage:'~200,000 t (COFCO · Louis Dreyfus)',
+    operator:'COFCO International · Louis Dreyfus · Shanghai International Port Group',
+    vesselTypes:'Panamax · Supramax',
+    grade:'Australian APW · US HRW · French soft wheat',
+    gradeLabel:'Grain type', bosphorusExposed:false, hormuzExposed:false, bypassRole:false,
+    note:'Shanghai serves as China\'s key gateway for European and premium milling wheat imports. French wheat (for bread quality) and Australian feed wheat both transit here. EU→China flows via Suez + Malacca; Pacific origins direct.',
+    color:'#60a5fa', grad:'linear-gradient(135deg,#7c2d12 0%,#0a1018 60%)' },
+  // ── ARABIAN GULF IMPORT HUBS ─────────────────────────────────────────────
+  { coord:[29.36,47.99], name:'Shuwaikh / Mina Abdullah — Kuwait Grain Port', country:'Kuwait',
+    type:'import', capacity:'3 MT/yr',
+    berths:'3 berths · 65,000 DWT',
+    storage:'~150,000 t (GPFSC strategic silos)',
+    operator:'General Authority for Food & Nutrition Security (GPFSC) · Kuwait Flour Mills',
+    vesselTypes:'Supramax · Handymax',
+    grade:'Australian APW · US HRW · Canadian CWRS',
+    gradeLabel:'Grain type', bosphorusExposed:false, hormuzExposed:true, bypassRole:false,
+    note:'Kuwait imports ~1.5 MT/yr of wheat entirely through the Persian Gulf — 100% Hormuz-dependent. GPFSC maintains a 6-month mandatory strategic grain reserve. No Red Sea or Suez exposure; all grain arrives via the Arabian Gulf.',
+    color:'#60a5fa', grad:'linear-gradient(135deg,#7c2d12 0%,#0a1018 60%)' },
+  { coord:[25.28,51.55], name:'Hamad Port — Qatar Grain Terminal', country:'Qatar',
+    type:'import', capacity:'3 MT/yr',
+    berths:'2 berths · 70,000 DWT',
+    storage:'~120,000 t (Qatar General Org for Ports)',
+    operator:'Mwani Qatar (Qatar General Org. for Ports) · Qatar National Import Co.',
+    vesselTypes:'Panamax · Supramax',
+    grade:'Australian APW · US HRW · Canadian CWRS',
+    gradeLabel:'Grain type', bosphorusExposed:false, hormuzExposed:true, bypassRole:false,
+    note:'Qatar\'s new deep-water Hamad Port (opened 2017) handles all grain imports. Post-2017 blockade Qatar diversified supply chains and expanded strategic reserves — now 6+ months. 100% Hormuz-dependent for all import corridors.',
+    color:'#60a5fa', grad:'linear-gradient(135deg,#7c2d12 0%,#0a1018 60%)' }
 ];
 
 function buildTerminalPopupHtml(t) {
@@ -17486,27 +17573,158 @@ function renderTFPriceImpact(comm, impactedPct, cpNames) {
 }
 
 // ── Vessel photo (Wikimedia Commons, CC-licensed) ────────────────────────────
-var TF_VESSEL_PHOTOS = {
-  // AbQaiq VLCC supertanker — U.S. Navy photo, public domain
-  vlcc:    'https://upload.wikimedia.org/wikipedia/commons/thumb/7/75/Supertanker_AbQaiq.jpg/960px-Supertanker_AbQaiq.jpg',
-  // Oil Tanker Stride in Colon, Panama — CC BY-SA 4.0
-  suezmax: 'https://upload.wikimedia.org/wikipedia/commons/thumb/c/c1/Oil_Tanker_Stride_in_Colon_Panama_2016_0698.jpg/960px-Oil_Tanker_Stride_in_Colon_Panama_2016_0698.jpg',
-  // Kakariki crude oil tanker (46,700 DWT) — CC0 public domain, Bernard Spragg
-  aframax: 'https://upload.wikimedia.org/wikipedia/commons/thumb/9/9c/Kakariki._Crude_Oil_Tanker._%2822223331981%29.jpg/960px-Kakariki._Crude_Oil_Tanker._%2822223331981%29.jpg',
-  // Panamax bulk carrier Federal Pioneer — CC BY-SA 3.0 Wikipedia
-  panamax: 'https://upload.wikimedia.org/wikipedia/commons/thumb/4/4e/Federal_Pioneer_-_Flickr_-_Dave_Wilson_Photography_UK.jpg/960px-Federal_Pioneer_-_Flickr_-_Dave_Wilson_Photography_UK.jpg',
-  // Supramax bulk carrier — CC BY-SA 2.0 Wikimedia Commons
-  supramax:'https://upload.wikimedia.org/wikipedia/commons/thumb/0/0f/Bulk_carrier_ship_at_sea.jpg/960px-Bulk_carrier_ship_at_sea.jpg',
-  // Handymax bulk carrier — CC BY 2.0 Bernard Spragg
-  handymax:'https://upload.wikimedia.org/wikipedia/commons/thumb/5/5c/Bulk_Carrier_%2849898701497%29.jpg/960px-Bulk_Carrier_%2849898701497%29.jpg'
+// Wikipedia article titles per vessel type — REST API resolves the current lead image
+var TF_WIKI_ARTICLES = {
+  vlcc:    'Supertanker',
+  suezmax: 'Suezmax',
+  aframax: 'Aframax',
+  panamax: 'Panamax',
+  supramax:'Supramax',
+  handymax:'Handymax'
 };
 
 function tfVesselSVG(type) {
-  var src = TF_VESSEL_PHOTOS[type] || TF_VESSEL_PHOTOS.vlcc;
-  return '<div style="position:relative;height:150px;overflow:hidden;background:#050d18">'
-    + '<img src="' + src + '" alt="' + type.toUpperCase() + ' tanker" '
-    +   'style="width:100%;height:100%;object-fit:cover;object-position:center 40%;display:block;filter:brightness(0.82) saturate(0.7)">'
-    + '<div style="position:absolute;inset:0;background:linear-gradient(to bottom,transparent 40%,rgba(6,10,18,0.85) 100%)"></div>'
+  return '<div style="position:relative;height:150px;overflow:hidden;background:#04101e">'
+    + '<img data-vessel-type="' + type + '" src="" alt="" '
+    +   'style="width:100%;height:100%;object-fit:cover;object-position:center 40%;display:none;filter:brightness(0.82) saturate(0.7)">'
+    + '<div style="position:absolute;inset:0;background:linear-gradient(to bottom,transparent 40%,rgba(4,10,24,0.9) 100%)"></div>'
+    + '</div>';
+}
+
+function loadVesselImages(container) {
+  var imgs = container.querySelectorAll('img[data-vessel-type]');
+  imgs.forEach(function(img) {
+    var type = img.getAttribute('data-vessel-type');
+    var article = TF_WIKI_ARTICLES[type];
+    if (!article) return;
+    fetch('https://en.wikipedia.org/api/rest_v1/page/summary/' + encodeURIComponent(article))
+      .then(function(r) { return r.json(); })
+      .then(function(d) {
+        var src = null;
+        if (d.thumbnail && d.thumbnail.source) {
+          // Upsize the thumbnail to 960px width
+          src = d.thumbnail.source.replace(/\/\d+px-([^/]+)$/, '/960px-$1');
+        } else if (d.originalimage && d.originalimage.source) {
+          src = d.originalimage.source;
+        }
+        if (src) {
+          img.src = src;
+          img.style.display = 'block';
+          img.onerror = function() { this.style.display = 'none'; };
+        }
+      })
+      .catch(function() {});
+  });
+}
+
+function tfVesselSVG_unused(type, color) {
+  var col = color || '#c9a227';
+  var isTanker = (type === 'vlcc' || type === 'suezmax' || type === 'aframax');
+  var uid = type; // unique per vessel type — safe for SVG id namespacing
+
+  // Cargo deck details differ: tankers have pipeline manifolds, bulk carriers have hatch covers
+  var deckDetail = '';
+  if (isTanker) {
+    // Pipeline manifold + valve clusters
+    deckDetail  = '<line x1="50" y1="73" x2="280" y2="73" stroke="#2a4a68" stroke-width="1.5"/>';
+    deckDetail += '<line x1="50" y1="76" x2="280" y2="76" stroke="#243858" stroke-width="1"/>';
+    for (var ti = 0; ti < 5; ti++) {
+      var tx = 60 + ti * 50;
+      deckDetail += '<rect x="' + (tx-4) + '" y="68" width="8" height="10" rx="1" fill="#1c3050" stroke="#2a4060" stroke-width="0.6"/>';
+      deckDetail += '<circle cx="' + tx + '" cy="65" r="3" fill="#1a2e48" stroke="#2a4060" stroke-width="0.6"/>';
+    }
+  } else {
+    // Bulk carrier hatch covers — 4 for panamax, 3 for smaller
+    var nHatches = (type === 'panamax') ? 4 : 3;
+    var hatchW = (type === 'panamax') ? 52 : 62;
+    var hatchGap = (type === 'panamax') ? 8 : 12;
+    var hatchStart = (type === 'panamax') ? 42 : 48;
+    for (var hi = 0; hi < nHatches; hi++) {
+      var hx = hatchStart + hi * (hatchW + hatchGap);
+      deckDetail += '<rect x="' + hx + '" y="59" width="' + hatchW + '" height="13" rx="2" fill="#1a2e4a" stroke="#2a4262" stroke-width="0.8"/>';
+      deckDetail += '<line x1="' + (hx + hatchW/2) + '" y1="59" x2="' + (hx + hatchW/2) + '" y2="72" stroke="#233355" stroke-width="0.6"/>';
+      deckDetail += '<line x1="' + hx + '" y1="65" x2="' + (hx + hatchW) + '" y2="65" stroke="#233355" stroke-width="0.4" opacity="0.6"/>';
+    }
+  }
+
+  var svg = '<svg viewBox="0 0 400 148" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:100%;display:block">'
+    + '<defs>'
+    + '<linearGradient id="sky_' + uid + '" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#020810"/><stop offset="100%" stop-color="#05101e"/></linearGradient>'
+    + '<linearGradient id="sea_' + uid + '" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#0b1e36"/><stop offset="100%" stop-color="#04101f"/></linearGradient>'
+    + '<linearGradient id="hull_' + uid + '" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#1c3358"/><stop offset="100%" stop-color="#0c1d32"/></linearGradient>'
+    + '<linearGradient id="sup_' + uid + '" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#223050"/><stop offset="100%" stop-color="#162440"/></linearGradient>'
+    + '</defs>'
+    // Sky
+    + '<rect width="400" height="148" fill="url(#sky_' + uid + ')"/>'
+    // Stars
+    + '<circle cx="38" cy="16" r="0.7" fill="white" opacity="0.4"/>'
+    + '<circle cx="105" cy="28" r="0.5" fill="white" opacity="0.3"/>'
+    + '<circle cx="178" cy="11" r="0.7" fill="white" opacity="0.35"/>'
+    + '<circle cx="265" cy="22" r="0.6" fill="white" opacity="0.28"/>'
+    + '<circle cx="345" cy="33" r="0.5" fill="white" opacity="0.25"/>'
+    + '<circle cx="315" cy="9"  r="0.4" fill="white" opacity="0.3"/>'
+    + '<circle cx="220" cy="37" r="0.4" fill="white" opacity="0.2"/>'
+    // Horizon glow
+    + '<ellipse cx="200" cy="96" rx="220" ry="6" fill="#0c2040" opacity="0.5"/>'
+    // Sea
+    + '<rect x="0" y="94" width="400" height="54" fill="url(#sea_' + uid + ')"/>'
+    // Wave shimmer
+    + '<path d="M0,96 Q80,93 160,96 Q240,99 320,96 Q365,94 400,96" stroke="#183a5a" stroke-width="0.8" fill="none" opacity="0.55"/>'
+    + '<path d="M0,103 Q60,100 130,103 Q200,106 290,103 Q345,101 400,103" stroke="#183a5a" stroke-width="0.5" fill="none" opacity="0.3"/>'
+    // Below-waterline hull shadow
+    + '<path d="M18,98 L18,110 Q200,118 382,110 L382,98 Z" fill="#07152a"/>'
+    // Main hull freeboard
+    + '<path d="M18,92 L18,98 L382,98 L382,92 L376,74 L32,74 Z" fill="url(#hull_' + uid + ')"/>'
+    // Bow (pointed left)
+    + '<path d="M32,74 Q20,83 18,92" stroke="#2a4262" stroke-width="1" fill="none"/>'
+    + '<path d="M18,92 L10,90 L14,84 Z" fill="#0d1e34"/>'
+    // Stern
+    + '<path d="M376,74 L382,92 L389,89 Z" fill="#0d1e34"/>'
+    // Waterline stripe (brand colour)
+    + '<rect x="18" y="96" width="364" height="3" fill="' + col + '" opacity="0.5" rx="1"/>'
+    // Deck surface
+    + '<rect x="30" y="70" width="346" height="5" fill="#162840"/>'
+    // Deck detail (hatches or pipes)
+    + deckDetail
+    // Superstructure
+    + '<rect x="295" y="38" width="75" height="36" rx="2" fill="url(#sup_' + uid + ')"/>'
+    // Bridge wing
+    + '<rect x="290" y="32" width="85" height="10" rx="1" fill="#1a2c46"/>'
+    // Nav bridge windows (top)
+    + '<rect x="299" y="34" width="8" height="6" rx="1" fill="#3a8fc0" opacity="0.8"/>'
+    + '<rect x="312" y="34" width="8" height="6" rx="1" fill="#3a8fc0" opacity="0.8"/>'
+    + '<rect x="325" y="34" width="8" height="6" rx="1" fill="#3a8fc0" opacity="0.8"/>'
+    + '<rect x="338" y="34" width="8" height="6" rx="1" fill="#3a8fc0" opacity="0.8"/>'
+    + '<rect x="351" y="34" width="8" height="6" rx="1" fill="#3a8fc0" opacity="0.75"/>'
+    // Lower bridge windows
+    + '<rect x="300" y="50" width="7" height="6" rx="1" fill="#243a58" opacity="0.9"/>'
+    + '<rect x="312" y="50" width="7" height="6" rx="1" fill="#243a58" opacity="0.9"/>'
+    + '<rect x="324" y="50" width="7" height="6" rx="1" fill="#243a58" opacity="0.9"/>'
+    + '<rect x="336" y="50" width="7" height="6" rx="1" fill="#243a58" opacity="0.9"/>'
+    + '<rect x="348" y="50" width="7" height="6" rx="1" fill="#243a58" opacity="0.9"/>'
+    // Funnel
+    + '<rect x="318" y="14" width="22" height="24" rx="2" fill="#131f34"/>'
+    + '<rect x="315" y="11" width="28" height="6" rx="1" fill="#182840"/>'
+    // Funnel colour band
+    + '<rect x="318" y="22" width="22" height="7" fill="' + col + '" opacity="0.55" rx="1"/>'
+    // Stack exhaust hint
+    + '<ellipse cx="329" cy="11" rx="8" ry="3" fill="#0d1828" opacity="0.8"/>'
+    // Main mast (aft)
+    + '<line x1="329" y1="11" x2="329" y2="1" stroke="#182a42" stroke-width="1.5"/>'
+    + '<line x1="322" y1="5"  x2="336" y2="5"  stroke="#182a42" stroke-width="0.9"/>'
+    // Foremast (bow)
+    + '<line x1="58" y1="70" x2="58" y2="32" stroke="#182a42" stroke-width="1.2"/>'
+    + '<line x1="52" y1="37" x2="64" y2="37" stroke="#182a42" stroke-width="0.8"/>'
+    // Navigation light (port — red)
+    + '<circle cx="18" cy="90" r="1.8" fill="#e84040" opacity="0.8"/>'
+    // Bow wave
+    + '<path d="M10,99 Q2,103 0,108" stroke="#1a3a58" stroke-width="1.5" fill="none" opacity="0.55"/>'
+    + '<path d="M14,96 Q4,100 0,104" stroke="#1a3a58" stroke-width="0.8" fill="none" opacity="0.3"/>'
+    + '</svg>';
+
+  return '<div style="position:relative;height:150px;overflow:hidden;background:#020810">'
+    + svg
+    + '<div style="position:absolute;inset:0;background:linear-gradient(to bottom,transparent 35%,rgba(2,8,16,0.88) 100%)"></div>'
     + '</div>';
 }
 
@@ -17682,6 +17900,7 @@ function renderTFFleet(comm) {
 
   html += '<div class="tf-source-tag">' + data.sources + '</div>';
   el.innerHTML = html;
+  loadVesselImages(el);
 }
 
 // ── Strategic Stockpile Runway ────────────────────────────────────────────────
@@ -17922,22 +18141,21 @@ function toggleTFAccordion(bodyId, chevId) {
     }, 320);
   };
 
-  // Already visited this session — skip cover but keep cvGoTab defined
-  if (sessionStorage.getItem('cv_seen')) {
-    cover.style.display = 'none';
-    return;
-  }
-
   var skipBtn = document.getElementById('cv-skip');
   if (skipBtn) skipBtn.addEventListener('click', dismissCover);
 
-  // Escape key dismisses cover (handled separately from mob-nav Escape listener)
-  document.addEventListener('keydown', function cvKey(e) {
+  // Always attach Escape listener so re-shown cover (after auth) also responds
+  document.addEventListener('keydown', function(e) {
     if (e.key === 'Escape' && cover.style.display !== 'none') {
       dismissCover();
-      document.removeEventListener('keydown', cvKey);
     }
   });
+
+  // Already visited this session — hide immediately but keep listeners live
+  // so auth can re-show the cover and it still behaves correctly
+  if (sessionStorage.getItem('cv_seen')) {
+    cover.style.display = 'none';
+  }
 })();
 
 </script>
@@ -17973,6 +18191,211 @@ function closeNeomCaveat() {
 document.addEventListener('keydown', function(e) {
   if (e.key === 'Escape') closeNeomCaveat();
 });
+</script>
+
+<!-- ═══════════════════════════════════════════════════════════════════
+     CORRIDOR POPULAR TIMES  ·  M/M/c queueing model
+     Arrival shapes inferred from regional crossing literature;
+     wait scaled via M/M/1 utilisation ratio as M/M/c proxy.
+     W(t) = W̄ × [ρ(t)/(1−ρ(t))] / [ρ̄/(1−ρ̄)]   ±25–35% margin
+════════════════════════════════════════════════════════════════════ -->
+<script>
+(function() {
+  /* Crossing parameters:
+     avgW  = calibrated average wait (min) from ZATCA/MoT Jun 26 2026
+     rho   = base utilisation at average load (dimensionless)
+     maxW  = cap for overloaded conditions (min)
+     w     = unnormalised hourly arrival weights [midnight … 11 pm]
+             Al Bat'ha / Salwa / Nuwaiseeb: commercial-truck pattern
+             King Fahd: mixed commuter + commercial
+             Sohar / Jeddah gates: port-gate daylight-peak pattern    */
+  /* Truck-ban schedules encoded per crossing (hour indices, 0 = midnight).
+     Arrivals are structurally suppressed during these windows — trucks are
+     held at staging areas inside origin cities.  Bars are rendered in a
+     distinct colour to signal "regulated period".
+     Sources: UAE RTA/ITC 2026 · Qatar MoI · Kuwait MoI Aug 2025 ·
+              Saudi TGA (Jeddah city order) · Oman MOT (no ban confirmed)     */
+  var COR = {
+    /* UAE (Dubai/AD) ban: 06:30–09:00 (hrs 6,7,8) + 15:00–19:00 (hrs 15–18)
+       Arrivals spike at 09:00 and 19:00 as pent-up convoys release           */
+    albatha: { avgW:120, rho:0.72, maxW:240,
+      ban:[6,7,8,15,16,17,18],
+      w:[20,15,12,8,15,38,22,8,5,72,88,82,72,65,62,8,5,5,8,62,78,65,42,25] },
+
+    /* King Fahd: mixed commuter + light commercial; Bahrain has no confirmed
+       published truck-ban schedule for this crossing — treated unrestricted   */
+    kfahd: { avgW:50, rho:0.65, maxW:180,
+      ban:[],
+      w:[10,6,4,3,5,12,30,58,70,72,65,55,48,42,45,52,65,80,88,85,65,48,30,18] },
+
+    /* Qatar ban: 07:30–10:00 (hrs 7,8,9) + 12:30–15:00 (hrs 12,13,14)
+       + 17:00–midnight (hrs 17–23) — most restrictive in the GCC.
+       Almost all commercial movement concentrates in two windows:
+       10:00–12:30 and 15:00–17:00                                            */
+    salwa: { avgW:55, rho:0.68, maxW:180,
+      ban:[7,8,9,12,13,14,17,18,19,20,21,22,23],
+      w:[5,4,3,3,8,25,40,8,5,5,85,82,8,5,5,78,72,5,4,4,3,3,3,3] },
+
+    /* Kuwait ban: 06:30–09:00 (hrs 6,7,8) + 12:30–15:30 (hrs 12,13,14,15)
+       Active Sep 2025–Jun 14 2026; likely extended — treated as ongoing      */
+    nuwaiseeb: { avgW:70, rho:0.70, maxW:200,
+      ban:[6,7,8,12,13,14,15],
+      w:[22,18,14,10,15,32,10,6,5,65,80,75,8,5,5,8,62,82,85,72,55,38,28,22] },
+
+    /* Oman: no published urban truck ban; port gate operates 24 h            */
+    sohargate: { avgW:180, rho:0.78, maxW:300,
+      ban:[],
+      w:[5,3,3,3,5,12,35,70,85,90,88,80,72,70,72,78,65,55,40,25,15,10,8,5] },
+
+    /* Saudi (Jeddah city) ban: 06:00–09:00 (hrs 6,7,8) + 12:00–15:00
+       (hrs 12,13,14) + 17:00–01:00 next day (hrs 17–23 + hr 0).
+       Trucks rush through the 01:00–06:00 and 09:00–12:00 windows            */
+    jeddahgate: { avgW:225, rho:0.80, maxW:300,
+      ban:[0,6,7,8,12,13,14,17,18,19,20,21,22,23],
+      w:[3,35,42,40,25,15,5,3,3,55,80,82,6,4,4,68,72,4,3,3,3,3,3,3] }
+  };
+
+  function calcWait(loadMult, rho, avgW, maxW) {
+    var r = Math.min(0.995, rho * loadMult);
+    var scale = (r / (1 - r)) / (rho / (1 - rho));
+    return Math.min(maxW, Math.max(3, Math.round(avgW * scale)));
+  }
+
+  function fmtWait(m) {
+    if (m >= 180) {
+      var h = Math.floor(m / 60);
+      var rem = m % 60;
+      return h + 'h' + (rem ? ' ' + rem + 'm' : '') + '+';
+    }
+    if (m >= 60) return Math.floor(m / 60) + 'h ' + (m % 60) + 'm';
+    return '~' + m + ' min';
+  }
+
+  function waitClr(m) {
+    if (m > 90)  return '#c02030';
+    if (m > 45)  return '#e8673c';
+    if (m > 20)  return '#f0c84b';
+    return '#3dd68c';
+  }
+
+  function drawChart(key) {
+    var d  = COR[key];
+    var el = document.getElementById('cpt-' + key);
+    if (!el) return;
+
+    var hr  = new Date().getHours();
+    var tot = d.w.reduce(function(a, b) { return a + b; }, 0);
+    var props = d.w.map(function(v) { return v / tot; });
+    var av  = 1 / 24;
+
+    /* classify each hour into a named period */
+    function kindOf(i) {
+      if (d.ban.length && d.ban.indexOf(i) !== -1) return 'ban';
+      var load = props[i] / av;
+      return load > 1.8 ? 'peak' : load > 0.8 ? 'busy' : 'quiet';
+    }
+
+    /* merge consecutive same-kind hours into segments */
+    var segs = [];
+    var i = 0;
+    while (i < 24) {
+      var k = kindOf(i), j = i + 1;
+      while (j < 24 && kindOf(j) === k) j++;
+      segs.push({ kind: k, start: i, end: j });
+      i = j;
+    }
+
+    /* layout constants */
+    var W = 220, nowH = 11, barH = 22, labelH = 13, H = nowH + barH + labelH;
+
+    /* colour palette: block bg / label text */
+    var bg  = { ban:'#350916', peak:'#0d2560', busy:'#0e1e45', quiet:'#090e1a' };
+    var fg  = { ban:'#c04060', peak:'#60a5fa', busy:'#3d6ab0', quiet:'#1e2d3d' };
+    var lbl = { ban:'BAN',     peak:'PEAK',    busy:'BUSY',    quiet:'quiet'   };
+
+    var parts = [
+      '<svg viewBox="0 0 ', W, ' ', H,
+      '" style="width:100%;display:block" aria-hidden="true">'
+    ];
+
+    /* coloured period blocks */
+    segs.forEach(function(s) {
+      var x0 = Math.round(s.start / 24 * W);
+      var x1 = Math.round(s.end   / 24 * W);
+      var bw = x1 - x0 - 1;
+      if (bw < 1) return;
+      parts.push(
+        '<rect x="', x0, '" y="', nowH,
+        '" width="', bw, '" height="', barH,
+        '" rx="3" fill="', bg[s.kind], '"/>'
+      );
+      if (bw > 20) {
+        parts.push(
+          '<text x="', x0 + bw / 2, '" y="', nowH + barH / 2,
+          '" fill="', fg[s.kind], '" font-size="', bw > 38 ? 7 : 6, '"',
+          ' font-family="monospace,sans-serif" font-weight="700"',
+          ' text-anchor="middle" dominant-baseline="middle">',
+          lbl[s.kind], '</text>'
+        );
+      }
+    });
+
+    /* NOW marker — vertical rule + label */
+    var nx = Math.round((hr + 0.5) / 24 * W);
+    parts.push(
+      '<line x1="', nx, '" y1="2" x2="', nx, '" y2="', nowH + barH + 3,
+      '" stroke="#e8eaed" stroke-width="1.5" stroke-linecap="round"/>',
+      '<text x="', nx, '" y="1" fill="#e8eaed" font-size="6"',
+      ' font-family="monospace,sans-serif" font-weight="700"',
+      ' text-anchor="middle" dominant-baseline="text-before-edge">NOW</text>'
+    );
+
+    /* time labels: 12a · 6a · 12p · 6p */
+    [[0,'12a'],[6,'6a'],[12,'12p'],[18,'6p']].forEach(function(pair) {
+      var lx = Math.round(pair[0] / 24 * W);
+      parts.push(
+        '<text x="', lx === 0 ? 2 : lx,
+        '" y="', nowH + barH + labelH - 1,
+        '" fill="#3a4a5e" font-size="5.5" font-family="monospace,sans-serif"',
+        ' text-anchor="', lx === 0 ? 'start' : 'middle', '">',
+        pair[1], '</text>'
+      );
+    });
+
+    parts.push('</svg>');
+    el.innerHTML = parts.join('');
+
+    /* update wait readout for current hour */
+    var waits = props.map(function(p) {
+      return calcWait(p / av, d.rho, d.avgW, d.maxW);
+    });
+    var wEl = document.getElementById('cpt-' + key + '-wait');
+    if (wEl) {
+      var isCurBan = d.ban.length && d.ban.indexOf(hr) !== -1;
+      wEl.textContent = isCurBan ? 'ban hrs*' : fmtWait(waits[hr]);
+      wEl.style.color = isCurBan ? '#7a3040'  : waitClr(waits[hr]);
+    }
+  }
+
+  function renderAll() {
+    Object.keys(COR).forEach(drawChart);
+  }
+
+  /* initial render */
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', renderAll);
+  } else {
+    renderAll();
+  }
+
+  /* refresh at each hour boundary */
+  function scheduleNext() {
+    var n = new Date();
+    var msToHour = (60 - n.getMinutes()) * 60000 - n.getSeconds() * 1000 - n.getMilliseconds();
+    setTimeout(function() { renderAll(); scheduleNext(); }, msToHour);
+  }
+  scheduleNext();
+})();
 </script>
 </body>
 </html>

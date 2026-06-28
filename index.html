@@ -3149,6 +3149,12 @@ canvas { font-family: var(--f-mono); }
       errMsg.classList.remove('gcc-auth-err-show');
       btn.disabled = false;
       btn.textContent = 'Authenticate →';
+      // Always return to the cover/landing page
+      var cover = document.getElementById('cover');
+      if (cover) {
+        cover.classList.remove('cv-out');
+        cover.style.display = '';
+      }
     }, 380);
   }
 

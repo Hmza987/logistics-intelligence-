@@ -3535,7 +3535,7 @@ canvas { font-family: var(--f-mono); }
           <div class="metric"><div class="val red"><span id="m-containers">0</span><a href="https://www.kpler.com" target="_blank" rel="noopener" class="src-lnk" title="Source: Kpler satellite+AIS">↗</a></div><div class="lbl">Container Ships</div><div class="chg muted">suspended post-Jun 27</div></div>
         </div>
         <!-- 14-day chart -->
-        <div style="position:relative;height:120px">
+        <div style="position:relative;height:200px">
           <canvas id="hChart" role="img" aria-label="Daily Hormuz crossings past 14 days"></canvas>
         </div>
         <div class="src"><span>Kpler (satellite+AIS) &middot; Windward AI &middot; straits.live &middot; Lloyd's List &middot; CNBC &middot; Jun 28 2026</span><span class="src-badge">real data</span></div>
@@ -8873,32 +8873,10 @@ function fetchLiveData() {
 
       var t = data.transits;
 
-      // ── Charts ──────────────────────────────────────────────────────────────
-      L14   = t.labels.slice(-14);
-      CROSS = t.counts.slice(-14);
-
-      if (CHARTS['hChart']) {
-        var ch = CHARTS['hChart'];
-        ch.data.labels = L14;
-        ch.data.datasets[0].data = CROSS;
-        ch.data.datasets[0].backgroundColor = CROSS.map(function(v){
-          return v <= 2 ? 'rgba(192,57,43,0.7)' : v <= 4 ? 'rgba(217,119,6,0.65)' : 'rgba(45,125,210,0.55)';
-        });
-        ch.data.datasets[0].borderColor = CROSS.map(function(v){
-          return v <= 2 ? '#e74c3c' : v <= 4 ? '#fbbf24' : '#5aa3f5';
-        });
-        ch.update('none');
-      }
-
-      if (CHARTS['sChart'] && t.tankers) {
-        var sc = CHARTS['sChart'];
-        sc.data.labels = L14;
-        sc.data.datasets[0].data = t.tankers.slice(-14);
-        sc.data.datasets[1].data = t.containers.slice(-14);
-        sc.data.datasets[2].data = t.lng.slice(-14);
-        sc.data.datasets[3].data = t.other.slice(-14);
-        sc.update('none');
-      }
+      // Charts intentionally NOT updated from live API — hChart/sChart display
+      // the curated Kpler+Windward reconciled 14-day history (Jun 15–28, peak 49
+      // on Jun 24). IMF PortWatch (pure AIS) shows lower counts that would make
+      // the chart unreadable. Only metric cards below get live values.
 
       // ── Transit metrics ─────────────────────────────────────────────────────
       var today    = t.today != null ? t.today : (CROSS.length ? CROSS[CROSS.length - 1] : 4);

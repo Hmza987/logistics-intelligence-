@@ -14366,25 +14366,42 @@ var TF_COMMODITIES = {
       { event:'Red Sea disruptions 2024',                       duration:'Ongoing',  impact:'+4–6% landed Middle East', note:'Suez detours added 15–18 days; cost increases partially absorbed by exporters' }
     ],
     routes:[
+      // ── Black Sea / Russia origins ─────────────────────────────────────────
       {
         id:'blacksea_me', label:'Black Sea → Middle East / N. Africa',
-        fromCoord:[44,33], toCoord:[30,32],
+        fromCoord:[44,33], toCoord:[25,36],
         vol:45, share:23, cps:['turkish_straits','bab_el_mandeb','suez'], distNm:2800,
-        waypoints:[[44,33],[41.1,29.1],[38,27],[36,18],[20,38],[12.6,43.4],[15,44],[25,36]],
-        altWp:{ turkish_straits:[[44,33],[52,36],[56,22],[55.6,10.8],[48,-5],[36,-5.4],[36,18],[20,38],[12.6,43.4],[25,36]], turkish_straits_nm:3500 }
+        waypoints:[[44,33],[41.1,29.1],[38,27],[36,18],[36,10],[12.6,43.4],[15,44],[25,36]],
+        altWp:{ turkish_straits:[[44,33],[52,36],[56,22],[55.6,10.8],[56,5],[48,-2],[36,-5.4],[36,10],[12.6,43.4],[15,44],[25,36]], turkish_straits_nm:9500 }
       },
       {
-        id:'russia_asia', label:'Russia / Black Sea → Asia',
-        fromCoord:[44,33], toCoord:[20,78],
-        vol:12, share:6, cps:['turkish_straits','suez','bab_el_mandeb'], distNm:5500,
-        waypoints:[[44,33],[41.1,29.1],[38,27],[36,18],[12.6,43.4],[15,52],[20,62],[20,78]], altWp:{}
+        id:'russia_asia', label:'Russia / Black Sea → South / SE Asia',
+        fromCoord:[44,33], toCoord:[13,100],
+        vol:12, share:6, cps:['turkish_straits','suez','bab_el_mandeb'], distNm:7200,
+        waypoints:[[44,33],[41.1,29.1],[38,27],[36,18],[36,10],[12.6,43.4],[8,55],[0,72],[5,80],[8,90],[8,100],[13,100]],
+        altWp:{ turkish_straits:[[44,33],[52,36],[56,22],[55.6,10.8],[56,5],[48,-2],[36,-5.4],[-34.5,18.5],[-5,58],[8,75],[13,100]], turkish_straits_nm:14000 }
       },
       {
-        id:'australia_asia_w', label:'Australia → SE Asia',
-        fromCoord:[-33,117], toCoord:[13,100],
-        vol:14, share:7, cps:['malacca'], distNm:5200,
-        waypoints:[[-33,117],[-20,108],[-8,104],[1.2,103.9],[8,100],[13,100]], altWp:{}
+        id:'russia_africa', label:'Russia / Black Sea → Sub-Saharan Africa',
+        fromCoord:[44,33], toCoord:[6.4,3.4],
+        vol:6, share:3, cps:['turkish_straits'], distNm:5200,
+        waypoints:[[44,33],[41.1,29.1],[38,27],[36,18],[36,5],[36,-5.4],[20,-17],[10,-15],[5,0],[6.4,3.4]],
+        altWp:{ turkish_straits:[[44,33],[52,36],[56,22],[55.6,10.8],[56,5],[48,-2],[36,-5.4],[20,-17],[10,-15],[5,0],[6.4,3.4]], turkish_straits_nm:9500 }
       },
+      // ── NW Europe origins ─────────────────────────────────────────────────
+      {
+        id:'eu_mena', label:'NW Europe → N. Africa / Egypt',
+        fromCoord:[49.4,1.0], toCoord:[31.2,29.9],
+        vol:12, share:6, cps:[], distNm:3200,
+        waypoints:[[49.4,1.0],[48,-3],[44,-4],[36,-5.4],[37,5],[37,13],[36,22],[33,28],[31.2,29.9]], altWp:{}
+      },
+      {
+        id:'eu_westafr', label:'NW Europe → West / Sub-Saharan Africa',
+        fromCoord:[49.4,1.0], toCoord:[6.4,3.4],
+        vol:8, share:4, cps:[], distNm:4000,
+        waypoints:[[49.4,1.0],[48,-3],[44,-4],[36,-5.4],[20,-17],[10,-15],[5,0],[6.4,3.4]], altWp:{}
+      },
+      // ── North America – Pacific ────────────────────────────────────────────
       {
         id:'canada_pac_wheat', label:'Canada (Pacific) → East Asia',
         fromCoord:[54.3,-130.3], toCoord:[35.7,139.7],
@@ -14396,6 +14413,58 @@ var TF_COMMODITIES = {
         fromCoord:[45.5,-122.7], toCoord:[35.7,139.7],
         vol:8, share:4, cps:[], distNm:4500,
         waypoints:[[45.5,-122.7],[45,-138],[42,-160],[40,-185],[35.7,-220.3]], altWp:{}
+      },
+      // ── North America – Gulf / Atlantic ───────────────────────────────────
+      {
+        id:'us_gulf_mena', label:'US Gulf → Middle East / N. Africa',
+        fromCoord:[29.9,-90.1], toCoord:[31.3,32.3],
+        vol:8, share:4, cps:['suez','bab_el_mandeb'], distNm:8200,
+        waypoints:[[29.9,-90.1],[23,-83],[22,-75],[15,-60],[5,-28],[10,-17],[20,-17],[30,-13],[36,-5.4],[37,10],[36,22],[31.3,32.3]], altWp:{}
+      },
+      {
+        id:'canada_atl_mena', label:'Canada (Atlantic) → N. Africa / MENA',
+        fromCoord:[44.7,-63.6], toCoord:[31.2,29.9],
+        vol:6, share:3, cps:[], distNm:5100,
+        waypoints:[[44.7,-63.6],[40,-50],[32,-40],[20,-30],[10,-17],[20,-17],[30,-13],[36,-5.4],[37,10],[35,20],[33,28],[31.2,29.9]], altWp:{}
+      },
+      // ── South America ─────────────────────────────────────────────────────
+      {
+        id:'argentina_mena', label:'Argentina → N. Africa / MENA',
+        fromCoord:[-38.7,-62.3], toCoord:[31.2,29.9],
+        vol:8, share:4, cps:[], distNm:5500,
+        waypoints:[[-38.7,-62.3],[-35,-52],[-20,-38],[0,-25],[10,-17],[20,-17],[30,-13],[36,-5.4],[37,8],[36,20],[33,27],[31.2,29.9]], altWp:{}
+      },
+      {
+        id:'argentina_asia', label:'Argentina → SE Asia (via Cape)',
+        fromCoord:[-38.7,-62.3], toCoord:[-6.2,106.8],
+        vol:4, share:2, cps:['malacca'], distNm:10200,
+        waypoints:[[-38.7,-62.3],[-45,-38],[-55,-8],[-34.5,18.5],[-20,42],[-5,58],[4,80],[1.2,103.9],[-6.2,106.8]], altWp:{}
+      },
+      // ── Australia ─────────────────────────────────────────────────────────
+      {
+        id:'australia_asia_w', label:'Australia → SE Asia',
+        fromCoord:[-33,117], toCoord:[13,100],
+        vol:14, share:7, cps:['malacca'], distNm:5200,
+        waypoints:[[-33,117],[-20,108],[-8,104],[1.2,103.9],[8,100],[13,100]], altWp:{}
+      },
+      {
+        id:'australia_mena', label:'Australia → Middle East / Red Sea',
+        fromCoord:[-32,115.7], toCoord:[21.5,39.2],
+        vol:5, share:3, cps:['bab_el_mandeb'], distNm:4200,
+        waypoints:[[-32,115.7],[-25,108],[-12,95],[-5,78],[8,55],[12.6,43.4],[15,42],[21.5,39.2]], altWp:{}
+      },
+      {
+        id:'australia_ne_asia', label:'Australia → NE Asia (Japan / Korea)',
+        fromCoord:[-32.9,151.8], toCoord:[35.4,139.6],
+        vol:5, share:3, cps:[], distNm:4000,
+        waypoints:[[-32.9,151.8],[-20,153],[-5,155],[10,152],[25,142],[35.4,139.6]], altWp:{}
+      },
+      // ── India ─────────────────────────────────────────────────────────────
+      {
+        id:'india_gcc', label:'India → Gulf / Middle East',
+        fromCoord:[22.9,70.2], toCoord:[21.5,39.2],
+        vol:5, share:3, cps:['bab_el_mandeb'], distNm:2300,
+        waypoints:[[22.9,70.2],[18,64],[12,52],[12.6,43.4],[15,43],[21.5,39.2]], altWp:{}
       }
     ]
   },
@@ -15005,6 +15074,9 @@ function selectTFCommodity(commId) {
 
   // Header chip strip
   updateTFCPChips();
+
+  // GCC / MENA country exposure card (commodity-aware)
+  renderGCCImpact();
 
   // Clear outputs
   clearTFOutputs();
@@ -15775,6 +15847,364 @@ var TF_GRAIN_STOCKPILE_DATA = [
     noteColor:'#3dd68c' }
 ];
 
+// ── Grain terminal data (wheat) ───────────────────────────────────────────────
+var TF_GRAIN_TERMINALS = [
+  // ── BLACK SEA EXPORT HUBS ──────────────────────────────────────────────────
+  { coord:[44.72,37.77], name:'Novorossiysk NCSP Grain Terminal', country:'Russia',
+    type:'export', capacity:'20 MT/yr (NCSP + KSK terminals combined)',
+    berths:'4 berths · 80,000 DWT max · 2 loader arms each berth',
+    storage:'~500,000 t silo + covered warehouse complex',
+    operator:'NCSP Group · KSK Terminal',
+    vesselTypes:'Panamax · Supramax',
+    grade:'Milling wheat (4th/5th class) · Barley · Sunflower meal',
+    gradeLabel:'Grain type', bosphorusExposed:true, hormuzExposed:false, bypassRole:false,
+    note:'Largest Russian grain export port — handles ~50% of all Russian wheat exports. Fully dependent on Bosphorus passage. Turkish Straits closure would immediately halt Black Sea grain flows, triggering food price spikes globally.',
+    color:'#f59e0b', grad:'linear-gradient(135deg,#7c2d12 0%,#1c1414 60%)' },
+  { coord:[45.22,36.68], name:'Taman Grain Terminal', country:'Russia',
+    type:'export', capacity:'7 MT/yr',
+    berths:'2 berths · 75,000 DWT max',
+    storage:'~200,000 t silo complex (expanded 2023)',
+    operator:'Taman Grain Terminal LLC',
+    vesselTypes:'Panamax · Supramax',
+    grade:'Wheat · Barley · Sunflower meal',
+    gradeLabel:'Grain type', bosphorusExposed:true, hormuzExposed:false, bypassRole:false,
+    note:'Located on the Taman Peninsula near the Kerch Strait. Key secondary Russian Black Sea export hub — expansion completed 2023 added two new silo lines and a second loader arm.',
+    color:'#f59e0b', grad:'linear-gradient(135deg,#7c2d12 0%,#1c1414 60%)' },
+  { coord:[46.49,30.73], name:'Odessa Grain Terminal', country:'Ukraine',
+    type:'export', capacity:'6 MT/yr (reduced from 12 MT pre-conflict)',
+    berths:'3 berths · 70,000 DWT max',
+    storage:'~150,000 t covered silo',
+    operator:'USPA (State) · Transgrains LLC',
+    vesselTypes:'Supramax · Handymax',
+    grade:'Milling wheat · Feed barley · Corn',
+    gradeLabel:'Grain type', bosphorusExposed:true, hormuzExposed:false, bypassRole:false,
+    note:'Ukraine\'s largest port. Operating under Black Sea Grain Initiative frameworks. Exports significantly reduced from pre-war 30+ MT/yr peak. Fully dependent on Bosphorus passage and safe corridor agreements.',
+    color:'#f59e0b', grad:'linear-gradient(135deg,#1e3a5f 0%,#1c1414 60%)' },
+  { coord:[46.31,30.66], name:'Chornomorsk Port (Ukraine)', country:'Ukraine',
+    type:'export', capacity:'4 MT/yr',
+    berths:'2 berths · 65,000 DWT',
+    storage:'~120,000 t',
+    operator:'USPA · Risoil Terminal',
+    vesselTypes:'Supramax · Handymax',
+    grade:'Wheat · Barley · Sunflower oil',
+    gradeLabel:'Grain type', bosphorusExposed:true, hormuzExposed:false, bypassRole:false,
+    note:'Former Ilyichevsk. Became an active grain export corridor alongside Odessa and Pivdennyi under the 2022 Black Sea Initiative. Secondary Ukrainian export point serving Mediterranean and MENA buyers.',
+    color:'#f59e0b', grad:'linear-gradient(135deg,#1e3a5f 0%,#1c1414 60%)' },
+  { coord:[44.15,28.64], name:'Constanta Grain Terminal', country:'Romania',
+    type:'export', capacity:'10 MT/yr (grain / agri-bulk)',
+    berths:'6 berths · 80,000 DWT',
+    storage:'~400,000 t (Bunge · Cargill · COMVEX silos)',
+    operator:'CN Administratia Porturilor Maritime · Bunge Agri · Cargill',
+    vesselTypes:'Panamax · Supramax',
+    grade:'Romanian + Ukrainian wheat (transit) · Corn · Barley',
+    gradeLabel:'Grain type', bosphorusExposed:true, hormuzExposed:false, bypassRole:false,
+    note:'Largest port on the Black Sea by cargo volume. Critical transit hub for Ukrainian grain via Danube river barges during war-phase corridor disruptions. Bosphorus dependency applies to all outbound voyages.',
+    color:'#f59e0b', grad:'linear-gradient(135deg,#3b1f5c 0%,#1c1414 60%)' },
+  // ── AUSTRALIA EXPORT HUBS ─────────────────────────────────────────────────
+  { coord:[-28.78,114.61], name:'Geraldton Port — CBH Grain', country:'Australia',
+    type:'export', capacity:'7 MT/yr',
+    berths:'1 berth · 65,000 DWT',
+    storage:'~200,000 t silo complex',
+    operator:'CBH Group',
+    vesselTypes:'Panamax · Supramax',
+    grade:'Australian Premium White (APW) · APH Prime Hard',
+    gradeLabel:'Grain type', bosphorusExposed:false, hormuzExposed:false, bypassRole:false,
+    note:'CBH Group\'s primary WA wheat export terminal. Serves Middle East and SE Asia corridors via the Indian Ocean. No international chokepoint dependency on primary Middle East/Indonesia routes.',
+    color:'#f59e0b', grad:'linear-gradient(135deg,#14432a 0%,#1c1414 60%)' },
+  { coord:[-32.04,115.74], name:'Fremantle — CBH Grain Terminal', country:'Australia',
+    type:'export', capacity:'5 MT/yr',
+    berths:'1 berth · 60,000 DWT',
+    storage:'~150,000 t',
+    operator:'CBH Group · Fremantle Ports',
+    vesselTypes:'Supramax · Handymax',
+    grade:'APW · AH (Australian Hard) · Feed wheat',
+    gradeLabel:'Grain type', bosphorusExposed:false, hormuzExposed:false, bypassRole:false,
+    note:'Supplemental WA export terminal handling overflow during peak harvest season. Routes serve Indonesia, SE Asia and Indian Ocean corridor to Middle East. Bab el-Mandeb exposure for Red Sea deliveries.',
+    color:'#f59e0b', grad:'linear-gradient(135deg,#14432a 0%,#1c1414 60%)' },
+  { coord:[-34.47,150.90], name:'Port Kembla — GrainCorp Terminal', country:'Australia',
+    type:'export', capacity:'4 MT/yr',
+    berths:'1 berth · 70,000 DWT',
+    storage:'~100,000 t',
+    operator:'GrainCorp · NSW Ports',
+    vesselTypes:'Panamax · Supramax',
+    grade:'APH (Prime Hard) · AH (Hard) · ASW (Soft White)',
+    gradeLabel:'Grain type', bosphorusExposed:false, hormuzExposed:false, bypassRole:false,
+    note:'GrainCorp\'s key east-coast terminal serving NE Asia (Japan, Korea, Taiwan). Handles NSW and southern Queensland wheat. Pacific-facing — no significant chokepoint exposure on primary routes.',
+    color:'#f59e0b', grad:'linear-gradient(135deg,#14432a 0%,#1c1414 60%)' },
+  // ── NORTH AMERICA PACIFIC EXPORT HUBS ────────────────────────────────────
+  { coord:[54.31,-130.33], name:'Prince Rupert — Ridley Island Terminal', country:'Canada',
+    type:'export', capacity:'8 MT/yr',
+    berths:'2 berths · 75,000 DWT',
+    storage:'~170,000 t',
+    operator:'Ridley Terminals Inc.',
+    vesselTypes:'Panamax · Supramax',
+    grade:'CWRS (Canada Western Red Spring) · CWAD Durum',
+    gradeLabel:'Grain type', bosphorusExposed:false, hormuzExposed:false, bypassRole:false,
+    note:'Canada\'s premier West Coast grain export terminal — deepest bulk port in North America (30m draught). Ice-free year-round. Serves Japan, South Korea and SE Asia. No chokepoint dependency on Pacific routes.',
+    color:'#f59e0b', grad:'linear-gradient(135deg,#1e3a5f 0%,#1c1414 60%)' },
+  { coord:[49.28,-123.11], name:'Vancouver — Cascadia / G3 Terminal', country:'Canada',
+    type:'export', capacity:'10 MT/yr (combined)',
+    berths:'3 berths · 75,000 DWT',
+    storage:'~250,000 t',
+    operator:'G3 Canada · Parrish & Heimbecker · Cargill',
+    vesselTypes:'Panamax · Supramax',
+    grade:'CWRS · CPS (Prairie Spring) · CWAD Durum',
+    gradeLabel:'Grain type', bosphorusExposed:false, hormuzExposed:false, bypassRole:false,
+    note:'Metro Vancouver is Canada\'s highest-volume grain export hub with multiple competing terminal operators. Primary destination is Asia-Pacific. Minimal chokepoint exposure on trans-Pacific routes.',
+    color:'#f59e0b', grad:'linear-gradient(135deg,#1e3a5f 0%,#1c1414 60%)' },
+  { coord:[45.55,-122.67], name:'Portland / Columbia River Grain Hub', country:'USA',
+    type:'export', capacity:'6 MT/yr',
+    berths:'2 berths · 65,000 DWT',
+    storage:'~120,000 t',
+    operator:'Columbia Grain Inc. · TEMCO (ADM/CHS JV)',
+    vesselTypes:'Panamax · Supramax',
+    grade:'Hard Red Winter (HRW) · Soft White (SW) · Hard Red Spring',
+    gradeLabel:'Grain type', bosphorusExposed:false, hormuzExposed:false, bypassRole:false,
+    note:'Portland is the largest US wheat export point by volume. Ships via the Snake/Columbia River system from the Pacific Northwest wheat belt. Primary market is East Asia on open Pacific routes with no chokepoint dependency.',
+    color:'#f59e0b', grad:'linear-gradient(135deg,#7c1d2d 0%,#1c1414 60%)' },
+  // ── NORTH AMERICA GULF / ATLANTIC EXPORT HUBS ────────────────────────────
+  { coord:[29.94,-90.07], name:'New Orleans — Gulf Grain Complex', country:'USA',
+    type:'export', capacity:'8 MT/yr (multiple terminals)',
+    berths:'4 berths · 80,000 DWT',
+    storage:'~300,000 t (Bunge · ADM · LDC · Cargill)',
+    operator:'Bunge · ADM · Louis Dreyfus · Cargill',
+    vesselTypes:'Panamax · Supramax',
+    grade:'HRW (Hard Red Winter) · SRW (Soft Red Winter)',
+    gradeLabel:'Grain type', bosphorusExposed:false, hormuzExposed:false, bypassRole:false,
+    note:'US Gulf is the primary origin for wheat shipments to North Africa and the Middle East. Atlantic + Gibraltar route to Mediterranean destinations (no major CPs). Suez dependency for deeper Red Sea / GCC delivery.',
+    color:'#f59e0b', grad:'linear-gradient(135deg,#7c1d2d 0%,#1c1414 60%)' },
+  { coord:[44.7,-63.6], name:'Halifax / Canadian Atlantic Grain', country:'Canada',
+    type:'export', capacity:'4 MT/yr',
+    berths:'2 berths · 65,000 DWT',
+    storage:'~120,000 t',
+    operator:'Viterra · Parrish & Heimbecker · Halifax Port Authority',
+    vesselTypes:'Panamax · Supramax · Handymax',
+    grade:'CWRS · CPS · CWAD Durum',
+    gradeLabel:'Grain type', bosphorusExposed:false, hormuzExposed:false, bypassRole:false,
+    note:'Canadian Maritimes grain export facilities serve N. Africa, UK and Mediterranean markets via direct Atlantic crossing. Significantly shorter haul than Pacific terminals for European/MENA buyers. No chokepoint dependency.',
+    color:'#f59e0b', grad:'linear-gradient(135deg,#1e3a5f 0%,#1c1414 60%)' },
+  // ── NW EUROPE EXPORT HUBS ─────────────────────────────────────────────────
+  { coord:[49.43,1.10], name:'Rouen / Grand Port Maritime de Normandie', country:'France',
+    type:'export', capacity:'12 MT/yr',
+    berths:'4 berths · 70,000 DWT (Seine draught-limited)',
+    storage:'~400,000 t (Sénalia · Simarex · Bunge)',
+    operator:'Sénalia · Simarex · Bunge · Cargill',
+    vesselTypes:'Panamax · Supramax · Handymax',
+    grade:'French milling wheat (FRW) · Barley · Rapeseed',
+    gradeLabel:'Grain type', bosphorusExposed:false, hormuzExposed:false, bypassRole:false,
+    note:'Europe\'s largest grain export port — handles ~60% of French wheat exports. Primary destinations: Morocco, Algeria, Egypt, Mauritania. No major international chokepoint dependency; pure Mediterranean corridor from Gibraltar.',
+    color:'#f59e0b', grad:'linear-gradient(135deg,#0f3460 0%,#1c1414 60%)' },
+  { coord:[46.15,-1.18], name:'La Pallice / La Rochelle Grain Terminal', country:'France',
+    type:'export', capacity:'5 MT/yr',
+    berths:'2 berths · 70,000 DWT',
+    storage:'~180,000 t',
+    operator:'Charente Maritime Terminal · Sénalia',
+    vesselTypes:'Panamax · Supramax',
+    grade:'Milling wheat (FRW) · Barley · Oilseeds',
+    gradeLabel:'Grain type', bosphorusExposed:false, hormuzExposed:false, bypassRole:false,
+    note:'France\'s secondary Atlantic-facing grain terminal. Serves Mauritania, Senegal and Sub-Saharan African markets as well as Algeria and Morocco. Deepwater facility allows full Panamax loading without Seine depth constraints.',
+    color:'#f59e0b', grad:'linear-gradient(135deg,#0f3460 0%,#1c1414 60%)' },
+  // ── SOUTH AMERICA EXPORT HUBS ─────────────────────────────────────────────
+  { coord:[-38.72,-62.27], name:'Bahia Blanca — Argentina Grain Complex', country:'Argentina',
+    type:'export', capacity:'15 MT/yr (combined)',
+    berths:'6 berths · 80,000 DWT',
+    storage:'~600,000 t (Cargill · Bunge · Cofco · ACA)',
+    operator:'Cargill · Bunge · Cofco · ACA (Cooperatives)',
+    vesselTypes:'Panamax · Supramax',
+    grade:'Hard wheat (HRW equiv.) · Feed barley · Corn · Soy',
+    gradeLabel:'Grain type', bosphorusExposed:false, hormuzExposed:false, bypassRole:false,
+    note:'Southern Argentina\'s dominant grain export complex. Winter wheat (Dec–Feb harvest) ships primarily to Algeria, Egypt, Indonesia and Brazil. Unique flexibility: Atlantic (Mediterranean/N.Africa) or Cape route (Asia) depending on destination.',
+    color:'#f59e0b', grad:'linear-gradient(135deg,#3b1f5c 0%,#1c1414 60%)' },
+  { coord:[-32.72,-60.74], name:'Rosario / San Lorenzo — Paraná Grain Hub', country:'Argentina',
+    type:'export', capacity:'20 MT/yr (Paraná waterway cluster)',
+    berths:'8 berths · 80,000 DWT (partial loads; lightering offshore for Panamax)',
+    storage:'~800,000 t (Cargill · Bunge · Cofco · ADM · Viterra)',
+    operator:'Cargill · Bunge · Cofco · ADM · Viterra',
+    vesselTypes:'Panamax · Supramax (tranship to Cape offshore)',
+    grade:'Wheat · Corn · Soy oil · Soy meal · Sunflower',
+    gradeLabel:'Grain type', bosphorusExposed:false, hormuzExposed:false, bypassRole:false,
+    note:'World\'s largest grain and agro-industrial export hub by volume. Located 300 km upstream on the Paraná River — channel depth limits vessels to ~50,000 DWT; cargo is transhipped offshore for Panamax service. All grains + oilseeds through a single corridor.',
+    color:'#f59e0b', grad:'linear-gradient(135deg,#3b1f5c 0%,#1c1414 60%)' },
+  // ── INDIA EXPORT HUB ─────────────────────────────────────────────────────
+  { coord:[22.98,70.22], name:'Kandla / Deendayal Port — Grain Terminal', country:'India',
+    type:'export', capacity:'3 MT/yr (seasonal / surplus-dependent)',
+    berths:'2 dedicated grain berths · 60,000 DWT',
+    storage:'~80,000 t (Adani Agri-Logistics)',
+    operator:'Deendayal Port Trust · AGTL (Adani Agri-Logistics)',
+    vesselTypes:'Supramax · Handymax',
+    grade:'Sharbati wheat (premium) · Feed wheat · Durum',
+    gradeLabel:'Grain type', bosphorusExposed:false, hormuzExposed:false, bypassRole:false,
+    note:'India\'s primary wheat export terminal when domestic surplus policy allows. Government frequently restricts exports via Minimum Export Price (MEP) or outright bans during domestic price spikes. Routes serve GCC via Arabian Sea and SE Asia via Indian Ocean.',
+    color:'#f59e0b', grad:'linear-gradient(135deg,#14432a 0%,#1c1414 60%)' },
+  // ── EGYPT IMPORT HUBS ─────────────────────────────────────────────────────
+  { coord:[31.20,29.87], name:'Alexandria — GASC Grain Terminal', country:'Egypt',
+    type:'import', capacity:'12 MT/yr',
+    berths:'5 dedicated grain berths · 60,000 DWT',
+    storage:'~600,000 t (GASC strategic silos)',
+    operator:'Egyptian General Authority for Supply (GASC)',
+    vesselTypes:'Panamax · Supramax · Handymax',
+    grade:'Russian 4th class · Ukrainian milling · EU soft wheat',
+    gradeLabel:'Grain type', bosphorusExposed:false, hormuzExposed:false, bypassRole:false,
+    note:'Egypt is the world\'s largest wheat importer at ~13 MT/yr. Alexandria handles ~65% of GASC tender deliveries. GASC strategic silos hold 3–4 months\' supply. Primary source: Russia (60–70%) via Black Sea/Turkish Straits.',
+    color:'#60a5fa', grad:'linear-gradient(135deg,#1e3a5f 0%,#0a1018 60%)' },
+  { coord:[31.42,31.81], name:'Damietta Port — Grain Silos', country:'Egypt',
+    type:'import', capacity:'4 MT/yr',
+    berths:'2 berths · 60,000 DWT',
+    storage:'~150,000 t',
+    operator:'Damietta Port Authority · GASC',
+    vesselTypes:'Supramax · Handymax',
+    grade:'Import milling wheat · Feed barley',
+    gradeLabel:'Grain type', bosphorusExposed:false, hormuzExposed:false, bypassRole:false,
+    note:'Secondary Egyptian grain import port east of the Nile Delta. Supplements Alexandria capacity during peak GASC tender delivery windows. Serves eastern Delta mills.',
+    color:'#60a5fa', grad:'linear-gradient(135deg,#1e3a5f 0%,#0a1018 60%)' },
+  // ── N.AFRICA IMPORT HUBS ─────────────────────────────────────────────────
+  { coord:[36.76,3.06], name:'Algiers / Djen Djen — OAIC Grain Port', country:'Algeria',
+    type:'import', capacity:'5 MT/yr',
+    berths:'4 berths · 70,000 DWT',
+    storage:'~300,000 t (OAIC strategic silos)',
+    operator:'OAIC (Office Algérien Interprofessionnel des Céréales) · EPAL',
+    vesselTypes:'Panamax · Supramax',
+    grade:'Soft milling wheat (French/Black Sea) · Durum · Barley',
+    gradeLabel:'Grain type', bosphorusExposed:false, hormuzExposed:false, bypassRole:false,
+    note:'Algeria is among the top 5 global wheat importers at ~8 MT/yr. OAIC manages a mandatory 4-month strategic reserve. Primary origins: France (milling quality), Argentina and Russia. No major chokepoint dependency — pure Mediterranean and Atlantic routes.',
+    color:'#60a5fa', grad:'linear-gradient(135deg,#14432a 0%,#0a1018 60%)' },
+  { coord:[33.61,-7.61], name:'Casablanca Port — ONICL Grain Terminal', country:'Morocco',
+    type:'import', capacity:'4 MT/yr',
+    berths:'3 berths · 65,000 DWT',
+    storage:'~200,000 t (ONICL-managed)',
+    operator:'ANP (Agence Nationale des Ports) · ONICL',
+    vesselTypes:'Panamax · Supramax',
+    grade:'Soft wheat (French) · Durum · HRW (US/Argentine)',
+    gradeLabel:'Grain type', bosphorusExposed:false, hormuzExposed:false, bypassRole:false,
+    note:'Morocco imports 4–6 MT/yr in average years, rising sharply in drought years (2022: 9 MT). Primary origin is France for milling wheat. Atlantic-facing location — no major chokepoint risk; flexible sourcing from Americas and EU.',
+    color:'#60a5fa', grad:'linear-gradient(135deg,#14432a 0%,#0a1018 60%)' },
+  // ── GULF / MENA IMPORT HUBS ──────────────────────────────────────────────
+  { coord:[21.47,39.17], name:'Jeddah Islamic Port — SAGO Grain', country:'Saudi Arabia',
+    type:'import', capacity:'8 MT/yr',
+    berths:'4 dedicated grain berths · 75,000 DWT',
+    storage:'~400,000 t (SAGO strategic silos)',
+    operator:'SAGO (Saudi Grains Organisation) · Saudi Ports Authority',
+    vesselTypes:'Panamax · Supramax',
+    grade:'HRW · Canadian CWRS · Australian APW · Black Sea wheat',
+    gradeLabel:'Grain type', bosphorusExposed:false, hormuzExposed:false, bypassRole:false,
+    note:'SAGO manages Saudi Arabia\'s strategic grain reserve (180-day target, 2023 policy). Post-2022 SAGO diversified away from Black Sea — now 70% non-Black Sea origins (Australia, USA, Canada). Red Sea location: Bab el-Mandeb closure is primary risk factor.',
+    color:'#60a5fa', grad:'linear-gradient(135deg,#7c2d12 0%,#0a1018 60%)' },
+  { coord:[26.40,50.00], name:'Dammam / King Fahad Industrial Port', country:'Saudi Arabia',
+    type:'import', capacity:'4 MT/yr',
+    berths:'3 berths · 70,000 DWT',
+    storage:'~200,000 t (SAGO East Province silos)',
+    operator:'SAGO · Saudi Ports Authority',
+    vesselTypes:'Panamax · Supramax',
+    grade:'Wheat · Barley · Yellow corn (SAGO tenders)',
+    gradeLabel:'Grain type', bosphorusExposed:false, hormuzExposed:false, bypassRole:false,
+    note:'Saudi Arabia\'s Persian Gulf grain import point for eastern provinces. All inbound vessels must transit the Strait of Hormuz — a Hormuz closure would block this port entirely. SAGO progressively building inland silo network to reduce port dependency.',
+    color:'#60a5fa', grad:'linear-gradient(135deg,#7c2d12 0%,#0a1018 60%)' },
+  { coord:[24.97,55.06], name:'Jebel Ali — Dubai Grain Centre', country:'UAE',
+    type:'import', capacity:'5 MT/yr (agri-bulk)',
+    berths:'2 dedicated grain berths · 70,000 DWT',
+    storage:'~180,000 t',
+    operator:'DP World · Dubai Grain Centre (DMCC)',
+    vesselTypes:'Panamax · Supramax',
+    grade:'Australian APW · US HRW · Feed barley · Oilseeds',
+    gradeLabel:'Grain type', bosphorusExposed:false, hormuzExposed:false, bypassRole:false,
+    note:'UAE\'s primary grain import hub and Gulf re-export platform. UAE maintains 6-month grain reserves (National Food Security Strategy 2051). Persian Gulf location — Hormuz closure is primary import risk. Bab el-Mandeb for Indian Ocean origins.',
+    color:'#60a5fa', grad:'linear-gradient(135deg,#7c2d12 0%,#0a1018 60%)' },
+  { coord:[29.52,34.99], name:'Aqaba Port — Grain Terminal', country:'Jordan',
+    type:'import', capacity:'2 MT/yr',
+    berths:'2 berths · 55,000 DWT',
+    storage:'~100,000 t (Jordan Silos & Supply Corp)',
+    operator:'Aqaba Port Corp · Jordan Silos & Supply Corp (JSSC)',
+    vesselTypes:'Supramax · Handymax',
+    grade:'Wheat · Barley · Feed grains (JSSC tenders)',
+    gradeLabel:'Grain type', bosphorusExposed:false, hormuzExposed:false, bypassRole:false,
+    note:'Jordan\'s sole sea port and primary grain entry point. Jordan imports all wheat/barley (no domestic production). JSSC manages ~10-month strategic reserve — one of the highest buffer levels globally relative to consumption. Red Sea route: Bab el-Mandeb exposure.',
+    color:'#60a5fa', grad:'linear-gradient(135deg,#7c2d12 0%,#0a1018 60%)' },
+  // ── TURKEY IMPORT HUB ────────────────────────────────────────────────────
+  { coord:[40.77,29.82], name:'Derince / Izmit — TMO Grain Port', country:'Turkey',
+    type:'import', capacity:'6 MT/yr',
+    berths:'3 berths · 70,000 DWT',
+    storage:'~300,000 t (TMO silos)',
+    operator:'TMO (Turkish Grain Board) · Derince Port Authority',
+    vesselTypes:'Panamax · Supramax',
+    grade:'Russian/Ukrainian wheat · Barley · Corn',
+    gradeLabel:'Grain type', bosphorusExposed:false, hormuzExposed:false, bypassRole:false,
+    note:'Turkey imports 5–7 MT/yr for domestic flour milling and flour re-export. Izmit Bay location means vessels are already inside the Bosphorus — Turkey effectively controls its own transit access. TMO holds a substantial buffer stock alongside private milling capacity.',
+    color:'#60a5fa', grad:'linear-gradient(135deg,#3b1f5c 0%,#0a1018 60%)' },
+  // ── SE ASIA IMPORT HUBS ──────────────────────────────────────────────────
+  { coord:[-6.10,106.88], name:'Tanjung Priok / Jakarta — BULOG', country:'Indonesia',
+    type:'import', capacity:'8 MT/yr (grain, BULOG + private mills)',
+    berths:'4 berths · 65,000 DWT',
+    storage:'~250,000 t',
+    operator:'BULOG (State Logistics) · Pelindo · Bogasari (Indofood)',
+    vesselTypes:'Panamax · Supramax',
+    grade:'Australian APW/H · US HRW · Black Sea wheat',
+    gradeLabel:'Grain type', bosphorusExposed:false, hormuzExposed:false, bypassRole:false,
+    note:'Indonesia imports ~10 MT/yr — the world\'s largest instant noodle and bread market. Bogasari (Indofood) is the world\'s largest single flour mill complex. Malacca dependency for Australia/Indian Ocean routes; Pacific route available from US/Canada.',
+    color:'#60a5fa', grad:'linear-gradient(135deg,#14432a 0%,#0a1018 60%)' },
+  { coord:[14.59,120.97], name:'Manila / Port of Manila — Grain Terminal', country:'Philippines',
+    type:'import', capacity:'4 MT/yr',
+    berths:'2 berths · 60,000 DWT',
+    storage:'~100,000 t',
+    operator:'PPA (Philippine Ports Authority) · San Miguel Corp',
+    vesselTypes:'Supramax · Handymax',
+    grade:'US HRW · Australian APW · Canadian CWRS',
+    gradeLabel:'Grain type', bosphorusExposed:false, hormuzExposed:false, bypassRole:false,
+    note:'Philippines imports 6–7 MT/yr for its pandesal (bread staple) flour market. Pacific-facing location enables direct routing from US PNW and Canada without Malacca dependency. San Miguel\'s flour complex is the country\'s largest food processing facility.',
+    color:'#60a5fa', grad:'linear-gradient(135deg,#14432a 0%,#0a1018 60%)' },
+  { coord:[22.32,91.83], name:'Chittagong Port — Grain Berths', country:'Bangladesh',
+    type:'import', capacity:'3 MT/yr',
+    berths:'2 berths · 50,000 DWT (depth-limited)',
+    storage:'~80,000 t',
+    operator:'Chittagong Port Authority · TCB (Trading Corp of Bangladesh)',
+    vesselTypes:'Supramax · Handymax',
+    grade:'HRW (US/Arg) · Russian 4th class · Australian APW',
+    gradeLabel:'Grain type', bosphorusExposed:false, hormuzExposed:false, bypassRole:false,
+    note:'Bangladesh imports 5+ MT/yr for a rapidly growing flour-based food industry. Chittagong is severely port-congested and depth-limited (max 9.1 m draught). Bab el-Mandeb/Suez exposure for Black Sea and EU origins transiting Indian Ocean.',
+    color:'#60a5fa', grad:'linear-gradient(135deg,#3b1f5c 0%,#0a1018 60%)' },
+  // ── WEST AFRICA IMPORT HUBS ──────────────────────────────────────────────
+  { coord:[6.44,3.40], name:'Lagos / Apapa — Grain Terminal', country:'Nigeria',
+    type:'import', capacity:'3 MT/yr',
+    berths:'2 berths · 60,000 DWT',
+    storage:'~100,000 t',
+    operator:'NPA (Nigerian Ports Authority) · Flour Mills of Nigeria · Crown Flour',
+    vesselTypes:'Supramax · Handymax',
+    grade:'US HRW · EU soft wheat (French) · Russian',
+    gradeLabel:'Grain type', bosphorusExposed:false, hormuzExposed:false, bypassRole:false,
+    note:'Nigeria imports 5–6 MT/yr for a large bread and pasta market (100M+ urban consumers). Apapa port has historically suffered severe congestion (30–60 day delays). Major flour milling industry concentrated at port gate. No major chokepoint exposure from Atlantic origins.',
+    color:'#60a5fa', grad:'linear-gradient(135deg,#14432a 0%,#0a1018 60%)' },
+  { coord:[5.64,0.00], name:'Tema Port — Ghana Grain Terminal', country:'Ghana',
+    type:'import', capacity:'2 MT/yr',
+    berths:'2 berths · 55,000 DWT',
+    storage:'~80,000 t',
+    operator:'GPHA (Ghana Ports & Harbours Authority) · GADCO',
+    vesselTypes:'Supramax · Handymax',
+    grade:'HRW · EU soft wheat',
+    gradeLabel:'Grain type', bosphorusExposed:false, hormuzExposed:false, bypassRole:false,
+    note:'Ghana imports 1.5–2 MT/yr for flour mills and the growing yeast bread market. Tema is West Africa\'s most efficient port and serves as a regional distribution hub. Atlantic origins (France, Argentina, US) mean minimal chokepoint exposure.',
+    color:'#60a5fa', grad:'linear-gradient(135deg,#14432a 0%,#0a1018 60%)' },
+  // ── NE ASIA IMPORT HUBS ──────────────────────────────────────────────────
+  { coord:[35.08,129.04], name:'Busan — Korea Grain Terminal (KGT)', country:'South Korea',
+    type:'import', capacity:'5 MT/yr',
+    berths:'3 berths · 75,000 DWT',
+    storage:'~200,000 t (aT / KAFTRA managed)',
+    operator:'aT (KAFTRA) · CJ CheilJedang · Dongwon',
+    vesselTypes:'Panamax · Supramax',
+    grade:'CWRS (Canadian) · US HRW/DNS · Australian APH',
+    gradeLabel:'Grain type', bosphorusExposed:false, hormuzExposed:false, bypassRole:false,
+    note:'South Korea imports ~5 MT/yr from Canada, USA and Australia. Busan is the primary entry point; Incheon handles some milling deliveries. Pacific-facing — no significant chokepoint dependency. Government-linked aT manages strategic grain reserves.',
+    color:'#60a5fa', grad:'linear-gradient(135deg,#1e3a5f 0%,#0a1018 60%)' },
+  { coord:[35.44,139.65], name:'Yokohama / Tokyo Bay — Japan Grain Hub', country:'Japan',
+    type:'import', capacity:'6 MT/yr',
+    berths:'4 berths · 75,000 DWT',
+    storage:'~300,000 t (government-managed + mill storage)',
+    operator:'Zen-Noh · FOODEX · Mitsubishi Corp',
+    vesselTypes:'Panamax · Supramax',
+    grade:'CWRS (Canadian) · US HRW · US DNS · Australian ASW',
+    gradeLabel:'Grain type', bosphorusExposed:false, hormuzExposed:false, bypassRole:false,
+    note:'Japan imports ~5.5 MT/yr — entirely imported by policy (no domestic wheat support). Government maintains a 2.3 MT strategic reserve (~3 months supply). Origins: USA ~50%, Canada ~33%, Australia ~17%. Pacific routes — minimal chokepoint risk.',
+    color:'#60a5fa', grad:'linear-gradient(135deg,#1e3a5f 0%,#0a1018 60%)' }
+];
+
 function buildTerminalPopupHtml(t) {
   var isBypass = t.bypassRole;
   var isExport = t.type === 'export';
@@ -15783,7 +16213,9 @@ function buildTerminalPopupHtml(t) {
   var typeBg    = isBypass ? 'rgba(61,214,140,.14)' : (isExport ? 'rgba(245,158,11,.14)' : 'rgba(96,165,250,.14)');
   var horRow = '';
   if (isExport) {
-    if (t.hormuzExposed) {
+    if (t.bosphorusExposed) {
+      horRow = '<div class="pp-row"><span class="pp-lbl">Bosphorus exposure</span><span class="pp-val" style="color:#dc2626">&#9679; Black Sea — Bosphorus dependent</span></div>';
+    } else if (t.hormuzExposed) {
       horRow = '<div class="pp-row"><span class="pp-lbl">Hormuz exposure</span><span class="pp-val" style="color:#dc2626">&#9679; Exposed — no bypass</span></div>';
     } else if (isBypass) {
       horRow = '<div class="pp-row"><span class="pp-lbl">Hormuz exposure</span><span class="pp-val" style="color:#3dd68c">&#9679; Bypass terminal</span></div>';
@@ -15811,7 +16243,7 @@ function buildTerminalPopupHtml(t) {
       '<div class="pp-section-head">Operations</div>' +
       '<div class="pp-row"><span class="pp-lbl">Operator</span><span class="pp-val" style="max-width:185px;text-align:right;line-height:1.35;font-size:8px">' + t.operator + '</span></div>' +
       '<div class="pp-row"><span class="pp-lbl">Vessel types</span><span class="pp-val">' + t.vesselTypes + '</span></div>' +
-      '<div class="pp-row"><span class="pp-lbl">Crude grade</span><span class="pp-val" style="max-width:185px;text-align:right;font-size:8px;line-height:1.35">' + t.grade + '</span></div>' +
+      '<div class="pp-row"><span class="pp-lbl">' + (t.gradeLabel || 'Crude grade') + '</span><span class="pp-val" style="max-width:185px;text-align:right;font-size:8px;line-height:1.35">' + t.grade + '</span></div>' +
       horRow +
       '<div class="pp-section-head">Strategic Note</div>' +
       '<div style="font-family:\'IBM Plex Mono\',monospace;font-size:8px;color:#94a3b8;line-height:1.55;padding:4px 0 2px">' + t.note + '</div>' +
@@ -15822,7 +16254,11 @@ function buildTerminalPopupHtml(t) {
 function renderTFTerminals() {
   TF_TERMINAL_LAYERS.forEach(function(l) { if (TF_MAP) TF_MAP.removeLayer(l); });
   TF_TERMINAL_LAYERS = [];
-  if (!TF_MAP || !TF_ACTIVE_COMM || TF_ACTIVE_COMM !== 'crude_oil') return;
+  if (!TF_MAP || !TF_ACTIVE_COMM) return;
+  var terminals = TF_ACTIVE_COMM === 'crude_oil' ? TF_OIL_TERMINALS
+                : TF_ACTIVE_COMM === 'wheat'     ? TF_GRAIN_TERMINALS
+                : null;
+  if (!terminals) return;
 
   // Pass 1: feeder spurs — connect each terminal to nearest trade lane hub
   var comm = TF_COMMODITIES[TF_ACTIVE_COMM];
@@ -15833,7 +16269,7 @@ function renderTFTerminals() {
     if (!seenF[fk]) { seenF[fk] = true; fromHubs.push(r.fromCoord); }
     if (!seenT[tk]) { seenT[tk] = true; toHubs.push(r.toCoord); }
   });
-  TF_OIL_TERMINALS.forEach(function(t) {
+  terminals.forEach(function(t) {
     var hubs = (t.type === 'export') ? fromHubs : toHubs;
     var minD = Infinity, best = null;
     hubs.forEach(function(h) {
@@ -15848,7 +16284,7 @@ function renderTFTerminals() {
   });
 
   // Pass 2: terminal markers (rendered on top of spurs)
-  TF_OIL_TERMINALS.forEach(function(t) {
+  terminals.forEach(function(t) {
     var ringColor = t.bypassRole ? '#3dd68c' : (t.type === 'export' ? '#f59e0b' : '#60a5fa');
     var m = L.circleMarker(t.coord, {
       radius: 7, color: ringColor, fillColor: '#0a1018', fillOpacity: 1, weight: 2
@@ -15883,7 +16319,7 @@ function toggleTFChokepoint(cpId) {
     runTFStressTest();
   } else if (TF_ACTIVE_COMM) {
     clearTFOutputs();
-    renderTFBaseline(TF_ACTIVE_COMM);
+    renderTFBaseline(TF_COMMODITIES[TF_ACTIVE_COMM]);
   }
 }
 
@@ -15904,106 +16340,118 @@ function clearTFDisruptions() {
   renderGCCImpact();
 }
 
-// ── MENA Food Security — Wheat country exposure ────────────────────────────────
+// ── GCC Food Security — Wheat country exposure ────────────────────────────────
 var TF_WHEAT_GCC_DATA = [
   {
-    id:'egypt', name:'Egypt', role:'World\'s Largest Wheat Importer',
-    resilience:35, resColor:'#dc2626',
-    cps:['turkish_straits','bab_el_mandeb','suez'],
-    normal:{
-      stats:[{val:'13.5 MT',lbl:'wheat imports/yr'},{val:'60%',lbl:'sourced from Black Sea'}],
-      facts:'GASC strategic reserve ~3–4 months · Largest buyer of Russian/Ukrainian wheat · 100M population, subsidised bread programme (baladi) relies entirely on imported grain · Port Said and Alexandria handle 95% of grain arrivals',
-      bypass:'▶ Alternative: Australian, US and EU wheat at ~15–20% price premium'
-    },
-    scenarios:{
-      'turkish_straits':{
-        stats:[{val:'~7.8 MT/yr',lbl:'supply at risk'},{val:'~55 days',lbl:'est. reserve runway'}],
-        insight:'Turkish Straits closure directly cuts Egypt\'s primary supply lane. GASC has ~3.5 MT govt reserve (57 days). Emergency procurement switches to Australian/US origins adds $30–45/MT premium and 21–28 days lead time. Bread subsidy programme faces cost shock; potential political risk.',
-        bypass:'⚠ Emergency switch to Australian/US/EU wheat — significant price premium'
-      },
-      'bab_el_mandeb':{
-        stats:[{val:'+18 days',lbl:'Red Sea detour via CoGH'},{val:'+$12–18/MT',lbl:'freight cost increase'}],
-        insight:'Black Sea cargoes that cleared Turkish Straits face Cape of Good Hope rerouting. ~7.8 MT/yr supply path lengthened by 18 days. No physical supply cut but significant cost inflation on landed price — GASC tender premiums rise sharply.',
-        bypass:'▶ Cargo still arrives via CoGH — cost impact, not volume cut'
-      },
-      'suez':{
-        stats:[{val:'+15–18 days',lbl:'Cape routing delay'},{val:'$10–14/MT',lbl:'additional freight'}],
-        insight:'Suez closure forces Cape of Good Hope routing for all Black Sea and European wheat. Egypt still receives supply but at higher cost and longer lead times. GASC emergency reserve buffer reduces pressure — 45–60 day window available.',
-        bypass:'▶ CoGH viable; reserve cover buys 45–60 day buffer'
-      },
-      'bab_el_mandeb,suez':{
-        stats:[{val:'Both Red Sea exits sealed',lbl:''},{val:'~73 days',lbl:'reserve runway at current drawdown'}],
-        insight:'Both southern exits sealed. All Black Sea wheat must route via Cape of Good Hope. Freight surcharge of $20–28/MT compounds supply anxiety. Egypt\'s 5.0 MT total reserve provides ~73 days of buffer at normal consumption. Emergency tenders at premium will be triggered.',
-        bypass:'⚠ Cape of Good Hope only — $20–28/MT surcharge; reserve buffer critical'
-      },
-      'turkish_straits,bab_el_mandeb':{
-        stats:[{val:'Primary supply halted',lbl:''},{val:'~55 days',lbl:'reserve runway — critical'}],
-        insight:'Turkish Straits cuts the primary supply lane; Bab el-Mandeb makes Cape rerouting of surviving cargoes also costly. Emergency procurement from Australia/USA essential. Bread subsidy financing gap opens within 60 days. High food security risk.',
-        bypass:'⚠ No viable low-cost alternative — full premium sourcing required'
-      },
-      'turkish_straits,suez':{
-        stats:[{val:'Black Sea fully severed',lbl:''},{val:'~55 days',lbl:'reserve runway — critical'}],
-        insight:'Turkish Straits + Suez closure severs both the primary supply source and the efficient transit route. Remaining supply must come from Americas/Australia via Atlantic — 28–35 days longer. Reserve runway of ~55 days is tight. GASC emergency procurement activated.',
-        bypass:'⚠ Atlantic/Americas routing required — 28–35 day additional lead time'
-      }
-    }
-  },
-  {
-    id:'saudi', name:'Saudi Arabia', role:'GCC Food Security Anchor',
-    resilience:60, resColor:'#f59e0b',
-    cps:['turkish_straits','bab_el_mandeb','suez'],
+    id:'w_saudi', name:'Saudi Arabia', role:'GCC Food Security Anchor',
+    resilience:68, resColor:'#f59e0b',
+    cps:['bab_el_mandeb','hormuz','turkish_straits'],
     normal:{
       stats:[{val:'3.0 MT',lbl:'wheat imports/yr'},{val:'6 months',lbl:'SAGO strategic buffer'}],
-      facts:'SAGO (Saudi Grains Organisation) holds 6-month strategic grain reserve · Post-2022: diversified to Australia, Canada, USA · Jeddah Islamic Port and Dammam handle bulk grain · No domestic wheat production since 2008 groundwater ban · Population 36M',
-      bypass:'▶ SAGO reserve: 6-month buffer (strongest in GCC) · Diversified supplier base'
+      facts:'SAGO (Saudi Grains Organisation) holds 6-month grain reserve · Post-Ukraine 2022 diversification: ~70% non-Black Sea origins (Australia, Canada, USA) · Dual-port logistics: Jeddah Islamic Port (Red Sea) + Dammam King Fahad Port (Arabian Gulf) · No domestic wheat production since 2008 groundwater ban · Population 36M',
+      bypass:'▶ Dual-port system · 6-month SAGO reserve · Diversified supply base'
     },
     scenarios:{
       'turkish_straits':{
-        stats:[{val:'~35%',lbl:'supply at risk (Black Sea origin)'},{val:'>6 months',lbl:'SAGO reserve cover'}],
-        insight:'Saudi Arabia diversified away from Black Sea post-Ukraine 2022. Only ~35% of imports now from Black Sea origins. SAGO\'s 6-month strategic reserve provides strong buffer. Emergency procurement from Australia/US is well-established. Moderate price impact only.',
-        bypass:'▶ Well-positioned — SAGO reserve + diversified origins'
+        stats:[{val:'~35%',lbl:'imports from Black Sea'},{val:'>6 months',lbl:'SAGO reserve cover'}],
+        insight:'Saudi Arabia diversified strongly post-Ukraine 2022 — only ~35% of wheat imports still from Black Sea origins. SAGO\'s 6-month strategic reserve provides a robust buffer. Emergency procurement from Australia and the US is well-established. Primary impact is price, not volume.',
+        bypass:'▶ Well-positioned — SAGO reserve + diversified suppliers cover any shortfall'
       },
       'bab_el_mandeb':{
-        stats:[{val:'Jeddah supply chain disrupted',lbl:''},{val:'+12–16 days',lbl:'Cape routing delay'}],
-        insight:'Jeddah Islamic Port (Red Sea) is a primary grain import hub. Bab el-Mandeb closure forces either Cape of Good Hope rerouting or diversion to Dammam (Arabian Gulf). Saudi Arabia\'s dual-coast logistics (Jeddah + Dammam) provides meaningful resilience.',
-        bypass:'▶ Diversion to Dammam (Arabian Gulf) via Hormuz partially compensates'
+        stats:[{val:'Jeddah (Red Sea) disrupted',lbl:''},{val:'+12–16 days',lbl:'Cape rerouting if Dammam used'}],
+        insight:'Bab el-Mandeb closure disrupts Jeddah Islamic Port — Saudi Arabia\'s primary Red Sea grain hub. Saudi\'s dual-coast architecture allows full diversion to Dammam (Arabian Gulf) via Hormuz. SAGO can reroute shipments at modest extra cost. Strong resilience versus single-port states.',
+        bypass:'▶ Divert to Dammam (Arabian Gulf) — dual-port system absorbs disruption'
       },
       'hormuz':{
-        stats:[{val:'Dammam supply disrupted',lbl:''},{val:'Jeddah fully operational',lbl:''}],
-        insight:'Hormuz closure affects Dammam (Arabian Gulf) grain arrivals but Jeddah (Red Sea) remains fully operational. Saudi Arabia\'s dual-port system provides strong resilience. SAGO can reroute 100% of grain imports via Jeddah if needed.',
-        bypass:'▶ Full switch to Jeddah routing — strong resilience'
+        stats:[{val:'Dammam supply blocked',lbl:''},{val:'Jeddah fully operational',lbl:''}],
+        insight:'Hormuz closure blocks Dammam (Arabian Gulf) grain arrivals but Jeddah (Red Sea) remains fully open. SAGO can reroute 100% of grain imports via Jeddah. Saudi Arabia\'s dual-port system makes it the most Hormuz-resilient GCC food importer.',
+        bypass:'▶ Full switch to Jeddah — Hormuz does not threaten Saudi food security alone'
       },
       'bab_el_mandeb,hormuz':{
-        stats:[{val:'Both major ports disrupted',lbl:''},{val:'4–5 months',lbl:'SAGO cover + inland divert'}],
-        insight:'Dual disruption affects both Jeddah (Bab el-Mandeb) and Dammam (Hormuz) grain corridors. SAGO strategic reserve of 6 months provides critical buffer. Land bridge from Jordan/Kuwait possible but limited in scale. Severe logistics stress but not immediate food security crisis.',
-        bypass:'⚠ Both ports disrupted — land bridge + reserve drawdown only option'
+        stats:[{val:'Both ports disrupted',lbl:''},{val:'~5–6 months',lbl:'SAGO reserve runway'}],
+        insight:'Compound scenario: Bab el-Mandeb blocks Jeddah, Hormuz blocks Dammam. Both sea-entry points are disrupted simultaneously. SAGO\'s 6-month reserve is the primary backstop. Overland logistics from Jordan and Iraq exist but are limited in throughput for bulk grain. Severe stress, manageable with reserves.',
+        bypass:'⚠ Both ports severed — reserve drawdown + limited overland from Jordan/Iraq'
       }
     }
   },
   {
-    id:'turkey', name:'Turkey', role:'Transit Hub + Major Importer',
-    resilience:50, resColor:'#f59e0b',
-    cps:['turkish_straits','bab_el_mandeb','suez'],
+    id:'w_uae', name:'UAE', role:'Gulf Re-export Hub — Hormuz Dependent',
+    resilience:52, resColor:'#f59e0b',
+    cps:['hormuz','bab_el_mandeb'],
     normal:{
-      stats:[{val:'10.0 MT',lbl:'wheat imports/yr'},{val:'~25%',lbl:'of global Black Sea transit'}],
-      facts:'Turkish Straits controller — exports ~3 MT/yr re-milled flour · Imports ~10 MT/yr (mostly Black Sea and EU) · Istanbul Strait handles 50,000+ grain vessels/yr · 85M population, subsidised bread · TOPRAK MAHSULLERI OFISI (TMO) state grain buffer',
-      bypass:'▶ Domestic reserve + EU origin alternative — but strategic leverage cuts both ways'
+      stats:[{val:'1.0 MT',lbl:'wheat imports/yr'},{val:'6 months',lbl:'national food reserve target'}],
+      facts:'National Food Security Strategy 2051 mandates 6-month strategic grain reserve · Jebel Ali (DP World) is the primary grain import hub — and a major regional flour re-export platform · Origins: Australia APW, US HRW, Canada CWRS · No domestic grain production · Population 10M · UAE is a key supply pivot for broader Gulf region',
+      bypass:'▶ 6-month reserve target · Jebel Ali re-export capacity adds regional buffer'
     },
     scenarios:{
-      'turkish_straits':{
-        stats:[{val:'Turkish Straits CLOSED',lbl:''},{val:'Geopolitical control',lbl:'Turkey controls closure'}],
-        insight:'Turkish Straits closure is primarily a geopolitical decision by Turkey (under Montreux Convention). Domestic supply is not directly threatened — Turkey controls the closure and retains domestic access. Export flour business (~3 MT) is disrupted. Regional food security leverage is very high.',
-        bypass:'▶ Turkey controls the Straits — closure is a policy decision, not a supply risk'
+      'hormuz':{
+        stats:[{val:'100%',lbl:'imports Hormuz-dependent'},{val:'~6 months',lbl:'strategic reserve runway'}],
+        insight:'All UAE grain arrives via the Strait of Hormuz to Jebel Ali — there is no alternative sea route. A Hormuz closure blocks 100% of inbound grain supply. The 6-month strategic reserve (per Food Security Strategy 2051) is the sole buffer. UAE\'s re-export role for the wider Gulf is also immediately compromised.',
+        bypass:'⚠ No sea alternative to Hormuz — 6-month reserve is the only backstop'
       },
       'bab_el_mandeb':{
-        stats:[{val:'+16–18 days',lbl:'re-export flour supply chains'},{val:'$10–14/MT',lbl:'freight increase'}],
-        insight:'Turkey\'s flour re-export business to MENA (via Red Sea) is disrupted. Domestic supply from Black Sea via Turkish Straits (open) remains unaffected. Cost inflation on re-export flour makes Turkish millers less competitive vs. Australian/European alternatives.',
-        bypass:'▶ Domestic supply unaffected — re-export flour business disrupted'
+        stats:[{val:'+12–16 days',lbl:'Indian Ocean origins via CoGH'},{val:'$10–14/MT',lbl:'landed freight surcharge'}],
+        insight:'Bab el-Mandeb closure forces Australian and Indian Ocean wheat for Jebel Ali to reroute via Cape of Good Hope, adding 12–16 days and $10–14/MT. Hormuz remains open — supply volumes are unaffected. The UAE\'s flour re-export business faces margin compression as landed costs rise.',
+        bypass:'▶ CoGH rerouting available — cost increase, supply volumes unaffected'
       },
-      'suez':{
-        stats:[{val:'Flour exports to Asia disrupted',lbl:''},{val:'Domestic supply unaffected',lbl:''}],
-        insight:'Turkish Straits open (domestic imports unaffected). Suez closure disrupts Turkey\'s flour export business to East Africa and South Asia. Cape of Good Hope routing makes Turkish flour uncompetitive on these lanes. Moderate economic impact, no food security risk.',
-        bypass:'▶ Domestic supply secure — flour export competitiveness reduced'
+      'bab_el_mandeb,hormuz':{
+        stats:[{val:'Jebel Ali fully isolated',lbl:''},{val:'~6 months',lbl:'reserve runway — critical'}],
+        insight:'Compound closure of Bab el-Mandeb and Hormuz isolates Jebel Ali entirely. No sea-borne grain can reach the UAE by any route. The 6-month strategic reserve is the only food security buffer. Limited overland supply from Oman and Saudi Arabia exists but cannot substitute bulk grain at scale.',
+        bypass:'⚠ Full port isolation — reserve + minimal overland from Saudi/Oman only'
+      }
+    }
+  },
+  {
+    id:'w_kuwait', name:'Kuwait', role:'Most Hormuz-Exposed GCC State',
+    resilience:38, resColor:'#dc2626',
+    cps:['hormuz'],
+    normal:{
+      stats:[{val:'0.5 MT',lbl:'wheat imports/yr'},{val:'~6 months',lbl:'government strategic reserve'}],
+      facts:'100% of grain imports transit the Strait of Hormuz · Shuwaikh and Shuaibah ports are both inside the Arabian Gulf with no alternative sea access · Government holds ~6-month strategic grain reserve · Population 4.8M · Zero domestic agricultural production · Most Hormuz-exposed GCC food importer',
+      bypass:'▶ Govt 6-month reserve · Saudi Arabia overland corridor (limited capacity)'
+    },
+    scenarios:{
+      'hormuz':{
+        stats:[{val:'100%',lbl:'imports Hormuz-dependent'},{val:'~6 months',lbl:'government reserve runway'}],
+        insight:'Kuwait has no alternative sea access to the Arabian Gulf. A Hormuz closure completely blocks all grain imports. The government\'s strategic reserve provides approximately 6 months of buffer. The Saudi overland land bridge is the only supply alternative, but bulk grain throughput by road is extremely limited. Kuwait is the most Hormuz-exposed food importer in the GCC.',
+        bypass:'⚠ No sea alternative — Saudi land bridge only fallback at minimal scale'
+      },
+      'bab_el_mandeb':{
+        stats:[{val:'Indirect impact only',lbl:''},{val:'Arabian Gulf route unaffected',lbl:''}],
+        insight:'Kuwait\'s grain supply arrives entirely via the Arabian Gulf through Hormuz — not through the Red Sea. Bab el-Mandeb closure does not directly affect supply volumes. Indirect effect: freight rates rise for Indian Ocean origins (Australian, Indian wheat) that reroute via Cape of Good Hope, lifting landed costs by $10–14/MT.',
+        bypass:'▶ Arabian Gulf corridor unaffected — indirect cost impact only'
+      },
+      'turkish_straits':{
+        stats:[{val:'Indirect impact only',lbl:''},{val:'~6 months',lbl:'reserve cover'}],
+        insight:'Kuwait imports minimal Black Sea wheat after supply diversification. Turkish Straits closure has only a marginal volume impact — primarily a price signal through global wheat markets. Government reserve provides full buffer for any short-term supply tightness.',
+        bypass:'▶ Diversified away from Black Sea — price impact, no volume risk'
+      }
+    }
+  },
+  {
+    id:'w_qatar', name:'Qatar', role:'Post-Blockade Resilience Leader',
+    resilience:74, resColor:'#3dd68c',
+    cps:['hormuz'],
+    normal:{
+      stats:[{val:'0.3 MT',lbl:'wheat imports/yr'},{val:'12+ months',lbl:'strategic reserve — highest in GCC'}],
+      facts:'2017 Saudi/UAE/Bahrain blockade transformed Qatar\'s food security policy · Hamad Port (New Port) holds large strategic grain silos · National Food Security Programme targets 12+ month grain reserve — highest in GCC by far · Air freight and Turkey overland emergency supplements established · Population 2.9M (majority expatriates) · No domestic grain production',
+      bypass:'▶ 12-month reserve — post-2017 investment makes Qatar most resilient per capita'
+    },
+    scenarios:{
+      'hormuz':{
+        stats:[{val:'100%',lbl:'imports Hormuz-dependent'},{val:'12+ months',lbl:'strategic reserve runway — best in GCC'}],
+        insight:'Qatar learned from the 2017 blockade. The National Food Security Programme has built a 12+ month strategic grain reserve — the highest in the GCC. Hamad Port is Hormuz-dependent, but the extended reserve buys far more response time than any other GCC state. Qatar also maintains air freight and Turkey overland emergency supply chains as supplements.',
+        bypass:'▶ Best-prepared GCC state — 12-month reserve from post-2017 build-up'
+      },
+      'bab_el_mandeb':{
+        stats:[{val:'Indirect impact only',lbl:''},{val:'Arabian Gulf corridor unaffected',lbl:''}],
+        insight:'Qatar\'s grain imports arrive via the Arabian Gulf through Hormuz. Bab el-Mandeb closure does not affect supply volumes. Freight costs for Indian Ocean origins (Australian wheat) increase by $10–14/MT via Cape of Good Hope rerouting — a manageable cost impact given Qatar\'s purchasing power.',
+        bypass:'▶ Arabian Gulf corridor unaffected — cost impact absorbed'
+      },
+      'turkish_straits':{
+        stats:[{val:'Minimal direct exposure',lbl:''},{val:'12+ months',lbl:'reserve fully covers any shortfall'}],
+        insight:'Qatar sources minimal wheat from Black Sea origins. Turkish Straits closure has a negligible direct supply impact. Global price signals may lift procurement costs. Qatar\'s 12-month strategic reserve effectively neutralises any short-to-medium term supply tightness from this disruption.',
+        bypass:'▶ Reserve fully covers — Turkish Straits has minimal direct impact on Qatar'
       }
     }
   }
@@ -16295,7 +16743,7 @@ function renderGCCImpact() {
   var gccCardLabel = document.getElementById('tf-gcc-card-label');
   if (gccCardLabel) {
     gccCardLabel.innerHTML = TF_ACTIVE_COMM === 'wheat'
-      ? '&#9670; Key Insights &mdash; MENA Food Security Exposure'
+      ? '&#9670; Key Insights &mdash; GCC Food Security Exposure'
       : '&#9670; Key Insights &mdash; GCC Country Exposure';
   }
 

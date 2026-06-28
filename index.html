@@ -3163,6 +3163,13 @@ canvas { font-family: var(--f-mono); }
 
   window.gccHideAuth = hideOverlay;
 
+  // Browser back-button: if the modal is open, dismiss it instead of leaving the page
+  window.addEventListener('popstate', function(e) {
+    if (overlay.classList.contains('gcc-auth-active')) {
+      hideOverlay();
+    }
+  });
+
   window.gccShowAuth = function(tabId) {
     // Already authenticated this session — skip the modal
     if (sessionStorage.getItem('gcc_authed') === '1') {
@@ -3174,6 +3181,8 @@ canvas { font-family: var(--f-mono); }
     input.value = '';
     btn.disabled = false;
     btn.textContent = 'Authenticate →';
+    // Push a history entry so the browser back button dismisses the modal
+    history.pushState({ gccAuth: true }, '');
     overlay.classList.add('gcc-auth-active');
     requestAnimationFrame(function(){
       requestAnimationFrame(function(){

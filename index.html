@@ -14347,25 +14347,25 @@ var TF_COMMODITIES = {
     // Bilateral flow matrix (MT/yr, USDA FAS MY2022/23 estimates).
     // Rows = major exporters; columns = major importers. Values reflect documented bilateral flows.
     matrix:{
-      importers:['Egypt','Algeria','S. Arabia','Indonesia','Turkey','Japan'],
+      importers:['Egypt','Algeria','S. Arabia','Indonesia','Turkey','China'],
       rows:[
-        { name:'Russia',    vals:[7.5, 3.5, 0.8, 2.5, 7.0, 0.1] },
+        { name:'Russia',    vals:[7.5, 3.5, 0.8, 2.5, 7.0, 0.5] },
         { name:'EU',        vals:[2.5, 3.5, 0.2, 0.5, 0.5, 0.0] },
-        { name:'Australia', vals:[1.0, 0.5, 0.8, 4.5, 0.3, 1.0] },
-        { name:'Canada',    vals:[0.5, 0.5, 0.6, 0.5, 0.2, 2.0] },
-        { name:'USA',       vals:[1.0, 0.5, 0.5, 2.0, 0.5, 2.8] },
-        { name:'Ukraine',   vals:[0.5, 0.5, 0.1, 0.5, 1.0, 0.1] },
+        { name:'Australia', vals:[1.0, 0.5, 0.8, 4.5, 0.3, 3.5] },
+        { name:'Canada',    vals:[0.5, 0.5, 0.6, 0.5, 0.2, 2.5] },
+        { name:'USA',       vals:[1.0, 0.5, 0.5, 2.0, 0.5, 0.8] },
+        { name:'Ukraine',   vals:[0.5, 0.5, 0.1, 0.5, 1.0, 0.2] },
         { name:'Argentina', vals:[0.5, 0.5, 0.1, 0.5, 0.2, 0.0] }
       ],
-      // Per-cell chokepoint dependencies. Columns: Egypt | Algeria | S.Arabia | Indonesia | Turkey | Japan
+      // Per-cell chokepoint dependencies. Columns: Egypt | Algeria | S.Arabia | Indonesia | Turkey | China
       matrixCps:{
-        'Russia':    { 'Egypt':['turkish_straits'], 'Algeria':['turkish_straits'], 'S. Arabia':['turkish_straits','suez'], 'Indonesia':['turkish_straits','suez','bab_el_mandeb','malacca'], 'Turkey':['turkish_straits'], 'Japan':['turkish_straits','suez','bab_el_mandeb','malacca'] },
-        'EU':        { 'Egypt':[], 'Algeria':[], 'S. Arabia':['suez'], 'Indonesia':['suez','bab_el_mandeb','malacca'], 'Turkey':[], 'Japan':['suez','bab_el_mandeb','malacca'] },
-        'Australia': { 'Egypt':['bab_el_mandeb','suez'], 'Algeria':['bab_el_mandeb','suez'], 'S. Arabia':['bab_el_mandeb'], 'Indonesia':['malacca'], 'Turkey':['bab_el_mandeb','suez'], 'Japan':[] },
-        'Canada':    { 'Egypt':[], 'Algeria':[], 'S. Arabia':['suez'], 'Indonesia':['malacca'], 'Turkey':[], 'Japan':[] },
-        'USA':       { 'Egypt':[], 'Algeria':[], 'S. Arabia':['suez'], 'Indonesia':['malacca'], 'Turkey':[], 'Japan':[] },
-        'Ukraine':   { 'Egypt':['turkish_straits'], 'Algeria':['turkish_straits'], 'S. Arabia':['turkish_straits','suez'], 'Indonesia':['turkish_straits','suez','bab_el_mandeb','malacca'], 'Turkey':['turkish_straits'], 'Japan':['turkish_straits','suez','bab_el_mandeb','malacca'] },
-        'Argentina': { 'Egypt':[], 'Algeria':[], 'S. Arabia':['suez'], 'Indonesia':['malacca'], 'Turkey':[], 'Japan':['malacca'] }
+        'Russia':    { 'Egypt':['turkish_straits'], 'Algeria':['turkish_straits'], 'S. Arabia':['turkish_straits','suez'], 'Indonesia':['turkish_straits','suez','bab_el_mandeb','malacca'], 'Turkey':['turkish_straits'], 'China':[] },
+        'EU':        { 'Egypt':[], 'Algeria':[], 'S. Arabia':['suez'], 'Indonesia':['suez','bab_el_mandeb','malacca'], 'Turkey':[], 'China':['suez','bab_el_mandeb','malacca'] },
+        'Australia': { 'Egypt':['bab_el_mandeb','suez'], 'Algeria':['bab_el_mandeb','suez'], 'S. Arabia':['bab_el_mandeb'], 'Indonesia':['malacca'], 'Turkey':['bab_el_mandeb','suez'], 'China':[] },
+        'Canada':    { 'Egypt':[], 'Algeria':[], 'S. Arabia':['suez'], 'Indonesia':['malacca'], 'Turkey':[], 'China':[] },
+        'USA':       { 'Egypt':[], 'Algeria':[], 'S. Arabia':['suez'], 'Indonesia':['malacca'], 'Turkey':[], 'China':[] },
+        'Ukraine':   { 'Egypt':['turkish_straits'], 'Algeria':['turkish_straits'], 'S. Arabia':['turkish_straits','suez'], 'Indonesia':['turkish_straits','suez','bab_el_mandeb','malacca'], 'Turkey':['turkish_straits'], 'China':['turkish_straits','suez','bab_el_mandeb','malacca'] },
+        'Argentina': { 'Egypt':[], 'Algeria':[], 'S. Arabia':['suez'], 'Indonesia':['malacca'], 'Turkey':[], 'China':['malacca'] }
       }
     },
     exporters:[

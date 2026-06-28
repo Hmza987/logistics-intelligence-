@@ -18464,7 +18464,6 @@ function initCvTicker() {
   if (!cover) return;
 
   function dismissCover() {
-    sessionStorage.setItem('cv_seen', '1');
     cover.classList.add('cv-out');
     setTimeout(function() {
       cover.style.display = 'none';
@@ -18505,12 +18504,6 @@ function initCvTicker() {
       dismissCover();
     }
   });
-
-  // Already visited this session — hide immediately but keep listeners live
-  // so auth can re-show the cover and it still behaves correctly
-  if (sessionStorage.getItem('cv_seen')) {
-    cover.style.display = 'none';
-  }
 
   // Start the rolling signals ticker whenever the cover is in the DOM
   initCvTicker();

@@ -3821,414 +3821,330 @@ canvas { font-family: var(--f-mono); }
 
 </div>
 <!-- ============================================================ TAB 3: TRUCKING -->
-<div class="page" id="page-trucking">
-  <!-- PORT DWELL TIMES -->
-  <div class="card" style="margin-bottom:14px">
-    <div class="card-label">Port Dwell Times &mdash; Red Sea &amp; Oman Ports</div>
-    <div class="card-sub">Cargo processing time at berth &middot; crisis-period estimates &middot; Jun 2026</div>
+<div class="page" id="page-trucking" style="padding:0;background:#0A0A0A;font-family:'JetBrains Mono',monospace">
 
-    <!-- ── Model methodology note ───────────────────────────────────── -->
-    <div id="pdt-formula-block" style="margin:10px 0 14px;padding:10px 14px;background:#0e1318;border-radius:4px;border-left:2px solid rgba(167,139,250,.35)">
-      <div style="font-family:'IBM Plex Mono',monospace;font-size:7px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:#a78bfa;margin-bottom:6px">◈ Methodology</div>
-      <div style="font-family:'IBM Plex Mono',monospace;font-size:7.5px;color:#748494;line-height:1.9">
-        Dwell times estimated using <span style="color:#c9b8ff">queueing theory</span> (M/M/c) calibrated against vessel traffic observations
-        (anchor counts, berth utilisation, arrival rates) and confirmed port congestion reports.
-        Margin of error: <span style="color:#a78bfa">&plusmn;8–10%</span> &nbsp;&bull;&nbsp;
-        <span id="pdt-model-date" style="color:#4a5668">model run: 2026-06-26</span>
-      </div>
-      <!-- Calibrated params — hidden placeholder, updated by JS -->
-      <div id="pdt-calib-params" style="display:none"></div>
-    </div>
-
-    <div style="display:grid;grid-template-columns:repeat(5,1fr);gap:10px;margin:0 0 10px">
-
-      <!-- Jeddah Islamic Port — CRITICAL · arc 57% of 40d scale (17.2d avg) · pre-crisis 3.7d -->
-      <div id="pdt-jeddah" style="background:#181c22;border-radius:4px;padding:12px 10px 10px;text-align:center">
-        <div style="font-family:'IBM Plex Mono',monospace;font-size:7px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;color:#c02030;line-height:1.35;margin-bottom:1px">Jeddah<br>Islamic Port</div>
-        <div data-pdt="meta" style="font-size:6.5px;color:#5a6880;margin-bottom:5px"><img src="https://flagcdn.com/16x12/sa.png" alt="SA" style="height:9px;vertical-align:middle;border-radius:1px"> Red Sea &middot; King Abdul Aziz</div>
-        <svg viewBox="0 0 80 46" width="80" height="46" style="display:block;margin:0 auto;overflow:visible" aria-hidden="true">
-          <path d="M8 40 A32 32 0 0 1 72 40" fill="none" stroke="#1e2a38" stroke-width="8" stroke-linecap="round"/>
-          <path data-pdt="arc" d="M8 40 A32 32 0 0 1 72 40" fill="none" stroke="#c02030" stroke-width="8" stroke-linecap="round" stroke-dasharray="100.53" stroke-dashoffset="54.0"/>
-          <circle data-pdt="precrisis-dot" cx="9.4" cy="30.8" r="3" fill="#3dd68c"/>
-          <text data-pdt="precrisis-label" x="13.4" y="28.2" font-size="5.5" fill="#3dd68c" font-family="monospace,sans-serif">~3.7d</text>
-        </svg>
-        <div data-pdt="dwell" style="font-family:'IBM Plex Mono',monospace;font-size:19px;font-weight:900;color:#c02030;line-height:1;margin-top:3px">17–20<span style="font-size:9px;color:#7a8494;font-weight:400"> d</span></div>
-        <div data-pdt="detail" style="font-size:6.5px;color:#7a8494;margin-top:3px">Red Sea diversion surge · backlog partially clearing</div>
-        <div data-pdt="badge" style="margin-top:5px;font-family:'IBM Plex Mono',monospace;font-size:7px;font-weight:700;color:#c02030;background:rgba(192,32,48,.15);padding:2px 6px;border-radius:2px;display:inline-block">CRITICAL</div>
-        <div data-pdt="src" style="font-size:6px;color:#4a5568;margin-top:4px">dubaicargos.com &middot; Jun 2026</div>
-      </div>
-
-      <!-- Yanbu Commercial Port — CRITICAL · arc 35% of 40d scale (14d avg) · pre-crisis 3.3d -->
-      <div id="pdt-yanbu" style="background:#181c22;border-radius:4px;padding:12px 10px 10px;text-align:center">
-        <div style="font-family:'IBM Plex Mono',monospace;font-size:7px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;color:#c02030;line-height:1.35;margin-bottom:1px">Yanbu<br>Commercial Port</div>
-        <div data-pdt="meta" style="font-size:6.5px;color:#5a6880;margin-bottom:5px"><img src="https://flagcdn.com/16x12/sa.png" alt="SA" style="height:9px;vertical-align:middle;border-radius:1px"> Red Sea &middot; Jeddah overflow</div>
-        <svg viewBox="0 0 80 46" width="80" height="46" style="display:block;margin:0 auto;overflow:visible" aria-hidden="true">
-          <path d="M8 40 A32 32 0 0 1 72 40" fill="none" stroke="#1e2a38" stroke-width="8" stroke-linecap="round"/>
-          <path data-pdt="arc" d="M8 40 A32 32 0 0 1 72 40" fill="none" stroke="#c02030" stroke-width="8" stroke-linecap="round" stroke-dasharray="100.53" stroke-dashoffset="61.6"/>
-          <circle data-pdt="precrisis-dot" cx="9.1" cy="31.7" r="3" fill="#3dd68c"/>
-          <text data-pdt="precrisis-label" x="13.1" y="29.2" font-size="5.5" fill="#3dd68c" font-family="monospace,sans-serif">~3.3d</text>
-        </svg>
-        <div data-pdt="dwell" style="font-family:'IBM Plex Mono',monospace;font-size:19px;font-weight:900;color:#c02030;line-height:1;margin-top:3px">14–17<span style="font-size:9px;color:#7a8494;font-weight:400"> d</span></div>
-        <div data-pdt="detail" style="font-size:6.5px;color:#7a8494;margin-top:3px">Pipeline rerouting + Jeddah overflow · exports at capacity</div>
-        <div data-pdt="badge" style="margin-top:5px;font-family:'IBM Plex Mono',monospace;font-size:7px;font-weight:700;color:#c02030;background:rgba(192,32,48,.15);padding:2px 6px;border-radius:2px;display:inline-block">CRITICAL</div>
-        <div data-pdt="src" style="font-size:6px;color:#4a5568;margin-top:4px">Mawani (Saudi Ports Authority) &middot; Jun 2026</div>
-      </div>
-
-      <!-- Port of Sohar — CRITICAL · arc 77.5% of 40d scale (31d avg) · pre-crisis 7.6d -->
-      <div id="pdt-sohar" style="background:#181c22;border-radius:4px;padding:12px 10px 10px;text-align:center">
-        <div style="font-family:'IBM Plex Mono',monospace;font-size:7px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;color:#c02030;line-height:1.35;margin-bottom:1px">Port of Sohar<br><span style="font-size:6px;color:#5a6878;font-weight:400;text-transform:none;letter-spacing:0">(Sohar Port &amp; Freezone)</span></div>
-        <div data-pdt="meta" style="font-size:6.5px;color:#5a6880;margin-bottom:5px"><img src="https://flagcdn.com/16x12/om.png" alt="OM" style="height:9px;vertical-align:middle;border-radius:1px"> Gulf of Oman &middot; bypass hub</div>
-        <svg viewBox="0 0 80 46" width="80" height="46" style="display:block;margin:0 auto;overflow:visible" aria-hidden="true">
-          <path d="M8 40 A32 32 0 0 1 72 40" fill="none" stroke="#1e2a38" stroke-width="8" stroke-linecap="round"/>
-          <path data-pdt="arc" d="M8 40 A32 32 0 0 1 72 40" fill="none" stroke="#c02030" stroke-width="8" stroke-linecap="round" stroke-dasharray="100.53" stroke-dashoffset="40.2"/>
-          <circle data-pdt="precrisis-dot" cx="13.5" cy="22.0" r="3" fill="#3dd68c"/>
-          <text data-pdt="precrisis-label" x="17.5" y="19.5" font-size="5.5" fill="#3dd68c" font-family="monospace,sans-serif">~7.6d</text>
-        </svg>
-        <div data-pdt="dwell" style="font-family:'IBM Plex Mono',monospace;font-size:19px;font-weight:900;color:#c02030;line-height:1;margin-top:3px">22–26<span style="font-size:9px;color:#7a8494;font-weight:400"> d</span></div>
-        <div data-pdt="detail" style="font-size:6.5px;color:#7a8494;margin-top:3px">Easing from peak · +400% throughput · yard 86% full</div>
-        <div data-pdt="badge" style="margin-top:5px;font-family:'IBM Plex Mono',monospace;font-size:7px;font-weight:700;color:#c02030;background:rgba(192,32,48,.15);padding:2px 6px;border-radius:2px;display:inline-block">CRITICAL</div>
-        <div data-pdt="src" style="font-size:6px;color:#4a5568;margin-top:4px">Vizion API &middot; OPAZ &middot; Jun 2026</div>
-      </div>
-
-      <!-- Khor Fakkan Container Terminal — HIGH · arc 20% of 40d scale (8d avg) · pre-crisis 2.2d -->
-      <div id="pdt-khor_fakkan" style="background:#181c22;border-radius:4px;padding:12px 10px 10px;text-align:center">
-        <div style="font-family:'IBM Plex Mono',monospace;font-size:7px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;color:#e8673c;line-height:1.35;margin-bottom:1px">Khor Fakkan<br>Container Terminal</div>
-        <div data-pdt="meta" style="font-size:6.5px;color:#5a6880;margin-bottom:5px"><img src="https://flagcdn.com/16x12/ae.png" alt="AE" style="height:9px;vertical-align:middle;border-radius:1px"> Gulf of Oman &middot; <span style="color:#3dd68c;font-weight:700">6 berths operational</span></div>
-        <svg viewBox="0 0 80 46" width="80" height="46" style="display:block;margin:0 auto;overflow:visible" aria-hidden="true">
-          <path d="M8 40 A32 32 0 0 1 72 40" fill="none" stroke="#1e2a38" stroke-width="8" stroke-linecap="round"/>
-          <path data-pdt="arc" d="M8 40 A32 32 0 0 1 72 40" fill="none" stroke="#e8673c" stroke-width="8" stroke-linecap="round" stroke-dasharray="100.53" stroke-dashoffset="80.4"/>
-          <circle data-pdt="precrisis-dot" cx="8.5" cy="34.4" r="3" fill="#3dd68c"/>
-          <text data-pdt="precrisis-label" x="12.5" y="31.9" font-size="5.5" fill="#3dd68c" font-family="monospace,sans-serif">~2.2d</text>
-        </svg>
-        <div data-pdt="dwell" style="font-family:'IBM Plex Mono',monospace;font-size:19px;font-weight:900;color:#e8673c;line-height:1;margin-top:3px">7–9<span style="font-size:9px;color:#7a8494;font-weight:400"> d</span></div>
-        <div data-pdt="detail" style="font-size:6.5px;color:#7a8494;margin-top:3px">Exports resumed · all berths active · calls surging</div>
-        <div data-pdt="badge" style="margin-top:5px;font-family:'IBM Plex Mono',monospace;font-size:7px;font-weight:700;color:#e8673c;background:rgba(232,103,60,.12);padding:2px 6px;border-radius:2px;display:inline-block">HIGH</div>
-        <div data-pdt="src" style="font-size:6px;color:#4a5568;margin-top:4px">Lloyd's List · Jun 26 2026</div>
-      </div>
-
-      <!-- Port of Salalah — HIGH · arc 20% of 40d scale (8d avg) · pre-crisis 3.2d -->
-      <div id="pdt-salalah" style="background:#181c22;border-radius:4px;padding:12px 10px 10px;text-align:center">
-        <div style="font-family:'IBM Plex Mono',monospace;font-size:7px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;color:#e8673c;line-height:1.35;margin-bottom:1px">Port of Salalah<br><span style="font-size:6px;color:#5a6878;font-weight:400;text-transform:none;letter-spacing:0">(APM Terminals)</span></div>
-        <div data-pdt="meta" style="font-size:6.5px;color:#5a6880;margin-bottom:5px"><img src="https://flagcdn.com/16x12/om.png" alt="OM" style="height:9px;vertical-align:middle;border-radius:1px"> Arabian Sea &middot; transshipment hub</div>
-        <svg viewBox="0 0 80 46" width="80" height="46" style="display:block;margin:0 auto;overflow:visible" aria-hidden="true">
-          <path d="M8 40 A32 32 0 0 1 72 40" fill="none" stroke="#1e2a38" stroke-width="8" stroke-linecap="round"/>
-          <path data-pdt="arc" d="M8 40 A32 32 0 0 1 72 40" fill="none" stroke="#e8673c" stroke-width="8" stroke-linecap="round" stroke-dasharray="100.53" stroke-dashoffset="74.1"/>
-          <circle data-pdt="precrisis-dot" cx="9.0" cy="32.0" r="3" fill="#3dd68c"/>
-          <text data-pdt="precrisis-label" x="13.0" y="29.5" font-size="5.5" fill="#3dd68c" font-family="monospace,sans-serif">~3.2d</text>
-        </svg>
-        <div data-pdt="dwell" style="font-family:'IBM Plex Mono',monospace;font-size:19px;font-weight:900;color:#e8673c;line-height:1;margin-top:3px">9–12<span style="font-size:9px;color:#7a8494;font-weight:400"> d</span></div>
-        <div data-pdt="detail" style="font-size:6.5px;color:#7a8494;margin-top:3px">+120% throughput · Cape rerouting calls steady</div>
-        <div data-pdt="badge" style="margin-top:5px;font-family:'IBM Plex Mono',monospace;font-size:7px;font-weight:700;color:#e8673c;background:rgba(232,103,60,.12);padding:2px 6px;border-radius:2px;display:inline-block">HIGH</div>
-        <div data-pdt="src" style="font-size:6px;color:#4a5568;margin-top:4px">APM Terminals Salalah &middot; Jun 26 2026</div>
-      </div>
-
-    </div>
-    <div class="src"><span>dubaicargos.com (Jeddah) &middot; Vizion API &middot; Mawani &middot; Sohar Port &amp; Freezone (OPAZ) &middot; APM Terminals Salalah &middot; Lloyd's List (Khor Fakkan)</span><span class="src-badge">Jun 26 2026 · verified + estimated</span></div>
+<!-- SUMMARY STRIP -->
+<div style="background:#0D0D0B;border-bottom:1px solid #1A1A18;padding:12px 28px;display:flex;align-items:center;gap:32px;flex-wrap:wrap">
+  <div style="display:flex;flex-direction:column;gap:2px;padding-right:32px;border-right:1px solid #1E1E1A">
+    <span style="font-size:9px;letter-spacing:.14em;color:#4A4A44">PORTS AVG DWELL</span>
+    <span style="font-size:22px;font-weight:700;color:#E05252;letter-spacing:-.01em">~18 days</span>
   </div>
-
-  <div class="card" id="ftl-pricing-card" style="margin-bottom:14px">
-    <div class="card-label">FTL Trucking Prices &mdash; 40ft Trailer</div>
-    <div class="card-sub">Crisis-period rates &middot; USD &middot; ALL-IN incl. road tolls + border crossing fees &middot; +65-80% vs pre-crisis baseline</div>
-    <div style="font-size:8px;color:#c9a227;font-weight:700;letter-spacing:.08em;text-transform:uppercase;margin-bottom:6px">From Jeddah</div>
-      <div class="rprice" style="border-left:2px solid #3dd68c">
-        <div class="rprice-top"><div class="rprice-name">Jeddah &rarr; Doha (Qatar)</div><div class="rprice-val" style="color:#3dd68c">$2,840&ndash;3,640</div></div>
-        <div class="rprice-sub">~1,450km &bull; 2-3 days &bull; via Riyadh/Salwa &bull; pre-crisis ~$1,840 &bull; Hormuz surge +55%</div>
-        <div class="rprice-allin"><span class="rprice-allin-fees">base freight ~$2,800&ndash;3,600 + borders ~$40 (Qatar entry)</span><span class="rprice-allin-total">all-in</span></div>
-      </div>
-      <div class="rprice" style="border-left:2px solid #3dd68c">
-        <div class="rprice-top"><div class="rprice-name">Jeddah &rarr; Manama (Bahrain)</div><div class="rprice-val" style="color:#3dd68c">$2,435&ndash;3,235</div></div>
-        <div class="rprice-sub">~1,330km &bull; 2 days &bull; via Riyadh/K.Fahd Causeway &bull; pre-crisis ~$1,685</div>
-        <div class="rprice-allin"><span class="rprice-allin-fees">base freight ~$2,400&ndash;3,200 + borders ~$35 (Bahrain entry)</span><span class="rprice-allin-total">all-in</span></div>
-      </div>
-      <div class="rprice" style="border-left:2px solid #3dd68c">
-        <div class="rprice-top"><div class="rprice-name">Jeddah &rarr; Kuwait City</div><div class="rprice-val" style="color:#3dd68c">$2,855&ndash;3,855</div></div>
-        <div class="rprice-sub">~1,620km &bull; 2-3 days &bull; via Riyadh/Al-Khafji &bull; pre-crisis ~$1,955 &bull; highest demand surge</div>
-        <div class="rprice-allin"><span class="rprice-allin-fees">base freight ~$2,800&ndash;3,800 + borders ~$55 (Kuwait entry)</span><span class="rprice-allin-total">all-in</span></div>
-      </div>
-      <div style="font-size:8px;color:#a78bfa;font-weight:700;letter-spacing:.08em;text-transform:uppercase;margin:8px 0 6px">From Sohar (Oman)</div>
-      <div class="rprice" style="border-left:2px solid #a78bfa">
-        <div class="rprice-top"><div class="rprice-name">Sohar &rarr; Doha (Qatar)</div><div class="rprice-val pur">$2,210&ndash;2,910</div></div>
-        <div class="rprice-sub">~835km &bull; 2 days &bull; via Buraimi/UAE/Salwa &bull; 3 border crossings &bull; pre-crisis ~$1,360 &bull; Omanisation + diversion premium</div>
-        <div class="rprice-allin"><span class="rprice-allin-fees">base freight ~$2,050&ndash;2,750 + borders ~$160 (Oman $25 + UAE $30 + SA $65 + Qatar $40)</span><span class="rprice-allin-total">all-in</span></div>
-      </div>
-      <div class="rprice" style="border-left:2px solid #a78bfa">
-        <div class="rprice-top"><div class="rprice-name">Sohar &rarr; Manama (Bahrain)</div><div class="rprice-val pur">$2,105&ndash;2,755</div></div>
-        <div class="rprice-sub">~855km &bull; 2 days &bull; via Buraimi/UAE/K.Fahd Causeway &bull; 2 border crossings &bull; pre-crisis ~$1,400 &bull; Omanisation + diversion premium</div>
-        <div class="rprice-allin"><span class="rprice-allin-fees">base freight ~$1,950&ndash;2,600 + borders ~$155 (Oman $25 + UAE $30 + SA $65 + Bahrain $35)</span><span class="rprice-allin-total">all-in</span></div>
-      </div>
-      <div style="font-size:8px;color:#c9a227;font-weight:700;letter-spacing:.08em;text-transform:uppercase;margin:8px 0 6px">Other key routes</div>
-      <div class="rprice" style="border-left:2px solid #c9a227">
-        <div class="rprice-top"><div class="rprice-name">Dubai / Jebel Ali &rarr; Riyadh</div><div class="rprice-val gld">$1,895&ndash;2,495</div></div>
-        <div class="rprice-sub">~1,100km &bull; 2-3 days &bull; Al Bat'ha border &bull; pre-crisis ~$1,295</div>
-        <div class="rprice-allin"><span class="rprice-allin-fees">base freight ~$1,800&ndash;2,400 + borders ~$95 (UAE exit $30 + SA entry $65)</span><span class="rprice-allin-total">all-in</span></div>
-      </div>
-      <div class="rprice" style="border-left:2px solid #e74c3c">
-        <div class="rprice-top"><div class="rprice-name">Oman &rarr; Riyadh (Hwy 95)</div><div class="rprice-val red">$2,320&ndash;3,120</div></div>
-        <div class="rprice-sub">~1,400km &bull; 2-4 days &bull; Hwy 95 surge route &bull; +40% since Hormuz crisis</div>
-        <div class="rprice-allin"><span class="rprice-allin-fees">base freight ~$2,200&ndash;3,000 + borders ~$120 (Oman $25 + UAE $30 + SA $65)</span><span class="rprice-allin-total">all-in</span></div>
-      </div>
-      <div style="margin-top:8px;font-size:8px;color:#7a8494;line-height:1.5;padding:6px 8px;background:#181c22;border-radius:3px">
-        Prices shown are ALL-IN &bull; Includes: road tolls (UAE Salik ~$5-15, K.Fahd Causeway ~$8) + border crossing fees (UAE exit ~$30, SA entry ~$65, Qatar ~$40, Oman exit ~$25, Bahrain ~$35, Kuwait ~$55) &bull; Reefer: +25-35% &bull; Hazmat: +40-60%
-      </div>
-      <div class="src"><span>SLR / Brightway / IFL logistics &middot; GCC tariff data &middot; 2026</span><span class="src-badge">market rates</span></div>
-  </div>
-
-  <div class="row col32">
-    <!-- GCC corridors Leaflet map -->
-    <div class="card" style="padding:0;overflow:hidden">
-      <div style="padding:10px 14px 8px;display:flex;justify-content:space-between;align-items:center">
-        <div>
-          <div class="card-label">GCC Land Corridors &mdash; Active Highways 2026</div>
-          <div class="card-sub">Click a crossing marker for live status &middot; color = congestion level</div>
-        </div>
-        <div style="display:flex;gap:10px;font-family:'IBM Plex Mono',monospace;font-size:7px;color:#5a6880">
-          <span><span style="display:inline-block;width:8px;height:8px;border-radius:50%;background:#e03040;margin-right:3px;vertical-align:middle"></span>Heavy</span>
-          <span><span style="display:inline-block;width:8px;height:8px;border-radius:50%;background:#f0c84b;margin-right:3px;vertical-align:middle"></span>Moderate</span>
-          <span><span style="display:inline-block;width:8px;height:8px;border-radius:50%;background:#3dd68c;margin-right:3px;vertical-align:middle"></span>Clear</span>
-        </div>
-      </div>
-      <div id="gcc-corridors-map" style="height:340px;width:100%;background:#060e18"></div>
-      <div class="src" style="padding:5px 14px"><span>ZATCA &middot; Oman MOT &middot; AGBI &middot; OpenStreetMap / CartoDB &middot; Jun 2026</span><span class="src-badge">real + synthesized</span></div>
-    </div>
-
-    <!-- Fleet signals + Jeddah -->
-    <div style="display:flex;flex-direction:column;gap:14px">
-      <div class="card">
-        <div class="card-label">Fleet &amp; Operator Signals</div>
-        <div class="card-sub">Capacity changes since Hormuz closure &middot; Jun 2026</div>
-        <div class="signal" style="background:#181c22;border-left:2px solid #a78bfa"><strong style="color:#e8eaed">TruKKer (UAE)</strong> &mdash; scaling 60 to <strong class="grn">500 moves/day</strong>. Fixed transparent rates from Khorfakkan activated.</div>
-        <div class="signal" style="background:#181c22;border-left:2px solid #c9a227"><strong style="color:#e8eaed">Flow Progressive (SA)</strong> &mdash; fleet <strong class="grn">340 to 500+</strong> 40ft trailers since conflict began.</div>
-        <div class="signal" style="background:#181c22;border-left:2px solid #3dd68c"><strong style="color:#e8eaed">Saudi TGA</strong> &mdash; eased GCC refrigerated truck entry rules March 2026. Hwy 95 Ramlet Khelah goods tripled to <strong class="grn">$830M</strong> in March.</div>
-        <div class="signal" style="background:#181c22;border-left:2px solid #f0c84b"><strong style="color:#e8eaed">Saudi Landbridge</strong> &mdash; Jeddah&ndash;Dammam rail ($7B, 1,300 km). Projected <strong style="color:#f0c84b">$4.2B/yr</strong> transport cost savings. Heavy manufacturers pre-booking capacity for 2026.</div>
-        <div class="src"><span>AGBI &middot; TruKKer &middot; makreo.com &middot; Jun 2026</span><span class="src-badge">real data</span></div>
-      </div>
+  <div style="display:flex;flex-direction:column;gap:2px;padding-right:32px;border-right:1px solid #1E1E1A">
+    <span style="font-size:9px;letter-spacing:.14em;color:#4A4A44">STATUS</span>
+    <div style="display:flex;align-items:baseline;gap:10px">
+      <span style="font-size:22px;font-weight:700;color:#E05252">2 CRITICAL</span>
+      <span style="font-size:22px;font-weight:700;color:#C98A2E">4 HEAVY</span>
     </div>
   </div>
+  <div style="display:flex;flex-direction:column;gap:2px;padding-right:32px;border-right:1px solid #1E1E1A">
+    <span style="font-size:9px;letter-spacing:.14em;color:#4A4A44">TRUCKING PREMIUM</span>
+    <span style="font-size:22px;font-weight:700;color:#C98A2E;letter-spacing:-.01em">+65–113% vs pre-crisis</span>
+  </div>
+  <div style="display:flex;flex-direction:column;gap:2px;margin-left:auto">
+    <span style="font-size:9px;letter-spacing:.14em;color:#4A4A44">LAST UPDATED</span>
+    <span style="font-size:13px;color:#C9AE4E">28 JUN 2026 · VERIFIED</span>
+  </div>
+</div>
 
-  <!-- ── LIVE CORRIDOR TRAFFIC STATUS ─────────────────────────────────── -->
-  <div class="map-section" style="margin-top:var(--gap)">
-    <div class="map-section-header">
+<div style="padding:0 28px 40px">
+
+<!-- PORT DWELL TIMES -->
+<div style="padding:26px 0 16px;display:flex;align-items:baseline;justify-content:space-between">
+  <div style="font-size:11px;font-weight:700;letter-spacing:.18em;color:#C9AE4E">PORT DWELL TIMES – RED SEA &amp; OMAN PORTS</div>
+  <div style="font-size:9px;color:#3A3A36;letter-spacing:.06em">Jun 2026 · crisis-period estimates</div>
+</div>
+<div style="display:grid;grid-template-columns:repeat(5,1fr);gap:12px;margin-bottom:32px">
+
+  <!-- JEDDAH -->
+  <div id="pdt-jeddah" style="background:#111110;border:1px solid #1E1E1C;border-radius:6px;padding:18px 14px;display:flex;flex-direction:column;align-items:center;gap:10px">
+    <div style="display:flex;align-items:center;justify-content:space-between;width:100%">
+      <div style="font-size:11px;font-weight:700;letter-spacing:.08em;color:#D9D8D3;display:flex;align-items:center;gap:6px"><img src="https://flagcdn.com/16x12/sa.png" alt="sa" style="height:11px;width:auto;border-radius:1px;vertical-align:middle"> JEDDAH</div>
+      <div style="font-size:8px;font-weight:700;letter-spacing:.1em;padding:2px 8px;border-radius:3px;color:#E05252;border:1px solid #E05252">CRITICAL</div>
+    </div>
+    <div style="font-size:9px;color:#4A4A44;text-align:center;line-height:1.4">Red Sea · King Abdul Aziz</div>
+    <svg width="128" height="68" viewBox="0 0 128 68" style="display:block;margin:0 auto">
+      <path d="M18,60 A46,46 0 0,1 110,60" fill="none" stroke="#222220" stroke-width="8" stroke-linecap="round"/>
+      <path d="M18,60 A46,46 0 0,1 110,60" fill="none" stroke="#E05252" stroke-width="8" stroke-linecap="round" stroke-dasharray="63.2 144.5"/>
+      <circle cx="19.7" cy="47.6" r="3.5" fill="#5FA86A"/>
+    </svg>
+    <div style="text-align:center">
+      <div style="font-size:30px;font-weight:700;letter-spacing:-.02em;color:#E05252;line-height:1">16–19</div>
+      <div style="font-size:10px;color:#4A4A44;margin-top:2px">days dwell</div>
+    </div>
+    <div style="font-size:9px;color:#5FA86A;letter-spacing:.04em">pre-crisis 3.7d</div>
+  </div>
+
+  <!-- YANBU -->
+  <div id="pdt-yanbu" style="background:#111110;border:1px solid #1E1E1C;border-radius:6px;padding:18px 14px;display:flex;flex-direction:column;align-items:center;gap:10px">
+    <div style="display:flex;align-items:center;justify-content:space-between;width:100%">
+      <div style="font-size:11px;font-weight:700;letter-spacing:.08em;color:#D9D8D3;display:flex;align-items:center;gap:6px"><img src="https://flagcdn.com/16x12/sa.png" alt="sa" style="height:11px;width:auto;border-radius:1px;vertical-align:middle"> YANBU</div>
+      <div style="font-size:8px;font-weight:700;letter-spacing:.1em;padding:2px 8px;border-radius:3px;color:#E05252;border:1px solid #E05252">CRITICAL</div>
+    </div>
+    <div style="font-size:9px;color:#4A4A44;text-align:center;line-height:1.4">Red Sea · Jeddah overflow</div>
+    <svg width="128" height="68" viewBox="0 0 128 68" style="display:block;margin:0 auto">
+      <path d="M18,60 A46,46 0 0,1 110,60" fill="none" stroke="#222220" stroke-width="8" stroke-linecap="round"/>
+      <path d="M18,60 A46,46 0 0,1 110,60" fill="none" stroke="#E05252" stroke-width="8" stroke-linecap="round" stroke-dasharray="50.6 144.5"/>
+      <circle cx="19.3" cy="49.3" r="3.5" fill="#5FA86A"/>
+    </svg>
+    <div style="text-align:center">
+      <div style="font-size:30px;font-weight:700;letter-spacing:-.02em;color:#E05252;line-height:1">13–15</div>
+      <div style="font-size:10px;color:#4A4A44;margin-top:2px">days dwell</div>
+    </div>
+    <div style="font-size:9px;color:#5FA86A;letter-spacing:.04em">pre-crisis 3.3d</div>
+  </div>
+
+  <!-- SOHAR -->
+  <div id="pdt-sohar" style="background:#111110;border:1px solid #1E1E1C;border-radius:6px;padding:18px 14px;display:flex;flex-direction:column;align-items:center;gap:10px">
+    <div style="display:flex;align-items:center;justify-content:space-between;width:100%">
+      <div style="font-size:11px;font-weight:700;letter-spacing:.08em;color:#D9D8D3;display:flex;align-items:center;gap:6px"><img src="https://flagcdn.com/16x12/om.png" alt="om" style="height:11px;width:auto;border-radius:1px;vertical-align:middle"> SOHAR</div>
+      <div style="font-size:8px;font-weight:700;letter-spacing:.1em;padding:2px 8px;border-radius:3px;color:#E05252;border:1px solid #E05252">CRITICAL</div>
+    </div>
+    <div style="font-size:9px;color:#4A4A44;text-align:center;line-height:1.4">Gulf of Oman · bypass hub</div>
+    <svg width="128" height="68" viewBox="0 0 128 68" style="display:block;margin:0 auto">
+      <path d="M18,60 A46,46 0 0,1 110,60" fill="none" stroke="#222220" stroke-width="8" stroke-linecap="round"/>
+      <path d="M18,60 A46,46 0 0,1 110,60" fill="none" stroke="#E05252" stroke-width="8" stroke-linecap="round" stroke-dasharray="112.0 144.5"/>
+      <circle cx="25.2" cy="35.3" r="3.5" fill="#5FA86A"/>
+    </svg>
+    <div style="text-align:center">
+      <div style="font-size:30px;font-weight:700;letter-spacing:-.02em;color:#E05252;line-height:1">29–33</div>
+      <div style="font-size:10px;color:#4A4A44;margin-top:2px">days dwell</div>
+    </div>
+    <div style="font-size:9px;color:#5FA86A;letter-spacing:.04em">pre-crisis 7.6d</div>
+  </div>
+
+  <!-- KHOR FAKKAN -->
+  <div id="pdt-khor_fakkan" style="background:#111110;border:1px solid #1E1E1C;border-radius:6px;padding:18px 14px;display:flex;flex-direction:column;align-items:center;gap:10px">
+    <div style="display:flex;align-items:center;justify-content:space-between;width:100%">
+      <div style="font-size:11px;font-weight:700;letter-spacing:.08em;color:#D9D8D3;display:flex;align-items:center;gap:6px"><img src="https://flagcdn.com/16x12/ae.png" alt="ae" style="height:11px;width:auto;border-radius:1px;vertical-align:middle"> KHOR FAKKAN</div>
+      <div style="font-size:8px;font-weight:700;letter-spacing:.1em;padding:2px 8px;border-radius:3px;color:#C98A2E;border:1px solid #C98A2E">HIGH</div>
+    </div>
+    <div style="font-size:9px;color:#4A4A44;text-align:center;line-height:1.4">Gulf of Oman · 6 berths</div>
+    <svg width="128" height="68" viewBox="0 0 128 68" style="display:block;margin:0 auto">
+      <path d="M18,60 A46,46 0 0,1 110,60" fill="none" stroke="#222220" stroke-width="8" stroke-linecap="round"/>
+      <path d="M18,60 A46,46 0 0,1 110,60" fill="none" stroke="#C98A2E" stroke-width="8" stroke-linecap="round" stroke-dasharray="47.0 144.5"/>
+      <circle cx="18.6" cy="52.7" r="3.5" fill="#5FA86A"/>
+    </svg>
+    <div style="text-align:center">
+      <div style="font-size:30px;font-weight:700;letter-spacing:-.02em;color:#C98A2E;line-height:1">12–14</div>
+      <div style="font-size:10px;color:#4A4A44;margin-top:2px">days dwell</div>
+    </div>
+    <div style="font-size:9px;color:#5FA86A;letter-spacing:.04em">pre-crisis 2.2d</div>
+  </div>
+
+  <!-- SALALAH -->
+  <div id="pdt-salalah" style="background:#111110;border:1px solid #1E1E1C;border-radius:6px;padding:18px 14px;display:flex;flex-direction:column;align-items:center;gap:10px">
+    <div style="display:flex;align-items:center;justify-content:space-between;width:100%">
+      <div style="font-size:11px;font-weight:700;letter-spacing:.08em;color:#D9D8D3;display:flex;align-items:center;gap:6px"><img src="https://flagcdn.com/16x12/om.png" alt="om" style="height:11px;width:auto;border-radius:1px;vertical-align:middle"> SALALAH</div>
+      <div style="font-size:8px;font-weight:700;letter-spacing:.1em;padding:2px 8px;border-radius:3px;color:#C98A2E;border:1px solid #C98A2E">HIGH</div>
+    </div>
+    <div style="font-size:9px;color:#4A4A44;text-align:center;line-height:1.4">Arabian Sea · transshipment</div>
+    <svg width="128" height="68" viewBox="0 0 128 68" style="display:block;margin:0 auto">
+      <path d="M18,60 A46,46 0 0,1 110,60" fill="none" stroke="#222220" stroke-width="8" stroke-linecap="round"/>
+      <path d="M18,60 A46,46 0 0,1 110,60" fill="none" stroke="#C98A2E" stroke-width="8" stroke-linecap="round" stroke-dasharray="28.9 144.5"/>
+      <circle cx="19.2" cy="49.7" r="3.5" fill="#5FA86A"/>
+    </svg>
+    <div style="text-align:center">
+      <div style="font-size:30px;font-weight:700;letter-spacing:-.02em;color:#C98A2E;line-height:1">7–9</div>
+      <div style="font-size:10px;color:#4A4A44;margin-top:2px">days dwell</div>
+    </div>
+    <div style="font-size:9px;color:#5FA86A;letter-spacing:.04em">pre-crisis 3.2d</div>
+  </div>
+
+</div>
+
+<!-- CROSSING CORRIDOR TRAFFIC -->
+<div style="padding:0 0 16px;display:flex;align-items:baseline;justify-content:space-between">
+  <div style="font-size:11px;font-weight:700;letter-spacing:.18em;color:#5FA86A">CROSSING CORRIDOR TRAFFIC – LIVE STATUS</div>
+  <div style="font-size:9px;color:#3A3A36;letter-spacing:.06em">6 GCC crossing points · click to open live traffic</div>
+</div>
+<div class="map-section" style="display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:32px">
+
+  <!-- AL BAT'HA -->
+  <a href="https://www.google.com/maps/place/Ghuwaifat+Border+Crossing/@24.1300,51.6200,16z/data=!5m1!1e1" target="_blank" rel="noopener" style="text-decoration:none;color:inherit">
+  <div style="background:#111110;border:1px solid #1E1E1C;border-radius:6px;padding:18px 16px;cursor:pointer">
+    <div style="display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:14px">
       <div>
-        <div class="map-section-title" style="color:#3dd68c">&#9632; Crossing Corridor Traffic — Live Status</div>
-        <div class="map-section-sub">
-          Road congestion at 6 GCC crossing points &bull;
-          <span style="color:#3dd68c">&#9646; clear</span>&nbsp;
-          <span style="color:#f0c84b">&#9646; moderate</span>&nbsp;
-          <span style="color:#e8673c">&#9646; slow</span>&nbsp;
-          <span style="color:#e03040">&#9646; heavy</span>&nbsp;
-          &bull; click any card to open live Google Maps traffic
-        </div>
+        <div style="font-size:12px;font-weight:700;letter-spacing:.06em;color:#F2F1ED">AL BAT'HA</div>
+        <div style="font-size:10px;color:#4A4A44;margin-top:4px;display:flex;align-items:center;gap:4px"><img src="https://flagcdn.com/16x12/sa.png" alt="sa" style="height:9px;width:auto;border-radius:1px;vertical-align:middle"> → <img src="https://flagcdn.com/16x12/ae.png" alt="ae" style="height:9px;width:auto;border-radius:1px;vertical-align:middle"> · Ghumaifat / Al Sila</div>
       </div>
-      <div style="display:flex;align-items:center;gap:8px">
-        <span style="font-family:'IBM Plex Mono',monospace;font-size:8px;color:#3dd68c;letter-spacing:.1em">&#9679; LIVE</span>
-        <div class="src-badge" style="font-size:8px">zatca · google</div>
-      </div>
+      <div style="font-size:8px;font-weight:700;letter-spacing:.1em;padding:3px 9px;border-radius:3px;color:#C98A2E;border:1px solid #C98A2E;white-space:nowrap">HEAVY</div>
     </div>
-
-    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:2px;background:var(--c-bd1)">
-
-      <!-- Al Bat'ha — HEAVY -->
-      <a href="https://www.google.com/maps/place/Ghuwaifat+Border+Crossing/@24.1300,51.6200,16z/data=!5m1!1e1" target="_blank" style="text-decoration:none;color:inherit">
-      <div style="background:var(--c-s1);padding:12px 14px;cursor:pointer;transition:background .15s" onmouseover="this.style.background='#1c2330'" onmouseout="this.style.background='var(--c-s1)'">
-        <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:10px">
-          <div>
-            <div style="font-family:'IBM Plex Mono',monospace;font-size:8px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:#e03040">Al Bat'ha</div>
-            <div style="font-family:'IBM Plex Mono',monospace;font-size:7px;color:#5a6880;margin-top:1px"><img src="https://flagcdn.com/16x12/sa.png" alt="SA" style="height:10px;vertical-align:middle;border-radius:1px"> &rarr; <img src="https://flagcdn.com/16x12/ae.png" alt="AE" style="height:10px;vertical-align:middle;border-radius:1px"> &nbsp;&bull; Ghuwaifat / Al Sila</div>
-          </div>
-          <span style="font-family:'IBM Plex Mono',monospace;font-size:7px;font-weight:700;letter-spacing:.1em;color:#e03040;background:rgba(224,48,64,.15);padding:3px 7px;border-radius:2px">HEAVY</span>
-        </div>
-        <!-- Traffic bar -->
-        <div id="cpt-albatha" style="margin-bottom:6px"></div>
-        <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px">
-          <div style="text-align:center">
-            <div id="cpt-albatha-wait" style="font-family:'IBM Plex Mono',monospace;font-size:10px;font-weight:700;color:#e03040">~120 min</div>
-            <div style="font-family:'IBM Plex Mono',monospace;font-size:6px;color:#4a5568;text-transform:uppercase;letter-spacing:.05em">M/M/c est. now</div>
-          </div>
-          <div style="text-align:center">
-            <div style="font-family:'IBM Plex Mono',monospace;font-size:10px;font-weight:700;color:#f0c84b">1,950</div>
-            <div style="font-family:'IBM Plex Mono',monospace;font-size:6px;color:#4a5568;text-transform:uppercase;letter-spacing:.05em">trucks/day</div>
-          </div>
-          <div style="text-align:center">
-            <div style="font-family:'IBM Plex Mono',monospace;font-size:10px;font-weight:700;color:#e03040">&#8593; +58%</div>
-            <div style="font-family:'IBM Plex Mono',monospace;font-size:6px;color:#4a5568;text-transform:uppercase;letter-spacing:.05em">vs pre-crisis</div>
-          </div>
-        </div>
-        <div style="margin-top:8px;font-family:'IBM Plex Mono',monospace;font-size:7px;color:#3a6080;text-align:right;letter-spacing:.05em">&#8599; open live traffic</div>
-      </div>
-      </a>
-
-      <!-- King Fahd — MODERATE -->
-      <a href="https://www.google.com/maps/place/King+Fahd+Causeway/@26.2083,50.2986,15z/data=!5m1!1e1" target="_blank" style="text-decoration:none;color:inherit">
-      <div style="background:var(--c-s1);padding:12px 14px;cursor:pointer;transition:background .15s" onmouseover="this.style.background='#1c2330'" onmouseout="this.style.background='var(--c-s1)'">
-        <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:10px">
-          <div>
-            <div style="font-family:'IBM Plex Mono',monospace;font-size:8px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:#f0c84b">King Fahd Causeway</div>
-            <div style="font-family:'IBM Plex Mono',monospace;font-size:7px;color:#5a6880;margin-top:1px"><img src="https://flagcdn.com/16x12/sa.png" alt="SA" style="height:10px;vertical-align:middle;border-radius:1px"> &rarr; <img src="https://flagcdn.com/16x12/bh.png" alt="BH" style="height:10px;vertical-align:middle;border-radius:1px"> &nbsp;&bull; 26 km bridge · reopened Apr 8</div>
-          </div>
-          <span style="font-family:'IBM Plex Mono',monospace;font-size:7px;font-weight:700;letter-spacing:.1em;color:#f0c84b;background:rgba(240,200,75,.13);padding:3px 7px;border-radius:2px">MODERATE</span>
-        </div>
-        <div id="cpt-kfahd" style="margin-bottom:6px"></div>
-        <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px">
-          <div style="text-align:center">
-            <div id="cpt-kfahd-wait" style="font-family:'IBM Plex Mono',monospace;font-size:10px;font-weight:700;color:#f0c84b">~50 min</div>
-            <div style="font-family:'IBM Plex Mono',monospace;font-size:6px;color:#4a5568;text-transform:uppercase;letter-spacing:.05em">M/M/c est. now</div>
-          </div>
-          <div style="text-align:center">
-            <div style="font-family:'IBM Plex Mono',monospace;font-size:10px;font-weight:700;color:#f0c84b">680</div>
-            <div style="font-family:'IBM Plex Mono',monospace;font-size:6px;color:#4a5568;text-transform:uppercase;letter-spacing:.05em">trucks/day</div>
-          </div>
-          <div style="text-align:center">
-            <div style="font-family:'IBM Plex Mono',monospace;font-size:10px;font-weight:700;color:#f0c84b">&#8593; +28%</div>
-            <div style="font-family:'IBM Plex Mono',monospace;font-size:6px;color:#4a5568;text-transform:uppercase;letter-spacing:.05em">vs pre-crisis</div>
-          </div>
-        </div>
-        <div style="margin-top:8px;font-family:'IBM Plex Mono',monospace;font-size:7px;color:#3a6080;text-align:right;letter-spacing:.05em">&#8599; open live traffic</div>
-      </div>
-      </a>
-
-      <!-- Salwa — HEAVY -->
-      <a href="https://www.google.com/maps/place/Abu+Samra+Border+Crossing/@24.7440,51.0620,16z/data=!5m1!1e1" target="_blank" style="text-decoration:none;color:inherit">
-      <div style="background:var(--c-s1);padding:12px 14px;cursor:pointer;transition:background .15s" onmouseover="this.style.background='#1c2330'" onmouseout="this.style.background='var(--c-s1)'">
-        <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:10px">
-          <div>
-            <div style="font-family:'IBM Plex Mono',monospace;font-size:8px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:#e03040">Salwa Border</div>
-            <div style="font-family:'IBM Plex Mono',monospace;font-size:7px;color:#5a6880;margin-top:1px"><img src="https://flagcdn.com/16x12/qa.png" alt="QA" style="height:10px;vertical-align:middle;border-radius:1px"> &rarr; <img src="https://flagcdn.com/16x12/sa.png" alt="SA" style="height:10px;vertical-align:middle;border-radius:1px"> &nbsp;&bull; main land entry</div>
-          </div>
-          <span style="font-family:'IBM Plex Mono',monospace;font-size:7px;font-weight:700;letter-spacing:.1em;color:#e03040;background:rgba(224,48,64,.15);padding:3px 7px;border-radius:2px">HEAVY</span>
-        </div>
-        <div id="cpt-salwa" style="margin-bottom:6px"></div>
-        <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px">
-          <div style="text-align:center">
-            <div id="cpt-salwa-wait" style="font-family:'IBM Plex Mono',monospace;font-size:10px;font-weight:700;color:#e03040">~55 min</div>
-            <div style="font-family:'IBM Plex Mono',monospace;font-size:6px;color:#4a5568;text-transform:uppercase;letter-spacing:.05em">M/M/c est. now</div>
-          </div>
-          <div style="text-align:center">
-            <div style="font-family:'IBM Plex Mono',monospace;font-size:10px;font-weight:700;color:#f0c84b">620</div>
-            <div style="font-family:'IBM Plex Mono',monospace;font-size:6px;color:#4a5568;text-transform:uppercase;letter-spacing:.05em">trucks/day</div>
-          </div>
-          <div style="text-align:center">
-            <div style="font-family:'IBM Plex Mono',monospace;font-size:10px;font-weight:700;color:#e03040">&#8593; +52%</div>
-            <div style="font-family:'IBM Plex Mono',monospace;font-size:6px;color:#4a5568;text-transform:uppercase;letter-spacing:.05em">vs pre-crisis</div>
-          </div>
-        </div>
-        <div style="margin-top:8px;font-family:'IBM Plex Mono',monospace;font-size:7px;color:#3a6080;text-align:right;letter-spacing:.05em">&#8599; open live traffic</div>
-      </div>
-      </a>
-
-      <!-- Al Nuwaiseeb — HEAVY -->
-      <a href="https://www.google.com/maps/place/Al+Nuwaiseeb+Border+Port/@28.8222,47.8798,16z/data=!5m1!1e1" target="_blank" style="text-decoration:none;color:inherit">
-      <div style="background:var(--c-s1);padding:12px 14px;cursor:pointer;transition:background .15s" onmouseover="this.style.background='#1c2330'" onmouseout="this.style.background='var(--c-s1)'">
-        <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:10px">
-          <div>
-            <div style="font-family:'IBM Plex Mono',monospace;font-size:8px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:#e03040">Al Nuwaiseeb</div>
-            <div style="font-family:'IBM Plex Mono',monospace;font-size:7px;color:#5a6880;margin-top:1px"><img src="https://flagcdn.com/16x12/kw.png" alt="KW" style="height:10px;vertical-align:middle;border-radius:1px"> &rarr; <img src="https://flagcdn.com/16x12/sa.png" alt="SA" style="height:10px;vertical-align:middle;border-radius:1px"> &nbsp;&bull; Al-Khafji · Kuwait land lifeline</div>
-          </div>
-          <span style="font-family:'IBM Plex Mono',monospace;font-size:7px;font-weight:700;letter-spacing:.1em;color:#e03040;background:rgba(224,48,64,.15);padding:3px 7px;border-radius:2px">HEAVY</span>
-        </div>
-        <div id="cpt-nuwaiseeb" style="margin-bottom:6px"></div>
-        <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px">
-          <div style="text-align:center">
-            <div id="cpt-nuwaiseeb-wait" style="font-family:'IBM Plex Mono',monospace;font-size:10px;font-weight:700;color:#e03040">~70 min</div>
-            <div style="font-family:'IBM Plex Mono',monospace;font-size:6px;color:#4a5568;text-transform:uppercase;letter-spacing:.05em">M/M/c est. now</div>
-          </div>
-          <div style="text-align:center">
-            <div style="font-family:'IBM Plex Mono',monospace;font-size:10px;font-weight:700;color:#f0c84b">780</div>
-            <div style="font-family:'IBM Plex Mono',monospace;font-size:6px;color:#4a5568;text-transform:uppercase;letter-spacing:.05em">trucks/day</div>
-          </div>
-          <div style="text-align:center">
-            <div style="font-family:'IBM Plex Mono',monospace;font-size:10px;font-weight:700;color:#e03040">&#8593; +65%</div>
-            <div style="font-family:'IBM Plex Mono',monospace;font-size:6px;color:#4a5568;text-transform:uppercase;letter-spacing:.05em">vs pre-crisis</div>
-          </div>
-        </div>
-        <div style="margin-top:8px;font-family:'IBM Plex Mono',monospace;font-size:7px;color:#3a6080;text-align:right;letter-spacing:.05em">&#8599; open live traffic</div>
-      </div>
-      </a>
-
-      <!-- Sohar — CRITICAL -->
-      <a href="https://www.google.com/maps/place/Sohar+Port+and+Freezone/@24.3588,56.7025,15z/data=!5m1!1e1" target="_blank" style="text-decoration:none;color:inherit">
-      <div style="background:var(--c-s1);padding:12px 14px;cursor:pointer;transition:background .15s" onmouseover="this.style.background='#1c2330'" onmouseout="this.style.background='var(--c-s1)'">
-        <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:10px">
-          <div>
-            <div style="font-family:'IBM Plex Mono',monospace;font-size:8px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:#c02030">Sohar Port — Hwy 95</div>
-            <div style="font-family:'IBM Plex Mono',monospace;font-size:7px;color:#5a6880;margin-top:1px"><img src="https://flagcdn.com/16x12/om.png" alt="OM" style="height:10px;vertical-align:middle;border-radius:1px"> &rarr; <img src="https://flagcdn.com/16x12/ae.png" alt="AE" style="height:10px;vertical-align:middle;border-radius:1px"> &nbsp;&bull; Oman bypass hub · +3,500% diversions</div>
-          </div>
-          <span style="font-family:'IBM Plex Mono',monospace;font-size:7px;font-weight:700;letter-spacing:.1em;color:#c02030;background:rgba(192,32,48,.2);padding:3px 7px;border-radius:2px">CRITICAL</span>
-        </div>
-        <div id="cpt-sohargate" style="margin-bottom:6px"></div>
-        <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px">
-          <div style="text-align:center">
-            <div id="cpt-sohargate-wait" style="font-family:'IBM Plex Mono',monospace;font-size:10px;font-weight:700;color:#c02030">2.5-4 hrs</div>
-            <div style="font-family:'IBM Plex Mono',monospace;font-size:6px;color:#4a5568;text-transform:uppercase;letter-spacing:.05em">gate est. now</div>
-          </div>
-          <div style="text-align:center">
-            <div style="font-family:'IBM Plex Mono',monospace;font-size:10px;font-weight:700;color:#c02030">3,800+</div>
-            <div style="font-family:'IBM Plex Mono',monospace;font-size:6px;color:#4a5568;text-transform:uppercase;letter-spacing:.05em">gate moves/day</div>
-          </div>
-          <div style="text-align:center">
-            <div style="font-family:'IBM Plex Mono',monospace;font-size:10px;font-weight:700;color:#c02030">&#8593;&#8593; +400%</div>
-            <div style="font-family:'IBM Plex Mono',monospace;font-size:6px;color:#4a5568;text-transform:uppercase;letter-spacing:.05em">throughput</div>
-          </div>
-        </div>
-        <div style="margin-top:8px;font-family:'IBM Plex Mono',monospace;font-size:7px;color:#3a6080;text-align:right;letter-spacing:.05em">&#8599; open live traffic</div>
-      </div>
-      </a>
-
-      <!-- Jeddah — CRITICAL -->
-      <a href="https://www.google.com/maps/place/Jeddah+Islamic+Port/@21.4908,39.1617,15z/data=!5m1!1e1" target="_blank" style="text-decoration:none;color:inherit">
-      <div style="background:var(--c-s1);padding:12px 14px;cursor:pointer;transition:background .15s" onmouseover="this.style.background='#1c2330'" onmouseout="this.style.background='var(--c-s1)'">
-        <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:10px">
-          <div>
-            <div style="font-family:'IBM Plex Mono',monospace;font-size:8px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:#c02030">Jeddah Islamic Port</div>
-            <div style="font-family:'IBM Plex Mono',monospace;font-size:7px;color:#5a6880;margin-top:1px"><img src="https://flagcdn.com/16x12/sa.png" alt="SA" style="height:10px;vertical-align:middle;border-radius:1px"> &nbsp;&bull; Red Sea approach · King Abdul Aziz Port</div>
-          </div>
-          <span style="font-family:'IBM Plex Mono',monospace;font-size:7px;font-weight:700;letter-spacing:.1em;color:#c02030;background:rgba(192,32,48,.2);padding:3px 7px;border-radius:2px">CRITICAL</span>
-        </div>
-        <div id="cpt-jeddahgate" style="margin-bottom:6px"></div>
-        <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px">
-          <div style="text-align:center">
-            <div id="cpt-jeddahgate-wait" style="font-family:'IBM Plex Mono',monospace;font-size:10px;font-weight:700;color:#c02030">3.5-4.5 hrs</div>
-            <div style="font-family:'IBM Plex Mono',monospace;font-size:6px;color:#4a5568;text-transform:uppercase;letter-spacing:.05em">gate est. now</div>
-          </div>
-          <div style="text-align:center">
-            <div style="font-family:'IBM Plex Mono',monospace;font-size:10px;font-weight:700;color:#f0c84b">~1,100</div>
-            <div style="font-family:'IBM Plex Mono',monospace;font-size:6px;color:#4a5568;text-transform:uppercase;letter-spacing:.05em">trucks/day</div>
-          </div>
-          <div style="text-align:center">
-            <div style="font-family:'IBM Plex Mono',monospace;font-size:10px;font-weight:700;color:#c02030">&#8593; +62%</div>
-            <div style="font-family:'IBM Plex Mono',monospace;font-size:6px;color:#4a5568;text-transform:uppercase;letter-spacing:.05em">vs pre-crisis</div>
-          </div>
-        </div>
-        <div style="margin-top:8px;font-family:'IBM Plex Mono',monospace;font-size:7px;color:#3a6080;text-align:right;letter-spacing:.05em">&#8599; open live traffic</div>
-      </div>
-      </a>
-
+    <div id="cpt-albatha" style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;border-top:1px solid #1A1A18;padding-top:12px">
+      <div><div style="font-size:8px;letter-spacing:.1em;color:#4A4A44">WAIT NOW</div><div id="cpt-albatha-wait" style="font-size:18px;font-weight:700;color:#F2F1ED;margin-top:4px;line-height:1">4h+</div></div>
+      <div><div style="font-size:8px;letter-spacing:.1em;color:#4A4A44">TRUCKS/DAY</div><div style="font-size:18px;font-weight:700;color:#F2F1ED;margin-top:4px;line-height:1">1,950</div></div>
+      <div><div style="font-size:8px;letter-spacing:.1em;color:#4A4A44">VS PRE-CRISIS</div><div style="font-size:18px;font-weight:700;color:#C98A2E;margin-top:4px;line-height:1">↑+58%</div></div>
     </div>
-    <!-- ── Popular-times methodology note ──────────────────────────── -->
-    <div style="padding:8px 14px 10px;border-top:1px solid #1a2232;margin-top:2px">
-      <div style="font-family:'IBM Plex Mono',monospace;font-size:6.5px;color:#3a4a5e;font-weight:700;letter-spacing:.1em;text-transform:uppercase;margin-bottom:5px">◈ Methodology &amp; Caveats — Hourly Wait Estimates</div>
-      <div style="font-family:'IBM Plex Mono',monospace;font-size:6.5px;color:#4a5668;line-height:1.85">
-        <span style="color:#a78bfa">Model:</span> M/M/c queueing (multi-server Erlang C), simplified via M/M/1 utilisation-ratio proxy:
-        <span style="color:#c9b8ff;letter-spacing:.04em"> W(t) = W̄ &times; [&rho;(t) &frasl; (1&minus;&rho;(t))] &frasl; [&rho;̄ &frasl; (1&minus;&rho;̄)]</span>
-        &nbsp;&bull;&nbsp; Hourly arrival shape inferred from regional crossing-behaviour literature (ZATCA 2024 flow reports, naqlapp.com seasonal data, GCC MoT engineering surveys).
-        &nbsp;&bull;&nbsp; Base utilisation &rho;̄ and average wait W̄ calibrated against ZATCA &frasl; MoT daily crossing averages (Jun 26 2026).
-        &nbsp;&bull;&nbsp; <span style="color:#f0c84b">Margin: &plusmn;25&ndash;35%</span> &mdash; model does not capture convoy arrivals, batch customs clearances, or lane closures.
-        &nbsp;&bull;&nbsp; Pattern shown is a <span style="color:#f0c84b">typical weekday</span>; Thu&ndash;Fri peaks at King Fahd Causeway may be 40&ndash;60% higher.
-        &nbsp;&bull;&nbsp; <span style="color:#c04060">&#9632; Dark bars = active truck-ban window</span> &mdash; arrivals structurally suppressed; convoys held at city staging areas and released as a surge when the ban lifts.
-        Schedules encoded: <span style="color:#c9b8ff">Al Bat&apos;ha</span> UAE 06:30–09:00 &amp; 15:00–19:00 &nbsp;|&nbsp;
-        <span style="color:#c9b8ff">Salwa</span> Qatar 07:30–10:00, 12:30–15:00 &amp; 17:00–00:00 &nbsp;|&nbsp;
-        <span style="color:#c9b8ff">Nuwaiseeb</span> Kuwait 06:30–09:00 &amp; 12:30–15:30 &nbsp;|&nbsp;
-        <span style="color:#c9b8ff">Jeddah gate</span> SA 06:00–09:00, 12:00–15:00 &amp; 17:00–01:00 &nbsp;|&nbsp;
-        King Fahd &amp; Sohar: no confirmed ban.
-        * &ldquo;ban hrs&rdquo; shown when current hour falls in a restricted window &mdash; exempt essential-goods permits may still move.
-        &nbsp;&bull;&nbsp; <span style="color:#e03040">Not live telemetry.</span>
-        For real-time border status: <span style="color:#60a5fa">ZATCA Unified Customs Portal &middot; naqlapp.com &middot; Oman MOT e-gate</span>
+  </div></a>
+
+  <!-- KING FAHD -->
+  <a href="https://www.google.com/maps/place/King+Fahd+Causeway/@26.2083,50.2986,15z/data=!5m1!1e1" target="_blank" rel="noopener" style="text-decoration:none;color:inherit">
+  <div style="background:#111110;border:1px solid #1E1E1C;border-radius:6px;padding:18px 16px;cursor:pointer">
+    <div style="display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:14px">
+      <div>
+        <div style="font-size:12px;font-weight:700;letter-spacing:.06em;color:#F2F1ED">KING FAHD CAUSEWAY</div>
+        <div style="font-size:10px;color:#4A4A44;margin-top:4px;display:flex;align-items:center;gap:4px"><img src="https://flagcdn.com/16x12/sa.png" alt="sa" style="height:9px;width:auto;border-radius:1px;vertical-align:middle"> → <img src="https://flagcdn.com/16x12/bh.png" alt="bh" style="height:9px;width:auto;border-radius:1px;vertical-align:middle"> · 26 km bridge · Apr 2026</div>
       </div>
+      <div style="font-size:8px;font-weight:700;letter-spacing:.1em;padding:3px 9px;border-radius:3px;color:#C2A23E;border:1px solid #C2A23E;white-space:nowrap">MODERATE</div>
     </div>
-    <div class="src" style="padding:5px 14px">
-      <span>Wait times estimated from ZATCA / MoT crossing data &bull; click any card to open live Google Maps traffic in new tab</span>
-      <span class="src-badge">estimated · jun 26 2026</span>
+    <div id="cpt-kfahd" style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;border-top:1px solid #1A1A18;padding-top:12px">
+      <div><div style="font-size:8px;letter-spacing:.1em;color:#4A4A44">WAIT NOW</div><div id="cpt-kfahd-wait" style="font-size:18px;font-weight:700;color:#F2F1ED;margin-top:4px;line-height:1">3h+</div></div>
+      <div><div style="font-size:8px;letter-spacing:.1em;color:#4A4A44">TRUCKS/DAY</div><div style="font-size:18px;font-weight:700;color:#F2F1ED;margin-top:4px;line-height:1">680</div></div>
+      <div><div style="font-size:8px;letter-spacing:.1em;color:#4A4A44">VS PRE-CRISIS</div><div style="font-size:18px;font-weight:700;color:#C98A2E;margin-top:4px;line-height:1">↑+28%</div></div>
     </div>
+  </div></a>
+
+  <!-- SALWA -->
+  <a href="https://www.google.com/maps/place/Abu+Samra+Border+Crossing/@24.7440,51.0620,16z/data=!5m1!1e1" target="_blank" rel="noopener" style="text-decoration:none;color:inherit">
+  <div style="background:#111110;border:1px solid #1E1E1C;border-radius:6px;padding:18px 16px;cursor:pointer">
+    <div style="display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:14px">
+      <div>
+        <div style="font-size:12px;font-weight:700;letter-spacing:.06em;color:#F2F1ED">SALWA BORDER</div>
+        <div style="font-size:10px;color:#4A4A44;margin-top:4px;display:flex;align-items:center;gap:4px"><img src="https://flagcdn.com/16x12/qa.png" alt="qa" style="height:9px;width:auto;border-radius:1px;vertical-align:middle"> → <img src="https://flagcdn.com/16x12/sa.png" alt="sa" style="height:9px;width:auto;border-radius:1px;vertical-align:middle"> · Main land entry</div>
+      </div>
+      <div style="font-size:8px;font-weight:700;letter-spacing:.1em;padding:3px 9px;border-radius:3px;color:#C98A2E;border:1px solid #C98A2E;white-space:nowrap">HEAVY</div>
+    </div>
+    <div id="cpt-salwa" style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;border-top:1px solid #1A1A18;padding-top:12px">
+      <div><div style="font-size:8px;letter-spacing:.1em;color:#4A4A44">WAIT NOW</div><div id="cpt-salwa-wait" style="font-size:18px;font-weight:700;color:#F2F1ED;margin-top:4px;line-height:1">ban hrs*</div></div>
+      <div><div style="font-size:8px;letter-spacing:.1em;color:#4A4A44">TRUCKS/DAY</div><div style="font-size:18px;font-weight:700;color:#F2F1ED;margin-top:4px;line-height:1">620</div></div>
+      <div><div style="font-size:8px;letter-spacing:.1em;color:#4A4A44">VS PRE-CRISIS</div><div style="font-size:18px;font-weight:700;color:#C98A2E;margin-top:4px;line-height:1">↑+52%</div></div>
+    </div>
+  </div></a>
+
+  <!-- AL NUWAISEEB -->
+  <a href="https://www.google.com/maps/place/Al+Nuwaiseeb+Border+Port/@28.8222,47.8798,16z/data=!5m1!1e1" target="_blank" rel="noopener" style="text-decoration:none;color:inherit">
+  <div style="background:#111110;border:1px solid #1E1E1C;border-radius:6px;padding:18px 16px;cursor:pointer">
+    <div style="display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:14px">
+      <div>
+        <div style="font-size:12px;font-weight:700;letter-spacing:.06em;color:#F2F1ED">AL NUWAISEEB</div>
+        <div style="font-size:10px;color:#4A4A44;margin-top:4px;display:flex;align-items:center;gap:4px"><img src="https://flagcdn.com/16x12/kw.png" alt="kw" style="height:9px;width:auto;border-radius:1px;vertical-align:middle"> → <img src="https://flagcdn.com/16x12/sa.png" alt="sa" style="height:9px;width:auto;border-radius:1px;vertical-align:middle"> · Kuwait land lifeline</div>
+      </div>
+      <div style="font-size:8px;font-weight:700;letter-spacing:.1em;padding:3px 9px;border-radius:3px;color:#C98A2E;border:1px solid #C98A2E;white-space:nowrap">HEAVY</div>
+    </div>
+    <div id="cpt-nuwaiseeb" style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;border-top:1px solid #1A1A18;padding-top:12px">
+      <div><div style="font-size:8px;letter-spacing:.1em;color:#4A4A44">WAIT NOW</div><div id="cpt-nuwaiseeb-wait" style="font-size:18px;font-weight:700;color:#F2F1ED;margin-top:4px;line-height:1">3h 20m+</div></div>
+      <div><div style="font-size:8px;letter-spacing:.1em;color:#4A4A44">TRUCKS/DAY</div><div style="font-size:18px;font-weight:700;color:#F2F1ED;margin-top:4px;line-height:1">780</div></div>
+      <div><div style="font-size:8px;letter-spacing:.1em;color:#4A4A44">VS PRE-CRISIS</div><div style="font-size:18px;font-weight:700;color:#C98A2E;margin-top:4px;line-height:1">↑+65%</div></div>
+    </div>
+  </div></a>
+
+  <!-- SOHAR HWY 95 -->
+  <a href="https://www.google.com/maps/place/Sohar+Port+and+Freezone/@24.3588,56.7025,15z/data=!5m1!1e1" target="_blank" rel="noopener" style="text-decoration:none;color:inherit">
+  <div style="background:#111110;border:1px solid #1E1E1C;border-radius:6px;padding:18px 16px;cursor:pointer">
+    <div style="display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:14px">
+      <div>
+        <div style="font-size:12px;font-weight:700;letter-spacing:.06em;color:#F2F1ED">SOHAR PORT – HWY 95</div>
+        <div style="font-size:10px;color:#4A4A44;margin-top:4px;display:flex;align-items:center;gap:4px"><img src="https://flagcdn.com/16x12/om.png" alt="om" style="height:9px;width:auto;border-radius:1px;vertical-align:middle"> → <img src="https://flagcdn.com/16x12/sa.png" alt="sa" style="height:9px;width:auto;border-radius:1px;vertical-align:middle"> · Oman bypass hub</div>
+      </div>
+      <div style="font-size:8px;font-weight:700;letter-spacing:.1em;padding:3px 9px;border-radius:3px;color:#E05252;border:1px solid #E05252;white-space:nowrap">CRITICAL</div>
+    </div>
+    <div id="cpt-sohargate" style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;border-top:1px solid #1A1A18;padding-top:12px">
+      <div><div style="font-size:8px;letter-spacing:.1em;color:#4A4A44">WAIT NOW</div><div id="cpt-sohargate-wait" style="font-size:18px;font-weight:700;color:#F2F1ED;margin-top:4px;line-height:1">~20 min</div></div>
+      <div><div style="font-size:8px;letter-spacing:.1em;color:#4A4A44">TRUCKS/DAY</div><div style="font-size:18px;font-weight:700;color:#F2F1ED;margin-top:4px;line-height:1">3,800+</div></div>
+      <div><div style="font-size:8px;letter-spacing:.1em;color:#4A4A44">VS PRE-CRISIS</div><div style="font-size:18px;font-weight:700;color:#C98A2E;margin-top:4px;line-height:1">↑+400%</div></div>
+    </div>
+  </div></a>
+
+  <!-- JEDDAH ISLAMIC PORT -->
+  <a href="https://www.google.com/maps/place/Jeddah+Islamic+Port/@21.4908,39.1617,15z/data=!5m1!1e1" target="_blank" rel="noopener" style="text-decoration:none;color:inherit">
+  <div style="background:#111110;border:1px solid #1E1E1C;border-radius:6px;padding:18px 16px;cursor:pointer">
+    <div style="display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:14px">
+      <div>
+        <div style="font-size:12px;font-weight:700;letter-spacing:.06em;color:#F2F1ED">JEDDAH ISLAMIC PORT</div>
+        <div style="font-size:10px;color:#4A4A44;margin-top:4px;display:flex;align-items:center;gap:4px"><img src="https://flagcdn.com/16x12/sa.png" alt="sa" style="height:9px;width:auto;border-radius:1px;vertical-align:middle"> · King Abdul Aziz Port</div>
+      </div>
+      <div style="font-size:8px;font-weight:700;letter-spacing:.1em;padding:3px 9px;border-radius:3px;color:#E05252;border:1px solid #E05252;white-space:nowrap">CRITICAL</div>
+    </div>
+    <div id="cpt-jeddahgate" style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;border-top:1px solid #1A1A18;padding-top:12px">
+      <div><div style="font-size:8px;letter-spacing:.1em;color:#4A4A44">WAIT NOW</div><div id="cpt-jeddahgate-wait" style="font-size:18px;font-weight:700;color:#F2F1ED;margin-top:4px;line-height:1">ban hrs*</div></div>
+      <div><div style="font-size:8px;letter-spacing:.1em;color:#4A4A44">TRUCKS/DAY</div><div style="font-size:18px;font-weight:700;color:#F2F1ED;margin-top:4px;line-height:1">~1,100</div></div>
+      <div><div style="font-size:8px;letter-spacing:.1em;color:#4A4A44">VS PRE-CRISIS</div><div style="font-size:18px;font-weight:700;color:#C98A2E;margin-top:4px;line-height:1">↑+62%</div></div>
+    </div>
+  </div></a>
+
+</div>
+
+<!-- FTL TRUCKING PRICES -->
+<div id="ftl-pricing-card" style="margin-bottom:32px">
+  <div style="padding:0 0 16px;display:flex;align-items:baseline;justify-content:space-between">
+    <div style="font-size:11px;font-weight:700;letter-spacing:.18em;color:#C9AE4E">FTL TRUCKING PRICES – 40FT TRAILER</div>
+    <div style="font-size:9px;color:#3A3A36;letter-spacing:.06em">USD · ALL-IN · crisis-period rates · Jun 2026</div>
   </div>
+  <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:16px">
+
+    <!-- FROM JEDDAH -->
+    <div>
+      <div style="font-size:10px;font-weight:700;letter-spacing:.14em;color:#5FA86A;margin-bottom:10px;padding-bottom:8px;border-bottom:1px solid #1A1A18;display:flex;align-items:center;gap:6px"><img src="https://flagcdn.com/16x12/sa.png" alt="sa" style="height:10px;width:auto;border-radius:1px;vertical-align:middle"> FROM JEDDAH</div>
+      <div style="display:flex;flex-direction:column;gap:6px">
+        <div style="background:#111110;border:1px solid #1E1E1C;border-left:2px solid #5FA86A;border-radius:0 4px 4px 0;padding:14px 16px;display:flex;align-items:center;justify-content:space-between;gap:12px">
+          <div style="font-size:13px;font-weight:700;color:#F2F1ED;line-height:1.4"><span style="display:inline-flex;align-items:center;gap:5px"><img src="https://flagcdn.com/16x12/sa.png" alt="sa" style="height:9px;width:auto;border-radius:1px;vertical-align:middle"> Jeddah</span><br><span style="color:#8E8E84;font-weight:400;display:inline-flex;align-items:center;gap:5px">→ <img src="https://flagcdn.com/16x12/qa.png" alt="qa" style="height:9px;width:auto;border-radius:1px;vertical-align:middle"> Doha</span></div>
+          <div style="font-size:20px;font-weight:700;color:#E05252;white-space:nowrap;letter-spacing:-.01em">$2,840–3,640</div>
+        </div>
+        <div style="background:#111110;border:1px solid #1E1E1C;border-left:2px solid #5FA86A;border-radius:0 4px 4px 0;padding:14px 16px;display:flex;align-items:center;justify-content:space-between;gap:12px">
+          <div style="font-size:13px;font-weight:700;color:#F2F1ED;line-height:1.4"><span style="display:inline-flex;align-items:center;gap:5px"><img src="https://flagcdn.com/16x12/sa.png" alt="sa" style="height:9px;width:auto;border-radius:1px;vertical-align:middle"> Jeddah</span><br><span style="color:#8E8E84;font-weight:400;display:inline-flex;align-items:center;gap:5px">→ <img src="https://flagcdn.com/16x12/bh.png" alt="bh" style="height:9px;width:auto;border-radius:1px;vertical-align:middle"> Manama</span></div>
+          <div style="font-size:20px;font-weight:700;color:#C98A2E;white-space:nowrap;letter-spacing:-.01em">$2,435–3,235</div>
+        </div>
+        <div style="background:#111110;border:1px solid #1E1E1C;border-left:2px solid #5FA86A;border-radius:0 4px 4px 0;padding:14px 16px;display:flex;align-items:center;justify-content:space-between;gap:12px">
+          <div style="font-size:13px;font-weight:700;color:#F2F1ED;line-height:1.4"><span style="display:inline-flex;align-items:center;gap:5px"><img src="https://flagcdn.com/16x12/sa.png" alt="sa" style="height:9px;width:auto;border-radius:1px;vertical-align:middle"> Jeddah</span><br><span style="color:#8E8E84;font-weight:400;display:inline-flex;align-items:center;gap:5px">→ <img src="https://flagcdn.com/16x12/kw.png" alt="kw" style="height:9px;width:auto;border-radius:1px;vertical-align:middle"> Kuwait City</span></div>
+          <div style="font-size:20px;font-weight:700;color:#E05252;white-space:nowrap;letter-spacing:-.01em">$2,855–3,855</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- FROM SOHAR -->
+    <div>
+      <div style="font-size:10px;font-weight:700;letter-spacing:.14em;color:#8B72C8;margin-bottom:10px;padding-bottom:8px;border-bottom:1px solid #1A1A18;display:flex;align-items:center;gap:6px"><img src="https://flagcdn.com/16x12/om.png" alt="om" style="height:10px;width:auto;border-radius:1px;vertical-align:middle"> FROM SOHAR</div>
+      <div style="display:flex;flex-direction:column;gap:6px">
+        <div style="background:#111110;border:1px solid #1E1E1C;border-left:2px solid #8B72C8;border-radius:0 4px 4px 0;padding:14px 16px;display:flex;align-items:center;justify-content:space-between;gap:12px">
+          <div style="font-size:13px;font-weight:700;color:#F2F1ED;line-height:1.4"><span style="display:inline-flex;align-items:center;gap:5px"><img src="https://flagcdn.com/16x12/om.png" alt="om" style="height:9px;width:auto;border-radius:1px;vertical-align:middle"> Sohar</span><br><span style="color:#8E8E84;font-weight:400;display:inline-flex;align-items:center;gap:5px">→ <img src="https://flagcdn.com/16x12/qa.png" alt="qa" style="height:9px;width:auto;border-radius:1px;vertical-align:middle"> Doha</span></div>
+          <div style="font-size:20px;font-weight:700;color:#E05252;white-space:nowrap;letter-spacing:-.01em">$2,210–2,910</div>
+        </div>
+        <div style="background:#111110;border:1px solid #1E1E1C;border-left:2px solid #8B72C8;border-radius:0 4px 4px 0;padding:14px 16px;display:flex;align-items:center;justify-content:space-between;gap:12px">
+          <div style="font-size:13px;font-weight:700;color:#F2F1ED;line-height:1.4"><span style="display:inline-flex;align-items:center;gap:5px"><img src="https://flagcdn.com/16x12/om.png" alt="om" style="height:9px;width:auto;border-radius:1px;vertical-align:middle"> Sohar</span><br><span style="color:#8E8E84;font-weight:400;display:inline-flex;align-items:center;gap:5px">→ <img src="https://flagcdn.com/16x12/bh.png" alt="bh" style="height:9px;width:auto;border-radius:1px;vertical-align:middle"> Manama</span></div>
+          <div style="font-size:20px;font-weight:700;color:#C98A2E;white-space:nowrap;letter-spacing:-.01em">$2,105–2,755</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- OTHER KEY ROUTES -->
+    <div>
+      <div style="font-size:10px;font-weight:700;letter-spacing:.14em;color:#C9AE4E;margin-bottom:10px;padding-bottom:8px;border-bottom:1px solid #1A1A18">OTHER KEY ROUTES</div>
+      <div style="display:flex;flex-direction:column;gap:6px">
+        <div style="background:#111110;border:1px solid #1E1E1C;border-left:2px solid #C9AE4E;border-radius:0 4px 4px 0;padding:14px 16px;display:flex;align-items:center;justify-content:space-between;gap:12px">
+          <div style="font-size:13px;font-weight:700;color:#F2F1ED;line-height:1.4"><span style="display:inline-flex;align-items:center;gap:5px"><img src="https://flagcdn.com/16x12/ae.png" alt="ae" style="height:9px;width:auto;border-radius:1px;vertical-align:middle"> Dubai / Jebel Ali</span><br><span style="color:#8E8E84;font-weight:400;display:inline-flex;align-items:center;gap:5px">→ <img src="https://flagcdn.com/16x12/sa.png" alt="sa" style="height:9px;width:auto;border-radius:1px;vertical-align:middle"> Riyadh</span></div>
+          <div style="font-size:20px;font-weight:700;color:#C2A23E;white-space:nowrap;letter-spacing:-.01em">$1,895–2,495</div>
+        </div>
+        <div style="background:#111110;border:1px solid #1E1E1C;border-left:2px solid #C9AE4E;border-radius:0 4px 4px 0;padding:14px 16px;display:flex;align-items:center;justify-content:space-between;gap:12px">
+          <div style="font-size:13px;font-weight:700;color:#F2F1ED;line-height:1.4"><span style="display:inline-flex;align-items:center;gap:5px"><img src="https://flagcdn.com/16x12/om.png" alt="om" style="height:9px;width:auto;border-radius:1px;vertical-align:middle"> Oman (Hwy 95)</span><br><span style="color:#8E8E84;font-weight:400;display:inline-flex;align-items:center;gap:5px">→ <img src="https://flagcdn.com/16x12/sa.png" alt="sa" style="height:9px;width:auto;border-radius:1px;vertical-align:middle"> Riyadh</span></div>
+          <div style="font-size:20px;font-weight:700;color:#C98A2E;white-space:nowrap;letter-spacing:-.01em">$2,320–3,120</div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- FLEET & OPERATOR SIGNALS -->
+<div>
+  <div style="font-size:11px;font-weight:700;letter-spacing:.18em;color:#C9AE4E;margin-bottom:16px">FLEET &amp; OPERATOR SIGNALS <span style="font-size:9px;font-weight:400;color:#3A3A36;letter-spacing:.06em">· Capacity changes since Hormuz closure · Jun 2026</span></div>
+  <div style="display:grid;grid-template-columns:repeat(2,1fr);gap:10px">
+    <div style="background:#111110;border:1px solid #1E1E1C;border-left:2px solid #8B72C8;border-radius:0 6px 6px 0;padding:14px 18px;font-size:12px;line-height:1.6;color:#C8C7C2"><span style="font-weight:700;color:#F2F1ED;display:inline-flex;align-items:center;gap:6px"><img src="https://flagcdn.com/16x12/ae.png" alt="ae" style="height:11px;width:auto;border-radius:1px;vertical-align:middle"> TruKKer (UAE)</span> — scaling 60 to 500 moves/day. Fixed transparent rates from Khorfakkan activated.</div>
+    <div style="background:#111110;border:1px solid #1E1E1C;border-left:2px solid #C9AE4E;border-radius:0 6px 6px 0;padding:14px 18px;font-size:12px;line-height:1.6;color:#C8C7C2"><span style="font-weight:700;color:#F2F1ED;display:inline-flex;align-items:center;gap:6px"><img src="https://flagcdn.com/16x12/sa.png" alt="sa" style="height:11px;width:auto;border-radius:1px;vertical-align:middle"> Flow Progressive (SA)</span> — fleet 340 to 500+ 40ft trailers since conflict began.</div>
+    <div style="background:#111110;border:1px solid #1E1E1C;border-left:2px solid #5FA86A;border-radius:0 6px 6px 0;padding:14px 18px;font-size:12px;line-height:1.6;color:#C8C7C2"><span style="font-weight:700;color:#F2F1ED;display:inline-flex;align-items:center;gap:6px"><img src="https://flagcdn.com/16x12/sa.png" alt="sa" style="height:11px;width:auto;border-radius:1px;vertical-align:middle"> Saudi TGA</span> — eased GCC refrigerated truck entry rules March 2026. Hwy 95 goods tripled to $830M.</div>
+    <div style="background:#111110;border:1px solid #1E1E1C;border-left:2px solid #E05252;border-radius:0 6px 6px 0;padding:14px 18px;font-size:12px;line-height:1.6;color:#C8C7C2"><span style="font-weight:700;color:#F2F1ED;display:inline-flex;align-items:center;gap:6px"><img src="https://flagcdn.com/16x12/sa.png" alt="sa" style="height:11px;width:auto;border-radius:1px;vertical-align:middle"> Saudi Landbridge</span> — Jeddah–Dammam rail ($7B, 1,300 km). Projected $4.2B/yr transport cost savings.</div>
+  </div>
+</div>
+
+<!-- GCC Corridors Map (kept for interactivity) -->
+<div style="margin-top:32px;border:1px solid #1E1E1C;border-radius:6px;overflow:hidden">
+  <div style="padding:12px 16px;border-bottom:1px solid #1A1A18;display:flex;justify-content:space-between;align-items:center">
+    <div style="font-size:10px;font-weight:700;letter-spacing:.12em;color:#C9AE4E">GCC LAND CORRIDORS — ACTIVE HIGHWAYS 2026</div>
+    <div style="font-size:9px;color:#3A3A36">click crossing marker for live status</div>
+  </div>
+  <div id="gcc-corridors-map" style="height:300px;width:100%;background:#060e18"></div>
+</div>
+
+</div><!-- /padding wrapper -->
+
 
 </div>
 

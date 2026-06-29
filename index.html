@@ -3340,7 +3340,7 @@ canvas { font-family: var(--f-mono); }
       <span>MODULES</span>
       <span>METHODOLOGY</span>
       <span>DATA</span>
-      <span class="cv-nav-access" onclick="openBriefingModal()" style="cursor:pointer">REQUEST&nbsp;ACCESS</span>
+      <span class="cv-nav-access" onclick="openBriefingModal('Request Access')" style="cursor:pointer">REQUEST&nbsp;ACCESS</span>
     </div>
   </div>
 
@@ -18873,7 +18873,10 @@ document.addEventListener('keydown', function(e) {
   var formWrap = document.getElementById('brfg-form-wrap');
   var successEl= document.getElementById('brfg-success');
 
-  function openBriefingModal() {
+  function openBriefingModal(label) {
+    var title = label || 'Book a Demo';
+    document.querySelector('.brfg-title').textContent = title;
+    submitBtn.textContent = title + '  →';
     errEl.style.display = 'none';
     formWrap.style.display = 'block';
     successEl.style.display = 'none';

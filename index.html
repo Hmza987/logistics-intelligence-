@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="utf-8"/>
@@ -3096,7 +3096,17 @@ canvas { font-family: var(--f-mono); }
 .tf-comm-btn:hover:not(.active){border-color:var(--c-tx2);}
 .tf-comm-btn.wip{opacity:0.38;cursor:default;border-style:dashed;}
 .tf-comm-btn.wip:hover{border-color:rgba(255,255,255,0.12);}
-#tf-world-map{height:580px;border-radius:0 0 4px 4px;background:#0a0f16;}
+/* Legacy stress-test elements hidden in new design */
+#tf-outputs,#tf-price-card,#tf-alert-strip,#tf-world-map,#tf-map-legend,#tf-map-lower-rows,#tf-wip-screen{display:none!important;}
+/* New Trade Explorer filter strip overrides */
+#page-stress .tf-cat-btn{font-size:10px;letter-spacing:.1em;padding:4px 13px;border-color:#222220;color:#5A5A52;text-transform:uppercase;}
+#page-stress .tf-cat-btn.active{background:rgba(82,130,224,0.14);border-color:rgba(82,130,224,0.55);color:#7AA8E8;}
+#page-stress .tf-comm-btn{font-size:10px;letter-spacing:.1em;padding:4px 13px;border-color:#222220;color:#5A5A52;background:transparent;}
+#page-stress .tf-comm-btn.active{background:rgba(194,162,62,0.12);border-color:rgba(194,162,62,0.6);color:#C9AE4E;}
+#page-stress .tf-cp-chip{border-color:#222220;color:#5A5A52;}
+#page-stress .tf-cp-chip.active{background:rgba(220,38,38,0.15);border-color:rgba(220,38,38,0.5);color:#f87171;}
+/* old Leaflet map — keep 0 height so JS can init but it stays invisible */
+#tf-world-map-hidden-legacy{height:1px;width:1px;overflow:hidden;position:absolute;opacity:0;pointer-events:none;}
 .tf-below-map{display:grid;grid-template-columns:62% 38%;gap:14px;margin-bottom:14px;}
 .tf-cp-grid{display:flex;flex-direction:column;gap:4px;max-height:300px;overflow-y:auto;}
 .tf-cp-row{display:flex;align-items:center;gap:8px;padding:5px 8px;border-radius:3px;background:rgba(255,255,255,0.02);border:1px solid var(--c-bd1);cursor:pointer;transition:all 0.15s;}
@@ -4746,246 +4756,343 @@ canvas { font-family: var(--f-mono); }
 </div>
 
 <!-- ============================================================ TAB 6: TRADE FLOW STRESS TEST -->
-<div class="page" id="page-stress">
+<div class="page" id="page-stress" style="padding:0">
 
-  <div class="tf-page-header">
-    <div>
-      <div class="tf-page-title">&#9670; Trade Explorer Lab</div>
-      <div class="tf-page-sub">Chokepoint disruption modelling &middot; Transparent calculation methodology &middot; Documented data sources</div>
-      <div class="tf-page-meta">Based on observed trade volumes &middot; Derived calculations only &middot; No AI-generated scores &middot; All outputs are fully auditable</div>
-    </div>
-    <div style="text-align:right;flex-shrink:0">
-      <div style="font-family:var(--f-mono);font-size:8px;color:var(--c-tx2);line-height:1.9">
-        Sources: IEA &bull; EIA &bull; GIIGNL &bull; USDA FAS &bull; ICSG &bull; Clarksons<br>
-        Distances: Sea-Distances.org &bull; MarineTraffic verified routes<br>
-        Last updated: Jun 2026
+  <!-- Hidden legacy IDs that JS still reads -->
+  <div id="tf-alert-strip" style="display:none"><span id="tf-active-count"></span><div id="tf-alert-body"></div></div>
+  <div id="tf-wip-screen" style="display:none"><div id="tf-wip-name"></div></div>
+  <div id="tf-world-map" style="display:none"></div>
+  <div id="tf-map-legend" style="display:none"></div>
+  <div id="tf-map-comm-label" style="display:none"></div>
+  <div id="tf-map-route-count" style="display:none"></div>
+  <div id="tf-map-lower-rows" style="display:none"></div>
+  <div id="tf-bl-comm" style="display:none"></div>
+  <div id="tf-baseline-content" style="display:none"></div>
+  <div id="tf-price-card" style="display:none"><div id="tf-price-content"></div></div>
+  <div id="tf-outputs" style="display:none">
+    <div id="tf-out-vol"><div id="tf-val-vol"></div><div id="tf-unit-vol"></div><div id="tf-sub-vol"></div></div>
+    <div id="tf-out-rrt"><div id="tf-val-rrt"></div><div id="tf-unit-rrt"></div><div id="tf-sub-rrt"></div></div>
+    <div id="tf-out-dist"><div id="tf-val-dist"></div></div>
+    <div id="tf-out-time"><div id="tf-val-time"></div></div>
+    <div id="tf-out-cost"><div id="tf-val-cost"></div></div>
+  </div>
+
+  <!-- ── FILTER STRIP ──────────────────────────────────────────────────────── -->
+  <div style="background:#0D0D0B;border-bottom:1px solid #1A1A18;padding:12px 28px;display:flex;flex-direction:column;gap:9px">
+
+    <div style="display:flex;align-items:center;gap:12px">
+      <span style="font-size:9px;font-weight:700;letter-spacing:0.14em;color:#4A4A44;width:80px;flex-shrink:0;font-family:var(--f-mono)">CATEGORY</span>
+      <div style="display:flex;gap:6px;flex-wrap:wrap" id="tf-cat-row">
+        <button class="tf-cat-btn active" onclick="filterTFCat('energy',this)" style="font-size:10px;font-weight:700;letter-spacing:0.1em;padding:4px 13px;border-radius:3px;background:rgba(82,130,224,0.14);border:1px solid rgba(82,130,224,0.55);color:#7AA8E8;cursor:pointer;font-family:var(--f-mono)">ENERGY</button>
+        <button class="tf-cat-btn" onclick="filterTFCat('agriculture',this)" style="font-size:10px;letter-spacing:0.1em;padding:4px 13px;border-radius:3px;border:1px solid #222220;color:#5A5A52;background:transparent;cursor:pointer;font-family:var(--f-mono)">AGRICULTURE</button>
+        <button class="tf-cat-btn" onclick="filterTFCat('metals',this)" style="font-size:10px;letter-spacing:0.1em;padding:4px 13px;border-radius:3px;border:1px solid #222220;color:#5A5A52;background:transparent;cursor:pointer;font-family:var(--f-mono)">METALS</button>
+        <button class="tf-cat-btn" onclick="filterTFCat('manufacturing',this)" style="font-size:10px;letter-spacing:0.1em;padding:4px 13px;border-radius:3px;border:1px solid #222220;color:#5A5A52;background:transparent;cursor:pointer;font-family:var(--f-mono)">MANUFACTURING</button>
+        <button class="tf-cat-btn" onclick="filterTFCat('all',this)" style="font-size:10px;letter-spacing:0.1em;padding:4px 13px;border-radius:3px;border:1px solid #222220;color:#5A5A52;background:transparent;cursor:pointer;font-family:var(--f-mono)">ALL</button>
       </div>
     </div>
+
+    <div style="display:flex;align-items:center;gap:12px">
+      <span style="font-size:9px;font-weight:700;letter-spacing:0.14em;color:#4A4A44;width:80px;flex-shrink:0;font-family:var(--f-mono)">COMMODITY</span>
+      <div style="display:flex;gap:6px;flex-wrap:wrap" id="tf-comm-grid"></div>
+    </div>
+
+    <div style="display:flex;align-items:center;gap:12px">
+      <span style="font-size:9px;font-weight:700;letter-spacing:0.14em;color:#4A4A44;width:80px;flex-shrink:0;font-family:var(--f-mono)">CHOKEPOINTS</span>
+      <div style="display:flex;gap:6px;flex-wrap:wrap" id="tf-cp-chips"></div>
+    </div>
+
   </div>
 
-  <!-- Alert strip (appears when disruptions are active) -->
-  <div class="tf-alert-strip" id="tf-alert-strip">
-    <div class="tf-alert-title">&#9670; Stress Test Active &mdash; <span id="tf-active-count">0</span> chokepoint(s) disrupted</div>
-    <div class="tf-alert-body" id="tf-alert-body">—</div>
-  </div>
+  <div style="padding:0 28px 28px">
 
-  <!-- Full-width world map with integrated commodity selector -->
-  <div class="card" style="padding:0;overflow:hidden;position:relative;margin-bottom:14px">
+    <!-- ── KPI SUMMARY STRIP ─────────────────────────────────────────────── -->
+    <div style="display:flex;align-items:stretch;border:1px solid #1E1E1C;border-radius:6px;overflow:hidden;background:#111110;margin-top:20px">
+      <div style="flex:1;padding:18px 20px;border-right:1px solid #1A1A18;display:flex;flex-direction:column;gap:4px">
+        <div style="font-size:9px;font-weight:700;letter-spacing:0.14em;color:#4A4A44;font-family:var(--f-mono)">GLOBAL SEABORNE CRUDE</div>
+        <div style="font-size:26px;font-weight:700;letter-spacing:-0.02em;color:#F2F1ED;line-height:1;margin:4px 0">100 M</div>
+        <div style="font-size:9px;color:#5A5A52;line-height:1.4;font-family:var(--f-mono)">bbl/day &middot; IEA 2024 baseline</div>
+      </div>
+      <div style="flex:1;padding:18px 20px;border-right:1px solid #1A1A18;display:flex;flex-direction:column;gap:4px">
+        <div style="font-size:9px;font-weight:700;letter-spacing:0.14em;color:#4A4A44;font-family:var(--f-mono)">THROUGH HORMUZ</div>
+        <div style="font-size:26px;font-weight:700;letter-spacing:-0.02em;color:#C9AE4E;line-height:1;margin:4px 0">~21 M</div>
+        <div style="font-size:9px;color:#5A5A52;line-height:1.4;font-family:var(--f-mono)">bbl/day &middot; ~21% of global seaborne</div>
+      </div>
+      <div style="flex:1;padding:18px 20px;border-right:1px solid #1A1A18;display:flex;flex-direction:column;gap:4px">
+        <div style="font-size:9px;font-weight:700;letter-spacing:0.14em;color:#4A4A44;font-family:var(--f-mono)">HORMUZ DISRUPTION</div>
+        <div style="font-size:26px;font-weight:700;letter-spacing:-0.02em;color:#E05252;line-height:1;margin:4px 0">-95%</div>
+        <div style="font-size:9px;color:#5A5A52;line-height:1.4;font-family:var(--f-mono)">Current transit vs 130/day baseline</div>
+      </div>
+      <div style="flex:1;padding:18px 20px;border-right:1px solid #1A1A18;display:flex;flex-direction:column;gap:4px">
+        <div style="font-size:9px;font-weight:700;letter-spacing:0.14em;color:#4A4A44;font-family:var(--f-mono)">RE-ROUTABLE VOLUME</div>
+        <div style="font-size:26px;font-weight:700;letter-spacing:-0.02em;color:#C98A2E;line-height:1;margin:4px 0">~14 M</div>
+        <div style="font-size:9px;color:#5A5A52;line-height:1.4;font-family:var(--f-mono)">bbl/day with viable Cape alternative</div>
+      </div>
+      <div style="flex:1;padding:18px 20px;display:flex;flex-direction:column;gap:4px">
+        <div style="font-size:9px;font-weight:700;letter-spacing:0.14em;color:#4A4A44;font-family:var(--f-mono)">ADDITIONAL TRANSIT</div>
+        <div style="font-size:26px;font-weight:700;letter-spacing:-0.02em;color:#C98A2E;line-height:1;margin:4px 0">+12 days</div>
+        <div style="font-size:9px;color:#5A5A52;line-height:1.4;font-family:var(--f-mono)">avg via Cape of Good Hope (VLCC)</div>
+      </div>
+    </div>
 
-    <!-- Row 1: category filter + map view buttons -->
-    <div style="padding:6px 14px;display:flex;align-items:center;justify-content:space-between;gap:10px;border-bottom:1px solid var(--c-bd1);background:rgba(6,14,24,0.95)">
-      <div style="display:flex;align-items:center;gap:6px;flex-wrap:wrap">
-        <span style="font-family:var(--f-mono);font-size:7px;letter-spacing:.1em;text-transform:uppercase;color:var(--c-tx2);white-space:nowrap">Category</span>
-        <div class="tf-cat-row" id="tf-cat-row" style="margin-bottom:0;gap:4px">
-          <button class="tf-cat-btn active" onclick="filterTFCat('energy',this)">Energy</button>
-          <button class="tf-cat-btn" onclick="filterTFCat('agriculture',this)">Agriculture</button>
-          <button class="tf-cat-btn" onclick="filterTFCat('metals',this)">Metals</button>
-          <button class="tf-cat-btn" onclick="filterTFCat('manufacturing',this)">Manufacturing</button>
-          <button class="tf-cat-btn" onclick="filterTFCat('all',this)">All</button>
+    <!-- ── TRADE ARCHITECTURE MAP ─────────────────────────────────────────── -->
+    <div style="background:#0A0A0A;border:1px solid #1E1E1C;border-radius:6px;overflow:hidden;margin-top:20px">
+      <!-- Legend header -->
+      <div style="padding:8px 16px;background:#0D0D0B;border-bottom:1px solid #1A1A18;display:flex;align-items:center;gap:18px;flex-wrap:wrap">
+        <span style="font-size:9px;font-weight:700;letter-spacing:0.06em;color:#5A5A52;display:flex;align-items:center;gap:6px;font-family:var(--f-mono)"><span style="width:22px;height:2px;background:#C2A23E;display:inline-block;border-radius:1px"></span>Active route</span>
+        <span style="font-size:9px;font-weight:700;letter-spacing:0.06em;color:#5A5A52;display:flex;align-items:center;gap:6px;font-family:var(--f-mono)"><span style="width:10px;height:10px;border-radius:50%;background:#E05252;display:inline-block"></span>Disrupted chokepoint</span>
+        <span style="font-size:9px;font-weight:700;letter-spacing:0.06em;color:#5A5A52;display:flex;align-items:center;gap:6px;font-family:var(--f-mono)"><span style="width:10px;height:10px;border-radius:50%;background:#5FA86A;display:inline-block"></span>Open chokepoint</span>
+        <span style="font-size:9px;font-weight:700;letter-spacing:0.06em;color:#5A5A52;display:flex;align-items:center;gap:6px;font-family:var(--f-mono)"><span style="width:10px;height:10px;border-radius:50%;border:2px solid #C2A23E;display:inline-block"></span>Export terminal</span>
+        <span style="font-size:9px;font-weight:700;letter-spacing:0.06em;color:#5A5A52;display:flex;align-items:center;gap:6px;font-family:var(--f-mono)"><span style="width:10px;height:10px;border-radius:50%;border:2px solid #4A80C8;display:inline-block"></span>Import terminal</span>
+        <span style="margin-left:auto;font-size:9px;color:#3A3A36;letter-spacing:0.08em;border:1px solid #2A2A26;padding:2px 9px;border-radius:3px;font-family:var(--f-mono)">Crude Oil &middot; Hormuz disruption scenario</span>
+      </div>
+      <!-- SVG Trade Map -->
+      <svg width="100%" height="320" viewBox="0 0 1280 320" style="display:block">
+        <!-- Background -->
+        <rect x="0" y="0" width="1280" height="320" fill="#0C1418"/>
+        <!-- Grid lines -->
+        <line x1="0" y1="0" x2="0" y2="320" stroke="rgba(255,255,255,0.018)" stroke-width="1"/>
+        <line x1="120" y1="0" x2="120" y2="320" stroke="rgba(255,255,255,0.018)" stroke-width="1"/>
+        <line x1="240" y1="0" x2="240" y2="320" stroke="rgba(255,255,255,0.018)" stroke-width="1"/>
+        <line x1="360" y1="0" x2="360" y2="320" stroke="rgba(255,255,255,0.018)" stroke-width="1"/>
+        <line x1="480" y1="0" x2="480" y2="320" stroke="rgba(255,255,255,0.018)" stroke-width="1"/>
+        <line x1="600" y1="0" x2="600" y2="320" stroke="rgba(255,255,255,0.018)" stroke-width="1"/>
+        <line x1="720" y1="0" x2="720" y2="320" stroke="rgba(255,255,255,0.018)" stroke-width="1"/>
+        <line x1="840" y1="0" x2="840" y2="320" stroke="rgba(255,255,255,0.018)" stroke-width="1"/>
+        <line x1="960" y1="0" x2="960" y2="320" stroke="rgba(255,255,255,0.018)" stroke-width="1"/>
+        <line x1="1080" y1="0" x2="1080" y2="320" stroke="rgba(255,255,255,0.018)" stroke-width="1"/>
+        <line x1="1200" y1="0" x2="1200" y2="320" stroke="rgba(255,255,255,0.018)" stroke-width="1"/>
+        <line x1="0" y1="0" x2="1280" y2="0" stroke="rgba(255,255,255,0.018)" stroke-width="1"/>
+        <line x1="0" y1="80" x2="1280" y2="80" stroke="rgba(255,255,255,0.018)" stroke-width="1"/>
+        <line x1="0" y1="160" x2="1280" y2="160" stroke="rgba(255,255,255,0.018)" stroke-width="1"/>
+        <line x1="0" y1="240" x2="1280" y2="240" stroke="rgba(255,255,255,0.018)" stroke-width="1"/>
+        <!-- Land masses -->
+        <path d="M 390,48 L 520,44 L 555,78 L 580,88 L 523,113 L 575,158 L 595,158 L 558,200 L 508,234 L 458,200 L 390,183 L 365,128 Z" fill="#141C1A" stroke="rgba(255,255,255,0.055)" stroke-width="0.8" stroke-linejoin="round"/>
+        <path d="M 554,193 L 610,183 L 650,194 L 664,224 L 654,264 L 632,304 L 603,313 L 577,293 L 550,263 L 543,233 Z" fill="#141C1A" stroke="rgba(255,255,255,0.055)" stroke-width="0.8" stroke-linejoin="round"/>
+        <path d="M 607,49 L 650,39 L 680,43 L 718,53 L 738,67 L 743,88 L 720,99 L 698,109 L 676,113 L 654,108 L 630,103 L 622,100 L 616,76 Z" fill="#141C1A" stroke="rgba(255,255,255,0.055)" stroke-width="0.8" stroke-linejoin="round"/>
+        <path d="M 618,99 L 680,111 L 720,107 L 754,111 L 762,129 L 748,161 L 728,183 L 716,211 L 696,241 L 694,259 L 666,267 L 646,257 L 628,243 L 610,219 L 592,195 L 590,172 L 600,154 L 618,137 Z" fill="#141C1A" stroke="rgba(255,255,255,0.055)" stroke-width="0.8" stroke-linejoin="round"/>
+        <path d="M 743,88 L 756,81 L 800,59 L 843,37 L 913,31 L 978,41 L 1044,55 L 1092,77 L 1138,99 L 1173,156 L 1145,196 L 1115,236 L 1085,256 L 1001,236 L 966,215 L 944,191 L 915,186 L 895,166 L 857,131 L 830,141 L 805,147 L 782,151 L 762,127 L 738,113 L 754,111 L 743,88 Z" fill="#141C1A" stroke="rgba(255,255,255,0.055)" stroke-width="0.8" stroke-linejoin="round"/>
+        <path d="M 1016,256 L 1066,250 L 1106,260 L 1126,286 L 1116,316 L 1066,320 L 1026,310 L 1008,296 L 1012,276 Z" fill="#141C1A" stroke="rgba(255,255,255,0.055)" stroke-width="0.8" stroke-linejoin="round"/>
+        <!-- Trade routes -->
+        <path d="M 849,123 C 920,154 970,169 1004,177 C 1040,164 1060,133 1091,97" fill="none" stroke="#C2A23E" stroke-width="2" stroke-linecap="round"/>
+        <path d="M 849,123 C 950,148 1080,128 1142,102" fill="none" stroke="rgba(194,162,62,0.55)" stroke-width="1.5" stroke-linecap="round"/>
+        <path d="M 849,123 Q 875,131 897,139" fill="none" stroke="#C2A23E" stroke-width="1.5" stroke-linecap="round"/>
+        <path d="M 849,123 Q 800,117 754,111 Q 700,89 654,62" fill="none" stroke="#C2A23E" stroke-width="1.5" stroke-linecap="round"/>
+        <path d="M 782,151 Q 740,198 694,258 Q 655,282 636,268" fill="none" stroke="rgba(194,162,62,0.3)" stroke-width="1" stroke-linecap="round" stroke-dasharray="6 4"/>
+        <path d="M 653,167 Q 645,128 654,62" fill="none" stroke="rgba(194,162,62,0.5)" stroke-width="1.2" stroke-linecap="round"/>
+        <path d="M 675,207 Q 685,236 694,258 Q 790,218 1004,177" fill="none" stroke="rgba(194,162,62,0.38)" stroke-width="1" stroke-linecap="round" stroke-dasharray="4 4"/>
+        <path d="M 523,113 Q 590,80 654,62" fill="none" stroke="rgba(194,162,62,0.5)" stroke-width="1.2" stroke-linecap="round"/>
+        <path d="M 523,113 Q 548,143 573,158 Q 700,160 1004,177" fill="none" stroke="rgba(194,162,62,0.32)" stroke-width="1" stroke-linecap="round"/>
+        <path d="M 756,82 Q 728,78 654,62" fill="none" stroke="rgba(194,162,62,0.4)" stroke-width="1" stroke-linecap="round"/>
+        <path d="M 763,56 Q 720,57 654,62" fill="none" stroke="rgba(194,162,62,0.28)" stroke-width="1" stroke-linecap="round" stroke-dasharray="5 3"/>
+        <path d="M 595,158 Q 624,113 654,62" fill="none" stroke="rgba(194,162,62,0.28)" stroke-width="1" stroke-linecap="round"/>
+        <!-- Chokepoint: HORMUZ (disrupted) — pulse ring -->
+        <circle cx="849" cy="123" r="14" fill="none" stroke="#E05252" stroke-width="1" opacity="0.35"/>
+        <circle cx="849" cy="123" r="6" fill="#0C1418"/>
+        <circle cx="849" cy="123" r="5" fill="#E05252"/>
+        <text x="849" y="111" text-anchor="middle" fill="#F2F1ED" style="font:bold 8px 'JetBrains Mono',monospace;letter-spacing:0.1em">HORMUZ</text>
+        <!-- Chokepoint: SUEZ -->
+        <circle cx="754" cy="111" r="6" fill="#0C1418"/>
+        <circle cx="754" cy="111" r="5" fill="#5FA86A"/>
+        <text x="754" y="99" text-anchor="middle" fill="#D9D8D3" style="font:bold 7px 'JetBrains Mono',monospace;letter-spacing:0.1em">SUEZ</text>
+        <!-- Chokepoint: BOSPHORUS -->
+        <circle cx="743" cy="88" r="6" fill="#0C1418"/>
+        <circle cx="743" cy="88" r="5" fill="#5FA86A"/>
+        <text x="743" y="76" text-anchor="middle" fill="#D9D8D3" style="font:bold 7px 'JetBrains Mono',monospace;letter-spacing:0.1em">BOSPHORUS</text>
+        <!-- Chokepoint: MALACCA -->
+        <circle cx="1004" cy="177" r="6" fill="#0C1418"/>
+        <circle cx="1004" cy="177" r="5" fill="#5FA86A"/>
+        <text x="1004" y="165" text-anchor="middle" fill="#D9D8D3" style="font:bold 7px 'JetBrains Mono',monospace;letter-spacing:0.1em">MALACCA</text>
+        <!-- Chokepoint: BAB-EL-MANDEB -->
+        <circle cx="782" cy="151" r="6" fill="#0C1418"/>
+        <circle cx="782" cy="151" r="5" fill="#C98A2E"/>
+        <text x="782" y="164" text-anchor="middle" fill="#D9D8D3" style="font:bold 7px 'JetBrains Mono',monospace;letter-spacing:0.1em">BAB-EL-MANDEB</text>
+        <!-- Chokepoint: PANAMA -->
+        <circle cx="573" cy="158" r="6" fill="#0C1418"/>
+        <circle cx="573" cy="158" r="5" fill="#5FA86A"/>
+        <text x="573" y="146" text-anchor="middle" fill="#D9D8D3" style="font:bold 7px 'JetBrains Mono',monospace;letter-spacing:0.1em">PANAMA</text>
+        <!-- Chokepoint: GIBRALTAR -->
+        <circle cx="622" cy="100" r="6" fill="#0C1418"/>
+        <circle cx="622" cy="100" r="5" fill="#5FA86A"/>
+        <text x="622" y="88" text-anchor="middle" fill="#D9D8D3" style="font:bold 7px 'JetBrains Mono',monospace;letter-spacing:0.1em">GIBRALTAR</text>
+        <!-- Export terminals (open gold circles) -->
+        <circle cx="840" cy="130" r="4" fill="none" stroke="#C2A23E" stroke-width="1.8"/>
+        <circle cx="764" cy="127" r="4" fill="none" stroke="#C2A23E" stroke-width="1.8"/>
+        <circle cx="653" cy="167" r="4" fill="none" stroke="#C2A23E" stroke-width="1.8"/>
+        <circle cx="675" cy="207" r="4" fill="none" stroke="#C2A23E" stroke-width="1.8"/>
+        <circle cx="595" cy="158" r="4" fill="none" stroke="#C2A23E" stroke-width="1.8"/>
+        <circle cx="763" cy="56" r="4" fill="none" stroke="#C2A23E" stroke-width="1.8"/>
+        <circle cx="681" cy="119" r="4" fill="none" stroke="#C2A23E" stroke-width="1.8"/>
+        <circle cx="523" cy="113" r="4" fill="none" stroke="#C2A23E" stroke-width="1.8"/>
+        <!-- Import terminals (open blue circles) -->
+        <circle cx="1091" cy="97" r="4" fill="none" stroke="#4A80C8" stroke-width="1.8"/>
+        <circle cx="1142" cy="102" r="4" fill="none" stroke="#4A80C8" stroke-width="1.8"/>
+        <circle cx="654" cy="62" r="4" fill="none" stroke="#4A80C8" stroke-width="1.8"/>
+        <circle cx="897" cy="139" r="4" fill="none" stroke="#4A80C8" stroke-width="1.8"/>
+        <!-- Bypass terminal (teal) -->
+        <circle cx="856" cy="134" r="4" fill="none" stroke="#5AB8B8" stroke-width="1.8"/>
+      </svg>
+      <!-- Footer attribution -->
+      <div style="padding:7px 16px;border-top:1px solid #1A1A18;font-size:9px;color:#2A2A26;letter-spacing:0.04em;display:flex;justify-content:space-between;font-family:var(--f-mono)">
+        <span>IEA, EIA, Vortexa 2023 &middot; Trade architecture: Crude Oil &middot; Hormuz active disruption scenario</span>
+        <span>Routes: Sea-Distances.org &middot; MarineTraffic AIS 2023</span>
+      </div>
+    </div>
+
+    <!-- ── BASELINE METRICS ───────────────────────────────────────────────── -->
+    <div id="tf-baseline-card" style="margin-top:28px;margin-bottom:0">
+      <div style="display:flex;align-items:baseline;justify-content:space-between;margin-bottom:14px">
+        <div style="font-size:11px;font-weight:700;letter-spacing:0.18em;color:#C9AE4E;font-family:var(--f-mono)">BASELINE METRICS &ndash; CRUDE OIL</div>
+        <div style="font-size:9px;color:#3A3A36;letter-spacing:0.06em;font-family:var(--f-mono)">Source: IEA Oil Market Report 2024 &middot; EIA &middot; Clarkson Research</div>
+      </div>
+      <div style="display:grid;grid-template-columns:repeat(5,1fr);gap:10px;margin-bottom:28px">
+        <div style="background:#111110;border:1px solid #1E1E1C;border-radius:6px;padding:16px 14px">
+          <div style="font-size:9px;font-weight:700;letter-spacing:0.12em;color:#4A4A44;margin-bottom:10px;font-family:var(--f-mono)">GLOBAL SEABORNE TRADE</div>
+          <div style="font-size:20px;font-weight:700;color:#F2F1ED;letter-spacing:-0.01em;line-height:1">100 M bbl/day</div>
+          <div style="font-size:9px;color:#5A5A52;margin-top:5px;line-height:1.4;font-family:var(--f-mono)">IEA Oil Market Report 2024</div>
         </div>
-      </div>
-      <div style="display:flex;align-items:center;gap:8px;flex-shrink:0">
-        <button onclick="TF_MAP && TF_MAP.setView([20,10],2)" style="font-family:var(--f-mono);font-size:8px;padding:2px 8px;background:transparent;border:1px solid var(--c-bd1);color:var(--c-tx2);border-radius:2px;cursor:pointer">Atlantic</button>
-        <button onclick="TF_MAP && TF_MAP.setView([20,160],2)" style="font-family:var(--f-mono);font-size:8px;padding:2px 8px;background:transparent;border:1px solid var(--c-bd1);color:var(--c-tx2);border-radius:2px;cursor:pointer">Pacific</button>
-      </div>
-    </div>
-
-    <!-- Row 2: commodity buttons -->
-    <div style="padding:5px 14px;border-bottom:1px solid var(--c-bd1);background:rgba(8,12,20,0.9)">
-      <div class="tf-comm-grid" id="tf-comm-grid" style="margin-bottom:0;gap:4px"></div>
-    </div>
-
-    <!-- Everything below the commodity row is wrapped so the WIP overlay only covers this area -->
-    <div id="tf-map-lower-rows" style="position:relative;overflow:hidden">
-
-      <!-- WIP overlay — covers map body only; commodity buttons above remain clickable -->
-      <div id="tf-wip-screen" style="display:none;position:absolute;inset:0;z-index:50;background:rgba(6,10,18,0.96);align-items:center;justify-content:center;flex-direction:column;gap:14px;text-align:center;padding:40px">
-        <div style="font-family:var(--f-mono);font-size:9px;letter-spacing:.18em;text-transform:uppercase;color:#334155">Work in Progress</div>
-        <div id="tf-wip-name" style="font-size:20px;font-weight:700;color:#e8eaed;letter-spacing:-.01em"></div>
-        <div style="font-size:10px;color:#475569;max-width:360px;line-height:1.75">Full trade flow modelling, route data, and chokepoint stress-test for this commodity is under development.<br><br>Only <span style="color:#f59e0b;font-weight:600">Crude Oil</span> is available in this release.</div>
-        <div style="width:40px;height:1px;background:rgba(255,255,255,0.07);margin:4px 0"></div>
-        <div style="font-size:8.5px;color:#1e293b;letter-spacing:.1em;text-transform:uppercase">&#8593; Select Crude Oil above to continue</div>
-      </div>
-
-      <!-- Row 3: chokepoint quick-select -->
-      <div style="padding:6px 14px;display:flex;align-items:center;gap:6px;flex-wrap:wrap;border-bottom:1px solid var(--c-bd1);background:rgba(6,14,24,0.95)">
-        <span style="font-family:var(--f-mono);font-size:7px;letter-spacing:.1em;text-transform:uppercase;color:var(--c-tx2);white-space:nowrap;flex-shrink:0">Chokepoints</span>
-        <div id="tf-cp-chips" style="display:flex;align-items:center;gap:4px;flex-wrap:wrap"></div>
-      </div>
-
-      <!-- Map title + route count -->
-      <div style="padding:5px 14px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid var(--c-bd1);background:rgba(10,15,22,0.95)">
-        <div style="font-family:var(--f-mono);font-size:8px;letter-spacing:.08em;text-transform:uppercase;color:var(--c-tx2)">
-          &#9670; Trade Architecture &mdash; <span id="tf-map-comm-label" style="color:var(--c-tx1)">Select a commodity above</span>
+        <div style="background:#111110;border:1px solid #1E1E1C;border-radius:6px;padding:16px 14px">
+          <div style="font-size:9px;font-weight:700;letter-spacing:0.12em;color:#4A4A44;margin-bottom:10px;font-family:var(--f-mono)">PRICE REFERENCE</div>
+          <div style="font-size:20px;font-weight:700;color:#F2F1ED;letter-spacing:-0.01em;line-height:1">Brent spot</div>
+          <div style="font-size:9px;color:#5A5A52;margin-top:5px;line-height:1.4;font-family:var(--f-mono)">$/bbl &middot; benchmark for crude trade flows</div>
         </div>
-        <div style="font-size:9px;color:var(--c-tx2)" id="tf-map-route-count"></div>
-      </div>
-
-      <div id="tf-world-map"></div>
-      <div class="tf-map-legend" id="tf-map-legend"></div>
-    </div><!-- /tf-map-lower-rows -->
-  </div><!-- /map card -->
-
-  <!-- Output metrics row — directly below map -->
-  <div class="tf-outputs" id="tf-outputs">
-    <div class="tf-output-card" id="tf-out-vol">
-      <div class="tf-output-label">Trade Volume Impacted</div>
-      <div class="tf-output-value" id="tf-val-vol">—</div>
-      <div class="tf-output-unit" id="tf-unit-vol"></div>
-      <div class="tf-output-sub" id="tf-sub-vol">Run stress test to see results</div>
-    </div>
-    <div class="tf-output-card" id="tf-out-rrt">
-      <div class="tf-output-label">Re-routable Volume</div>
-      <div class="tf-output-value" id="tf-val-rrt">—</div>
-      <div class="tf-output-unit" id="tf-unit-rrt"></div>
-      <div class="tf-output-sub" id="tf-sub-rrt">Volume with viable alternative routes</div>
-    </div>
-    <div class="tf-output-card" id="tf-out-dist">
-      <div class="tf-output-label">Additional Distance</div>
-      <div class="tf-output-value" id="tf-val-dist">—</div>
-      <div class="tf-output-unit">nautical miles (weighted avg)</div>
-      <div class="tf-output-sub" id="tf-sub-dist">Extra nm via alternative route</div>
-    </div>
-    <div class="tf-output-card" id="tf-out-time">
-      <div class="tf-output-label">Additional Transit Time</div>
-      <div class="tf-output-value" id="tf-val-time">—</div>
-      <div class="tf-output-unit">days</div>
-      <div class="tf-output-sub" id="tf-sub-time">Calculation: extra nm &divide; (vessel speed &times; 24)</div>
-    </div>
-    <div class="tf-output-card" id="tf-out-cost">
-      <div class="tf-output-label">Additional Transport Cost</div>
-      <div class="tf-output-value" id="tf-val-cost">—</div>
-      <div class="tf-output-unit">% above baseline rate</div>
-      <div class="tf-output-sub" id="tf-sub-cost">Regression model &beta;&#8323; = 0.045 per 100 nm</div>
-    </div>
-  </div>
-
-  <!-- Baseline metrics (full width) -->
-  <div class="card" id="tf-baseline-card" style="margin-bottom:14px">
-    <div class="card-label">&#9670; Baseline Metrics &mdash; <span id="tf-bl-comm">—</span></div>
-    <div id="tf-baseline-content">
-      <div style="font-size:9px;color:var(--c-tx2);padding:16px 0;text-align:center">Select a commodity to view baseline trade data</div>
-    </div>
-  </div>
-
-  <!-- Price impact -->
-  <div class="card" id="tf-price-card" style="margin-bottom:14px">
-    <div class="card-label">&#9670; Price Impact Estimate</div>
-    <div id="tf-price-content" style="font-size:9px;color:var(--c-tx2);padding:8px 0;line-height:1.7">Run stress test to see price impact analysis</div>
-  </div>
-
-  <!-- Fleet Tonnage Panel (crude oil only) -->
-  <div class="card" id="tf-fleet-card" style="margin-bottom:14px">
-    <div class="tf-method-toggle" onclick="toggleTFAccordion('tf-fleet-body','tf-fleet-chev')">
-      <div class="card-label" style="margin-bottom:0" id="tf-fleet-card-label">&#9670; Fleet Deployment &mdash; Crude Oil Tanker Market</div>
-      <div style="font-family:var(--f-mono);font-size:8px;color:var(--c-tx2)" id="tf-fleet-chev">&#9660; Show</div>
-    </div>
-    <div id="tf-fleet-body" style="display:none;margin-top:14px">
-      <div id="tf-fleet-content"><div style="font-size:9px;color:var(--c-tx2);padding:8px 0">Select crude oil to view fleet deployment data</div></div>
-    </div>
-  </div>
-
-  <!-- Strategic Stockpile Panel (crude oil only) -->
-  <div class="card" id="tf-stockpile-card" style="margin-bottom:14px">
-    <div class="tf-method-toggle" onclick="toggleTFAccordion('tf-stockpile-body','tf-stockpile-chev')">
-      <div class="card-label" style="margin-bottom:0" id="tf-stockpile-card-label">&#9670; Strategic Oil Stockpile Runway</div>
-      <div style="font-family:var(--f-mono);font-size:8px;color:var(--c-tx2)" id="tf-stockpile-chev">&#9660; Show</div>
-    </div>
-    <div id="tf-stockpile-body" style="display:none;margin-top:14px">
-      <div id="tf-stockpile-content"><div style="font-size:9px;color:var(--c-tx2);padding:8px 0">Select crude oil and run a stress test to view stockpile draw-down analysis</div></div>
-    </div>
-  </div>
-
-  <!-- GCC Country Impact -->
-  <div class="card" id="tf-gcc-card" style="margin-bottom:14px">
-    <div class="tf-method-toggle" onclick="toggleTFAccordion('tf-gcc-body','tf-gcc-chev')">
-      <div class="card-label" style="margin-bottom:0" id="tf-gcc-card-label">&#9670; Key Insights &mdash; GCC Country Exposure</div>
-      <div style="font-family:var(--f-mono);font-size:8px;color:var(--c-tx2)" id="tf-gcc-chev">&#9660; Show</div>
-    </div>
-    <div id="tf-gcc-body" style="display:none;margin-top:14px">
-      <div class="gcc-grid" id="tf-gcc-grid"></div>
-      <div id="gcc-footer" style="font-size:7.5px;color:var(--c-tx2);margin-top:10px;border-top:1px solid var(--c-bd1);padding-top:8px">
-        Baseline data &#8212; toggle a chokepoint chip above to see scenario-specific implications.
-      </div>
-    </div>
-  </div>
-
-  <!-- Methodology panel -->
-  <div class="card" id="tf-method-card">
-    <div class="tf-method-toggle" onclick="toggleTFMethodology()">
-      <div class="tf-method-title">&#9432; Methodology, Data Sources &amp; Assumptions</div>
-      <div style="font-family:var(--f-mono);font-size:8px;color:var(--c-tx2)" id="tf-method-chevron">&#9660; Show</div>
-    </div>
-    <div class="tf-method-body" id="tf-method-body">
-      <div>
-        <div class="tf-method-section-title">&#9670; Distance &amp; Transit Time</div>
-        <div class="tf-method-item">Route distances sourced from Sea-Distances.org and MarineTraffic port-to-port calculators for standard maritime routes.</div>
-        <div class="tf-method-formula">
-          Additional Time (days) =<br>
-          Extra Distance (nm) &divide; (Vessel Speed (kt) &times; 24)
+        <div style="background:#111110;border:1px solid #1E1E1C;border-radius:6px;padding:16px 14px">
+          <div style="font-size:9px;font-weight:700;letter-spacing:0.12em;color:#4A4A44;margin-bottom:10px;font-family:var(--f-mono)">TYPICAL VESSEL</div>
+          <div style="font-size:20px;font-weight:700;color:#F2F1ED;letter-spacing:-0.01em;line-height:1">VLCC / Suezmax</div>
+          <div style="font-size:9px;color:#5A5A52;margin-top:5px;line-height:1.4;font-family:var(--f-mono)">200&ndash;320k DWT primary &middot; 120&ndash;200k secondary</div>
         </div>
-        <div class="tf-method-item">Fleet-average speeds: VLCC 13 kt &bull; LNG carrier 19 kt &bull; Capesize bulk 14 kt &bull; Panamax 14 kt &bull; Container 20 kt</div>
-        <div class="tf-source-tag">Source: Clarksons Research, MarineTraffic average voyage speed data 2023</div>
-      </div>
-      <div>
-        <div class="tf-method-section-title">&#9670; Transport Cost Multiplier</div>
-        <div class="tf-method-item">Uses the same documented regression model as the Scenario Simulator tab. The distance coefficient &beta;&#8323; is validated against observed freight rate data.</div>
-        <div class="tf-method-formula">
-          Cost Multiplier = max(0.5,<br>
-          &nbsp;&nbsp;1 + 0.009&times;(Brent&minus;72)<br>
-          &nbsp;&nbsp;+ 0.045&times;(ExtraNm&divide;100)<br>
-          &nbsp;&nbsp;+ 0.050&times;(Utilisation&minus;72))<br><br>
-          <span style="color:var(--c-tx2)">&beta;&#8323; = 0.045 per 100 nm &bull; Base Brent: $72/bbl<br>
-          Utilisation held at 72% baseline</span>
+        <div style="background:#111110;border:1px solid #1E1E1C;border-radius:6px;padding:16px 14px">
+          <div style="font-size:9px;font-weight:700;letter-spacing:0.12em;color:#4A4A44;margin-bottom:10px;font-family:var(--f-mono)">AVG FLEET SPEED</div>
+          <div style="font-size:20px;font-weight:700;color:#F2F1ED;letter-spacing:-0.01em;line-height:1">13 knots</div>
+          <div style="font-size:9px;color:#5A5A52;margin-top:5px;line-height:1.4;font-family:var(--f-mono)">Avg laden/ballast average fleet speed</div>
         </div>
-        <div class="tf-source-tag">Regression: Stopford (2009) Maritime Economics; validated against FBX01 vs distance spread 2019&ndash;2023 (UNCTAD data)</div>
-      </div>
-      <div>
-        <div class="tf-method-section-title">&#9670; Price Impact Methodology</div>
-        <div class="tf-method-item"><strong style="color:#e8eaed">Method A &mdash; Historical Event References</strong><br>Documented outcomes from real disruption events. These are observed data, not predictions.</div>
-        <div class="tf-method-item"><strong style="color:#e8eaed">Method B &mdash; Elasticity-Based</strong></div>
-        <div class="tf-method-formula">
-          &Delta;P = (&Delta;Q &divide; Q) &times; (1 &divide; &epsilon;<sub>d</sub>) &times; P<br><br>
-          <span style="color:var(--c-tx2)">&Delta;Q = disrupted % of market<br>
-          &epsilon;<sub>d</sub> = short-run demand elasticity<br>
-          P = baseline commodity price</span>
-        </div>
-        <div class="tf-source-tag">Elasticities: crude oil &minus;0.05 (Hamilton 2009); LNG &minus;0.10 (Wood Mackenzie); agricultural &minus;0.15 to &minus;0.25 (IMF 2022)</div>
-      </div>
-      <div>
-        <div class="tf-method-section-title">&#9670; Volume Data Sources</div>
-        <div class="tf-method-item">
-          <strong style="color:#e8eaed">Crude Oil / Petroleum:</strong> EIA Chokepoints 2022; IEA OMR 2023<br>
-          <strong style="color:#e8eaed">LNG:</strong> GIIGNL Annual Report 2024<br>
-          <strong style="color:#e8eaed">Wheat / Corn / Rice / Soybeans:</strong> USDA FAS MY2022/23<br>
-          <strong style="color:#e8eaed">Copper:</strong> ICSG Copper Bulletin 2023<br>
-          <strong style="color:#e8eaed">Iron Ore / Coal:</strong> Clarksons Shipping Review 2023<br>
-          <strong style="color:#e8eaed">Nickel:</strong> INSG / NiPERA 2023<br>
-          <strong style="color:#e8eaed">Rare Earths:</strong> USGS Mineral Commodity Summaries 2023<br>
-          <strong style="color:#e8eaed">Semiconductors / EV Batteries:</strong> WSTS / BloombergNEF 2023
-        </div>
-      </div>
-      <div>
-        <div class="tf-method-section-title">&#9670; Routing Assumptions</div>
-        <div class="tf-method-item">Primary routes based on AIS vessel density data (MarineTraffic 2023). Alternative routes are the next-best viable commercial option per vessel type.<br><br>
-        VLCC (crude, iron ore): Cannot transit Panama; Suez at reduced draft. No bypass for Hormuz — product redistribution via Fujairah anchorage only.<br><br>
-        LNG Carriers &gt;80,000 DWT: Cannot use most secondary straits. Hormuz closure requires US Gulf supply substitution (significantly higher transit distances to Asia).</div>
-      </div>
-      <div>
-        <div class="tf-method-section-title">&#9670; What This Module Does NOT Do</div>
-        <div class="tf-method-item">
-          This module displays observed data and transparent calculations only. It does NOT:<br>
-          &bull; Generate AI predictions or confidence scores<br>
-          &bull; Assign vulnerability or resilience scores<br>
-          &bull; Account for demand destruction under prolonged disruptions<br>
-          &bull; Model strategic reserve drawdowns<br>
-          &bull; Predict geopolitical responses or supply substitution<br>
-          &bull; Distinguish spot vs. contract freight markets<br><br>
-          All outputs are mechanical calculations based on documented volumes and distances, fully auditable against the stated sources.
+        <div style="background:#111110;border:1px solid #1E1E1C;border-radius:6px;padding:16px 14px">
+          <div style="font-size:9px;font-weight:700;letter-spacing:0.12em;color:#4A4A44;margin-bottom:10px;font-family:var(--f-mono)">DEMAND ELASTICITY</div>
+          <div style="font-size:20px;font-weight:700;color:#F2F1ED;letter-spacing:-0.01em;line-height:1">-0.05</div>
+          <div style="font-size:9px;color:#5A5A52;margin-top:5px;line-height:1.4;font-family:var(--f-mono)">&epsilon;<sub>d</sub> &middot; Hamilton (2009) &middot; short-run oil price</div>
         </div>
       </div>
     </div>
-  </div>
+
+    <!-- ── TRADE FLOW MATRIX ──────────────────────────────────────────────── -->
+    <div style="margin-bottom:28px">
+      <div style="font-size:11px;font-weight:700;letter-spacing:0.16em;color:#C9AE4E;margin-bottom:6px;font-family:var(--f-mono)">TRADE FLOW MATRIX <span style="font-weight:400;color:#4A4A44">&mdash; M bbl/day</span></div>
+      <div style="font-size:9px;color:#3A3A36;letter-spacing:0.04em;margin-bottom:12px;font-family:var(--f-mono)">Major documented bilateral flows only &middot; rows may not sum to total export volumes &middot; Source IEA, EIA, Vortexa 2023</div>
+      <div id="tf-trade-matrix" style="background:#111110;border:1px solid #1E1E1C;border-radius:6px;overflow:hidden;overflow-x:auto">
+        <!-- Matrix populated by JS on init -->
+      </div>
+    </div>
+
+    <!-- ── FLEET DEPLOYMENT ───────────────────────────────────────────────── -->
+    <div id="tf-fleet-card" style="margin-bottom:28px">
+      <div style="font-size:11px;font-weight:700;letter-spacing:0.18em;color:#C9AE4E;margin-bottom:6px;font-family:var(--f-mono)">FLEET DEPLOYMENT &ndash; CRUDE OIL TANKER MARKET</div>
+      <div style="font-size:9px;color:#3A3A36;letter-spacing:0.04em;margin-bottom:16px;font-family:var(--f-mono)">Clarkson Research 2024 &middot; Platts Dirty Tanker Assessments &middot; EIA Chokepoints 2022</div>
+      <div id="tf-fleet-body" style="display:block">
+        <div id="tf-fleet-content">
+          <div style="font-size:9px;color:var(--c-tx2);padding:8px 0">Loading fleet data&hellip;</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── STRATEGIC STOCKPILE RUNWAY ─────────────────────────────────────── -->
+    <div id="tf-stockpile-card" style="margin-bottom:28px">
+      <div style="font-size:11px;font-weight:700;letter-spacing:0.18em;color:#C9AE4E;margin-bottom:16px;font-family:var(--f-mono)">STRATEGIC OIL STOCKPILE RUNWAY</div>
+      <div id="tf-stockpile-body" style="display:block">
+        <div id="tf-stockpile-content">
+          <div style="font-size:9px;color:var(--c-tx2);padding:8px 0">Loading stockpile data&hellip;</div>
+        </div>
+      </div>
+      <div style="font-size:9px;color:#2A2A26;margin-top:8px;letter-spacing:0.04em;line-height:1.6;font-family:var(--f-mono)">Sources: EIA Today in Energy Apr 2026 &middot; EIA WPGR (SPR 412 Mb Dec 2025 drawn to ~393 Mb Jun 2026 via IEA 400 Mb emergency releases) &middot; Kpler (OECD commercial) &middot; EIA crude Apr 2026</div>
+    </div>
+
+    <!-- ── GCC COUNTRY EXPOSURE ───────────────────────────────────────────── -->
+    <div id="tf-gcc-card" style="margin-bottom:28px">
+      <div style="font-size:11px;font-weight:700;letter-spacing:0.18em;color:#C9AE4E;margin-bottom:16px;font-family:var(--f-mono)">KEY INSIGHTS &ndash; GCC COUNTRY EXPOSURE</div>
+      <div id="tf-gcc-body" style="display:block">
+        <div class="gcc-grid" id="tf-gcc-grid"></div>
+        <div id="gcc-footer" style="font-size:8px;color:var(--c-tx2);margin-top:10px;border-top:1px solid var(--c-bd1);padding-top:8px;font-family:var(--f-mono)">
+          Baseline data &mdash; crude oil / Hormuz active disruption scenario.
+        </div>
+      </div>
+    </div>
+
+    <!-- ── METHODOLOGY ────────────────────────────────────────────────────── -->
+    <div class="card" id="tf-method-card">
+      <div class="tf-method-toggle" onclick="toggleTFMethodology()">
+        <div class="tf-method-title">&#9432; Methodology, Data Sources &amp; Assumptions</div>
+        <div style="font-family:var(--f-mono);font-size:8px;color:var(--c-tx2)" id="tf-method-chevron">&#9660; Show</div>
+      </div>
+      <div class="tf-method-body" id="tf-method-body">
+        <div>
+          <div class="tf-method-section-title">&#9670; Distance &amp; Transit Time</div>
+          <div class="tf-method-item">Route distances sourced from Sea-Distances.org and MarineTraffic port-to-port calculators for standard maritime routes.</div>
+          <div class="tf-method-formula">
+            Additional Time (days) =<br>
+            Extra Distance (nm) &divide; (Vessel Speed (kt) &times; 24)
+          </div>
+          <div class="tf-method-item">Fleet-average speeds: VLCC 13 kt &bull; LNG carrier 19 kt &bull; Capesize bulk 14 kt &bull; Panamax 14 kt &bull; Container 20 kt</div>
+          <div class="tf-source-tag">Source: Clarksons Research, MarineTraffic average voyage speed data 2023</div>
+        </div>
+        <div>
+          <div class="tf-method-section-title">&#9670; Transport Cost Multiplier</div>
+          <div class="tf-method-item">Uses the same documented regression model as the Scenario Simulator tab. The distance coefficient &beta;&#8323; is validated against observed freight rate data.</div>
+          <div class="tf-method-formula">
+            Cost Multiplier = max(0.5,<br>
+            &nbsp;&nbsp;1 + 0.009&times;(Brent&minus;72)<br>
+            &nbsp;&nbsp;+ 0.045&times;(ExtraNm&divide;100)<br>
+            &nbsp;&nbsp;+ 0.050&times;(Utilisation&minus;72))<br><br>
+            <span style="color:var(--c-tx2)">&beta;&#8323; = 0.045 per 100 nm &bull; Base Brent: $72/bbl<br>
+            Utilisation held at 72% baseline</span>
+          </div>
+          <div class="tf-source-tag">Regression: Stopford (2009) Maritime Economics; validated against FBX01 vs distance spread 2019&ndash;2023 (UNCTAD data)</div>
+        </div>
+        <div>
+          <div class="tf-method-section-title">&#9670; Price Impact Methodology</div>
+          <div class="tf-method-item"><strong style="color:#e8eaed">Method A &mdash; Historical Event References</strong><br>Documented outcomes from real disruption events. These are observed data, not predictions.</div>
+          <div class="tf-method-item"><strong style="color:#e8eaed">Method B &mdash; Elasticity-Based</strong></div>
+          <div class="tf-method-formula">
+            &Delta;P = (&Delta;Q &divide; Q) &times; (1 &divide; &epsilon;<sub>d</sub>) &times; P<br><br>
+            <span style="color:var(--c-tx2)">&Delta;Q = disrupted % of market<br>
+            &epsilon;<sub>d</sub> = short-run demand elasticity<br>
+            P = baseline commodity price</span>
+          </div>
+          <div class="tf-source-tag">Elasticities: crude oil &minus;0.05 (Hamilton 2009); LNG &minus;0.10 (Wood Mackenzie); agricultural &minus;0.15 to &minus;0.25 (IMF 2022)</div>
+        </div>
+        <div>
+          <div class="tf-method-section-title">&#9670; Volume Data Sources</div>
+          <div class="tf-method-item">
+            <strong style="color:#e8eaed">Crude Oil / Petroleum:</strong> EIA Chokepoints 2022; IEA OMR 2023<br>
+            <strong style="color:#e8eaed">LNG:</strong> GIIGNL Annual Report 2024<br>
+            <strong style="color:#e8eaed">Wheat / Corn / Rice / Soybeans:</strong> USDA FAS MY2022/23<br>
+            <strong style="color:#e8eaed">Copper:</strong> ICSG Copper Bulletin 2023<br>
+            <strong style="color:#e8eaed">Iron Ore / Coal:</strong> Clarksons Shipping Review 2023<br>
+            <strong style="color:#e8eaed">Nickel:</strong> INSG / NiPERA 2023<br>
+            <strong style="color:#e8eaed">Rare Earths:</strong> USGS Mineral Commodity Summaries 2023<br>
+            <strong style="color:#e8eaed">Semiconductors / EV Batteries:</strong> WSTS / BloombergNEF 2023
+          </div>
+        </div>
+        <div>
+          <div class="tf-method-section-title">&#9670; Routing Assumptions</div>
+          <div class="tf-method-item">Primary routes based on AIS vessel density data (MarineTraffic 2023). Alternative routes are the next-best viable commercial option per vessel type.<br><br>
+          VLCC (crude, iron ore): Cannot transit Panama; Suez at reduced draft. No bypass for Hormuz &mdash; product redistribution via Fujairah anchorage only.<br><br>
+          LNG Carriers &gt;80,000 DWT: Cannot use most secondary straits. Hormuz closure requires US Gulf supply substitution (significantly higher transit distances to Asia).</div>
+        </div>
+        <div>
+          <div class="tf-method-section-title">&#9670; What This Module Does NOT Do</div>
+          <div class="tf-method-item">
+            This module displays observed data and transparent calculations only. It does NOT:<br>
+            &bull; Generate AI predictions or confidence scores<br>
+            &bull; Assign vulnerability or resilience scores<br>
+            &bull; Account for demand destruction under prolonged disruptions<br>
+            &bull; Model strategic reserve drawdowns<br>
+            &bull; Predict geopolitical responses or supply substitution<br>
+            &bull; Distinguish spot vs. contract freight markets<br><br>
+            All outputs are mechanical calculations based on documented volumes and distances, fully auditable against the stated sources.
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div><!-- /padding wrapper -->
 
 </div><!-- end page-stress -->
 
@@ -15556,8 +15663,9 @@ function selectTFCommodity(commId) {
   renderTFRoutes();
   renderTFTerminals();
 
-  // Baseline panel
+  // Baseline panel + new trade matrix
   renderTFBaseline(comm);
+  renderTFTradeMatrix(comm);
   renderTFFleet(comm);
   renderTFStockpile();
 
@@ -17449,6 +17557,48 @@ function updateTFCPChips() {
     var lbl = TF_CP_SHORT[id] || (TF_CP[id] ? TF_CP[id].name : id);
     html += '<button class="tf-cp-chip'+(on?' active':'')+'" onclick="toggleTFChokepoint(\''+id+'\')">'+lbl+'</button>';
   });
+  el.innerHTML = html;
+}
+
+function renderTFTradeMatrix(comm) {
+  var el = document.getElementById('tf-trade-matrix');
+  if (!el || !comm || !comm.matrix) return;
+  var mat = comm.matrix;
+  function cellBg(v) {
+    if (!v) return 'transparent';
+    if (v < 0.3) return 'rgba(194,162,62,0.15)';
+    if (v < 0.6) return 'rgba(194,162,62,0.28)';
+    if (v < 1.0) return 'rgba(194,162,62,0.46)';
+    if (v < 1.5) return 'rgba(194,162,62,0.66)';
+    if (v < 2.0) return 'rgba(194,162,62,0.82)';
+    return 'rgba(194,162,62,0.97)';
+  }
+  function cellTxt(v) { return v >= 1.8 ? '#0A0A0A' : '#F2F1ED'; }
+  var F = "font-family:var(--f-mono)";
+  var html = '<div style="display:flex;border-bottom:1px solid #2A2A26;background:#0D0D0B">';
+  html += '<div style="width:140px;flex-shrink:0;padding:8px 6px;font-size:9px;letter-spacing:0.12em;color:#4A4A44;font-weight:700;'+F+'">ORIGIN</div>';
+  mat.importers.forEach(function(d) {
+    html += '<div style="flex:1;min-width:48px;text-align:center;padding:8px 4px;font-size:9px;letter-spacing:0.1em;color:#4A4A44;font-weight:700;border-left:1px solid #1A1A18;'+F+'">'+d+'</div>';
+  });
+  html += '<div style="width:52px;flex-shrink:0;text-align:right;padding:8px 6px;font-size:9px;letter-spacing:0.1em;color:#C9AE4E;font-weight:700;border-left:1px solid #1A1A18;'+F+'">TOTAL</div></div>';
+  mat.rows.forEach(function(row) {
+    var tot = row.vals.reduce(function(s,v){return s+(v||0);},0);
+    html += '<div style="display:flex;border-bottom:1px solid #141412">';
+    html += '<div style="width:140px;flex-shrink:0;padding:7px 6px;font-size:10px;font-weight:700;color:#D9D8D3;'+F+'">'+row.name+'</div>';
+    row.vals.forEach(function(v) {
+      var txt = v > 0 ? v.toFixed(1) : '';
+      html += '<div style="flex:1;min-width:48px;background:'+cellBg(v)+';text-align:center;font-size:10px;font-weight:'+(v>0?'700':'400')+';color:'+cellTxt(v)+';padding:7px 4px;border-left:1px solid #1A1A18;'+F+'">'+txt+'</div>';
+    });
+    html += '<div style="width:52px;flex-shrink:0;text-align:right;padding:7px 6px;font-size:11px;font-weight:700;color:#C9AE4E;border-left:1px solid #1A1A18;'+F+'">'+tot.toFixed(1)+'</div></div>';
+  });
+  var colTots = mat.importers.map(function(_,j){return mat.rows.reduce(function(s,r){return s+(r.vals[j]||0);},0);});
+  var grand = colTots.reduce(function(s,v){return s+v;},0);
+  html += '<div style="display:flex;background:#0D0D0B">';
+  html += '<div style="width:140px;flex-shrink:0;padding:9px 6px;font-size:10px;font-weight:700;color:#C9AE4E;letter-spacing:0.1em;'+F+'">TOTAL</div>';
+  colTots.forEach(function(v){
+    html += '<div style="flex:1;min-width:48px;text-align:center;font-size:11px;font-weight:700;color:#C9AE4E;padding:9px 4px;border-left:1px solid #1A1A18;border-top:1px solid #2A2A26;'+F+'">'+v.toFixed(1)+'</div>';
+  });
+  html += '<div style="width:52px;flex-shrink:0;text-align:right;padding:9px 6px;font-size:12px;font-weight:700;color:#C9AE4E;border-left:1px solid #1A1A18;border-top:1px solid #2A2A26;'+F+'">'+grand.toFixed(1)+'</div></div>';
   el.innerHTML = html;
 }
 

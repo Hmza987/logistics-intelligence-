@@ -15442,9 +15442,12 @@ function initTradeFlowTab() {
 function initTFMap() {
   if (TF_MAP_READY || !document.getElementById('tf-world-map')) return;
   TF_MAP = L.map('tf-world-map', { center:[15,25], zoom:2, minZoom:1, maxZoom:5, worldCopyJump:true });
-  L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
+  L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_nolabels/{z}/{x}/{y}{r}.png', {
     attribution:'&copy; OpenStreetMap contributors &copy; CARTO',
     subdomains:'abcd', maxZoom:19
+  }).addTo(TF_MAP);
+  L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/Reference/World_Boundaries_and_Places/MapServer/tile/{z}/{y}/{x}', {
+    attribution:'Labels &copy; Esri', maxZoom:19, opacity:0.9
   }).addTo(TF_MAP);
   TF_MAP_READY = true;
   // Place all chokepoint markers

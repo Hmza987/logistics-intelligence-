@@ -3097,7 +3097,8 @@ canvas { font-family: var(--f-mono); }
 .tf-comm-btn.wip{opacity:0.38;cursor:default;border-style:dashed;}
 .tf-comm-btn.wip:hover{border-color:rgba(255,255,255,0.12);}
 /* Legacy stress-test elements hidden in new design */
-#tf-outputs,#tf-price-card,#tf-alert-strip,#tf-world-map,#tf-map-legend,#tf-map-lower-rows,#tf-wip-screen{display:none!important;}
+#tf-outputs,#tf-price-card,#tf-alert-strip,#tf-map-legend,#tf-map-lower-rows,#tf-wip-screen{display:none!important;}
+#tf-world-map{height:480px;border-radius:6px;background:#0a0f16;}
 /* New Trade Explorer filter strip overrides */
 #page-stress .tf-cat-btn{font-size:10px;letter-spacing:.1em;padding:4px 13px;border-color:#222220;color:#5A5A52;text-transform:uppercase;}
 #page-stress .tf-cat-btn.active{background:rgba(82,130,224,0.14);border-color:rgba(82,130,224,0.55);color:#7AA8E8;}
@@ -4761,7 +4762,6 @@ canvas { font-family: var(--f-mono); }
   <!-- Hidden legacy IDs that JS still reads -->
   <div id="tf-alert-strip" style="display:none"><span id="tf-active-count"></span><div id="tf-alert-body"></div></div>
   <div id="tf-wip-screen" style="display:none"><div id="tf-wip-name"></div></div>
-  <div id="tf-world-map" style="display:none"></div>
   <div id="tf-map-legend" style="display:none"></div>
   <div id="tf-map-comm-label" style="display:none"></div>
   <div id="tf-map-route-count" style="display:none"></div>
@@ -4835,107 +4835,8 @@ canvas { font-family: var(--f-mono); }
     </div>
 
     <!-- ── TRADE ARCHITECTURE MAP ─────────────────────────────────────────── -->
-    <div style="background:#0A0A0A;border:1px solid #1E1E1C;border-radius:6px;overflow:hidden;margin-top:20px">
-      <!-- Legend header -->
-      <div style="padding:8px 16px;background:#0D0D0B;border-bottom:1px solid #1A1A18;display:flex;align-items:center;gap:18px;flex-wrap:wrap">
-        <span style="font-size:9px;font-weight:700;letter-spacing:0.06em;color:#5A5A52;display:flex;align-items:center;gap:6px;font-family:var(--f-mono)"><span style="width:22px;height:2px;background:#C2A23E;display:inline-block;border-radius:1px"></span>Active route</span>
-        <span style="font-size:9px;font-weight:700;letter-spacing:0.06em;color:#5A5A52;display:flex;align-items:center;gap:6px;font-family:var(--f-mono)"><span style="width:10px;height:10px;border-radius:50%;background:#E05252;display:inline-block"></span>Disrupted chokepoint</span>
-        <span style="font-size:9px;font-weight:700;letter-spacing:0.06em;color:#5A5A52;display:flex;align-items:center;gap:6px;font-family:var(--f-mono)"><span style="width:10px;height:10px;border-radius:50%;background:#5FA86A;display:inline-block"></span>Open chokepoint</span>
-        <span style="font-size:9px;font-weight:700;letter-spacing:0.06em;color:#5A5A52;display:flex;align-items:center;gap:6px;font-family:var(--f-mono)"><span style="width:10px;height:10px;border-radius:50%;border:2px solid #C2A23E;display:inline-block"></span>Export terminal</span>
-        <span style="font-size:9px;font-weight:700;letter-spacing:0.06em;color:#5A5A52;display:flex;align-items:center;gap:6px;font-family:var(--f-mono)"><span style="width:10px;height:10px;border-radius:50%;border:2px solid #4A80C8;display:inline-block"></span>Import terminal</span>
-        <span style="margin-left:auto;font-size:9px;color:#3A3A36;letter-spacing:0.08em;border:1px solid #2A2A26;padding:2px 9px;border-radius:3px;font-family:var(--f-mono)">Crude Oil &middot; Hormuz disruption scenario</span>
-      </div>
-      <!-- SVG Trade Map -->
-      <svg width="100%" height="320" viewBox="0 0 1280 320" style="display:block">
-        <!-- Background -->
-        <rect x="0" y="0" width="1280" height="320" fill="#0C1418"/>
-        <!-- Grid lines -->
-        <line x1="0" y1="0" x2="0" y2="320" stroke="rgba(255,255,255,0.018)" stroke-width="1"/>
-        <line x1="120" y1="0" x2="120" y2="320" stroke="rgba(255,255,255,0.018)" stroke-width="1"/>
-        <line x1="240" y1="0" x2="240" y2="320" stroke="rgba(255,255,255,0.018)" stroke-width="1"/>
-        <line x1="360" y1="0" x2="360" y2="320" stroke="rgba(255,255,255,0.018)" stroke-width="1"/>
-        <line x1="480" y1="0" x2="480" y2="320" stroke="rgba(255,255,255,0.018)" stroke-width="1"/>
-        <line x1="600" y1="0" x2="600" y2="320" stroke="rgba(255,255,255,0.018)" stroke-width="1"/>
-        <line x1="720" y1="0" x2="720" y2="320" stroke="rgba(255,255,255,0.018)" stroke-width="1"/>
-        <line x1="840" y1="0" x2="840" y2="320" stroke="rgba(255,255,255,0.018)" stroke-width="1"/>
-        <line x1="960" y1="0" x2="960" y2="320" stroke="rgba(255,255,255,0.018)" stroke-width="1"/>
-        <line x1="1080" y1="0" x2="1080" y2="320" stroke="rgba(255,255,255,0.018)" stroke-width="1"/>
-        <line x1="1200" y1="0" x2="1200" y2="320" stroke="rgba(255,255,255,0.018)" stroke-width="1"/>
-        <line x1="0" y1="0" x2="1280" y2="0" stroke="rgba(255,255,255,0.018)" stroke-width="1"/>
-        <line x1="0" y1="80" x2="1280" y2="80" stroke="rgba(255,255,255,0.018)" stroke-width="1"/>
-        <line x1="0" y1="160" x2="1280" y2="160" stroke="rgba(255,255,255,0.018)" stroke-width="1"/>
-        <line x1="0" y1="240" x2="1280" y2="240" stroke="rgba(255,255,255,0.018)" stroke-width="1"/>
-        <!-- Land masses -->
-        <path d="M 390,48 L 520,44 L 555,78 L 580,88 L 523,113 L 575,158 L 595,158 L 558,200 L 508,234 L 458,200 L 390,183 L 365,128 Z" fill="#141C1A" stroke="rgba(255,255,255,0.055)" stroke-width="0.8" stroke-linejoin="round"/>
-        <path d="M 554,193 L 610,183 L 650,194 L 664,224 L 654,264 L 632,304 L 603,313 L 577,293 L 550,263 L 543,233 Z" fill="#141C1A" stroke="rgba(255,255,255,0.055)" stroke-width="0.8" stroke-linejoin="round"/>
-        <path d="M 607,49 L 650,39 L 680,43 L 718,53 L 738,67 L 743,88 L 720,99 L 698,109 L 676,113 L 654,108 L 630,103 L 622,100 L 616,76 Z" fill="#141C1A" stroke="rgba(255,255,255,0.055)" stroke-width="0.8" stroke-linejoin="round"/>
-        <path d="M 618,99 L 680,111 L 720,107 L 754,111 L 762,129 L 748,161 L 728,183 L 716,211 L 696,241 L 694,259 L 666,267 L 646,257 L 628,243 L 610,219 L 592,195 L 590,172 L 600,154 L 618,137 Z" fill="#141C1A" stroke="rgba(255,255,255,0.055)" stroke-width="0.8" stroke-linejoin="round"/>
-        <path d="M 743,88 L 756,81 L 800,59 L 843,37 L 913,31 L 978,41 L 1044,55 L 1092,77 L 1138,99 L 1173,156 L 1145,196 L 1115,236 L 1085,256 L 1001,236 L 966,215 L 944,191 L 915,186 L 895,166 L 857,131 L 830,141 L 805,147 L 782,151 L 762,127 L 738,113 L 754,111 L 743,88 Z" fill="#141C1A" stroke="rgba(255,255,255,0.055)" stroke-width="0.8" stroke-linejoin="round"/>
-        <path d="M 1016,256 L 1066,250 L 1106,260 L 1126,286 L 1116,316 L 1066,320 L 1026,310 L 1008,296 L 1012,276 Z" fill="#141C1A" stroke="rgba(255,255,255,0.055)" stroke-width="0.8" stroke-linejoin="round"/>
-        <!-- Trade routes -->
-        <path d="M 849,123 C 920,154 970,169 1004,177 C 1040,164 1060,133 1091,97" fill="none" stroke="#C2A23E" stroke-width="2" stroke-linecap="round"/>
-        <path d="M 849,123 C 950,148 1080,128 1142,102" fill="none" stroke="rgba(194,162,62,0.55)" stroke-width="1.5" stroke-linecap="round"/>
-        <path d="M 849,123 Q 875,131 897,139" fill="none" stroke="#C2A23E" stroke-width="1.5" stroke-linecap="round"/>
-        <path d="M 849,123 Q 800,117 754,111 Q 700,89 654,62" fill="none" stroke="#C2A23E" stroke-width="1.5" stroke-linecap="round"/>
-        <path d="M 782,151 Q 740,198 694,258 Q 655,282 636,268" fill="none" stroke="rgba(194,162,62,0.3)" stroke-width="1" stroke-linecap="round" stroke-dasharray="6 4"/>
-        <path d="M 653,167 Q 645,128 654,62" fill="none" stroke="rgba(194,162,62,0.5)" stroke-width="1.2" stroke-linecap="round"/>
-        <path d="M 675,207 Q 685,236 694,258 Q 790,218 1004,177" fill="none" stroke="rgba(194,162,62,0.38)" stroke-width="1" stroke-linecap="round" stroke-dasharray="4 4"/>
-        <path d="M 523,113 Q 590,80 654,62" fill="none" stroke="rgba(194,162,62,0.5)" stroke-width="1.2" stroke-linecap="round"/>
-        <path d="M 523,113 Q 548,143 573,158 Q 700,160 1004,177" fill="none" stroke="rgba(194,162,62,0.32)" stroke-width="1" stroke-linecap="round"/>
-        <path d="M 756,82 Q 728,78 654,62" fill="none" stroke="rgba(194,162,62,0.4)" stroke-width="1" stroke-linecap="round"/>
-        <path d="M 763,56 Q 720,57 654,62" fill="none" stroke="rgba(194,162,62,0.28)" stroke-width="1" stroke-linecap="round" stroke-dasharray="5 3"/>
-        <path d="M 595,158 Q 624,113 654,62" fill="none" stroke="rgba(194,162,62,0.28)" stroke-width="1" stroke-linecap="round"/>
-        <!-- Chokepoint: HORMUZ (disrupted) — pulse ring -->
-        <circle cx="849" cy="123" r="14" fill="none" stroke="#E05252" stroke-width="1" opacity="0.35"/>
-        <circle cx="849" cy="123" r="6" fill="#0C1418"/>
-        <circle cx="849" cy="123" r="5" fill="#E05252"/>
-        <text x="849" y="111" text-anchor="middle" fill="#F2F1ED" style="font:bold 8px 'JetBrains Mono',monospace;letter-spacing:0.1em">HORMUZ</text>
-        <!-- Chokepoint: SUEZ -->
-        <circle cx="754" cy="111" r="6" fill="#0C1418"/>
-        <circle cx="754" cy="111" r="5" fill="#5FA86A"/>
-        <text x="754" y="99" text-anchor="middle" fill="#D9D8D3" style="font:bold 7px 'JetBrains Mono',monospace;letter-spacing:0.1em">SUEZ</text>
-        <!-- Chokepoint: BOSPHORUS -->
-        <circle cx="743" cy="88" r="6" fill="#0C1418"/>
-        <circle cx="743" cy="88" r="5" fill="#5FA86A"/>
-        <text x="743" y="76" text-anchor="middle" fill="#D9D8D3" style="font:bold 7px 'JetBrains Mono',monospace;letter-spacing:0.1em">BOSPHORUS</text>
-        <!-- Chokepoint: MALACCA -->
-        <circle cx="1004" cy="177" r="6" fill="#0C1418"/>
-        <circle cx="1004" cy="177" r="5" fill="#5FA86A"/>
-        <text x="1004" y="165" text-anchor="middle" fill="#D9D8D3" style="font:bold 7px 'JetBrains Mono',monospace;letter-spacing:0.1em">MALACCA</text>
-        <!-- Chokepoint: BAB-EL-MANDEB -->
-        <circle cx="782" cy="151" r="6" fill="#0C1418"/>
-        <circle cx="782" cy="151" r="5" fill="#C98A2E"/>
-        <text x="782" y="164" text-anchor="middle" fill="#D9D8D3" style="font:bold 7px 'JetBrains Mono',monospace;letter-spacing:0.1em">BAB-EL-MANDEB</text>
-        <!-- Chokepoint: PANAMA -->
-        <circle cx="573" cy="158" r="6" fill="#0C1418"/>
-        <circle cx="573" cy="158" r="5" fill="#5FA86A"/>
-        <text x="573" y="146" text-anchor="middle" fill="#D9D8D3" style="font:bold 7px 'JetBrains Mono',monospace;letter-spacing:0.1em">PANAMA</text>
-        <!-- Chokepoint: GIBRALTAR -->
-        <circle cx="622" cy="100" r="6" fill="#0C1418"/>
-        <circle cx="622" cy="100" r="5" fill="#5FA86A"/>
-        <text x="622" y="88" text-anchor="middle" fill="#D9D8D3" style="font:bold 7px 'JetBrains Mono',monospace;letter-spacing:0.1em">GIBRALTAR</text>
-        <!-- Export terminals (open gold circles) -->
-        <circle cx="840" cy="130" r="4" fill="none" stroke="#C2A23E" stroke-width="1.8"/>
-        <circle cx="764" cy="127" r="4" fill="none" stroke="#C2A23E" stroke-width="1.8"/>
-        <circle cx="653" cy="167" r="4" fill="none" stroke="#C2A23E" stroke-width="1.8"/>
-        <circle cx="675" cy="207" r="4" fill="none" stroke="#C2A23E" stroke-width="1.8"/>
-        <circle cx="595" cy="158" r="4" fill="none" stroke="#C2A23E" stroke-width="1.8"/>
-        <circle cx="763" cy="56" r="4" fill="none" stroke="#C2A23E" stroke-width="1.8"/>
-        <circle cx="681" cy="119" r="4" fill="none" stroke="#C2A23E" stroke-width="1.8"/>
-        <circle cx="523" cy="113" r="4" fill="none" stroke="#C2A23E" stroke-width="1.8"/>
-        <!-- Import terminals (open blue circles) -->
-        <circle cx="1091" cy="97" r="4" fill="none" stroke="#4A80C8" stroke-width="1.8"/>
-        <circle cx="1142" cy="102" r="4" fill="none" stroke="#4A80C8" stroke-width="1.8"/>
-        <circle cx="654" cy="62" r="4" fill="none" stroke="#4A80C8" stroke-width="1.8"/>
-        <circle cx="897" cy="139" r="4" fill="none" stroke="#4A80C8" stroke-width="1.8"/>
-        <!-- Bypass terminal (teal) -->
-        <circle cx="856" cy="134" r="4" fill="none" stroke="#5AB8B8" stroke-width="1.8"/>
-      </svg>
-      <!-- Footer attribution -->
-      <div style="padding:7px 16px;border-top:1px solid #1A1A18;font-size:9px;color:#2A2A26;letter-spacing:0.04em;display:flex;justify-content:space-between;font-family:var(--f-mono)">
-        <span>IEA, EIA, Vortexa 2023 &middot; Trade architecture: Crude Oil &middot; Hormuz active disruption scenario</span>
-        <span>Routes: Sea-Distances.org &middot; MarineTraffic AIS 2023</span>
-      </div>
+    <div style="border:1px solid #1E1E1C;border-radius:6px;overflow:hidden;margin-top:20px">
+      <div id="tf-world-map"></div>
     </div>
 
     <!-- ── BASELINE METRICS ───────────────────────────────────────────────── -->

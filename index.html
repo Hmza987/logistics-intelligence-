@@ -3099,6 +3099,8 @@ canvas { font-family: var(--f-mono); }
 /* Legacy stress-test elements hidden in new design */
 #tf-outputs,#tf-price-card,#tf-alert-strip,#tf-map-legend,#tf-map-lower-rows,#tf-wip-screen{display:none!important;}
 #tf-world-map{height:480px;border-radius:6px;background:#0a0f16;}
+#tf-world-map .leaflet-tile-pane{filter:brightness(1.9) contrast(1.05) saturate(1.15);}
+#tf-world-map .leaflet-overlay-pane,#tf-world-map .leaflet-marker-pane,#tf-world-map .leaflet-shadow-pane{filter:none;}
 /* New Trade Explorer filter strip overrides */
 #page-stress .tf-cat-btn{font-size:10px;letter-spacing:.1em;padding:4px 13px;border-color:#222220;color:#5A5A52;text-transform:uppercase;}
 #page-stress .tf-cat-btn.active{background:rgba(82,130,224,0.14);border-color:rgba(82,130,224,0.55);color:#7AA8E8;}

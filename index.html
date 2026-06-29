@@ -15410,6 +15410,20 @@ var TF_COMM_LIST = [
   { id:'rare_earths',   cat:'manufacturing' }
 ];
 
+// ── Flag codes (ISO 3166-1 alpha-2 → flagcdn.com) ────────────────────────────
+var TF_FLAG_CC = {
+  'Saudi Arabia':'sa','UAE':'ae','Qatar':'qa','Kuwait':'kw','Bahrain':'bh','Oman':'om',
+  'Russia':'ru','United States':'us','OECD Europe':'eu','China (est.)':'cn','China':'cn',
+  'Iraq':'iq','Iran':'ir','Kazakhstan':'kz','Nigeria':'ng','Angola':'ao','Libya':'ly',
+  'Brazil':'br','Mexico':'mx','Norway':'no','Venezuela':'ve',
+  'Egypt':'eg','Turkey':'tr','Pakistan':'pk','Bangladesh':'bd','India':'in',
+  'Japan':'jp','South Korea':'kr','Indonesia':'id','Malaysia':'my','Thailand':'th'
+};
+function tfFlag(name, h) {
+  var cc = TF_FLAG_CC[name];
+  return cc ? '<img src="https://flagcdn.com/16x12/'+cc+'.png" style="height:'+h+'px;border-radius:1px;vertical-align:middle;flex-shrink:0">' : '';
+}
+
 // ── State ─────────────────────────────────────────────────────────────────────
 var TF_MAP = null;
 var TF_MAP_READY = false;
@@ -17399,9 +17413,10 @@ function renderGCCImpact() {
     }
 
     html += '<div class="gcc-card" style="' + cardStyle + '">' +
-      '<div class="gcc-card-hdr"><div>' +
-        '<div class="gcc-name">' + c.name + '</div>' +
-        '<div class="gcc-role">' + c.role + '</div>' +
+      '<div class="gcc-card-hdr"><div style="display:flex;align-items:center;gap:9px">' +
+        tfFlag(c.name, 18) +
+        '<div><div class="gcc-name">' + c.name + '</div>' +
+        '<div class="gcc-role">' + c.role + '</div></div>' +
       '</div>' + ((isDisrupted || scenario) ?
         '<div class="gcc-res-wrap"><div class="gcc-res-label">Resilience</div>' +
         '<div class="gcc-res-bar"><div class="gcc-res-fill" style="width:' + resScore + '%;background:' + resColor + '"></div></div>' +
@@ -17490,7 +17505,7 @@ function renderTFTradeMatrix(comm) {
   mat.rows.forEach(function(row) {
     var tot = row.vals.reduce(function(s,v){return s+(v||0);},0);
     html += '<div style="display:flex;border-bottom:1px solid #141412">';
-    html += '<div style="width:140px;flex-shrink:0;padding:7px 6px;font-size:10px;font-weight:700;color:#D9D8D3;'+F+'">'+row.name+'</div>';
+    html += '<div style="width:140px;flex-shrink:0;padding:7px 6px;font-size:10px;font-weight:700;color:#D9D8D3;display:flex;align-items:center;gap:5px;'+F+'">'+tfFlag(row.name,9)+row.name+'</div>';
     row.vals.forEach(function(v) {
       var txt = v > 0 ? v.toFixed(1) : '';
       html += '<div style="flex:1;min-width:48px;background:'+cellBg(v)+';text-align:center;font-size:10px;font-weight:'+(v>0?'700':'400')+';color:'+cellTxt(v)+';padding:7px 4px;border-left:1px solid #1A1A18;'+F+'">'+txt+'</div>';
@@ -18537,8 +18552,10 @@ function renderTFStockpile() {
 
     html += '<div style="border:1px solid ' + borderStyle + ';border-radius:4px;padding:10px;background:rgba(6,10,18,0.7)">';
 
-    html += '<div style="font-size:11px;font-weight:700;color:#e8eaed;font-family:var(--f-mono);margin-bottom:1px">' + r.name + '</div>'
-          + '<div style="font-size:7.5px;color:var(--c-tx2);margin-bottom:9px">' + r.consumption + ' Mb/d consumption</div>';
+    html += '<div style="display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:9px">'
+          + '<div><div style="font-size:11px;font-weight:700;color:#e8eaed;font-family:var(--f-mono);margin-bottom:1px">' + r.name + '</div>'
+          + '<div style="font-size:7.5px;color:var(--c-tx2)">' + r.consumption + ' Mb/d consumption</div></div>'
+          + tfFlag(r.name, 16) + '</div>';
 
     // SPR bar
     var sprFillPct = Math.min(100, Math.round(r.sprM / (r.consumption * 50) * 100));

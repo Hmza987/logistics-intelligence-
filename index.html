@@ -18582,6 +18582,14 @@ function initCvTicker() {
   var inner = document.getElementById('cv-ticker-inner');
   if (!inner) return;
 
+  // Auto-update date to today
+  var dateEl = document.getElementById('cv-sig-date');
+  if (dateEl) {
+    var now = new Date();
+    var months = ['JAN','FEB','MAR','APR','MAY','JUN','JUL','AUG','SEP','OCT','NOV','DEC'];
+    dateEl.textContent = now.getDate() + ' ' + months[now.getMonth()] + ' · GST';
+  }
+
   var ROW_H   = 76;
   var VISIBLE = 3;
   var ptr     = 0;

@@ -3337,9 +3337,8 @@ canvas { font-family: var(--f-mono); }
       <div id="cv-topnav-brand-text"><span>Gulf Logistics</span> <strong>Intelligence</strong></div>
     </div>
     <div id="cv-topnav-nav">
-      <span>MODULES</span>
-      <span>METHODOLOGY</span>
-      <span>DATA</span>
+      <span onclick="openInfoModal('methodology')" style="cursor:pointer">METHODOLOGY</span>
+      <span onclick="openInfoModal('data')" style="cursor:pointer">DATA</span>
       <span class="cv-nav-access" onclick="openBriefingModal('Request Access')" style="cursor:pointer">REQUEST&nbsp;ACCESS</span>
     </div>
   </div>
@@ -3637,6 +3636,79 @@ canvas { font-family: var(--f-mono); }
       <div class="brfg-success-title">Request Received</div>
       <div class="brfg-success-msg">Thank you — a member of the team will be in touch within 24 hours.<br><br>For urgent enquiries: <span style="color:#c9ae4e">hamza.el.mounhi@strategyand.pwc.com</span></div>
     </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════════════════════════════════
+     METHODOLOGY MODAL
+     ════════════════════════════════════════════════════════════════════════ -->
+<div id="gcc-info-overlay" style="display:none;position:fixed;inset:0;z-index:999997;background:rgba(4,8,16,.82);backdrop-filter:blur(6px);align-items:center;justify-content:center;opacity:0;transition:opacity .25s">
+  <div style="background:#0d1220;border:1px solid #1a2535;border-radius:4px;padding:36px 40px;max-width:580px;width:90%;position:relative;max-height:82vh;overflow-y:auto;font-family:'IBM Plex Mono','JetBrains Mono',monospace">
+    <button onclick="closeInfoModal()" style="position:absolute;top:16px;right:18px;background:none;border:none;color:#2d4a62;font-size:18px;cursor:pointer;line-height:1;padding:4px">&#10005;</button>
+
+    <!-- METHODOLOGY content -->
+    <div id="info-methodology">
+      <div style="font-size:8px;letter-spacing:.14em;color:#3a5268;margin-bottom:6px">GCC LOGISTICS INTELLIGENCE PLATFORM</div>
+      <div style="font-size:13px;font-weight:700;letter-spacing:.12em;color:#c9ae4e;text-transform:uppercase;margin-bottom:16px">Methodology</div>
+      <div style="font-size:9.5px;color:#4a6070;line-height:1.9">
+        Our signals and indicators are produced through a layered quantitative framework combining several classes of mathematical and statistical models:
+      </div>
+      <div style="margin-top:20px;display:flex;flex-direction:column;gap:14px">
+        <div style="border-left:2px solid #1e3a50;padding-left:14px">
+          <div style="font-size:9px;font-weight:700;color:#c9ae4e;letter-spacing:.1em;margin-bottom:4px">QUEUING THEORY — M/M/c MODEL</div>
+          <div style="font-size:9px;color:#4a6070;line-height:1.8">Erlang-C formulation applied to port gate and berth operations. Models arrival rates (λ), service rates (μ) and server counts (c) to derive steady-state wait times, utilisation ratios and congestion probabilities under varying vessel and truck arrival patterns.</div>
+        </div>
+        <div style="border-left:2px solid #1e3a50;padding-left:14px">
+          <div style="font-size:9px;font-weight:700;color:#c9ae4e;letter-spacing:.1em;margin-bottom:4px">LINEAR &amp; LOG-LINEAR REGRESSION</div>
+          <div style="font-size:9px;color:#4a6070;line-height:1.8">Freight rate models trained on historical index data (FBX, SCFI, WCI) regressed against distance, vessel utilisation, bunker cost and route-specific risk premia. Log-linear specifications capture the non-linear elasticity of rates to capacity tightening.</div>
+        </div>
+        <div style="border-left:2px solid #1e3a50;padding-left:14px">
+          <div style="font-size:9px;font-weight:700;color:#c9ae4e;letter-spacing:.1em;margin-bottom:4px">PREDICTIVE &amp; SCENARIO MODELLING</div>
+          <div style="font-size:9px;color:#4a6070;line-height:1.8">Forward projections use multivariate regression models calibrated on 5–10 years of observed trade and freight data. Scenario outputs are stress-tested across a range of geopolitical and macroeconomic parameter shocks to produce probability-weighted corridors.</div>
+        </div>
+        <div style="border-left:2px solid #1e3a50;padding-left:14px">
+          <div style="font-size:9px;font-weight:700;color:#c9ae4e;letter-spacing:.1em;margin-bottom:4px">RISK COMPOSITE SCORING</div>
+          <div style="font-size:9px;color:#4a6070;line-height:1.8">Chokepoint and corridor risk scores are composite indices built from weighted sub-indicators (transit volume deviation, insurance premium spreads, vessel dwell anomalies, geopolitical event flags). Weights are derived from historical correlation analysis against actual disruption outcomes.</div>
+        </div>
+        <div style="border-left:2px solid #1e3a50;padding-left:14px">
+          <div style="font-size:9px;font-weight:700;color:#c9ae4e;letter-spacing:.1em;margin-bottom:4px">CAUSAL CHAIN ANALYSIS</div>
+          <div style="font-size:9px;color:#4a6070;line-height:1.8">Each signal is mapped across a structured origin → 1st-order → 2nd-order → 3rd-order causal chain with empirically estimated transmission lags and confidence scores, enabling decision-makers to assess both immediacy and systemic reach of a disruption.</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- DATA content -->
+    <div id="info-data" style="display:none">
+      <div style="font-size:8px;letter-spacing:.14em;color:#3a5268;margin-bottom:6px">GCC LOGISTICS INTELLIGENCE PLATFORM</div>
+      <div style="font-size:13px;font-weight:700;letter-spacing:.12em;color:#c9ae4e;text-transform:uppercase;margin-bottom:6px">Data Sources</div>
+      <div style="font-size:9px;color:#3a8a4a;letter-spacing:.08em;font-weight:700;margin-bottom:16px">&#9679; All data used is publicly available</div>
+      <div style="font-size:9.5px;color:#4a6070;line-height:1.9;margin-bottom:20px">
+        We do not use proprietary or commercially licensed data feeds. All underlying data is sourced from public international bodies, open maritime databases, and published government statistics — then processed, aggregated and modelled by our analytical team.
+      </div>
+      <div style="display:flex;flex-direction:column;gap:12px">
+        <div style="border-left:2px solid #1e3a50;padding-left:14px">
+          <div style="font-size:9px;font-weight:700;color:#c9ae4e;letter-spacing:.1em;margin-bottom:4px">MARITIME &amp; VESSEL TRAFFIC</div>
+          <div style="font-size:9px;color:#4a6070;line-height:1.8">AIS (Automatic Identification System) open data · Kpler satellite &amp; AIS aggregates · Lloyd's List vessel movements · MarineTraffic public vessel registry</div>
+        </div>
+        <div style="border-left:2px solid #1e3a50;padding-left:14px">
+          <div style="font-size:9px;font-weight:700;color:#c9ae4e;letter-spacing:.1em;margin-bottom:4px">FREIGHT RATES &amp; TRADE FLOWS</div>
+          <div style="font-size:9px;color:#4a6070;line-height:1.8">Freightos Baltic Index (FBX) · Shanghai Containerized Freight Index (SCFI) · World Container Index (WCI) · UNCTAD Review of Maritime Transport · World Bank trade statistics</div>
+        </div>
+        <div style="border-left:2px solid #1e3a50;padding-left:14px">
+          <div style="font-size:9px;font-weight:700;color:#c9ae4e;letter-spacing:.1em;margin-bottom:4px">PORT OPERATIONS &amp; INFRASTRUCTURE</div>
+          <div style="font-size:9px;color:#4a6070;line-height:1.8">GCC port authority public statistics (Mwani Qatar, Oman Ports, ACWA, SRCA) · World Bank Logistics Performance Index · UNCTAD Port Monitor · MDS Transmodal public reports</div>
+        </div>
+        <div style="border-left:2px solid #1e3a50;padding-left:14px">
+          <div style="font-size:9px;font-weight:700;color:#c9ae4e;letter-spacing:.1em;margin-bottom:4px">GEOPOLITICAL &amp; RISK</div>
+          <div style="font-size:9px;color:#4a6070;line-height:1.8">Lloyd's Market Association (LMA) war risk designations · IMO circulars &amp; safety advisories · UN Security Council resolutions · Publicly reported insurance premium indices</div>
+        </div>
+        <div style="border-left:2px solid #1e3a50;padding-left:14px">
+          <div style="font-size:9px;font-weight:700;color:#c9ae4e;letter-spacing:.1em;margin-bottom:4px">MACROECONOMIC &amp; ENERGY</div>
+          <div style="font-size:9px;color:#4a6070;line-height:1.8">IMF World Economic Outlook · EIA (U.S. Energy Information Administration) · OPEC Monthly Oil Market Report · World Bank Commodity Markets Outlook</div>
+        </div>
+      </div>
+    </div>
+
   </div>
 </div>
 
@@ -18862,6 +18934,30 @@ document.addEventListener('keydown', function(e) {
     setTimeout(function() { renderAll(); scheduleNext(); }, msToHour);
   }
   scheduleNext();
+})();
+
+/* ── Info Modals (Methodology / Data) ──────────────────────────────────── */
+(function() {
+  var overlay = document.getElementById('gcc-info-overlay');
+
+  window.openInfoModal = function(type) {
+    document.getElementById('info-methodology').style.display = type === 'methodology' ? 'block' : 'none';
+    document.getElementById('info-data').style.display        = type === 'data'        ? 'block' : 'none';
+    overlay.style.display = 'flex';
+    requestAnimationFrame(function() { overlay.style.opacity = '1'; });
+  };
+
+  window.closeInfoModal = function() {
+    overlay.style.opacity = '0';
+    setTimeout(function() { overlay.style.display = 'none'; }, 260);
+  };
+
+  overlay.addEventListener('click', function(e) {
+    if (e.target === overlay) closeInfoModal();
+  });
+  document.addEventListener('keydown', function(e) {
+    if (e.key === 'Escape' && overlay.style.display === 'flex') closeInfoModal();
+  });
 })();
 
 /* ── Briefing Modal ─────────────────────────────────────────────────────── */

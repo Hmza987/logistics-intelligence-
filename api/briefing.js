@@ -36,7 +36,7 @@ module.exports = async (req, res) => {
 
   const payload = {
     from: 'GCC Logistics Platform <onboarding@resend.dev>',
-    to: ['hamza.el.mounhi@strategyand.pwc.com'],
+    to: ['hamza.elmounhi@gmail.com'],
     reply_to: email,
     subject: `Demo Request — ${fname} ${lname} (${company})`,
     text: emailBody,

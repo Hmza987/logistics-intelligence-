@@ -3693,140 +3693,184 @@ canvas { font-family: var(--f-mono); }
 <!-- ============================================================ TAB 1: HORMUZ -->
 <div class="page active" id="page-hormuz">
 
-  <div class="row col21">
+  <!-- ① 3-CHOKEPOINT SUMMARY STRIP -->
+  <div style="background:#0D0D0B;border-bottom:1px solid #1A1A18;display:grid;grid-template-columns:repeat(3,1fr)">
+    <div style="padding:14px 24px;border-right:1px solid #1A1A18;display:flex;align-items:center;justify-content:space-between">
+      <div>
+        <div style="display:flex;align-items:center;gap:7px;margin-bottom:6px"><span style="width:7px;height:7px;border-radius:50%;background:#E05252;display:inline-block"></span><span style="font-size:8px;font-weight:700;letter-spacing:.16em;color:#E05252">CRITICAL</span></div>
+        <div style="font-size:11px;font-weight:700;letter-spacing:.08em;color:#D9D8D3">STRAIT OF HORMUZ</div>
+        <div style="font-size:9px;color:#4A4A44;margin-top:3px;line-height:1.4">Day 121 &middot; MoU volatile &middot; IRGC all-corridor</div>
+      </div>
+      <div style="text-align:right">
+        <div style="font-size:28px;font-weight:700;color:#E05252;line-height:1">-96%</div>
+        <div style="font-size:9px;color:#4A4A44;margin-top:3px">5/day vs 130 baseline</div>
+      </div>
+    </div>
+    <div style="padding:14px 24px;border-right:1px solid #1A1A18;display:flex;align-items:center;justify-content:space-between">
+      <div>
+        <div style="display:flex;align-items:center;gap:7px;margin-bottom:6px"><span style="width:7px;height:7px;border-radius:50%;background:#C98A2E;display:inline-block"></span><span style="font-size:8px;font-weight:700;letter-spacing:.16em;color:#C98A2E">ELEVATED</span></div>
+        <div style="font-size:11px;font-weight:700;letter-spacing:.08em;color:#D9D8D3">BAB-EL-MANDEB</div>
+        <div style="font-size:9px;color:#4A4A44;margin-top:3px;line-height:1.4">Houthi activity &middot; reduced but persistent</div>
+      </div>
+      <div style="text-align:right">
+        <div style="font-size:28px;font-weight:700;color:#C98A2E;line-height:1">-18%</div>
+        <div style="font-size:9px;color:#4A4A44;margin-top:3px">WoW transit decline</div>
+      </div>
+    </div>
+    <div style="padding:14px 24px;display:flex;align-items:center;justify-content:space-between">
+      <div>
+        <div style="display:flex;align-items:center;gap:7px;margin-bottom:6px"><span style="width:7px;height:7px;border-radius:50%;background:#5FA86A;display:inline-block"></span><span style="font-size:8px;font-weight:700;letter-spacing:.16em;color:#5FA86A">NORMAL</span></div>
+        <div style="font-size:11px;font-weight:700;letter-spacing:.08em;color:#D9D8D3">SUEZ CANAL</div>
+        <div style="font-size:9px;color:#4A4A44;margin-top:3px;line-height:1.4">Monitoring &middot; some Cape diversions continuing</div>
+      </div>
+      <div style="text-align:right">
+        <div style="font-size:28px;font-weight:700;color:#5FA86A;line-height:1">~45</div>
+        <div style="font-size:9px;color:#4A4A44;margin-top:3px">transits/day vs ~55 baseline</div>
+      </div>
+    </div>
+  </div>
 
-    <!-- Left: metrics + chart + map -->
-    <div>
-      <!-- Status chips -->
-      <div class="card" style="margin-bottom:14px">
-        <div class="card-label">Strait of Hormuz &mdash; Daily Transit Monitor</div>
-        <div class="card-sub">Kpler + Windward AIS synthesis &middot; UNCTAD baseline ~130/day &middot; Jun 15–24 Windward confirmed &middot; Jun 25–28 Kpler est. &middot; dark fleet partially excluded</div>
-        <div class="chips">
-          <span class="chip chip-r"><span class="chip-dot" style="background:#e74c3c"></span>AIS-visible: ~5/day &mdash; Day 121 &middot; volatile</span>
-          <span class="chip chip-r"><span class="chip-dot" style="background:#e74c3c"></span>Major carriers re-suspended post-Jun 27</span>
-          <span class="chip chip-a"><span class="chip-dot" style="background:#fbbf24"></span>IRGC: all-corridor control reinstated Jun 25</span>
-          <span class="chip chip-b"><span class="chip-dot" style="background:#5aa3f5"></span>Cape of Good Hope reroute active</span>
-          <span class="chip chip-r"><span class="chip-dot" style="background:#e74c3c"></span>2nd merchant vessel struck Jun 27 &middot; IMO plans paused</span>
+  <!-- ② TIERED ALERT BANNER -->
+  <div style="background:#130808;border-bottom:1px solid #2A1212;padding:9px 24px;display:flex;align-items:flex-start;gap:12px">
+    <span style="font-size:8px;font-weight:700;letter-spacing:.14em;color:#E05252;border:1px solid rgba(224,82,82,.5);padding:3px 8px;border-radius:3px;white-space:nowrap;flex-shrink:0;margin-top:1px">CRITICAL</span>
+    <div style="display:flex;flex-wrap:wrap;gap:6px">
+      <span style="font-size:9px;color:#F2F1ED;background:rgba(224,82,82,.1);border:1px solid rgba(224,82,82,.22);padding:3px 10px;border-radius:3px">&#9679; 2nd merchant vessel struck Jun 27 &mdash; IMO evacuation plans paused</span>
+      <span style="font-size:9px;color:#F2F1ED;background:rgba(224,82,82,.1);border:1px solid rgba(224,82,82,.22);padding:3px 10px;border-radius:3px">&#9679; IRGC: all-corridor control reinstated Jun 25</span>
+      <span style="font-size:9px;color:#F2F1ED;background:rgba(224,82,82,.1);border:1px solid rgba(224,82,82,.22);padding:3px 10px;border-radius:3px">&#9679; Major carriers re-suspended post-Jun 27</span>
+    </div>
+  </div>
+  <div style="background:#0E0B07;border-bottom:1px solid #242010;padding:7px 24px;display:flex;align-items:flex-start;gap:12px">
+    <span style="font-size:8px;font-weight:700;letter-spacing:.14em;color:#C98A2E;border:1px solid rgba(201,138,46,.5);padding:3px 8px;border-radius:3px;white-space:nowrap;flex-shrink:0;margin-top:1px">WATCH</span>
+    <div style="display:flex;flex-wrap:wrap;gap:6px">
+      <span style="font-size:9px;color:#D9D8D3;background:rgba(201,138,46,.07);border:1px solid rgba(201,138,46,.18);padding:3px 10px;border-radius:3px">&#9679; AIS-visible: ~5/day &mdash; Day 121 &middot; volatile</span>
+      <span style="font-size:9px;color:#D9D8D3;background:rgba(201,138,46,.07);border:1px solid rgba(201,138,46,.18);padding:3px 10px;border-radius:3px">&#9679; Cape of Good Hope reroute active</span>
+    </div>
+  </div>
+
+  <!-- ③ MAIN 2-COL GRID -->
+  <div class="row col21" style="padding-top:18px">
+
+    <!-- LEFT COLUMN -->
+    <div style="display:flex;flex-direction:column;gap:14px">
+
+      <!-- HERO KPI ROW -->
+      <div style="display:grid;grid-template-columns:2fr 1fr 1fr 1fr;gap:10px">
+        <div style="background:#130808;border:1px solid #2A1414;border-radius:6px;padding:22px 22px 16px;display:flex;flex-direction:column;justify-content:space-between;min-height:148px">
+          <div style="font-size:8px;font-weight:700;letter-spacing:.16em;color:#E05252">VS 130 / DAY BASELINE</div>
+          <div>
+            <div id="m-decline" style="font-size:60px;font-weight:700;letter-spacing:-.03em;color:#E05252;line-height:1;margin:6px 0">-96%</div>
+            <div style="font-size:10px;color:#6A3232;line-height:1.5">Post-Jun 27 strike &middot; Day 121<br>since IRGC closure</div>
+          </div>
+          <div style="font-size:8px;color:#3A2020;letter-spacing:.06em">Kpler &middot; Windward AIS synthesis</div>
         </div>
-        <div class="metrics">
-          <div class="metric"><div class="val red"><span id="m-transits">5</span><a href="https://www.kpler.com" target="_blank" rel="noopener" class="src-lnk" title="Source: Kpler satellite+AIS">↗</a></div><div class="lbl">Transits Today</div><div class="chg red" id="m-transits-chg">peaked 49 Jun 24 · MoU volatile</div></div>
-          <div class="metric"><div class="val red" id="m-decline">-96%</div><div class="lbl">vs 130/day baseline</div><div class="chg muted">post-Jun 27 strike</div></div>
-          <div class="metric"><div class="val red"><span id="m-tankers">4</span><a href="https://www.kpler.com" target="_blank" rel="noopener" class="src-lnk" title="Source: Kpler satellite+AIS">↗</a></div><div class="lbl">Tankers (24h)</div><div class="chg muted">Chinese-linked &middot; crude</div></div>
-          <div class="metric"><div class="val red"><span id="m-containers">0</span><a href="https://www.kpler.com" target="_blank" rel="noopener" class="src-lnk" title="Source: Kpler satellite+AIS">↗</a></div><div class="lbl">Container Ships</div><div class="chg muted">suspended post-Jun 27</div></div>
+        <div style="background:#111110;border:1px solid #1E1E1C;border-radius:6px;padding:16px 14px;display:flex;flex-direction:column;justify-content:space-between;min-height:148px">
+          <div style="font-size:8px;font-weight:700;letter-spacing:.14em;color:#4A4A44">TRANSITS TODAY</div>
+          <div>
+            <div style="font-size:44px;font-weight:700;letter-spacing:-.02em;color:#F2F1ED;line-height:1;margin:6px 0 4px"><span id="m-transits">5</span><a href="https://www.kpler.com" target="_blank" rel="noopener" class="src-lnk" title="Source: Kpler satellite+AIS">&#8599;</a></div>
+            <div class="chg red" id="m-transits-chg" style="font-size:9px;line-height:1.4">peaked 49<br>Jun 24 &middot; MoU</div>
+          </div>
+          <div style="font-size:8px;color:#2A2A26;letter-spacing:.04em">AIS-verified</div>
         </div>
-        <!-- 14-day chart -->
+        <div style="background:#111110;border:1px solid #1E1E1C;border-radius:6px;padding:16px 14px;display:flex;flex-direction:column;justify-content:space-between;min-height:148px">
+          <div style="font-size:8px;font-weight:700;letter-spacing:.14em;color:#4A4A44">TANKERS 24H</div>
+          <div>
+            <div style="font-size:44px;font-weight:700;letter-spacing:-.02em;color:#F2F1ED;line-height:1;margin:6px 0 4px"><span id="m-tankers">4</span><a href="https://www.kpler.com" target="_blank" rel="noopener" class="src-lnk" title="Source: Kpler satellite+AIS">&#8599;</a></div>
+            <div style="font-size:9px;color:#9A9A90;line-height:1.4">Chinese-linked<br>crude</div>
+          </div>
+          <div style="font-size:8px;color:#2A2A26;letter-spacing:.04em">Kpler estimate</div>
+        </div>
+        <div style="background:#111110;border:1px solid #1E1E1C;border-radius:6px;padding:16px 14px;display:flex;flex-direction:column;justify-content:space-between;min-height:148px">
+          <div style="font-size:8px;font-weight:700;letter-spacing:.14em;color:#4A4A44">CONTAINER SHIPS</div>
+          <div>
+            <div style="font-size:44px;font-weight:700;letter-spacing:-.02em;color:#E05252;line-height:1;margin:6px 0 4px"><span id="m-containers">0</span><a href="https://www.kpler.com" target="_blank" rel="noopener" class="src-lnk" title="Source: Kpler satellite+AIS">&#8599;</a></div>
+            <div style="font-size:9px;color:#C98A2E;line-height:1.4">suspended<br>post-Jun 27</div>
+          </div>
+          <div style="font-size:8px;color:#2A2A26;letter-spacing:.04em">AIS-verified</div>
+        </div>
+      </div>
+
+      <!-- BAR CHART -->
+      <div class="card">
+        <div class="card-label">Strait of Hormuz &mdash; 14-Day Transit Monitor</div>
+        <div class="card-sub">Jun 15&ndash;28 2026 &middot; Kpler + Windward AIS synthesis &middot; UNCTAD baseline ~130/day &middot; dark fleet partially excluded</div>
         <div style="position:relative;height:200px">
           <canvas id="hChart" role="img" aria-label="Daily Hormuz crossings past 14 days"></canvas>
         </div>
         <div class="src"><span>Kpler (satellite+AIS) &middot; Windward AI &middot; straits.live &middot; Lloyd's List &middot; CNBC &middot; Jun 28 2026</span><span class="src-badge">real data</span></div>
-
-        <!-- Dark fleet caveat -->
         <div style="margin-top:10px;padding:10px 12px;background:rgba(251,191,36,.06);border:1px solid rgba(251,191,36,.18);border-left:3px solid #fbbf24;border-radius:3px;font-size:10.5px;line-height:1.6;color:#c8a830">
           <span style="font-weight:700;color:#fbbf24;letter-spacing:.03em">&#9888; DATA LIMITATION &mdash; DARK FLEET &amp; AIS GAPS</span><br>
-          AIS counts only transmitting vessels. Post-MoU, dark-fleet share fell but did not disappear. <strong style="color:#e8d080">Windward AI (Jun 24)</strong> recorded <strong style="color:#e8d080">49 AIS-visible transits</strong> vs <strong style="color:#e8d080">Kpler's 70</strong> for the same day — a gap of ~21 vessels transiting dark or with spoofed positions. On <strong style="color:#e8d080">Jun 25</strong>, Windward identified <strong style="color:#e8d080">5 vessels exhibiting IRGC turn-back behaviour</strong> on the southern corridor, with a 6th losing AIS signal mid-transit. The post-Jun 27 count of ~5 AIS-visible likely understates actual traffic by <strong style="color:#e8d080">1.3–1.8×</strong> based on the Jun 24 Kpler/Windward ratio. <strong style="color:#e8d080">Kpler</strong> (satellite + AIS synthesis) remains the most credible independent tracker — <a href="https://www.kpler.com" target="_blank" rel="noopener" style="color:#e8d080">kpler.com ↗</a>.
+          AIS counts only transmitting vessels. Post-MoU, dark-fleet share fell but did not disappear. <strong style="color:#e8d080">Windward AI (Jun 24)</strong> recorded <strong style="color:#e8d080">49 AIS-visible transits</strong> vs <strong style="color:#e8d080">Kpler's 70</strong> for the same day &mdash; a gap of ~21 vessels transiting dark or with spoofed positions. On <strong style="color:#e8d080">Jun 25</strong>, Windward identified <strong style="color:#e8d080">5 vessels exhibiting IRGC turn-back behaviour</strong> on the southern corridor. The post-Jun 27 count of ~5 AIS-visible likely understates actual traffic by <strong style="color:#e8d080">1.3&ndash;1.8&times;</strong> based on the Jun 24 Kpler/Windward ratio. <strong style="color:#e8d080">Kpler</strong> (satellite + AIS synthesis) remains the most credible independent tracker &mdash; <a href="https://www.kpler.com" target="_blank" rel="noopener" style="color:#e8d080">kpler.com &#8599;</a>.
         </div>
       </div>
 
-      <!-- Vessel type breakdown -->
+      <!-- VESSEL MIX -->
       <div class="row col2" style="margin-bottom:14px">
         <div class="card">
           <div class="card-label">Vessel Type Breakdown &mdash; 24h</div>
           <div class="card-sub">Current vs pre-crisis baseline</div>
           <div style="display:flex;gap:14px;align-items:center">
-            <div style="width:110px;height:110px;flex-shrink:0">
-              <canvas id="dChart" role="img" aria-label="Vessel type donut"></canvas>
-            </div>
+            <div style="width:110px;height:110px;flex-shrink:0"><canvas id="dChart" role="img" aria-label="Vessel type donut"></canvas></div>
             <div style="flex:1">
-              <div class="vtype-row">
-                <div class="vtype-left"><span>&#128738;</span><div><div class="vtype-name">Crude Tankers</div><div class="vtype-sub">VLCC/Suezmax</div></div></div>
-                <div><div class="vtype-count red" id="m-vt-crude">3</div><div class="vtype-pct red" id="m-vt-crude-pct">60% &bull; was 38%</div></div>
-              </div>
-              <div class="vtype-row">
-                <div class="vtype-left"><span>&#9981;</span><div><div class="vtype-name">Product Tankers</div><div class="vtype-sub">MR/LR1/LR2</div></div></div>
-                <div><div class="vtype-count amb" id="m-vt-product">1</div><div class="vtype-pct amb" id="m-vt-product-pct">20% &bull; was 18%</div></div>
-              </div>
-              <div class="vtype-row">
-                <div class="vtype-left"><span>&#10052;</span><div><div class="vtype-name">LNG / LPG</div><div class="vtype-sub">Gas carriers</div></div></div>
-                <div><div class="vtype-count pur" id="m-vt-lng">0</div><div class="vtype-pct pur" id="m-vt-lng-pct">0% &bull; was 12%</div></div>
-              </div>
-              <div class="vtype-row">
-                <div class="vtype-left"><span>&#128230;</span><div><div class="vtype-name">Containers</div><div class="vtype-sub">Feeder to Panamax</div></div></div>
-                <div><div class="vtype-count blu" id="m-vt-containers">0</div><div class="vtype-pct blu" id="m-vt-containers-pct">0% &bull; was 15%</div></div>
-              </div>
-              <div class="vtype-row">
-                <div class="vtype-left"><span>&#9875;</span><div><div class="vtype-name">Bulk / Other</div><div class="vtype-sub">Dry bulk, general</div></div></div>
-                <div><div class="vtype-count muted" id="m-vt-bulk">1</div><div class="vtype-pct muted" id="m-vt-bulk-pct">20% &bull; was 17%</div></div>
-              </div>
+              <div class="vtype-row"><div class="vtype-left"><span>&#128738;</span><div><div class="vtype-name">Crude Tankers</div><div class="vtype-sub">VLCC/Suezmax</div></div></div><div><div class="vtype-count red" id="m-vt-crude">3</div><div class="vtype-pct red" id="m-vt-crude-pct">60% &bull; was 38%</div></div></div>
+              <div class="vtype-row"><div class="vtype-left"><span>&#9981;</span><div><div class="vtype-name">Product Tankers</div><div class="vtype-sub">MR/LR1/LR2</div></div></div><div><div class="vtype-count amb" id="m-vt-product">1</div><div class="vtype-pct amb" id="m-vt-product-pct">20% &bull; was 18%</div></div></div>
+              <div class="vtype-row"><div class="vtype-left"><span>&#10052;</span><div><div class="vtype-name">LNG / LPG</div><div class="vtype-sub">Gas carriers</div></div></div><div><div class="vtype-count pur" id="m-vt-lng">0</div><div class="vtype-pct pur" id="m-vt-lng-pct">0% &bull; was 12%</div></div></div>
+              <div class="vtype-row"><div class="vtype-left"><span>&#128230;</span><div><div class="vtype-name">Containers</div><div class="vtype-sub">Feeder to Panamax</div></div></div><div><div class="vtype-count blu" id="m-vt-containers">0</div><div class="vtype-pct blu" id="m-vt-containers-pct">0% &bull; was 15%</div></div></div>
+              <div class="vtype-row"><div class="vtype-left"><span>&#9875;</span><div><div class="vtype-name">Bulk / Other</div><div class="vtype-sub">Dry bulk, general</div></div></div><div><div class="vtype-count muted" id="m-vt-bulk">1</div><div class="vtype-pct muted" id="m-vt-bulk-pct">20% &bull; was 17%</div></div></div>
             </div>
           </div>
           <div class="src"><span>UNCTAD / AIS classification &middot; straits.live</span><span class="src-badge">real data</span></div>
         </div>
         <div class="card">
           <div class="card-label">14-Day Transit Trend &mdash; Vessel Mix</div>
-          <div class="card-sub">UNCTAD baseline ~130/day &rarr; AIS-verified: 2–8/day (dark fleet excluded)</div>
-          <div style="position:relative;height:165px">
-            <canvas id="sChart" role="img" aria-label="Stacked vessel type trend 14 days"></canvas>
-          </div>
+          <div class="card-sub">UNCTAD baseline ~130/day &rarr; AIS-verified: 2&ndash;8/day (dark fleet excluded)</div>
+          <div style="position:relative;height:165px"><canvas id="sChart" role="img" aria-label="Stacked vessel type trend 14 days"></canvas></div>
           <div class="src"><span>AIS synthesis &middot; IMF PortWatch</span><span class="src-badge">synthesized</span></div>
         </div>
       </div>
 
-      <!-- Live MarineTraffic map -->
+      <!-- LIVE MAP -->
       <div>
         <div class="mapbar">
           <span class="mapbar-label">Live AIS &mdash; MarineTraffic</span>
-          <span style="display:flex;align-items:center;gap:5px;font-family:var(--f-mono);font-size:8px;color:#3dd68c">
-            <span style="width:6px;height:6px;border-radius:50%;background:#3dd68c;flex-shrink:0;animation:pulse-dot 1.8s ease-in-out infinite"></span>
-            Real-time vessel tracking
-          </span>
+          <span style="display:flex;align-items:center;gap:5px;font-family:var(--f-mono);font-size:8px;color:#3dd68c"><span style="width:6px;height:6px;border-radius:50%;background:#3dd68c;flex-shrink:0;animation:pulse-dot 1.8s ease-in-out infinite"></span>Real-time vessel tracking</span>
           <div style="margin-left:auto;display:flex;gap:6px">
             <a href="https://www.marinetraffic.com/en/ais/home/centerx:56.4/centery:26.2/zoom:8" target="_blank" class="ext-btn">&#8599; Full screen</a>
             <a href="https://www.shiptraffic.net/tankers/HORMUZ%20STRAIT/ship-traffic-tracker" target="_blank" class="ext-btn">&#8599; Tankers live</a>
             <a href="https://straits.live" target="_blank" class="ext-btn" style="color:#e74c3c;border-color:rgba(231,76,60,.3)">&#8599; straits.live</a>
           </div>
         </div>
-        <iframe
-          id="sat-map"
-          src="https://www.marinetraffic.com/en/ais/embed/zoom:8/centery:26.2/centerx:56.4/maptype:4/shownames:false/mmsi:0/shipid:0/fleet:/fleet_id:/showmenu:false/remember:false"
-          width="100%"
-          style="border:none;display:block"
-          loading="lazy"
-          allowfullscreen
-          referrerpolicy="no-referrer-when-downgrade"
-          title="MarineTraffic — Strait of Hormuz live AIS">
-        </iframe>
+        <iframe id="sat-map" src="https://www.marinetraffic.com/en/ais/embed/zoom:8/centery:26.2/centerx:56.4/maptype:4/shownames:false/mmsi:0/shipid:0/fleet:/fleet_id:/showmenu:false/remember:false" width="100%" style="border:none;display:block" loading="lazy" allowfullscreen referrerpolicy="no-referrer-when-downgrade" title="MarineTraffic — Strait of Hormuz live AIS"></iframe>
         <div class="mapstats">
           <div class="mapstat"><span>Source:</span> <span style="color:#3dd68c">MarineTraffic live AIS &bull; auto-refresh</span></div>
           <div class="mapstat"><span>AIS transits today:</span> <span id="snap-transits" class="red">5</span> <span>/ 130 baseline &nbsp;<span style="color:#7a8494;font-size:8px">(dark fleet partially excluded)</span></span></div>
           <div style="margin-left:auto;font-size:7px;color:#7a8494;font-family:'IBM Plex Mono',monospace">MarineTraffic &copy; &middot; AIS data &middot; Jun 2026</div>
         </div>
       </div>
+
     </div>
 
-    <!-- Right: intel + market signals -->
+    <!-- RIGHT SIDEBAR -->
     <div style="display:flex;flex-direction:column;gap:14px">
 
-      <!-- Live Intel -->
+      <!-- INTELLIGENCE FEED -->
       <div class="card">
         <div class="card-label">Live Intelligence Feed <span style="font-size:9px;color:#3d4451;font-weight:400;margin-left:6px">&#8635; updates every 3 min</span></div>
-        <div class="news-item" id="intel-alert"><div class="news-dot" style="background:#e74c3c"></div><div><span class="news-tag tag-alert">ALERT</span><div class="news-text">IRGC enforces all-corridor control since Jun 25 southern-route crackdown. <strong style="color:#e8eaed">Second merchant vessel struck Jun 27</strong> — IMO crew-evacuation plans paused. MoU 60-day window under stress; nuclear talks postponed. Traffic peaked at 49 transits Jun 24 (Windward) before reverting. JWC war-risk listing extended through Jun 30+. <a href="https://www.lloydslist.com/hot-topics/strait-of-hormuz-crisis" target="_blank" rel="noopener" class="intel-src">Lloyd's List ↗</a></div></div></div>
-        <div id="intel-feed">
-          <!-- populated by rotateIntelFeed() on load -->
-        </div>
+        <div class="news-item" id="intel-alert"><div class="news-dot" style="background:#e74c3c"></div><div><span class="news-tag tag-alert">ALERT</span><div class="news-text">IRGC enforces all-corridor control since Jun 25 southern-route crackdown. <strong style="color:#e8eaed">Second merchant vessel struck Jun 27</strong> &mdash; IMO crew-evacuation plans paused. MoU 60-day window under stress; nuclear talks postponed. Traffic peaked at 49 transits Jun 24 (Windward) before reverting. JWC war-risk listing extended through Jun 30+. <a href="https://www.lloydslist.com/hot-topics/strait-of-hormuz-crisis" target="_blank" rel="noopener" class="intel-src">Lloyd's List &#8599;</a></div></div></div>
+        <div id="intel-feed"></div>
         <div class="src"><span id="intel-src-line">GDELT &middot; NewsAPI &middot; live sources</span><span class="src-badge">live</span></div>
       </div>
 
-      <!-- Brent + War-Risk signals -->
+      <!-- ENERGY & RISK SIGNALS -->
       <div class="card">
         <div class="card-label">Energy &amp; Risk Signals</div>
         <div class="metrics" style="flex-wrap:wrap">
           <div class="metric" style="min-width:120px">
-            <div class="val amb"><span id="m-brent">$73.20</span><a href="https://www.investing.com/commodities/brent-oil" target="_blank" rel="noopener" class="src-lnk" title="Source: investing.com">↗</a></div>
+            <div class="val amb"><span id="m-brent">$73.20</span><a href="https://www.investing.com/commodities/brent-oil" target="_blank" rel="noopener" class="src-lnk" title="Source: investing.com">&#8599;</a></div>
             <div class="lbl">Brent Crude / bbl</div>
             <div class="chg red" id="m-brent-chg">-4.3% Jun 26 &bull; Jun 27 strike adds upside risk</div>
           </div>
           <div class="metric" style="min-width:120px">
-            <div class="val amb">~3.2% hull<a href="https://www.lloydslist.com/hot-topics/strait-of-hormuz-crisis" target="_blank" rel="noopener" class="src-lnk" title="Source: Lloyd's List · LMA">↗</a></div>
+            <div class="val amb">~3.2% hull<a href="https://www.lloydslist.com/hot-topics/strait-of-hormuz-crisis" target="_blank" rel="noopener" class="src-lnk" title="Source: Lloyd's List &middot; LMA">&#8599;</a></div>
             <div class="lbl">War-Risk Insurance</div>
             <div class="chg red">&#9650;&nbsp;+1.2pp post-Jun 27 strike &bull; re-escalating from 2% MoU floor</div>
           </div>
@@ -3834,18 +3878,33 @@ canvas { font-family: var(--f-mono); }
         <div class="dv"></div>
         <div style="font-size:9px;color:#7a8494;line-height:1.6">
           <div style="margin-bottom:5px">Brent settled <span class="red">$71.99 Jun 26</span> (-4.3%) as tankers exited post-MoU, briefly restoring ~75% of pre-war Gulf export volumes. Jun 27 second vessel strike adds upside risk; market re-pricing disruption probability.</div>
-          <div>War-risk premiums halved from ~5% to <span class="amb">~2%</span> hull value after Jun 17 MoU. Jun 27 second vessel strike drove re-escalation to <span class="red">~3.2% (+1.2pp)</span>. Lloyd's Chubb-led consortium (Jun 19) adds $200M hull + $200M cargo capacity — capacity now under pressure.</div>
+          <div>War-risk premiums halved from ~5% to <span class="amb">~2%</span> hull value after Jun 17 MoU. Jun 27 second vessel strike drove re-escalation to <span class="red">~3.2% (+1.2pp)</span>. Lloyd's Chubb-led consortium (Jun 19) adds $200M hull + $200M cargo capacity &mdash; capacity now under pressure.</div>
         </div>
         <div class="src"><span>CNBC &middot; investing.com &middot; Lloyd's List &middot; Insurance Business &middot; Jun 28 2026</span><span class="src-badge">real data</span></div>
       </div>
 
-      <!-- War-risk context -->
+      <!-- CARRIER POSTURE -->
       <div class="card">
         <div class="card-label">Carrier Posture</div>
-        <div class="news-item"><div class="news-dot" style="background:#e74c3c"></div><div><div class="news-text"><strong style="color:#e8eaed">MSC</strong> &mdash; Briefly resumed Hormuz Jun 18–24 &middot; suspended again post-Jun 27 strike &middot; Cape diversions restored &middot; $1,200/TEU surcharge</div></div></div>
-        <div class="news-item"><div class="news-dot" style="background:#e74c3c"></div><div><div class="news-text"><strong style="color:#e8eaed">Maersk</strong> &mdash; Partial advisory resumption Jun 19 &middot; booking pause reinstated Jun 27 &middot; $1,000/TEU surcharge</div></div></div>
-        <div class="news-item"><div class="news-dot" style="background:#fbbf24"></div><div><div class="news-text"><strong style="color:#e8eaed">CMA CGM</strong> &mdash; Resumed escorted transits Jun 18–25 &middot; pausing evaluation post-Jun 27 vessel strike</div></div></div>
-        <div class="news-item"><div class="news-dot" style="background:#fbbf24"></div><div><div class="news-text"><strong style="color:#e8eaed">ONE / Evergreen / Yang Ming</strong> &mdash; Cautious MoU resumption Jun 18–25 &middot; re-suspended post-Jun 27</div></div></div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:10px">
+          <div style="background:#111110;border:1px solid #1E1E1C;border-radius:5px;padding:12px">
+            <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:6px;margin-bottom:7px"><div style="font-size:13px;font-weight:700;color:#F2F1ED">MSC</div><div style="font-size:8px;font-weight:700;padding:2px 7px;border-radius:3px;color:#E05252;border:1px solid #E05252;white-space:nowrap">SUSPENDED</div></div>
+            <div style="font-size:9px;color:#7A7A72;line-height:1.5;margin-bottom:7px">Cape Good Hope restored post-Jun 27. Briefly resumed Jun 18&ndash;24.</div>
+            <div style="font-size:9px;color:#C9AE4E;font-weight:700;border-top:1px solid #1A1A18;padding-top:6px">$1,200/TEU surcharge active</div>
+          </div>
+          <div style="background:#111110;border:1px solid #1E1E1C;border-radius:5px;padding:12px">
+            <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:6px;margin-bottom:7px"><div style="font-size:13px;font-weight:700;color:#F2F1ED">Hapag-Lloyd</div><div style="font-size:8px;font-weight:700;padding:2px 7px;border-radius:3px;color:#E05252;border:1px solid #E05252;white-space:nowrap">SUSPENDED</div></div>
+            <div style="font-size:9px;color:#7A7A72;line-height:1.5">Cape diversions active. No Hormuz calls since Jun 27.</div>
+          </div>
+          <div style="background:#111110;border:1px solid #1E1E1C;border-radius:5px;padding:12px">
+            <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:6px;margin-bottom:7px"><div style="font-size:13px;font-weight:700;color:#F2F1ED">Maersk</div><div style="font-size:8px;font-weight:700;padding:2px 7px;border-radius:3px;color:#E05252;border:1px solid #E05252;white-space:nowrap">SUSPENDED</div></div>
+            <div style="font-size:9px;color:#7A7A72;line-height:1.5">Second suspension confirmed Jun 27. Cape reroute restored. $1,000/TEU surcharge.</div>
+          </div>
+          <div style="background:#111110;border:1px solid #1E1E1C;border-radius:5px;padding:12px">
+            <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:6px;margin-bottom:7px"><div style="font-size:13px;font-weight:700;color:#F2F1ED">CMA CGM</div><div style="font-size:8px;font-weight:700;padding:2px 7px;border-radius:3px;color:#C98A2E;border:1px solid #C98A2E;white-space:nowrap">MONITORING</div></div>
+            <div style="font-size:9px;color:#7A7A72;line-height:1.5">Limited GCC exposure. Pausing evaluation post-Jun 27.</div>
+          </div>
+        </div>
         <div class="src"><span>straits.live &middot; Lloyd's List &middot; carrier ops updates &middot; Jun 28 2026</span><span class="src-badge">real data</span></div>
       </div>
 

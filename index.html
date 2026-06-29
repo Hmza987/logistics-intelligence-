@@ -5128,6 +5128,7 @@ function initHormuzCharts() {
       events.forEach(function(ev) {
         var x = meta.data[ev.idx].x;
         ctx.save();
+        // Dashed vertical line
         ctx.strokeStyle = ev.color;
         ctx.globalAlpha = 0.6;
         ctx.lineWidth = 1;
@@ -5136,11 +5137,15 @@ function initHormuzCharts() {
         ctx.moveTo(x, ca.top);
         ctx.lineTo(x, ca.bottom);
         ctx.stroke();
-        ctx.globalAlpha = 0.85;
+        // Label rotated 90° along the line, drawn inside chart from top
+        ctx.globalAlpha = 0.9;
         ctx.fillStyle = ev.color;
-        ctx.font = 'bold 7px IBM Plex Mono, monospace';
-        ctx.textAlign = 'center';
-        ctx.fillText(ev.label, x, ca.top - 5);
+        ctx.font = 'bold 7.5px "IBM Plex Mono", monospace';
+        ctx.textAlign = 'right';
+        ctx.setLineDash([]);
+        ctx.translate(x + 4, ca.top + 6);
+        ctx.rotate(-Math.PI / 2);
+        ctx.fillText(ev.label, 0, 0);
         ctx.restore();
       });
 

@@ -3933,125 +3933,33 @@ canvas { font-family: var(--f-mono); }
     </div>
   </div>
 
-  <!-- MAP SECTION -->
-  <div style="background:#0A0A0A;border-bottom:1px solid #1A1A18">
-    <div style="padding:10px 28px;background:#0D0D0B;border-bottom:1px solid #1A1A18;display:flex;align-items:center;flex-wrap:wrap;gap:0">
-      <span style="font-size:10px;font-weight:700;letter-spacing:.12em;color:#F2F1ED;margin-right:20px">&#9671; GLOBAL SHIPPING LANES &amp; PORT CALL IMBALANCE &ndash; HORMUZ CRISIS</span>
-      <span style="font-size:9px;color:#3A3A36;margin-right:auto;letter-spacing:.04em">Bubble size = commercial vessel calls/week &middot; dashed ring = pre-crisis volume &middot; badge = live AIS count &middot; 03 Jul 2026</span>
-      <div style="display:flex;align-items:center;gap:14px;flex-wrap:wrap;font-size:9px;letter-spacing:.06em">
-        <span style="display:flex;align-items:center;gap:5px;color:#5A5A52"><span style="width:10px;height:10px;border-radius:50%;background:#5FA86A;display:inline-block"></span>Surging (+60%+)</span>
-        <span style="display:flex;align-items:center;gap:5px;color:#5A5A52"><span style="width:10px;height:10px;border-radius:50%;background:#7A7A72;display:inline-block"></span>Stable</span>
-        <span style="display:flex;align-items:center;gap:5px;color:#5A5A52"><span style="width:10px;height:10px;border-radius:50%;background:#E05252;display:inline-block"></span>Collapsed</span>
-        <span style="display:flex;align-items:center;gap:5px;color:#5A5A52"><span style="width:10px;height:10px;border-radius:50%;border:1.5px dashed #7A7A72;display:inline-block"></span>Pre-crisis vol.</span>
-        <span style="display:flex;align-items:center;gap:5px;color:#5A5A52"><span style="width:22px;height:2px;background:#C2A23E;display:inline-block"></span>Via Cape</span>
-        <span style="display:flex;align-items:center;gap:5px;color:#5A5A52"><span style="width:22px;height:2px;background:#5A8AB8;display:inline-block"></span>Via Suez</span>
-        <span style="display:flex;align-items:center;gap:5px;color:#5A5A52"><span style="width:22px;height:0;border-top:2px dashed #4A7A6A;display:inline-block"></span>Arctic NSR</span>
-        <span style="border:1px solid #2A2A26;padding:2px 9px;border-radius:3px;color:#5A5A52;font-size:9px;letter-spacing:.08em">IMF PORTWATCH &middot; LLOYD'S</span>
+  <!-- GLOBAL CHOKEPOINTS MAP — full width -->
+  <div class="map-section" style="margin-bottom:14px">
+    <div class="map-section-header">
+      <div>
+        <div class="map-section-title" style="color:#7a9eb8">&#9671; Global Shipping Lanes &amp; Port Call Imbalance &mdash; Hormuz Crisis</div>
+        <div class="map-section-sub">Bubble size = commercial vessel calls/week (AIS-calibrated) &bull; dashed ring = pre-crisis volume &bull; badge = live AIS vessel count &bull; hover any port for data &bull; 7 Jun 2026</div>
+      </div>
+      <div style="display:flex;align-items:center;gap:8px">
+        <div class="map-legend" style="padding:0;background:none;border:none;display:flex;flex-wrap:wrap;gap:8px;min-width:unset">
+          <div class="map-legend-item"><div class="map-legend-dot" style="background:#3dd68c"></div>Surging port (+50%+)</div>
+          <div class="map-legend-item"><div class="map-legend-dot" style="background:#7a8494"></div>Stable port</div>
+          <div class="map-legend-item"><div class="map-legend-dot" style="background:#e03040"></div>Collapsed port</div>
+          <div class="map-legend-item" style="gap:4px">
+            <div style="width:12px;height:12px;border-radius:50%;border:1px dashed #5a6878;flex-shrink:0"></div>
+            Pre-crisis volume
+          </div>
+          <div class="map-legend-item"><div class="map-legend-dot" style="background:#a03020"></div>Chokepoint: closed</div>
+          <div class="map-legend-item"><div class="map-legend-dot" style="background:#7050c0"></div>Crisis hub</div>
+          <div class="map-legend-item"><div class="map-legend-line" style="background:#a87838;height:5px"></div>Via Cape (dominant)</div>
+          <div class="map-legend-item"><div class="map-legend-line" style="background:#6890a8"></div>Via Suez</div>
+          <div class="map-legend-item"><div class="map-legend-line" style="background:repeating-linear-gradient(90deg,#67e8f9 0,#67e8f9 5px,transparent 5px,transparent 9px)"></div>Arctic NSR (seasonal)</div>
+        </div>
+        <div class="src-badge" style="font-size:8px;flex-shrink:0">IMF PortWatch &middot; Lloyd's</div>
       </div>
     </div>
-    <svg width="100%" height="500" viewBox="0 0 1280 500" style="display:block">
-      <rect x="0" y="0" width="1280" height="500" fill="#0D1218"/>
-      <line x1="0" y1="0" x2="0" y2="500" stroke="rgba(255,255,255,0.015)" stroke-width="1"/><line x1="120" y1="0" x2="120" y2="500" stroke="rgba(255,255,255,0.015)" stroke-width="1"/><line x1="240" y1="0" x2="240" y2="500" stroke="rgba(255,255,255,0.015)" stroke-width="1"/><line x1="360" y1="0" x2="360" y2="500" stroke="rgba(255,255,255,0.015)" stroke-width="1"/><line x1="480" y1="0" x2="480" y2="500" stroke="rgba(255,255,255,0.015)" stroke-width="1"/><line x1="600" y1="0" x2="600" y2="500" stroke="rgba(255,255,255,0.015)" stroke-width="1"/><line x1="720" y1="0" x2="720" y2="500" stroke="rgba(255,255,255,0.015)" stroke-width="1"/><line x1="840" y1="0" x2="840" y2="500" stroke="rgba(255,255,255,0.015)" stroke-width="1"/><line x1="960" y1="0" x2="960" y2="500" stroke="rgba(255,255,255,0.015)" stroke-width="1"/><line x1="1080" y1="0" x2="1080" y2="500" stroke="rgba(255,255,255,0.015)" stroke-width="1"/><line x1="1200" y1="0" x2="1200" y2="500" stroke="rgba(255,255,255,0.015)" stroke-width="1"/>
-      <line x1="0" y1="80" x2="1280" y2="80" stroke="rgba(255,255,255,0.015)" stroke-width="1"/><line x1="0" y1="160" x2="1280" y2="160" stroke="rgba(255,255,255,0.015)" stroke-width="1"/><line x1="0" y1="240" x2="1280" y2="240" stroke="rgba(255,255,255,0.015)" stroke-width="1"/><line x1="0" y1="320" x2="1280" y2="320" stroke="rgba(255,255,255,0.015)" stroke-width="1"/><line x1="0" y1="400" x2="1280" y2="400" stroke="rgba(255,255,255,0.015)" stroke-width="1"/><line x1="0" y1="480" x2="1280" y2="480" stroke="rgba(255,255,255,0.015)" stroke-width="1"/>
-      <path d="M 365,62 L 495,58 L 530,92 L 555,102 L 498,127 L 550,172 L 570,172 L 533,214 L 483,248 L 433,214 L 365,197 L 340,142 Z" fill="#141C1A" stroke="rgba(255,255,255,0.05)" stroke-width="0.8" stroke-linejoin="round"/>
-      <path d="M 529,207 L 585,197 L 625,208 L 639,238 L 629,278 L 607,318 L 578,327 L 552,307 L 525,277 L 518,247 Z" fill="#141C1A" stroke="rgba(255,255,255,0.05)" stroke-width="0.8" stroke-linejoin="round"/>
-      <path d="M 582,63 L 625,53 L 655,57 L 693,67 L 713,81 L 718,102 L 695,113 L 673,123 L 651,127 L 629,122 L 605,117 L 597,114 L 591,90 Z" fill="#141C1A" stroke="rgba(255,255,255,0.05)" stroke-width="0.8" stroke-linejoin="round"/>
-      <path d="M 593,113 L 655,125 L 695,121 L 729,125 L 737,143 L 723,175 L 703,197 L 691,225 L 671,255 L 669,273 L 641,281 L 621,271 L 603,257 L 585,233 L 565,209 L 563,186 L 573,168 L 593,151 Z" fill="#141C1A" stroke="rgba(255,255,255,0.05)" stroke-width="0.8" stroke-linejoin="round"/>
-      <path d="M 718,102 L 731,95 L 775,73 L 818,51 L 888,45 L 953,55 L 1019,69 L 1067,91 L 1113,113 L 1148,170 L 1120,210 L 1090,250 L 1060,270 L 976,250 L 941,229 L 919,205 L 890,200 L 870,180 L 832,145 L 805,155 L 780,161 L 757,165 L 737,141 L 729,125 L 718,102 Z" fill="#141C1A" stroke="rgba(255,255,255,0.05)" stroke-width="0.8" stroke-linejoin="round"/>
-      <path d="M 991,270 L 1041,264 L 1081,274 L 1101,300 L 1091,330 L 1041,334 L 1001,324 L 983,310 L 987,290 Z" fill="#141C1A" stroke="rgba(255,255,255,0.05)" stroke-width="0.8" stroke-linejoin="round"/>
-      <text x="210" y="310" text-anchor="middle" fill="rgba(90,130,160,0.22)" style="font:11px 'JetBrains Mono',monospace;letter-spacing:0.12em">ATLANTIC</text>
-      <text x="210" y="328" text-anchor="middle" fill="rgba(90,130,160,0.22)" style="font:11px 'JetBrains Mono',monospace;letter-spacing:0.12em">OCEAN</text>
-      <text x="150" y="200" text-anchor="middle" fill="rgba(90,130,160,0.22)" style="font:11px 'JetBrains Mono',monospace;letter-spacing:0.12em">PACIFIC</text>
-      <text x="150" y="218" text-anchor="middle" fill="rgba(90,130,160,0.22)" style="font:11px 'JetBrains Mono',monospace;letter-spacing:0.12em">OCEAN</text>
-      <text x="1180" y="260" text-anchor="middle" fill="rgba(90,130,160,0.22)" style="font:11px 'JetBrains Mono',monospace;letter-spacing:0.12em">PACIFIC</text>
-      <text x="1180" y="278" text-anchor="middle" fill="rgba(90,130,160,0.22)" style="font:11px 'JetBrains Mono',monospace;letter-spacing:0.12em">OCEAN</text>
-      <text x="800" y="420" text-anchor="middle" fill="rgba(90,130,160,0.22)" style="font:11px 'JetBrains Mono',monospace;letter-spacing:0.12em">INDIAN OCEAN</text>
-      <text x="460" y="178" text-anchor="middle" fill="rgba(255,255,255,0.07)" style="font:bold 13px 'JetBrains Mono',monospace;letter-spacing:0.14em">NORTH AMERICA</text>
-      <text x="580" y="266" text-anchor="middle" fill="rgba(255,255,255,0.07)" style="font:bold 13px 'JetBrains Mono',monospace;letter-spacing:0.14em">SOUTH AMERICA</text>
-      <text x="660" y="168" text-anchor="middle" fill="rgba(255,255,255,0.07)" style="font:bold 13px 'JetBrains Mono',monospace;letter-spacing:0.14em">AFRICA</text>
-      <text x="860" y="100" text-anchor="middle" fill="rgba(255,255,255,0.07)" style="font:bold 13px 'JetBrains Mono',monospace;letter-spacing:0.14em">ASIA</text>
-      <text x="650" y="85" text-anchor="middle" fill="rgba(255,255,255,0.07)" style="font:bold 13px 'JetBrains Mono',monospace;letter-spacing:0.14em">EUROPE</text>
-      <path d="M 498,127 Q 430,310 390,380 Q 440,460 640,440 Q 780,390 830,180" fill="none" stroke="#C2A23E" stroke-width="2.5" stroke-linecap="round"/>
-      <path d="M 498,127 Q 490,300 580,400 Q 680,460 850,380 Q 900,300 870,178" fill="none" stroke="rgba(194,162,62,0.5)" stroke-width="1.5" stroke-linecap="round" stroke-dasharray="7 5"/>
-      <path d="M 941,229 Q 980,290 1041,280 Q 1100,240 1113,113" fill="none" stroke="#C2A23E" stroke-width="2" stroke-linecap="round"/>
-      <path d="M 941,229 Q 900,260 870,280 Q 800,400 700,450 Q 580,440 498,127" fill="none" stroke="rgba(194,162,62,0.35)" stroke-width="1.5" stroke-linecap="round" stroke-dasharray="6 4"/>
-      <path d="M 729,141 Q 718,118 695,113 Q 660,105 638,80 Q 620,62 605,117" fill="none" stroke="#5A8AB8" stroke-width="2" stroke-linecap="round"/>
-      <path d="M 941,229 Q 870,178 737,141" fill="none" stroke="#5A8AB8" stroke-width="2" stroke-linecap="round"/>
-      <path d="M 605,117 Q 540,105 498,127" fill="none" stroke="#5A8AB8" stroke-width="1.5" stroke-linecap="round" stroke-dasharray="4 3"/>
-      <path d="M 498,127 Q 600,30 750,30 Q 900,30 1113,113" fill="none" stroke="#4A7A6A" stroke-width="1.5" stroke-linecap="round" stroke-dasharray="8 5" opacity="0.7"/>
-      <circle cx="824" cy="152" r="14" fill="none" stroke="#E05252" stroke-width="1.5" opacity="0.3"/>
-      <circle cx="824" cy="152" r="7" fill="#0D1218"/>
-      <circle cx="824" cy="152" r="5.5" fill="#E05252"/>
-      <text x="832" y="142" text-anchor="start" fill="#C8C7C2" style="font:bold 8.5px 'JetBrains Mono',monospace;letter-spacing:0.08em">Strait of Hormuz</text>
-      <circle cx="729" cy="141" r="7" fill="#0D1218"/>
-      <circle cx="729" cy="141" r="5.5" fill="none" stroke="#5FA86A" stroke-width="1.8"/>
-      <text x="737" y="131" text-anchor="start" fill="#C8C7C2" style="font:bold 8.5px 'JetBrains Mono',monospace;letter-spacing:0.08em">Suez Canal</text>
-      <text x="737" y="163" text-anchor="start" fill="#5FA86A" style="font:bold 9px 'JetBrains Mono',monospace">+83%</text>
-      <circle cx="757" cy="165" r="7" fill="#0D1218"/>
-      <circle cx="757" cy="165" r="5.5" fill="none" stroke="#C98A2E" stroke-width="1.8"/>
-      <text x="765" y="155" text-anchor="start" fill="#C8C7C2" style="font:bold 8.5px 'JetBrains Mono',monospace;letter-spacing:0.08em">Bab el-Mandeb</text>
-      <circle cx="713" cy="81" r="7" fill="#0D1218"/>
-      <circle cx="713" cy="81" r="5.5" fill="none" stroke="#5FA86A" stroke-width="1.8"/>
-      <text x="721" y="71" text-anchor="start" fill="#C8C7C2" style="font:bold 8.5px 'JetBrains Mono',monospace;letter-spacing:0.08em">Turkish Straits</text>
-      <circle cx="605" cy="117" r="7" fill="#0D1218"/>
-      <circle cx="605" cy="117" r="5.5" fill="none" stroke="#5FA86A" stroke-width="1.8"/>
-      <text x="613" y="107" text-anchor="start" fill="#C8C7C2" style="font:bold 8.5px 'JetBrains Mono',monospace;letter-spacing:0.08em">Strait of Gibraltar</text>
-      <circle cx="533" cy="172" r="7" fill="#0D1218"/>
-      <circle cx="533" cy="172" r="5.5" fill="none" stroke="#5FA86A" stroke-width="1.8"/>
-      <text x="541" y="162" text-anchor="start" fill="#C8C7C2" style="font:bold 8.5px 'JetBrains Mono',monospace;letter-spacing:0.08em">Panama Canal</text>
-      <circle cx="1041" cy="264" r="7" fill="#0D1218"/>
-      <circle cx="1041" cy="264" r="5.5" fill="none" stroke="#5FA86A" stroke-width="1.8"/>
-      <text x="1033" y="254" text-anchor="end" fill="#C8C7C2" style="font:bold 8.5px 'JetBrains Mono',monospace;letter-spacing:0.08em">Strait of Malacca</text>
-      <text x="1033" y="286" text-anchor="end" fill="#5FA86A" style="font:bold 9px 'JetBrains Mono',monospace">+83%</text>
-      <circle cx="685" cy="110" r="24" fill="rgba(95,168,106,0.13)" stroke="#5FA86A" stroke-width="1.5" opacity="0.85"/>
-      <text x="685" y="82" text-anchor="middle" fill="#9A9A92" style="font:9px 'JetBrains Mono',monospace">Rotterdam</text>
-      <text x="685" y="113" text-anchor="middle" fill="#5FA86A" style="font:bold 9px 'JetBrains Mono',monospace">+112%</text>
-      <circle cx="618" cy="106" r="16" fill="rgba(95,168,106,0.13)" stroke="#5FA86A" stroke-width="1.5" opacity="0.85"/>
-      <text x="618" y="85" text-anchor="middle" fill="#9A9A92" style="font:9px 'JetBrains Mono',monospace">Tanger Med</text>
-      <text x="618" y="109" text-anchor="middle" fill="#5FA86A" style="font:bold 9px 'JetBrains Mono',monospace">+228%</text>
-      <circle cx="588" cy="142" r="18" fill="rgba(95,168,106,0.13)" stroke="#5FA86A" stroke-width="1.5" opacity="0.85"/>
-      <text x="588" y="121" text-anchor="middle" fill="#9A9A92" style="font:9px 'JetBrains Mono',monospace">Dakar</text>
-      <text x="588" y="145" text-anchor="middle" fill="#5FA86A" style="font:bold 9px 'JetBrains Mono',monospace">+100%</text>
-      <circle cx="598" cy="190" r="14" fill="rgba(95,168,106,0.13)" stroke="#5FA86A" stroke-width="1.5" opacity="0.85"/>
-      <text x="598" y="172" text-anchor="middle" fill="#9A9A92" style="font:9px 'JetBrains Mono',monospace">Lom&#233;</text>
-      <text x="598" y="193" text-anchor="middle" fill="#5FA86A" style="font:bold 9px 'JetBrains Mono',monospace">+100%</text>
-      <circle cx="632" cy="228" r="14" fill="rgba(95,168,106,0.13)" stroke="#5FA86A" stroke-width="1.5" opacity="0.85"/>
-      <text x="632" y="231" text-anchor="middle" fill="#5FA86A" style="font:bold 9px 'JetBrains Mono',monospace">+188%</text>
-      <circle cx="615" cy="264" r="10" fill="rgba(95,168,106,0.13)" stroke="#5FA86A" stroke-width="1.5" opacity="0.85"/>
-      <text x="615" y="267" text-anchor="middle" fill="#5FA86A" style="font:bold 9px 'JetBrains Mono',monospace">+275%</text>
-      <circle cx="660" cy="248" r="10" fill="rgba(95,168,106,0.13)" stroke="#5FA86A" stroke-width="1.5" opacity="0.85"/>
-      <text x="660" y="251" text-anchor="middle" fill="#5FA86A" style="font:bold 9px 'JetBrains Mono',monospace">+150%</text>
-      <circle cx="680" cy="390" r="14" fill="rgba(95,168,106,0.13)" stroke="#5FA86A" stroke-width="1.5" opacity="0.85"/>
-      <text x="680" y="393" text-anchor="middle" fill="#5FA86A" style="font:bold 9px 'JetBrains Mono',monospace">+233%</text>
-      <circle cx="850" cy="310" r="16" fill="rgba(95,168,106,0.13)" stroke="#5FA86A" stroke-width="1.5" opacity="0.85"/>
-      <text x="850" y="289" text-anchor="middle" fill="#9A9A92" style="font:9px 'JetBrains Mono',monospace">Mombasa</text>
-      <text x="850" y="313" text-anchor="middle" fill="#5FA86A" style="font:bold 9px 'JetBrains Mono',monospace">+178%</text>
-      <circle cx="940" cy="350" r="14" fill="rgba(95,168,106,0.13)" stroke="#5FA86A" stroke-width="1.5" opacity="0.85"/>
-      <text x="940" y="329" text-anchor="middle" fill="#9A9A92" style="font:9px 'JetBrains Mono',monospace">Colombo</text>
-      <text x="940" y="353" text-anchor="middle" fill="#5FA86A" style="font:bold 9px 'JetBrains Mono',monospace">+178%</text>
-      <circle cx="1041" cy="270" r="20" fill="rgba(95,168,106,0.13)" stroke="#5FA86A" stroke-width="1.5" opacity="0.85"/>
-      <text x="1041" y="247" text-anchor="middle" fill="#9A9A92" style="font:9px 'JetBrains Mono',monospace">Singapore</text>
-      <text x="1041" y="273" text-anchor="middle" fill="#5FA86A" style="font:bold 9px 'JetBrains Mono',monospace">+83%</text>
-      <circle cx="1093" cy="112" r="28" fill="rgba(95,168,106,0.13)" stroke="#5FA86A" stroke-width="1.5" opacity="0.85"/>
-      <text x="1093" y="81" text-anchor="middle" fill="#9A9A92" style="font:9px 'JetBrains Mono',monospace">Shanghai</text>
-      <text x="1093" y="115" text-anchor="middle" fill="#5FA86A" style="font:bold 9px 'JetBrains Mono',monospace">+520%</text>
-      <circle cx="1125" cy="145" r="16" fill="rgba(95,168,106,0.13)" stroke="#5FA86A" stroke-width="1.5" opacity="0.85"/>
-      <circle cx="792" cy="180" r="28" fill="rgba(95,168,106,0.13)" stroke="#5FA86A" stroke-width="1.5" opacity="0.85"/>
-      <text x="792" y="149" text-anchor="middle" fill="#9A9A92" style="font:9px 'JetBrains Mono',monospace">Jeddah</text>
-      <text x="792" y="183" text-anchor="middle" fill="#5FA86A" style="font:bold 9px 'JetBrains Mono',monospace">+83%</text>
-      <circle cx="828" cy="192" r="18" fill="rgba(95,168,106,0.13)" stroke="#5FA86A" stroke-width="1.5" opacity="0.85"/>
-      <text x="828" y="171" text-anchor="middle" fill="#9A9A92" style="font:9px 'JetBrains Mono',monospace">Salalah</text>
-      <circle cx="824" cy="152" r="14" fill="rgba(224,82,82,0.13)" stroke="#E05252" stroke-width="1.5" opacity="0.85"/>
-      <text x="824" y="156" text-anchor="middle" fill="#F2F1ED" style="font:bold 11px 'JetBrains Mono',monospace">15</text>
-      <circle cx="499" cy="128" r="32" fill="none" stroke="rgba(122,122,114,0.35)" stroke-width="1" stroke-dasharray="3 3"/>
-      <text x="499" y="107" text-anchor="middle" fill="#7A7A72" style="font:9px 'JetBrains Mono',monospace">New York</text>
-      <circle cx="482" cy="100" r="22" fill="none" stroke="rgba(122,122,114,0.35)" stroke-width="1" stroke-dasharray="3 3"/>
-      <circle cx="1118" cy="115" r="22" fill="none" stroke="rgba(122,122,114,0.35)" stroke-width="1" stroke-dasharray="3 3"/>
-      <rect x="8" y="8" width="22" height="44" rx="3" fill="rgba(10,10,10,0.85)" stroke="rgba(255,255,255,0.1)" stroke-width="1"/>
-      <text x="19" y="26" text-anchor="middle" fill="#9A9A90" style="font:bold 14px sans-serif">+</text>
-      <text x="19" y="44" text-anchor="middle" fill="#9A9A90" style="font:bold 14px sans-serif">-</text>
-    </svg>
-    <div style="padding:6px 28px;border-top:1px solid #1A1A18;font-size:9px;color:#2A2A26;letter-spacing:.04em">IMF PortWatch &middot; Lloyd's List Intelligence &middot; AIS vessel tracking &middot; MarineTraffic &middot; Jul 2026</div>
+    <div id="chokepoints-map" style="height:520px"></div>
+    <div class="src" style="padding:5px 14px;display:flex;align-items:center;justify-content:space-between"><span>straits.live &bull; VesselFinder &bull; IMF PortWatch &bull; Lloyd's List Intelligence &bull; Inchcape ISS &bull; 7 Jun 2026</span><span style="display:flex;align-items:center;gap:8px;flex-shrink:0"><span id="pc-last-refresh" style="font-size:8px;color:#3a5060"></span><button class="pc-refresh-btn" onclick="refreshPortCalls()" title="Refresh live port call data">&#8635; Live Arrivals</button><span class="src-badge">real data</span></span></div>
   </div>
 
   <!-- BOTTOM GRID -->

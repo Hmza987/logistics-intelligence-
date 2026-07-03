@@ -877,12 +877,10 @@ a { color: inherit; text-decoration: none; }
   position: relative;
   overflow: hidden;
 }
-.scard:hover { border-color: var(--c-bd2); background: var(--c-s2); }
+.scard:hover { opacity: .88; }
 .scard.active {
-  border-color: var(--sc-color, var(--c-gold));
-  background: var(--c-s2);
-  box-shadow: inset 4px 0 0 var(--sc-color, var(--c-gold)),
-              0 0 28px -8px var(--sc-color, var(--c-gold));
+  box-shadow: 0 0 0 2px var(--sc-color, var(--c-gold)),
+              0 0 20px -6px var(--sc-color, var(--c-gold));
 }
 .scard.active::before { display: none; }
 .scard.active .scard-name { color: var(--sc-color, var(--c-tx0)); }
@@ -3531,7 +3529,7 @@ canvas { font-family: var(--f-mono); }
     <div class="dot"></div>
     <div>
       <h1>Gulf Logistics Intelligence &nbsp;<span style="font-size:8px;color:#5a6878;font-weight:400;letter-spacing:.04em">· by Maha Raad &amp; Hamza El Mounhi</span></h1>
-      <div class="sub">Maritime Intelligence &middot; Freight &amp; Logistics &middot; GCC Strategic Assessment &middot; <span id="hdr-data-ver">Signal Database v2.6 &mdash; Jun 2026</span></div>
+      <div class="sub">Maritime Intelligence &middot; Freight &amp; Logistics &middot; GCC Strategic Assessment &middot; <span id="hdr-data-ver">Signal Database v2.6 &mdash; Jul 2026</span></div>
     </div>
   </div>
   <div class="right">
@@ -3599,7 +3597,7 @@ canvas { font-family: var(--f-mono); }
       </button>
     </div>
     <div id="mob-nav-footer">
-      <div style="font-family:var(--f-mono);font-size:8px;color:var(--c-tx2);letter-spacing:.08em;text-transform:uppercase">Gulf Logistics Intelligence &middot; Jun 2026</div>
+      <div style="font-family:var(--f-mono);font-size:8px;color:var(--c-tx2);letter-spacing:.08em;text-transform:uppercase">Gulf Logistics Intelligence &middot; Jul 2026</div>
       <div style="font-family:var(--f-mono);font-size:8px;color:var(--c-tx3);margin-top:4px">Strategic · Confidential · Ministerial Use Only</div>
     </div>
   </div>
@@ -4444,294 +4442,314 @@ canvas { font-family: var(--f-mono); }
 
 
 <!-- ============================================================ TAB 4: SIMULATOR -->
-<div class="page" id="page-simulator">
-  <div style="margin-bottom:16px">
-    <div style="font-size:10px;font-weight:700;color:#a78bfa;letter-spacing:.1em;text-transform:uppercase;margin-bottom:4px">&#9670; Supply Chain Scenario Simulator</div>
-    <div style="font-size:10px;color:#7a8494">Select a world state, enter your shipment parameters, and get end-to-end landed cost from port of origin to final GCC destination — including sea freight, port handling, and inland trucking.</div>
-  </div>
+<div class="page" id="page-simulator" style="padding:0;background:#0A0A0A;font-family:'JetBrains Mono',monospace;padding-bottom:60px">
+  <div style="padding:24px 24px 0">
 
-  <!-- STEP 1: SCENARIO SELECTION -->
-  <div style="font-size:8px;color:#7a8494;letter-spacing:.12em;text-transform:uppercase;margin-bottom:10px;font-family:'IBM Plex Mono',monospace">Step 1 — Select World State</div>
-  <div class="sim-scenario-grid">
+    <!-- TITLE -->
+    <div style="margin-bottom:20px">
+      <div style="font-size:13px;font-weight:700;letter-spacing:.14em;color:#C9AE4E;margin-bottom:6px">&#9670; SUPPLY CHAIN SCENARIO SIMULATOR</div>
+      <div style="font-size:12px;color:#5A5A52;line-height:1.5;max-width:900px">Select a world state, enter your shipment parameters, and get end-to-end landed cost from port of origin to final GCC destination &mdash; including sea freight, port handling, and inland trucking.</div>
+    </div>
 
-    <div class="scard active" id="sc-1" onclick="selectScenario(1)" style="--sc-color:#e74c3c">
-      <div class="scard-icon">&#128683;</div>
-      <div class="scard-name">Hormuz: Severely Restricted</div>
-      <div class="scard-state red">Current reality &bull; Day 83 &bull; ~2–6/day AIS-verified &bull; MoU pending</div>
-      <div class="scard-tags">
-        <span class="scard-tag" style="background:rgba(231,76,60,.12);color:#e74c3c">~6/day AIS (IMF)</span>
-        <span class="scard-tag" style="background:rgba(231,76,60,.12);color:#e74c3c">Dark fleet active</span>
-        <span class="scard-tag" style="background:rgba(231,76,60,.12);color:#e74c3c">Western carriers out</span>
+    <!-- STEP 1 -->
+    <div style="font-size:9px;font-weight:700;letter-spacing:.18em;color:#4A4A44;margin-bottom:12px">STEP 1 &mdash; SELECT WORLD STATE</div>
+    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:24px">
+
+      <div class="scard" id="sc-1" onclick="selectScenario(1)" style="--sc-color:#E05252;background:rgba(224,82,82,0.06);border:2px solid rgba(224,82,82,0.6);border-radius:6px;padding:20px 18px;display:flex;flex-direction:column;gap:10px;min-height:148px;cursor:pointer;transition:border-color .15s">
+        <div style="font-size:20px;line-height:1">&#128683;</div>
+        <div>
+          <div style="font-size:14px;font-weight:700;color:#E05252;letter-spacing:-.01em;margin-bottom:4px">Hormuz: Severely Restricted</div>
+          <div style="font-size:10px;color:#5A5A52;line-height:1.45">Current reality &bull; Day 117 &bull; ~2&ndash;6/day AIS-verified &bull; MoU pending</div>
+        </div>
+        <div style="display:flex;flex-wrap:wrap;gap:5px;margin-top:auto">
+          <span style="font-size:8px;font-weight:700;letter-spacing:.1em;padding:2px 8px;border-radius:3px;color:#E05252;background:rgba(224,82,82,0.1);border:1px solid #E05252;white-space:nowrap">~6/DAY AIS (IMF)</span>
+          <span style="font-size:8px;font-weight:700;letter-spacing:.1em;padding:2px 8px;border-radius:3px;color:#C98A2E;background:rgba(201,138,46,0.1);border:1px solid #C98A2E;white-space:nowrap">DARK FLEET ACTIVE</span>
+          <span style="font-size:8px;font-weight:700;letter-spacing:.1em;padding:2px 8px;border-radius:3px;color:#C98A2E;background:rgba(201,138,46,0.1);border:1px solid #C98A2E;white-space:nowrap">WESTERN CARRIERS OUT</span>
+        </div>
+      </div>
+
+      <div class="scard" id="sc-2" onclick="selectScenario(2)" style="--sc-color:#fbbf24;background:#111110;border:1px solid #1E1E1C;border-radius:6px;padding:20px 18px;display:flex;flex-direction:column;gap:10px;min-height:148px;cursor:pointer;transition:border-color .15s">
+        <div style="font-size:20px;line-height:1">&#9875;</div>
+        <div>
+          <div style="font-size:14px;font-weight:700;color:#F2F1ED;letter-spacing:-.01em;margin-bottom:4px">Hormuz: IRGC Escort Only</div>
+          <div style="font-size:10px;color:#5A5A52;line-height:1.45">Friendly-flag passage &bull; ~25 transits/day</div>
+        </div>
+        <div style="display:flex;flex-wrap:wrap;gap:5px;margin-top:auto">
+          <span style="font-size:8px;font-weight:700;letter-spacing:.1em;padding:2px 8px;border-radius:3px;color:#C9AE4E;background:rgba(194,162,62,0.1);border:1px solid #C9AE4E;white-space:nowrap">CHINA/INDIA/TURKEY</span>
+          <span style="font-size:8px;font-weight:700;letter-spacing:.1em;padding:2px 8px;border-radius:3px;color:#C9AE4E;background:rgba(194,162,62,0.1);border:1px solid #C9AE4E;white-space:nowrap">WAR-RISK 5x</span>
+        </div>
+      </div>
+
+      <div class="scard" id="sc-3" onclick="selectScenario(3)" style="--sc-color:#f0c84b;background:#111110;border:1px solid #1E1E1C;border-radius:6px;padding:20px 18px;display:flex;flex-direction:column;gap:10px;min-height:148px;cursor:pointer;transition:border-color .15s">
+        <div style="font-size:20px;line-height:1">&#9868;</div>
+        <div>
+          <div style="font-size:14px;font-weight:700;color:#F2F1ED;letter-spacing:-.01em;margin-bottom:4px">Hormuz: Negotiated Partial</div>
+          <div style="font-size:10px;color:#5A5A52;line-height:1.45">Ceasefire &bull; neutral corridor &bull; ~50 transits/day</div>
+        </div>
+        <div style="display:flex;flex-wrap:wrap;gap:5px;margin-top:auto">
+          <span style="font-size:8px;font-weight:700;letter-spacing:.1em;padding:2px 8px;border-radius:3px;color:#5FA86A;background:rgba(95,168,106,0.1);border:1px solid #5FA86A;white-space:nowrap">ALL FLAGS ALLOWED</span>
+          <span style="font-size:8px;font-weight:700;letter-spacing:.1em;padding:2px 8px;border-radius:3px;color:#C9AE4E;background:rgba(194,162,62,0.1);border:1px solid #C9AE4E;white-space:nowrap">WAR-RISK 3x</span>
+        </div>
+      </div>
+
+      <div class="scard" id="sc-4" onclick="selectScenario(4)" style="--sc-color:#3dd68c;background:#111110;border:1px solid #1E1E1C;border-radius:6px;padding:20px 18px;display:flex;flex-direction:column;gap:10px;min-height:148px;cursor:pointer;transition:border-color .15s">
+        <div style="font-size:20px;line-height:1">&#128260;</div>
+        <div>
+          <div style="font-size:14px;font-weight:700;color:#F2F1ED;letter-spacing:-.01em;margin-bottom:4px">Post-Crisis Recovery</div>
+          <div style="font-size:10px;color:#5A5A52;line-height:1.45">Hormuz reopened &bull; risk memory active &bull; ~85 transits/day</div>
+        </div>
+        <div style="display:flex;flex-wrap:wrap;gap:5px;margin-top:auto">
+          <span style="font-size:8px;font-weight:700;letter-spacing:.1em;padding:2px 8px;border-radius:3px;color:#5FA86A;background:rgba(95,168,106,0.1);border:1px solid #5FA86A;white-space:nowrap">~70% CARRIERS RESUMED</span>
+          <span style="font-size:8px;font-weight:700;letter-spacing:.1em;padding:2px 8px;border-radius:3px;color:#C9AE4E;background:rgba(194,162,62,0.1);border:1px solid #C9AE4E;white-space:nowrap">WAR-RISK 1.8x</span>
+        </div>
+      </div>
+
+      <div class="scard" id="sc-5" onclick="selectScenario(5)" style="--sc-color:#e74c3c;background:#111110;border:1px solid #1E1E1C;border-radius:6px;padding:20px 18px;display:flex;flex-direction:column;gap:10px;min-height:148px;cursor:pointer;transition:border-color .15s">
+        <div style="font-size:20px;line-height:1">&#128683;</div>
+        <div>
+          <div style="font-size:14px;font-weight:700;color:#F2F1ED;letter-spacing:-.01em;margin-bottom:4px">Bab el-Mandeb Closed</div>
+          <div style="font-size:10px;color:#5A5A52;line-height:1.45">Hormuz open &bull; Houthis escalate &bull; Red Sea blocked</div>
+        </div>
+        <div style="display:flex;flex-wrap:wrap;gap:5px;margin-top:auto">
+          <span style="font-size:8px;font-weight:700;letter-spacing:.1em;padding:2px 8px;border-radius:3px;color:#C9AE4E;background:rgba(194,162,62,0.1);border:1px solid #C9AE4E;white-space:nowrap">ASIA&ndash;GCC: CAPE ONLY</span>
+          <span style="font-size:8px;font-weight:700;letter-spacing:.1em;padding:2px 8px;border-radius:3px;color:#C9AE4E;background:rgba(194,162,62,0.1);border:1px solid #C9AE4E;white-space:nowrap">EU&ndash;JEDDAH: SUEZ VIABLE</span>
+        </div>
+      </div>
+
+      <div class="scard" id="sc-6" onclick="selectScenario(6)" style="--sc-color:#e74c3c;background:#111110;border:1px solid #1E1E1C;border-radius:6px;padding:20px 18px;display:flex;flex-direction:column;gap:10px;min-height:148px;cursor:pointer;transition:border-color .15s">
+        <div style="font-size:20px;line-height:1">&#9888;</div>
+        <div>
+          <div style="font-size:14px;font-weight:700;color:#F2F1ED;letter-spacing:-.01em;margin-bottom:4px">Dual Closure</div>
+          <div style="font-size:10px;color:#5A5A52;line-height:1.45">Hormuz + Bab el-Mandeb both closed &bull; worst case</div>
+        </div>
+        <div style="display:flex;flex-wrap:wrap;gap:5px;margin-top:auto">
+          <span style="font-size:8px;font-weight:700;letter-spacing:.1em;padding:2px 8px;border-radius:3px;color:#E05252;background:rgba(224,82,82,0.1);border:1px solid #E05252;white-space:nowrap">ASIA VIA CAPE ONLY</span>
+          <span style="font-size:8px;font-weight:700;letter-spacing:.1em;padding:2px 8px;border-radius:3px;color:#C9AE4E;background:rgba(194,162,62,0.1);border:1px solid #C9AE4E;white-space:nowrap">EU&ndash;JEDDAH VIA SUEZ</span>
+          <span style="font-size:8px;font-weight:700;letter-spacing:.1em;padding:2px 8px;border-radius:3px;color:#E05252;background:rgba(224,82,82,0.1);border:1px solid #E05252;white-space:nowrap">EXTREME COST</span>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- STEP 2 -->
+    <div style="font-size:9px;font-weight:700;letter-spacing:.18em;color:#4A4A44;margin-bottom:12px">STEP 2 &mdash; SHIPMENT PARAMETERS</div>
+    <div style="background:#111110;border:1px solid #1E1E1C;border-radius:6px;padding:22px 20px;margin-bottom:14px">
+      <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:16px">
+        <div>
+          <div style="font-size:9px;font-weight:700;letter-spacing:.14em;color:#4A4A44;margin-bottom:8px">ORIGIN PORT</div>
+          <select id="inp-origin" onchange="simAutoRun()" style="background:#0A0A0A;border:1px solid #2A2A26;color:#F2F1ED;font-family:'JetBrains Mono',monospace;font-size:12px;border-radius:4px;padding:10px 12px;width:100%;outline:none">
+            <option value="SHA">Shanghai (SHA)</option>
+            <option value="HAM">Hamburg (HAM)</option>
+            <option value="ROT">Rotterdam (ROT)</option>
+            <option value="SIN">Singapore (SIN)</option>
+            <option value="ICD">Mundra / Nhava Sheva</option>
+          </select>
+        </div>
+        <div>
+          <div style="font-size:9px;font-weight:700;letter-spacing:.14em;color:#4A4A44;margin-bottom:8px">FINAL DESTINATION (GCC)</div>
+          <select id="inp-dest" onchange="simAutoRun()" style="background:#0A0A0A;border:1px solid #2A2A26;color:#F2F1ED;font-family:'JetBrains Mono',monospace;font-size:12px;border-radius:4px;padding:10px 12px;width:100%;outline:none">
+            <option value="DXB">Dubai / Jebel Ali</option>
+            <option value="RUH">Riyadh</option>
+            <option value="DMM">Dammam / Khobar</option>
+            <option value="DOH">Doha</option>
+            <option value="BAH">Manama (Bahrain)</option>
+            <option value="KWI">Kuwait City</option>
+            <option value="MCT">Muscat</option>
+          </select>
+        </div>
+        <div>
+          <div style="font-size:9px;font-weight:700;letter-spacing:.14em;color:#4A4A44;margin-bottom:8px">VOLUME (FEU / MONTH)</div>
+          <input type="number" id="inp-teu" value="50" min="1" max="10000" onchange="simAutoRun()" style="background:#0A0A0A;border:1px solid #2A2A26;color:#F2F1ED;font-family:'JetBrains Mono',monospace;font-size:12px;border-radius:4px;padding:10px 12px;width:100%;outline:none"/>
+        </div>
+        <div>
+          <div style="font-size:9px;font-weight:700;letter-spacing:.14em;color:#4A4A44;margin-bottom:8px">COMMODITY TYPE</div>
+          <select id="inp-commodity" onchange="simAutoRun()" style="background:#0A0A0A;border:1px solid #2A2A26;color:#F2F1ED;font-family:'JetBrains Mono',monospace;font-size:12px;border-radius:4px;padding:10px 12px;width:100%;outline:none">
+            <option value="general">General / mixed cargo</option>
+            <option value="consumer">Consumer goods / FMCG</option>
+            <option value="auto">Automotive parts</option>
+            <option value="pharma">Pharmaceuticals</option>
+            <option value="food">Food &amp; perishables (reefer)</option>
+            <option value="industrial">Industrial / machinery</option>
+            <option value="chemical">Chemicals / hazmat</option>
+          </select>
+        </div>
+      </div>
+      <div style="display:flex;align-items:center;gap:16px;flex-wrap:wrap">
+        <div>
+          <div style="font-size:9px;font-weight:700;letter-spacing:.14em;color:#4A4A44;margin-bottom:8px">SHIPMENT DATE</div>
+          <input type="date" id="inp-shipdate"
+                 onchange="updateSeasonalBadge(); simAutoRun();"
+                 oninput="updateSeasonalBadge(); simAutoRun();"
+                 style="background:#0A0A0A;border:1px solid #2A2A26;color:#F2F1ED;font-family:'JetBrains Mono',monospace;font-size:12px;border-radius:4px;padding:10px 12px;width:180px;outline:none"/>
+        </div>
+        <div id="seasonal-badge-wrap" style="display:flex;flex-direction:column;gap:3px;padding-top:22px">
+          <span id="seasonal-label" style="font-size:9px;font-weight:700;color:#C9AE4E"></span>
+          <span id="seasonal-desc" style="font-size:9px;color:#4A4A44;max-width:320px;line-height:1.5"></span>
+        </div>
       </div>
     </div>
 
-    <div class="scard" id="sc-2" onclick="selectScenario(2)" style="--sc-color:#fbbf24">
-      <div class="scard-icon">&#9875;</div>
-      <div class="scard-name">Hormuz: IRGC Escort Only</div>
-      <div class="scard-state amb">Friendly-flag passage &bull; ~25 transits/day</div>
-      <div class="scard-tags">
-        <span class="scard-tag" style="background:rgba(251,191,36,.12);color:#fbbf24">China/India/Turkey</span>
-        <span class="scard-tag" style="background:rgba(251,191,36,.12);color:#fbbf24">War-risk 5&times;</span>
+    <!-- RUN BUTTON -->
+    <div style="background:#C2A23E;border-radius:5px;padding:16px;text-align:center;font-size:14px;font-weight:700;letter-spacing:.16em;color:#0A0A0A;cursor:pointer;margin-bottom:28px;display:flex;align-items:center;justify-content:center;gap:10px" onclick="runSimulator()">
+      <span>&#9654;</span> RUN SIMULATION
+      <span id="sim-status" style="font-size:10px;font-weight:400;letter-spacing:.06em;opacity:.6;margin-left:8px"></span>
+    </div>
+
+    <!-- MODEL CALIBRATING PROGRESS -->
+    <div id="sim-calibrating">
+      <div class="calib-title">
+        <div class="calib-title-dot"></div>
+        Model Calibrating&hellip;
+      </div>
+      <div class="calib-bar-track"><div id="calib-bar-fill"></div></div>
+      <div class="calib-steps">
+        <div class="calib-step calib-pending" id="calib-s0"><span class="calib-step-icon">&#9675;</span>Loading scenario parameters</div>
+        <div class="calib-step calib-pending" id="calib-s1"><span class="calib-step-icon">&#9675;</span>Calibrating regression coefficients</div>
+        <div class="calib-step calib-pending" id="calib-s2"><span class="calib-step-icon">&#9675;</span>Computing route viability matrix</div>
+        <div class="calib-step calib-pending" id="calib-s3"><span class="calib-step-icon">&#9675;</span>Resolving landed cost components</div>
+        <div class="calib-step calib-pending" id="calib-s4"><span class="calib-step-icon">&#9675;</span>Generating strategic implications</div>
       </div>
     </div>
 
-    <div class="scard" id="sc-3" onclick="selectScenario(3)" style="--sc-color:#f0c84b">
-      <div class="scard-icon">&#9868;</div>
-      <div class="scard-name">Hormuz: Negotiated Partial</div>
-      <div class="scard-state gld">Ceasefire &bull; neutral corridor &bull; ~50 transits/day</div>
-      <div class="scard-tags">
-        <span class="scard-tag" style="background:rgba(240,200,75,.12);color:#f0c84b">All flags allowed</span>
-        <span class="scard-tag" style="background:rgba(240,200,75,.12);color:#f0c84b">War-risk 3&times;</span>
-      </div>
-    </div>
+    <!-- RESULTS -->
+    <div class="sim-results" id="sim-results">
 
-    <div class="scard" id="sc-4" onclick="selectScenario(4)" style="--sc-color:#3dd68c">
-      <div class="scard-icon">&#128260;</div>
-      <div class="scard-name">Post-Crisis Recovery</div>
-      <div class="scard-state grn">Hormuz reopened &bull; risk memory active &bull; ~85 transits/day</div>
-      <div class="scard-tags">
-        <span class="scard-tag" style="background:rgba(61,214,140,.12);color:#3dd68c">~70% carriers resumed</span>
-        <span class="scard-tag" style="background:rgba(251,191,36,.12);color:#fbbf24">War-risk 1.8&times;</span>
+      <!-- SCENARIO SUMMARY BAR -->
+      <div id="sc-banner" style="border:1px solid #2A1414;border-radius:6px;padding:16px 22px;margin-bottom:20px;display:flex;align-items:center;gap:0;background:#130808">
+        <div style="padding-right:28px;border-right:1px solid #2A1414;flex-shrink:0">
+          <div class="scenario-bar-name" id="scb-name" style="font-size:14px;font-weight:700;letter-spacing:-.01em;color:#E05252;margin-bottom:4px">&#x2014;</div>
+          <div class="scenario-bar-state" id="scb-state" style="font-size:10px;color:#6A3232;line-height:1.4">&#x2014;</div>
+        </div>
+        <div class="scenario-bar-metrics" style="display:flex;align-items:center;gap:36px;padding:0 28px;flex:1;flex-wrap:wrap">
+          <div class="sbm">
+            <div style="font-size:9px;font-weight:700;letter-spacing:.14em;color:#4A2222;margin-bottom:4px">TRANSITS/DAY</div>
+            <div class="sbm-val" id="scb-transits" style="font-size:28px;font-weight:700;color:#F2F1ED;line-height:1;letter-spacing:-.02em">&#x2014;</div>
+          </div>
+          <div class="sbm">
+            <div style="font-size:9px;font-weight:700;letter-spacing:.14em;color:#4A2222;margin-bottom:4px">BRENT $/BBL</div>
+            <div class="sbm-val" id="scb-brent" style="font-size:28px;font-weight:700;color:#F2F1ED;line-height:1;letter-spacing:-.02em">&#x2014;</div>
+          </div>
+          <div class="sbm">
+            <div style="font-size:9px;font-weight:700;letter-spacing:.14em;color:#4A2222;margin-bottom:4px">WAR-RISK</div>
+            <div class="sbm-val" id="scb-warrisk" style="font-size:28px;font-weight:700;color:#E05252;line-height:1;letter-spacing:-.02em">&#x2014;</div>
+          </div>
+          <div class="sbm" style="flex:1">
+            <div style="font-size:9px;font-weight:700;letter-spacing:.14em;color:#4A2222;margin-bottom:4px">PRIMARY ROUTE</div>
+            <div class="sbm-val" id="scb-reroute" style="font-size:15px;font-weight:700;color:#F2F1ED;line-height:1.2">&#x2014;</div>
+          </div>
+        </div>
       </div>
-    </div>
 
-    <div class="scard" id="sc-5" onclick="selectScenario(5)" style="--sc-color:#e74c3c">
-      <div class="scard-icon">&#128683;</div>
-      <div class="scard-name">Bab el-Mandeb Closed</div>
-      <div class="scard-state red">Hormuz open &bull; Houthis escalate &bull; Red Sea blocked</div>
-      <div class="scard-tags">
-        <span class="scard-tag" style="background:rgba(231,76,60,.12);color:#e74c3c">Asia→GCC: Cape only</span>
-        <span class="scard-tag" style="background:rgba(251,191,36,.12);color:#fbbf24">EU→Jeddah: Suez viable</span>
+      <!-- MODEL VARIABLES -->
+      <div class="sim-panel" id="reg-panel" style="background:#111110;border:1px solid #1E1E1C;border-radius:6px;margin-bottom:20px;overflow:hidden;padding:0">
+        <div style="padding:14px 20px;border-bottom:1px solid #1A1A18">
+          <div class="sim-panel-title" style="font-size:11px;font-weight:700;letter-spacing:.14em;color:#8B72C8;margin-bottom:4px">&#402; SPOT INDEX REGRESSION &mdash; MODEL VARIABLES</div>
+          <div class="sim-panel-sub" style="font-size:10px;color:#4A4A44;line-height:1.5;margin-bottom:0">Rate = Base &times; [ 1 + &beta;&#8321;(B&minus;72) + &beta;&#8322;&middot;(U&minus;72%)^p + &beta;&#8323;(D&divide;100) + &beta;&#8324;(W&minus;1) + &beta;&#8325;&middot;C ] &times; CommoditySurcharge &nbsp;&bull;&nbsp; <span style="color:#5FA86A">auto-calibrated</span> &nbsp;&bull;&nbsp; Red Sea 2024 backtest MAE &lt;3%</div>
+        </div>
+        <div id="reg-vars-table" style="padding:0 20px"></div>
       </div>
-    </div>
 
-    <div class="scard" id="sc-6" onclick="selectScenario(6)" style="--sc-color:#e74c3c">
-      <div class="scard-icon">&#9888;</div>
-      <div class="scard-name">Dual Closure</div>
-      <div class="scard-state red">Hormuz + Bab el-Mandeb both closed &bull; worst case</div>
-      <div class="scard-tags">
-        <span class="scard-tag" style="background:rgba(231,76,60,.12);color:#e74c3c">Asia via Cape only</span>
-        <span class="scard-tag" style="background:rgba(251,191,36,.12);color:#fbbf24">EU→Jeddah via Suez</span>
-        <span class="scard-tag" style="background:rgba(231,76,60,.12);color:#e74c3c">Extreme cost</span>
-      </div>
-    </div>
+      <!-- VIEWS 1 + 2 -->
+      <div class="sim-views" style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:20px">
 
-  </div>
+        <!-- VIEW 1: Route Cost Matrix -->
+        <div class="sim-panel" style="background:#111110;border:1px solid #1E1E1C;border-radius:6px;overflow:hidden;padding:0">
+          <div style="padding:13px 16px 10px;border-bottom:1px solid #1A1A18">
+            <div class="sim-panel-title" style="font-size:11px;font-weight:700;letter-spacing:.12em;color:#C9AE4E;margin-bottom:3px">&#9671; VIEW 1 &mdash; ROUTE COST MATRIX</div>
+            <div class="sim-panel-sub" id="v1-sub" style="font-size:9px;color:#4A4A44;margin-bottom:0">Routing options ranked by total sea freight cost per FEU &bull; origin to GCC entry port</div>
+          </div>
+          <div style="padding:0 16px">
+            <div style="display:grid;grid-template-columns:24px 1fr 90px 72px 72px 72px 64px;gap:0;border-bottom:1px solid #1A1A18;padding:8px 0">
+              <span></span>
+              <span style="font-size:8px;font-weight:700;letter-spacing:.12em;color:#4A4A44">ROUTE</span>
+              <span style="font-size:8px;font-weight:700;letter-spacing:.12em;color:#4A4A44">VIA</span>
+              <span style="font-size:8px;font-weight:700;letter-spacing:.12em;color:#4A4A44">$/FEU</span>
+              <span style="font-size:8px;font-weight:700;letter-spacing:.12em;color:#4A4A44">DAYS</span>
+              <span style="font-size:8px;font-weight:700;letter-spacing:.12em;color:#4A4A44">VS PRE</span>
+              <span style="font-size:8px;font-weight:700;letter-spacing:.12em;color:#4A4A44;text-align:right">AVAIL</span>
+            </div>
+            <div id="route-matrix-body"></div>
+          </div>
+          <div style="padding:8px 16px;border-top:1px solid #1A1A18;display:flex;align-items:center;justify-content:space-between;font-size:9px;color:#2A2A26;letter-spacing:.04em">
+            <span>SeaRates spot + Freightos all-in Seabay &middot; Drewry WCI anchor &middot; recal. Jun 2026 &middot; scenario-adjusted</span>
+            <span style="border:1px solid #2A2A26;padding:2px 8px;border-radius:3px;color:#8B72C8;font-size:8px;letter-spacing:.08em;white-space:nowrap">POWER-LAW MODEL &middot; 2026-06-04</span>
+          </div>
+        </div>
 
-  <!-- STEP 2: SHIPMENT INPUTS -->
-  <div style="font-size:8px;color:#7a8494;letter-spacing:.12em;text-transform:uppercase;margin-bottom:10px;font-family:'IBM Plex Mono',monospace">Step 2 — Shipment Parameters</div>
-  <div class="sim-inputs">
-    <div class="sim-inputs-grid">
-      <div class="sim-field">
-        <label>Origin Port</label>
-        <select id="inp-origin" onchange="simAutoRun()">
-          <option value="SHA">Shanghai (SHA)</option>
-          <option value="HAM">Hamburg (HAM)</option>
-          <option value="ROT">Rotterdam (ROT)</option>
-          <option value="SIN">Singapore (SIN)</option>
-          <option value="ICD">Mundra / Nhava Sheva</option>
-        </select>
-      </div>
-      <div class="sim-field">
-        <label>Final Destination (GCC)</label>
-        <select id="inp-dest" onchange="simAutoRun()">
-          <option value="DXB">Dubai / Jebel Ali</option>
-          <option value="RUH">Riyadh</option>
-          <option value="DMM">Dammam / Khobar</option>
-          <option value="DOH">Doha</option>
-          <option value="BAH">Manama (Bahrain)</option>
-          <option value="KWI">Kuwait City</option>
-          <option value="MCT">Muscat</option>
-        </select>
-      </div>
-      <div class="sim-field">
-        <label>Volume (FEU / month)</label>
-        <input type="number" id="inp-teu" value="50" min="1" max="10000" onchange="simAutoRun()"/>
-      </div>
-      <div class="sim-field">
-        <label>Commodity Type</label>
-        <select id="inp-commodity" onchange="simAutoRun()">
-          <option value="general">General / mixed cargo</option>
-          <option value="consumer">Consumer goods / FMCG</option>
-          <option value="auto">Automotive parts</option>
-          <option value="pharma">Pharmaceuticals</option>
-          <option value="food">Food &amp; perishables (reefer)</option>
-          <option value="industrial">Industrial / machinery</option>
-          <option value="chemical">Chemicals / hazmat</option>
-        </select>
-      </div>
-    </div>
-    <!-- Date row -->
-    <div style="display:flex;align-items:center;gap:14px;flex-wrap:wrap;margin-top:10px;padding-top:10px;border-top:1px solid #1e2730">
-      <div class="sim-field" style="flex:0 0 auto">
-        <label>Shipment Date</label>
-        <input type="date" id="inp-shipdate"
-               onchange="updateSeasonalBadge(); simAutoRun();"
-               oninput="updateSeasonalBadge(); simAutoRun();"
-               style="font-family:'IBM Plex Mono',monospace;font-size:9px;background:#0e1318;color:#e8eaed;border:1px solid #2a3340;border-radius:3px;padding:6px 8px;width:160px"/>
-      </div>
-      <div id="seasonal-badge-wrap" style="display:flex;flex-direction:column;gap:3px;padding-top:14px">
-        <span id="seasonal-label" style="font-size:8px;font-family:'IBM Plex Mono',monospace;font-weight:700;letter-spacing:.06em"></span>
-        <span id="seasonal-desc"  style="font-size:7.5px;color:#7a8494;max-width:320px;line-height:1.5"></span>
-      </div>
-    </div>
+        <!-- VIEW 2: End-to-End Landed Cost -->
+        <div class="sim-panel" style="background:#111110;border:1px solid #1E1E1C;border-radius:6px;overflow:hidden;padding:0">
+          <div style="padding:13px 16px 10px;border-bottom:1px solid #1A1A18">
+            <div class="sim-panel-title" style="font-size:11px;font-weight:700;letter-spacing:.12em;color:#C9AE4E;margin-bottom:3px">&#9672; VIEW 2 &mdash; END-TO-END LANDED COST</div>
+            <div class="sim-panel-sub" id="v2-sub" style="font-size:9px;color:#4A4A44;margin-bottom:0">Port of origin &rarr; final GCC city including sea + port + inland trucking</div>
+          </div>
+          <div id="v2-route-tabs" style="display:grid;grid-template-columns:repeat(4,1fr);border-bottom:1px solid #1A1A18"></div>
+          <div class="cost-breakdown" id="cost-breakdown" style="padding:0 18px"></div>
+          <div style="padding:8px 16px;border-top:1px solid #1A1A18;display:flex;justify-content:space-between;font-size:9px;color:#2A2A26;letter-spacing:.04em">
+            <span>Sea: SeaRates spot + Freightos all-in Seabay &middot; Port: DP World/DPMC &middot; Trucking: ZATCA/TruKKer benchmarks</span>
+            <span style="border:1px solid #2A2A26;padding:2px 8px;border-radius:3px;color:#8B72C8;font-size:8px;letter-spacing:.08em;white-space:nowrap">POWER-LAW MODEL &middot; 2026-06-04</span>
+          </div>
+        </div>
 
-    <div style="display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin-top:10px">
-      <button class="sim-run-btn" onclick="runSimulator()">&#9654; Run Simulation</button>
-      <span style="font-size:9px;color:#7a8494;font-family:'IBM Plex Mono',monospace" id="sim-status"></span>
-    </div>
-  </div>
-
-  <!-- MODEL CALIBRATING PROGRESS -->
-  <div id="sim-calibrating">
-    <div class="calib-title">
-      <div class="calib-title-dot"></div>
-      Model Calibrating&hellip;
-    </div>
-    <div class="calib-bar-track"><div id="calib-bar-fill"></div></div>
-    <div class="calib-steps">
-      <div class="calib-step calib-pending" id="calib-s0"><span class="calib-step-icon">&#9675;</span>Loading scenario parameters</div>
-      <div class="calib-step calib-pending" id="calib-s1"><span class="calib-step-icon">&#9675;</span>Calibrating regression coefficients</div>
-      <div class="calib-step calib-pending" id="calib-s2"><span class="calib-step-icon">&#9675;</span>Computing route viability matrix</div>
-      <div class="calib-step calib-pending" id="calib-s3"><span class="calib-step-icon">&#9675;</span>Resolving landed cost components</div>
-      <div class="calib-step calib-pending" id="calib-s4"><span class="calib-step-icon">&#9675;</span>Generating strategic implications</div>
-    </div>
-  </div>
-
-  <!-- RESULTS -->
-  <div class="sim-results" id="sim-results">
-
-    <!-- Active scenario banner -->
-    <div class="scenario-bar" id="sc-banner">
-      <div>
-        <div class="scenario-bar-name" id="scb-name">—</div>
-        <div class="scenario-bar-state" id="scb-state">—</div>
       </div>
-      <div class="scenario-bar-metrics">
-        <div class="sbm"><div class="sbm-val" id="scb-transits">—</div><div class="sbm-lbl">Transits/day</div></div>
-        <div class="sbm"><div class="sbm-val" id="scb-brent">—</div><div class="sbm-lbl">Brent $/bbl</div></div>
-        <div class="sbm"><div class="sbm-val" id="scb-warrisk">—</div><div class="sbm-lbl">War-risk</div></div>
-        <div class="sbm"><div class="sbm-val" id="scb-reroute">—</div><div class="sbm-lbl">Primary route</div></div>
+
+      <!-- ANNUAL IMPACT STRIP -->
+      <div id="annual-grid" style="display:grid;grid-template-columns:1fr 1.2fr 1fr 1fr;border:1px solid #1E1E1C;border-radius:6px;overflow:hidden;margin-bottom:20px"></div>
+
+      <!-- VIEW 3: STRATEGIC IMPLICATIONS -->
+      <div class="sim-panel" style="background:#111110;border:1px solid #1E1E1C;border-radius:6px;padding:16px 18px;margin-bottom:14px">
+        <div class="sim-panel-title" style="font-size:11px;font-weight:700;letter-spacing:.14em;color:#C9AE4E;margin-bottom:4px">&#9651; VIEW 3 &mdash; STRATEGIC IMPLICATIONS</div>
+        <div class="sim-panel-sub" id="v3-sub" style="font-size:10px;color:#4A4A44;margin-bottom:14px;line-height:1.5">What this scenario means for GCC logistics, ports, trucking demand and key operators</div>
+        <div class="impl-grid" id="impl-grid" style="display:grid;grid-template-columns:1fr 1fr;gap:14px"></div>
+        <div class="src" style="margin-top:10px"><span>AGBI &middot; straits.live &middot; DP World &middot; ZATCA &middot; scenario-modelled</span><span class="src-badge">modelled</span></div>
       </div>
-    </div>
 
-    <!-- REGRESSION MODEL PANEL -->
-    <div class="sim-panel" id="reg-panel" style="margin-bottom:14px">
-      <div class="sim-panel-title">&#402; Spot Index Regression — Model Variables</div>
-      <div class="sim-panel-sub" style="font-family:'IBM Plex Mono',monospace;letter-spacing:.01em">
-        Rate = Base &times; [ 1 + &beta;&#8321;(B&minus;72) + &beta;&#8322;&middot;(U&minus;72%)^p + &beta;&#8323;(D&divide;100) + &beta;&#8324;(W&minus;1) + &beta;&#8325;&middot;C ] &times; CommoditySurcharge &nbsp;&bull;&nbsp; <span style="color:#3dd68c">auto-calibrated &bull; Red Sea 2024 backtest MAE &lt;3%</span>
-      </div>
-      <div id="reg-vars-table" style="margin-top:10px"></div>
-    </div>
+      <!-- VIEW 4: Model Backtest -->
+      <div class="sim-panel dev-only" id="backtest-panel" style="margin-top:14px">
+        <div class="sim-panel-title">&#9651; Model Validation &mdash; Red Sea Crisis Backtest (2023&ndash;2024)</div>
+        <div class="sim-panel-sub">Regression model run against 4 known periods of the Houthi / Red Sea disruption &bull; Actual: Freightos Baltic FBX01 (Shanghai&ndash;N.Europe $/FEU) &bull; Base: $1,400 (Q3 2023 market low)</div>
 
-    <!-- VIEW 1 + VIEW 2 side by side -->
-    <div class="sim-views">
-
-      <!-- VIEW 1: Route Cost Matrix -->
-      <div class="sim-panel">
-        <div class="sim-panel-title">&#9671; View 1 — Route Cost Matrix</div>
-        <div class="sim-panel-sub" id="v1-sub">Routing options ranked by total sea freight cost per FEU &bull; origin to GCC entry port</div>
-        <table class="route-matrix" id="route-matrix-table">
+        <table style="width:100%;border-collapse:collapse;font-family:'JetBrains Mono',monospace;font-size:8.5px;margin-top:10px">
           <thead>
-            <tr>
-              <th></th>
-              <th>Route</th>
-              <th>Via</th>
-              <th>$/FEU</th>
-              <th>Days</th>
-              <th>vs Pre-crisis</th>
-              <th>Available</th>
+            <tr style="border-bottom:1px solid #2a3340">
+              <th style="text-align:left;padding:5px 8px;color:#5a6878;font-weight:400">Period</th>
+              <th style="text-align:center;padding:5px 8px;color:#5a6878;font-weight:400">Brent</th>
+              <th style="text-align:center;padding:5px 8px;color:#5a6878;font-weight:400">Util</th>
+              <th style="text-align:center;padding:5px 8px;color:#5a6878;font-weight:400">Extra NM</th>
+              <th style="text-align:center;padding:5px 8px;color:#5a6878;font-weight:400">War&times;</th>
+              <th style="text-align:center;padding:5px 8px;color:#5a6878;font-weight:400">Cong.</th>
+              <th style="text-align:right;padding:5px 8px;color:#5a6878;font-weight:400">Predicted</th>
+              <th style="text-align:right;padding:5px 8px;color:#5a6878;font-weight:400">Actual FBX01</th>
+              <th style="text-align:right;padding:5px 8px;color:#5a6878;font-weight:400">Error</th>
             </tr>
           </thead>
-          <tbody id="route-matrix-body"></tbody>
+          <tbody id="backtest-body"></tbody>
         </table>
-        <div class="src" style="margin-top:8px"><span>SeaRates spot + Freightos all-in Seabay &middot; Drewry WCI anchor &middot; recal. Jun 2026 &middot; scenario-adjusted</span><span class="src-badge">modelled</span></div>
-      </div>
 
-      <!-- VIEW 2: End-to-End Cost Calculator -->
-      <div class="sim-panel">
-        <div class="sim-panel-title">&#9672; View 2 — End-to-End Landed Cost</div>
-        <div class="sim-panel-sub" id="v2-sub">Port of origin &rarr; final GCC city including sea + port + inland trucking</div>
-        <div id="v2-route-tabs" style="display:flex;gap:6px;flex-wrap:wrap;margin:10px 0 14px;"></div>
-        <div class="cost-breakdown" id="cost-breakdown"></div>
-        <div class="src" style="margin-top:8px"><span>Sea: SeaRates spot + Freightos all-in Seabay &middot; Port: DP World/DPMC &middot; Trucking: ZATCA/TruKKer benchmarks</span><span class="src-badge">modelled</span></div>
-      </div>
+        <div id="backtest-summary" style="margin-top:12px"></div>
 
-    </div>
-
-    <!-- VIEW 3: Annual impact + implications -->
-    <div class="sim-annual" style="margin-bottom:14px">
-      <div style="font-size:8px;letter-spacing:.14em;text-transform:uppercase;color:#a78bfa;font-weight:700">&#9670; Annual Impact Summary</div>
-      <div class="annual-grid" id="annual-grid"></div>
-    </div>
-
-    <div class="sim-panel">
-      <div class="sim-panel-title">&#9651; View 3 — Strategic Implications</div>
-      <div class="sim-panel-sub" id="v3-sub">What this scenario means for GCC logistics, ports, trucking demand and key operators</div>
-      <div class="impl-grid" id="impl-grid"></div>
-      <div class="src" style="margin-top:10px"><span>AGBI &middot; straits.live &middot; DP World &middot; ZATCA &middot; scenario-modelled</span><span class="src-badge">modelled</span></div>
-    </div>
-
-    <!-- VIEW 4: Model Backtest — Red Sea Crisis 2024 -->
-    <div class="sim-panel dev-only" id="backtest-panel" style="margin-top:14px">
-      <div class="sim-panel-title">&#9651; Model Validation — Red Sea Crisis Backtest (2023&ndash;2024)</div>
-      <div class="sim-panel-sub">Regression model run against 4 known periods of the Houthi / Red Sea disruption &bull; Actual: Freightos Baltic FBX01 (Shanghai&ndash;N.Europe $/FEU) &bull; Base: $1,400 (Q3 2023 market low)</div>
-
-      <table style="width:100%;border-collapse:collapse;font-family:'IBM Plex Mono',monospace;font-size:8.5px;margin-top:10px">
-        <thead>
-          <tr style="border-bottom:1px solid #2a3340">
-            <th style="text-align:left;padding:5px 8px;color:#5a6878;font-weight:400">Period</th>
-            <th style="text-align:center;padding:5px 8px;color:#5a6878;font-weight:400">Brent</th>
-            <th style="text-align:center;padding:5px 8px;color:#5a6878;font-weight:400">Util</th>
-            <th style="text-align:center;padding:5px 8px;color:#5a6878;font-weight:400">Extra NM</th>
-            <th style="text-align:center;padding:5px 8px;color:#5a6878;font-weight:400">War&times;</th>
-            <th style="text-align:center;padding:5px 8px;color:#5a6878;font-weight:400">Cong.</th>
-            <th style="text-align:right;padding:5px 8px;color:#5a6878;font-weight:400">Predicted</th>
-            <th style="text-align:right;padding:5px 8px;color:#5a6878;font-weight:400">Actual FBX01</th>
-            <th style="text-align:right;padding:5px 8px;color:#5a6878;font-weight:400">Error</th>
-          </tr>
-        </thead>
-        <tbody id="backtest-body"></tbody>
-      </table>
-
-      <div id="backtest-summary" style="margin-top:12px"></div>
-
-      <!-- Coefficient Optimizer -->
-      <div style="margin-top:14px;padding:10px 12px;background:#0e1318;border-radius:4px;border:1px solid #2a3340">
-        <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px">
-          <div>
-            <div style="font-size:8px;font-weight:700;color:#a78bfa;letter-spacing:.08em;text-transform:uppercase">&#9670; Coefficient Optimizer</div>
-            <div style="font-size:8px;color:#5a6878;margin-top:2px">Grid search over ~23,500 combinations &bull; Pass 1: best linear fit &bull; Pass 2: non-linear &beta;&#8322; power law &bull; runs in &lt;10ms</div>
+        <div style="margin-top:14px;padding:10px 12px;background:#0e1318;border-radius:4px;border:1px solid #2a3340">
+          <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px">
+            <div>
+              <div style="font-size:8px;font-weight:700;color:#a78bfa;letter-spacing:.08em;text-transform:uppercase">&#9670; Coefficient Optimizer</div>
+              <div style="font-size:8px;color:#5a6878;margin-top:2px">Grid search over ~23,500 combinations &bull; Pass 1: best linear fit &bull; Pass 2: non-linear &beta;&#8322; power law &bull; runs in &lt;10ms</div>
+            </div>
+            <button onclick="runOptimizer()" style="background:#a78bfa;color:#0d1117;font-family:'JetBrains Mono',monospace;font-size:8px;font-weight:700;border:none;padding:6px 14px;border-radius:3px;cursor:pointer;letter-spacing:.06em;text-transform:uppercase">&#9654; Run Optimizer</button>
           </div>
-          <button onclick="runOptimizer()" style="background:#a78bfa;color:#0d1117;font-family:'IBM Plex Mono',monospace;font-size:8px;font-weight:700;border:none;padding:6px 14px;border-radius:3px;cursor:pointer;letter-spacing:.06em;text-transform:uppercase">&#9654; Run Optimizer</button>
+          <div id="optimizer-results" style="margin-top:10px"></div>
         </div>
-        <div id="optimizer-results" style="margin-top:10px"></div>
+
+        <div style="margin-top:10px;padding:8px 10px;background:#0e1318;border-radius:3px;border-left:2px solid #e8673c">
+          <div style="font-size:8px;color:#e8673c;font-weight:700;letter-spacing:.08em;text-transform:uppercase;margin-bottom:4px">&#9888; Key Model Limitation Identified</div>
+          <div style="font-size:8px;color:#9aa8b8;line-height:1.6">The linear &beta;&#8322; (capacity utilisation) term systematically <strong style="color:#e8eaed">under-predicts peak-crisis rates by 15&ndash;25%</strong>. Real markets exhibit a <strong style="color:#e8eaed">convex / near-logistic</strong> rate curve as utilisation approaches 95&ndash;100% &mdash; the linear approximation diverges sharply at those extremes. Kalouptsidi (2014, <em>AER</em>) documents this non-linearity in bulk shipping; the same dynamic applies to container markets. A log-linear specification or a logistic utilisation term would reduce peak RMSE from ~14% to an estimated ~6&ndash;8%.</div>
+        </div>
+
+        <div style="margin-top:8px;font-size:7.5px;color:#5a6878;line-height:1.6">Literature: Notteboom &amp; Vernimmen (2009) <em>J.Transport Geography</em> (bunker &beta;) &bull; Kalouptsidi (2014) <em>AER</em> (capacity elasticity) &bull; IMF WP/24/058 &ldquo;Sailing into Headwinds: The Red Sea Disruption&rdquo; (detour &amp; war-risk) &bull; Drewry Port Performance Index 2021&ndash;22 (congestion pass-through) &bull; Hummels &amp; Schaur (2013) <em>AER</em> (time-value in trade)</div>
+        <div class="src" style="margin-top:6px"><span>FBX01 actuals: Freightos Baltic Index &middot; Conditions: market consensus estimates</span><span class="src-badge">backtested</span></div>
       </div>
 
-      <div style="margin-top:10px;padding:8px 10px;background:#0e1318;border-radius:3px;border-left:2px solid #e8673c">
-        <div style="font-size:8px;color:#e8673c;font-weight:700;letter-spacing:.08em;text-transform:uppercase;margin-bottom:4px">&#9888; Key Model Limitation Identified</div>
-        <div style="font-size:8px;color:#9aa8b8;line-height:1.6">
-          The linear &beta;&#8322; (capacity utilisation) term systematically <strong style="color:#e8eaed">under-predicts peak-crisis rates by 15&ndash;25%</strong>.
-          Real markets exhibit a <strong style="color:#e8eaed">convex / near-logistic</strong> rate curve as utilisation approaches 95&ndash;100% —
-          the linear approximation diverges sharply at those extremes. Kalouptsidi (2014, <em>AER</em>) documents this non-linearity in bulk shipping;
-          the same dynamic applies to container markets. A log-linear specification or a logistic utilisation term
-          would reduce peak RMSE from ~14% to an estimated ~6&ndash;8%.
-        </div>
-      </div>
-
-      <div style="margin-top:8px;font-size:7.5px;color:#5a6878;line-height:1.6">
-        Literature: Notteboom &amp; Vernimmen (2009) <em>J.Transport Geography</em> (bunker &beta;) &bull;
-        Kalouptsidi (2014) <em>AER</em> (capacity elasticity) &bull;
-        IMF WP/24/058 &ldquo;Sailing into Headwinds: The Red Sea Disruption&rdquo; (detour &amp; war-risk) &bull;
-        Drewry Port Performance Index 2021&ndash;22 (congestion pass-through) &bull;
-        Hummels &amp; Schaur (2013) <em>AER</em> (time-value in trade)
-      </div>
-      <div class="src" style="margin-top:6px"><span>FBX01 actuals: Freightos Baltic Index &middot; Conditions: market consensus estimates</span><span class="src-badge">backtested</span></div>
     </div>
 
   </div>
-
-
 </div>
 
 
@@ -5116,7 +5134,7 @@ canvas { font-family: var(--f-mono); }
         <div class="sf-links">
           <a class="sf-link" href="mailto:hamza.el.mounhi@strategyand.pwc.com">hamza.el.mounhi@strategyand.pwc.com</a>
           <span class="sf-link-plain">Signal Database v2.6</span>
-          <span class="sf-link-plain">Last updated: Jun 2026</span>
+          <span class="sf-link-plain">Last updated: Jul 2026</span>
         </div>
       </div>
     </div>
@@ -6462,7 +6480,7 @@ function addTransitDays(date, days) {
 
 // ── Old SCENARIOS preserved as reference (not used by GCSS UI) ───────────────
 var SCENARIOS = {
-  1:{name:'Hormuz: Severely Restricted',emoji:'&#128683;',state:'Current reality - AIS-verified ~6/day - dark fleet active - Day 83',transits:6,brent:104.50,warrisk:'8.0x',reg:{util:95,cong:4},reroute:'Red Sea (Jeddah) · Sohar/KF · Cape/Jeddah (Med)',color:'#e74c3c',routeMults:{cgh:{mult:null,days:47,tag:'rt-cgh',label:'Cape / Jeddah',avail:true,warOverride:1.5,congOverride:0,note:'Cape of GH → Atlantic → Mediterranean → Suez Canal (north entry) → Jeddah — avoids Hormuz entirely; flag-neutral; no IRGC restriction; ~47 days'},redsea:{mult:2.8,days:22,tag:'rt-rs',label:'Red Sea / Jeddah',avail:true,note:'Jeddah entry only — overland truck to GCC destinations'},direct:{mult:null,days:null,tag:'rt-na',label:'Hormuz direct',avail:false,note:'IRGC escort only — not available to Western/neutral carriers. Use Red Sea (Jeddah) or Sohar/KF overland.'},oman:{mult:3.2,days:20,tag:'rt-dir',label:'Sohar/KF land',avail:true,note:'Indian Ocean → Gulf of Oman → Sohar/KF — no Hormuz transit; overland truck to GCC'}},implications:[{title:'Jeddah Port',color:'#e74c3c',metric:'12-day dwell',text:'Absorbing displaced cargo but slowly easing. ~33 IRGC-escorted vessels/day resuming Gulf access.'},{title:'Brent Crude',color:'#e74c3c',metric:'$104.50/bbl',text:'+45% vs pre-crisis. IRGC escort allows friendly-flag crude exports; Western carriers still excluded.'},{title:'GCC Trucking',color:'#fbbf24',metric:'+47% fleet',text:'Al Bat\'ha 1,649 trucks/day. TruKKer scaling to 500 moves/day from Khorfakkan.'},{title:'Khor Fakkan/Sohar',color:'#3dd68c',metric:'+3,500% diversions',text:'Windward: vessel diversions to Oman up 3,500%. Sohar emerging as primary Asia-GCC gateway.'},{title:'Stranded Vessels',color:'#e74c3c',metric:'~2,000 ships',text:'~20,000 mariners still in Persian Gulf. 109K TEU confirmed stranded. Friendly-flag vessels slowly clearing.'},{title:'War-Risk Insurance',color:'#e74c3c',metric:'8.0x premium',text:'VLCC approx $2.5M per voyage for IRGC-escorted transits. 6 P&I clubs withdrew cover.'}]},
+  1:{name:'Hormuz: Severely Restricted',emoji:'&#128683;',state:'Current reality - AIS-verified ~6/day - dark fleet active - Day 117',transits:6,brent:104.50,warrisk:'8.0x',reg:{util:95,cong:4},reroute:'Red Sea (Jeddah) · Sohar/KF · Cape/Jeddah (Med)',color:'#e74c3c',routeMults:{cgh:{mult:null,days:47,tag:'rt-cgh',label:'Cape / Jeddah',avail:true,warOverride:1.5,congOverride:0,note:'Cape of GH → Atlantic → Mediterranean → Suez Canal (north entry) → Jeddah — avoids Hormuz entirely; flag-neutral; no IRGC restriction; ~47 days'},redsea:{mult:2.8,days:22,tag:'rt-rs',label:'Red Sea / Jeddah',avail:true,note:'Jeddah entry only — overland truck to GCC destinations'},direct:{mult:null,days:null,tag:'rt-na',label:'Hormuz direct',avail:false,note:'IRGC escort only — not available to Western/neutral carriers. Use Red Sea (Jeddah) or Sohar/KF overland.'},oman:{mult:3.2,days:20,tag:'rt-dir',label:'Sohar/KF land',avail:true,note:'Indian Ocean → Gulf of Oman → Sohar/KF — no Hormuz transit; overland truck to GCC'}},implications:[{title:'Jeddah Port',color:'#e74c3c',metric:'12-day dwell',text:'Absorbing displaced cargo but slowly easing. ~33 IRGC-escorted vessels/day resuming Gulf access.'},{title:'Brent Crude',color:'#e74c3c',metric:'$104.50/bbl',text:'+45% vs pre-crisis. IRGC escort allows friendly-flag crude exports; Western carriers still excluded.'},{title:'GCC Trucking',color:'#fbbf24',metric:'+47% fleet',text:'Al Bat\'ha 1,649 trucks/day. TruKKer scaling to 500 moves/day from Khorfakkan.'},{title:'Khor Fakkan/Sohar',color:'#3dd68c',metric:'+3,500% diversions',text:'Windward: vessel diversions to Oman up 3,500%. Sohar emerging as primary Asia-GCC gateway.'},{title:'Stranded Vessels',color:'#e74c3c',metric:'~2,000 ships',text:'~20,000 mariners still in Persian Gulf. 109K TEU confirmed stranded. Friendly-flag vessels slowly clearing.'},{title:'War-Risk Insurance',color:'#e74c3c',metric:'8.0x premium',text:'VLCC approx $2.5M per voyage for IRGC-escorted transits. 6 P&I clubs withdrew cover.'}]},
   2:{name:'Hormuz: IRGC Escort Only',emoji:'&#9875;',state:'Friendly-flag passage - China India Turkey - ~25 transits/day',transits:25,brent:92.00,warrisk:'5.0x',reg:{util:83,cong:2},reroute:'IRGC escort direct · Oman · Cape/Jeddah (Med)',color:'#fbbf24',routeMults:{cgh:{mult:null,days:47,tag:'rt-cgh',label:'Cape / Jeddah',avail:true,warOverride:1.3,congOverride:0,note:'Cape of GH → Atlantic → Mediterranean → Suez Canal (north entry) → Jeddah — flag-neutral; avoids Hormuz entirely; viable for EU/US carriers; ~47 days'},redsea:{mult:2.0,days:22,tag:'rt-rs',label:'Red Sea / Jeddah',avail:true,note:'Jeddah entry — overland truck to GCC; viable for non-IRGC-flag carriers'},direct:{mult:null,days:null,tag:'rt-na',label:'Hormuz direct',avail:false,note:'IRGC escort — restricted to China/India/Turkey flag vessels only. Western and neutral-flag carriers must use Red Sea (Jeddah), Sohar/KF overland, or Cape / Jeddah.'},oman:{mult:2.2,days:20,tag:'rt-dir',label:'Sohar/KF land',avail:true,note:'Flag-neutral entry via Gulf of Oman — preferred by EU/US carriers avoiding Hormuz'}},implications:[{title:'Jeddah Port',color:'#fbbf24',metric:'10-day dwell',text:'Easing slightly as some Hormuz traffic resumes for friendly flags.'},{title:'Brent Crude',color:'#fbbf24',metric:'~$92/bbl',text:'+28% vs pre-crisis. Flag-state discrimination persists.'},{title:'GCC Trucking',color:'#fbbf24',metric:'+25% fleet',text:'Land routes remain elevated. Jebel Ali handling Asia cargo for Chinese/Indian flag vessels.'},{title:'Khor Fakkan/Sohar',color:'#3dd68c',metric:'Still elevated',text:'Oman ports retain volume as flag-neutral entry. Preferred by EU/US carriers avoiding Hormuz.'},{title:'Carrier Posture',color:'#fbbf24',metric:'Split market',text:'Chinese carriers (COSCO/Evergreen) resume Hormuz direct under IRGC escort. Western majors (Maersk/MSC) route via Red Sea → Jeddah, Sohar/KF overland, or Cape of GH → Atlantic → Med → Suez → Jeddah (~47 days, flag-neutral, no IRGC dependency).'},{title:'War-Risk Insurance',color:'#fbbf24',metric:'5.0x premium',text:'Reduced but elevated. Escort availability uncertain. JWC maintaining listed area.'}]},
   3:{name:'Hormuz: Negotiated Partial',emoji:'&#9868;',state:'Ceasefire - neutral corridor - all flags - ~50 transits/day',transits:50,brent:82.00,warrisk:'3.0x',reg:{util:78,cong:1},reroute:'Hormuz + CoGH',color:'#f0c84b',routeMults:{cgh:{mult:2.0,days:35,tag:'rt-cgh',label:'Cape of GH',avail:true,note:'Still viable some lanes'},redsea:{mult:1.5,days:22,tag:'rt-rs',label:'Red Sea',avail:true},direct:{mult:1.8,days:18,tag:'rt-dir',label:'Hormuz direct',avail:true,note:'All flags - corridor zones apply'},oman:{mult:1.6,days:20,tag:'rt-dir',label:'Sohar/KF land',avail:true}},implications:[{title:'Jeddah Port',color:'#3dd68c',metric:'6-day dwell',text:'Traffic redistributing to Gulf ports. Congestion easing.'},{title:'Brent Crude',color:'#3dd68c',metric:'~$82/bbl',text:'+14% vs pre-crisis. Ceasefire premium partially unwound.'},{title:'GCC Trucking',color:'#3dd68c',metric:'Normalising',text:'Al Bat\'ha volumes declining as Jebel Ali direct calls resume.'},{title:'Khor Fakkan/Sohar',color:'#fbbf24',metric:'Transitional',text:'Still processing diverted backlog. 6-12 weeks to fully normalise.'},{title:'Carrier Posture',color:'#3dd68c',metric:'Resuming calls',text:'MSC/Maersk announce Gulf resumption. 6-8 week lead time for full schedules.'},{title:'War-Risk Insurance',color:'#fbbf24',metric:'3.0x premium',text:'Falling toward 2x as ceasefire holds. JWC likely to revise within 30-60 days.'}]},
   4:{name:'Post-Crisis Recovery',emoji:'&#128260;',state:'Hormuz reopened — carrier risk memory active — gradual normalisation — ~85 transits/day',transits:85,brent:75.00,warrisk:'1.8x',reg:{util:78,cong:1},reroute:'Hormuz + some CoGH',color:'#3dd68c',routeMults:{cgh:{mult:1.3,days:35,tag:'rt-cgh',label:'Cape of GH',avail:true,note:'~30% of carriers — slow to realign'},redsea:{mult:1.1,days:22,tag:'rt-rs',label:'Red Sea',avail:true,note:'Resuming via Suez'},direct:{mult:1.2,days:18,tag:'rt-dir',label:'Hormuz direct',avail:true,note:'~70% of carriers resuming'},oman:{mult:1.1,days:20,tag:'rt-dir',label:'Sohar/KF land',avail:true,note:'Maintained as transitional hub'}},implications:[{title:'Jeddah Port',color:'#fbbf24',metric:'5-day dwell',text:'Gradual recovery as Red Sea volumes rebuild. JWC residual premium limiting full Suez resumption. Historical precedent: Bab al-Mandab avoided 18+ months post-peak.'},{title:'Brent Crude',color:'#fbbf24',metric:'~$75/bbl',text:'Residual $3–5/bbl geopolitical risk premium persists. Full normalisation to $72 baseline expected 12–18 months post-resolution as strategic reserves rebuild.'},{title:'GCC Trucking',color:'#fbbf24',metric:'~80% normalised',text:'Al Bat\'ha at ~750 trucks/day (vs 1,649 peak / 900 pre-crisis). Oman corridors remain elevated as ~30% of carriers maintain alternative routing.'},{title:'Khor Fakkan/Sohar',color:'#3dd68c',metric:'Sustained volumes',text:'~30% of carriers maintaining Cape/Oman routing for 6–18 months post-resolution. Strategic window for Oman logistics. Bab al-Mandab 2024: still avoided 18 months on.'},{title:'Carrier Posture',color:'#fbbf24',metric:'~70% resumed',text:'~70% of carriers resuming Hormuz Direct. ~30% maintaining CoGH/Oman routing pending JWC delistment and sustained security guarantees. Suez 1956 precedent: 2 years to full resumption.'},{title:'War-Risk Insurance',color:'#fbbf24',metric:'1.8x premium',text:'JWC delistment process initiated — full removal takes 6–12 months minimum post-resolution. Lloyd\'s syndicates and P&I clubs historically slowest to adjust. Residual Gulf surcharge maintained.'}]},
@@ -6566,12 +6584,20 @@ function selectScenario(id) {
   document.querySelectorAll('.scard').forEach(function(c){ c.classList.remove('active'); });
   var card = document.getElementById('sc-' + id);
   if (card) card.classList.add('active');
-  // Thread scenario severity colour into the results banner
+  // Tint the results banner to reflect scenario severity
   var banner = document.getElementById('sc-banner');
-  if (banner && SCENARIOS[id]) banner.style.setProperty('--sb-color', SCENARIOS[id].color);
+  if (banner && SCENARIOS[id]) {
+    var sc = SCENARIOS[id];
+    var isCritical = id === 1 || id === 6;
+    var isAmber    = id === 2 || id === 5;
+    banner.style.background   = isCritical ? '#130808' : isAmber ? '#12100A' : '#0F110F';
+    banner.style.borderColor  = isCritical ? '#2A1414' : isAmber ? '#2A2414' : '#1A2A1A';
+    var wrisks = document.querySelectorAll('#sc-banner .sbm-val#scb-warrisk');
+    // keep war-risk text color dynamic via scb-warrisk inline color (set in runSimulator)
+  }
   document.getElementById('sim-results').classList.remove('visible');
   var st = document.getElementById('sim-status');
-  if (st) st.textContent = 'Scenario ' + id + ' selected. Click Run Simulation.';
+  if (st) st.textContent = 'Scenario ' + id + ' selected — click RUN SIMULATION';
 }
 
 function fmtN(n) { return Math.round(n).toLocaleString('en-US'); }
@@ -6585,8 +6611,8 @@ function updateSeasonalBadge() {
   var lbl = document.getElementById('seasonal-label');
   var dsc = document.getElementById('seasonal-desc');
   if (lbl) lbl.innerHTML =
-    '<span style="background:' + s.color + '22;color:' + s.color + ';padding:2px 7px;border-radius:3px;font-size:8px">' +
-    s.label + ' &nbsp;<strong>' + pctStr + '</strong></span>';
+    '<span style="font-size:10px;font-weight:700;color:'+s.color+';border:1px solid '+s.color+'70;padding:4px 10px;border-radius:3px">'+
+    s.label+' &nbsp;'+pctStr+'</span>';
   if (dsc) dsc.textContent = s.desc;
 }
 
@@ -6797,18 +6823,20 @@ function showCalibrating(callback) {
 function renderV2RouteTabs(rows, selectedKey) {
   var el2 = document.getElementById('v2-route-tabs');
   if (!el2) return;
-  el2.innerHTML = rows.map(function(r) {
+  var bestKey = rows.filter(function(x){ return x.rm.avail && x.rate !== null; }).map(function(x){ return x.key; })[0];
+  el2.innerHTML = rows.map(function(r, i) {
     var isActive = r.key === selectedKey;
-    var isBest   = r.key === rows.filter(function(x){ return x.rm.avail && x.rate !== null; }).map(function(x){ return x.key; })[0];
-    var cls = 'v2-rt-btn' + (isActive ? ' v2-rt-active' : '');
-    var label = r.rm.label || ROUTE_NAMES[r.key] || r.key;
-    var rateStr = r.rm.avail && r.rate !== null ? '$' + fmtN(r.rate) : '<span class="v2-rt-unavail">Unavailable</span>';
-    var badge   = isBest && r.rm.avail ? '<span class="v2-rt-badge">&#9733; OPTIMAL</span>' : '';
-    return '<button class="'+cls+'" onclick="selectSimRoute(\''+r.key+'\')">'+
-      '<span class="v2-rt-name">'+label+'</span>'+
-      '<span class="v2-rt-rate">'+rateStr+'</span>'+
-      badge+
-    '</button>';
+    var isBest   = r.key === bestKey;
+    var label    = r.rm.label || ROUTE_NAMES[r.key] || r.key;
+    var isLast   = i === rows.length - 1;
+    var priceC   = !r.rm.avail || r.rate === null ? '#5A5A52' : isBest ? '#5FA86A' : '#C98A2E';
+    var bg       = isActive ? (isBest ? '#1A2A1A' : '#161614') : 'transparent';
+    var borderB  = isActive ? ('2px solid ' + (isBest ? '#5FA86A' : '#C9AE4E')) : '2px solid transparent';
+    return '<div onclick="selectSimRoute(\''+r.key+'\')" style="padding:12px 14px;background:'+bg+';border-right:'+(isLast?'none':'1px solid #1A1A18')+';border-bottom:'+borderB+';cursor:pointer">'+
+      '<div style="font-size:11px;font-weight:700;color:'+(isActive?'#F2F1ED':'#8E8E84')+';margin-bottom:4px">'+label+'</div>'+
+      '<div style="font-size:18px;font-weight:700;color:'+priceC+';letter-spacing:-.01em;line-height:1">'+(r.rm.avail&&r.rate!==null?'$'+fmtN(r.rate):'<span style="font-size:13px;color:#5A5A52">Unavailable</span>')+'</div>'+
+      (isBest&&r.rm.avail?'<div style="font-size:8px;font-weight:700;color:#5FA86A;letter-spacing:.1em;margin-top:5px">&#9733; OPTIMAL</div>':'')+
+    '</div>';
   }).join('');
 }
 
@@ -6861,42 +6889,52 @@ function renderV2CostBreakdown(row) {
   if (!bd) return;
   bd.innerHTML = items.map(function(it) {
     if (it.seasonal) {
-      var sColor = it.p > 0 ? s.seasonal.color : it.p < 0 ? '#3dd68c' : '#7a8494';
+      var sColor = it.p > 0 ? s.seasonal.color : it.p < 0 ? '#5FA86A' : '#5A5A52';
       var sVal   = (it.p > 0 ? '+' : '') + it.p + '%';
-      return '<div class="cost-row" style="border-left:2px solid '+sColor+'22;padding-left:10px">'+
-        '<div><div class="cost-key" style="color:'+sColor+'">'+it.k+'</div><div class="cost-sub">'+it.s+'</div></div>'+
-        '<div style="display:flex;align-items:center;gap:6px">'+
-          '<div class="cost-val" style="color:'+sColor+';font-size:15px">'+sVal+'</div>'+
-          '<span class="crisis-delta" style="background:'+sColor+'22;color:'+sColor+'">on sea freight</span>'+
-        '</div></div>';
+      return '<div style="padding:13px 0;border-bottom:1px solid #141412">'+
+        '<div style="background:#0D0D0B;border:1px solid #1A1A18;border-radius:4px;padding:8px 12px;display:flex;align-items:center;justify-content:space-between">'+
+          '<div style="font-size:10px;color:#5A5A52;line-height:1.4">'+it.k+'<br><span style="color:#3A3A36;font-size:9px">'+it.s+'</span></div>'+
+          '<div style="display:flex;align-items:center;gap:8px;white-space:nowrap">'+
+            '<span style="font-size:12px;font-weight:700;color:'+sColor+'">'+sVal+'</span>'+
+            '<span style="font-size:9px;color:#3A3A36;border:1px solid #2A2A26;padding:2px 7px;border-radius:3px">on sea freight</span>'+
+          '</div>'+
+        '</div>'+
+      '</div>';
     }
-    var pc = it.p>100?'#e74c3c':it.p>30?'#fbbf24':it.p>0?'#f0c84b':'#7a8494';
+    var pc = it.p>100?'#E05252':it.p>30?'#C98A2E':it.p>0?'#C9AE4E':'#3A3A36';
     var pt = it.p>0?'+'+it.p+'%':'baseline';
-    return '<div class="cost-row">'+
-      '<div><div class="cost-key">'+it.k+'</div><div class="cost-sub">'+it.s+'</div></div>'+
-      '<div style="display:flex;align-items:center;gap:6px">'+
-        '<div class="cost-val" style="color:#f0c84b">'+it.v+'</div>'+
-        '<span class="crisis-delta" style="background:rgba(58,67,81,.2);color:'+pc+'">'+pt+'</span>'+
-      '</div></div>';
-  }).join('') +
-  '<div class="cost-row" style="padding-top:10px;border-top:1px solid #2e3540;margin-top:4px">'+
-    '<div><div class="cost-key" style="color:#e8eaed;font-weight:700">Total per FEU (landed)</div>'+
-    '<div class="cost-sub">Pre-crisis baseline: $'+fmtN(s.preTotal)+'</div></div>'+
-    '<div style="display:flex;align-items:center;gap:6px">'+
-      '<div class="cost-val" style="color:#e8eaed;font-size:20px">$'+fmtN(totalFEU)+'</div>'+
-      '<span class="crisis-delta" style="background:'+(dFEU>0?'rgba(231,76,60,.12)':'rgba(61,214,140,.12)')+';color:'+(dFEU>0?'#e74c3c':'#3dd68c')+'">'+
-        (dFEU>0?'+':'')+dPct+'% vs pre-crisis'+
-      '</span>'+
-    '</div></div>'+
-  '<div class="cost-row" style="background:#181c22;margin:8px -16px -16px;padding:12px 16px;border-radius:0 0 6px 6px">'+
-    '<div><div class="cost-key" style="color:#a78bfa;font-weight:700">Monthly total ('+s.teu+' TEU/month)</div>'+
-    '<div class="cost-sub">Pre-crisis monthly: $'+fmtN(s.preMo)+'</div></div>'+
-    '<div style="display:flex;align-items:center;gap:8px">'+
-      '<div style="font-size:22px;font-weight:700;font-family:\'IBM Plex Mono\',monospace;color:#a78bfa">$'+fmtN(totalMo)+'</div>'+
-      '<div style="font-size:9px;font-family:\'IBM Plex Mono\',monospace;padding:3px 8px;border-radius:3px;background:'+(dMo>0?'rgba(231,76,60,.12)':'rgba(61,214,140,.12)')+';color:'+(dMo>0?'#e74c3c':'#3dd68c')+'">'+
-        (dMo>0 ? '+$'+fmtN(dMo)+'/month vs pre-crisis' : dMo<0 ? '&#x2212;$'+fmtN(Math.abs(dMo))+'/month saved vs pre-crisis' : 'at pre-crisis baseline')+
+    var vc = it.p>100?'#C98A2E':it.p>0?'#F2F1ED':'#F2F1ED';
+    return '<div style="padding:13px 0;border-bottom:1px solid #141412;display:flex;align-items:center;justify-content:space-between">'+
+      '<div><div style="font-size:12px;font-weight:700;color:#D9D8D3">'+it.k+'</div><div style="font-size:9px;color:#4A4A44;margin-top:2px">'+it.s+'</div></div>'+
+      '<div style="display:flex;align-items:center;gap:10px">'+
+        '<span style="font-size:15px;font-weight:700;color:'+vc+'">'+it.v+'</span>'+
+        '<span style="font-size:9px;color:'+(it.p>0?pc:'#3A3A36')+';border:1px solid '+(it.p>0?'rgba(224,82,82,0.4)':'#2A2A26')+';padding:2px 7px;border-radius:3px'+(it.p>0?';font-weight:700':'')+'">'+pt+'</span>'+
       '</div>'+
-    '</div></div>';
+    '</div>';
+  }).join('') +
+  '<div style="padding:14px 0 10px;border-bottom:1px solid #1A1A18">'+
+    '<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:5px">'+
+      '<div><div style="font-size:13px;font-weight:700;color:#F2F1ED">Total per FEU <span style="font-weight:400;color:#5A5A52">(landed)</span></div>'+
+      '<div style="font-size:9px;color:#4A4A44;margin-top:2px">Pre-crisis baseline: $'+fmtN(s.preTotal)+'</div></div>'+
+      '<div style="display:flex;align-items:center;gap:10px">'+
+        '<span style="font-size:24px;font-weight:700;color:#F2F1ED;letter-spacing:-.02em">$'+fmtN(totalFEU)+'</span>'+
+        '<span style="font-size:10px;font-weight:700;color:'+(dFEU>0?'#E05252':'#5FA86A')+';border:1px solid '+(dFEU>0?'rgba(224,82,82,0.4)':'rgba(95,168,106,0.4)')+';background:'+(dFEU>0?'rgba(224,82,82,0.1)':'rgba(95,168,106,0.1)')+';padding:3px 9px;border-radius:3px">'+
+          (dFEU>0?'+':'')+dPct+'% vs pre-crisis</span>'+
+      '</div>'+
+    '</div>'+
+  '</div>'+
+  '<div style="padding:14px 0">'+
+    '<div style="display:flex;align-items:center;justify-content:space-between">'+
+      '<div><div style="font-size:12px;font-weight:700;color:#C9AE4E">Monthly total <span style="font-weight:400;color:#5A5A52">('+s.teu+' TEU/month)</span></div>'+
+      '<div style="font-size:9px;color:#4A4A44;margin-top:2px">Pre-crisis monthly: $'+fmtN(s.preMo)+'</div></div>'+
+      '<div style="display:flex;align-items:center;gap:10px">'+
+        '<span style="font-size:28px;font-weight:700;color:#C9AE4E;letter-spacing:-.025em">$'+fmtN(totalMo)+'</span>'+
+        '<span style="font-size:10px;font-weight:700;color:'+(dMo>0?'#E05252':'#5FA86A')+';border:1px solid '+(dMo>0?'rgba(224,82,82,0.4)':'rgba(95,168,106,0.4)')+';background:'+(dMo>0?'rgba(224,82,82,0.1)':'rgba(95,168,106,0.1)')+';padding:3px 9px;border-radius:3px">'+
+          (dMo>0?'+$'+fmtN(dMo)+'/month vs pre-crisis':dMo<0?'&#x2212;$'+fmtN(Math.abs(dMo))+'/month saved':'at pre-crisis baseline')+
+        '</span>'+
+      '</div>'+
+    '</div>'+
+  '</div>';
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -6993,28 +7031,37 @@ function runSimulator() {
     return (a.landed !== null ? a.landed : 999999) - (b.landed !== null ? b.landed : 999999);
   });
 
-  var rkClasses = ['rank-1','rank-2','rank-3','rank-x'];
+  var rkBgs = ['#1A3A1A','#1A2A3A','#3A1A1A','#1A1A1A'];
+  var rkCs  = ['#5FA86A','#5A8AB8','#C98A2E','#3A3A36'];
   var tbody = document.getElementById('route-matrix-body');
   if (tbody) {
     tbody.innerHTML = '';
     var rk = 0;
     rows.forEach(function(r) {
-      var av = r.rm.avail;
-      var rkC = av ? rkClasses[Math.min(rk,3)] : 'rank-x';
+      var av   = r.rm.avail;
+      var rkI  = av ? Math.min(rk, 2) : 3;
       if (av) rk++;
-      var dPct = r.rm.avail ? Math.round((r.mult - 1) * 100) : null;
-      var dColor = dPct===null?'#748494':dPct>100?'#e74c3c':dPct>50?'#fbbf24':dPct>0?'#f0c84b':'#3dd68c';
-      var noteH = (r.rm.note && av) ? '<span style="font-size:8px;color:#7a8494;display:block">'+r.rm.note+'</span>' : '';
+      var rkBg = rkBgs[rkI]; var rkC = rkCs[rkI];
+      var dPct = av ? Math.round((r.mult - 1) * 100) : null;
+      var dColor = dPct===null?'#3A3A36':dPct>100?'#E05252':dPct>50?'#C98A2E':dPct>0?'#C9AE4E':'#5FA86A';
+      var noteH = (r.rm.note && av) ? '<div style="font-size:8px;color:#4A4A44;line-height:1.4;margin-top:3px">'+r.rm.note+'</div>' : '';
+      var chipColors = {
+        'rt-cgh': {c:'#8B72C8', bg:'rgba(139,114,200,0.1)'},
+        'rt-rs':  {c:'#E09060', bg:'rgba(224,144,96,0.1)'},
+        'rt-dir': {c:'#5A8AB8', bg:'rgba(90,138,184,0.1)'},
+        'rt-na':  {c:'#3A3A36', bg:'transparent'}
+      };
+      var chip = chipColors[r.rm.tag] || {c:'#3A3A36', bg:'transparent'};
       tbody.innerHTML +=
-        '<tr>'+
-        '<td><span class="rank-badge '+rkC+'">'+(av?rk:'-')+'</span></td>'+
-        '<td style="color:#e8eaed">'+ROUTE_NAMES[r.key]+noteH+'</td>'+
-        '<td><span class="route-tag '+r.rm.tag+'">'+r.rm.label+'</span></td>'+
-        '<td style="color:#f0c84b;font-weight:700">'+(av&&r.rate?'$'+fmtN(r.rate):'<span style="color:#748494">N/A</span>')+'</td>'+
-        '<td style="color:#7a8494">'+(r.rm.days?r.rm.days+'d':'-')+'</td>'+
-        '<td style="color:'+dColor+'">'+(dPct!==null?'+'+dPct+'%':'-')+'</td>'+
-        '<td>'+(av?'<span style="color:#3dd68c">Yes</span>':'<span style="color:#e74c3c">No - '+(r.rm.note||'')+'</span>')+'</td>'+
-        '</tr>';
+        '<div style="display:grid;grid-template-columns:24px 1fr 90px 72px 72px 72px 64px;gap:0;padding:12px 0;border-bottom:1px solid #141412;align-items:start">'+
+        '<div style="display:flex;align-items:center;justify-content:center;width:20px;height:20px;border-radius:3px;background:'+rkBg+';font-size:10px;font-weight:700;color:'+rkC+';margin-top:2px;flex-shrink:0">'+(av?rk:'×')+'</div>'+
+        '<div style="padding-right:8px"><div style="font-size:12px;font-weight:700;color:'+(av?'#D9D8D3':'#3A3A36')+';margin-bottom:2px">'+ROUTE_NAMES[r.key]+'</div>'+noteH+'</div>'+
+        '<div><span style="font-size:9px;font-weight:700;letter-spacing:.08em;padding:3px 7px;border-radius:3px;color:'+chip.c+';border:1px solid '+chip.c+';background:'+chip.bg+';line-height:1.6;display:inline-block">'+r.rm.label+'</span></div>'+
+        '<div style="font-size:13px;font-weight:700;color:'+(av&&r.rate?'#C9AE4E':'#3A3A36')+'">'+(av&&r.rate?'$'+fmtN(r.rate):'N/A')+'</div>'+
+        '<div style="font-size:11px;color:#7A7A72">'+(r.rm.days?r.rm.days+'d':'—')+'</div>'+
+        '<div style="font-size:12px;font-weight:700;color:'+dColor+'">'+(dPct!==null?'+'+dPct+'%':'—')+'</div>'+
+        '<div style="font-size:11px;font-weight:700;color:'+(av?'#5FA86A':'#E05252')+';text-align:right">'+(av?'Yes':'No')+'</div>'+
+        '</div>';
     });
   }
 
@@ -7039,42 +7086,40 @@ function runSimulator() {
       { name:'War-risk premium',     sym:'W', val:sc.warrisk+'&times;',              coeff:'&beta;&#8324; = '+REG.b4_warrsk, v:_vW, c: warNum>6?'#e74c3c':warNum>3?'#fbbf24':'#3dd68c' },
       { name:'Port congestion',      sym:'C', val:regCong+' extra days',             coeff:'&beta;&#8325; = '+REG.b5_cong,   v:_vC, c: regCong>4?'#e74c3c':regCong>2?'#fbbf24':'#3dd68c' }
     ];
+    var _colGrid = '180px 60px 160px 160px 1fr 100px';
     rp.innerHTML =
-      '<table style="width:100%;border-collapse:collapse;font-family:\'IBM Plex Mono\',monospace;font-size:8.5px">'+
-      '<thead><tr style="border-bottom:1px solid #2a3340">'+
-      '<th style="text-align:left;padding:5px 8px;color:#5a6878;font-weight:400">Variable</th>'+
-      '<th style="text-align:center;padding:5px 6px;color:#5a6878;font-weight:400">Symbol</th>'+
-      '<th style="text-align:right;padding:5px 8px;color:#5a6878;font-weight:400">Scenario value</th>'+
-      '<th style="text-align:center;padding:5px 8px;color:#5a6878;font-weight:400">Coefficient</th>'+
-      '<th style="text-align:right;padding:5px 8px;color:#5a6878;font-weight:400">Rate impact</th>'+
-      '<th style="text-align:right;padding:5px 8px;color:#5a6878;font-weight:400">$/FEU add-on</th>'+
-      '</tr></thead><tbody>'+
+      '<div style="display:grid;grid-template-columns:'+_colGrid+';gap:0;border-bottom:1px solid #1A1A18;padding:8px 0">'+
+      '<span style="font-size:8px;font-weight:700;letter-spacing:.12em;color:#4A4A44">VARIABLE</span>'+
+      '<span style="font-size:8px;font-weight:700;letter-spacing:.12em;color:#4A4A44">SYMBOL</span>'+
+      '<span style="font-size:8px;font-weight:700;letter-spacing:.12em;color:#4A4A44">SCENARIO VALUE</span>'+
+      '<span style="font-size:8px;font-weight:700;letter-spacing:.12em;color:#4A4A44">COEFFICIENT</span>'+
+      '<span style="font-size:8px;font-weight:700;letter-spacing:.12em;color:#4A4A44">RATE IMPACT</span>'+
+      '<span style="font-size:8px;font-weight:700;letter-spacing:.12em;color:#4A4A44;text-align:right">$/FEU ADD-ON</span>'+
+      '</div>'+
       _vars.map(function(v){
         var pct    = Math.round(v.v * 100);
         var dol    = Math.round(_baseR * v.v);
-        var barPct = Math.min(100, Math.round(Math.abs(pct) / 80 * 100)); // normalise to 80% max
-        var barCol = pct > 30 ? '#e8673c' : pct > 10 ? '#fbbf24' : pct > 0 ? '#f0c84b' : '#3dd68c';
-        var miniBar = '<span style="display:inline-block;vertical-align:middle;width:36px;height:3px;background:#1a2130;border-radius:1px;margin-left:5px;overflow:hidden">'+
-          '<span style="display:block;height:100%;width:'+barPct+'%;background:'+barCol+';border-radius:1px"></span></span>';
-        return '<tr style="border-bottom:1px solid #1a2130">'+
-          '<td style="padding:5px 8px;color:#cdd2da">'+v.name+'</td>'+
-          '<td style="padding:5px 6px;text-align:center;color:#a78bfa;font-weight:700">'+v.sym+'</td>'+
-          '<td style="padding:5px 8px;text-align:right;color:'+v.c+';font-weight:700">'+v.val+'</td>'+
-          '<td style="padding:5px 8px;text-align:center;color:#748494">'+v.coeff+'</td>'+
-          '<td style="padding:5px 8px;text-align:right;color:'+(pct>0?'#e8673c':'#3dd68c')+'">'+
-            (pct>0?'+':'')+pct+'%'+miniBar+'</td>'+
-          '<td style="padding:5px 8px;text-align:right;color:#f0c84b;font-weight:700">'+
-            (dol>0?'+$'+fmtN(dol):'&mdash;')+'</td>'+
-          '</tr>';
+        var barPct = Math.min(100, Math.round(Math.abs(pct) / 80 * 100));
+        var barCol = pct > 30 ? '#C2A23E' : pct > 10 ? '#C98A2E' : pct > 0 ? '#C9AE4E' : '#5FA86A';
+        var miniBar = '<div style="flex:1;height:5px;background:#1A1A18;border-radius:2px;overflow:hidden"><div style="height:100%;width:'+barPct+'%;background:'+barCol+';border-radius:2px"></div></div>';
+        return '<div style="display:grid;grid-template-columns:'+_colGrid+';gap:0;padding:12px 0;border-bottom:1px solid #141412;align-items:center">'+
+          '<span style="font-size:12px;color:#D9D8D3">'+v.name+'</span>'+
+          '<span style="font-size:13px;font-weight:700;color:#8B72C8">'+v.sym+'</span>'+
+          '<span style="font-size:11px;font-weight:700;color:'+v.c+'">'+v.val+'</span>'+
+          '<span style="font-size:10px;color:#5A5A52">'+v.coeff+'</span>'+
+          '<div style="display:flex;align-items:center;gap:8px;padding-right:16px"><span style="font-size:11px;font-weight:700;color:#C98A2E;white-space:nowrap;width:48px">'+(pct>0?'+':'')+pct+'%</span>'+miniBar+'</div>'+
+          '<span style="font-size:13px;font-weight:700;color:#C9AE4E;text-align:right">'+(dol>0?'+$'+fmtN(dol):'&mdash;')+'</span>'+
+          '</div>';
       }).join('')+
-      '<tr style="border-top:2px solid #2a3340;background:#0e1318">'+
-      '<td colspan="2" style="padding:6px 8px;color:#e8eaed;font-weight:700">Total multiplier &nbsp;<span style="color:#748494;font-weight:400;font-size:8px">(best route: '+ROUTE_NAMES[_bestKey]+')</span></td>'+
-      '<td style="padding:6px 8px;text-align:right;color:#7a8494">Base: $'+fmtN(_baseR)+'</td>'+
-      '<td style="padding:6px 8px;text-align:center;color:#748494">&times; '+_totalMult.toFixed(3)+'</td>'+
-      '<td style="padding:6px 8px;text-align:right;color:#e03040;font-weight:700">+'+Math.round((_totalMult-1)*100)+'%</td>'+
-      '<td style="padding:6px 8px;text-align:right;color:#f0c84b;font-weight:700">= $'+fmtN(Math.round(_baseR * _totalMult * cSrg))+'</td>'+
-      '</tr></tbody></table>'+
-      '<div style="margin-top:7px;font-size:7.5px;color:#5a6878;line-height:1.6">'+
+      '<div style="display:grid;grid-template-columns:'+_colGrid+';gap:0;padding:12px 0;border-top:2px solid #2A2A26;align-items:center">'+
+      '<span style="font-size:12px;font-weight:700;color:#F2F1ED">Total multiplier <span style="font-size:9px;font-weight:400;color:#5A5A52">(best: '+ROUTE_NAMES[_bestKey]+')</span></span>'+
+      '<span style="font-size:13px;font-weight:700;color:#8B72C8"></span>'+
+      '<span style="font-size:11px;font-weight:700;color:#C9AE4E">Base: $'+fmtN(_baseR)+'</span>'+
+      '<span style="font-size:10px;color:#5A5A52">&times; '+_totalMult.toFixed(3)+'</span>'+
+      '<div style="display:flex;align-items:center;gap:8px;padding-right:16px"><span style="font-size:11px;font-weight:700;color:#E05252;white-space:nowrap;width:48px">+'+Math.round((_totalMult-1)*100)+'%</span><div style="flex:1;height:5px;background:#1A1A18;border-radius:2px;overflow:hidden"><div style="height:100%;background:#E05252;border-radius:2px"></div></div></div>'+
+      '<span style="font-size:13px;font-weight:700;color:#C9AE4E;text-align:right">= $'+fmtN(Math.round(_baseR * _totalMult * cSrg))+'</span>'+
+      '</div>'+
+      '<div style="padding:8px 0;font-size:9px;color:#2A2A26;line-height:1.55">'+
       'Calibration: SCFI / Drewry WCI historical elasticities (2024 Red Sea crisis + COVID peak) &nbsp;&bull;&nbsp; '+
       'War-risk coefficients: JWC &amp; P&amp;I club loadings &nbsp;&bull;&nbsp; '+
       'Commodity surcharge &times;'+cSrg.toFixed(2)+' applied post-regression &nbsp;&bull;&nbsp; '+
@@ -7123,25 +7168,20 @@ function runSimulator() {
   var ag = document.getElementById('annual-grid');
   if (ag) {
     var annMetric = annDelta > 0
-      ? { v:'$'+fmtN(annDelta),            l:'Annual crisis premium', s:'vs pre-crisis baseline',     c:'#e74c3c' }
+      ? { v:'$'+fmtN(annDelta),           l:'ANNUAL CRISIS PREMIUM', s:'vs pre-crisis baseline',    c:'#E05252', bg:'#130808', lc:'#4A2222', sc2:'#6A3232' }
       : annDelta < 0
-      ? { v:'$'+fmtN(Math.abs(annDelta)),  l:'Annual savings',        s:'below pre-crisis baseline',  c:'#3dd68c' }
-      : { v:'$0',                           l:'No crisis premium',     s:'at pre-crisis baseline',     c:'#7a8494' };
-    annMetric.h = true; // flag crisis premium card for visual highlight
+      ? { v:'$'+fmtN(Math.abs(annDelta)), l:'ANNUAL SAVINGS',        s:'below pre-crisis baseline', c:'#5FA86A', bg:'#0A1A0A', lc:'#2A4A2A', sc2:'#3A6A3A' }
+      : { v:'$0',                         l:'NO CRISIS PREMIUM',     s:'at pre-crisis baseline',    c:'#5A5A52', bg:'#111110', lc:'#4A4A44', sc2:'#3A3A36' };
     ag.innerHTML = [
-      {v:'$'+fmtN(annTotal), l:'Annual landed cost', s:teu+' TEU × 12 months', c:'#a78bfa'},
+      { v:'$'+fmtN(annTotal),    l:'ANNUAL LANDED COST',  s:teu+' TEU × 12 months',            c:'#F2F1ED', bg:'#111110', lc:'#4A4A44', sc2:'#5A5A52' },
       annMetric,
-      {v:fPct+'%',             l:'Sea freight share',   s:'Truck: '+tPct+'% | Port: '+(100-fPct-tPct)+'%', c:'#f0c84b'},
-      {v:sc.transits+'/day',   l:'Strait transits',     s:'Pre-crisis baseline: 130/day (UNCTAD)', c:sc.color}
-    ].map(function(m){
-      // Build inline style for highlighted card using hex alpha
-      var hlStyle = m.h
-        ? 'style="--ahl-c:'+m.c+'55;--ahl-bg:'+m.c+'12;border-color:'+m.c+'55 !important;background:'+m.c+'12 !important;"'
-        : '';
-      return '<div class="annual-met'+(m.h?' annual-met-hl':'')+'" '+hlStyle+'>'+
-        '<div class="annual-val" style="color:'+m.c+'">'+m.v+'</div>'+
-        '<div class="annual-lbl">'+m.l+'</div>'+
-        '<div class="annual-delta">'+m.s+'</div>'+
+      { v:fPct+'%',              l:'SEA FREIGHT SHARE',   s:'Truck: '+tPct+'% | Port: '+(100-fPct-tPct)+'%', c:'#C9AE4E', bg:'#111110', lc:'#4A4A44', sc2:'#5A5A52' },
+      { v:sc.transits+'/day',    l:'STRAIT TRANSITS',     s:'Pre-crisis baseline: 130/day (UNCTAD)', c:sc.color,  bg:'#111110', lc:'#4A4A44', sc2:'#5A5A52' }
+    ].map(function(m, i) {
+      return '<div style="padding:20px 22px;border-right:'+(i<3?'1px solid #1A1A18':'none')+';background:'+m.bg+'">'+
+        '<div style="font-size:9px;font-weight:700;letter-spacing:.14em;color:'+m.lc+';margin-bottom:6px">'+m.l+'</div>'+
+        '<div style="font-size:30px;font-weight:700;color:'+m.c+';letter-spacing:-.025em;line-height:1;margin-bottom:4px">'+m.v+'</div>'+
+        '<div style="font-size:9px;color:'+m.sc2+'">'+m.s+'</div>'+
         '</div>';
     }).join('');
   }
@@ -7158,12 +7198,12 @@ function runSimulator() {
     });
     var cards = dynCards;
     ig.innerHTML = cards.map(function(imp) {
-      var catHtml = imp.cat ? '<div class="impl-cat">'+imp.cat+'</div>' : '';
-      return '<div class="impl-card" style="border-color:'+imp.color+'">'+
+      var catHtml = imp.cat ? '<div style="font-size:9px;font-weight:700;letter-spacing:.16em;color:#4A4A44;margin-bottom:8px">'+imp.cat+'</div>' : '';
+      return '<div style="background:#0D0D0B;border:1px solid #1E1E1C;border-left:3px solid '+imp.color+';border-radius:0 6px 6px 0;padding:20px 18px">'+
         catHtml+
-        '<div class="impl-metric" style="color:'+imp.color+'">'+imp.metric+'</div>'+
-        '<div class="impl-title">'+imp.title+'</div>'+
-        '<div class="impl-text">'+imp.text+'</div>'+
+        '<div style="font-size:20px;font-weight:700;color:'+imp.color+';letter-spacing:-.01em;margin-bottom:8px;line-height:1.2">'+imp.metric+'</div>'+
+        '<div style="font-size:11px;font-weight:700;color:#D9D8D3;margin-bottom:8px">'+imp.title+'</div>'+
+        '<div style="font-size:11px;color:#7A7A72;line-height:1.65">'+imp.text+'</div>'+
         (imp.gdpHtml||'')+
         '</div>';
     }).join('');
@@ -8218,7 +8258,7 @@ function initTheatreMap() {
     '#e74c3c', 2, 'bl-lane-disrupted', 'Persian Gulf — IRGC escort-only &bull; 2–4 vessels/day');
   // Hormuz Strait approach — CLOSED (red, fastest)
   addLane(theatreMap, [[23.0,57.8],[24.5,57.2],[25.6,56.8],[26.1,56.5],[26.5,56.2]],
-    '#e74c3c', 3, 'bl-lane-disrupted', 'Hormuz Strait — CLOSED to commercial traffic &bull; IRGC naval control &bull; Day 83');
+    '#e74c3c', 3, 'bl-lane-disrupted', 'Hormuz Strait — CLOSED to commercial traffic &bull; IRGC naval control &bull; Day 117');
   // Red Sea lane — active but HIGH THREAT (amber, fast)
   addLane(theatreMap, [[28.5,33.5],[26.0,35.0],[22.0,38.0],[18.0,40.0],[15.0,41.5],[12.5,43.5]],
     '#fbbf24', 2.5, 'bl-lane-disrupted', 'Red Sea southbound lane — Houthi anti-ship threat &bull; JWC War Risk &bull; escort required');
@@ -8245,7 +8285,7 @@ function initTheatreMap() {
   tm(24.25,54.55,'✈', 'Al Dhafra AB — US/UAE coalition air base &bull; CENTCOM','#5aa3f5');
 
   L.marker([26.6,56.4],{ icon:L.divIcon({ html:'<div style="font-size:22px;color:#e74c3c;font-weight:900;text-shadow:0 0 8px #000">✕</div>', iconSize:[26,26],iconAnchor:[13,13],className:'' }) })
-    .addTo(theatreMap).bindTooltip('Strait of Hormuz — CLOSED &bull; IRGC control &bull; Day 83',{sticky:true,className:'irgc-tip'});
+    .addTo(theatreMap).bindTooltip('Strait of Hormuz — CLOSED &bull; IRGC control &bull; Day 117',{sticky:true,className:'irgc-tip'});
 }
 
 // ── CORRIDOR TRAFFIC MINI-MAPS ────────────────────────────────────────────────
@@ -8679,7 +8719,7 @@ var chokepointsMap = null, chokepointsMapReady = false;
 
 // radius ∝ trade volume (px): Malacca 25%→16, Hormuz 20%→14, Suez 13%→12, BaM 10%→10, Gib 8%→9, Cape crisis→12, Bosporus 5%→8, Panama 5%→8
 var CHOKEPOINTS = [
-  { name:'Strait of Hormuz',          lat:26.6,  lng:56.4,   r:14, status:'CLOSED',      color:'#a03020', oil:'21M bbl/day', trade:'~20% global oil',      transits:'2–4/day (IRGC escort)',         note:'IRGC naval control — Day 83. Commercial shipping suspended.' },
+  { name:'Strait of Hormuz',          lat:26.6,  lng:56.4,   r:14, status:'CLOSED',      color:'#a03020', oil:'21M bbl/day', trade:'~20% global oil',      transits:'2–4/day (IRGC escort)',         note:'IRGC naval control — Day 117. Commercial shipping suspended.' },
   { name:'Bab el-Mandeb',             lat:12.6,  lng:43.5,   r:10, status:'HIGH THREAT', color:'#c07830', oil:'4.7M bbl/day',trade:'10% global trade',     transits:'Reduced — escort required',      note:'Houthi anti-ship missiles active. JWC listed area. Most carriers rerouting via Cape.' },
   { name:'Suez Canal',                lat:30.0,  lng:32.55,  r:12, status:'OPEN',        color:'#3a7a5a', oil:'—',           trade:'12–15% global trade',  transits:'~40–50 vessels/day (reduced)',   note:'Operational. Reduced throughput as Bab el-Mandeb threat deters approach.' },
   { name:'Strait of Malacca',         lat:1.3,   lng:103.85, r:16, status:'OPEN',        color:'#3a7a5a', oil:'16M bbl/day', trade:'25% global trade',     transits:'~90,000 vessels/year',           note:"World's busiest chokepoint. Normal operations. Low piracy risk." },

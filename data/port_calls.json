@@ -1,0 +1,82 @@
+{
+  "generated": "2026-07-03",
+  "source": "IMF PortWatch ArcGIS REST API",
+  "queryWindow": {
+    "start": "2026-06-19",
+    "end": "2026-06-25"
+  },
+  "updates": {
+    "Jebel Ali": {
+      "newCur": 11,
+      "ratio": 0.17708333333333334,
+      "imfCur": 17,
+      "imfPre": 96,
+      "dashPre": 62,
+      "window": "2026-06-19–2026-06-25"
+    },
+    "Shuwaikh": {
+      "newCur": 0,
+      "ratio": 0,
+      "imfCur": 0,
+      "imfPre": 5.1,
+      "dashPre": 20,
+      "window": "2026-06-19–2026-06-25"
+    },
+    "Dammam": {
+      "newCur": 7,
+      "ratio": 0.20833333333333331,
+      "imfCur": 3,
+      "imfPre": 14.4,
+      "dashPre": 35,
+      "window": "2026-06-19–2026-06-25"
+    },
+    "Shanghai": {
+      "newCur": 86,
+      "ratio": 0.908745247148289,
+      "imfCur": 239,
+      "imfPre": 263,
+      "dashPre": 95,
+      "window": "2026-06-19–2026-06-25"
+    },
+    "Busan": {
+      "newCur": 77,
+      "ratio": 0.9008264462809917,
+      "imfCur": 218,
+      "imfPre": 242,
+      "dashPre": 85,
+      "window": "2026-06-19–2026-06-25"
+    },
+    "Singapore": {
+      "newCur": 182,
+      "ratio": 0.9861111111111112,
+      "imfCur": 284,
+      "imfPre": 288,
+      "dashPre": 185,
+      "window": "2026-06-19–2026-06-25"
+    },
+    "Rotterdam": {
+      "newCur": 87,
+      "ratio": 0.9164818920916481,
+      "imfCur": 124,
+      "imfPre": 135.3,
+      "dashPre": 95,
+      "window": "2026-06-19–2026-06-25"
+    },
+    "Antwerp": {
+      "newCur": 63,
+      "ratio": 0.8111111111111111,
+      "imfCur": 73,
+      "imfPre": 90,
+      "dashPre": 78,
+      "window": "2026-06-19–2026-06-25"
+    },
+    "Djibouti": {
+      "newCur": 23,
+      "ratio": 0.7042253521126761,
+      "imfCur": 10,
+      "imfPre": 14.2,
+      "dashPre": 32,
+      "window": "2026-06-19–2026-06-25"
+    }
+  }
+}

@@ -8641,7 +8641,7 @@ function buildLiveSectionHtml(live) {
             '<span class="pp-val" style="color:#3dd68c">&#9679; ' + live.inPort + ' vessels</span></div>';
   }
   if (live && live.expectedTotal !== null && live.expectedTotal !== undefined) {
-    html += '<div class="pp-row"><span class="pp-lbl">Expected arrivals</span>' +
+    html += '<div class="pp-row"><span class="pp-lbl">Expected arrivals (next 7 days)</span>' +
             '<span class="pp-val">' + live.expectedTotal + ' vessels</span></div>';
   } else if (live && live.arrivals24h !== null && live.arrivals24h !== undefined) {
     html += '<div class="pp-row"><span class="pp-lbl">Arrivals (last 24 h)</span>' +
@@ -8657,11 +8657,18 @@ function buildPortPopupHtml(p, info, status, live) {
   var liveKey  = PP_LIVE_KEYS[p.name];
 
   var msLink = 'https://www.myshiptracking.com/ports?q=' + encodeURIComponent(p.name);
-  var liveSection = liveKey
-    ? (live ? buildLiveSectionHtml(live) : '<div class="pp-loading">&#8635; Loading live data…</div>')
-    : '<div class="pp-lbl" style="color:#2a3a48">AIS data not yet indexed &mdash; ' +
+  var liveSection;
+  if (!liveKey) {
+    liveSection = '<div class="pp-lbl" style="color:#2a3a48">AIS data not yet indexed &mdash; ' +
       '<a href="' + msLink + '" target="_blank" rel="noopener" ' +
       'style="color:#4a9eda;text-decoration:none">view on myshiptracking.com &#8599;</a></div>';
+  } else if (live) {
+    liveSection = buildLiveSectionHtml(live);
+  } else {
+    liveSection = p.exp7 !== undefined
+      ? '<div class="pp-row"><span class="pp-lbl">Expected arrivals (next 7 days)</span><span class="pp-val">' + p.exp7 + ' vessels</span></div>'
+      : '<div class="pp-loading">&#8635; Loading live data…</div>';
+  }
 
   return (
     '<div class="pp-hdr" style="background:' + info.grad + '">' +
@@ -8681,7 +8688,7 @@ function buildPortPopupHtml(p, info, status, live) {
       '<div class="pp-row"><span class="pp-lbl">&#9875; Container Berths</span><span class="pp-val">' + info.berths + '</span></div>' +
       '<div class="pp-section-head">Vessel Traffic</div>' +
       '<div class="pp-row"><span class="pp-lbl">Pre-crisis baseline</span><span class="pp-val">' + p.pre + ' calls / week</span></div>' +
-      '<div class="pp-row"><span class="pp-lbl">Current · Jun 2026</span>' +
+      '<div class="pp-row"><span class="pp-lbl">Current · Jul 2026</span>' +
         '<span class="pp-val">' + p.cur + ' &nbsp;<span class="pp-chg" style="color:' + chgColor + '">' + sign + pct + '%</span></span>' +
       '</div>' +
       '<div class="pp-section-head"><span class="pp-live-dot"></span>Live AIS · myshiptracking.com</div>' +
@@ -8709,7 +8716,9 @@ function openPortPopup(p, latlng) {
       })
       .catch(function() {
         var el = document.querySelector('.pp-live-section');
-        if (el) el.innerHTML = '<div class="pp-loading">Live data unavailable</div>';
+        if (el) el.innerHTML = p.exp7 !== undefined
+          ? '<div class="pp-row"><span class="pp-lbl">Expected arrivals (next 7 days)</span><span class="pp-val">' + p.exp7 + ' vessels</span></div>'
+          : '<div class="pp-loading">Live data unavailable</div>';
       });
   }
 }
@@ -8828,12 +8837,12 @@ function initChokepointsMap() {
     { name:'Shanghai',     country:'China',        lat:31.23, lng:121.48, pre:95,  cur:86  },
     { name:'Busan',        country:'South Korea',  lat:35.10, lng:129.07, pre:85,  cur:77  },
     { name:'Hong Kong',    country:'China',        lat:22.30, lng:114.17, pre:48,  cur:44  },
-    { name:'Singapore',    country:'Singapore',    lat:1.27,  lng:103.50, pre:185, cur:182 },  // slight up: Cape bunkering stop
+    { name:'Singapore',    country:'Singapore',    lat:1.27,  lng:103.50, pre:185, cur:182, exp7:363 },  // slight up: Cape bunkering stop
     { name:'Port Klang',   country:'Malaysia',     lat:2.95,  lng:101.18, pre:75,  cur:68  },
     // ── Indian Ocean waypoint (surging — Cape route stop + congestion) ────────
-    { name:'Colombo',      country:'Sri Lanka',    lat:6.93,  lng:79.84,  pre:58,  cur:106 },  // 42.9% congestion rate (Portcast Jun 2026)
+    { name:'Colombo',      country:'Sri Lanka',    lat:6.93,  lng:79.84,  pre:58,  cur:106, exp7:17 },  // 42.9% congestion rate (Portcast Jun 2026)
     // ── Gulf ports INSIDE Hormuz (collapsed — Hormuz at 11% of pre-crisis) ────
-    { name:'Jebel Ali',    country:'UAE',          lat:24.98, lng:55.05,  pre:62,  cur:11  },  // IMF PortWatch Jun 20-26: 18 container/wk = 18.75% of Oct-2024 pre-crisis 96/wk
+    { name:'Jebel Ali',    country:'UAE',          lat:24.98, lng:55.05,  pre:62,  cur:11,  exp7:3  },  // IMF PortWatch Jun 20-26: 18 container/wk = 18.75% of Oct-2024 pre-crisis 96/wk
     { name:'Bandar Abbas', country:'Iran',         lat:27.20, lng:56.17,  pre:28,  cur:10  },  // IMF: 0 container calls; domestic/military traffic only
     { name:'Khalifa Port', country:'UAE',          lat:24.80, lng:54.58,  pre:22,  cur:4   },  // ~20% pre-crisis (consistent with Jebel Ali)
     { name:'Hamad Port',   country:'Qatar',        lat:24.92, lng:51.56,  pre:18,  cur:4   },  // ~20% pre-crisis
@@ -8841,11 +8850,11 @@ function initChokepointsMap() {
     { name:'Shuwaikh',     country:'Kuwait',       lat:29.36, lng:47.95,  pre:20,  cur:1   },  // IMF Jun 19-26: 0–1 container/wk (data gap risk); pre-crisis 5.1/wk
     { name:'Dammam',       country:'Saudi Arabia', lat:26.47, lng:50.12,  pre:35,  cur:7  },  // IMF Jun 20-26: 5 container/wk = 35% of pre-crisis 14.4/wk
     // ── Gulf OUTSIDE Hormuz (surging — confirmed primary diversion hubs) ─────
-    { name:'Fujairah',     country:'UAE',          lat:25.13, lng:56.33,  pre:14,  cur:38  },  // straits.live: 38 total/24h · Inchcape 5 Jun
+    { name:'Fujairah',     country:'UAE',          lat:25.13, lng:56.33,  pre:14,  cur:38,  exp7:24 },  // straits.live: 38 total/24h · Inchcape 5 Jun
     { name:'Salalah',      country:'Oman',         lat:17.00, lng:54.08,  pre:28,  cur:46  },  // primary Cape-diversion offload hub
     { name:'Sohar',        country:'Oman',         lat:24.37, lng:56.68,  pre:10,  cur:62  },  // straits.live: 40/24h · primary container gateway
     // ── Red Sea ───────────────────────────────────────────────────────────────
-    { name:'Jeddah',       country:'Saudi Arabia', lat:21.47, lng:39.08,  pre:48,  cur:112 },  // VesselFinder Jul 3: 105/24h (+28% vs Jun 7 82/24h baseline)
+    { name:'Jeddah',       country:'Saudi Arabia', lat:21.47, lng:39.08,  pre:48,  cur:112, exp7:11 },  // VesselFinder Jul 3: 105/24h (+28% vs Jun 7 82/24h baseline)
     { name:'Port of NEOM', country:'Saudi Arabia', lat:28.21, lng:35.43,  pre:2,   cur:4   },  // Kpler/Marinelink Jun 2026: RoRo-only, 2 regular vessels, no container activity
     { name:'Port Said',    country:'Egypt',        lat:31.28, lng:32.20,  pre:85,  cur:58  },  // Suez throughput declining; down from 63
     // ── East Africa (Cape route feeder — sustained surge) ─────────────────────
@@ -8854,16 +8863,16 @@ function initChokepointsMap() {
     { name:'Dar es Salaam',country:'Tanzania',     lat:-6.85, lng:39.30,  pre:16,  cur:46  },
     { name:'Maputo',       country:'Mozambique',   lat:-25.97,lng:32.57,  pre:8,   cur:20  },
     // ── Cape route hubs (sustained surge — 8/9 major carriers full Cape) ──────
-    { name:'Durban',       country:'South Africa', lat:-29.87,lng:31.03,  pre:22,  cur:86  },  // VesselFinder Jul 3: 19/24h (+19% vs Jun 7 16/24h baseline)
-    { name:'Cape Town',    country:'South Africa', lat:-33.90,lng:18.40,  pre:18,  cur:50  },
+    { name:'Durban',       country:'South Africa', lat:-29.87,lng:31.03,  pre:22,  cur:86,  exp7:16 },  // VesselFinder Jul 3: 19/24h (+19% vs Jun 7 16/24h baseline)
+    { name:'Cape Town',    country:'South Africa', lat:-33.90,lng:18.40,  pre:18,  cur:50,  exp7:11 },
     { name:'Port Louis',   country:'Mauritius',    lat:-20.16,lng:57.50,  pre:12,  cur:40  },
     // ── West Africa (Cape route waypoints — sustained surge) ──────────────────
     { name:'Lomé',         country:'Togo',         lat:6.13,  lng:1.27,   pre:14,  cur:28  },
     { name:'Ndayane',      country:'Senegal',      lat:14.46, lng:-17.04, pre:5,   cur:16  },
     // ── North Africa / Atlantic gateway (surging — Cape vessels via Gibraltar) ─
-    { name:'Tanger Med',   country:'Morocco',      lat:35.85, lng:-5.48,  pre:52,  cur:110 },  // primary European entry for Cape-routed vessels
+    { name:'Tanger Med',   country:'Morocco',      lat:35.85, lng:-5.48,  pre:52,  cur:110, exp7:1  },  // primary European entry for Cape-routed vessels
     // ── European destination ports (broadly stable) ───────────────────────────
-    { name:'Rotterdam',    country:'Netherlands',  lat:51.91, lng:4.35,   pre:95,  cur:87  },
+    { name:'Rotterdam',    country:'Netherlands',  lat:51.91, lng:4.35,   pre:95,  cur:87,  exp7:62 },
     { name:'Hamburg',      country:'Germany',      lat:53.54, lng:9.85,   pre:55,  cur:50  },
     { name:'Antwerp',      country:'Belgium',      lat:51.22, lng:4.18,   pre:78,  cur:63  },
     { name:'Felixstowe',   country:'UK',           lat:51.95, lng:1.20,   pre:42,  cur:38  },

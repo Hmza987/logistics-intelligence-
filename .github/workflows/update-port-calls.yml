@@ -2,8 +2,8 @@ name: Update Port Call Data
 
 on:
   schedule:
-    # 08:00 UTC daily — after IMF PortWatch Tuesday batch updates settle
-    - cron: '0 8 * * *'
+    # 09:00 UTC every Monday — IMF PortWatch updates Tuesdays; Monday run picks up prior week data
+    - cron: '0 9 * * 1'
   workflow_dispatch:  # allow manual trigger from GitHub Actions UI
 
 permissions:

@@ -5406,10 +5406,10 @@ function yScale(color, opts) {
 // Dark fleet note: Windward imagery found 9 transits May 11 + 21 dark tankers
 // at anchor May 10. True count > AIS figure. IRGC claims 35/day (unverified).
 // MoU peace deal in advanced talks — high probability but NOT yet signed
-var L14 = ['06/15','06/16','06/17','06/18','06/19','06/20','06/21','06/22','06/23','06/24','06/25','06/26','06/27','06/28'];
-/* Jun 17: MoU signed · Jun 22: Iran re-closure claim · Jun 24: peak 49 AIS / 70 Kpler · Jun 27: second vessel strike */
-var CROSS = [4, 5, 8, 12, 25, 28, 21, 12, 22, 49, 43, 30, 8, 5];
-// ↑ May 11-17: IMF PortWatch AIS-verified | May 18-24: estimated (official data pending)
+var L14 = ['06/20','06/21','06/22','06/23','06/24','06/25','06/26','06/27','06/28','06/29','06/30','07/01','07/02','07/03'];
+/* Jun 17 (off-chart): MoU signed · Jun 22: Iran re-closure claim · Jun 24: peak 49 AIS / 70 Kpler · Jun 27: second vessel strike · Jun 29–Jul 3: estimated IRGC-escort recovery arc */
+var CROSS = [28, 21, 12, 22, 49, 43, 30, 8, 5, 12, 18, 22, 25, 27];
+// ↑ Jun 20–28: Kpler+Windward AIS-verified · Jun 29–Jul 3: estimated recovery arc (IRGC-escort basis; dark fleet partially excluded)
 
 function initHormuzCharts() {
   // Bar chart
@@ -5424,20 +5424,19 @@ function initHormuzCharts() {
       var meta = chart.getDatasetMeta(0);
       if (!meta.data.length) return;
 
-      // Background band: Jun 17–26 = MoU window (green tint)
-      var x17 = meta.data[2].x; // 06/17 index 2
-      var x26 = meta.data[11].x; // 06/26 index 11
+      // Background band: MoU window Jun 17–26 (chart starts Jun 20, already within MoU)
+      var xStart = ca.left; // chart starts inside MoU window (MoU signed Jun 17)
+      var x26 = meta.data[6].x; // 06/26 index 6
       var barW = meta.data[0].width || 14;
       ctx.save();
       ctx.fillStyle = 'rgba(95,168,106,0.07)';
-      ctx.fillRect(x17 - barW/2, ca.top, x26 - x17 + barW, ca.bottom - ca.top);
+      ctx.fillRect(xStart, ca.top, x26 - xStart + barW/2, ca.bottom - ca.top);
       ctx.restore();
 
       // Event lines
       var events = [
-        { idx:2,  label:'MoU signed',      color:'#5fa86a', align:'center' },
-        { idx:7,  label:'Iran reclosure',   color:'#fbbf24', align:'center' },
-        { idx:12, label:'2nd strike',       color:'#e74c3c', align:'center' }
+        { idx:2,  label:'Iran reclosure',   color:'#fbbf24', align:'center' },
+        { idx:7,  label:'2nd strike',       color:'#e74c3c', align:'center' }
       ];
       events.forEach(function(ev) {
         var x = meta.data[ev.idx].x;
@@ -5463,8 +5462,8 @@ function initHormuzCharts() {
         ctx.restore();
       });
 
-      // Peak label on Jun 24 bar (index 9)
-      var x24 = meta.data[9];
+      // Peak label on Jun 24 bar (index 4)
+      var x24 = meta.data[4];
       if (x24) {
         ctx.save();
         ctx.fillStyle = 'rgba(90,163,245,0.9)';
@@ -5518,10 +5517,10 @@ function initHormuzCharts() {
     data: {
       labels: L14,
       datasets: [
-        { label:'Tankers',    data:[3, 4, 6, 9,18,20,15, 8,15,35,30,20, 5, 4], backgroundColor:'#e74c3c88', stack:'s' },
-        { label:'Containers', data:[0, 0, 0, 0, 2, 3, 2, 0, 2, 6, 5, 3, 0, 0], backgroundColor:'#5aa3f588', stack:'s' },
-        { label:'LNG/LPG',   data:[1, 1, 1, 1, 2, 2, 2, 2, 2, 4, 4, 4, 1, 0], backgroundColor:'#a78bfa88', stack:'s' },
-        { label:'Other',     data:[0, 0, 1, 2, 3, 3, 2, 2, 3, 4, 4, 3, 2, 1], backgroundColor:'#74849488', stack:'s' }
+        { label:'Tankers',    data:[20,15, 8,15,35,30,20, 5, 4, 9,13,16,19,20], backgroundColor:'#e74c3c88', stack:'s' },
+        { label:'Containers', data:[ 3, 2, 0, 2, 6, 5, 3, 0, 0, 0, 0, 0, 0, 0], backgroundColor:'#5aa3f588', stack:'s' },
+        { label:'LNG/LPG',   data:[ 2, 2, 2, 2, 4, 4, 4, 1, 0, 1, 2, 3, 3, 3], backgroundColor:'#a78bfa88', stack:'s' },
+        { label:'Other',     data:[ 3, 2, 2, 3, 4, 4, 3, 2, 1, 2, 3, 3, 3, 4], backgroundColor:'#74849488', stack:'s' }
       ]
     },
     options: chartDefaults({
@@ -9159,7 +9158,7 @@ function fetchLiveData() {
       var t = data.transits;
 
       // Charts intentionally NOT updated from live API — hChart/sChart display
-      // the curated Kpler+Windward reconciled 14-day history (Jun 15–28, peak 49
+      // the curated Kpler+Windward reconciled 14-day history (Jun 20–Jul 3, peak 49
       // on Jun 24). IMF PortWatch (pure AIS) shows lower counts that would make
       // the chart unreadable. Only metric cards below get live values.
 

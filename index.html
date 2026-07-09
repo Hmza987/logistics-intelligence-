@@ -3789,7 +3789,7 @@ canvas { font-family: var(--f-mono); }
       <!-- BAR CHART -->
       <div class="card">
         <div class="card-label">Strait of Hormuz &mdash; 14-Day Transit Monitor</div>
-        <div class="card-sub">Jun 27&ndash;Jul 8 2026 &middot; Windward AI (satellite+AIS synthesis, dark fleet included) &middot; UNCTAD baseline ~130/day all vessels, both directions &middot; <span style="color:#2dd4bf;font-weight:600">updated daily</span></div>
+        <div class="card-sub">Jun 27&ndash;Jul 8 2026 &middot; Windward AI &middot; <span style="color:#5aa3f5">&#9632; AIS-visible</span> &nbsp;<span style="color:#fbbf24">&#9632; Dark fleet</span> &middot; UNCTAD baseline ~130/day &middot; <span style="color:#2dd4bf;font-weight:600">updated daily</span></div>
         <div style="position:relative;height:200px">
           <canvas id="hChart" role="img" aria-label="Daily Hormuz crossings past 14 days"></canvas>
         </div>
@@ -5469,8 +5469,9 @@ function initHormuzCharts() {
         ctx.restore();
       });
 
-      // Peak label on Jul 6 bar (index 9)
-      var x24 = meta.data[9];
+      // Peak label on Jul 6 bar (index 9) — use dark fleet meta for top-of-stack y
+      var meta2 = chart.getDatasetMeta(1);
+      var x24 = meta2.data[9];
       if (x24) {
         ctx.save();
         ctx.fillStyle = 'rgba(90,163,245,0.9)';
@@ -5486,16 +5487,28 @@ function initHormuzCharts() {
     type: 'bar',
     data: {
       labels: L14,
-      datasets: [{
-        label: 'Daily transits',
-        data: CROSS,
-        backgroundColor: CROSS.map(function(v){ return v<=8?'rgba(192,57,43,0.7)':v<=20?'rgba(217,119,6,0.65)':'rgba(45,125,210,0.55)'; }),
-        borderColor: CROSS.map(function(v){ return v<=8?'#e74c3c':v<=20?'#fbbf24':'#5aa3f5'; }),
-        borderWidth: 1,
-        borderRadius: 2
-      }]
+      datasets: [
+        {
+          label: 'AIS-visible',
+          data: [40,48,36,48,37,40,33,33,38,52,35,35],
+          backgroundColor: 'rgba(45,125,210,0.55)',
+          borderColor: '#5aa3f5',
+          borderWidth: 1,
+          borderRadius: 0,
+          stack: 'h'
+        },
+        {
+          label: 'Dark fleet',
+          data: [4,5,3,3,1,1,5,7,9,10,11,12],
+          backgroundColor: 'rgba(251,191,36,0.75)',
+          borderColor: '#fbbf24',
+          borderWidth: 1,
+          borderRadius: 2,
+          stack: 'h'
+        }
+      ]
     },
-    options: chartDefaults({ x: xScale(), y: yScale(TICK_COLOR, {beginAtZero:true, max:60}) }),
+    options: chartDefaults({ x: xScale(), y: yScale(TICK_COLOR, {beginAtZero:true, max:70}) }),
     plugins: [hAnnotationPlugin]
   });
 

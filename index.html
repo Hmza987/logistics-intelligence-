@@ -5416,8 +5416,8 @@ function yScale(color, opts) {
 // MoU peace deal in advanced talks — high probability but NOT yet signed
 var L14 = ['06/27','06/28','06/29','06/30','07/01','07/02','07/03','07/04','07/05','07/06','07/07','07/08'];
 /* Jun 27: 2nd vessel strike (idx 0) · Jul 6: peak 62 (idx 9) · Windward AI satellite+AIS+dark fleet · updated manually */
-var CROSS = [44, 53, 39, 51, 38, 41, 38, 40, 47, 62, 46, 47];
-// ↑ Windward AI (satellite+AIS synthesis, dark fleet included) — updated manually from insights.windward.ai
+var CROSS = [40, 48, 36, 48, 37, 40, 33, 33, 38, 52, 35, 35];
+// ↑ Windward AI — Total = Inbound + Outbound (dark fleet subset already included within each direction)
 
 function initHormuzCharts() {
   // Bar chart
@@ -5477,7 +5477,7 @@ function initHormuzCharts() {
         ctx.fillStyle = 'rgba(90,163,245,0.9)';
         ctx.font = 'bold 7.5px IBM Plex Mono, monospace';
         ctx.textAlign = 'center';
-        ctx.fillText('62 peak', x24.x, x24.y - 5);
+        ctx.fillText('52 peak', x24.x, x24.y - 5);
         ctx.restore();
       }
     }
@@ -5490,7 +5490,7 @@ function initHormuzCharts() {
       datasets: [
         {
           label: 'AIS-visible',
-          data: [40,48,36,48,37,40,33,33,38,52,35,35],
+          data: [36,43,33,45,36,39,28,26,29,42,24,24],
           backgroundColor: 'rgba(45,125,210,0.55)',
           borderColor: '#5aa3f5',
           borderWidth: 1,
@@ -5499,7 +5499,7 @@ function initHormuzCharts() {
         },
         {
           label: 'Dark fleet',
-          data: [4,5,3,3,1,1,5,7,9,10,11,12],
+          data: [4,5,3,3,1,1,5,7,9,10,11,11],
           backgroundColor: 'rgba(251,191,36,0.75)',
           borderColor: '#fbbf24',
           borderWidth: 1,
@@ -5538,8 +5538,7 @@ function initHormuzCharts() {
       labels: L14,
       datasets: [
         { label:'Inbound',  data:[24,29,16,25,16,19,18,17,17,17,17,17], backgroundColor:'#2dd4bf88', stack:'s' },
-        { label:'Outbound', data:[16,19,20,23,21,21,15,16,21,35,18,18], backgroundColor:'#f9731688', stack:'s' },
-        { label:'Dark',     data:[ 4, 5, 3, 3, 1, 1, 5, 7, 9,10,11,12], backgroundColor:'#fbbf2488', stack:'s' }
+        { label:'Outbound', data:[16,19,20,23,21,21,15,16,21,35,18,18], backgroundColor:'#f9731688', stack:'s' }
       ]
     },
     options: chartDefaults({

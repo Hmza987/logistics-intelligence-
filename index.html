@@ -3789,11 +3789,11 @@ canvas { font-family: var(--f-mono); }
       <!-- BAR CHART -->
       <div class="card">
         <div class="card-label">Strait of Hormuz &mdash; 14-Day Transit Monitor</div>
-        <div class="card-sub">Jun 20&ndash;Jul 3 2026 &middot; Kpler + Windward AIS synthesis &middot; UNCTAD baseline ~130/day (all vessels, both directions) &middot; dark fleet partially excluded</div>
+        <div class="card-sub">Jun 20&ndash;Jul 3 2026 &middot; Kpler + Windward AIS synthesis &middot; UNCTAD baseline ~130/day (all vessels, both directions) &middot; dark fleet partially excluded &middot; <span style="color:#fbbf24;font-weight:600">last verified Jul 3 &mdash; updated manually</span></div>
         <div style="position:relative;height:200px">
           <canvas id="hChart" role="img" aria-label="Daily Hormuz crossings past 14 days"></canvas>
         </div>
-        <div class="src"><span>Kpler (satellite+AIS) &middot; Windward AI &middot; IMF PortWatch &middot; straits.live &middot; Lloyd's List &middot; Jul 3 2026</span><span class="src-badge">real data</span></div>
+        <div class="src"><span>Kpler (satellite+AIS) &middot; Windward AI &middot; IMF PortWatch &middot; straits.live &middot; Lloyd's List</span><span class="src-badge" style="background:rgba(251,191,36,.15);color:#fbbf24;border-color:rgba(251,191,36,.3)">data to jul 3</span></div>
         <div style="margin-top:10px;padding:10px 12px;background:rgba(251,191,36,.06);border:1px solid rgba(251,191,36,.18);border-left:3px solid #fbbf24;border-radius:3px;font-size:10.5px;line-height:1.6;color:#c8a830">
           <span style="font-weight:700;color:#fbbf24;letter-spacing:.03em">&#9888; DATA LIMITATION &mdash; DARK FLEET &amp; AIS GAPS</span><br>
           AIS counts only transmitting vessels. Post-MoU, dark-fleet share fell but did not disappear. <strong style="color:#e8d080">Windward AI (Jun 24)</strong> recorded <strong style="color:#e8d080">49 AIS-visible transits</strong> vs <strong style="color:#e8d080">Kpler's 70</strong> for the same day &mdash; a gap of ~21 vessels transiting dark or with spoofed positions. On <strong style="color:#e8d080">Jun 25</strong>, Windward identified <strong style="color:#e8d080">5 vessels exhibiting IRGC turn-back behaviour</strong> on the southern corridor. The post-Jun 27 count of ~5 AIS-visible likely understates actual traffic by <strong style="color:#e8d080">1.3&ndash;1.8&times;</strong> based on the Jun 24 Kpler/Windward ratio. <strong style="color:#e8d080">Kpler</strong> (satellite + AIS synthesis) remains the most credible independent tracker &mdash; <a href="https://www.kpler.com" target="_blank" rel="noopener" style="color:#e8d080">kpler.com &#8599;</a>.

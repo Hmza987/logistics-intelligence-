@@ -237,8 +237,9 @@ async function main() {
     `hover any port for data &bull; ${labelDate(new Date(end))}`
   );
 
-  // ── Update Hormuz transit chart ─────────────────────────────────────────
-  html = await fetchHormuzTransits(html);
+  // ── Hormuz chart updated manually from Windward AI screenshots ──────────
+  // Re-enable fetchHormuzTransits(html) below to fall back to IMF PortWatch
+  // html = await fetchHormuzTransits(html);
 
   fs.writeFileSync(HTML, html, 'utf8');
   console.log(`Patched ${patchCount} PORT_CALLS entries in index.html`);

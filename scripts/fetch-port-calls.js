@@ -112,6 +112,66 @@ async function fetchWeekly(imfNames, start, end) {
   return totals;
 }
 
+// ── Hormuz transit chart (straits.live public API) ────────────────────────
+async function fetchHormuzTransits(html) {
+  let data;
+  try {
+    data = await fetchJSON('https://straits.live/api/v1/transits?history=1&limit=20');
+  } catch (e) {
+    console.warn('Hormuz API failed:', e.message, '— skipping');
+    return html;
+  }
+
+  const history = (data.history || []).slice().reverse(); // API returns newest-first
+  const recent  = history.slice(-14);
+  if (recent.length < 14) { console.warn('Hormuz: <14 records, skipping'); return html; }
+
+  const MONTHS   = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+  const MONTHSlo = ['jan','feb','mar','apr','may','jun','jul','aug','sep','oct','nov','dec'];
+  const fmt  = iso => { const [,m,d] = iso.split('-').map(Number); return m.toString().padStart(2,'0')+'/'+d.toString().padStart(2,'0'); };
+  const sub  = iso => { const [,m,d] = iso.split('-').map(Number); return MONTHS[m-1]+' '+d; };
+  const badge= iso => { const [,m,d] = iso.split('-').map(Number); return MONTHSlo[m-1]+' '+d; };
+
+  const labels    = recent.map(r => fmt(r.date));
+  const cross     = recent.map(r => r.nTotal);
+  const tankers   = recent.map(r => r.nTanker);
+  const nonTanker = recent.map(r => r.nTotal - r.nTanker);
+  const dates     = recent.map(r => r.date);
+  const peakVal   = Math.max(...cross);
+  const peakIdx   = cross.indexOf(peakVal);
+  const ireclIdx  = dates.indexOf('2026-06-22');
+  const strike2Idx= dates.indexOf('2026-06-27');
+  const mouEndIdx = dates.indexOf('2026-06-26');
+  const year      = recent[0].date.split('-')[0];
+
+  html = html.replace(/var L14 = \[.*?\];/,    `var L14 = [${labels.map(l=>`'${l}'`).join(',')}];`);
+  html = html.replace(/var CROSS = \[.*?\];/,  `var CROSS = [${cross.join(', ')}];`);
+  html = html.replace(/(\{ label:'Tankers',\s*data:\[)[\d,\s]+(\])/, (_,a,b) => `${a}${tankers.join(',')}${b}`);
+  html = html.replace(/(\{ label:'Non-Tanker',\s*data:\[)[\d,\s]+(\])/, (_,a,b) => `${a}${nonTanker.join(',')}${b}`);
+
+  if (ireclIdx  >= 0) html = html.replace(/(\{ idx:)\d+(\s*,\s*label:'Iran reclosure')/, `$1${ireclIdx}$2`);
+  if (strike2Idx>= 0) html = html.replace(/(\{ idx:)\d+(\s*,\s*label:'2nd strike')/,     `$1${strike2Idx}$2`);
+  if (mouEndIdx >= 0) html = html.replace(
+    /var x26 = meta\.data\[\d+\]\.x; \/\/ 06\/26 index \d+/,
+    `var x26 = meta.data[${mouEndIdx}].x; // 06/26 index ${mouEndIdx}`
+  );
+
+  html = html.replace(
+    /\/\/ Peak label on Jun 24 bar \(index \d+\)\n(\s*)var x24 = meta\.data\[\d+\]/,
+    `// Peak label on Jun 24 bar (index ${peakIdx})\n$1var x24 = meta.data[${peakIdx}]`
+  );
+  html = html.replace(/ctx\.fillText\('\d+ peak'/, `ctx.fillText('${peakVal} peak'`);
+
+  html = html.replace(
+    /\w+ \d+&ndash;\w+ \d+ \d{4} &middot; IMF PortWatch/,
+    `${sub(recent[0].date)}&ndash;${sub(recent[recent.length-1].date)} ${year} &middot; IMF PortWatch`
+  );
+  html = html.replace(/data to \w+ \d+/, `data to ${badge(recent[recent.length-1].date)}`);
+
+  console.log(`Hormuz: ${sub(recent[0].date)}–${sub(recent[recent.length-1].date)} · peak ${peakVal}/day (${dates[peakIdx]})`);
+  return html;
+}
+
 async function main() {
   const { start, end } = getQueryWindow();
   const imfNames = [...new Set(Object.values(PORT_MAP))];
@@ -176,6 +236,9 @@ async function main() {
     /hover any port for data &bull; [\d]+ \w+ \d{4}/,
     `hover any port for data &bull; ${labelDate(new Date(end))}`
   );
+
+  // ── Update Hormuz transit chart ─────────────────────────────────────────
+  html = await fetchHormuzTransits(html);
 
   fs.writeFileSync(HTML, html, 'utf8');
   console.log(`Patched ${patchCount} PORT_CALLS entries in index.html`);

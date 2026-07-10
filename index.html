@@ -19321,7 +19321,11 @@ document.addEventListener('keydown', function(e) {
     return STATUS[STATUS.length - 1];
   }
 
+  var _cwDone = false;
+
   window.initCrossingWaits = function () {
+    if (_cwDone) return;
+    _cwDone = true;
     var svc = new google.maps.DistanceMatrixService();
     CROSSINGS.forEach(function (c) {
       svc.getDistanceMatrix({
@@ -19351,6 +19355,13 @@ document.addEventListener('keydown', function(e) {
       });
     });
   };
+
+  // Fallback: Maps API cached → callback may fire before this script runs
+  window.addEventListener('load', function () {
+    if (typeof google !== 'undefined' && google.maps && !_cwDone) {
+      window.initCrossingWaits();
+    }
+  });
 })();
 </script>
 <script async src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAw0u2J875W3L2BgE_go1o5dlY9k130Qv8&callback=initCrossingWaits&loading=async"></script>

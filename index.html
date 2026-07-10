@@ -4254,8 +4254,8 @@ canvas { font-family: var(--f-mono); }
 
 <!-- CROSSING CORRIDOR TRAFFIC -->
 <div style="padding:0 0 16px;display:flex;align-items:baseline;justify-content:space-between">
-  <div style="font-size:11px;font-weight:700;letter-spacing:.18em;color:#5FA86A">CROSSING CORRIDOR TRAFFIC – LIVE STATUS</div>
-  <div style="font-size:9px;color:#3A3A36;letter-spacing:.06em">6 GCC crossing points · click to open live traffic</div>
+  <div style="font-size:11px;font-weight:700;letter-spacing:.18em;color:#5FA86A">CROSSING CORRIDOR TRAFFIC – LIVE TRAFFIC</div>
+  <div style="font-size:9px;color:#3A3A36;letter-spacing:.06em">wait now via Google Maps · trucks/day assessed Jul 2026</div>
 </div>
 <div class="map-section" style="display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-bottom:32px">
 
@@ -4267,7 +4267,7 @@ canvas { font-family: var(--f-mono); }
         <div style="font-size:14px;font-weight:700;letter-spacing:.07em;color:#F2F1ED;margin-bottom:6px">AL BAT'HA</div>
         <div style="font-size:11px;color:#4A4A44;display:flex;align-items:center;gap:5px"><img src="https://flagcdn.com/16x12/sa.png" alt="sa" style="height:10px;width:auto;border-radius:1px;vertical-align:middle"> → <img src="https://flagcdn.com/16x12/ae.png" alt="ae" style="height:10px;width:auto;border-radius:1px;vertical-align:middle"> · Ghumaifat / Al Sila</div>
       </div>
-      <div style="font-size:9px;font-weight:700;letter-spacing:.1em;padding:4px 10px;border-radius:3px;color:#C98A2E;border:1px solid #C98A2E;white-space:nowrap">HEAVY</div>
+      <div id="cpt-albatha-status" style="font-size:9px;font-weight:700;letter-spacing:.1em;padding:4px 10px;border-radius:3px;color:#C98A2E;border:1px solid #C98A2E;white-space:nowrap">HEAVY</div>
     </div>
     <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;border-top:1px solid #1A1A18;padding-top:18px">
       <div><div style="font-size:9px;letter-spacing:.1em;color:#4A4A44;margin-bottom:8px">WAIT NOW</div><div id="cpt-albatha-wait" style="font-size:26px;font-weight:700;color:#F2F1ED;line-height:1">4h+</div></div>
@@ -4284,7 +4284,7 @@ canvas { font-family: var(--f-mono); }
         <div style="font-size:14px;font-weight:700;letter-spacing:.07em;color:#F2F1ED;margin-bottom:6px">KING FAHD CAUSEWAY</div>
         <div style="font-size:11px;color:#4A4A44;display:flex;align-items:center;gap:5px"><img src="https://flagcdn.com/16x12/sa.png" alt="sa" style="height:10px;width:auto;border-radius:1px;vertical-align:middle"> → <img src="https://flagcdn.com/16x12/bh.png" alt="bh" style="height:10px;width:auto;border-radius:1px;vertical-align:middle"> · 26 km bridge · Apr 2026</div>
       </div>
-      <div style="font-size:9px;font-weight:700;letter-spacing:.1em;padding:4px 10px;border-radius:3px;color:#C2A23E;border:1px solid #C2A23E;white-space:nowrap">MODERATE</div>
+      <div id="cpt-kfahd-status" style="font-size:9px;font-weight:700;letter-spacing:.1em;padding:4px 10px;border-radius:3px;color:#C2A23E;border:1px solid #C2A23E;white-space:nowrap">MODERATE</div>
     </div>
     <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;border-top:1px solid #1A1A18;padding-top:18px">
       <div><div style="font-size:9px;letter-spacing:.1em;color:#4A4A44;margin-bottom:8px">WAIT NOW</div><div id="cpt-kfahd-wait" style="font-size:26px;font-weight:700;color:#F2F1ED;line-height:1">3h+</div></div>
@@ -4301,7 +4301,7 @@ canvas { font-family: var(--f-mono); }
         <div style="font-size:14px;font-weight:700;letter-spacing:.07em;color:#F2F1ED;margin-bottom:6px">SALWA BORDER</div>
         <div style="font-size:11px;color:#4A4A44;display:flex;align-items:center;gap:5px"><img src="https://flagcdn.com/16x12/qa.png" alt="qa" style="height:10px;width:auto;border-radius:1px;vertical-align:middle"> → <img src="https://flagcdn.com/16x12/sa.png" alt="sa" style="height:10px;width:auto;border-radius:1px;vertical-align:middle"> · Main land entry</div>
       </div>
-      <div style="font-size:9px;font-weight:700;letter-spacing:.1em;padding:4px 10px;border-radius:3px;color:#C98A2E;border:1px solid #C98A2E;white-space:nowrap">HEAVY</div>
+      <div id="cpt-salwa-status" style="font-size:9px;font-weight:700;letter-spacing:.1em;padding:4px 10px;border-radius:3px;color:#C98A2E;border:1px solid #C98A2E;white-space:nowrap">HEAVY</div>
     </div>
     <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;border-top:1px solid #1A1A18;padding-top:18px">
       <div><div style="font-size:9px;letter-spacing:.1em;color:#4A4A44;margin-bottom:8px">WAIT NOW</div><div id="cpt-salwa-wait" style="font-size:26px;font-weight:700;color:#F2F1ED;line-height:1">ban hrs*</div></div>
@@ -4318,7 +4318,7 @@ canvas { font-family: var(--f-mono); }
         <div style="font-size:14px;font-weight:700;letter-spacing:.07em;color:#F2F1ED;margin-bottom:6px">AL NUWAISEEB</div>
         <div style="font-size:11px;color:#4A4A44;display:flex;align-items:center;gap:5px"><img src="https://flagcdn.com/16x12/kw.png" alt="kw" style="height:10px;width:auto;border-radius:1px;vertical-align:middle"> → <img src="https://flagcdn.com/16x12/sa.png" alt="sa" style="height:10px;width:auto;border-radius:1px;vertical-align:middle"> · Kuwait land lifeline</div>
       </div>
-      <div style="font-size:9px;font-weight:700;letter-spacing:.1em;padding:4px 10px;border-radius:3px;color:#C98A2E;border:1px solid #C98A2E;white-space:nowrap">HEAVY</div>
+      <div id="cpt-nuwaiseeb-status" style="font-size:9px;font-weight:700;letter-spacing:.1em;padding:4px 10px;border-radius:3px;color:#C98A2E;border:1px solid #C98A2E;white-space:nowrap">HEAVY</div>
     </div>
     <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;border-top:1px solid #1A1A18;padding-top:18px">
       <div><div style="font-size:9px;letter-spacing:.1em;color:#4A4A44;margin-bottom:8px">WAIT NOW</div><div id="cpt-nuwaiseeb-wait" style="font-size:26px;font-weight:700;color:#F2F1ED;line-height:1">3h 20m+</div></div>
@@ -4335,7 +4335,7 @@ canvas { font-family: var(--f-mono); }
         <div style="font-size:14px;font-weight:700;letter-spacing:.07em;color:#F2F1ED;margin-bottom:6px">SOHAR PORT – HWY 95</div>
         <div style="font-size:11px;color:#4A4A44;display:flex;align-items:center;gap:5px"><img src="https://flagcdn.com/16x12/om.png" alt="om" style="height:10px;width:auto;border-radius:1px;vertical-align:middle"> → <img src="https://flagcdn.com/16x12/sa.png" alt="sa" style="height:10px;width:auto;border-radius:1px;vertical-align:middle"> · Oman bypass hub</div>
       </div>
-      <div style="font-size:9px;font-weight:700;letter-spacing:.1em;padding:4px 10px;border-radius:3px;color:#E05252;border:1px solid #E05252;white-space:nowrap">CRITICAL</div>
+      <div id="cpt-sohargate-status" style="font-size:9px;font-weight:700;letter-spacing:.1em;padding:4px 10px;border-radius:3px;color:#E05252;border:1px solid #E05252;white-space:nowrap">CRITICAL</div>
     </div>
     <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;border-top:1px solid #1A1A18;padding-top:18px">
       <div><div style="font-size:9px;letter-spacing:.1em;color:#4A4A44;margin-bottom:8px">WAIT NOW</div><div id="cpt-sohargate-wait" style="font-size:26px;font-weight:700;color:#F2F1ED;line-height:1">3h–5h+</div></div>
@@ -4352,7 +4352,7 @@ canvas { font-family: var(--f-mono); }
         <div style="font-size:14px;font-weight:700;letter-spacing:.07em;color:#F2F1ED;margin-bottom:6px">JEDDAH ISLAMIC PORT</div>
         <div style="font-size:11px;color:#4A4A44;display:flex;align-items:center;gap:5px"><img src="https://flagcdn.com/16x12/sa.png" alt="sa" style="height:10px;width:auto;border-radius:1px;vertical-align:middle"> · King Abdul Aziz Port</div>
       </div>
-      <div style="font-size:9px;font-weight:700;letter-spacing:.1em;padding:4px 10px;border-radius:3px;color:#E05252;border:1px solid #E05252;white-space:nowrap">CRITICAL</div>
+      <div id="cpt-jeddahgate-status" style="font-size:9px;font-weight:700;letter-spacing:.1em;padding:4px 10px;border-radius:3px;color:#E05252;border:1px solid #E05252;white-space:nowrap">CRITICAL</div>
     </div>
     <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;border-top:1px solid #1A1A18;padding-top:18px">
       <div><div style="font-size:9px;letter-spacing:.1em;color:#4A4A44;margin-bottom:8px">WAIT NOW</div><div id="cpt-jeddahgate-wait" style="font-size:26px;font-weight:700;color:#F2F1ED;line-height:1">ban hrs*</div></div>
@@ -4362,6 +4362,7 @@ canvas { font-family: var(--f-mono); }
   </div></a>
 
 </div>
+<div style="font-size:9px;color:#3A3A36;margin-top:-20px;margin-bottom:32px;letter-spacing:.04em">WAIT NOW via Google Maps Distance Matrix (live traffic signal) · TRUCKS/DAY &amp; VS PRE-CRISIS: assessed field intel Jul 2026</div>
 
 <!-- FTL TRUCKING PRICES -->
 <div id="ftl-pricing-card" style="margin-bottom:32px">
@@ -4438,7 +4439,7 @@ canvas { font-family: var(--f-mono); }
 <div style="margin-top:32px;border:1px solid #1E1E1C;border-radius:6px;overflow:hidden">
   <div style="padding:12px 16px;border-bottom:1px solid #1A1A18;display:flex;justify-content:space-between;align-items:center">
     <div style="font-size:10px;font-weight:700;letter-spacing:.12em;color:#C9AE4E">GCC LAND CORRIDORS — ACTIVE HIGHWAYS 2026</div>
-    <div style="font-size:9px;color:#3A3A36">click crossing marker for live status</div>
+    <div style="font-size:9px;color:#3A3A36">wait now: Google Maps traffic · trucks/day: assessed Jul 2026</div>
   </div>
   <div id="gcc-corridors-map" style="height:300px;width:100%;background:#060e18"></div>
 </div>
@@ -19288,5 +19289,70 @@ document.addEventListener('keydown', function(e) {
   });
 })();
 </script>
+
+<!-- ── Google Maps Distance Matrix: Crossing Corridor live traffic ──────── -->
+<script>
+(function () {
+  var CROSSINGS = [
+    { id: 'albatha',    origin: '24.1300,51.5500', destination: '24.1300,51.6900' },
+    { id: 'kfahd',      origin: '26.2800,50.2100', destination: '26.2200,50.5200' },
+    { id: 'salwa',      origin: '24.7440,51.0620', destination: '24.7440,50.9550' },
+    { id: 'nuwaiseeb',  origin: '28.8200,47.9700', destination: '28.7440,48.0300' },
+    { id: 'sohargate',  origin: '24.4600,56.7700', destination: '24.3612,56.6834' },
+    { id: 'jeddahgate', origin: '21.5500,39.1300', destination: '21.4908,39.1617' }
+  ];
+
+  var STATUS = [
+    { ratio: 2.5, label: 'CRITICAL', color: '#E05252' },
+    { ratio: 1.8, label: 'HEAVY',    color: '#C98A2E' },
+    { ratio: 1.3, label: 'MODERATE', color: '#C2A23E' },
+    { ratio: 0,   label: 'FLOWING',  color: '#5FA86A' }
+  ];
+
+  function fmt(sec) {
+    var m = Math.round(sec / 60), h = Math.floor(m / 60), r = m % 60;
+    return h > 0 ? h + 'h' + (r ? ' ' + r + 'm' : '') + '+' : m + 'm+';
+  }
+
+  function getStatus(ratio) {
+    for (var i = 0; i < STATUS.length; i++) {
+      if (ratio >= STATUS[i].ratio) return STATUS[i];
+    }
+    return STATUS[STATUS.length - 1];
+  }
+
+  window.initCrossingWaits = function () {
+    var svc = new google.maps.DistanceMatrixService();
+    CROSSINGS.forEach(function (c) {
+      svc.getDistanceMatrix({
+        origins:      [c.origin],
+        destinations: [c.destination],
+        travelMode:   google.maps.TravelMode.DRIVING,
+        drivingOptions: {
+          departureTime: new Date(),
+          trafficModel:  google.maps.TrafficModel.BEST_GUESS
+        }
+      }, function (res, status) {
+        if (status !== 'OK') return;
+        var el = res.rows[0].elements[0];
+        if (el.status !== 'OK') return;
+        var free    = el.duration.value;
+        var traffic = (el.duration_in_traffic || el.duration).value;
+        var ratio   = traffic / free;
+        var st      = getStatus(ratio);
+        var wEl = document.getElementById('cpt-' + c.id + '-wait');
+        var sEl = document.getElementById('cpt-' + c.id + '-status');
+        if (wEl) wEl.textContent = fmt(traffic);
+        if (sEl) {
+          sEl.textContent       = st.label;
+          sEl.style.color       = st.color;
+          sEl.style.borderColor = st.color;
+        }
+      });
+    });
+  };
+})();
+</script>
+<script async src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAw0u2J875W3L2BgE_go1o5dlY9k130Qv8&callback=initCrossingWaits&loading=async"></script>
 </body>
 </html>

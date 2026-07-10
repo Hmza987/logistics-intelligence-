@@ -4362,7 +4362,7 @@ canvas { font-family: var(--f-mono); }
   </div></a>
 
 </div>
-<div style="font-size:9px;color:#3A3A36;margin-top:-20px;margin-bottom:32px;letter-spacing:.04em">EST. WAIT = assessed field baseline (Jul 2026) scaled by Google Maps live congestion ratio · no unified public real-time source exists for GCC crossings · TRUCKS/DAY &amp; VS PRE-CRISIS: assessed field intel Jul 2026</div>
+<div style="font-size:9px;color:#3A3A36;margin-top:-20px;margin-bottom:32px;letter-spacing:.04em">EST. WAIT = assessed field baseline (Jul 2026) × Google Maps live congestion ratio · BAN HRS = Saudi TGA truck movement restriction (source: Saudi Gazette / General Directorate of Traffic) · no unified public real-time crossing API exists</div>
 
 <!-- FTL TRUCKING PRICES -->
 <div id="ftl-pricing-card" style="margin-bottom:32px">
@@ -19293,15 +19293,32 @@ document.addEventListener('keydown', function(e) {
 <!-- ── Google Maps Distance Matrix: Crossing Corridor live traffic ──────── -->
 <script>
 (function () {
-  // baseH = assessed baseline wait time in hours (field intel Jul 2026)
-  // Google Maps congestion ratio scales this up/down dynamically
+  // Saudi Arabia Standard Time = UTC+3, no DST
+  // Returns true if current Gulf time falls within Jeddah truck movement ban
+  // Source: Saudi TGA / General Directorate of Traffic (saudigazette.com.sa)
+  function isJeddahBanHour() {
+    var now  = new Date();
+    var gulf = new Date(now.getTime() + 3 * 3600 * 1000); // UTC+3
+    var h    = gulf.getUTCHours();
+    var d    = gulf.getUTCDay(); // 0=Sun … 4=Thu, 5=Fri, 6=Sat
+    if (d <= 3) // Sun–Wed: banned 09-19 and 21-01
+      return (h >= 9 && h < 19) || h >= 21 || h < 1;
+    if (d === 4) // Thu: banned 09-19 and 21-03
+      return (h >= 9 && h < 19) || h >= 21 || h < 3;
+    if (d === 5) // Fri: banned 16-19 and 21-03
+      return (h >= 16 && h < 19) || h >= 21 || h < 3;
+    // Sat: banned 16-19 and 21-01
+    return (h >= 16 && h < 19) || h >= 21 || h < 1;
+  }
+
+  // baseH = assessed baseline wait (field intel Jul 2026); banCheck = optional ban-hour fn
   var CROSSINGS = [
     { id: 'albatha',    origin: '24.1300,51.5500', destination: '24.1300,51.6900', baseH: 4.0 },
     { id: 'kfahd',      origin: '26.2800,50.2100', destination: '26.2200,50.5200', baseH: 3.0 },
     { id: 'salwa',      origin: '24.7440,51.0620', destination: '24.7440,50.9550', baseH: 3.5 },
     { id: 'nuwaiseeb',  origin: '28.8200,47.9700', destination: '28.7440,48.0300', baseH: 3.3 },
     { id: 'sohargate',  origin: '24.4200,56.7200', destination: '24.3700,56.6900', baseH: 4.0 },
-    { id: 'jeddahgate', origin: '21.5500,39.1300', destination: '21.4908,39.1617', baseH: 4.0 }
+    { id: 'jeddahgate', origin: '21.5500,39.1300', destination: '21.4908,39.1617', baseH: 4.0, banCheck: isJeddahBanHour }
   ];
 
   var STATUS = [
@@ -19356,11 +19373,12 @@ document.addEventListener('keydown', function(e) {
         var st      = getStatus(ratio);
         var wEl = document.getElementById('cpt-' + c.id + '-wait');
         var sEl = document.getElementById('cpt-' + c.id + '-status');
-        if (wEl) wEl.textContent = fmtH(estH);
-        if (sEl) {
-          sEl.textContent       = st.label;
-          sEl.style.color       = st.color;
-          sEl.style.borderColor = st.color;
+        if (c.banCheck && c.banCheck()) {
+          if (wEl) wEl.textContent = 'BAN HRS';
+          if (sEl) { sEl.textContent = 'BANNED'; sEl.style.color = '#E05252'; sEl.style.borderColor = '#E05252'; }
+        } else {
+          if (wEl) wEl.textContent = fmtH(estH);
+          if (sEl) { sEl.textContent = st.label; sEl.style.color = st.color; sEl.style.borderColor = st.color; }
         }
       });
     });

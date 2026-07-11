@@ -19328,15 +19328,13 @@ document.addEventListener('keydown', function(e) {
     { ratio: 0,   label: 'FLOWING',  color: '#5FA86A' }
   ];
 
-  // Format estimated wait (hours float) → "Xh+", "Xh 30m+", "< 1h"
-  function fmtH(h) {
+  // Format estimated wait as a range: lo = est×0.75, hi = est×1.30 (integer hours)
+  // e.g. 4h estimate → "3–6h+"
+  function fmtRange(h) {
     if (h < 1) return '< 1h';
-    var whole = Math.floor(h);
-    var frac  = h - whole;
-    // round fraction to nearest 30 min
-    if (frac < 0.25)      return whole + 'h+';
-    if (frac < 0.75)      return whole + 'h 30m+';
-    return (whole + 1) + 'h+';
+    var lo = Math.max(1, Math.floor(h * 0.75));
+    var hi = Math.ceil(h * 1.30);
+    return lo === hi ? lo + 'h+' : lo + '–' + hi + 'h+';
   }
 
   function getStatus(ratio) {
@@ -19377,7 +19375,7 @@ document.addEventListener('keydown', function(e) {
           if (wEl) wEl.textContent = 'BAN HRS';
           if (sEl) { sEl.textContent = 'BANNED'; sEl.style.color = '#E05252'; sEl.style.borderColor = '#E05252'; }
         } else {
-          if (wEl) wEl.textContent = fmtH(estH);
+          if (wEl) wEl.textContent = fmtRange(estH);
           if (sEl) { sEl.textContent = st.label; sEl.style.color = st.color; sEl.style.borderColor = st.color; }
         }
       });

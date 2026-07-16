@@ -19748,14 +19748,36 @@ window.btClose=function(){
 };
 
 // ── COUNTRY LIST ─────────────────────────────────────────────────────────────
+var BG=[
+  {h:'GCC',     cs:['sau','are','qat','bhr','kwt','omn']},
+  {h:'MENA',    cs:['egy','irq','jor','mar','alg','tun','lby','isr','tur','irn','pak']},
+  {h:'ASIA',    cs:['ind','bgd','lka','chn','jpn','kor','sgp','mys','tha','idn','vnm','phl','kaz']},
+  {h:'EUROPE',  cs:['deu','gbr','fra','ita','esp','nld','bel','swe','che','pol','grc','rus']},
+  {h:'AMERICAS',cs:['usa','can','bra','mex','arg','col','chl','per']},
+  {h:'AFRICA',  cs:['zaf','nga','ken','eth','gha']},
+  {h:'OCEANIA', cs:['aus','nzl']}
+];
 window.btFilter=function(q){bRenderList(q.toLowerCase().trim());};
+function bCItem(c){
+  var sel=(c.c===_S),cls='bt-ci'+(sel?' bt-sel':'')+(!c.has?' bt-dim':'');
+  return '<div class="'+cls+'" onclick="bSel(\''+c.c+'\')">'
+    +'<span style="font-size:15px;line-height:1">'+c.f+'</span>'
+    +'<span style="flex:1">'+c.n+'</span>'
+    +(c.has?'<span style="color:#2A6A2A;font-size:7px">&#9679;</span>':'')
+    +'</div>';
+}
 function bRenderList(q){
-  var h='';
-  BC.forEach(function(c){
-    if(q&&c.n.toLowerCase().indexOf(q)<0)return;
-    var sel=(c.c===_S),cls='bt-ci'+(sel?' bt-sel':'')+(!c.has?' bt-dim':'');
-    h+='<div class="'+cls+'" onclick="bSel(\''+c.c+'\')">'+'<span style="font-size:14px">'+c.f+'</span><span>'+c.n+'</span>'+(c.has?'<span style="color:#2A5C2A;font-size:7px;margin-left:auto">&#9679;</span>':'')+'</div>';
-  });
+  var h='',idx={};BC.forEach(function(c){idx[c.c]=c;});
+  if(q){
+    BC.forEach(function(c){if(c.n.toLowerCase().indexOf(q)>=0)h+=bCItem(c);});
+  } else {
+    BG.forEach(function(g){
+      var rows=g.cs.map(function(code){return idx[code];}).filter(Boolean);
+      if(!rows.length)return;
+      h+='<div style="padding:8px 14px 3px;font-size:7.5px;font-weight:700;letter-spacing:.2em;color:#2A2A28;font-family:var(--f-mono)">'+g.h+'</div>';
+      rows.forEach(function(c){h+=bCItem(c);});
+    });
+  }
   document.getElementById('bt-clist').innerHTML=h||'<div style="padding:12px 14px;font-size:9px;color:#3A3A36;font-family:var(--f-mono)">No matches</div>';
 }
 
@@ -19793,65 +19815,138 @@ window.btTab=function(name){
 // ── OVERVIEW ─────────────────────────────────────────────────────────────────
 function bRenderOv(d){
   var t=d.totals,pMax=d.partners[0].total;
+  var fmap={china:'🇨🇳',india:'🇮🇳',japan:'🇯🇵'};
+  var h='';
+
+  // ── 4 KPI cards ────────────────────────────────────────────────────────────
   var kpis=[
-    {l:'TOTAL TRADE',   v:bFmt(t.total),   c:'#C8C7C2'},
-    {l:'EXPORTS',       v:bFmt(t.exports),  c:'#5aa3f5'},
-    {l:'IMPORTS',       v:bFmt(t.imports),  c:'#C98A2E'},
-    {l:'TRADE BALANCE', v:(t.balance>0?'+':'')+bFmt(t.balance), c:t.balance>0?'#4A9E6A':'#E05252'}
+    {l:'TOTAL TRADE',   v:bFmt(t.total),   c:'#C8C7C2', sub:'all partners · 2024'},
+    {l:'EXPORTS',       v:bFmt(t.exports),  c:'#5aa3f5', sub:(t.exports/t.total*100).toFixed(1)+'% of total trade'},
+    {l:'IMPORTS',       v:bFmt(t.imports),  c:'#d97706', sub:(t.imports/t.total*100).toFixed(1)+'% of total trade'},
+    {l:'TRADE BALANCE', v:(t.balance>0?'+':'')+bFmt(t.balance), c:'#4A9E6A', sub:'KSA net surplus'}
   ];
-  var h='<div style="display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:#1A1A18;border:1px solid #1A1A18;border-radius:6px;overflow:hidden;margin-bottom:28px">';
+  h+='<div style="display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:#181816;border:1px solid #1E1E1C;border-radius:6px;overflow:hidden;margin-bottom:36px">';
   kpis.forEach(function(k){
-    h+='<div style="background:#111110;padding:18px 20px"><div style="font-size:9px;font-weight:700;letter-spacing:.14em;color:#4A4A44;font-family:var(--f-mono);margin-bottom:6px">'+k.l+'</div><div style="font-size:23px;font-weight:700;color:'+k.c+';letter-spacing:-.02em;line-height:1">'+k.v+'</div></div>';
-  });
-  h+='</div><div style="display:grid;grid-template-columns:1fr 1fr;gap:32px">';
-  // Partners
-  h+='<div><div style="font-size:9px;font-weight:700;letter-spacing:.14em;color:#4A4A44;font-family:var(--f-mono);margin-bottom:16px">TOP TRADING PARTNERS &middot; 2024</div>';
-  d.partners.forEach(function(p){
-    var pct=(p.total/t.total*100).toFixed(1),bar=(p.total/pMax*100).toFixed(1);
-    h+='<div style="margin-bottom:18px"><div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:5px"><span style="font-size:12px;color:#C8C7C2;font-family:var(--f-mono)">'+p.name+'</span><span style="font-size:9px;color:#6A6A62;font-family:var(--f-mono)">'+bFmt(p.total)+'&nbsp;&nbsp;'+pct+'%</span></div><div style="height:5px;background:#1A1A18;border-radius:2px;overflow:hidden"><div style="width:'+bar+'%;height:100%;background:#5aa3f5;border-radius:2px"></div></div><div style="display:flex;gap:16px;margin-top:5px"><span style="font-size:9px;color:#2E6E4E;font-family:var(--f-mono)">&#8679;&nbsp;'+bFmt(p.exports)+'</span><span style="font-size:9px;color:#6E3E1A;font-family:var(--f-mono)">&#8681;&nbsp;'+bFmt(p.imports)+'</span></div></div>';
+    h+='<div style="background:#111110;padding:22px 22px 18px">'
+      +'<div style="font-size:8px;font-weight:700;letter-spacing:.18em;color:#333331;font-family:var(--f-mono);margin-bottom:10px">'+k.l+'</div>'
+      +'<div style="font-size:32px;font-weight:700;color:'+k.c+';letter-spacing:-.03em;line-height:1;font-family:var(--f-mono)">'+k.v+'</div>'
+      +'<div style="font-size:8px;color:#282826;font-family:var(--f-mono);margin-top:8px">'+k.sub+'</div>'
+      +'</div>';
   });
   h+='</div>';
-  // Type breakdown
-  h+='<div>';
-  [['EXPORT COMPOSITION',d.expByType,t.exports],['IMPORT COMPOSITION',d.impByType,t.imports]].forEach(function(row){
-    var lbl=row[0],byT=row[1],total=row[2];
-    var order=['Oil-Based','Oil-Adjacent','Non-Oil'];
-    h+='<div style="font-size:9px;font-weight:700;letter-spacing:.14em;color:#4A4A44;font-family:var(--f-mono);margin-bottom:12px;margin-top:20px">'+lbl+'</div>';
-    h+='<div style="display:flex;height:10px;border-radius:3px;overflow:hidden;margin-bottom:14px">';
-    order.forEach(function(k){h+='<div style="width:'+(byT[k]/total*100).toFixed(2)+'%;background:'+TC[k]+';opacity:.82"></div>';});
-    h+='</div>';
-    order.forEach(function(k){
-      var pct=(byT[k]/total*100).toFixed(1);
-      h+='<div style="display:flex;align-items:center;gap:10px;margin-bottom:9px"><div style="width:8px;height:8px;border-radius:2px;background:'+TC[k]+';flex-shrink:0"></div><span style="font-size:10px;color:#C8C7C2;font-family:var(--f-mono);flex:1">'+k+'</span><span style="font-size:10px;color:#5A5A52;font-family:var(--f-mono)">'+bFmt(byT[k])+'</span><span style="font-size:9px;color:#3A3A36;font-family:var(--f-mono);width:38px;text-align:right">'+pct+'%</span></div>';
-    });
+
+  // ── Trading partners ────────────────────────────────────────────────────────
+  h+='<div style="margin-bottom:36px">';
+  h+='<div style="font-size:8px;font-weight:700;letter-spacing:.2em;color:#333331;font-family:var(--f-mono);padding-bottom:12px;border-bottom:1px solid #191917;margin-bottom:22px">TOP TRADING PARTNERS</div>';
+  d.partners.forEach(function(p){
+    var flag=fmap[p.name.toLowerCase()]||'';
+    var pct=(p.total/t.total*100).toFixed(1);
+    var barW=(p.total/pMax*100).toFixed(1);
+    var expFrac=(p.exports/p.total*100).toFixed(0);
+    var impFrac=(p.imports/p.total*100).toFixed(0);
+    h+='<div style="margin-bottom:26px">'
+      // name row
+      +'<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px">'
+      +'<div style="display:flex;align-items:center;gap:10px">'
+      +(flag?'<span style="font-size:20px;line-height:1">'+flag+'</span>':'')
+      +'<span style="font-size:15px;font-weight:700;color:#C8C7C2;font-family:var(--f-mono)">'+p.name+'</span>'
+      +'</div>'
+      +'<div style="display:flex;align-items:baseline;gap:10px">'
+      +'<span style="font-size:20px;font-weight:700;color:#C8C7C2;font-family:var(--f-mono)">'+bFmt(p.total)+'</span>'
+      +'<span style="font-size:9px;color:#3A3A36;font-family:var(--f-mono)">'+pct+'% of total</span>'
+      +'</div></div>'
+      // split bar
+      +'<div style="height:8px;background:#141412;border-radius:2px;overflow:hidden;margin-bottom:8px">'
+      +'<div style="width:'+barW+'%;height:100%;display:flex">'
+      +'<div style="width:'+expFrac+'%;background:#5aa3f5;opacity:.85"></div>'
+      +'<div style="width:'+impFrac+'%;background:#d97706;opacity:.75"></div>'
+      +'</div></div>'
+      // exp / imp split
+      +'<div style="display:flex;gap:24px">'
+      +'<span style="font-size:9px;color:#3A6A54;font-family:var(--f-mono)">&#8599; exports &nbsp;'+bFmt(p.exports)+'</span>'
+      +'<span style="font-size:9px;color:#6A4A24;font-family:var(--f-mono)">&#8600; imports &nbsp;'+bFmt(p.imports)+'</span>'
+      +'</div></div>';
   });
-  h+='</div></div><div style="margin-top:22px;font-size:8px;color:#252523;font-family:var(--f-mono)">Source: OEC World &middot; BACI database &middot; 2024 trade flows &middot; HS4 product classification</div>';
+  h+='</div>';
+
+  // ── Composition 2-col ───────────────────────────────────────────────────────
+  h+='<div style="display:grid;grid-template-columns:1fr 1fr;gap:32px">';
+  [
+    {lbl:'EXPORT COMPOSITION',byT:d.expByType,total:t.exports,ord:['Oil-Based','Oil-Adjacent','Non-Oil']},
+    {lbl:'IMPORT COMPOSITION',byT:d.impByType,total:t.imports,ord:['Non-Oil','Oil-Adjacent','Oil-Based']}
+  ].forEach(function(sec){
+    h+='<div>';
+    h+='<div style="font-size:8px;font-weight:700;letter-spacing:.2em;color:#333331;font-family:var(--f-mono);padding-bottom:10px;border-bottom:1px solid #191917;margin-bottom:16px">'+sec.lbl+'</div>';
+    h+='<div style="display:flex;height:10px;border-radius:3px;overflow:hidden;margin-bottom:18px;background:#141412">';
+    sec.ord.forEach(function(k){h+='<div style="width:'+(sec.byT[k]/sec.total*100).toFixed(2)+'%;background:'+TC[k]+';opacity:.85"></div>';});
+    h+='</div>';
+    sec.ord.forEach(function(k){
+      var pct=(sec.byT[k]/sec.total*100).toFixed(1);
+      h+='<div style="display:flex;align-items:center;gap:12px;margin-bottom:13px">'
+        +'<div style="width:3px;height:32px;background:'+TC[k]+';border-radius:2px;flex-shrink:0;opacity:.9"></div>'
+        +'<div style="flex:1">'
+        +'<div style="font-size:10px;color:#A8A8A2;font-family:var(--f-mono);margin-bottom:2px">'+k+'</div>'
+        +'<div style="font-size:9px;color:#4A4A44;font-family:var(--f-mono)">'+bFmt(sec.byT[k])+'&ensp;·&ensp;'+pct+'%</div>'
+        +'</div></div>';
+    });
+    h+='</div>';
+  });
+  h+='</div>';
+
+  h+='<div style="margin-top:28px;padding-top:14px;border-top:1px solid #141412;font-size:8px;color:#202020;font-family:var(--f-mono)">Source: OEC World &middot; BACI database &middot; 2024 trade flows &middot; HS4 product classification</div>';
   document.getElementById('bt-pov').innerHTML=h;
 }
 
 // ── PRODUCTS ─────────────────────────────────────────────────────────────────
+// BD is IIFE-scoped — use this global wrapper from inline onclick handlers
+window.btPf=function(pf){ if(BD[_S])bRenderPr(BD[_S],pf); };
+
 window.bRenderPr=function(d,pf){
   _PF=pf;
-  var ps=[{id:'all',n:'ALL PARTNERS'},{id:'chn',n:'CHINA'},{id:'ind',n:'INDIA'},{id:'jpn',n:'JAPAN'}];
+  var ps=[
+    {id:'all',n:'All Partners',f:''},
+    {id:'chn',n:'China',       f:'🇨🇳'},
+    {id:'ind',n:'India',       f:'🇮🇳'},
+    {id:'jpn',n:'Japan',       f:'🇯🇵'}
+  ];
   var exps=pf==='all'?d.topExports:(d.bpE[pf]||[]);
   var imps=pf==='all'?d.topImports:(d.bpI[pf]||[]);
   var maxE=exps.length?exps[0].v:1,maxI=imps.length?imps[0].v:1;
-  var h='<div style="display:flex;gap:6px;margin-bottom:24px">';
+
+  var h='<div style="display:flex;gap:6px;margin-bottom:28px;flex-wrap:wrap">';
   ps.forEach(function(p){
     var a=(p.id===pf);
-    h+='<button onclick="bRenderPr(BD[\''+_S+'\'],\''+p.id+'\')" style="font-size:9px;font-weight:700;letter-spacing:.1em;padding:5px 14px;border-radius:3px;cursor:pointer;font-family:var(--f-mono);border:1px solid '+(a?'rgba(201,174,78,.5)':'#222220')+';background:'+(a?'rgba(201,174,78,.1)':'transparent')+';color:'+(a?'#C9AE4E':'#4A4A44')+'">'+p.n+'</button>';
+    h+='<button onclick="btPf(\''+p.id+'\')" style="font-size:9px;font-weight:700;letter-spacing:.1em;padding:7px 18px;border-radius:3px;cursor:pointer;font-family:var(--f-mono);border:1px solid '
+      +(a?'rgba(201,174,78,.45)':'#222220')
+      +';background:'+(a?'rgba(201,174,78,.09)':'transparent')
+      +';color:'+(a?'#C9AE4E':'#4A4A44')+'">'
+      +(p.f?p.f+'&nbsp; ':'')+p.n+'</button>';
   });
-  h+='</div><div style="display:grid;grid-template-columns:1fr 1fr;gap:36px">';
-  function mkB(items,maxV,clr){
-    var bh='<div style="font-size:9px;font-weight:700;letter-spacing:.14em;color:'+clr+';font-family:var(--f-mono);margin-bottom:14px">'+(clr==='#5aa3f5'?'TOP EXPORTS':'TOP IMPORTS')+'</div>';
-    items.slice(0,15).forEach(function(p){
+  h+='</div><div style="display:grid;grid-template-columns:1fr 1fr;gap:40px">';
+
+  function mkBars(items,maxV,isExp){
+    var hdr=isExp?'TOP EXPORTS':'TOP IMPORTS';
+    var hdrC=isExp?'#5aa3f5':'#d97706';
+    var bh='<div style="font-size:8px;font-weight:700;letter-spacing:.2em;color:'+hdrC
+          +';font-family:var(--f-mono);padding-bottom:10px;border-bottom:1px solid #191917;margin-bottom:18px">'+hdr+'</div>';
+    items.slice(0,15).forEach(function(p,i){
       var nm=p.n||p.name||'',tp=p.t||p.type||'Non-Oil',vl=p.v||p.value||0;
-      var w=(vl/maxV*100).toFixed(1),c=TC[tp]||'#5aa3f5';
-      bh+='<div style="margin-bottom:9px"><div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:3px"><span style="font-size:9px;color:#C8C7C2;font-family:var(--f-mono);max-width:62%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">'+nm+'</span><span style="font-size:9px;color:#5A5A52;font-family:var(--f-mono)">'+bFmt(vl)+'</span></div><div style="height:4px;background:#1A1A18;border-radius:2px;overflow:hidden"><div style="width:'+w+'%;height:100%;background:'+c+';opacity:.82;border-radius:2px"></div></div></div>';
+      var w=Math.max(1,(vl/maxV*100)).toFixed(1),c=TC[tp]||'#5aa3f5';
+      var rank=(i<9?'0':'')+(i+1);
+      bh+='<div style="margin-bottom:14px">'
+        +'<div style="display:flex;align-items:center;gap:8px;margin-bottom:5px">'
+        +'<span style="font-size:8px;color:#282826;font-family:var(--f-mono);flex-shrink:0;width:16px">'+rank+'</span>'
+        +'<div style="width:3px;height:16px;background:'+c+';border-radius:1px;flex-shrink:0;opacity:.9"></div>'
+        +'<span style="font-size:10px;color:#C8C7C2;font-family:var(--f-mono);flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">'+nm+'</span>'
+        +'<span style="font-size:10px;color:#5A5A52;font-family:var(--f-mono);flex-shrink:0">'+bFmt(vl)+'</span>'
+        +'</div>'
+        +'<div style="margin-left:24px;height:5px;background:#141412;border-radius:2px;overflow:hidden">'
+        +'<div style="width:'+w+'%;height:100%;background:'+c+';opacity:.8;border-radius:2px"></div>'
+        +'</div></div>';
     });
     return bh;
   }
-  h+='<div>'+mkB(exps,maxE,'#5aa3f5')+'</div><div>'+mkB(imps,maxI,'#C98A2E')+'</div></div>';
+  h+='<div>'+mkBars(exps,maxE,true)+'</div><div>'+mkBars(imps,maxI,false)+'</div></div>';
   document.getElementById('bt-ppr').innerHTML=h;
 };
 
@@ -19875,17 +19970,30 @@ function bRenderMx(d){
     type:'scatter',
     data:{datasets:datasets},
     plugins:[{
+      beforeDraw:function(chart){
+        var cx=chart.ctx,xs=chart.scales.x,ys=chart.scales.y,ca=chart.chartArea;
+        cx.save();
+        var x0=xs.getPixelForValue(0),y1=ys.getPixelForValue(1);
+        // Q1 top-right: competitive & complex (faint blue tint)
+        cx.fillStyle='rgba(90,163,245,0.03)';
+        cx.fillRect(x0,ca.top,ca.right-x0,y1-ca.top);
+        // Q4 bottom-right: commodity dominance (faint red tint)
+        cx.fillStyle='rgba(231,76,60,0.03)';
+        cx.fillRect(x0,y1,ca.right-x0,ca.bottom-y1);
+        cx.restore();
+      },
       afterDraw:function(chart){
         var cx=chart.ctx,xs=chart.scales.x,ys=chart.scales.y,ca=chart.chartArea;
-        cx.save();cx.strokeStyle='rgba(255,255,255,0.09)';cx.lineWidth=1;cx.setLineDash([4,4]);
-        var x0=xs.getPixelForValue(0);
+        cx.save();
+        var x0=xs.getPixelForValue(0),y1=ys.getPixelForValue(1);
+        cx.strokeStyle='rgba(255,255,255,0.1)';cx.lineWidth=1;cx.setLineDash([5,5]);
         cx.beginPath();cx.moveTo(x0,ca.top);cx.lineTo(x0,ca.bottom);cx.stroke();
-        var y1=ys.getPixelForValue(1);
         cx.beginPath();cx.moveTo(ca.left,y1);cx.lineTo(ca.right,y1);cx.stroke();
-        cx.fillStyle='rgba(255,255,255,0.05)';cx.font='8px monospace';
-        cx.fillText('COMPETITIVE ADVANTAGE',x0+8,ca.top+12);
-        cx.fillText('VISION 2030 TARGETS',ca.left+6,ca.top+12);
-        cx.fillText('COMMODITY BASE',x0+8,ca.bottom-8);
+        cx.setLineDash([]);
+        cx.font='700 8px monospace';cx.fillStyle='rgba(255,255,255,0.1)';
+        cx.fillText('COMPETITIVE ADVANTAGE ▸', x0+10, ca.top+14);
+        cx.fillText('◂ VISION 2030 TARGETS',   ca.left+6, ca.top+14);
+        cx.fillText('COMMODITY BASE ▸',          x0+10, ca.bottom-8);
         cx.restore();
       }
     }],

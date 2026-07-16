@@ -9247,9 +9247,10 @@ function fetchLiveData() {
           }) + ' GST';
       }
 
-      // ── Extend hChart to today with live AIS estimate ────────────────────
-      // Appends gap-day (null) bars + today's amber bar when the baked-in
-      // L14 series ends before today (IMF PortWatch has a ~4-day publication lag).
+      // ── Append today's AIS estimate bar to hChart ────────────────────────
+      // Gap days (IMF publication lag ~4 days) are intentionally omitted —
+      // only today's amber bar is added so the chart shows verified IMF data
+      // up to jul 12, then jumps directly to today's live AIS count.
       var hInst = CHARTS && CHARTS['hChart'];
       if (hInst && L14.length && t.today != null) {
         // Guard: only extend once (chart still shows only the baked-in 14 bars)
@@ -9260,43 +9261,34 @@ function fetchLiveData() {
           var diffDays = Math.floor((nowUTC.getTime() - lastDt.getTime()) / 86400000);
 
           if (diffDays > 0 && diffDays <= 10) {
-            var xLabels = [];
-            var xVals   = [];
-            for (var gd = 1; gd <= diffDays; gd++) {
-              var gd2 = new Date(lastDt.getTime() + gd * 86400000);
-              xLabels.push(
-                (gd2.getUTCMonth() + 1).toString().padStart(2, '0') + '/' +
-                gd2.getUTCDate().toString().padStart(2, '0')
-              );
-              xVals.push(gd < diffDays ? null : t.today); // nulls for gap, live count for today
-            }
+            // Only today — no gap-day placeholders
+            var todayLbl = (nowUTC.getUTCMonth() + 1).toString().padStart(2, '0') + '/' +
+                           nowUTC.getUTCDate().toString().padStart(2, '0');
 
             var hds     = hInst.data.datasets[0];
-            hInst.data.labels = hInst.data.labels.concat(xLabels);
-            var allD    = Array.prototype.slice.call(hds.data).concat(xVals);
+            hInst.data.labels = hInst.data.labels.concat([todayLbl]);
+            var allD    = Array.prototype.slice.call(hds.data).concat([t.today]);
             var origLen = L14.length;
             hds.data    = allD;
             hds.backgroundColor = allD.map(function(v, i) {
-              if (v === null)   return 'rgba(0,0,0,0)';
               if (i >= origLen) return 'rgba(217,119,6,0.55)';  // amber = AIS live
               return v <= 8 ? 'rgba(192,57,43,0.7)' : v <= 20 ? 'rgba(217,119,6,0.65)' : 'rgba(45,125,210,0.55)';
             });
             hds.borderColor = allD.map(function(v, i) {
-              if (v === null)   return 'rgba(0,0,0,0)';
               if (i >= origLen) return '#f59e0b';
               return v <= 8 ? '#e74c3c' : v <= 20 ? '#fbbf24' : '#5aa3f5';
             });
             hInst.update();
 
-            // Update "data to …" badge
+            // Update "data to …" badge to amber
             var hBadge = document.getElementById('h-badge');
             if (hBadge) {
-              var todayParts = xLabels[xLabels.length - 1].split('/');
+              var tp   = todayLbl.split('/');
               var mons = ['jan','feb','mar','apr','may','jun','jul','aug','sep','oct','nov','dec'];
-              hBadge.style.background    = 'rgba(217,119,6,0.15)';
-              hBadge.style.color         = '#f59e0b';
-              hBadge.style.borderColor   = 'rgba(217,119,6,0.4)';
-              hBadge.textContent = 'data to ' + mons[parseInt(todayParts[0], 10) - 1] + ' ' + parseInt(todayParts[1], 10) + ' · AIS est.';
+              hBadge.style.background  = 'rgba(217,119,6,0.15)';
+              hBadge.style.color       = '#f59e0b';
+              hBadge.style.borderColor = 'rgba(217,119,6,0.4)';
+              hBadge.textContent = 'data to ' + mons[parseInt(tp[0], 10) - 1] + ' ' + parseInt(tp[1], 10) + ' · AIS est.';
             }
           }
         }

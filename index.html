@@ -4914,6 +4914,12 @@ canvas { font-family: var(--f-mono); }
 
   </div>
 
+  <!-- ── BILATERAL TRADE EXPLORER CTA ──────────────────────────────────────── -->
+  <div style="background:#0C0C0A;border-bottom:1px solid #181816;padding:10px 28px;display:flex;align-items:center;justify-content:space-between">
+    <button onclick="btOpen()" style="font-size:9px;font-weight:700;letter-spacing:.16em;color:#C9AE4E;background:rgba(201,174,78,.07);border:1px solid rgba(201,174,78,.28);padding:9px 20px;border-radius:3px;cursor:pointer;font-family:var(--f-mono);transition:background .15s">&#9670;&nbsp;&nbsp;EXPLORE BILATERAL TRADE</button>
+    <span style="font-size:9px;color:#2A2A28;font-family:var(--f-mono)">OEC &middot; BACI &middot; 2024</span>
+  </div>
+
   <div style="padding:0 28px 28px">
 
     <!-- ── KPI SUMMARY STRIP ─────────────────────────────────────────────── -->
@@ -19438,5 +19444,478 @@ document.addEventListener('keydown', function(e) {
 })();
 </script>
 <script async src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAw0u2J875W3L2BgE_go1o5dlY9k130Qv8&callback=initCrossingWaits&loading=async"></script>
+
+<!-- ══════════════════════════════════════════════════════════════════
+     BILATERAL TRADE EXPLORER
+     ══════════════════════════════════════════════════════════════════ -->
+<style>
+.bt-tab-btn{font-size:9px;font-weight:700;letter-spacing:.14em;padding:14px 22px;border:none;background:none;color:#4A4A44;cursor:pointer;font-family:var(--f-mono);border-bottom:2px solid transparent;margin-bottom:-1px;transition:color .15s}
+.bt-tab-btn:hover{color:#8A8A7E}
+.bt-tab-btn.bt-on{color:#C9AE4E;border-bottom-color:#C9AE4E}
+.bt-ci{display:flex;align-items:center;gap:9px;padding:7px 14px;font-size:10px;font-family:var(--f-mono);cursor:pointer;color:#6A6A62;border-left:2px solid transparent;transition:all .1s;white-space:nowrap}
+.bt-ci:hover{background:#111110;color:#C8C7C2}
+.bt-ci.bt-sel{background:#0F0F0D;color:#C9AE4E;border-left-color:#C9AE4E}
+.bt-ci.bt-dim{opacity:.35;cursor:default}
+.bt-ci.bt-dim:hover{background:none;color:#6A6A62}
+</style>
+
+<div id="bt-overlay" style="display:none;position:fixed;inset:0;z-index:99000;background:#090909;flex-direction:column">
+  <div style="background:#0D0D0B;border-bottom:1px solid #1E1E1C;padding:0 24px;height:52px;display:flex;align-items:center;justify-content:space-between;flex-shrink:0">
+    <div style="display:flex;align-items:center;gap:18px">
+      <span style="font-size:9px;font-weight:700;letter-spacing:.2em;color:#C9AE4E;font-family:var(--f-mono)">BILATERAL TRADE EXPLORER</span>
+      <span id="bt-ctag" style="font-size:9px;color:#4A4A44;font-family:var(--f-mono)"></span>
+    </div>
+    <div style="display:flex;align-items:center;gap:20px">
+      <span style="font-size:9px;color:#282826;font-family:var(--f-mono)">OEC &middot; BACI &middot; 2024 vintage</span>
+      <button onclick="btClose()" style="background:none;border:1px solid #2A2A28;color:#5A5A52;font-size:18px;width:30px;height:30px;border-radius:3px;cursor:pointer;line-height:1;font-family:var(--f-mono)">&times;</button>
+    </div>
+  </div>
+  <div style="display:flex;flex:1;overflow:hidden">
+    <div style="width:226px;flex-shrink:0;background:#0A0A09;border-right:1px solid #1A1A18;display:flex;flex-direction:column;overflow:hidden">
+      <div style="padding:10px 12px;border-bottom:1px solid #141412;flex-shrink:0">
+        <input id="bt-srch" oninput="btFilter(this.value)" placeholder="Search country…" autocomplete="off"
+          style="width:100%;box-sizing:border-box;background:#111110;border:1px solid #222220;color:#C8C7C2;font-size:10px;padding:7px 10px;border-radius:3px;font-family:var(--f-mono);outline:none">
+      </div>
+      <div id="bt-clist" style="flex:1;overflow-y:auto;padding:6px 0"></div>
+    </div>
+    <div style="flex:1;overflow:hidden;display:flex;flex-direction:column">
+      <div style="background:#0D0D0B;border-bottom:1px solid #1E1E1C;padding:0 28px;display:flex;flex-shrink:0">
+        <button id="bt-tb-ov" class="bt-tab-btn bt-on" onclick="btTab('ov')">OVERVIEW</button>
+        <button id="bt-tb-pr" class="bt-tab-btn" onclick="btTab('pr')">TOP PRODUCTS</button>
+        <button id="bt-tb-mx" class="bt-tab-btn" onclick="btTab('mx')">COMPLEXITY MATRIX</button>
+      </div>
+      <div id="bt-empty" style="flex:1;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:14px">
+        <div style="font-size:28px;color:#222220">&#8592;</div>
+        <div style="font-size:9px;letter-spacing:.18em;color:#2A2A28;font-family:var(--f-mono)">SELECT A COUNTRY</div>
+      </div>
+      <div id="bt-cs" style="display:none;flex:1;align-items:center;justify-content:center;flex-direction:column;gap:12px">
+        <div style="font-size:9px;letter-spacing:.18em;color:#3A3A36;font-family:var(--f-mono)">DATA COMING SOON</div>
+        <div style="font-size:9px;color:#2A2A28;font-family:var(--f-mono);text-align:center;line-height:1.9;max-width:220px">Trade data for this country will be added in a future release.</div>
+      </div>
+      <div id="bt-pov" style="display:none;flex:1;overflow-y:auto;padding:28px 32px"></div>
+      <div id="bt-ppr" style="display:none;flex:1;overflow-y:auto;padding:28px 32px"></div>
+      <div id="bt-pmx" style="display:none;flex:1;overflow-y:auto;padding:24px 32px">
+        <div id="bt-mleg" style="display:flex;gap:18px;align-items:center;margin-bottom:16px"></div>
+        <div style="position:relative;height:460px;max-width:880px"><canvas id="bt-sc"></canvas></div>
+        <div style="margin-top:12px;font-size:8px;color:#2E2E2C;font-family:var(--f-mono);line-height:2">X &mdash; Product Complexity Index (PCI) &nbsp;&middot;&nbsp; Y &mdash; Revealed Comparative Advantage (RCA) &nbsp;&middot;&nbsp; Dot size &mdash; global export value &nbsp;&middot;&nbsp; Dashed lines: PCI&nbsp;=&nbsp;0 &nbsp;|&nbsp; RCA&nbsp;=&nbsp;1</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+(function(){
+// ── DATA ─────────────────────────────────────────────────────────────────────
+var BD={'sau':{
+  year:2024,
+  totals:{exports:118084215370,imports:76842922887,total:194927138257,balance:41241292483},
+  partners:[
+    {name:'China', exports:57305502565,imports:55139835813,total:112445338378},
+    {name:'India', exports:30931018457,imports:13571746018,total:44502764475},
+    {name:'Japan', exports:29847694348,imports:8131341056, total:37979035404}
+  ],
+  topExports:[
+    {n:'Crude Petroleum',      t:'Oil-Based',    v:96264539160},
+    {n:'Petroleum Gas',        t:'Oil-Based',    v:3323538836},
+    {n:'Ethylene Polymers',    t:'Oil-Adjacent', v:2934980260},
+    {n:'Acyclic Alcohols',     t:'Oil-Adjacent', v:2682537750},
+    {n:'Aircraft',             t:'Non-Oil',      v:1491453734},
+    {n:'Fertilizers',          t:'Oil-Adjacent', v:1200953989},
+    {n:'Scrap Copper',         t:'Non-Oil',      v:874926122},
+    {n:'Refined Petroleum',    t:'Oil-Based',    v:833030655},
+    {n:'Cyclic Hydrocarbons',  t:'Oil-Adjacent', v:828866067},
+    {n:'Copper Ore',           t:'Non-Oil',      v:620542966},
+    {n:'Propylene Polymers',   t:'Oil-Adjacent', v:572531092},
+    {n:'Petroleum Coke',       t:'Oil-Based',    v:535024253},
+    {n:'Gold',                 t:'Non-Oil',      v:524671018},
+    {n:'Special Purpose Ships',t:'Non-Oil',      v:441638164},
+    {n:'Scrap Aluminium',      t:'Non-Oil',      v:420470161}
+  ],
+  topImports:[
+    {n:'Cars',                   t:'Non-Oil',      v:10983133268},
+    {n:'Telephones',             t:'Non-Oil',      v:6715352111},
+    {n:'Aircraft',               t:'Non-Oil',      v:1898625948},
+    {n:'Computers',              t:'Non-Oil',      v:1836022670},
+    {n:'Hot-Rolled Iron',        t:'Non-Oil',      v:1824054028},
+    {n:'Delivery Trucks',        t:'Non-Oil',      v:1763551516},
+    {n:'Semiconductor Devices',  t:'Non-Oil',      v:1722653656},
+    {n:'Rice',                   t:'Non-Oil',      v:1435985206},
+    {n:'Air Conditioners',       t:'Non-Oil',      v:1350814233},
+    {n:'Electrical Transformers',t:'Non-Oil',      v:1097571050},
+    {n:'Rubber Tires',           t:'Oil-Adjacent', v:1060703909},
+    {n:'Other Toys',             t:'Non-Oil',      v:788843228},
+    {n:'Other Furniture',        t:'Non-Oil',      v:770387311},
+    {n:'Light Fixtures',         t:'Non-Oil',      v:756595299},
+    {n:'Construction Vehicles',  t:'Non-Oil',      v:740621351}
+  ],
+  bpE:{
+    chn:[{n:'Crude Petroleum',t:'Oil-Based',v:47910307938},{n:'Ethylene Polymers',t:'Oil-Adjacent',v:2121576122},{n:'Acyclic Alcohols',t:'Oil-Adjacent',v:1989179665},{n:'Petroleum Gas',t:'Oil-Based',v:912993816},{n:'Copper Ore',t:'Non-Oil',v:620542966},{n:'Special Purpose Ships',t:'Non-Oil',v:441638164},{n:'Cyclic Hydrocarbons',t:'Oil-Adjacent',v:315402582},{n:'Scrap Copper',t:'Non-Oil',v:301956777},{n:'Polyacetals',t:'Oil-Adjacent',v:227767334},{n:'Propylene Polymers',t:'Oil-Adjacent',v:185055666}],
+    ind:[{n:'Crude Petroleum',t:'Oil-Based',v:19606881973},{n:'Petroleum Gas',t:'Oil-Based',v:2395444044},{n:'Aircraft',t:'Non-Oil',v:1490550749},{n:'Fertilizers',t:'Oil-Adjacent',v:1200725405},{n:'Ethylene Polymers',t:'Oil-Adjacent',v:761613196},{n:'Cyclic Hydrocarbons',t:'Oil-Adjacent',v:513463485},{n:'Gold',t:'Non-Oil',v:503669057},{n:'Acyclic Alcohols',t:'Oil-Adjacent',v:480570076},{n:'Scrap Copper',t:'Non-Oil',v:387452237},{n:'Scrap Aluminium',t:'Non-Oil',v:382982187}],
+    jpn:[{n:'Crude Petroleum',t:'Oil-Based',v:28747349249},{n:'Refined Petroleum',t:'Oil-Based',v:330975603},{n:'Acyclic Alcohols',t:'Oil-Adjacent',v:212788009},{n:'Scrap Copper',t:'Non-Oil',v:185517108},{n:'Raw Aluminium',t:'Non-Oil',v:117949643},{n:'Titanium',t:'Non-Oil',v:56112393},{n:'Ethylene Polymers',t:'Oil-Adjacent',v:51790942},{n:'Petroleum Gas',t:'Oil-Based',v:15100976},{n:'Polyacetals',t:'Oil-Adjacent',v:14824369},{n:'Ammonia',t:'Oil-Adjacent',v:14473419}]
+  },
+  bpI:{
+    chn:[{n:'Telephones',t:'Non-Oil',v:6378050933},{n:'Cars',t:'Non-Oil',v:4949933065},{n:'Computers',t:'Non-Oil',v:1825220474},{n:'Semiconductor Devices',t:'Non-Oil',v:1721307704},{n:'Hot-Rolled Iron',t:'Non-Oil',v:1703617040},{n:'Air Conditioners',t:'Non-Oil',v:1329349183},{n:'Electrical Transformers',t:'Non-Oil',v:995985645},{n:'Delivery Trucks',t:'Non-Oil',v:958301856},{n:'Rubber Tires',t:'Oil-Adjacent',v:852117521},{n:'Other Toys',t:'Non-Oil',v:788402894}],
+    ind:[{n:'Aircraft',t:'Non-Oil',v:1532876625},{n:'Rice',t:'Non-Oil',v:1432781573},{n:'Cars',t:'Non-Oil',v:1306042518},{n:'Cyclic Hydrocarbons',t:'Oil-Adjacent',v:630521987},{n:'Copper Wire',t:'Non-Oil',v:497087004},{n:'Jewellery',t:'Non-Oil',v:370164556},{n:'Refined Petroleum',t:'Oil-Based',v:356581015},{n:'Telephones',t:'Non-Oil',v:332373727},{n:'Construction Vehicles',t:'Non-Oil',v:319418367},{n:'Frozen Bovine Meat',t:'Non-Oil',v:291869409}],
+    jpn:[{n:'Cars',t:'Non-Oil',v:4727157685},{n:'Delivery Trucks',t:'Non-Oil',v:593973157},{n:'Vehicle Parts',t:'Non-Oil',v:287510346},{n:'Rubber Tires',t:'Oil-Adjacent',v:140069132},{n:'Air Pumps',t:'Non-Oil',v:108870402},{n:'Hot-Rolled Iron',t:'Non-Oil',v:100615581},{n:'Packaged Medicaments',t:'Non-Oil',v:89329451},{n:'Liquid Pumps',t:'Non-Oil',v:73607727},{n:'Buses',t:'Non-Oil',v:60872545},{n:'Iron Pipes',t:'Non-Oil',v:59201353}]
+  },
+  expByType:{'Non-Oil':6005188781,'Oil-Adjacent':11110648491,'Oil-Based':100968378098},
+  impByType:{'Non-Oil':70878240787,'Oil-Adjacent':5412733925,'Oil-Based':551948175},
+  scatter:[
+    {n:'Crude Petroleum',      t:'Oil-Based',    r:10.525,p:-2.522,g:186873882791},
+    {n:'Refined Petroleum',    t:'Oil-Based',    r:2.442, p:-1.069,g:28938103790},
+    {n:'Ethylene Polymers',    t:'Oil-Adjacent', r:9.688, p:-0.18, g:11199907361},
+    {n:'Telephones',           t:'Non-Oil',      r:0.823, p:0.674, g:6554983987},
+    {n:'Propylene Polymers',   t:'Oil-Adjacent', r:8.396, p:0.288, g:5135750319},
+    {n:'Acyclic Alcohols',     t:'Oil-Adjacent', r:9.698, p:-0.434,g:4800453777},
+    {n:'Petroleum Gas',        t:'Oil-Based',    r:0.704, p:-1.908,g:4493021385},
+    {n:'Fertilizers',          t:'Oil-Adjacent', r:6.627, p:-1.314,g:3344771651},
+    {n:'Other Sea Vessels',    t:'Non-Oil',      r:31.292,p:-0.749,g:3214639117},
+    {n:'Cyclic Hydrocarbons',  t:'Oil-Adjacent', r:5.09,  p:0.485, g:2903494982},
+    {n:'Special Purpose Ships',t:'Non-Oil',      r:8.452, p:-1.746,g:2291271878},
+    {n:'Gold',                 t:'Non-Oil',      r:0.246, p:-2.487,g:1938826267},
+    {n:'Nitrogenous Fertilizers',t:'Oil-Adjacent',r:3.591,p:-1.404,g:1660731116},
+    {n:'Ethers',               t:'Oil-Adjacent', r:7.414, p:-0.161,g:1613088514},
+    {n:'Aircraft',             t:'Non-Oil',      r:0.751, p:0.746, g:1523007928},
+    {n:'Scrap Copper',         t:'Non-Oil',      r:2.739, p:-1.001,g:1407944203},
+    {n:'Polyacetals',          t:'Oil-Adjacent', r:1.305, p:0.789, g:1158608121},
+    {n:'Tug Boats',            t:'Non-Oil',      r:19.173,p:-1.159,g:1095857097},
+    {n:'Ammonia',              t:'Oil-Adjacent', r:9.567, p:-1.383,g:1093203846},
+    {n:'Cars',                 t:'Non-Oil',      r:0.079, p:0.964, g:1029836860},
+    {n:'Aluminium Plating',    t:'Non-Oil',      r:1.558, p:0.456, g:854537723},
+    {n:'Raw Aluminium',        t:'Non-Oil',      r:0.766, p:-1.562,g:814613363},
+    {n:'Unsaturated Acyclic Acids',t:'Oil-Adjacent',r:5.038,p:1.243,g:729193617},
+    {n:'Coal Tar Oil',         t:'Oil-Based',    r:1.664, p:0.207, g:718363321},
+    {n:'Jewellery',            t:'Non-Oil',      r:0.411, p:-0.192,g:676658176},
+    {n:'Synthetic Rubber',     t:'Oil-Adjacent', r:1.75,  p:0.381, g:665531917},
+    {n:'Raw Plastic Sheeting', t:'Oil-Adjacent', r:0.739, p:0.233, g:652735014},
+    {n:'Passenger Ships',      t:'Non-Oil',      r:0.577, p:-0.936,g:639865276},
+    {n:'Copper Ore',           t:'Non-Oil',      r:0.449, p:-2.163,g:637504168},
+    {n:'Petroleum Coke',       t:'Oil-Based',    r:1.743, p:-1.35, g:601755720},
+    {n:'Alkylbenzenes',        t:'Non-Oil',      r:16.33, p:-0.087,g:594286163},
+    {n:'Scrap Aluminium',      t:'Non-Oil',      r:1.923, p:-0.777,g:586485804},
+    {n:'Amino-resins',         t:'Oil-Adjacent', r:2.019, p:1.117, g:559376561},
+    {n:'Insulated Wire',       t:'Non-Oil',      r:0.236, p:-0.39, g:549940536},
+    {n:'Packaged Medicaments', t:'Non-Oil',      r:0.081, p:0.689, g:522966528},
+    {n:'Sulphur',              t:'Oil-Adjacent', r:7.972, p:-1.905,g:500901062},
+    {n:'Spark-Ignition Engines',t:'Non-Oil',     r:0.683, p:0.89,  g:483939127},
+    {n:'Tropical Fruits',      t:'Non-Oil',      r:1.719, p:-1.85, g:454604504},
+    {n:'Baked Goods',          t:'Non-Oil',      r:0.578, p:-0.197,g:452093499},
+    {n:'Cleaning Products',    t:'Non-Oil',      r:0.816, p:-0.208,g:436420450},
+    {n:'Sulfur (high purity)', t:'Oil-Adjacent', r:35,    p:-1.363,g:419283947},
+    {n:'Pasta',                t:'Non-Oil',      r:1.737, p:-1.059,g:382963182},
+    {n:'Saturated Acyclic Acids',t:'Oil-Adjacent',r:1.762,p:0.881, g:378912239},
+    {n:'Oxygen Amino Compounds',t:'Oil-Adjacent',r:1.639, p:0.675, g:353546727},
+    {n:'Paper Containers',     t:'Non-Oil',      r:0.87,  p:-0.337,g:350567820},
+    {n:'Other Engines',        t:'Non-Oil',      r:0.923, p:0.983, g:342436462},
+    {n:'Flavored Water',       t:'Non-Oil',      r:0.841, p:-0.478,g:340944693},
+    {n:'Engine Parts',         t:'Non-Oil',      r:0.338, p:0.966, g:325679450},
+    {n:'Iron Pipes',           t:'Non-Oil',      r:0.84,  p:0.474, g:324354105},
+    {n:'Concentrated Milk',    t:'Non-Oil',      r:1.095, p:-0.507,g:320608969},
+    {n:'Fruit Juice',          t:'Non-Oil',      r:1.118, p:-0.893,g:305024858},
+    {n:'Gas Turbines',         t:'Non-Oil',      r:0.112, p:1.0,   g:299226364},
+    {n:'Cement',               t:'Non-Oil',      r:1.506, p:-1.602,g:292721450},
+    {n:'Nitrogen Compounds',   t:'Oil-Adjacent', r:3.579, p:1.171, g:290056111},
+    {n:'Acrylic Polymers',     t:'Oil-Adjacent', r:1.082, p:1.205, g:278455427},
+    {n:'Styrene Polymers',     t:'Oil-Adjacent', r:0.995, p:0.771, g:271051238},
+    {n:'Stranded Copper Wire', t:'Non-Oil',      r:6.717, p:0.183, g:259497280},
+    {n:'Reaction Products',    t:'Non-Oil',      r:0.793, p:0.838, g:246417288},
+    {n:'Hot-Rolled Iron',      t:'Non-Oil',      r:0.249, p:0.533, g:230883644},
+    {n:'Amine Compounds',      t:'Oil-Adjacent', r:1.512, p:1.199, g:228236832},
+    {n:'Phenols',              t:'Oil-Adjacent', r:2.496, p:1.217, g:185625975},
+    {n:'Titanium',             t:'Non-Oil',      r:1.6,   p:0.332, g:184022775},
+    {n:'Raw Lead',             t:'Non-Oil',      r:1.519, p:-1.523,g:177994468},
+    {n:'Halogenated Hydrocarbons',t:'Oil-Adjacent',r:0.975,p:0.951,g:147650126},
+    {n:'Non-woven Textiles',   t:'Non-Oil',      r:0.566, p:0.801, g:133300262},
+    {n:'Ketones',              t:'Oil-Adjacent', r:1.426, p:1.295, g:132027478},
+    {n:'Work Trucks',          t:'Non-Oil',      r:3.952, p:0.9,   g:117826998},
+    {n:'Valves',               t:'Non-Oil',      r:0.072, p:1.312, g:109471238},
+    {n:'Cyclic Alcohols',      t:'Oil-Adjacent', r:2.832, p:0.637, g:89726452},
+    {n:'Epoxides',             t:'Oil-Adjacent', r:1.843, p:1.422, g:84044895},
+    {n:'Surveying Equipment',  t:'Non-Oil',      r:0.54,  p:0.418, g:78751391},
+    {n:'Aluminium Foil',       t:'Non-Oil',      r:0.36,  p:0.853, g:76532047},
+    {n:'Interchangeable Tools',t:'Non-Oil',      r:0.218, p:1.747, g:66783996},
+    {n:'Electric Batteries',   t:'Non-Oil',      r:0.033, p:1.454, g:66294818},
+    {n:'Carboxyamide Compounds',t:'Oil-Adjacent',r:0.579, p:1.259, g:65993364},
+    {n:'Iron Pipe Fittings',   t:'Non-Oil',      r:0.173, p:1.162, g:52091882},
+    {n:'Float Glass',          t:'Non-Oil',      r:1.232, p:-0.405,g:95612826},
+    {n:'Textile Processing Machines',t:'Non-Oil',r:0.71,  p:1.167, g:96111835},
+    {n:'Cement Articles',      t:'Non-Oil',      r:0.416, p:0.374, g:60368831},
+    {n:'Scrap Nickel',         t:'Non-Oil',      r:2.974, p:0.08,  g:53218911},
+    {n:'Fairground Rides',     t:'Non-Oil',      r:2.149, p:0.852, g:60521024},
+    {n:'Synthetic Monofilament',t:'Non-Oil',     r:2.043, p:0.622, g:41924350},
+    {n:'Cast Iron Pipes',      t:'Non-Oil',      r:1.351, p:-0.58, g:31461858},
+    {n:'Pig Iron',             t:'Non-Oil',      r:0.959, p:-1.944,g:61433003},
+    {n:'Precious Metal Watches',t:'Non-Oil',     r:0.417, p:0.512, g:96821850},
+    {n:'Aluminium Bars',       t:'Non-Oil',      r:0.685, p:0.149, g:191237943},
+    {n:'Sand',                 t:'Non-Oil',      r:1.72,  p:-0.876,g:57861016},
+    {n:'Dyeing Agents',        t:'Non-Oil',      r:1.022, p:0.518, g:68758644},
+    {n:'Soap',                 t:'Non-Oil',      r:0.482, p:-0.618,g:102109845},
+    {n:'Oxygen Heterocyclic',  t:'Oil-Adjacent', r:0.222, p:0.917, g:30092082},
+    {n:'Nitrogen Heterocyclic',t:'Oil-Adjacent', r:0.034, p:1.369, g:35626503},
+    {n:'Medical Instruments',  t:'Non-Oil',      r:0.023, p:0.808, g:53822798},
+    {n:'Gas Flow Instruments', t:'Non-Oil',      r:0.067, p:1.242, g:25527649},
+    {n:'Chemical Analysis Instr.',t:'Non-Oil',   r:0.033, p:1.674, g:24687683},
+    {n:'Cranes',               t:'Non-Oil',      r:0.258, p:1.049, g:61922808},
+    {n:'Machinery (Individual Functions)',t:'Non-Oil',r:0.028,p:1.668,g:37064923},
+    {n:'Electrical Ignitions', t:'Non-Oil',      r:0.108, p:1.093, g:32654170},
+    {n:'High-Voltage Equipment',t:'Non-Oil',     r:0.223, p:0.905, g:37203276},
+    {n:'Air Pumps',            t:'Non-Oil',      r:0.054, p:1.208, g:68993600},
+    {n:'Liquid Pumps',         t:'Non-Oil',      r:0.072, p:1.292, g:74549638},
+    {n:'Centrifuges',          t:'Non-Oil',      r:0.104, p:1.015, g:129595605}
+  ]
+}};
+
+// ── COUNTRIES ────────────────────────────────────────────────────────────────
+var BC=[
+  {c:'sau',n:'Saudi Arabia',        f:'🇸🇦',has:true},
+  {c:'are',n:'UAE',                 f:'🇦🇪',has:false},
+  {c:'qat',n:'Qatar',               f:'🇶🇦',has:false},
+  {c:'bhr',n:'Bahrain',             f:'🇧🇭',has:false},
+  {c:'kwt',n:'Kuwait',              f:'🇰🇼',has:false},
+  {c:'omn',n:'Oman',                f:'🇴🇲',has:false},
+  {c:'egy',n:'Egypt',               f:'🇪🇬',has:false},
+  {c:'irq',n:'Iraq',                f:'🇮🇶',has:false},
+  {c:'jor',n:'Jordan',              f:'🇯🇴',has:false},
+  {c:'mar',n:'Morocco',             f:'🇲🇦',has:false},
+  {c:'alg',n:'Algeria',             f:'🇩🇿',has:false},
+  {c:'tun',n:'Tunisia',             f:'🇹🇳',has:false},
+  {c:'lby',n:'Libya',               f:'🇱🇾',has:false},
+  {c:'isr',n:'Israel',              f:'🇮🇱',has:false},
+  {c:'tur',n:'Turkey',              f:'🇹🇷',has:false},
+  {c:'irn',n:'Iran',                f:'🇮🇷',has:false},
+  {c:'pak',n:'Pakistan',            f:'🇵🇰',has:false},
+  {c:'ind',n:'India',               f:'🇮🇳',has:false},
+  {c:'bgd',n:'Bangladesh',          f:'🇧🇩',has:false},
+  {c:'lka',n:'Sri Lanka',           f:'🇱🇰',has:false},
+  {c:'chn',n:'China',               f:'🇨🇳',has:false},
+  {c:'jpn',n:'Japan',               f:'🇯🇵',has:false},
+  {c:'kor',n:'South Korea',         f:'🇰🇷',has:false},
+  {c:'sgp',n:'Singapore',           f:'🇸🇬',has:false},
+  {c:'mys',n:'Malaysia',            f:'🇲🇾',has:false},
+  {c:'tha',n:'Thailand',            f:'🇹🇭',has:false},
+  {c:'idn',n:'Indonesia',           f:'🇮🇩',has:false},
+  {c:'vnm',n:'Vietnam',             f:'🇻🇳',has:false},
+  {c:'phl',n:'Philippines',         f:'🇵🇭',has:false},
+  {c:'kaz',n:'Kazakhstan',          f:'🇰🇿',has:false},
+  {c:'deu',n:'Germany',             f:'🇩🇪',has:false},
+  {c:'gbr',n:'United Kingdom',      f:'🇬🇧',has:false},
+  {c:'fra',n:'France',              f:'🇫🇷',has:false},
+  {c:'ita',n:'Italy',               f:'🇮🇹',has:false},
+  {c:'esp',n:'Spain',               f:'🇪🇸',has:false},
+  {c:'nld',n:'Netherlands',         f:'🇳🇱',has:false},
+  {c:'bel',n:'Belgium',             f:'🇧🇪',has:false},
+  {c:'swe',n:'Sweden',              f:'🇸🇪',has:false},
+  {c:'che',n:'Switzerland',         f:'🇨🇭',has:false},
+  {c:'pol',n:'Poland',              f:'🇵🇱',has:false},
+  {c:'grc',n:'Greece',              f:'🇬🇷',has:false},
+  {c:'rus',n:'Russia',              f:'🇷🇺',has:false},
+  {c:'usa',n:'United States',       f:'🇺🇸',has:false},
+  {c:'can',n:'Canada',              f:'🇨🇦',has:false},
+  {c:'bra',n:'Brazil',              f:'🇧🇷',has:false},
+  {c:'mex',n:'Mexico',              f:'🇲🇽',has:false},
+  {c:'arg',n:'Argentina',           f:'🇦🇷',has:false},
+  {c:'col',n:'Colombia',            f:'🇨🇴',has:false},
+  {c:'chl',n:'Chile',               f:'🇨🇱',has:false},
+  {c:'per',n:'Peru',                f:'🇵🇪',has:false},
+  {c:'zaf',n:'South Africa',        f:'🇿🇦',has:false},
+  {c:'nga',n:'Nigeria',             f:'🇳🇬',has:false},
+  {c:'ken',n:'Kenya',               f:'🇰🇪',has:false},
+  {c:'eth',n:'Ethiopia',            f:'🇪🇹',has:false},
+  {c:'gha',n:'Ghana',               f:'🇬🇭',has:false},
+  {c:'aus',n:'Australia',           f:'🇦🇺',has:false},
+  {c:'nzl',n:'New Zealand',         f:'🇳🇿',has:false}
+];
+
+// ── STATE ────────────────────────────────────────────────────────────────────
+var _S=null, _T='ov', _PF='all', _SC=null;
+
+// ── HELPERS ──────────────────────────────────────────────────────────────────
+function bFmt(v){if(v>=1e9)return'$'+(v/1e9).toFixed(1)+'B';if(v>=1e6)return'$'+(v/1e6).toFixed(0)+'M';return'$'+(v/1e3).toFixed(0)+'K';}
+function bRad(g){var lo=Math.log(5e6),hi=Math.log(2e11);var n=(Math.log(Math.max(g,5e6))-lo)/(hi-lo);return Math.max(3,Math.min(16,3+n*13));}
+var TC={'Oil-Based':'#e74c3c','Oil-Adjacent':'#d97706','Non-Oil':'#5aa3f5'};
+var TC2={'Oil-Based':'rgba(231,76,60,.7)','Oil-Adjacent':'rgba(217,119,6,.7)','Non-Oil':'rgba(90,163,245,.65)'};
+
+// ── OPEN / CLOSE ─────────────────────────────────────────────────────────────
+window.btOpen=function(){
+  var el=document.getElementById('bt-overlay');
+  el.style.display='flex';
+  bRenderList('');
+  bSel('sau');
+};
+window.btClose=function(){
+  document.getElementById('bt-overlay').style.display='none';
+  if(_SC){_SC.destroy();_SC=null;}
+};
+
+// ── COUNTRY LIST ─────────────────────────────────────────────────────────────
+window.btFilter=function(q){bRenderList(q.toLowerCase().trim());};
+function bRenderList(q){
+  var h='';
+  BC.forEach(function(c){
+    if(q&&c.n.toLowerCase().indexOf(q)<0)return;
+    var sel=(c.c===_S),cls='bt-ci'+(sel?' bt-sel':'')+(!c.has?' bt-dim':'');
+    h+='<div class="'+cls+'" onclick="bSel(\''+c.c+'\')">'+'<span style="font-size:14px">'+c.f+'</span><span>'+c.n+'</span>'+(c.has?'<span style="color:#2A5C2A;font-size:7px;margin-left:auto">&#9679;</span>':'')+'</div>';
+  });
+  document.getElementById('bt-clist').innerHTML=h||'<div style="padding:12px 14px;font-size:9px;color:#3A3A36;font-family:var(--f-mono)">No matches</div>';
+}
+
+window.bSel=function(code){
+  _S=code;
+  bRenderList(document.getElementById('bt-srch').value.toLowerCase().trim());
+  var ctry=BC.filter(function(c){return c.c===code;})[0];
+  if(ctry)document.getElementById('bt-ctag').textContent='&#9658; '+ctry.n;
+  var emp=document.getElementById('bt-empty'),cs=document.getElementById('bt-cs');
+  var d=BD[code];
+  if(!d){
+    emp.style.display='none';cs.style.display='flex';
+    ['ov','pr','mx'].forEach(function(t){document.getElementById('bt-p'+t).style.display='none';});
+    return;
+  }
+  emp.style.display='none';cs.style.display='none';
+  btTab(_T);
+};
+
+// ── TAB SWITCHING ────────────────────────────────────────────────────────────
+window.btTab=function(name){
+  _T=name;
+  ['ov','pr','mx'].forEach(function(t){
+    var btn=document.getElementById('bt-tb-'+t),pane=document.getElementById('bt-p'+t);
+    if(t===name){btn.className='bt-tab-btn bt-on';pane.style.display='block';}
+    else{btn.className='bt-tab-btn';pane.style.display='none';}
+  });
+  if(!BD[_S])return;
+  var d=BD[_S];
+  if(name==='ov')bRenderOv(d);
+  else if(name==='pr')bRenderPr(d,_PF);
+  else if(name==='mx')bRenderMx(d);
+};
+
+// ── OVERVIEW ─────────────────────────────────────────────────────────────────
+function bRenderOv(d){
+  var t=d.totals,pMax=d.partners[0].total;
+  var kpis=[
+    {l:'TOTAL TRADE',   v:bFmt(t.total),   c:'#C8C7C2'},
+    {l:'EXPORTS',       v:bFmt(t.exports),  c:'#5aa3f5'},
+    {l:'IMPORTS',       v:bFmt(t.imports),  c:'#C98A2E'},
+    {l:'TRADE BALANCE', v:(t.balance>0?'+':'')+bFmt(t.balance), c:t.balance>0?'#4A9E6A':'#E05252'}
+  ];
+  var h='<div style="display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:#1A1A18;border:1px solid #1A1A18;border-radius:6px;overflow:hidden;margin-bottom:28px">';
+  kpis.forEach(function(k){
+    h+='<div style="background:#111110;padding:18px 20px"><div style="font-size:9px;font-weight:700;letter-spacing:.14em;color:#4A4A44;font-family:var(--f-mono);margin-bottom:6px">'+k.l+'</div><div style="font-size:23px;font-weight:700;color:'+k.c+';letter-spacing:-.02em;line-height:1">'+k.v+'</div></div>';
+  });
+  h+='</div><div style="display:grid;grid-template-columns:1fr 1fr;gap:32px">';
+  // Partners
+  h+='<div><div style="font-size:9px;font-weight:700;letter-spacing:.14em;color:#4A4A44;font-family:var(--f-mono);margin-bottom:16px">TOP TRADING PARTNERS &middot; 2024</div>';
+  d.partners.forEach(function(p){
+    var pct=(p.total/t.total*100).toFixed(1),bar=(p.total/pMax*100).toFixed(1);
+    h+='<div style="margin-bottom:18px"><div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:5px"><span style="font-size:12px;color:#C8C7C2;font-family:var(--f-mono)">'+p.name+'</span><span style="font-size:9px;color:#6A6A62;font-family:var(--f-mono)">'+bFmt(p.total)+'&nbsp;&nbsp;'+pct+'%</span></div><div style="height:5px;background:#1A1A18;border-radius:2px;overflow:hidden"><div style="width:'+bar+'%;height:100%;background:#5aa3f5;border-radius:2px"></div></div><div style="display:flex;gap:16px;margin-top:5px"><span style="font-size:9px;color:#2E6E4E;font-family:var(--f-mono)">&#8679;&nbsp;'+bFmt(p.exports)+'</span><span style="font-size:9px;color:#6E3E1A;font-family:var(--f-mono)">&#8681;&nbsp;'+bFmt(p.imports)+'</span></div></div>';
+  });
+  h+='</div>';
+  // Type breakdown
+  h+='<div>';
+  [['EXPORT COMPOSITION',d.expByType,t.exports],['IMPORT COMPOSITION',d.impByType,t.imports]].forEach(function(row){
+    var lbl=row[0],byT=row[1],total=row[2];
+    var order=['Oil-Based','Oil-Adjacent','Non-Oil'];
+    h+='<div style="font-size:9px;font-weight:700;letter-spacing:.14em;color:#4A4A44;font-family:var(--f-mono);margin-bottom:12px;margin-top:20px">'+lbl+'</div>';
+    h+='<div style="display:flex;height:10px;border-radius:3px;overflow:hidden;margin-bottom:14px">';
+    order.forEach(function(k){h+='<div style="width:'+(byT[k]/total*100).toFixed(2)+'%;background:'+TC[k]+';opacity:.82"></div>';});
+    h+='</div>';
+    order.forEach(function(k){
+      var pct=(byT[k]/total*100).toFixed(1);
+      h+='<div style="display:flex;align-items:center;gap:10px;margin-bottom:9px"><div style="width:8px;height:8px;border-radius:2px;background:'+TC[k]+';flex-shrink:0"></div><span style="font-size:10px;color:#C8C7C2;font-family:var(--f-mono);flex:1">'+k+'</span><span style="font-size:10px;color:#5A5A52;font-family:var(--f-mono)">'+bFmt(byT[k])+'</span><span style="font-size:9px;color:#3A3A36;font-family:var(--f-mono);width:38px;text-align:right">'+pct+'%</span></div>';
+    });
+  });
+  h+='</div></div><div style="margin-top:22px;font-size:8px;color:#252523;font-family:var(--f-mono)">Source: OEC World &middot; BACI database &middot; 2024 trade flows &middot; HS4 product classification</div>';
+  document.getElementById('bt-pov').innerHTML=h;
+}
+
+// ── PRODUCTS ─────────────────────────────────────────────────────────────────
+window.bRenderPr=function(d,pf){
+  _PF=pf;
+  var ps=[{id:'all',n:'ALL PARTNERS'},{id:'chn',n:'CHINA'},{id:'ind',n:'INDIA'},{id:'jpn',n:'JAPAN'}];
+  var exps=pf==='all'?d.topExports:(d.bpE[pf]||[]);
+  var imps=pf==='all'?d.topImports:(d.bpI[pf]||[]);
+  var maxE=exps.length?exps[0].v:1,maxI=imps.length?imps[0].v:1;
+  var h='<div style="display:flex;gap:6px;margin-bottom:24px">';
+  ps.forEach(function(p){
+    var a=(p.id===pf);
+    h+='<button onclick="bRenderPr(BD[\''+_S+'\'],\''+p.id+'\')" style="font-size:9px;font-weight:700;letter-spacing:.1em;padding:5px 14px;border-radius:3px;cursor:pointer;font-family:var(--f-mono);border:1px solid '+(a?'rgba(201,174,78,.5)':'#222220')+';background:'+(a?'rgba(201,174,78,.1)':'transparent')+';color:'+(a?'#C9AE4E':'#4A4A44')+'">'+p.n+'</button>';
+  });
+  h+='</div><div style="display:grid;grid-template-columns:1fr 1fr;gap:36px">';
+  function mkB(items,maxV,clr){
+    var bh='<div style="font-size:9px;font-weight:700;letter-spacing:.14em;color:'+clr+';font-family:var(--f-mono);margin-bottom:14px">'+(clr==='#5aa3f5'?'TOP EXPORTS':'TOP IMPORTS')+'</div>';
+    items.slice(0,15).forEach(function(p){
+      var nm=p.n||p.name||'',tp=p.t||p.type||'Non-Oil',vl=p.v||p.value||0;
+      var w=(vl/maxV*100).toFixed(1),c=TC[tp]||'#5aa3f5';
+      bh+='<div style="margin-bottom:9px"><div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:3px"><span style="font-size:9px;color:#C8C7C2;font-family:var(--f-mono);max-width:62%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">'+nm+'</span><span style="font-size:9px;color:#5A5A52;font-family:var(--f-mono)">'+bFmt(vl)+'</span></div><div style="height:4px;background:#1A1A18;border-radius:2px;overflow:hidden"><div style="width:'+w+'%;height:100%;background:'+c+';opacity:.82;border-radius:2px"></div></div></div>';
+    });
+    return bh;
+  }
+  h+='<div>'+mkB(exps,maxE,'#5aa3f5')+'</div><div>'+mkB(imps,maxI,'#C98A2E')+'</div></div>';
+  document.getElementById('bt-ppr').innerHTML=h;
+};
+
+// ── COMPLEXITY MATRIX ────────────────────────────────────────────────────────
+function bRenderMx(d){
+  if(_SC){_SC.destroy();_SC=null;}
+  var types=['Oil-Based','Oil-Adjacent','Non-Oil'];
+  var datasets=types.map(function(tp){
+    var pts=d.scatter.filter(function(s){return s.t===tp;}).map(function(s){
+      return{x:s.p,y:Math.min(s.r,32),label:s.n,rca:s.r,pci:s.p,gv:s.g,r:bRad(s.g)};
+    });
+    return{label:tp,data:pts,backgroundColor:TC2[tp],borderColor:TC[tp],borderWidth:1,
+           pointRadius:pts.map(function(p){return p.r;}),pointHoverRadius:pts.map(function(p){return p.r+2;})};
+  });
+  // Legend
+  var lh='';
+  types.forEach(function(tp){lh+='<div style="display:flex;align-items:center;gap:6px"><div style="width:10px;height:10px;border-radius:50%;background:'+TC2[tp]+';border:1px solid '+TC[tp]+'"></div><span style="font-size:9px;color:#6A6A62;font-family:var(--f-mono)">'+tp+'</span></div>';});
+  document.getElementById('bt-mleg').innerHTML=lh;
+  var ctx=document.getElementById('bt-sc').getContext('2d');
+  _SC=new Chart(ctx,{
+    type:'scatter',
+    data:{datasets:datasets},
+    plugins:[{
+      afterDraw:function(chart){
+        var cx=chart.ctx,xs=chart.scales.x,ys=chart.scales.y,ca=chart.chartArea;
+        cx.save();cx.strokeStyle='rgba(255,255,255,0.09)';cx.lineWidth=1;cx.setLineDash([4,4]);
+        var x0=xs.getPixelForValue(0);
+        cx.beginPath();cx.moveTo(x0,ca.top);cx.lineTo(x0,ca.bottom);cx.stroke();
+        var y1=ys.getPixelForValue(1);
+        cx.beginPath();cx.moveTo(ca.left,y1);cx.lineTo(ca.right,y1);cx.stroke();
+        cx.fillStyle='rgba(255,255,255,0.05)';cx.font='8px monospace';
+        cx.fillText('COMPETITIVE ADVANTAGE',x0+8,ca.top+12);
+        cx.fillText('VISION 2030 TARGETS',ca.left+6,ca.top+12);
+        cx.fillText('COMMODITY BASE',x0+8,ca.bottom-8);
+        cx.restore();
+      }
+    }],
+    options:{
+      responsive:true,maintainAspectRatio:false,
+      plugins:{
+        legend:{display:false},
+        tooltip:{
+          callbacks:{label:function(ctx){var p=ctx.raw;return[p.label,'RCA: '+p.rca.toFixed(2)+(p.rca>=32?' ▲':''),'PCI: '+p.pci.toFixed(3),'Global: '+bFmt(p.gv)];}},
+          backgroundColor:'#1A1A18',titleColor:'#C8C7C2',bodyColor:'#7A7A72',
+          borderColor:'#2A2A28',borderWidth:1,padding:10,
+          titleFont:{family:'monospace',size:11},bodyFont:{family:'monospace',size:9}
+        }
+      },
+      scales:{
+        x:{title:{display:true,text:'Product Complexity Index (PCI)',color:'#4A4A44',font:{family:'monospace',size:8}},
+           min:-3,max:3,grid:{color:'rgba(255,255,255,0.04)'},ticks:{color:'#4A4A44',font:{family:'monospace',size:8}},border:{color:'#2A2A28'}},
+        y:{title:{display:true,text:'Revealed Comparative Advantage (RCA, capped at 32)',color:'#4A4A44',font:{family:'monospace',size:8}},
+           min:0,max:32,grid:{color:'rgba(255,255,255,0.04)'},ticks:{color:'#4A4A44',font:{family:'monospace',size:8}},border:{color:'#2A2A28'}}
+      }
+    }
+  });
+}
+
+// ── KEYBOARD CLOSE ───────────────────────────────────────────────────────────
+document.addEventListener('keydown',function(e){
+  if(e.key==='Escape'){var o=document.getElementById('bt-overlay');if(o&&o.style.display!=='none')btClose();}
+});
+})();
+</script>
+
 </body>
 </html>

@@ -3722,7 +3722,7 @@ canvas { font-family: var(--f-mono); }
       </div>
       <div style="text-align:right">
         <div style="font-size:28px;font-weight:700;color:#E05252;line-height:1">-79%</div>
-        <div style="font-size:9px;color:#4A4A44;margin-top:3px">~27/day vs 130 baseline</div>
+        <div style="font-size:9px;color:#4A4A44;margin-top:3px">~10/day vs 130 baseline</div>
       </div>
     </div>
   </div>
@@ -3739,7 +3739,7 @@ canvas { font-family: var(--f-mono); }
   <div style="background:#0E0B07;border-bottom:1px solid #242010;padding:7px 24px;display:flex;align-items:flex-start;gap:12px">
     <span style="font-size:8px;font-weight:700;letter-spacing:.14em;color:#C98A2E;border:1px solid rgba(201,138,46,.5);padding:3px 8px;border-radius:3px;white-space:nowrap;flex-shrink:0;margin-top:1px">WATCH</span>
     <div style="display:flex;flex-wrap:wrap;gap:6px">
-      <span style="font-size:9px;color:#D9D8D3;background:rgba(201,138,46,.07);border:1px solid rgba(201,138,46,.18);padding:3px 10px;border-radius:3px">&#9679; AIS-visible: ~27/day &mdash; Day 125 &middot; partial recovery</span>
+      <span style="font-size:9px;color:#D9D8D3;background:rgba(201,138,46,.07);border:1px solid rgba(201,138,46,.18);padding:3px 10px;border-radius:3px">&#9679; AIS-visible: ~10/day &mdash; Day 125 &middot; partial recovery</span>
       <span style="font-size:9px;color:#D9D8D3;background:rgba(201,138,46,.07);border:1px solid rgba(201,138,46,.18);padding:3px 10px;border-radius:3px">&#9679; Cape of Good Hope reroute active</span>
     </div>
   </div>
@@ -3880,7 +3880,7 @@ canvas { font-family: var(--f-mono); }
           <div style="margin-bottom:5px">Brent settled <span class="red">$71.99 Jun 26</span> (-4.3%) as tankers exited post-MoU, briefly restoring ~75% of pre-war Gulf export volumes. Jun 27 second vessel strike adds upside risk; market re-pricing disruption probability.</div>
           <div>War-risk premiums halved from ~5% to <span class="amb">~2%</span> hull value after Jun 17 MoU. Jun 27 second vessel strike drove re-escalation to <span class="red">~3.2% (+1.2pp)</span>. Lloyd's Chubb-led consortium (Jun 19) adds $200M hull + $200M cargo capacity &mdash; capacity now under pressure.</div>
         </div>
-        <div class="src"><span>CNBC &middot; investing.com &middot; Lloyd's List &middot; Insurance Business &middot; Jun 28 2026</span><span class="src-badge">real data</span></div>
+        <div class="src"><span>CNBC &middot; investing.com &middot; Lloyd's List &middot; Insurance Business &middot; Jul 2026</span><span class="src-badge">real data</span></div>
       </div>
 
       <!-- CARRIER POSTURE -->
@@ -3905,7 +3905,7 @@ canvas { font-family: var(--f-mono); }
             <div style="font-size:9px;color:#7A7A72;line-height:1.5">Limited GCC exposure. Pausing evaluation post-Jun 27.</div>
           </div>
         </div>
-        <div class="src"><span>straits.live &middot; Lloyd's List &middot; carrier ops updates &middot; Jun 28 2026</span><span class="src-badge">real data</span></div>
+        <div class="src"><span>straits.live &middot; Lloyd's List &middot; carrier ops updates &middot; Jul 2026</span><span class="src-badge">real data</span></div>
       </div>
 
     </div>
@@ -4468,7 +4468,7 @@ canvas { font-family: var(--f-mono); }
         <div style="font-size:20px;line-height:1">&#128683;</div>
         <div>
           <div style="font-size:14px;font-weight:700;color:#E05252;letter-spacing:-.01em;margin-bottom:4px">Hormuz: Severely Restricted</div>
-          <div style="font-size:10px;color:#5A5A52;line-height:1.45">Current reality &bull; Day 117 &bull; ~27/day AIS-verified &bull; partial recovery</div>
+          <div style="font-size:10px;color:#5A5A52;line-height:1.45">Current reality &bull; Day 125 &bull; ~10/day AIS-verified &bull; partial recovery</div>
         </div>
         <div style="display:flex;flex-wrap:wrap;gap:5px;margin-top:auto">
           <span style="font-size:8px;font-weight:700;letter-spacing:.1em;padding:2px 8px;border-radius:3px;color:#E05252;background:rgba(224,82,82,0.1);border:1px solid #E05252;white-space:nowrap">~27/DAY AIS (IMF)</span>
@@ -5694,7 +5694,7 @@ function initMap() {
   if (mapReady) return; mapReady = true;
   leafMap = L.map('sat-map', { center:[26.6,56.4], zoom:8, zoomControl:true, preferCanvas:true });
   L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}',
-    { attribution:'Imagery (c) Esri, USGS | AIS: straits.live - Windward - Jun 2026', maxZoom:18 }).addTo(leafMap);
+    { attribution:'Imagery (c) Esri, USGS | AIS: straits.live - Windward - Jul 2026', maxZoom:18 }).addTo(leafMap);
   L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/Reference/World_Boundaries_and_Places/MapServer/tile/{z}/{y}/{x}',
     { maxZoom:18, opacity:0.75 }).addTo(leafMap);
   L.polygon([[27.5,55.8],[27.65,56.3],[27.55,57.1],[27.0,57.6],[26.4,57.5],[26.1,56.9],[26.25,56.0],[26.75,55.65]],
@@ -6486,7 +6486,7 @@ function addTransitDays(date, days) {
 
 // ── Old SCENARIOS preserved as reference (not used by GCSS UI) ───────────────
 var SCENARIOS = {
-  1:{name:'Hormuz: Severely Restricted',emoji:'&#128683;',state:'Current reality - AIS-verified ~27/day - dark fleet active - Day 117',transits:27,brent:72.06,warrisk:'8.0x',reg:{util:95,cong:4},reroute:'Red Sea (Jeddah) · Sohar/KF · Cape/Jeddah (Med)',color:'#e74c3c',routeMults:{cgh:{mult:null,days:47,tag:'rt-cgh',label:'Cape / Jeddah',avail:true,warOverride:1.5,congOverride:0,note:'Cape of GH → Atlantic → Mediterranean → Suez Canal (north entry) → Jeddah — avoids Hormuz entirely; flag-neutral; no IRGC restriction; ~47 days'},redsea:{mult:2.8,days:22,tag:'rt-rs',label:'Red Sea / Jeddah',avail:true,note:'Jeddah entry only — overland truck to GCC destinations'},direct:{mult:null,days:null,tag:'rt-na',label:'Hormuz direct',avail:false,note:'IRGC escort only — not available to Western/neutral carriers. Use Red Sea (Jeddah) or Sohar/KF overland.'},oman:{mult:3.2,days:20,tag:'rt-dir',label:'Sohar/KF land',avail:true,note:'Indian Ocean → Gulf of Oman → Sohar/KF — no Hormuz transit; overland truck to GCC'}},implications:[{title:'Jeddah Port',color:'#e74c3c',metric:'12-day dwell',text:'Absorbing displaced cargo but slowly easing. ~27 IRGC-escorted vessels/day resuming Gulf access (Jun 28 AIS).'},{title:'Brent Crude',color:'#e74c3c',metric:'$72.06/bbl',text:'+0.1% vs pre-crisis ($72 baseline). Price broadly stable despite disruption — demand weakness offsets supply shock. Western carriers still excluded.'},{title:'GCC Trucking',color:'#fbbf24',metric:'+47% fleet',text:'Al Bat\'ha 1,649 trucks/day. TruKKer scaling to 500 moves/day from Khorfakkan.'},{title:'Khor Fakkan/Sohar',color:'#3dd68c',metric:'+3,500% diversions',text:'Windward: vessel diversions to Oman up 3,500%. Sohar emerging as primary Asia-GCC gateway.'},{title:'Stranded Vessels',color:'#e74c3c',metric:'~2,000 ships',text:'~20,000 mariners still in Persian Gulf. 109K TEU confirmed stranded. Friendly-flag vessels slowly clearing.'},{title:'War-Risk Insurance',color:'#e74c3c',metric:'8.0x premium',text:'VLCC approx $2.5M per voyage for IRGC-escorted transits. 6 P&I clubs withdrew cover.'}]},
+  1:{name:'Hormuz: Severely Restricted',emoji:'&#128683;',state:'Current reality - AIS-verified ~10/day - dark fleet active - Day 125',transits:10,brent:72.06,warrisk:'8.0x',reg:{util:95,cong:4},reroute:'Red Sea (Jeddah) · Sohar/KF · Cape/Jeddah (Med)',color:'#e74c3c',routeMults:{cgh:{mult:null,days:47,tag:'rt-cgh',label:'Cape / Jeddah',avail:true,warOverride:1.5,congOverride:0,note:'Cape of GH → Atlantic → Mediterranean → Suez Canal (north entry) → Jeddah — avoids Hormuz entirely; flag-neutral; no IRGC restriction; ~47 days'},redsea:{mult:2.8,days:22,tag:'rt-rs',label:'Red Sea / Jeddah',avail:true,note:'Jeddah entry only — overland truck to GCC destinations'},direct:{mult:null,days:null,tag:'rt-na',label:'Hormuz direct',avail:false,note:'IRGC escort only — not available to Western/neutral carriers. Use Red Sea (Jeddah) or Sohar/KF overland.'},oman:{mult:3.2,days:20,tag:'rt-dir',label:'Sohar/KF land',avail:true,note:'Indian Ocean → Gulf of Oman → Sohar/KF — no Hormuz transit; overland truck to GCC'}},implications:[{title:'Jeddah Port',color:'#e74c3c',metric:'12-day dwell',text:'Absorbing displaced cargo but slowly easing. ~10 IRGC-escorted vessels/day (Jul 2026, IMF PortWatch).'},{title:'Brent Crude',color:'#e74c3c',metric:'$72.06/bbl',text:'+0.1% vs pre-crisis ($72 baseline). Price broadly stable despite disruption — demand weakness offsets supply shock. Western carriers still excluded.'},{title:'GCC Trucking',color:'#fbbf24',metric:'+47% fleet',text:'Al Bat\'ha 1,649 trucks/day. TruKKer scaling to 500 moves/day from Khorfakkan.'},{title:'Khor Fakkan/Sohar',color:'#3dd68c',metric:'+3,500% diversions',text:'Windward: vessel diversions to Oman up 3,500%. Sohar emerging as primary Asia-GCC gateway.'},{title:'Stranded Vessels',color:'#e74c3c',metric:'~2,000 ships',text:'~20,000 mariners still in Persian Gulf. 109K TEU confirmed stranded. Friendly-flag vessels slowly clearing.'},{title:'War-Risk Insurance',color:'#e74c3c',metric:'8.0x premium',text:'VLCC approx $2.5M per voyage for IRGC-escorted transits. 6 P&I clubs withdrew cover.'}]},
   2:{name:'Hormuz: IRGC Escort Only',emoji:'&#9875;',state:'Friendly-flag passage - China India Turkey - ~25 transits/day',transits:25,brent:92.00,warrisk:'5.0x',reg:{util:83,cong:2},reroute:'IRGC escort direct · Oman · Cape/Jeddah (Med)',color:'#fbbf24',routeMults:{cgh:{mult:null,days:47,tag:'rt-cgh',label:'Cape / Jeddah',avail:true,warOverride:1.3,congOverride:0,note:'Cape of GH → Atlantic → Mediterranean → Suez Canal (north entry) → Jeddah — flag-neutral; avoids Hormuz entirely; viable for EU/US carriers; ~47 days'},redsea:{mult:2.0,days:22,tag:'rt-rs',label:'Red Sea / Jeddah',avail:true,note:'Jeddah entry — overland truck to GCC; viable for non-IRGC-flag carriers'},direct:{mult:null,days:null,tag:'rt-na',label:'Hormuz direct',avail:false,note:'IRGC escort — restricted to China/India/Turkey flag vessels only. Western and neutral-flag carriers must use Red Sea (Jeddah), Sohar/KF overland, or Cape / Jeddah.'},oman:{mult:2.2,days:20,tag:'rt-dir',label:'Sohar/KF land',avail:true,note:'Flag-neutral entry via Gulf of Oman — preferred by EU/US carriers avoiding Hormuz'}},implications:[{title:'Jeddah Port',color:'#fbbf24',metric:'10-day dwell',text:'Easing slightly as some Hormuz traffic resumes for friendly flags.'},{title:'Brent Crude',color:'#fbbf24',metric:'~$92/bbl',text:'+28% vs pre-crisis. Flag-state discrimination persists.'},{title:'GCC Trucking',color:'#fbbf24',metric:'+25% fleet',text:'Land routes remain elevated. Jebel Ali handling Asia cargo for Chinese/Indian flag vessels.'},{title:'Khor Fakkan/Sohar',color:'#3dd68c',metric:'Still elevated',text:'Oman ports retain volume as flag-neutral entry. Preferred by EU/US carriers avoiding Hormuz.'},{title:'Carrier Posture',color:'#fbbf24',metric:'Split market',text:'Chinese carriers (COSCO/Evergreen) resume Hormuz direct under IRGC escort. Western majors (Maersk/MSC) route via Red Sea → Jeddah, Sohar/KF overland, or Cape of GH → Atlantic → Med → Suez → Jeddah (~47 days, flag-neutral, no IRGC dependency).'},{title:'War-Risk Insurance',color:'#fbbf24',metric:'5.0x premium',text:'Reduced but elevated. Escort availability uncertain. JWC maintaining listed area.'}]},
   3:{name:'Hormuz: Negotiated Partial',emoji:'&#9868;',state:'Ceasefire - neutral corridor - all flags - ~50 transits/day',transits:50,brent:82.00,warrisk:'3.0x',reg:{util:78,cong:1},reroute:'Hormuz + CoGH',color:'#f0c84b',routeMults:{cgh:{mult:2.0,days:35,tag:'rt-cgh',label:'Cape of GH',avail:true,note:'Still viable some lanes'},redsea:{mult:1.5,days:22,tag:'rt-rs',label:'Red Sea',avail:true},direct:{mult:1.8,days:18,tag:'rt-dir',label:'Hormuz direct',avail:true,note:'All flags - corridor zones apply'},oman:{mult:1.6,days:20,tag:'rt-dir',label:'Sohar/KF land',avail:true}},implications:[{title:'Jeddah Port',color:'#3dd68c',metric:'6-day dwell',text:'Traffic redistributing to Gulf ports. Congestion easing.'},{title:'Brent Crude',color:'#3dd68c',metric:'~$82/bbl',text:'+14% vs pre-crisis. Ceasefire premium partially unwound.'},{title:'GCC Trucking',color:'#3dd68c',metric:'Normalising',text:'Al Bat\'ha volumes declining as Jebel Ali direct calls resume.'},{title:'Khor Fakkan/Sohar',color:'#fbbf24',metric:'Transitional',text:'Still processing diverted backlog. 6-12 weeks to fully normalise.'},{title:'Carrier Posture',color:'#3dd68c',metric:'Resuming calls',text:'MSC/Maersk announce Gulf resumption. 6-8 week lead time for full schedules.'},{title:'War-Risk Insurance',color:'#fbbf24',metric:'3.0x premium',text:'Falling toward 2x as ceasefire holds. JWC likely to revise within 30-60 days.'}]},
   4:{name:'Post-Crisis Recovery',emoji:'&#128260;',state:'Hormuz reopened — carrier risk memory active — gradual normalisation — ~85 transits/day',transits:85,brent:75.00,warrisk:'1.8x',reg:{util:78,cong:1},reroute:'Hormuz + some CoGH',color:'#3dd68c',routeMults:{cgh:{mult:1.3,days:35,tag:'rt-cgh',label:'Cape of GH',avail:true,note:'~30% of carriers — slow to realign'},redsea:{mult:1.1,days:22,tag:'rt-rs',label:'Red Sea',avail:true,note:'Resuming via Suez'},direct:{mult:1.2,days:18,tag:'rt-dir',label:'Hormuz direct',avail:true,note:'~70% of carriers resuming'},oman:{mult:1.1,days:20,tag:'rt-dir',label:'Sohar/KF land',avail:true,note:'Maintained as transitional hub'}},implications:[{title:'Jeddah Port',color:'#fbbf24',metric:'5-day dwell',text:'Gradual recovery as Red Sea volumes rebuild. JWC residual premium limiting full Suez resumption. Historical precedent: Bab al-Mandab avoided 18+ months post-peak.'},{title:'Brent Crude',color:'#fbbf24',metric:'~$75/bbl',text:'Residual $3–5/bbl geopolitical risk premium persists. Full normalisation to $72 baseline expected 12–18 months post-resolution as strategic reserves rebuild.'},{title:'GCC Trucking',color:'#fbbf24',metric:'~80% normalised',text:'Al Bat\'ha at ~750 trucks/day (vs 1,649 peak / 900 pre-crisis). Oman corridors remain elevated as ~30% of carriers maintain alternative routing.'},{title:'Khor Fakkan/Sohar',color:'#3dd68c',metric:'Sustained volumes',text:'~30% of carriers maintaining Cape/Oman routing for 6–18 months post-resolution. Strategic window for Oman logistics. Bab al-Mandab 2024: still avoided 18 months on.'},{title:'Carrier Posture',color:'#fbbf24',metric:'~70% resumed',text:'~70% of carriers resuming Hormuz Direct. ~30% maintaining CoGH/Oman routing pending JWC delistment and sustained security guarantees. Suez 1956 precedent: 2 years to full resumption.'},{title:'War-Risk Insurance',color:'#fbbf24',metric:'1.8x premium',text:'JWC delistment process initiated — full removal takes 6–12 months minimum post-resolution. Lloyd\'s syndicates and P&I clubs historically slowest to adjust. Residual Gulf surcharge maintained.'}]},
@@ -8264,7 +8264,7 @@ function initTheatreMap() {
     '#e74c3c', 2, 'bl-lane-disrupted', 'Persian Gulf — IRGC escort-only &bull; 2–4 vessels/day');
   // Hormuz Strait approach — CLOSED (red, fastest)
   addLane(theatreMap, [[23.0,57.8],[24.5,57.2],[25.6,56.8],[26.1,56.5],[26.5,56.2]],
-    '#e74c3c', 3, 'bl-lane-disrupted', 'Hormuz Strait — CLOSED to commercial traffic &bull; IRGC naval control &bull; Day 117');
+    '#e74c3c', 3, 'bl-lane-disrupted', 'Hormuz Strait — CLOSED to commercial traffic &bull; IRGC naval control &bull; Day 125');
   // Red Sea lane — active but HIGH THREAT (amber, fast)
   addLane(theatreMap, [[28.5,33.5],[26.0,35.0],[22.0,38.0],[18.0,40.0],[15.0,41.5],[12.5,43.5]],
     '#fbbf24', 2.5, 'bl-lane-disrupted', 'Red Sea southbound lane — Houthi anti-ship threat &bull; JWC War Risk &bull; escort required');
@@ -8291,7 +8291,7 @@ function initTheatreMap() {
   tm(24.25,54.55,'✈', 'Al Dhafra AB — US/UAE coalition air base &bull; CENTCOM','#5aa3f5');
 
   L.marker([26.6,56.4],{ icon:L.divIcon({ html:'<div style="font-size:22px;color:#e74c3c;font-weight:900;text-shadow:0 0 8px #000">✕</div>', iconSize:[26,26],iconAnchor:[13,13],className:'' }) })
-    .addTo(theatreMap).bindTooltip('Strait of Hormuz — CLOSED &bull; IRGC control &bull; Day 117',{sticky:true,className:'irgc-tip'});
+    .addTo(theatreMap).bindTooltip('Strait of Hormuz — CLOSED &bull; IRGC control &bull; Day 125',{sticky:true,className:'irgc-tip'});
 }
 
 // ── CORRIDOR TRAFFIC MINI-MAPS ────────────────────────────────────────────────
@@ -8734,7 +8734,7 @@ var chokepointsMap = null, chokepointsMapReady = false;
 
 // radius ∝ trade volume (px): Malacca 25%→16, Hormuz 20%→14, Suez 13%→12, BaM 10%→10, Gib 8%→9, Cape crisis→12, Bosporus 5%→8, Panama 5%→8
 var CHOKEPOINTS = [
-  { name:'Strait of Hormuz',          lat:26.6,  lng:56.4,   r:14, status:'CLOSED',      color:'#a03020', oil:'21M bbl/day', trade:'~20% global oil',      transits:'~27/day (IRGC escort; 32% pre-crisis)', note:'IRGC naval control — Day 117. ~27 transits/day (Jun 28) = 32% of pre-crisis 84/day.' },
+  { name:'Strait of Hormuz',          lat:26.6,  lng:56.4,   r:14, status:'CLOSED',      color:'#a03020', oil:'21M bbl/day', trade:'~20% global oil',      transits:'~10/day (Jul 2026; ~12% pre-crisis)', note:'IRGC naval control — Day 125. ~10 transits/day (Jul 2026, IMF PortWatch) = ~12% of pre-crisis 84/day.' },
   { name:'Bab el-Mandeb',             lat:12.6,  lng:43.5,   r:10, status:'HIGH THREAT', color:'#c07830', oil:'4.7M bbl/day',trade:'10% global trade',     transits:'Reduced — escort required',      note:'Houthi anti-ship missiles active. JWC listed area. Most carriers rerouting via Cape.' },
   { name:'Suez Canal',                lat:30.0,  lng:32.55,  r:12, status:'OPEN',        color:'#3a7a5a', oil:'—',           trade:'12–15% global trade',  transits:'~40–50 vessels/day (reduced)',   note:'Operational. Reduced throughput as Bab el-Mandeb threat deters approach.' },
   { name:'Strait of Malacca',         lat:1.3,   lng:103.85, r:16, status:'OPEN',        color:'#3a7a5a', oil:'16M bbl/day', trade:'25% global trade',     transits:'~90,000 vessels/year',           note:"World's busiest chokepoint. Normal operations. Low piracy risk." },
@@ -18812,9 +18812,9 @@ function toggleTFAccordion(bodyId, chevId) {
 var CV_SIGNALS = [
   {
     cat: 'SECURITY FLASH',
-    name: 'Hormuz — Day 122 &middot; 2nd vessel struck Jun 27',
-    val:  '5 vessels / day AIS',
-    chg:  'IMO talks paused &middot; IRGC all-corridor control &middot; 29 Jun',
+    name: 'Hormuz — Day 125 &middot; transit rate declining',
+    val:  '~10/day AIS-verified',
+    chg:  'Partial recovery stalling &middot; IMF PortWatch &middot; 16 Jul 2026',
     col:  '#e74c3c',
     badge:'CRITICAL',
     time: '08:10'
@@ -18823,7 +18823,7 @@ var CV_SIGNALS = [
     cat: 'WAR-RISK',
     name: 'War-risk insurance — Hormuz corridor',
     val:  '~3.2% hull value',
-    chg:  '&#9650;&nbsp;+1.2pp from 2% MoU floor &middot; Lloyd\'s &middot; 29 Jun',
+    chg:  '&#9650;&nbsp;+1.2pp from 2% MoU floor &middot; Lloyd\'s &middot; Jul 2026',
     col:  '#C98A2E',
     badge:'HIGH',
     time: '07:50'
@@ -18832,7 +18832,7 @@ var CV_SIGNALS = [
     cat: 'ENERGY',
     name: 'Brent Crude',
     val:  '$73.20 / bbl',
-    chg:  '&#9650;&nbsp;+$8 since Jun 27 strike &middot; investing.com &middot; 29 Jun',
+    chg:  'investing.com live &middot; Jul 2026',
     col:  '#C9AE4E',
     badge:'WATCH',
     time: '07:00'
@@ -18841,7 +18841,7 @@ var CV_SIGNALS = [
     cat: 'FREIGHT SPOT',
     name: 'Asia&ndash;Gulf container spot (SHA&rarr;ME)',
     val:  '$7,400 / FEU',
-    chg:  '&#9650;&nbsp;4.2% WoW &middot; Freightos FBX &middot; 29 Jun',
+    chg:  '&#9650;&nbsp;4.2% WoW &middot; Freightos FBX &middot; Jul 2026',
     col:  '#5FA86A',
     badge:'',
     time: '05:55'
@@ -18850,7 +18850,7 @@ var CV_SIGNALS = [
     cat: 'FREIGHT INDEX',
     name: 'FBX Global Container Index',
     val:  '$2,889 / FEU',
-    chg:  '&#9650;&nbsp;+46% from May &middot; Freightos Baltic &middot; Jun 14',
+    chg:  '&#9650;&nbsp;+46% from May &middot; Freightos Baltic &middot; Jul 2026',
     col:  '#C9AE4E',
     badge:'WATCH',
     time: '05:30'

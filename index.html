@@ -20496,98 +20496,145 @@ function psrRenderBaseline(){
 }
 
 // ── FLOW MAP TAB ──────────────────────────────────────────────────────────────
-function psrRenderFlowMap(){
+// Real maritime waypoints from/to Saudi Arabia.
+// Persian Gulf hub (Ras Tanura) [26.0, 51.0] → East/South Asia via Hormuz
+// Red Sea hub (Jeddah/King Abdullah Port) [21.5, 39.0] → Europe/Americas via Bab+Suez
+var PSR_ROUTE_WP = {
+  CHN:{ from:[26.0,51.0], to:[22,114],    cps:['hormuz','malacca'],
+    wp:[[26.0,51.0],[26.6,56.3],[20,65],[10,72],[4,80],[2,102],[10,108],[22,114]] },
+  JPN:{ from:[26.0,51.0], to:[35,138],    cps:['hormuz','malacca'],
+    wp:[[26.0,51.0],[26.6,56.3],[20,65],[10,72],[4,80],[2,102],[10,108],[22,114],[30,132],[35,138]] },
+  KOR:{ from:[26.0,51.0], to:[35,129],    cps:['hormuz','malacca'],
+    wp:[[26.0,51.0],[26.6,56.3],[20,65],[10,72],[4,80],[2,102],[10,108],[22,114],[30,127],[35,129]] },
+  TWN:{ from:[26.0,51.0], to:[25,121],    cps:['hormuz','malacca'],
+    wp:[[26.0,51.0],[26.6,56.3],[20,65],[10,72],[4,80],[2,102],[10,108],[22,114],[25,121]] },
+  IND:{ from:[26.0,51.0], to:[22.8,69.7], cps:['hormuz'],
+    wp:[[26.0,51.0],[26.6,56.3],[22,63],[22.8,69.7]] },
+  AUS:{ from:[26.0,51.0], to:[-32,115],   cps:['hormuz'],
+    wp:[[26.0,51.0],[26.6,56.3],[20,65],[10,72],[0,80],[-15,100],[-25,110],[-32,115]] },
+  DEU:{ from:[21.5,39.0], to:[52,8],      cps:['bab_el_mandeb','suez'],
+    wp:[[21.5,39.0],[12.6,43.4],[20,38],[30.7,32.3],[32,28],[36,18],[36,0],[36,-5.4],[48,-5],[52,8]] },
+  CHE:{ from:[21.5,39.0], to:[47,8],      cps:['bab_el_mandeb','suez'],
+    wp:[[21.5,39.0],[12.6,43.4],[20,38],[30.7,32.3],[32,28],[36,18],[36,4],[47,8]] },
+  GBR:{ from:[21.5,39.0], to:[51,-1],     cps:['bab_el_mandeb','suez'],
+    wp:[[21.5,39.0],[12.6,43.4],[20,38],[30.7,32.3],[36,-5.4],[48,-8],[51,-1]] },
+  USA:{ from:[21.5,39.0], to:[30,-80],    cps:['bab_el_mandeb','suez'],
+    wp:[[21.5,39.0],[12.6,43.4],[20,38],[30.7,32.3],[36,-5.4],[25,-60],[30,-80]] },
+  CAN:{ from:[21.5,39.0], to:[45,-64],    cps:['bab_el_mandeb','suez'],
+    wp:[[21.5,39.0],[12.6,43.4],[20,38],[30.7,32.3],[36,-5.4],[35,-30],[45,-64]] },
+  UKR:{ from:[21.5,39.0], to:[46.5,31],   cps:['bab_el_mandeb','suez'],
+    wp:[[21.5,39.0],[12.6,43.4],[20,38],[30.7,32.3],[32,28],[36,24],[41.1,29.1],[43,32],[46.5,31]] },
+  RUS:{ from:[21.5,39.0], to:[44.7,37.8], cps:['bab_el_mandeb','suez'],
+    wp:[[21.5,39.0],[12.6,43.4],[20,38],[30.7,32.3],[32,28],[36,24],[41.1,29.1],[43,34],[44.7,37.8]] },
+  TUR:{ from:[21.5,39.0], to:[38,27],     cps:['bab_el_mandeb','suez'],
+    wp:[[21.5,39.0],[12.6,43.4],[20,38],[30.7,32.3],[32,28],[36,24],[36,28],[38,27]] },
+  ARE:{ from:[26.0,51.0], to:[25.1,56.3], cps:['hormuz'],
+    wp:[[26.0,51.0],[25.5,54.5],[25.1,56.3]] },
+  BRA:{ from:[21.5,39.0], to:[-23,-43],   cps:['bab_el_mandeb'],
+    wp:[[21.5,39.0],[12.6,43.4],[0,38],[-10,30],[-30,10],[-23,-43]] }
+};
+
+// Map PSR chokepoint keys → TF_CP keys (TF uses 'bab_el_mandeb', PSR uses 'bab')
+var PSR_CP_TO_TF = {hormuz:'hormuz',bab:'bab_el_mandeb',suez:'suez',malacca:'malacca',panama:'panama'};
+
+var PSR_MAP = null;
+var PSR_MAP_READY = false;
+var PSR_MAP_BOX_READY = false;
+var PSR_ROUTE_LAYERS = [];
+var PSR_CP_DOTS = {};
+
+function psrInitMap() {
+  if (PSR_MAP_READY) return;
+  var el = document.getElementById('psr-leaflet-map');
+  if (!el) return;
+  PSR_MAP = L.map('psr-leaflet-map', {center:[20,50],zoom:2,minZoom:1,maxZoom:6,worldCopyJump:true});
+  L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_nolabels/{z}/{x}/{y}{r}.png',
+    {attribution:'&copy; OpenStreetMap &copy; CARTO',subdomains:'abcd',maxZoom:19}).addTo(PSR_MAP);
+  L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/Reference/World_Boundaries_and_Places/MapServer/tile/{z}/{y}/{x}',
+    {attribution:'Labels &copy; Esri',maxZoom:19,opacity:0.9}).addTo(PSR_MAP);
+  PSR_MAP_READY = true;
+}
+
+function psrClearRoutes() {
+  PSR_ROUTE_LAYERS.forEach(function(l){try{PSR_MAP.removeLayer(l);}catch(e){}});
+  PSR_ROUTE_LAYERS = [];
+  PSR_CP_DOTS = {};
+}
+
+function psrDrawFlowRoutes(flow) {
+  if (!PSR_MAP_READY || !PSR_MAP || !flow) return;
+  psrClearRoutes();
+  var maxShare = Math.max.apply(null,flow.partners.map(function(p){return Math.max(p.importShare||0,p.exportShare||0);}));
+
+  flow.partners.forEach(function(p) {
+    var r = PSR_ROUTE_WP[p.code];
+    if (!r) return;
+    var isExport = (p.exportShare||0) > (p.importShare||0);
+    var share = isExport ? (p.exportShare||0) : (p.importShare||0);
+    var color = isExport ? '#5aa3f5' : '#d97706';
+    var weight = Math.max(1.5, Math.min(7, (share/maxShare)*7));
+    var cpNames = r.cps.map(function(c){return TF_CP[c]?TF_CP[c].name:c;}).join(' · ');
+
+    var pl = L.polyline(r.wp,{color:color,weight:weight,opacity:0.72}).addTo(PSR_MAP);
+    pl.bindTooltip(
+      '<div style="min-width:165px;font-family:monospace">'
+      +'<div style="font-weight:700;color:'+color+';margin-bottom:3px">'+p.flag+' '+p.name+'</div>'
+      +'<div style="color:#64748b;font-size:8.5px;letter-spacing:.06em">'+(isExport?'EXPORT ROUTE':'IMPORT ROUTE')+'</div>'
+      +'<div style="margin-top:5px;color:#e2e8f0">'+share+'% of '+(isExport?'exports':'imports')+'</div>'
+      +'<div style="color:#64748b;font-size:8.5px;margin-top:3px">Via: '+(cpNames||'Open ocean')+'</div>'
+      +'</div>',{sticky:true});
+    PSR_ROUTE_LAYERS.push(pl);
+
+    [r.from, r.to].forEach(function(coord){
+      var dot = L.circleMarker(coord,{radius:4,color:color,fillColor:color,fillOpacity:1,weight:1,interactive:false}).addTo(PSR_MAP);
+      PSR_ROUTE_LAYERS.push(dot);
+    });
+
+    // Chokepoint markers — use TF_CP coordinates, colour by PSR exposure %
+    r.cps.forEach(function(tfKey) {
+      if (PSR_CP_DOTS[tfKey] || !TF_CP[tfKey]) return;
+      var psrKey = null;
+      Object.keys(PSR_CP_TO_TF).forEach(function(k){if(PSR_CP_TO_TF[k]===tfKey)psrKey=k;});
+      var exp = psrKey ? (flow.chokepointExposure[psrKey]||0) : 0;
+      var cc = exp>=50?'#c02030':exp>=25?'#e8673c':'#f0c84b';
+      var cp = TF_CP[tfKey];
+      var m = L.circleMarker([cp.lat,cp.lng],{radius:9,color:cc,fillColor:cc,fillOpacity:0.75,weight:2}).addTo(PSR_MAP);
+      m.bindTooltip('<div style="font-family:monospace"><b style="color:'+cc+'">'+cp.name+'</b><br>'
+        +'<span style="color:#64748b;font-size:9px">Exposure: '+(exp||'—')+(exp?'%':'')+'</span></div>',{sticky:true});
+      PSR_CP_DOTS[tfKey] = m;
+      PSR_ROUTE_LAYERS.push(m);
+    });
+  });
+
+  // SAU hub marker
+  var hub = L.circleMarker([24,45],{radius:7,color:'#C9AE4E',fillColor:'#C9AE4E',fillOpacity:1,weight:2}).addTo(PSR_MAP);
+  hub.bindTooltip('<b style="color:#C9AE4E;font-family:monospace">Saudi Arabia</b>',{permanent:false,sticky:true});
+  PSR_ROUTE_LAYERS.push(hub);
+}
+
+function psrRenderFlowMap() {
   var el = document.getElementById('psr-flowmap');
   var flow = psrCurrentFlow();
 
-  if(!flow){
-    el.innerHTML='<div style="padding:60px;text-align:center;font-family:monospace;font-size:11px;color:#4A4A44">Select a product with available data to view flow map.</div>';
+  if (!PSR_MAP_BOX_READY) {
+    el.innerHTML =
+      '<div id="psr-leaflet-map" style="height:500px;border-radius:4px 4px 0 0"></div>'
+      +'<div style="background:#0C0C0A;border:1px solid #1E1E1C;border-top:none;border-radius:0 0 4px 4px;padding:8px 16px;display:flex;gap:20px;align-items:center;flex-wrap:wrap">'
+      +'<span style="font-family:monospace;font-size:9px;color:#d97706">&#9644; Import route</span>'
+      +'<span style="font-family:monospace;font-size:9px;color:#5aa3f5">&#9644; Export route</span>'
+      +'<span style="font-family:monospace;font-size:9px;color:#c02030">&#9711; Chokepoint (&ge;50% exposure)</span>'
+      +'<span style="font-family:monospace;font-size:9px;color:#e8673c">&#9711; Chokepoint (&ge;25%)</span>'
+      +'<span style="font-family:monospace;font-size:9px;color:#f0c84b">&#9711; Chokepoint (&lt;25%)</span>'
+      +'<span style="font-family:monospace;font-size:8px;color:#3A3A34;margin-left:auto">Estimated maritime routing &middot; DEMO DATA</span>'
+      +'</div>';
+    PSR_MAP_BOX_READY = true;
+    setTimeout(function(){psrInitMap();if(flow)psrDrawFlowRoutes(flow);},80);
     return;
   }
 
-  // Approximate world map SVG with key ports/chokepoints
-  // Node positions are simplified geographic approximations
-  var nodes = {
-    SAU:{x:520,y:225,label:'Saudi Arabia',color:'#C9AE4E'},
-    CHN:{x:740,y:190,label:'China',color:'#5aa3f5'},
-    IND:{x:620,y:230,label:'India',color:'#5aa3f5'},
-    JPN:{x:790,y:175,label:'Japan',color:'#5aa3f5'},
-    KOR:{x:775,y:180,label:'S.Korea',color:'#5aa3f5'},
-    USA:{x:120,y:195,label:'USA',color:'#5aa3f5'},
-    DEU:{x:400,y:155,label:'Germany',color:'#5aa3f5'},
-    CHE:{x:400,y:160,label:'Switzerland',color:'#5aa3f5'},
-    GBR:{x:380,y:148,label:'UK',color:'#5aa3f5'},
-    UKR:{x:450,y:155,label:'Ukraine',color:'#5aa3f5'},
-    RUS:{x:490,y:140,label:'Russia',color:'#5aa3f5'},
-    AUS:{x:730,y:320,label:'Australia',color:'#5aa3f5'},
-    CAN:{x:130,y:158,label:'Canada',color:'#5aa3f5'},
-    TUR:{x:460,y:180,label:'Turkey',color:'#5aa3f5'},
-    ARE:{x:535,y:228,label:'UAE',color:'#5aa3f5'},
-    TWN:{x:755,y:205,label:'Taiwan',color:'#5aa3f5'}
-  };
-  var chokepoints = [
-    {id:'hormuz',x:548,y:222,label:'Hormuz',color:'#c02030'},
-    {id:'bab',x:490,y:248,label:'Bab Al-Mandeb',color:'#e8673c'},
-    {id:'suez',x:468,y:208,label:'Suez',color:'#f0c84b'},
-    {id:'malacca',x:700,y:258,label:'Malacca',color:'#5aa3f5'}
-  ];
-
-  var maxShare = Math.max.apply(null, flow.partners.map(function(p){return Math.max(p.importShare,p.exportShare);}));
-
-  var arcs = flow.partners.map(function(p){
-    var src = nodes[p.code];
-    var dst = nodes['SAU'];
-    if(!src||!dst) return '';
-    var share = Math.max(p.importShare,p.exportShare);
-    var strokeW = Math.max(1, Math.round(share / maxShare * 5));
-    var isExport = p.exportShare > p.importShare;
-    var color = isExport ? '#5aa3f5' : '#d97706';
-    var mx = (src.x+dst.x)/2;
-    var my = Math.min(src.y,dst.y) - 40 - Math.abs(src.x-dst.x)*0.06;
-    return '<path d="M'+src.x+','+src.y+' Q'+mx+','+my+' '+dst.x+','+dst.y+'"'
-      +' fill="none" stroke="'+color+'" stroke-width="'+strokeW+'" stroke-opacity="0.5" stroke-dasharray="none"/>';
-  }).join('');
-
-  var nodeHtml = Object.keys(nodes).map(function(k){
-    var n=nodes[k];
-    var isActive = k==='SAU' || flow.partners.some(function(p){return p.code===k;});
-    if(!isActive) return '';
-    return '<circle cx="'+n.x+'" cy="'+n.y+'" r="'+(k==='SAU'?7:4)+'" fill="'+n.color+'" opacity="'+(k==='SAU'?1:0.7)+'"/>'
-      +'<text x="'+n.x+'" y="'+(n.y-10)+'" font-family="monospace" font-size="7" fill="'+n.color+'" text-anchor="middle" opacity="0.9">'+n.label+'</text>';
-  }).join('');
-
-  var cpHtml = chokepoints.map(function(cp){
-    var exp = flow.chokepointExposure[cp.id]||0;
-    if(exp===0) return '';
-    return '<circle cx="'+cp.x+'" cy="'+cp.y+'" r="6" fill="none" stroke="'+cp.color+'" stroke-width="1.5" opacity="0.9"/>'
-      +'<text x="'+cp.x+'" y="'+(cp.y+16)+'" font-family="monospace" font-size="6.5" fill="'+cp.color+'" text-anchor="middle">'+cp.label+' ('+exp+'%)</text>';
-  }).join('');
-
-  // Simplified world outline paths
-  var landColor = '#1A1A18';
-  var worldPath = '<rect x="0" y="0" width="900" height="420" fill="#0C0C0A"/>'
-    +'<path d="M60,140 L200,130 L240,150 L260,180 L220,220 L180,250 L140,240 L100,220 L60,200 Z" fill="'+landColor+'" opacity="0.6"/>'
-    +'<path d="M60,255 L200,245 L230,270 L220,320 L180,360 L130,370 L80,350 L50,300 Z" fill="'+landColor+'" opacity="0.6"/>'
-    +'<path d="M280,100 L480,95 L520,130 L530,200 L490,240 L460,250 L400,240 L360,210 L320,180 L280,160 Z" fill="'+landColor+'" opacity="0.6"/>'
-    +'<path d="M420,245 L500,260 L510,300 L490,340 L450,350 L420,330 L410,290 Z" fill="'+landColor+'" opacity="0.6"/>'
-    +'<path d="M510,190 L580,185 L630,200 L650,230 L630,260 L590,270 L550,260 L515,240 Z" fill="'+landColor+'" opacity="0.6"/>'
-    +'<path d="M640,160 L800,150 L830,180 L820,220 L780,240 L720,245 L670,230 L640,200 Z" fill="'+landColor+'" opacity="0.6"/>'
-    +'<path d="M680,280 L800,275 L830,310 L820,360 L780,390 L720,395 L670,370 L650,330 Z" fill="'+landColor+'" opacity="0.6"/>';
-
-  el.innerHTML = '<div style="max-width:1100px">'
-    +'<div style="font-family:monospace;font-size:9px;color:#5A5A52;margin-bottom:12px;letter-spacing:.06em">'
-    +'TRADE FLOW MAP · HS '+flow.hs+' · '+flow.product+' · Estimated — based on standard maritime routing logic · <span style="color:#C9AE4E">DEMO DATA</span></div>'
-    +'<div style="background:#0C0C0A;border:1px solid #1E1E1C;border-radius:4px;overflow:hidden;margin-bottom:16px">'
-    +'<svg viewBox="0 0 900 420" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto">'
-    + worldPath + arcs + nodeHtml + cpHtml
-    +'<text x="10" y="415" font-family="monospace" font-size="6" fill="#3A3A34">Simplified schematic — not to scale. Routes are illustrative maritime estimates.</text>'
-    +'</svg></div>'
-    +'<div style="display:flex;gap:20px;flex-wrap:wrap">'
-    +'<span style="font-family:monospace;font-size:9px;color:#d97706">&#9644; Import flow</span>'
-    +'<span style="font-family:monospace;font-size:9px;color:#5aa3f5">&#9644; Export flow</span>'
-    +'<span style="font-family:monospace;font-size:9px;color:#c02030">&#9711; High-risk chokepoint</span>'
-    +'<span style="font-family:monospace;font-size:9px;color:#e8673c">&#9711; Medium-risk chokepoint</span>'
-    +'</div></div>';
+  if (!PSR_MAP_READY) { setTimeout(function(){psrInitMap();if(flow)psrDrawFlowRoutes(flow);},80); return; }
+  PSR_MAP.invalidateSize();
+  psrDrawFlowRoutes(flow);
 }
 
 // ── RESILIENCE LAB TAB ────────────────────────────────────────────────────────

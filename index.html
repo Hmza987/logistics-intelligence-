@@ -5198,13 +5198,11 @@ canvas { font-family: var(--f-mono); }
   <!-- Sub-tabs -->
   <div id="psr-tabs" style="background:#0F0F0D;border-bottom:1px solid #1E1E1C;padding:0 28px;display:flex;gap:0">
     <button class="psr-stab psr-stab-active" id="psr-stab-baseline"  onclick="psrTab('baseline')">Baseline</button>
-    <button class="psr-stab" id="psr-stab-flowmap"   onclick="psrTab('flowmap')">Flow Map</button>
     <button class="psr-stab" id="psr-stab-scenarios" onclick="psrTab('scenarios')">Resilience Lab &amp; Watchlist</button>
   </div>
 
   <!-- Content panels -->
   <div id="psr-baseline"  class="psr-panel psr-panel-active" style="overflow-y:auto;height:calc(100vh - 160px)"></div>
-  <div id="psr-flowmap"   class="psr-panel" style="overflow-y:auto;height:calc(100vh - 160px)"></div>
   <div id="psr-scenarios" class="psr-panel" style="overflow-y:auto;height:calc(100vh - 160px)"></div>
 
 </div><!-- end page-psr -->
@@ -20398,7 +20396,7 @@ window.psrRender = function(){
 // ── TAB SWITCHING ─────────────────────────────────────────────────────────────
 window.psrTab = function(t){
   _psrTab = t;
-  ['baseline','flowmap','scenarios'].forEach(function(x){
+  ['baseline','scenarios'].forEach(function(x){
     var btn=document.getElementById('psr-stab-'+x);
     var panel=document.getElementById('psr-'+x);
     if(btn) btn.className='psr-stab'+(x===t?' psr-stab-active':'');
@@ -20409,9 +20407,7 @@ window.psrTab = function(t){
 
 function psrRenderActive(){
   if(_psrTab==='baseline')  psrRenderBaseline();
-  if(_psrTab==='flowmap')   psrRenderFlowMap();
   if(_psrTab==='scenarios') psrRenderScenarios();
-  if(_psrTab==='watchlist') psrRenderWatchlist();
 }
 
 // ── BASELINE TAB ──────────────────────────────────────────────────────────────
@@ -20488,12 +20484,6 @@ function psrRenderBaseline(){
       +'</div>';
   }).join('');
 
-  var altHtml = flow.altSuppliers&&flow.altSuppliers.length
-    ? '<div style="margin-top:24px"><div class="psr-section-title">Alternative Supplier Options</div>'
-      +'<div style="display:flex;flex-wrap:wrap;gap:8px">'
-      +flow.altSuppliers.map(function(s){return '<span style="background:#1A1A18;border:1px solid #2A2A26;border-radius:3px;font-family:monospace;font-size:10px;color:#7A7A72;padding:5px 10px">'+s+'</span>';}).join('')
-      +'</div></div>' : '';
-
   el.innerHTML = '<div style="max-width:1100px">'
     +'<div style="font-family:monospace;font-size:10px;color:#5A5A52;margin-bottom:16px;letter-spacing:.06em">'
     +'HS '+flow.hs+' · '+flow.product+' · '+flow.country+' · 2024 · <span style="color:#C9AE4E">DEMO DATA</span></div>'
@@ -20505,7 +20495,27 @@ function psrRenderBaseline(){
     +'<span style="font-family:monospace;font-size:8px;color:#3A3A34;margin-left:auto">Volume = share% × total · DEMO</span>'
     +'</div>'
     + tableHeader + combinedRows
-    + altHtml + '</div>';
+    +'</div>';
+
+  // Append map section using DOM (not innerHTML) so Leaflet can attach to the div
+  var mapWrap = document.createElement('div');
+  mapWrap.style.cssText = 'max-width:1100px;margin-top:28px';
+  mapWrap.innerHTML = '<div class="psr-section-title">Trade Flow Map</div>'
+    +'<div id="psr-leaflet-map" style="height:440px;border-radius:4px 4px 0 0"></div>'
+    +'<div style="background:#0C0C0A;border:1px solid #1E1E1C;border-top:none;border-radius:0 0 4px 4px;padding:8px 16px;display:flex;gap:20px;align-items:center;flex-wrap:wrap">'
+    +(showImport?'<span style="font-family:monospace;font-size:9px;color:#d97706">&#9644; Import route</span>':'')
+    +(showExport?'<span style="font-family:monospace;font-size:9px;color:#5aa3f5">&#9644; Export route</span>':'')
+    +'<span style="font-family:monospace;font-size:9px;color:#c02030">&#9711; &ge;50% exposure</span>'
+    +'<span style="font-family:monospace;font-size:9px;color:#e8673c">&#9711; &ge;25%</span>'
+    +'<span style="font-family:monospace;font-size:9px;color:#f0c84b">&#9711; &lt;25%</span>'
+    +'<span style="font-family:monospace;font-size:8px;color:#3A3A34;margin-left:auto">Estimated maritime routing · DEMO</span>'
+    +'</div>';
+  el.appendChild(mapWrap);
+
+  // Destroy old Leaflet instance (its container was just replaced) then reinit
+  if (PSR_MAP) { try { PSR_MAP.remove(); } catch(e){} PSR_MAP = null; PSR_MAP_READY = false; }
+  PSR_MAP_BOX_READY = false;
+  setTimeout(function(){ psrInitMap(); psrDrawFlowRoutes(flow); }, 80);
 }
 
 // ── FLOW MAP TAB ──────────────────────────────────────────────────────────────

@@ -1,82 +1,82 @@
 {
-  "generated": "2026-07-16",
+  "generated": "2026-07-17",
   "source": "IMF PortWatch ArcGIS REST API",
   "queryWindow": {
-    "start": "2026-07-02",
-    "end": "2026-07-08"
+    "start": "2026-07-03",
+    "end": "2026-07-09"
   },
   "updates": {
     "Jebel Ali": {
-      "newCur": 10,
-      "ratio": 0.16666666666666666,
-      "imfCur": 16,
+      "newCur": 11,
+      "ratio": 0.17708333333333334,
+      "imfCur": 17,
       "imfPre": 96,
       "dashPre": 62,
-      "window": "2026-07-02–2026-07-08"
+      "window": "2026-07-03–2026-07-09"
     },
     "Shuwaikh": {
-      "newCur": 8,
-      "ratio": 0.3921568627450981,
-      "imfCur": 2,
+      "newCur": 12,
+      "ratio": 0.5882352941176471,
+      "imfCur": 3,
       "imfPre": 5.1,
       "dashPre": 20,
-      "window": "2026-07-02–2026-07-08"
+      "window": "2026-07-03–2026-07-09"
     },
     "Dammam": {
-      "newCur": 17,
-      "ratio": 0.4861111111111111,
-      "imfCur": 7,
+      "newCur": 19,
+      "ratio": 0.5555555555555556,
+      "imfCur": 8,
       "imfPre": 14.4,
       "dashPre": 35,
-      "window": "2026-07-02–2026-07-08"
+      "window": "2026-07-03–2026-07-09"
     },
     "Shanghai": {
       "newCur": 84,
-      "ratio": 0.8859315589353612,
-      "imfCur": 233,
+      "ratio": 0.8821292775665399,
+      "imfCur": 232,
       "imfPre": 263,
       "dashPre": 95,
-      "window": "2026-07-02–2026-07-08"
+      "window": "2026-07-03–2026-07-09"
     },
     "Busan": {
-      "newCur": 79,
-      "ratio": 0.9338842975206612,
-      "imfCur": 226,
+      "newCur": 78,
+      "ratio": 0.9132231404958677,
+      "imfCur": 221,
       "imfPre": 242,
       "dashPre": 85,
-      "window": "2026-07-02–2026-07-08"
+      "window": "2026-07-03–2026-07-09"
     },
     "Singapore": {
-      "newCur": 170,
-      "ratio": 0.9166666666666666,
-      "imfCur": 264,
+      "newCur": 169,
+      "ratio": 0.9131944444444444,
+      "imfCur": 263,
       "imfPre": 288,
       "dashPre": 185,
-      "window": "2026-07-02–2026-07-08"
+      "window": "2026-07-03–2026-07-09"
     },
     "Rotterdam": {
-      "newCur": 87,
-      "ratio": 0.9164818920916481,
-      "imfCur": 124,
+      "newCur": 79,
+      "ratio": 0.835181079083518,
+      "imfCur": 113,
       "imfPre": 135.3,
       "dashPre": 95,
-      "window": "2026-07-02–2026-07-08"
+      "window": "2026-07-03–2026-07-09"
     },
     "Antwerp": {
-      "newCur": 78,
-      "ratio": 1,
-      "imfCur": 90,
+      "newCur": 80,
+      "ratio": 1.0222222222222221,
+      "imfCur": 92,
       "imfPre": 90,
       "dashPre": 78,
-      "window": "2026-07-02–2026-07-08"
+      "window": "2026-07-03–2026-07-09"
     },
     "Djibouti": {
-      "newCur": 32,
-      "ratio": 0.9859154929577465,
-      "imfCur": 14,
+      "newCur": 34,
+      "ratio": 1.0563380281690142,
+      "imfCur": 15,
       "imfPre": 14.2,
       "dashPre": 32,
-      "window": "2026-07-02–2026-07-08"
+      "window": "2026-07-03–2026-07-09"
     }
   }
 }

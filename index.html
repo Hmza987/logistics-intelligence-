@@ -20459,9 +20459,9 @@ function psrRenderBaseline(){
     return {p:p, impVal:impVal, expVal:expVal, total:total};
   }).sort(function(a,b){return b.total-a.total;});
 
-  var tableHeader = '<div style="display:grid;grid-template-columns:28px 130px 200px 60px 150px 1fr;gap:10px;align-items:center;'
+  var tableHeader = '<div style="display:grid;grid-template-columns:28px 120px 180px 52px 140px 160px 1fr;gap:10px;align-items:center;'
     +'padding:6px 0;border-bottom:1px solid #2A2A26;font-family:monospace;font-size:8px;letter-spacing:.1em;color:#4A4A44;text-transform:uppercase">'
-    +'<span></span><span>Partner</span><span>Volume (est.)</span><span>Share</span><span>Chokepoints</span><span>Risk</span>'
+    +'<span></span><span>Partner</span><span>Volume (est.)</span><span>Share</span><span>Chokepoints</span><span>Route</span><span>Risk</span>'
     +'</div>';
 
   var combinedRows = partnerVols.map(function(pv){
@@ -20471,7 +20471,7 @@ function psrRenderBaseline(){
     var flags  = (pv.p.riskFlags||[]).map(function(f){
       return '<span class="psr-flag-pill '+psrRiskClass([f])+'">'+f+'</span>';
     }).join(' ');
-    return '<div style="display:grid;grid-template-columns:28px 130px 200px 60px 150px 1fr;gap:10px;align-items:center;padding:8px 0;border-bottom:1px solid #141412">'
+    return '<div style="display:grid;grid-template-columns:28px 120px 180px 52px 140px 160px 1fr;gap:10px;align-items:center;padding:8px 0;border-bottom:1px solid #141412">'
       +'<span style="font-size:14px">'+pv.p.flag+'</span>'
       +'<span style="font-family:monospace;font-size:10px;color:#C8C7C2">'+pv.p.name+'</span>'
       +'<div>'
@@ -20483,6 +20483,7 @@ function psrRenderBaseline(){
       +'</div>'
       +'<span style="font-family:monospace;font-size:10px;color:#9A9A90;text-align:right">'+share+'%</span>'
       +'<span style="font-family:monospace;font-size:8px;color:#5A5A52;line-height:1.6">'+(pv.p.chokepoints||[]).join('<br>')+'</span>'
+      +'<span style="font-family:monospace;font-size:8px;color:#5A5A52;line-height:1.6">'+(pv.p.routes||[]).join('<br>')+'</span>'
       +'<span style="display:flex;flex-wrap:wrap;gap:4px">'+flags+'</span>'
       +'</div>';
   }).join('');

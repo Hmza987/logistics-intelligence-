@@ -20431,17 +20431,14 @@ function psrRenderBaseline(){
   var tv = flow.importVal + flow.exportVal;
   var bal = flow.exportVal - flow.importVal;
   var top3share = flow.partners.slice(0,3).reduce(function(s,p){return s+(p.importShare||p.exportShare||0);},0);
-  var maxCkpt = Object.keys(flow.chokepointExposure).reduce(function(best,k){
-    return flow.chokepointExposure[k]>flow.chokepointExposure[best]?k:best;
-  },Object.keys(flow.chokepointExposure)[0]);
-  var maxCkptNames = {hormuz:'Strait of Hormuz',bab:'Bab Al-Mandeb',suez:'Suez Canal',malacca:'Malacca Strait',panama:'Panama Canal'};
 
+  // ── KPI cards (no chokepoint card here — see Resilience Lab tab) ─────────
   var kpiShow = [];
-  if(_psrDir!=='export' && flow.importVal>0) kpiShow.push({label:'Import Value',val:'$'+psrFmt(flow.importVal),sub:'USD (demo)',color:'#d97706'});
-  if(_psrDir!=='import' && flow.exportVal>0) kpiShow.push({label:'Export Value',val:'$'+psrFmt(flow.exportVal),sub:'USD (demo)',color:'#5aa3f5'});
+  if(_psrDir!=='export' && flow.importVal>0) kpiShow.push({label:'Total Imports',val:'$'+psrFmt(flow.importVal),sub:flow.unit+' · demo',color:'#d97706'});
+  if(_psrDir!=='import' && flow.exportVal>0) kpiShow.push({label:'Total Exports',val:'$'+psrFmt(flow.exportVal),sub:flow.unit+' · demo',color:'#5aa3f5'});
+  if(_psrDir==='total') kpiShow.push({label:'Trade Balance',val:(bal>=0?'+':'')+psrFmt(bal),sub:bal>=0?'surplus':'deficit',color:bal>=0?'#3dd68c':'#c02030'});
   kpiShow.push({label:'Trade Partners',val:flow.partners.length,sub:'tracked in dataset',color:'#C9AE4E'});
   kpiShow.push({label:'Top-3 Partner Share',val:psrPct(top3share),sub:'of trade volume',color:'#C9AE4E'});
-  kpiShow.push({label:'Max Chokepoint Exposure',val:psrPct(flow.chokepointExposure[maxCkpt]),sub:maxCkptNames[maxCkpt],color:'#c02030'});
   if(flow.stockDays) kpiShow.push({label:'Strategic Stock',val:flow.stockDays+'d',sub:'estimated coverage',color:'#3dd68c'});
 
   var kpiHtml = '<div class="psr-kpi-grid">'+kpiShow.map(function(k){
@@ -20450,32 +20447,46 @@ function psrRenderBaseline(){
       +'<div class="psr-kpi-sub">'+k.sub+'</div></div>';
   }).join('')+'</div>';
 
-  // Chokepoint exposure bar
-  var ckptHtml = '<div style="margin-bottom:24px"><div class="psr-section-title">Chokepoint Exposure (% of trade routed through)</div>'
-    +'<div style="display:grid;grid-template-columns:140px 1fr 40px;gap:6px 12px;align-items:center">';
-  var ckptNames = {hormuz:'Hormuz',bab:'Bab Al-Mandeb',suez:'Suez Canal',malacca:'Malacca',panama:'Panama'};
-  var ckptColors = {hormuz:'#c02030',bab:'#e8673c',suez:'#f0c84b',malacca:'#5aa3f5',panama:'#3dd68c'};
-  Object.keys(flow.chokepointExposure).forEach(function(k){
-    var v = flow.chokepointExposure[k];
-    ckptHtml += '<span style="font-family:monospace;font-size:9px;color:#7A7A72;letter-spacing:.06em">'+ckptNames[k]+'</span>'
-      +'<div style="background:#141412;border-radius:2px;height:6px;overflow:hidden">'
-      +'<div style="width:'+v+'%;height:100%;background:'+ckptColors[k]+';border-radius:2px;transition:width .4s"></div></div>'
-      +'<span style="font-family:monospace;font-size:9px;color:'+ckptColors[k]+'">'+(v||'—')+(v?'%':'')+'</span>';
-  });
-  ckptHtml += '</div></div>';
+  // ── Volume by partner ──────────────────────────────────────────────────────
+  // Estimate partner value = share% × relevant total
+  var showImport = _psrDir !== 'export';
+  var showExport = _psrDir !== 'import';
+  var maxPartnerVal = 0;
+  var partnerVols = flow.partners.map(function(p){
+    var impVal = showImport ? Math.round(flow.importVal * (p.importShare||0) / 100) : 0;
+    var expVal = showExport ? Math.round(flow.exportVal * (p.exportShare||0) / 100) : 0;
+    var total = impVal + expVal;
+    if(total > maxPartnerVal) maxPartnerVal = total;
+    return {p:p, impVal:impVal, expVal:expVal, total:total};
+  }).sort(function(a,b){return b.total-a.total;});
 
-  // Partners table
-  var partnerRows = flow.partners.map(function(p,i){
-    var share = _psrDir==='export' ? p.exportShare : (_psrDir==='import' ? p.importShare : Math.max(p.importShare,p.exportShare));
-    var flags = (p.riskFlags||[]).map(function(f){
+  var volRows = partnerVols.map(function(pv){
+    var impPct  = maxPartnerVal ? (pv.impVal/maxPartnerVal*100) : 0;
+    var expPct  = maxPartnerVal ? (pv.expVal/maxPartnerVal*100) : 0;
+    var flags = (pv.p.riskFlags||[]).map(function(f){
       return '<span class="psr-flag-pill '+psrRiskClass([f])+'">'+f+'</span>';
     }).join(' ');
+    return '<div style="display:grid;grid-template-columns:28px 130px 1fr 90px auto;align-items:center;gap:10px;padding:7px 0;border-bottom:1px solid #141412">'
+      +'<span style="font-family:monospace;font-size:9px;color:#5A5A52">'+pv.p.flag+'</span>'
+      +'<span style="font-family:monospace;font-size:10px;color:#C8C7C2">'+pv.p.name+'</span>'
+      +'<div style="position:relative;height:14px;background:#141412;border-radius:2px;overflow:hidden">'
+        +(pv.impVal>0?'<div style="position:absolute;left:0;top:0;height:100%;width:'+impPct.toFixed(1)+'%;background:#d97706;opacity:0.8;border-radius:2px 0 0 2px"></div>':'')
+        +(pv.expVal>0?'<div style="position:absolute;left:'+impPct.toFixed(1)+'%;top:0;height:100%;width:'+expPct.toFixed(1)+'%;background:#5aa3f5;opacity:0.8"></div>':'')
+      +'</div>'
+      +'<span style="font-family:monospace;font-size:10px;color:#C9AE4E;text-align:right">$'+psrFmt(pv.total||0)+'</span>'
+      +'<span style="display:flex;flex-wrap:wrap;gap:4px;min-width:120px">'+flags+'</span>'
+      +'</div>';
+  }).join('');
+
+  // ── Partners table (chokepoints) ───────────────────────────────────────────
+  var partnerRows = flow.partners.map(function(p,i){
+    var share = _psrDir==='export' ? p.exportShare : (_psrDir==='import' ? p.importShare : Math.max(p.importShare,p.exportShare));
     return '<div class="psr-partner-row">'
       +'<span style="color:#5A5A52;font-size:9px">'+(i+1)+'</span>'
       +'<span style="color:#C8C7C2">'+p.flag+' '+p.name+'</span>'
       +'<span style="color:#C9AE4E;text-align:right">'+share+'%</span>'
       +'<span style="color:#5A5A52;font-size:9px">'+(p.chokepoints||[]).join(', ')+'</span>'
-      +'<span style="display:flex;flex-wrap:wrap;gap:4px">'+flags+'</span>'
+      +'<span style="color:#5A5A52;font-size:9px">'+(p.routes||[]).join(' → ')+'</span>'
       +'</div>';
   }).join('');
 
@@ -20488,10 +20499,18 @@ function psrRenderBaseline(){
   el.innerHTML = '<div style="max-width:1100px">'
     +'<div style="font-family:monospace;font-size:10px;color:#5A5A52;margin-bottom:16px;letter-spacing:.06em">'
     +'HS '+flow.hs+' · '+flow.product+' · '+flow.country+' · 2024 · <span style="color:#C9AE4E">DEMO DATA</span></div>'
-    + kpiHtml + ckptHtml
-    +'<div class="psr-section-title">Trade Partners</div>'
+    + kpiHtml
+    +'<div class="psr-section-title">Estimated Trade Volume by Partner</div>'
+    +'<div style="display:flex;gap:16px;margin-bottom:10px">'
+    +(showImport?'<span style="font-family:monospace;font-size:9px;color:#d97706">&#9644; Imports</span>':'')
+    +(showExport?'<span style="font-family:monospace;font-size:9px;color:#5aa3f5">&#9644; Exports</span>':'')
+    +'<span style="font-family:monospace;font-size:8px;color:#3A3A34;margin-left:auto">Values estimated: share% × total · DEMO</span>'
+    +'</div>'
+    + volRows
+    +'<div style="margin-top:24px"></div>'
+    +'<div class="psr-section-title">Partner Routes &amp; Chokepoints</div>'
     +'<div class="psr-partner-row psr-partner-header" style="margin-bottom:4px">'
-    +'<span>#</span><span>Country</span><span>Share</span><span>Chokepoints</span><span>Risk Indicators</span></div>'
+    +'<span>#</span><span>Country</span><span>Share</span><span>Chokepoints</span><span>Route</span></div>'
     + partnerRows + altHtml + '</div>';
 }
 

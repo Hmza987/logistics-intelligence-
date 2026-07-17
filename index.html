@@ -5199,15 +5199,13 @@ canvas { font-family: var(--f-mono); }
   <div id="psr-tabs" style="background:#0F0F0D;border-bottom:1px solid #1E1E1C;padding:0 28px;display:flex;gap:0">
     <button class="psr-stab psr-stab-active" id="psr-stab-baseline"  onclick="psrTab('baseline')">Baseline</button>
     <button class="psr-stab" id="psr-stab-flowmap"   onclick="psrTab('flowmap')">Flow Map</button>
-    <button class="psr-stab" id="psr-stab-scenarios" onclick="psrTab('scenarios')">Resilience Lab</button>
-    <button class="psr-stab" id="psr-stab-watchlist" onclick="psrTab('watchlist')">Watchlist</button>
+    <button class="psr-stab" id="psr-stab-scenarios" onclick="psrTab('scenarios')">Resilience Lab &amp; Watchlist</button>
   </div>
 
   <!-- Content panels -->
   <div id="psr-baseline"  class="psr-panel psr-panel-active" style="overflow-y:auto;height:calc(100vh - 160px)"></div>
   <div id="psr-flowmap"   class="psr-panel" style="overflow-y:auto;height:calc(100vh - 160px)"></div>
   <div id="psr-scenarios" class="psr-panel" style="overflow-y:auto;height:calc(100vh - 160px)"></div>
-  <div id="psr-watchlist-panel" class="psr-panel" style="overflow-y:auto;height:calc(100vh - 160px)"></div>
 
 </div><!-- end page-psr -->
 
@@ -20400,9 +20398,9 @@ window.psrRender = function(){
 // ── TAB SWITCHING ─────────────────────────────────────────────────────────────
 window.psrTab = function(t){
   _psrTab = t;
-  ['baseline','flowmap','scenarios','watchlist'].forEach(function(x){
+  ['baseline','flowmap','scenarios'].forEach(function(x){
     var btn=document.getElementById('psr-stab-'+x);
-    var panel=document.getElementById('psr-'+(x==='watchlist'?'watchlist-panel':x));
+    var panel=document.getElementById('psr-'+x);
     if(btn) btn.className='psr-stab'+(x===t?' psr-stab-active':'');
     if(panel) panel.className='psr-panel'+(x===t?' psr-panel-active':'');
   });
@@ -20603,14 +20601,58 @@ function psrRenderScenarios(){
     return;
   }
 
+  // ── Watchlist alerts (embedded at top) ───────────────────────────────────
+  var alerts = [];
+  var ckptNames2 = {hormuz:'Strait of Hormuz',bab:'Bab Al-Mandeb',suez:'Suez Canal',malacca:'Malacca Strait',panama:'Panama Canal'};
+  var topShare = flow.partners[0] ? Math.max(flow.partners[0].importShare,flow.partners[0].exportShare) : 0;
+  if(topShare>=25) alerts.push({icon:'⚠️',color:'#e8673c',level:'HIGH',
+    title:'Supplier Concentration',
+    body:'Top partner ('+flow.partners[0].name+') = '+topShare+'% of trade. Single-source share above 25%.'});
+  var highCkpts = Object.keys(flow.chokepointExposure).filter(function(k){return flow.chokepointExposure[k]>=50;});
+  if(highCkpts.length) alerts.push({icon:'🚨',color:'#c02030',level:'CRITICAL',
+    title:'High Chokepoint Exposure',
+    body:highCkpts.map(function(k){return ckptNames2[k]+' '+flow.chokepointExposure[k]+'%';}).join(' · ')});
+  var altCount = flow.altSuppliers ? flow.altSuppliers.length : 0;
+  if(altCount<=2) alerts.push({icon:'🔶',color:'#f0c84b',level:'MEDIUM',
+    title:'Limited Alternatives',
+    body:'Only '+(altCount||'no')+' alternative supplier(s) identified for '+flow.product+'.'});
+  var conflictPartners = flow.partners.filter(function(p){return (p.riskFlags||[]).some(function(f){return f.toLowerCase().indexOf('conflict')>=0;});});
+  if(conflictPartners.length) alerts.push({icon:'🌐',color:'#e8673c',level:'HIGH',
+    title:'Conflict Zone Exposure',
+    body:conflictPartners.map(function(p){return p.name;}).join(', ')+' — monitor for export restrictions.'});
+  if(flow.stockDays&&flow.stockDays<45) alerts.push({icon:'📦',color:'#f0c84b',level:'MEDIUM',
+    title:'Low Strategic Stock',
+    body:'Estimated '+flow.stockDays+' days coverage — below 60-day threshold.'});
+  var highExp = Object.keys(flow.chokepointExposure).filter(function(k){return flow.chokepointExposure[k]>=30;});
+  if(highExp.length>=2) alerts.push({icon:'🔁',color:'#5aa3f5',level:'MONITOR',
+    title:'Multi-Chokepoint Dependency',
+    body:highExp.map(function(k){return ckptNames2[k];}).join(', ')+' simultaneously exposed.'});
+  if(!alerts.length) alerts.push({icon:'✅',color:'#3dd68c',level:'CLEAR',title:'No Critical Flags',body:'No rule-based flags triggered for this product.'});
+
+  var wlHtml = '<div style="margin-bottom:24px">'
+    +'<div class="psr-section-title">Auto-Generated Watchlist <span style="color:#3A3A34;font-weight:normal;letter-spacing:0">· rule-based · DEMO DATA</span></div>'
+    +'<div style="display:flex;flex-wrap:wrap;gap:8px">'
+    +alerts.map(function(a){
+      return '<div style="background:#111110;border:1px solid '+a.color+'33;border-left:2px solid '+a.color+';border-radius:3px;padding:8px 12px;min-width:200px;flex:1">'
+        +'<div style="display:flex;align-items:center;gap:6px;margin-bottom:3px">'
+        +'<span style="font-size:12px">'+a.icon+'</span>'
+        +'<span style="font-family:monospace;font-size:9px;font-weight:600;color:#C8C7C2">'+a.title+'</span>'
+        +'<span style="font-family:monospace;font-size:7px;color:'+a.color+';border:1px solid '+a.color+'44;padding:1px 5px;border-radius:2px;margin-left:auto">'+a.level+'</span>'
+        +'</div>'
+        +'<div style="font-family:monospace;font-size:9px;color:#6A6A60;line-height:1.5">'+a.body+'</div>'
+        +'</div>';
+    }).join('')
+    +'</div></div>';
+
+  // ── Scenario runner ───────────────────────────────────────────────────────
   var cards = PSR_SCENARIOS.map(function(s){
     var isActive = _psrActiveScenario===s.id;
-    return '<div class="psr-scenario-card'+(isActive?' active':'')+'" onclick="psrRunScenario(\''+s.id+'\')" id="psr-sc-'+s.id+'">'
+    return '<div class="psr-scenario-card'+(isActive?' active':'')+'" onclick="psrRunScenario(\''+s.id+'\')">'
       +'<div style="display:flex;align-items:center;gap:10px">'
-      +'<span style="font-size:18px">'+s.icon+'</span>'
+      +'<span style="font-size:16px">'+s.icon+'</span>'
       +'<div><div class="psr-scenario-title">'+s.name+'</div>'
       +'<div class="psr-scenario-sub">'+s.desc+'</div></div>'
-      +'<span style="margin-left:auto;font-family:monospace;font-size:9px;color:'+(isActive?s.color:'#3A3A34')+'">'+(isActive?'▶ ACTIVE':'SELECT')+'</span>'
+      +'<span style="margin-left:auto;font-family:monospace;font-size:9px;color:'+(isActive?s.color:'#3A3A34')+'">'+(isActive?'▶':'▷')+'</span>'
       +'</div></div>';
   }).join('');
 
@@ -20619,28 +20661,29 @@ function psrRenderScenarios(){
     var sc = PSR_SCENARIOS.filter(function(s){return s.id===_psrActiveScenario;})[0];
     if(sc){
       var res = sc.fn(flow);
-      impactHtml = '<div style="margin-top:24px">'
-        +'<div class="psr-section-title" style="color:'+sc.color+'">Impact Analysis — '+sc.name+'</div>'
+      impactHtml = '<div class="psr-section-title" style="color:'+sc.color+'">'+sc.icon+' Impact Analysis — '+sc.name+'</div>'
         +'<div class="psr-impact-grid">'
         +'<div class="psr-impact-cell"><div class="psr-impact-label">Value Exposed</div><div class="psr-impact-val" style="color:'+sc.color+'">$'+psrFmt(res.valueExposed)+'</div></div>'
         +'<div class="psr-impact-cell"><div class="psr-impact-label">% of Trade</div><div class="psr-impact-val" style="color:'+sc.color+'">'+res.pctExposed+'%</div></div>'
-        +'<div class="psr-impact-cell"><div class="psr-impact-label">Affected Partners</div><div class="psr-impact-val" style="font-size:12px;color:#C8C7C2">'+(res.affectedPartners.length||'None')+'</div></div>'
+        +'<div class="psr-impact-cell"><div class="psr-impact-label">Affected Partners</div><div class="psr-impact-val" style="font-size:14px;color:#C8C7C2">'+(res.affectedPartners.length||'—')+'</div></div>'
         +'</div>'
-        +'<div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:12px">'
+        +'<div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:10px">'
         +'<div class="psr-impact-cell"><div class="psr-impact-label">Affected Partners</div><div style="font-family:monospace;font-size:10px;color:#9A9A90;line-height:1.6">'+res.affectedPartners.join(', ')+'</div></div>'
         +'<div class="psr-impact-cell"><div class="psr-impact-label">Cost Impact (est.)</div><div style="font-family:monospace;font-size:10px;color:#e8673c;line-height:1.6">'+res.costImpact+'</div></div>'
         +'<div class="psr-impact-cell"><div class="psr-impact-label">Delay Impact (est.)</div><div style="font-family:monospace;font-size:10px;color:#f0c84b;line-height:1.6">'+res.delayImpact+'</div></div>'
         +'<div class="psr-impact-cell"><div class="psr-impact-label">Alternative Routes / Suppliers</div><div style="font-family:monospace;font-size:10px;color:#3dd68c;line-height:1.6">'+res.altRoutes.join('<br>')+'</div></div>'
         +'</div>'
-        +'<div style="margin-top:10px;font-family:monospace;font-size:8px;color:#3A3A34;letter-spacing:.06em">* All impact estimates are indicative and based on illustrative demo data. Not for operational use.</div>'
-        +'</div>';
+        +'<div style="margin-top:10px;font-family:monospace;font-size:8px;color:#3A3A34">* Indicative estimates based on illustrative demo data.</div>';
     }
   }
 
-  el.innerHTML = '<div style="max-width:1100px;display:grid;grid-template-columns:320px 1fr;gap:24px;align-items:start">'
-    +'<div><div class="psr-section-title">Select Scenario</div>'+cards+'</div>'
-    +'<div>'+(impactHtml||'<div style="padding:40px;text-align:center;font-family:monospace;font-size:11px;color:#3A3A34">Select a scenario on the left to view impact analysis.</div>')+'</div>'
-    +'</div>';
+  el.innerHTML = '<div style="max-width:1100px">'
+    + wlHtml
+    +'<div class="psr-section-title">Scenario Runner</div>'
+    +'<div style="display:grid;grid-template-columns:300px 1fr;gap:20px;align-items:start">'
+    +'<div>'+cards+'</div>'
+    +'<div>'+(impactHtml||'<div style="padding:40px 0;font-family:monospace;font-size:11px;color:#3A3A34">Select a scenario to view impact analysis.</div>')+'</div>'
+    +'</div></div>';
 }
 
 window.psrRunScenario = function(id){

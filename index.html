@@ -3557,6 +3557,7 @@ canvas { font-family: var(--f-mono); }
   <div class="tab" onclick="showTab('simulator',this)">&#9670; Scenario Simulator</div>
   <div class="tab" onclick="showTab('watchlist',this)">&#8881; Strategic Watchlist</div>
   <div class="tab" onclick="showTab('stress',this)">&#9670; Trade Explorer Lab</div>
+  <div class="tab" onclick="showTab('psr',this)">&#9670; Supply Chain Resilience</div>
 </div>
 
 <!-- MOBILE CURRENT-TAB INDICATOR -->
@@ -3602,6 +3603,10 @@ canvas { font-family: var(--f-mono); }
       <button class="mob-nav-item" id="mob-tab-stress" onclick="mobShowTab('stress')">
         <span class="mob-nav-icon">&#9670;</span>
         <span class="mob-nav-label">Trade Explorer Lab</span>
+      </button>
+      <button class="mob-nav-item" id="mob-tab-psr" onclick="mobShowTab('psr')">
+        <span class="mob-nav-icon">&#9670;</span>
+        <span class="mob-nav-label">Supply Chain Resilience</span>
       </button>
     </div>
     <div id="mob-nav-footer">
@@ -5114,6 +5119,98 @@ canvas { font-family: var(--f-mono); }
 
 </div><!-- end page-stress -->
 
+<style>
+.psr-dir-btn{background:none;border:none;color:#6A6A60;font-family:monospace;font-size:10px;padding:6px 12px;cursor:pointer;letter-spacing:.06em;transition:background .15s,color .15s}
+.psr-dir-btn:hover{background:#1E1E1C;color:#C8C7C2}
+.psr-dir-active{background:#1E1E1C!important;color:#C9AE4E!important}
+.psr-stab{background:none;border:none;border-bottom:2px solid transparent;color:#6A6A60;font-family:monospace;font-size:10px;letter-spacing:.1em;text-transform:uppercase;padding:12px 20px;cursor:pointer;transition:color .15s,border-color .15s}
+.psr-stab:hover{color:#C8C7C2}
+.psr-stab-active{color:#C9AE4E!important;border-bottom-color:#C9AE4E!important}
+.psr-panel{display:none;padding:24px 28px}
+.psr-panel-active{display:block}
+.psr-kpi-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:12px;margin-bottom:24px}
+.psr-kpi{background:#111110;border:1px solid #1E1E1C;border-radius:4px;padding:14px 16px}
+.psr-kpi-label{font-family:monospace;font-size:9px;letter-spacing:.12em;text-transform:uppercase;color:#5A5A52;margin-bottom:6px}
+.psr-kpi-value{font-family:monospace;font-size:24px;font-weight:700;color:#C8C7C2;line-height:1}
+.psr-kpi-sub{font-family:monospace;font-size:9px;color:#5A5A52;margin-top:4px}
+.psr-section-title{font-family:monospace;font-size:9px;letter-spacing:.14em;text-transform:uppercase;color:#5A5A52;margin:0 0 12px;padding-bottom:6px;border-bottom:1px solid #1A1A18}
+.psr-partner-row{display:grid;grid-template-columns:28px 1fr 80px 90px 1fr;align-items:center;gap:10px;padding:8px 0;border-bottom:1px solid #141412;font-family:monospace;font-size:10px;color:#9A9A90}
+.psr-partner-row:last-child{border-bottom:none}
+.psr-partner-header{color:#5A5A52!important;font-size:9px!important;padding-top:0!important;border-bottom:1px solid #1E1E1C!important}
+.psr-flag-pill{background:#1A1A18;border:1px solid #2A2A26;border-radius:10px;font-size:8px;padding:2px 7px;color:#7A7A72;white-space:nowrap}
+.psr-flag-high{border-color:#c02030;color:#c02030;background:rgba(192,32,48,.08)}
+.psr-flag-med{border-color:#e8673c;color:#e8673c;background:rgba(232,103,60,.08)}
+.psr-flag-low{border-color:#3dd68c;color:#3dd68c;background:rgba(61,214,140,.08)}
+.psr-scenario-card{background:#111110;border:1px solid #1E1E1C;border-radius:4px;padding:16px 18px;margin-bottom:10px;cursor:pointer;transition:border-color .15s}
+.psr-scenario-card:hover{border-color:#2A2A26}
+.psr-scenario-card.active{border-color:#C9AE4E}
+.psr-scenario-title{font-family:monospace;font-size:11px;color:#C8C7C2;margin-bottom:4px}
+.psr-scenario-sub{font-family:monospace;font-size:9px;color:#5A5A52;letter-spacing:.06em}
+.psr-impact-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:16px}
+.psr-impact-cell{background:#0C0C0A;border:1px solid #1E1E1C;border-radius:3px;padding:10px 12px}
+.psr-impact-label{font-family:monospace;font-size:8px;letter-spacing:.1em;text-transform:uppercase;color:#5A5A52;margin-bottom:4px}
+.psr-impact-val{font-family:monospace;font-size:16px;font-weight:700}
+.psr-wl-row{background:#111110;border:1px solid #1E1E1C;border-radius:4px;padding:12px 16px;margin-bottom:8px;display:flex;align-items:flex-start;gap:12px}
+.psr-wl-icon{width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:12px;flex-shrink:0;margin-top:1px}
+.psr-ac-item{padding:8px 12px;font-family:monospace;font-size:10px;color:#9A9A90;cursor:pointer;border-bottom:1px solid #1A1A18;display:flex;justify-content:space-between;gap:8px}
+.psr-ac-item:hover{background:#1E1E1C;color:#C8C7C2}
+.psr-ac-item:last-child{border-bottom:none}
+.psr-ac-code{color:#5A5A52;font-size:9px}
+</style>
+
+<!-- ════════════════════════════ SUPPLY CHAIN RESILIENCE PAGE ════════════════════════════ -->
+<div class="page" id="page-psr">
+
+  <!-- Top toolbar -->
+  <div id="psr-toolbar" style="background:#0C0C0A;border-bottom:1px solid #1E1E1C;padding:12px 28px;display:flex;align-items:center;gap:16px;flex-wrap:wrap">
+    <!-- Product search -->
+    <div style="position:relative;flex:1;min-width:220px;max-width:360px">
+      <input id="psr-search" type="text" placeholder="Search product (name or HS code)…"
+        oninput="psrSearch(this.value)"
+        style="width:100%;background:#141412;border:1px solid #2A2A26;border-radius:3px;color:#C8C7C2;font-family:monospace;font-size:11px;padding:7px 10px 7px 28px;outline:none;box-sizing:border-box"/>
+      <span style="position:absolute;left:9px;top:50%;transform:translateY(-50%);color:#4A4A44;font-size:11px">&#9673;</span>
+      <div id="psr-autocomplete" style="display:none;position:absolute;top:100%;left:0;right:0;background:#1A1A18;border:1px solid #2A2A26;border-top:none;z-index:200;max-height:220px;overflow-y:auto;border-radius:0 0 3px 3px"></div>
+    </div>
+    <!-- GCC country -->
+    <select id="psr-country" onchange="psrRender()" style="background:#141412;border:1px solid #2A2A26;border-radius:3px;color:#C8C7C2;font-family:monospace;font-size:11px;padding:7px 10px;outline:none">
+      <option value="SAU">Saudi Arabia</option>
+      <option value="ARE">UAE</option>
+      <option value="KWT">Kuwait</option>
+      <option value="QAT">Qatar</option>
+      <option value="BHR">Bahrain</option>
+      <option value="OMN">Oman</option>
+    </select>
+    <!-- Direction -->
+    <div style="display:flex;border:1px solid #2A2A26;border-radius:3px;overflow:hidden">
+      <button id="psr-dir-total"  onclick="psrDir('total')"  class="psr-dir-btn psr-dir-active">Total</button>
+      <button id="psr-dir-import" onclick="psrDir('import')" class="psr-dir-btn">Imports</button>
+      <button id="psr-dir-export" onclick="psrDir('export')" class="psr-dir-btn">Exports</button>
+    </div>
+    <!-- Year -->
+    <select id="psr-year" onchange="psrRender()" style="background:#141412;border:1px solid #2A2A26;border-radius:3px;color:#C8C7C2;font-family:monospace;font-size:11px;padding:7px 10px;outline:none">
+      <option value="2024">2024</option>
+      <option value="2023">2023</option>
+    </select>
+    <!-- Mock data badge -->
+    <span style="margin-left:auto;font-family:monospace;font-size:9px;color:#6A6A60;letter-spacing:.08em;border:1px solid #2A2A26;padding:4px 8px;border-radius:2px">&#9432; DEMO DATA — illustrative</span>
+  </div>
+
+  <!-- Sub-tabs -->
+  <div id="psr-tabs" style="background:#0F0F0D;border-bottom:1px solid #1E1E1C;padding:0 28px;display:flex;gap:0">
+    <button class="psr-stab psr-stab-active" id="psr-stab-baseline"  onclick="psrTab('baseline')">Baseline</button>
+    <button class="psr-stab" id="psr-stab-flowmap"   onclick="psrTab('flowmap')">Flow Map</button>
+    <button class="psr-stab" id="psr-stab-scenarios" onclick="psrTab('scenarios')">Resilience Lab</button>
+    <button class="psr-stab" id="psr-stab-watchlist" onclick="psrTab('watchlist')">Watchlist</button>
+  </div>
+
+  <!-- Content panels -->
+  <div id="psr-baseline"  class="psr-panel psr-panel-active" style="overflow-y:auto;height:calc(100vh - 160px)"></div>
+  <div id="psr-flowmap"   class="psr-panel" style="overflow-y:auto;height:calc(100vh - 160px)"></div>
+  <div id="psr-scenarios" class="psr-panel" style="overflow-y:auto;height:calc(100vh - 160px)"></div>
+  <div id="psr-watchlist-panel" class="psr-panel" style="overflow-y:auto;height:calc(100vh - 160px)"></div>
+
+</div><!-- end page-psr -->
+
 <!-- ═══════════════════════════════════ SITE FOOTER ═══════════════════════════════════ -->
 <footer id="site-footer">
   <div class="sf-inner">
@@ -5176,8 +5273,8 @@ var activeScenario = 1;
 var lastSimState   = null;  // persists View 2 state for route-tab switching
 
 // ── TABS ──────────────────────────────────────────────────────────────────────
-var TAB_LABELS = { hormuz:'Chokepoint Traffic', rates:'Freight Rate Tracker', trucking:'Corridor Performance Monitor', simulator:'Scenario Simulator', watchlist:'Strategic Watchlist', stress:'Trade Flow Stress Test' };
-var TAB_ICONS  = { hormuz:'&#9651;', rates:'&#9671;', trucking:'&#9672;', simulator:'&#9670;', watchlist:'&#8881;', stress:'&#9670;' };
+var TAB_LABELS = { hormuz:'Chokepoint Traffic', rates:'Freight Rate Tracker', trucking:'Corridor Performance Monitor', simulator:'Scenario Simulator', watchlist:'Strategic Watchlist', stress:'Trade Flow Stress Test', psr:'Supply Chain Resilience' };
+var TAB_ICONS  = { hormuz:'&#9651;', rates:'&#9671;', trucking:'&#9672;', simulator:'&#9670;', watchlist:'&#8881;', stress:'&#9670;', psr:'&#9670;' };
 
 // ── Port Dwell Model — fetch model output and update the 5 dwell cards ──────
 var pdtLoaded = false;
@@ -5375,6 +5472,9 @@ function showTab(name, el) {
     }
     if (name === 'stress') {
       initTradeFlowTab();
+    }
+    if (name === 'psr') {
+      initPSR();
     }
     if (name === 'trucking') {
       setTimeout(initGCCCorridorsMap, 100);
@@ -9452,7 +9552,7 @@ function closeMobNav() {
 function mobShowTab(name) {
   // Delegate to the main showTab function using the matching desktop tab element
   var desktopTabs = document.querySelectorAll('#tabs .tab');
-  var tabNames = ['hormuz', 'rates', 'trucking', 'simulator', 'watchlist', 'stress'];
+  var tabNames = ['hormuz', 'rates', 'trucking', 'simulator', 'watchlist', 'stress', 'psr'];
   var idx = tabNames.indexOf(name);
   if (idx !== -1) showTab(name, desktopTabs[idx]);
 
@@ -20023,6 +20123,621 @@ document.addEventListener('keydown',function(e){
   if(e.key==='Escape'){var o=document.getElementById('bt-overlay');if(o&&o.style.display!=='none')btClose();}
 });
 })();
+
+// ══════════════════════════════════════════════════════════════════════════════
+// PRODUCT SUPPLY CHAIN RESILIENCE EXPLORER
+// All trade figures below are DEMO / ILLUSTRATIVE DATA.
+// They do not represent official government or customs statistics.
+// ══════════════════════════════════════════════════════════════════════════════
+(function(){
+
+// ── MOCK DATA ─────────────────────────────────────────────────────────────────
+var PSR_PRODUCTS = [
+  {hs:'1005',name:'Maize (Corn)',sector:'Food & Feed'},
+  {hs:'1001',name:'Wheat',sector:'Food & Feed'},
+  {hs:'1006',name:'Rice',sector:'Food & Feed'},
+  {hs:'1507',name:'Soybean Oil',sector:'Food & Feed'},
+  {hs:'2709',name:'Crude Petroleum',sector:'Energy'},
+  {hs:'2711',name:'LPG / Natural Gas',sector:'Energy'},
+  {hs:'2601',name:'Iron Ore',sector:'Metals'},
+  {hs:'7207',name:'Steel Billets',sector:'Metals'},
+  {hs:'2814',name:'Ammonia',sector:'Chemicals'},
+  {hs:'3102',name:'Nitrogen Fertilizers',sector:'Chemicals'},
+  {hs:'8471',name:'Computers & IT Equipment',sector:'Electronics'},
+  {hs:'8517',name:'Telecom Equipment',sector:'Electronics'},
+  {hs:'8703',name:'Passenger Vehicles',sector:'Transport'},
+  {hs:'8431',name:'Machinery Parts',sector:'Machinery'},
+  {hs:'8481',name:'Industrial Valves',sector:'Machinery'},
+  {hs:'3004',name:'Medicaments',sector:'Pharma'},
+  {hs:'3006',name:'Pharmaceutical Goods',sector:'Pharma'},
+  {hs:'5201',name:'Cotton',sector:'Textiles'},
+  {hs:'6204',name:'Apparel (Women\'s)',sector:'Textiles'},
+  {hs:'7113',name:'Jewellery',sector:'Luxury'},
+  {hs:'3901',name:'Polyethylene',sector:'Petrochemicals'},
+  {hs:'2917',name:'Plastic Polymers',sector:'Petrochemicals'}
+];
+
+// Per-country, per-product flows (demo)
+var PSR_FLOWS = {
+  SAU: {
+    '1001': {
+      product:'Wheat', hs:'1001', country:'Saudi Arabia',
+      importVal:2800, exportVal:120, unit:'M USD',
+      partners:[
+        {name:'Ukraine',code:'UKR',flag:'🇺🇦',importShare:28,exportShare:0,routes:['Black Sea','Suez Canal','Red Sea'],chokepoints:['Bab Al-Mandeb','Suez Canal'],riskFlags:['Conflict zone','Single chokepoint']},
+        {name:'Russia',code:'RUS',flag:'🇷🇺',importShare:22,exportShare:0,routes:['Black Sea','Suez Canal','Red Sea'],chokepoints:['Bab Al-Mandeb','Suez Canal'],riskFlags:['Sanctions exposure','Conflict zone']},
+        {name:'Australia',code:'AUS',flag:'🇦🇺',importShare:18,exportShare:0,routes:['Indian Ocean','Strait of Hormuz'],chokepoints:['Strait of Hormuz'],riskFlags:['Hormuz exposure']},
+        {name:'Canada',code:'CAN',flag:'🇨🇦',importShare:14,exportShare:0,routes:['Atlantic','Suez Canal','Red Sea'],chokepoints:['Suez Canal','Bab Al-Mandeb'],riskFlags:['Long transit']},
+        {name:'USA',code:'USA',flag:'🇺🇸',importShare:10,exportShare:2,routes:['Atlantic','Suez Canal'],chokepoints:['Suez Canal'],riskFlags:[]}
+      ],
+      chokepointExposure:{hormuz:18,bab:72,suez:68,malacca:0,panama:0},
+      stockDays:45, altSuppliers:['Argentina','India','France']
+    },
+    '2709': {
+      product:'Crude Petroleum', hs:'2709', country:'Saudi Arabia',
+      importVal:0, exportVal:185000, unit:'M USD',
+      partners:[
+        {name:'China',code:'CHN',flag:'🇨🇳',importShare:0,exportShare:26,routes:['Strait of Hormuz','Indian Ocean','Malacca Strait'],chokepoints:['Strait of Hormuz','Malacca Strait'],riskFlags:['Dual chokepoint','High concentration']},
+        {name:'Japan',code:'JPN',flag:'🇯🇵',importShare:0,exportShare:16,routes:['Strait of Hormuz','Indian Ocean','Malacca Strait'],chokepoints:['Strait of Hormuz','Malacca Strait'],riskFlags:['Dual chokepoint']},
+        {name:'India',code:'IND',flag:'🇮🇳',importShare:0,exportShare:14,routes:['Strait of Hormuz','Indian Ocean'],chokepoints:['Strait of Hormuz'],riskFlags:[]},
+        {name:'South Korea',code:'KOR',flag:'🇰🇷',importShare:0,exportShare:12,routes:['Strait of Hormuz','Indian Ocean','Malacca Strait'],chokepoints:['Strait of Hormuz','Malacca Strait'],riskFlags:['Dual chokepoint']},
+        {name:'USA',code:'USA',flag:'🇺🇸',importShare:0,exportShare:8,routes:['Strait of Hormuz','Cape of Good Hope'],chokepoints:['Strait of Hormuz'],riskFlags:[]}
+      ],
+      chokepointExposure:{hormuz:100,bab:12,suez:10,malacca:55,panama:0},
+      stockDays:null, altSuppliers:['Iraq','UAE','Kuwait']
+    },
+    '8471': {
+      product:'Computers & IT Equipment', hs:'8471', country:'Saudi Arabia',
+      importVal:3400, exportVal:60, unit:'M USD',
+      partners:[
+        {name:'China',code:'CHN',flag:'🇨🇳',importShare:38,exportShare:0,routes:['Malacca Strait','Indian Ocean','Strait of Hormuz'],chokepoints:['Strait of Hormuz','Malacca Strait'],riskFlags:['High concentration','Dual chokepoint']},
+        {name:'USA',code:'USA',flag:'🇺🇸',importShare:24,exportShare:6,routes:['Atlantic','Suez Canal','Red Sea'],chokepoints:['Suez Canal','Bab Al-Mandeb'],riskFlags:[]},
+        {name:'Germany',code:'DEU',flag:'🇩🇪',importShare:12,exportShare:0,routes:['Mediterranean','Suez Canal','Red Sea'],chokepoints:['Suez Canal','Bab Al-Mandeb'],riskFlags:[]},
+        {name:'Taiwan',code:'TWN',flag:'🇹🇼',importShare:10,exportShare:0,routes:['Malacca Strait','Indian Ocean','Strait of Hormuz'],chokepoints:['Strait of Hormuz','Malacca Strait'],riskFlags:['Geopolitical risk','Dual chokepoint']},
+        {name:'South Korea',code:'KOR',flag:'🇰🇷',importShare:8,exportShare:0,routes:['Malacca Strait','Indian Ocean','Strait of Hormuz'],chokepoints:['Strait of Hormuz','Malacca Strait'],riskFlags:['Dual chokepoint']}
+      ],
+      chokepointExposure:{hormuz:62,bab:36,suez:36,malacca:56,panama:0},
+      stockDays:30, altSuppliers:['Vietnam','Mexico','India']
+    },
+    '3004': {
+      product:'Medicaments', hs:'3004', country:'Saudi Arabia',
+      importVal:4200, exportVal:180, unit:'M USD',
+      partners:[
+        {name:'Germany',code:'DEU',flag:'🇩🇪',importShare:22,exportShare:0,routes:['Mediterranean','Suez Canal','Red Sea'],chokepoints:['Suez Canal','Bab Al-Mandeb'],riskFlags:[]},
+        {name:'Switzerland',code:'CHE',flag:'🇨🇭',importShare:18,exportShare:0,routes:['Mediterranean','Suez Canal','Red Sea'],chokepoints:['Suez Canal','Bab Al-Mandeb'],riskFlags:[]},
+        {name:'India',code:'IND',flag:'🇮🇳',importShare:16,exportShare:0,routes:['Indian Ocean','Strait of Hormuz'],chokepoints:['Strait of Hormuz'],riskFlags:[]},
+        {name:'USA',code:'USA',flag:'🇺🇸',importShare:14,exportShare:4,routes:['Atlantic','Suez Canal','Red Sea'],chokepoints:['Suez Canal','Bab Al-Mandeb'],riskFlags:[]},
+        {name:'UK',code:'GBR',flag:'🇬🇧',importShare:10,exportShare:0,routes:['Atlantic','Suez Canal','Red Sea'],chokepoints:['Suez Canal','Bab Al-Mandeb'],riskFlags:[]}
+      ],
+      chokepointExposure:{hormuz:16,bab:82,suez:78,malacca:0,panama:0},
+      stockDays:60, altSuppliers:['Jordan','Egypt','China']
+    },
+    '7207': {
+      product:'Steel Billets', hs:'7207', country:'Saudi Arabia',
+      importVal:1600, exportVal:2400, unit:'M USD',
+      partners:[
+        {name:'China',code:'CHN',flag:'🇨🇳',importShare:32,exportShare:8,routes:['Malacca Strait','Indian Ocean','Strait of Hormuz'],chokepoints:['Strait of Hormuz','Malacca Strait'],riskFlags:['High concentration','Dual chokepoint']},
+        {name:'Turkey',code:'TUR',flag:'🇹🇷',importShare:18,exportShare:12,routes:['Red Sea','Bab Al-Mandeb'],chokepoints:['Bab Al-Mandeb'],riskFlags:[]},
+        {name:'India',code:'IND',flag:'🇮🇳',importShare:14,exportShare:22,routes:['Indian Ocean','Strait of Hormuz'],chokepoints:['Strait of Hormuz'],riskFlags:[]},
+        {name:'UAE',code:'ARE',flag:'🇦🇪',importShare:10,exportShare:18,routes:['Strait of Hormuz'],chokepoints:['Strait of Hormuz'],riskFlags:[]},
+        {name:'Russia',code:'RUS',flag:'🇷🇺',importShare:8,exportShare:0,routes:['Black Sea','Suez Canal','Red Sea'],chokepoints:['Bab Al-Mandeb','Suez Canal'],riskFlags:['Sanctions exposure']}
+      ],
+      chokepointExposure:{hormuz:62,bab:42,suez:28,malacca:32,panama:0},
+      stockDays:20, altSuppliers:['Japan','South Korea','Brazil']
+    }
+  }
+};
+
+// Default to wheat for first render
+var _psrProduct = '1001';
+var _psrCountry = 'SAU';
+var _psrDir = 'total';
+var _psrTab = 'baseline';
+var _psrInited = false;
+
+var PSR_SCENARIOS = [
+  {id:'hormuz', name:'Strait of Hormuz Closure', icon:'🚫', color:'#c02030',
+   desc:'Full closure of Strait of Hormuz. Affects ~20% of global oil trade.',
+   fn: function(flow){
+     var exp = flow.chokepointExposure.hormuz;
+     var tv = flow.importVal + flow.exportVal;
+     return {
+       valueExposed: Math.round(tv * exp / 100),
+       pctExposed: exp,
+       affectedPartners: flow.partners.filter(function(p){return p.chokepoints.indexOf('Strait of Hormuz')>=0;}).map(function(p){return p.name;}),
+       costImpact: '+$2.40/barrel oil equiv; +$800–1,200/TEU rerouting via Cape',
+       delayImpact: '+14–18 days via Cape of Good Hope',
+       altRoutes: ['Cape of Good Hope (South Africa)','Saudi East-West Pipeline (oil only)','Air freight for critical cargo']
+     };
+   }
+  },
+  {id:'bab', name:'Bab Al-Mandeb Disruption', icon:'⚠️', color:'#e8673c',
+   desc:'Significant restriction on Bab Al-Mandeb Strait due to conflict or blockade.',
+   fn: function(flow){
+     var exp = flow.chokepointExposure.bab;
+     var tv = flow.importVal + flow.exportVal;
+     return {
+       valueExposed: Math.round(tv * exp / 100),
+       pctExposed: exp,
+       affectedPartners: flow.partners.filter(function(p){return p.chokepoints.indexOf('Bab Al-Mandeb')>=0;}).map(function(p){return p.name;}),
+       costImpact: '+$600–900/TEU rerouting via Cape',
+       delayImpact: '+10–14 days via Cape of Good Hope',
+       altRoutes: ['Cape of Good Hope (South Africa)','Suez Canal with restricted access','Overland via Saudi-Jordan corridor']
+     };
+   }
+  },
+  {id:'suez', name:'Suez Canal Blockage', icon:'⛔', color:'#e8673c',
+   desc:'Canal blockage or closure (days to weeks), similar to Ever Given incident.',
+   fn: function(flow){
+     var exp = flow.chokepointExposure.suez;
+     var tv = flow.importVal + flow.exportVal;
+     return {
+       valueExposed: Math.round(tv * exp / 100),
+       pctExposed: exp,
+       affectedPartners: flow.partners.filter(function(p){return p.chokepoints.indexOf('Suez Canal')>=0;}).map(function(p){return p.name;}),
+       costImpact: '+$500–800/TEU; +15% spot rate spike',
+       delayImpact: '+8–12 days via Cape; or queue delay 3–7 days',
+       altRoutes: ['Cape of Good Hope','Trans-Sahara road (limited)','Air freight for time-critical goods']
+     };
+   }
+  },
+  {id:'malacca', name:'Strait of Malacca Restriction', icon:'🔶', color:'#f0c84b',
+   desc:'Piracy surge or geopolitical restriction on Malacca Strait transit.',
+   fn: function(flow){
+     var exp = flow.chokepointExposure.malacca;
+     var tv = flow.importVal + flow.exportVal;
+     return {
+       valueExposed: Math.round(tv * exp / 100),
+       pctExposed: exp,
+       affectedPartners: flow.partners.filter(function(p){return p.chokepoints.indexOf('Malacca Strait')>=0;}).map(function(p){return p.name;}),
+       costImpact: '+$400–700/TEU via Lombok or Sunda Strait',
+       delayImpact: '+3–6 days via alternative Indonesian straits',
+       altRoutes: ['Lombok Strait (Indonesia)','Sunda Strait (Indonesia)','Kra Canal (proposed, not operational)']
+     };
+   }
+  },
+  {id:'tariff25', name:'Tariff Increase +25%', icon:'📈', color:'#5aa3f5',
+   desc:'25% additional tariff imposed on imports from top partner country.',
+   fn: function(flow){
+     var top = flow.partners[0];
+     var tv = flow.importVal;
+     var exposed = Math.round(tv * top.importShare / 100);
+     return {
+       valueExposed: exposed,
+       pctExposed: top.importShare,
+       affectedPartners: [top.name],
+       costImpact: '+' + Math.round(exposed * 0.25) + 'M USD annual cost increase',
+       delayImpact: 'Customs processing +2–5 days for re-documentation',
+       altRoutes: flow.altSuppliers.map(function(s){return 'Shift to: '+s;})
+     };
+   }
+  },
+  {id:'climate', name:'Climate Disruption (Drought/Storm)', icon:'🌡️', color:'#7a5af5',
+   desc:'Extreme weather event disrupting major supplier agricultural regions or port operations.',
+   fn: function(flow){
+     var tv = flow.importVal + flow.exportVal;
+     return {
+       valueExposed: Math.round(tv * 0.30),
+       pctExposed: 30,
+       affectedPartners: flow.partners.slice(0,2).map(function(p){return p.name;}),
+       costImpact: '+15–40% commodity price spike; force majeure declarations',
+       delayImpact: '+4–8 weeks supply disruption; harvest yield -20–35%',
+       altRoutes: flow.altSuppliers.map(function(s){return 'Emergency procurement: '+s;})
+     };
+   }
+  }
+];
+
+// ── HELPERS ──────────────────────────────────────────────────────────────────
+function psrFmt(n){
+  if(n==null) return '—';
+  if(n>=1000) return (n/1000).toFixed(1)+'B';
+  return n+'M';
+}
+function psrPct(n){return n!=null?n+'%':'—';}
+function psrCurrentFlow(){
+  var byCountry = PSR_FLOWS[_psrCountry];
+  return byCountry ? (byCountry[_psrProduct] || null) : null;
+}
+function psrRiskClass(flags){
+  if(!flags||!flags.length) return 'psr-flag-low';
+  var txt = flags.join(' ').toLowerCase();
+  if(txt.indexOf('conflict')>=0||txt.indexOf('concentration')>=0||txt.indexOf('sanctions')>=0) return 'psr-flag-high';
+  if(txt.indexOf('chokepoint')>=0||txt.indexOf('dual')>=0||txt.indexOf('geopolit')>=0) return 'psr-flag-med';
+  return 'psr-flag-low';
+}
+
+// ── INIT ──────────────────────────────────────────────────────────────────────
+window.initPSR = function(){
+  if(_psrInited) return;
+  _psrInited = true;
+  psrRender();
+};
+
+// ── SEARCH / AUTOCOMPLETE ─────────────────────────────────────────────────────
+window.psrSearch = function(q){
+  var box = document.getElementById('psr-autocomplete');
+  if(!q||q.length<2){box.style.display='none';return;}
+  var matches = PSR_PRODUCTS.filter(function(p){
+    return p.name.toLowerCase().indexOf(q.toLowerCase())>=0 || p.hs.indexOf(q)>=0;
+  }).slice(0,8);
+  if(!matches.length){box.style.display='none';return;}
+  box.innerHTML = matches.map(function(p){
+    return '<div class="psr-ac-item" onclick="psrSelect(\''+p.hs+'\',\''+p.name+'\')">'+
+      '<span>'+p.name+'</span><span class="psr-ac-code">HS '+p.hs+'</span></div>';
+  }).join('');
+  box.style.display='block';
+};
+
+window.psrSelect = function(hs, name){
+  _psrProduct = hs;
+  document.getElementById('psr-search').value = name;
+  document.getElementById('psr-autocomplete').style.display='none';
+  psrRender();
+};
+
+document.addEventListener('click',function(e){
+  var box=document.getElementById('psr-autocomplete');
+  if(box&&!box.contains(e.target)&&e.target.id!=='psr-search') box.style.display='none';
+});
+
+// ── DIRECTION TOGGLE ─────────────────────────────────────────────────────────
+window.psrDir = function(d){
+  _psrDir = d;
+  ['total','import','export'].forEach(function(x){
+    var btn=document.getElementById('psr-dir-'+x);
+    if(btn) btn.className='psr-dir-btn'+(x===d?' psr-dir-active':'');
+  });
+  psrRender();
+};
+
+// ── COUNTRY / YEAR CHANGE ────────────────────────────────────────────────────
+window.psrRender = function(){
+  _psrCountry = document.getElementById('psr-country').value;
+  psrRenderActive();
+};
+
+// ── TAB SWITCHING ─────────────────────────────────────────────────────────────
+window.psrTab = function(t){
+  _psrTab = t;
+  ['baseline','flowmap','scenarios','watchlist'].forEach(function(x){
+    var btn=document.getElementById('psr-stab-'+x);
+    var panel=document.getElementById('psr-'+(x==='watchlist'?'watchlist-panel':x));
+    if(btn) btn.className='psr-stab'+(x===t?' psr-stab-active':'');
+    if(panel) panel.className='psr-panel'+(x===t?' psr-panel-active':'');
+  });
+  psrRenderActive();
+};
+
+function psrRenderActive(){
+  if(_psrTab==='baseline')  psrRenderBaseline();
+  if(_psrTab==='flowmap')   psrRenderFlowMap();
+  if(_psrTab==='scenarios') psrRenderScenarios();
+  if(_psrTab==='watchlist') psrRenderWatchlist();
+}
+
+// ── BASELINE TAB ──────────────────────────────────────────────────────────────
+function psrRenderBaseline(){
+  var el = document.getElementById('psr-baseline');
+  var flow = psrCurrentFlow();
+  var prod = PSR_PRODUCTS.filter(function(p){return p.hs===_psrProduct;})[0];
+  var prodName = prod ? prod.name : 'Select a product';
+
+  if(!flow){
+    el.innerHTML='<div style="padding:60px;text-align:center;font-family:monospace;font-size:11px;color:#4A4A44">'
+      +'No trade data available for <strong style="color:#C9AE4E">'+prodName+'</strong> — '+_psrCountry+'.<br><br>'
+      +'<span style="color:#3A3A34">Demo data currently covers: Wheat (1001), Crude Oil (2709), IT Equipment (8471), Medicaments (3004), Steel Billets (7207) for Saudi Arabia.</span></div>';
+    return;
+  }
+
+  var tv = flow.importVal + flow.exportVal;
+  var bal = flow.exportVal - flow.importVal;
+  var top3share = flow.partners.slice(0,3).reduce(function(s,p){return s+(p.importShare||p.exportShare||0);},0);
+  var maxCkpt = Object.keys(flow.chokepointExposure).reduce(function(best,k){
+    return flow.chokepointExposure[k]>flow.chokepointExposure[best]?k:best;
+  },Object.keys(flow.chokepointExposure)[0]);
+  var maxCkptNames = {hormuz:'Strait of Hormuz',bab:'Bab Al-Mandeb',suez:'Suez Canal',malacca:'Malacca Strait',panama:'Panama Canal'};
+
+  var kpiShow = [];
+  if(_psrDir!=='export' && flow.importVal>0) kpiShow.push({label:'Import Value',val:'$'+psrFmt(flow.importVal),sub:'USD (demo)',color:'#d97706'});
+  if(_psrDir!=='import' && flow.exportVal>0) kpiShow.push({label:'Export Value',val:'$'+psrFmt(flow.exportVal),sub:'USD (demo)',color:'#5aa3f5'});
+  kpiShow.push({label:'Trade Partners',val:flow.partners.length,sub:'tracked in dataset',color:'#C9AE4E'});
+  kpiShow.push({label:'Top-3 Partner Share',val:psrPct(top3share),sub:'of trade volume',color:'#C9AE4E'});
+  kpiShow.push({label:'Max Chokepoint Exposure',val:psrPct(flow.chokepointExposure[maxCkpt]),sub:maxCkptNames[maxCkpt],color:'#c02030'});
+  if(flow.stockDays) kpiShow.push({label:'Strategic Stock',val:flow.stockDays+'d',sub:'estimated coverage',color:'#3dd68c'});
+
+  var kpiHtml = '<div class="psr-kpi-grid">'+kpiShow.map(function(k){
+    return '<div class="psr-kpi"><div class="psr-kpi-label">'+k.label+'</div>'
+      +'<div class="psr-kpi-value" style="color:'+k.color+'">'+k.val+'</div>'
+      +'<div class="psr-kpi-sub">'+k.sub+'</div></div>';
+  }).join('')+'</div>';
+
+  // Chokepoint exposure bar
+  var ckptHtml = '<div style="margin-bottom:24px"><div class="psr-section-title">Chokepoint Exposure (% of trade routed through)</div>'
+    +'<div style="display:grid;grid-template-columns:140px 1fr 40px;gap:6px 12px;align-items:center">';
+  var ckptNames = {hormuz:'Hormuz',bab:'Bab Al-Mandeb',suez:'Suez Canal',malacca:'Malacca',panama:'Panama'};
+  var ckptColors = {hormuz:'#c02030',bab:'#e8673c',suez:'#f0c84b',malacca:'#5aa3f5',panama:'#3dd68c'};
+  Object.keys(flow.chokepointExposure).forEach(function(k){
+    var v = flow.chokepointExposure[k];
+    ckptHtml += '<span style="font-family:monospace;font-size:9px;color:#7A7A72;letter-spacing:.06em">'+ckptNames[k]+'</span>'
+      +'<div style="background:#141412;border-radius:2px;height:6px;overflow:hidden">'
+      +'<div style="width:'+v+'%;height:100%;background:'+ckptColors[k]+';border-radius:2px;transition:width .4s"></div></div>'
+      +'<span style="font-family:monospace;font-size:9px;color:'+ckptColors[k]+'">'+(v||'—')+(v?'%':'')+'</span>';
+  });
+  ckptHtml += '</div></div>';
+
+  // Partners table
+  var partnerRows = flow.partners.map(function(p,i){
+    var share = _psrDir==='export' ? p.exportShare : (_psrDir==='import' ? p.importShare : Math.max(p.importShare,p.exportShare));
+    var flags = (p.riskFlags||[]).map(function(f){
+      return '<span class="psr-flag-pill '+psrRiskClass([f])+'">'+f+'</span>';
+    }).join(' ');
+    return '<div class="psr-partner-row">'
+      +'<span style="color:#5A5A52;font-size:9px">'+(i+1)+'</span>'
+      +'<span style="color:#C8C7C2">'+p.flag+' '+p.name+'</span>'
+      +'<span style="color:#C9AE4E;text-align:right">'+share+'%</span>'
+      +'<span style="color:#5A5A52;font-size:9px">'+(p.chokepoints||[]).join(', ')+'</span>'
+      +'<span style="display:flex;flex-wrap:wrap;gap:4px">'+flags+'</span>'
+      +'</div>';
+  }).join('');
+
+  var altHtml = flow.altSuppliers&&flow.altSuppliers.length
+    ? '<div style="margin-top:24px"><div class="psr-section-title">Alternative Supplier Options</div>'
+      +'<div style="display:flex;flex-wrap:wrap;gap:8px">'
+      +flow.altSuppliers.map(function(s){return '<span style="background:#1A1A18;border:1px solid #2A2A26;border-radius:3px;font-family:monospace;font-size:10px;color:#7A7A72;padding:5px 10px">'+s+'</span>';}).join('')
+      +'</div></div>' : '';
+
+  el.innerHTML = '<div style="max-width:1100px">'
+    +'<div style="font-family:monospace;font-size:10px;color:#5A5A52;margin-bottom:16px;letter-spacing:.06em">'
+    +'HS '+flow.hs+' · '+flow.product+' · '+flow.country+' · 2024 · <span style="color:#C9AE4E">DEMO DATA</span></div>'
+    + kpiHtml + ckptHtml
+    +'<div class="psr-section-title">Trade Partners</div>'
+    +'<div class="psr-partner-row psr-partner-header" style="margin-bottom:4px">'
+    +'<span>#</span><span>Country</span><span>Share</span><span>Chokepoints</span><span>Risk Indicators</span></div>'
+    + partnerRows + altHtml + '</div>';
+}
+
+// ── FLOW MAP TAB ──────────────────────────────────────────────────────────────
+function psrRenderFlowMap(){
+  var el = document.getElementById('psr-flowmap');
+  var flow = psrCurrentFlow();
+
+  if(!flow){
+    el.innerHTML='<div style="padding:60px;text-align:center;font-family:monospace;font-size:11px;color:#4A4A44">Select a product with available data to view flow map.</div>';
+    return;
+  }
+
+  // Approximate world map SVG with key ports/chokepoints
+  // Node positions are simplified geographic approximations
+  var nodes = {
+    SAU:{x:520,y:225,label:'Saudi Arabia',color:'#C9AE4E'},
+    CHN:{x:740,y:190,label:'China',color:'#5aa3f5'},
+    IND:{x:620,y:230,label:'India',color:'#5aa3f5'},
+    JPN:{x:790,y:175,label:'Japan',color:'#5aa3f5'},
+    KOR:{x:775,y:180,label:'S.Korea',color:'#5aa3f5'},
+    USA:{x:120,y:195,label:'USA',color:'#5aa3f5'},
+    DEU:{x:400,y:155,label:'Germany',color:'#5aa3f5'},
+    CHE:{x:400,y:160,label:'Switzerland',color:'#5aa3f5'},
+    GBR:{x:380,y:148,label:'UK',color:'#5aa3f5'},
+    UKR:{x:450,y:155,label:'Ukraine',color:'#5aa3f5'},
+    RUS:{x:490,y:140,label:'Russia',color:'#5aa3f5'},
+    AUS:{x:730,y:320,label:'Australia',color:'#5aa3f5'},
+    CAN:{x:130,y:158,label:'Canada',color:'#5aa3f5'},
+    TUR:{x:460,y:180,label:'Turkey',color:'#5aa3f5'},
+    ARE:{x:535,y:228,label:'UAE',color:'#5aa3f5'},
+    TWN:{x:755,y:205,label:'Taiwan',color:'#5aa3f5'}
+  };
+  var chokepoints = [
+    {id:'hormuz',x:548,y:222,label:'Hormuz',color:'#c02030'},
+    {id:'bab',x:490,y:248,label:'Bab Al-Mandeb',color:'#e8673c'},
+    {id:'suez',x:468,y:208,label:'Suez',color:'#f0c84b'},
+    {id:'malacca',x:700,y:258,label:'Malacca',color:'#5aa3f5'}
+  ];
+
+  var maxShare = Math.max.apply(null, flow.partners.map(function(p){return Math.max(p.importShare,p.exportShare);}));
+
+  var arcs = flow.partners.map(function(p){
+    var src = nodes[p.code];
+    var dst = nodes['SAU'];
+    if(!src||!dst) return '';
+    var share = Math.max(p.importShare,p.exportShare);
+    var strokeW = Math.max(1, Math.round(share / maxShare * 5));
+    var isExport = p.exportShare > p.importShare;
+    var color = isExport ? '#5aa3f5' : '#d97706';
+    var mx = (src.x+dst.x)/2;
+    var my = Math.min(src.y,dst.y) - 40 - Math.abs(src.x-dst.x)*0.06;
+    return '<path d="M'+src.x+','+src.y+' Q'+mx+','+my+' '+dst.x+','+dst.y+'"'
+      +' fill="none" stroke="'+color+'" stroke-width="'+strokeW+'" stroke-opacity="0.5" stroke-dasharray="none"/>';
+  }).join('');
+
+  var nodeHtml = Object.keys(nodes).map(function(k){
+    var n=nodes[k];
+    var isActive = k==='SAU' || flow.partners.some(function(p){return p.code===k;});
+    if(!isActive) return '';
+    return '<circle cx="'+n.x+'" cy="'+n.y+'" r="'+(k==='SAU'?7:4)+'" fill="'+n.color+'" opacity="'+(k==='SAU'?1:0.7)+'"/>'
+      +'<text x="'+n.x+'" y="'+(n.y-10)+'" font-family="monospace" font-size="7" fill="'+n.color+'" text-anchor="middle" opacity="0.9">'+n.label+'</text>';
+  }).join('');
+
+  var cpHtml = chokepoints.map(function(cp){
+    var exp = flow.chokepointExposure[cp.id]||0;
+    if(exp===0) return '';
+    return '<circle cx="'+cp.x+'" cy="'+cp.y+'" r="6" fill="none" stroke="'+cp.color+'" stroke-width="1.5" opacity="0.9"/>'
+      +'<text x="'+cp.x+'" y="'+(cp.y+16)+'" font-family="monospace" font-size="6.5" fill="'+cp.color+'" text-anchor="middle">'+cp.label+' ('+exp+'%)</text>';
+  }).join('');
+
+  // Simplified world outline paths
+  var landColor = '#1A1A18';
+  var worldPath = '<rect x="0" y="0" width="900" height="420" fill="#0C0C0A"/>'
+    +'<path d="M60,140 L200,130 L240,150 L260,180 L220,220 L180,250 L140,240 L100,220 L60,200 Z" fill="'+landColor+'" opacity="0.6"/>'
+    +'<path d="M60,255 L200,245 L230,270 L220,320 L180,360 L130,370 L80,350 L50,300 Z" fill="'+landColor+'" opacity="0.6"/>'
+    +'<path d="M280,100 L480,95 L520,130 L530,200 L490,240 L460,250 L400,240 L360,210 L320,180 L280,160 Z" fill="'+landColor+'" opacity="0.6"/>'
+    +'<path d="M420,245 L500,260 L510,300 L490,340 L450,350 L420,330 L410,290 Z" fill="'+landColor+'" opacity="0.6"/>'
+    +'<path d="M510,190 L580,185 L630,200 L650,230 L630,260 L590,270 L550,260 L515,240 Z" fill="'+landColor+'" opacity="0.6"/>'
+    +'<path d="M640,160 L800,150 L830,180 L820,220 L780,240 L720,245 L670,230 L640,200 Z" fill="'+landColor+'" opacity="0.6"/>'
+    +'<path d="M680,280 L800,275 L830,310 L820,360 L780,390 L720,395 L670,370 L650,330 Z" fill="'+landColor+'" opacity="0.6"/>';
+
+  el.innerHTML = '<div style="max-width:1100px">'
+    +'<div style="font-family:monospace;font-size:9px;color:#5A5A52;margin-bottom:12px;letter-spacing:.06em">'
+    +'TRADE FLOW MAP · HS '+flow.hs+' · '+flow.product+' · Estimated — based on standard maritime routing logic · <span style="color:#C9AE4E">DEMO DATA</span></div>'
+    +'<div style="background:#0C0C0A;border:1px solid #1E1E1C;border-radius:4px;overflow:hidden;margin-bottom:16px">'
+    +'<svg viewBox="0 0 900 420" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto">'
+    + worldPath + arcs + nodeHtml + cpHtml
+    +'<text x="10" y="415" font-family="monospace" font-size="6" fill="#3A3A34">Simplified schematic — not to scale. Routes are illustrative maritime estimates.</text>'
+    +'</svg></div>'
+    +'<div style="display:flex;gap:20px;flex-wrap:wrap">'
+    +'<span style="font-family:monospace;font-size:9px;color:#d97706">&#9644; Import flow</span>'
+    +'<span style="font-family:monospace;font-size:9px;color:#5aa3f5">&#9644; Export flow</span>'
+    +'<span style="font-family:monospace;font-size:9px;color:#c02030">&#9711; High-risk chokepoint</span>'
+    +'<span style="font-family:monospace;font-size:9px;color:#e8673c">&#9711; Medium-risk chokepoint</span>'
+    +'</div></div>';
+}
+
+// ── RESILIENCE LAB TAB ────────────────────────────────────────────────────────
+var _psrActiveScenario = null;
+
+function psrRenderScenarios(){
+  var el = document.getElementById('psr-scenarios');
+  var flow = psrCurrentFlow();
+  if(!flow){
+    el.innerHTML='<div style="padding:60px;text-align:center;font-family:monospace;font-size:11px;color:#4A4A44">Select a product with available data to run scenarios.</div>';
+    return;
+  }
+
+  var cards = PSR_SCENARIOS.map(function(s){
+    var isActive = _psrActiveScenario===s.id;
+    return '<div class="psr-scenario-card'+(isActive?' active':'')+'" onclick="psrRunScenario(\''+s.id+'\')" id="psr-sc-'+s.id+'">'
+      +'<div style="display:flex;align-items:center;gap:10px">'
+      +'<span style="font-size:18px">'+s.icon+'</span>'
+      +'<div><div class="psr-scenario-title">'+s.name+'</div>'
+      +'<div class="psr-scenario-sub">'+s.desc+'</div></div>'
+      +'<span style="margin-left:auto;font-family:monospace;font-size:9px;color:'+(isActive?s.color:'#3A3A34')+'">'+(isActive?'▶ ACTIVE':'SELECT')+'</span>'
+      +'</div></div>';
+  }).join('');
+
+  var impactHtml = '';
+  if(_psrActiveScenario){
+    var sc = PSR_SCENARIOS.filter(function(s){return s.id===_psrActiveScenario;})[0];
+    if(sc){
+      var res = sc.fn(flow);
+      impactHtml = '<div style="margin-top:24px">'
+        +'<div class="psr-section-title" style="color:'+sc.color+'">Impact Analysis — '+sc.name+'</div>'
+        +'<div class="psr-impact-grid">'
+        +'<div class="psr-impact-cell"><div class="psr-impact-label">Value Exposed</div><div class="psr-impact-val" style="color:'+sc.color+'">$'+psrFmt(res.valueExposed)+'</div></div>'
+        +'<div class="psr-impact-cell"><div class="psr-impact-label">% of Trade</div><div class="psr-impact-val" style="color:'+sc.color+'">'+res.pctExposed+'%</div></div>'
+        +'<div class="psr-impact-cell"><div class="psr-impact-label">Affected Partners</div><div class="psr-impact-val" style="font-size:12px;color:#C8C7C2">'+(res.affectedPartners.length||'None')+'</div></div>'
+        +'</div>'
+        +'<div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:12px">'
+        +'<div class="psr-impact-cell"><div class="psr-impact-label">Affected Partners</div><div style="font-family:monospace;font-size:10px;color:#9A9A90;line-height:1.6">'+res.affectedPartners.join(', ')+'</div></div>'
+        +'<div class="psr-impact-cell"><div class="psr-impact-label">Cost Impact (est.)</div><div style="font-family:monospace;font-size:10px;color:#e8673c;line-height:1.6">'+res.costImpact+'</div></div>'
+        +'<div class="psr-impact-cell"><div class="psr-impact-label">Delay Impact (est.)</div><div style="font-family:monospace;font-size:10px;color:#f0c84b;line-height:1.6">'+res.delayImpact+'</div></div>'
+        +'<div class="psr-impact-cell"><div class="psr-impact-label">Alternative Routes / Suppliers</div><div style="font-family:monospace;font-size:10px;color:#3dd68c;line-height:1.6">'+res.altRoutes.join('<br>')+'</div></div>'
+        +'</div>'
+        +'<div style="margin-top:10px;font-family:monospace;font-size:8px;color:#3A3A34;letter-spacing:.06em">* All impact estimates are indicative and based on illustrative demo data. Not for operational use.</div>'
+        +'</div>';
+    }
+  }
+
+  el.innerHTML = '<div style="max-width:1100px;display:grid;grid-template-columns:320px 1fr;gap:24px;align-items:start">'
+    +'<div><div class="psr-section-title">Select Scenario</div>'+cards+'</div>'
+    +'<div>'+(impactHtml||'<div style="padding:40px;text-align:center;font-family:monospace;font-size:11px;color:#3A3A34">Select a scenario on the left to view impact analysis.</div>')+'</div>'
+    +'</div>';
+}
+
+window.psrRunScenario = function(id){
+  _psrActiveScenario = id;
+  psrRenderScenarios();
+};
+
+// ── WATCHLIST TAB ─────────────────────────────────────────────────────────────
+function psrRenderWatchlist(){
+  var el = document.getElementById('psr-watchlist-panel');
+  var flow = psrCurrentFlow();
+  var prod = PSR_PRODUCTS.filter(function(p){return p.hs===_psrProduct;})[0];
+
+  if(!flow){
+    el.innerHTML='<div style="padding:60px;text-align:center;font-family:monospace;font-size:11px;color:#4A4A44">Select a product with available data to generate watchlist.</div>';
+    return;
+  }
+
+  var alerts = [];
+
+  // Rule 1: Supplier concentration
+  var topShare = flow.partners[0] ? Math.max(flow.partners[0].importShare,flow.partners[0].exportShare) : 0;
+  if(topShare>=25){
+    alerts.push({icon:'⚠️',color:'#e8673c',level:'HIGH',title:'Supplier Concentration Risk',
+      body:'Top partner ('+flow.partners[0].name+') accounts for '+topShare+'% of trade. '
+        +'A single-source share above 25% creates significant vulnerability to bilateral disruptions.'});
+  }
+
+  // Rule 2: Chokepoint exposure
+  var highCkpts = Object.keys(flow.chokepointExposure).filter(function(k){return flow.chokepointExposure[k]>=50;});
+  var ckptNames2 = {hormuz:'Strait of Hormuz',bab:'Bab Al-Mandeb',suez:'Suez Canal',malacca:'Malacca Strait',panama:'Panama Canal'};
+  if(highCkpts.length){
+    alerts.push({icon:'🚨',color:'#c02030',level:'CRITICAL',title:'High Chokepoint Exposure',
+      body:highCkpts.map(function(k){return ckptNames2[k]+' ('+flow.chokepointExposure[k]+'%)';}).join(', ')
+        +' — more than 50% of trade transits through a single maritime chokepoint. Recommend diversification or strategic stock review.'});
+  }
+
+  // Rule 3: Limited alternatives
+  var altCount = flow.altSuppliers ? flow.altSuppliers.length : 0;
+  if(altCount<=2){
+    alerts.push({icon:'🔶',color:'#f0c84b',level:'MEDIUM',title:'Limited Alternative Suppliers',
+      body:'Only '+(altCount||'no')+' alternative supplier(s) identified for '+flow.product+'. '
+        +'In a disruption scenario, sourcing flexibility would be severely constrained.'});
+  }
+
+  // Rule 4: Conflict-zone partners
+  var conflictPartners = flow.partners.filter(function(p){
+    return (p.riskFlags||[]).some(function(f){return f.toLowerCase().indexOf('conflict')>=0;});
+  });
+  if(conflictPartners.length){
+    alerts.push({icon:'🌐',color:'#e8673c',level:'HIGH',title:'Active Conflict Zone Exposure',
+      body:'Partners in or adjacent to active conflict zones: '+conflictPartners.map(function(p){return p.name;}).join(', ')+'.'
+        +' Monitor for force majeure declarations and export restriction escalation.'});
+  }
+
+  // Rule 5: Short stock coverage
+  if(flow.stockDays && flow.stockDays < 45){
+    alerts.push({icon:'📦',color:'#f0c84b',level:'MEDIUM',title:'Low Strategic Stock Coverage',
+      body:'Estimated strategic stock of '+flow.stockDays+' days is below the recommended 60-day threshold for critical commodities. '
+        +'Recommend reviewing national buffer stock levels.'});
+  }
+
+  // Rule 6: Dual chokepoint exposure
+  var highExposed = Object.keys(flow.chokepointExposure).filter(function(k){return flow.chokepointExposure[k]>=30;});
+  if(highExposed.length>=2){
+    alerts.push({icon:'🔁',color:'#5aa3f5',level:'MONITOR',title:'Multi-Chokepoint Route Dependency',
+      body:'Trade flows are exposed to '+highExposed.length+' chokepoints simultaneously ('+highExposed.map(function(k){return ckptNames2[k];}).join(', ')+').'
+        +' A compound disruption scenario would have amplified impact.'});
+  }
+
+  if(!alerts.length){
+    alerts.push({icon:'✅',color:'#3dd68c',level:'CLEAR',title:'No Critical Flags Detected',
+      body:'Based on available demo data, no critical supply chain flags were generated for this product-country combination.'});
+  }
+
+  var levelColors = {CRITICAL:'#c02030',HIGH:'#e8673c',MEDIUM:'#f0c84b',MONITOR:'#5aa3f5',CLEAR:'#3dd68c'};
+  var rows = alerts.map(function(a){
+    return '<div class="psr-wl-row">'
+      +'<div class="psr-wl-icon" style="background:'+a.color+'22;border:1px solid '+a.color+'44">'+a.icon+'</div>'
+      +'<div style="flex:1">'
+      +'<div style="display:flex;align-items:center;gap:10px;margin-bottom:5px">'
+      +'<span style="font-family:monospace;font-size:11px;color:#C8C7C2;font-weight:600">'+a.title+'</span>'
+      +'<span style="font-family:monospace;font-size:8px;color:'+a.color+';border:1px solid '+a.color+'44;padding:2px 7px;border-radius:2px;letter-spacing:.1em">'+a.level+'</span>'
+      +'</div>'
+      +'<div style="font-family:monospace;font-size:10px;color:#7A7A72;line-height:1.6">'+a.body+'</div>'
+      +'</div></div>';
+  }).join('');
+
+  el.innerHTML='<div style="max-width:900px">'
+    +'<div style="font-family:monospace;font-size:9px;color:#5A5A52;margin-bottom:16px;letter-spacing:.06em">'
+    +'AUTO-GENERATED WATCHLIST · '+flow.product+' · '+flow.country+' · Rule-based signals · <span style="color:#C9AE4E">DEMO DATA</span></div>'
+    +rows
+    +'<div style="margin-top:16px;font-family:monospace;font-size:8px;color:#3A3A34;letter-spacing:.06em">Watchlist rules are deterministic and based on factual exposure thresholds. No composite risk scoring is applied.</div>'
+    +'</div>';
+}
+
+})(); // end PSR IIFE
 </script>
 
 </body>

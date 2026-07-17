@@ -20447,8 +20447,7 @@ function psrRenderBaseline(){
       +'<div class="psr-kpi-sub">'+k.sub+'</div></div>';
   }).join('')+'</div>';
 
-  // ── Volume by partner ──────────────────────────────────────────────────────
-  // Estimate partner value = share% × relevant total
+  // ── Combined partner table ─────────────────────────────────────────────────
   var showImport = _psrDir !== 'export';
   var showExport = _psrDir !== 'import';
   var maxPartnerVal = 0;
@@ -20460,33 +20459,31 @@ function psrRenderBaseline(){
     return {p:p, impVal:impVal, expVal:expVal, total:total};
   }).sort(function(a,b){return b.total-a.total;});
 
-  var volRows = partnerVols.map(function(pv){
-    var impPct  = maxPartnerVal ? (pv.impVal/maxPartnerVal*100) : 0;
-    var expPct  = maxPartnerVal ? (pv.expVal/maxPartnerVal*100) : 0;
-    var flags = (pv.p.riskFlags||[]).map(function(f){
+  var tableHeader = '<div style="display:grid;grid-template-columns:28px 130px 200px 60px 150px 1fr;gap:10px;align-items:center;'
+    +'padding:6px 0;border-bottom:1px solid #2A2A26;font-family:monospace;font-size:8px;letter-spacing:.1em;color:#4A4A44;text-transform:uppercase">'
+    +'<span></span><span>Partner</span><span>Volume (est.)</span><span>Share</span><span>Chokepoints</span><span>Risk</span>'
+    +'</div>';
+
+  var combinedRows = partnerVols.map(function(pv){
+    var impPct = maxPartnerVal ? (pv.impVal/maxPartnerVal*100) : 0;
+    var expPct = maxPartnerVal ? (pv.expVal/maxPartnerVal*100) : 0;
+    var share  = _psrDir==='export' ? (pv.p.exportShare||0) : (_psrDir==='import' ? (pv.p.importShare||0) : Math.max(pv.p.importShare||0,pv.p.exportShare||0));
+    var flags  = (pv.p.riskFlags||[]).map(function(f){
       return '<span class="psr-flag-pill '+psrRiskClass([f])+'">'+f+'</span>';
     }).join(' ');
-    return '<div style="display:grid;grid-template-columns:28px 130px 1fr 90px auto;align-items:center;gap:10px;padding:7px 0;border-bottom:1px solid #141412">'
-      +'<span style="font-family:monospace;font-size:9px;color:#5A5A52">'+pv.p.flag+'</span>'
+    return '<div style="display:grid;grid-template-columns:28px 130px 200px 60px 150px 1fr;gap:10px;align-items:center;padding:8px 0;border-bottom:1px solid #141412">'
+      +'<span style="font-size:14px">'+pv.p.flag+'</span>'
       +'<span style="font-family:monospace;font-size:10px;color:#C8C7C2">'+pv.p.name+'</span>'
-      +'<div style="position:relative;height:14px;background:#141412;border-radius:2px;overflow:hidden">'
-        +(pv.impVal>0?'<div style="position:absolute;left:0;top:0;height:100%;width:'+impPct.toFixed(1)+'%;background:#d97706;opacity:0.8;border-radius:2px 0 0 2px"></div>':'')
-        +(pv.expVal>0?'<div style="position:absolute;left:'+impPct.toFixed(1)+'%;top:0;height:100%;width:'+expPct.toFixed(1)+'%;background:#5aa3f5;opacity:0.8"></div>':'')
+      +'<div>'
+        +'<div style="position:relative;height:10px;background:#141412;border-radius:2px;overflow:hidden;margin-bottom:3px">'
+          +(pv.impVal>0?'<div style="position:absolute;left:0;top:0;height:100%;width:'+impPct.toFixed(1)+'%;background:#d97706;opacity:0.85"></div>':'')
+          +(pv.expVal>0?'<div style="position:absolute;left:'+impPct.toFixed(1)+'%;top:0;height:100%;width:'+expPct.toFixed(1)+'%;background:#5aa3f5;opacity:0.85"></div>':'')
+        +'</div>'
+        +'<span style="font-family:monospace;font-size:9px;color:#C9AE4E">$'+psrFmt(pv.total)+'</span>'
       +'</div>'
-      +'<span style="font-family:monospace;font-size:10px;color:#C9AE4E;text-align:right">$'+psrFmt(pv.total||0)+'</span>'
-      +'<span style="display:flex;flex-wrap:wrap;gap:4px;min-width:120px">'+flags+'</span>'
-      +'</div>';
-  }).join('');
-
-  // ── Partners table (chokepoints) ───────────────────────────────────────────
-  var partnerRows = flow.partners.map(function(p,i){
-    var share = _psrDir==='export' ? p.exportShare : (_psrDir==='import' ? p.importShare : Math.max(p.importShare,p.exportShare));
-    return '<div class="psr-partner-row">'
-      +'<span style="color:#5A5A52;font-size:9px">'+(i+1)+'</span>'
-      +'<span style="color:#C8C7C2">'+p.flag+' '+p.name+'</span>'
-      +'<span style="color:#C9AE4E;text-align:right">'+share+'%</span>'
-      +'<span style="color:#5A5A52;font-size:9px">'+(p.chokepoints||[]).join(', ')+'</span>'
-      +'<span style="color:#5A5A52;font-size:9px">'+(p.routes||[]).join(' → ')+'</span>'
+      +'<span style="font-family:monospace;font-size:10px;color:#9A9A90;text-align:right">'+share+'%</span>'
+      +'<span style="font-family:monospace;font-size:8px;color:#5A5A52;line-height:1.6">'+(pv.p.chokepoints||[]).join('<br>')+'</span>'
+      +'<span style="display:flex;flex-wrap:wrap;gap:4px">'+flags+'</span>'
       +'</div>';
   }).join('');
 
@@ -20500,18 +20497,14 @@ function psrRenderBaseline(){
     +'<div style="font-family:monospace;font-size:10px;color:#5A5A52;margin-bottom:16px;letter-spacing:.06em">'
     +'HS '+flow.hs+' · '+flow.product+' · '+flow.country+' · 2024 · <span style="color:#C9AE4E">DEMO DATA</span></div>'
     + kpiHtml
-    +'<div class="psr-section-title">Estimated Trade Volume by Partner</div>'
-    +'<div style="display:flex;gap:16px;margin-bottom:10px">'
+    +'<div class="psr-section-title">Trade Partners</div>'
+    +'<div style="display:flex;gap:16px;margin-bottom:8px;align-items:center">'
     +(showImport?'<span style="font-family:monospace;font-size:9px;color:#d97706">&#9644; Imports</span>':'')
     +(showExport?'<span style="font-family:monospace;font-size:9px;color:#5aa3f5">&#9644; Exports</span>':'')
-    +'<span style="font-family:monospace;font-size:8px;color:#3A3A34;margin-left:auto">Values estimated: share% × total · DEMO</span>'
+    +'<span style="font-family:monospace;font-size:8px;color:#3A3A34;margin-left:auto">Volume = share% × total · DEMO</span>'
     +'</div>'
-    + volRows
-    +'<div style="margin-top:24px"></div>'
-    +'<div class="psr-section-title">Partner Routes &amp; Chokepoints</div>'
-    +'<div class="psr-partner-row psr-partner-header" style="margin-bottom:4px">'
-    +'<span>#</span><span>Country</span><span>Share</span><span>Chokepoints</span><span>Route</span></div>'
-    + partnerRows + altHtml + '</div>';
+    + tableHeader + combinedRows
+    + altHtml + '</div>';
 }
 
 // ── FLOW MAP TAB ──────────────────────────────────────────────────────────────

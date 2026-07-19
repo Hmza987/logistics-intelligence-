@@ -20978,8 +20978,7 @@ function psrBuildSimBuilder(flow){
     +sel('psr-sim-cp-duration',[['days','Days (acute incident)'],['weeks','Weeks (ongoing conflict)'],['months','Months (structural)']],p.chokepoint.duration);
 
   var runDisabled = t?'':' disabled';
-  return '<div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;align-items:start;margin-bottom:16px">'
-    +simBlock('climate','🌡️','Climate Disruption',climateParams)
+  return '<div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;align-items:start;margin-bottom:16px">'
     +simBlock('tariff','📈','Tariff Policy Shock',tariffParams)
     +simBlock('chokepoint','🚫','Chokepoint Disruption',cpParams)
     +'</div>'

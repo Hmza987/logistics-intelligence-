@@ -20945,30 +20945,23 @@ function psrBuildSimBuilder(flow){
   var _sp = PSR_SMART_DATA.find(function(d){return d.code===_psrSmartParams.hs4;})||PSR_SMART_DATA[0];
   var _spt = _sp.partners.find(function(pp){return pp.id===_psrSmartParams.partner;})||_sp.partners[0];
   var _sliderVal = (_psrSmartParams.newTariff!==null&&_psrSmartParams.newTariff!==undefined)?_psrSmartParams.newTariff:_spt.t0;
-  var _sliderPct = Math.round(_sliderVal*1000)/10;
-  var _baselinePct = Math.round(_spt.t0*1000)/10;
+  var _sliderPct = (_sliderVal*100).toFixed(1);
+  var _baselinePct = (_spt.t0*100).toFixed(1);
   var tariffParams =
-    '<label class="psr-sim-label">HS4 Product Category (KSA Imports)</label>'
+    '<label class="psr-sim-label">Product / HS4 Category</label>'
     +'<select class="psr-sim-select" id="psr-sim-tr-hs4" onchange="psrSmartOnChange()">'
-    +PSR_SMART_DATA.map(function(d){return '<option value="'+d.code+'"'+(d.code===_sp.code?' selected':'')+'>HS'+d.code+' — '+d.name+'</option>';}).join('')
+    +PSR_SMART_DATA.map(function(d){return '<option value="'+d.code+'"'+(d.code===_sp.code?' selected':'')+'>'+d.name+' (HS4 '+d.code+')'+'</option>';}).join('')
     +'</select>'
-    +'<label class="psr-sim-label">Trading Partner</label>'
+    +'<label class="psr-sim-label" style="margin-top:12px">Trading Partner</label>'
     +'<select class="psr-sim-select" id="psr-sim-tr-partner" onchange="psrSmartOnChange()">'
-    +_sp.partners.map(function(pp){return '<option value="'+pp.id+'"'+(pp.id===_spt.id?' selected':'')+'>'+({'chn':'🇨🇳','ind':'🇮🇳','jpn':'🇯🇵'}[pp.id]||'')+' '+pp.name+'</option>';}).join('')
+    +_sp.partners.map(function(pp){return '<option value="'+pp.id+'"'+(pp.id===_spt.id?' selected':'')+'>'+pp.name+'</option>';}).join('')
     +'</select>'
-    +'<div style="background:#0A0A08;border:1px solid #1E1E1C;border-radius:3px;padding:8px 10px;margin-top:8px">'
-    +'<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:3px">'
-    +'<span style="font-family:monospace;font-size:8px;letter-spacing:.08em;text-transform:uppercase;color:#5A5A52">Current MFN Rate</span>'
-    +'<span style="font-family:monospace;font-size:11px;color:#C9AE4E" id="psr-smart-baseline-pct">'+_baselinePct+'%</span>'
-    +'</div>'
-    +'<div style="display:flex;justify-content:space-between;align-items:center">'
-    +'<span style="font-family:monospace;font-size:8px;letter-spacing:.08em;text-transform:uppercase;color:#5A5A52">Baseline Imports</span>'
-    +'<span style="font-family:monospace;font-size:10px;color:#9A9A90" id="psr-smart-baseline-m0">'+fmtSmartUSD(_spt.m0)+'</span>'
-    +'</div>'
-    +'</div>'
-    +'<label class="psr-sim-label" style="margin-top:10px">New Tariff Rate — <span id="psr-smart-slider-label" style="color:#C9AE4E">'+_sliderPct+'%</span></label>'
-    +'<input type="range" id="psr-sim-tr-slider" min="0" max="2" step="0.005" value="'+_sliderVal.toFixed(4)+'" oninput="psrSmartOnSlider(this.value)" style="width:100%;accent-color:#C9AE4E;cursor:pointer;margin-top:4px">'
-    +'<div style="display:flex;justify-content:space-between;font-family:monospace;font-size:8px;color:#3A3A34;margin-top:2px"><span>0%</span><span>100%</span><span>200%</span></div>';
+    +'<label class="psr-sim-label" style="margin-top:12px">Baseline Tariff <span style="text-transform:none;letter-spacing:0;color:#3A3A34">(current MFN applied rate)</span></label>'
+    +'<div style="font-family:monospace;font-size:20px;font-weight:600;color:#C8C7C2;padding:6px 0 2px" id="psr-smart-baseline-pct">'+_baselinePct+'%</div>'
+    +'<div style="font-family:monospace;font-size:9px;color:#5A5A52;margin-bottom:4px" id="psr-smart-baseline-m0">baseline imports from '+_spt.name+': '+fmtSmartUSD(_spt.m0)+'</div>'
+    +'<label class="psr-sim-label" style="margin-top:12px">New Tariff <span id="psr-smart-slider-label" style="font-family:monospace;color:#C9AE4E;font-size:10px;text-transform:none;letter-spacing:0">(set to '+_sliderPct+'%)</span></label>'
+    +'<input type="range" id="psr-sim-tr-slider" min="0" max="2" step="0.005" value="'+_sliderVal.toFixed(4)+'" oninput="psrSmartOnSlider(this.value)" style="width:100%;accent-color:#C9AE4E;cursor:pointer;margin-top:6px">'
+    +'<div style="font-family:monospace;font-size:9px;color:#3A3A34;margin-top:5px">Drag to any rate from 0% to 200% — result updates on Run, not live.</div>';
 
   var cpExposure = flow.chokepointExposure||{};
   var cpParams =
@@ -21139,66 +21132,69 @@ function psrBuildSmartResults(calc){
   if(!calc) return '';
   var pct=calc.pctChange*100;
   var pctStr=(pct>=0?'+':'')+pct.toFixed(1)+'%';
-  var pctColor=pct<0?'#3dd68c':(pct>0?'#e8673c':'#5A5A52');
-  var revChgPct=calc.revOld>0?(calc.revChange/calc.revOld*100):0;
+  var pctColor=pct<-0.05?'#3dd68c':(pct>0.05?'#e8673c':'#5A5A52');
+  var revDelta=calc.revChange;
+  var revDeltaStr=(revDelta>=0?'+':'')+'$'+fmtSmartUSD(Math.abs(revDelta))+' vs baseline '+fmtSmartUSD(calc.revOld);
+  var revDeltaColor=revDelta>=0?'#3dd68c':'#e8673c';
+  var creationStr=(calc.totalCreation>=0?'+':'')+'$'+fmtSmartUSD(Math.abs(calc.totalCreation));
+  var diversionStr='diversion: '+(calc.totalDiversion>=0?'+':'')+'$'+fmtSmartUSD(Math.abs(calc.totalDiversion))+' (nets ~0)';
   var targetRow=calc.rows.find(function(r){return r.id===calc.partnerId;})||calc.rows[0];
 
-  var kpis='<div class="psr-sim-kpi-strip" style="margin-bottom:20px">'
-    +'<div class="psr-sim-kpi"><div class="psr-sim-kpi-label">Total Import Change</div>'
-    +'<div class="psr-sim-kpi-val" style="color:'+pctColor+'">'+pctStr+'</div>'
-    +'<div class="psr-sim-kpi-sub">'+fmtSmartUSD(calc.totalM0)+' → '+fmtSmartUSD(calc.totalNew)+'</div></div>'
-    +'<div class="psr-sim-kpi"><div class="psr-sim-kpi-label">Trade Creation</div>'
-    +'<div class="psr-sim-kpi-val" style="color:#5aa3f5">'+fmtSmartUSD(Math.abs(calc.totalCreation))+'</div>'
-    +'<div class="psr-sim-kpi-sub">'+(calc.totalCreation<0?'demand contraction':'demand expansion')+'</div></div>'
-    +'<div class="psr-sim-kpi"><div class="psr-sim-kpi-label">Trade Diversion</div>'
-    +'<div class="psr-sim-kpi-val" style="color:#f0c84b">'+fmtSmartUSD(Math.abs(calc.totalDiversion))+'</div>'
-    +'<div class="psr-sim-kpi-sub">Armington subst. (σ='+PSR_SMART_SIGMA+')</div></div>'
-    +'<div class="psr-sim-kpi"><div class="psr-sim-kpi-label">Tariff Revenue Δ</div>'
-    +'<div class="psr-sim-kpi-val" style="color:'+(revChgPct>=0?'#3dd68c':'#e8673c')+'">'+(revChgPct>=0?'+':'')+revChgPct.toFixed(1)+'%</div>'
-    +'<div class="psr-sim-kpi-sub">'+fmtSmartUSD(calc.revOld)+' → '+fmtSmartUSD(calc.revNew)+'</div></div>'
+  // 3 KPI cards matching handoff
+  var kpis='<div style="display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:20px">'
+    +'<div class="psr-sim-kpi">'
+    +'<div class="psr-sim-kpi-label">Total imports, this product</div>'
+    +'<div style="font-family:monospace;font-size:18px;font-weight:600;color:#C8C7C2;margin:6px 0 4px">$'+fmtSmartUSD(calc.totalNew)+'</div>'
+    +'<div style="font-family:monospace;font-size:10px;color:'+pctColor+'">'+pctStr+' vs baseline $'+fmtSmartUSD(calc.totalM0)+'</div>'
+    +'</div>'
+    +'<div class="psr-sim-kpi">'
+    +'<div class="psr-sim-kpi-label">Trade creation / diversion</div>'
+    +'<div style="font-family:monospace;font-size:18px;font-weight:600;color:'+(calc.totalCreation>=0?'#3dd68c':'#e8673c')+';margin:6px 0 4px">'+creationStr+'</div>'
+    +'<div style="font-family:monospace;font-size:10px;color:#5A5A52">'+diversionStr+'</div>'
+    +'</div>'
+    +'<div class="psr-sim-kpi">'
+    +'<div class="psr-sim-kpi-label">Tariff revenue, this product</div>'
+    +'<div style="font-family:monospace;font-size:18px;font-weight:600;color:#C8C7C2;margin:6px 0 4px">$'+fmtSmartUSD(calc.revNew)+'</div>'
+    +'<div style="font-family:monospace;font-size:10px;color:'+revDeltaColor+'">'+revDeltaStr+'</div>'
+    +'</div>'
     +'</div>';
 
-  var PFLAGS={chn:'🇨🇳',ind:'🇮🇳',jpn:'🇯🇵'};
-  var maxVal=Math.max.apply(null,calc.rows.map(function(r){return Math.max(r.m0,r.newM);}));
+  // Two-track bar chart matching handoff (baseline grey / new coloured)
+  var maxVal=Math.max.apply(null,calc.rows.map(function(r){return Math.max(r.m0,r.newM);}))*1.05;
   var bars=calc.rows.map(function(r){
-    var baseW=maxVal>0?(r.m0/maxVal*100).toFixed(1):0;
-    var newW=maxVal>0?(r.newM/maxVal*100).toFixed(1):0;
+    var baseW=maxVal>0?Math.min((r.m0/maxVal)*100,100).toFixed(1):0;
+    var newW=maxVal>0?Math.min((r.newM/maxVal)*100,100).toFixed(1):0;
     var chg=r.m0>0?r.change/r.m0*100:0;
+    var growing=r.newM>=r.m0;
     var chgCol=chg<-0.05?'#3dd68c':(chg>0.05?'#e8673c':'#5A5A52');
-    var chgStr=(chg>=0?'+':'')+chg.toFixed(1)+'%';
     var isTarget=(r.id===calc.partnerId);
-    return '<div style="margin-bottom:14px">'
-      +'<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:4px">'
-      +'<span style="font-family:monospace;font-size:10px;color:'+(isTarget?'#C9AE4E':'#C8C7C2')+'">'+((PFLAGS[r.id]||'')+' '+r.name+(isTarget?' ← scenario tariff':''))+'</span>'
-      +'<span style="font-family:monospace;font-size:10px;color:'+chgCol+'">'+chgStr+'</span>'
+    return '<div style="margin-bottom:16px">'
+      +'<div style="display:flex;justify-content:space-between;align-items:center;font-family:monospace;font-size:11px;margin-bottom:6px">'
+      +'<span style="color:'+( isTarget?'#C9AE4E':'#C8C7C2')+'">'+r.name+(isTarget?' &middot; adjusted':' &middot; unchanged')+'</span>'
+      +'<span style="color:'+chgCol+'">'+(growing?'+':'')+chg.toFixed(1)+'%</span>'
       +'</div>'
-      +'<div style="display:flex;gap:4px;align-items:center;margin-bottom:3px">'
-      +'<span style="font-family:monospace;font-size:8px;color:#5A5A52;width:42px">Base</span>'
-      +'<div style="flex:1;background:#1A1A16;border-radius:2px;height:8px"><div style="width:'+baseW+'%;height:100%;background:#3A3A34;border-radius:2px"></div></div>'
-      +'<span style="font-family:monospace;font-size:8px;color:#9A9A90;min-width:60px;text-align:right">'+fmtSmartUSD(r.m0)+'</span>'
+      +'<div style="position:relative;height:16px;background:#1A1A16;border-radius:3px;overflow:hidden;margin-bottom:3px">'
+      +'<div style="position:absolute;top:0;left:0;height:100%;width:'+baseW+'%;background:#2A2A26;border-radius:3px"></div>'
       +'</div>'
-      +'<div style="display:flex;gap:4px;align-items:center">'
-      +'<span style="font-family:monospace;font-size:8px;color:#5A5A52;width:42px">New</span>'
-      +'<div style="flex:1;background:#1A1A16;border-radius:2px;height:8px"><div style="width:'+newW+'%;height:100%;background:'+chgCol+';border-radius:2px;opacity:.7"></div></div>'
-      +'<span style="font-family:monospace;font-size:8px;color:'+chgCol+';min-width:60px;text-align:right">'+fmtSmartUSD(r.newM)+'</span>'
-      +'</div></div>';
+      +'<div style="position:relative;height:16px;background:#1A1A16;border-radius:3px;overflow:hidden;margin-bottom:4px">'
+      +'<div style="position:absolute;top:0;left:0;height:100%;width:'+newW+'%;background:'+chgCol+';border-radius:3px;opacity:.8"></div>'
+      +'</div>'
+      +'<div style="display:flex;justify-content:space-between;font-family:monospace;font-size:9px;color:#5A5A52">'
+      +'<span>baseline: $'+fmtSmartUSD(r.m0)+'</span><span>new: $'+fmtSmartUSD(r.newM)+'</span>'
+      +'</div>'
+      +'</div>';
   }).join('');
 
-  var note='<div style="background:#080807;border:1px solid #1A1A16;border-radius:3px;padding:12px 14px;margin-top:16px">'
-    +'<div style="font-family:monospace;font-size:8px;letter-spacing:.1em;text-transform:uppercase;color:#3A3A34;margin-bottom:6px">Methodology &amp; Known Limitations</div>'
-    +'<div style="font-family:monospace;font-size:9px;color:#4A4A44;line-height:1.65">'
-    +'WITS-SMART partial-equilibrium (Laird &amp; Yeats 1986). η='+calc.eta.toFixed(4)+' (Kee, Nicita &amp; Olarreaga 2008, winsorized [−5, −0.2]). Small-country assumption: world prices fixed. σ='+PSR_SMART_SIGMA+' (SMART default).'
-    +'<span style="color:#2A2A24;display:block;margin-top:4px">Limitations: KSA importer only · 3 partners (CHN/IND/JPN) · 9 curated HS4 product lines · no retaliation loop · pending validation against WITS desktop tool.</span>'
-    +'</div></div>';
+  var note='<div style="margin-top:20px;border-top:1px solid #1E1E1C;padding-top:16px;font-family:monospace;font-size:9px;color:#4A4A44;line-height:1.7">'
+    +'<span style="color:#5A5A52">Method:</span> WITS-SMART partial equilibrium (trade creation from import-share-weighted avg tariff change × product elasticity; diversion from each partner\'s price change relative to that average × substitution elasticity '+PSR_SMART_SIGMA+'). Small-country assumption: world prices fixed.<br>'
+    +'<span style="color:#5A5A52">Elasticities:</span> Kee, Nicita &amp; Olarreaga (2008), World Bank — HS4-aggregated for Saudi Arabia, winsorized to [−5, −0.2]. η='+calc.eta.toFixed(4)+' for this product.<br>'
+    +'<span style="color:#5A5A52">Scope:</span> Saudi Arabia as importer · China / India / Japan · single-country model, retaliation loop not yet included · not yet validated against WITS desktop SMART tool.<br>'
+    +'<span style="color:#5A5A52">Product set:</span> 9 products curated from top imports, selected for stable trade-diversion behavior across the full 0–200% tariff range.'
+    +'</div>';
 
-  return '<div style="margin-top:28px;border-top:1px solid #2A2A26;padding-top:24px">'
-    +'<div style="display:flex;align-items:center;gap:10px;margin-bottom:20px">'
-    +'<span style="font-size:18px">📊</span>'
-    +'<div><div style="font-family:monospace;font-size:13px;font-weight:600;color:#C8C7C2">SMART Simulation — '+calc.prod.name+'</div>'
-    +'<div style="font-family:monospace;font-size:9px;color:#5A5A52;margin-top:2px">HS'+calc.prod.code+' · KSA as importer · Tariff on '+targetRow.name+': '+(calc.newTariff*100).toFixed(1)+'% (was '+(targetRow.t0*100).toFixed(1)+'%)</div>'
-    +'</div></div>'
+  return '<div style="margin-top:28px;border-top:1px solid #2A2A26;padding-top:22px">'
+    +'<div style="font-family:monospace;font-size:9px;letter-spacing:.08em;text-transform:uppercase;color:#5A5A52;margin-bottom:14px">Result</div>'
     +kpis
-    +'<div class="psr-section-title" style="margin-bottom:12px">Partner-Level Import Impact</div>'
     +bars
     +note
     +'</div>';
@@ -21290,7 +21286,7 @@ window.psrSmartOnChange = psrSmartOnChange;
 window.psrSmartOnSlider = function(v){
   _psrSmartParams.newTariff = parseFloat(v);
   var lbl = document.getElementById('psr-smart-slider-label');
-  if(lbl) lbl.textContent = Math.round(parseFloat(v)*1000)/10+'%';
+  if(lbl) lbl.textContent = '(set to '+(parseFloat(v)*100).toFixed(1)+'%)';
 };
 
 // ── WATCHLIST TAB ─────────────────────────────────────────────────────────────

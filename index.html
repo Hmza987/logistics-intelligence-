@@ -20728,6 +20728,32 @@ var PSR_CP_REROUTE = {
   malacca:      {expKey:'malacca', cpLabel:'Malacca Strait',    partnerCpName:'Malacca Strait',    rerouteDays:[3,6],   rerouteVia:'Lombok / Sunda Strait', costPerTEU:'$300–600',   costPct:[6,12]}
 };
 
+// ── SMART TARIFF ENGINE DATA (real OEC + World Bank elasticities) ──────────────
+var PSR_SMART_DATA = [
+  {code:'8802', name:'Planes, Helicopters & Spacecraft', elasticity:-1.4566,
+   partners:[{id:'chn',name:'China',m0:365749323,t0:0.0303},{id:'ind',name:'India',m0:1532876625,t0:0.0269}]},
+  {code:'8541', name:'Semiconductor Devices', elasticity:-1.4542,
+   partners:[{id:'chn',name:'China',m0:1721307704,t0:0.0004},{id:'ind',name:'India',m0:752618,t0:0.1817},{id:'jpn',name:'Japan',m0:593334,t0:0.0}]},
+  {code:'8504', name:'Electrical Transformers', elasticity:-1.0524,
+   partners:[{id:'chn',name:'China',m0:995985645,t0:0.0170},{id:'ind',name:'India',m0:61238010,t0:0.1564},{id:'jpn',name:'Japan',m0:40347395,t0:0.0}]},
+  {code:'4011', name:'Rubber Tires', elasticity:-0.9830,
+   partners:[{id:'chn',name:'China',m0:852117521,t0:0.1125},{id:'ind',name:'India',m0:68517256,t0:0.1211},{id:'jpn',name:'Japan',m0:140069132,t0:0.0}]},
+  {code:'9503', name:'Other Toys', elasticity:-0.7317,
+   partners:[{id:'chn',name:'China',m0:788402894,t0:0.0},{id:'ind',name:'India',m0:347054,t0:0.7},{id:'jpn',name:'Japan',m0:93280,t0:0.0}]},
+  {code:'9403', name:'Other Furniture', elasticity:-0.9527,
+   partners:[{id:'chn',name:'China',m0:739426567,t0:0.0},{id:'ind',name:'India',m0:30626702,t0:0.25},{id:'jpn',name:'Japan',m0:334042,t0:0.0}]},
+  {code:'9405', name:'Light Fixtures', elasticity:-0.8259,
+   partners:[{id:'chn',name:'China',m0:749064103,t0:0.0752},{id:'ind',name:'India',m0:6664491,t0:0.25},{id:'jpn',name:'Japan',m0:866705,t0:0.0021}]},
+  {code:'8429', name:'Large Construction Vehicles', elasticity:-1.2670,
+   partners:[{id:'chn',name:'China',m0:559821570,t0:0.0718},{id:'ind',name:'India',m0:125896436,t0:0.075},{id:'jpn',name:'Japan',m0:54903345,t0:0.0}]},
+  {code:'8507', name:'Electric Batteries', elasticity:-0.6388,
+   partners:[{id:'chn',name:'China',m0:699092767,t0:0.0992},{id:'ind',name:'India',m0:25144982,t0:0.1086},{id:'jpn',name:'Japan',m0:4172687,t0:0.0}]}
+];
+var PSR_SMART_SIGMA = 1.5; // WITS default substitution elasticity
+
+var _psrSmartParams = {hs4:'8802', partner:'chn'};
+var _psrSmartResult = null;
+
 // ── SIMULATION COMPUTATION ────────────────────────────────────────────────────
 function psrComputeSim(flow, type, params) {
   var showImport = _psrDir !== 'export';
@@ -20915,14 +20941,34 @@ function psrBuildSimBuilder(flow){
     +'<label class="psr-sim-label">Duration</label>'
     +sel('psr-sim-cl-duration',[['short','Short (1–3 months)'],['medium','Medium (3–6 months)'],['long','Long (6–12 months+)']],p.climate.duration);
 
-  var partnerOpts = flow.partners.map(function(pt){return [pt.name, pt.flag+' '+pt.name];});
+  // SMART tariff UI — independent 9-product dataset (CHN/IND/JPN vs KSA)
+  var _sp = PSR_SMART_DATA.find(function(d){return d.code===_psrSmartParams.hs4;})||PSR_SMART_DATA[0];
+  var _spt = _sp.partners.find(function(pp){return pp.id===_psrSmartParams.partner;})||_sp.partners[0];
+  var _sliderVal = (_psrSmartParams.newTariff!==null&&_psrSmartParams.newTariff!==undefined)?_psrSmartParams.newTariff:_spt.t0;
+  var _sliderPct = Math.round(_sliderVal*1000)/10;
+  var _baselinePct = Math.round(_spt.t0*1000)/10;
   var tariffParams =
-    '<label class="psr-sim-label">Country Imposing Tariff on Imports From</label>'
-    +sel('psr-sim-tr-country', partnerOpts, p.tariff.country)
-    +'<label class="psr-sim-label">Tariff Increase (%)</label>'
-    +'<input class="psr-sim-input" type="number" id="psr-sim-tr-pct" min="1" max="200" value="'+p.tariff.pct+'" placeholder="e.g. 25"/>'
-    +'<label class="psr-sim-label">Scope</label>'
-    +sel('psr-sim-tr-scope',[['product','This product only (HS '+flow.hs+')'],['all','All traded goods with this country']],p.tariff.scope);
+    '<label class="psr-sim-label">HS4 Product Category (KSA Imports)</label>'
+    +'<select class="psr-sim-select" id="psr-sim-tr-hs4" onchange="psrSmartOnChange()">'
+    +PSR_SMART_DATA.map(function(d){return '<option value="'+d.code+'"'+(d.code===_sp.code?' selected':'')+'>HS'+d.code+' — '+d.name+'</option>';}).join('')
+    +'</select>'
+    +'<label class="psr-sim-label">Trading Partner</label>'
+    +'<select class="psr-sim-select" id="psr-sim-tr-partner" onchange="psrSmartOnChange()">'
+    +_sp.partners.map(function(pp){return '<option value="'+pp.id+'"'+(pp.id===_spt.id?' selected':'')+'>'+({'chn':'🇨🇳','ind':'🇮🇳','jpn':'🇯🇵'}[pp.id]||'')+' '+pp.name+'</option>';}).join('')
+    +'</select>'
+    +'<div style="background:#0A0A08;border:1px solid #1E1E1C;border-radius:3px;padding:8px 10px;margin-top:8px">'
+    +'<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:3px">'
+    +'<span style="font-family:monospace;font-size:8px;letter-spacing:.08em;text-transform:uppercase;color:#5A5A52">Current MFN Rate</span>'
+    +'<span style="font-family:monospace;font-size:11px;color:#C9AE4E" id="psr-smart-baseline-pct">'+_baselinePct+'%</span>'
+    +'</div>'
+    +'<div style="display:flex;justify-content:space-between;align-items:center">'
+    +'<span style="font-family:monospace;font-size:8px;letter-spacing:.08em;text-transform:uppercase;color:#5A5A52">Baseline Imports</span>'
+    +'<span style="font-family:monospace;font-size:10px;color:#9A9A90" id="psr-smart-baseline-m0">'+fmtSmartUSD(_spt.m0)+'</span>'
+    +'</div>'
+    +'</div>'
+    +'<label class="psr-sim-label" style="margin-top:10px">New Tariff Rate — <span id="psr-smart-slider-label" style="color:#C9AE4E">'+_sliderPct+'%</span></label>'
+    +'<input type="range" id="psr-sim-tr-slider" min="0" max="2" step="0.005" value="'+_sliderVal.toFixed(4)+'" oninput="psrSmartOnSlider(this.value)" style="width:100%;accent-color:#C9AE4E;cursor:pointer;margin-top:4px">'
+    +'<div style="display:flex;justify-content:space-between;font-family:monospace;font-size:8px;color:#3A3A34;margin-top:2px"><span>0%</span><span>100%</span><span>200%</span></div>';
 
   var cpExposure = flow.chokepointExposure||{};
   var cpParams =
@@ -21044,6 +21090,130 @@ function psrBuildSimResults(flow, res){
     +'</div>';
 }
 
+// ── SMART TARIFF ENGINE ────────────────────────────────────────────────────────
+function fmtSmartUSD(v){
+  if(v>=1e9) return '$'+(v/1e9).toFixed(2)+'B';
+  if(v>=1e6) return '$'+(v/1e6).toFixed(1)+'M';
+  if(v>=1e3) return '$'+(v/1e3).toFixed(0)+'K';
+  return '$'+Math.round(v);
+}
+
+function psrSmartCalc(hs4, partnerId, newTariff){
+  var prod = PSR_SMART_DATA.find(function(d){return d.code===hs4;})||PSR_SMART_DATA[0];
+  var eta = prod.elasticity;
+  var sigma = PSR_SMART_SIGMA;
+  var partners = prod.partners;
+  var totalM0 = partners.reduce(function(s,pp){return s+pp.m0;},0);
+  var rows = partners.map(function(pp){
+    var t0=pp.t0, t1=(pp.id===partnerId)?newTariff:t0;
+    var dPi=(t1-t0)/(1+t0);
+    return {id:pp.id,name:pp.name,m0:pp.m0,t0:t0,t1:t1,dPi:dPi,share:pp.m0/totalM0};
+  });
+  var dP=rows.reduce(function(s,r){return s+r.share*r.dPi;},0);
+  rows.forEach(function(r){
+    r.creation=r.m0*eta*dP;
+    r.diversion=r.m0*sigma*(dP-r.dPi);
+    r.change=r.creation+r.diversion;
+    r.newM=Math.max(0,r.m0+r.change);
+    r.pct=r.m0>0?r.change/r.m0:0;
+    r.revOld=r.m0*r.t0;
+    r.revNew=r.newM*r.t1;
+  });
+  var totalNew=rows.reduce(function(s,r){return s+r.newM;},0);
+  var totalChange=rows.reduce(function(s,r){return s+r.change;},0);
+  var totalCreation=rows.reduce(function(s,r){return s+r.creation;},0);
+  var totalDiversion=rows.reduce(function(s,r){return s+r.diversion;},0);
+  var revOldTotal=rows.reduce(function(s,r){return s+r.revOld;},0);
+  var revNewTotal=rows.reduce(function(s,r){return s+r.revNew;},0);
+  return {
+    prod:prod, partnerId:partnerId, newTariff:newTariff,
+    rows:rows, totalM0:totalM0, totalNew:totalNew,
+    totalChange:totalChange, totalCreation:totalCreation, totalDiversion:totalDiversion,
+    pctChange:totalM0>0?totalChange/totalM0:0,
+    revOld:revOldTotal, revNew:revNewTotal, revChange:revNewTotal-revOldTotal,
+    eta:eta, sigma:sigma
+  };
+}
+
+function psrBuildSmartResults(calc){
+  if(!calc) return '';
+  var pct=calc.pctChange*100;
+  var pctStr=(pct>=0?'+':'')+pct.toFixed(1)+'%';
+  var pctColor=pct<0?'#3dd68c':(pct>0?'#e8673c':'#5A5A52');
+  var revChgPct=calc.revOld>0?(calc.revChange/calc.revOld*100):0;
+  var targetRow=calc.rows.find(function(r){return r.id===calc.partnerId;})||calc.rows[0];
+
+  var kpis='<div class="psr-sim-kpi-strip" style="margin-bottom:20px">'
+    +'<div class="psr-sim-kpi"><div class="psr-sim-kpi-label">Total Import Change</div>'
+    +'<div class="psr-sim-kpi-val" style="color:'+pctColor+'">'+pctStr+'</div>'
+    +'<div class="psr-sim-kpi-sub">'+fmtSmartUSD(calc.totalM0)+' → '+fmtSmartUSD(calc.totalNew)+'</div></div>'
+    +'<div class="psr-sim-kpi"><div class="psr-sim-kpi-label">Trade Creation</div>'
+    +'<div class="psr-sim-kpi-val" style="color:#5aa3f5">'+fmtSmartUSD(Math.abs(calc.totalCreation))+'</div>'
+    +'<div class="psr-sim-kpi-sub">'+(calc.totalCreation<0?'demand contraction':'demand expansion')+'</div></div>'
+    +'<div class="psr-sim-kpi"><div class="psr-sim-kpi-label">Trade Diversion</div>'
+    +'<div class="psr-sim-kpi-val" style="color:#f0c84b">'+fmtSmartUSD(Math.abs(calc.totalDiversion))+'</div>'
+    +'<div class="psr-sim-kpi-sub">Armington subst. (σ='+PSR_SMART_SIGMA+')</div></div>'
+    +'<div class="psr-sim-kpi"><div class="psr-sim-kpi-label">Tariff Revenue Δ</div>'
+    +'<div class="psr-sim-kpi-val" style="color:'+(revChgPct>=0?'#3dd68c':'#e8673c')+'">'+(revChgPct>=0?'+':'')+revChgPct.toFixed(1)+'%</div>'
+    +'<div class="psr-sim-kpi-sub">'+fmtSmartUSD(calc.revOld)+' → '+fmtSmartUSD(calc.revNew)+'</div></div>'
+    +'</div>';
+
+  var PFLAGS={chn:'🇨🇳',ind:'🇮🇳',jpn:'🇯🇵'};
+  var maxVal=Math.max.apply(null,calc.rows.map(function(r){return Math.max(r.m0,r.newM);}));
+  var bars=calc.rows.map(function(r){
+    var baseW=maxVal>0?(r.m0/maxVal*100).toFixed(1):0;
+    var newW=maxVal>0?(r.newM/maxVal*100).toFixed(1):0;
+    var chg=r.m0>0?r.change/r.m0*100:0;
+    var chgCol=chg<-0.05?'#3dd68c':(chg>0.05?'#e8673c':'#5A5A52');
+    var chgStr=(chg>=0?'+':'')+chg.toFixed(1)+'%';
+    var isTarget=(r.id===calc.partnerId);
+    return '<div style="margin-bottom:14px">'
+      +'<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:4px">'
+      +'<span style="font-family:monospace;font-size:10px;color:'+(isTarget?'#C9AE4E':'#C8C7C2')+'">'+((PFLAGS[r.id]||'')+' '+r.name+(isTarget?' ← scenario tariff':''))+'</span>'
+      +'<span style="font-family:monospace;font-size:10px;color:'+chgCol+'">'+chgStr+'</span>'
+      +'</div>'
+      +'<div style="display:flex;gap:4px;align-items:center;margin-bottom:3px">'
+      +'<span style="font-family:monospace;font-size:8px;color:#5A5A52;width:42px">Base</span>'
+      +'<div style="flex:1;background:#1A1A16;border-radius:2px;height:8px"><div style="width:'+baseW+'%;height:100%;background:#3A3A34;border-radius:2px"></div></div>'
+      +'<span style="font-family:monospace;font-size:8px;color:#9A9A90;min-width:60px;text-align:right">'+fmtSmartUSD(r.m0)+'</span>'
+      +'</div>'
+      +'<div style="display:flex;gap:4px;align-items:center">'
+      +'<span style="font-family:monospace;font-size:8px;color:#5A5A52;width:42px">New</span>'
+      +'<div style="flex:1;background:#1A1A16;border-radius:2px;height:8px"><div style="width:'+newW+'%;height:100%;background:'+chgCol+';border-radius:2px;opacity:.7"></div></div>'
+      +'<span style="font-family:monospace;font-size:8px;color:'+chgCol+';min-width:60px;text-align:right">'+fmtSmartUSD(r.newM)+'</span>'
+      +'</div></div>';
+  }).join('');
+
+  var note='<div style="background:#080807;border:1px solid #1A1A16;border-radius:3px;padding:12px 14px;margin-top:16px">'
+    +'<div style="font-family:monospace;font-size:8px;letter-spacing:.1em;text-transform:uppercase;color:#3A3A34;margin-bottom:6px">Methodology &amp; Known Limitations</div>'
+    +'<div style="font-family:monospace;font-size:9px;color:#4A4A44;line-height:1.65">'
+    +'WITS-SMART partial-equilibrium (Laird &amp; Yeats 1986). η='+calc.eta.toFixed(4)+' (Kee, Nicita &amp; Olarreaga 2008, winsorized [−5, −0.2]). Small-country assumption: world prices fixed. σ='+PSR_SMART_SIGMA+' (SMART default).'
+    +'<span style="color:#2A2A24;display:block;margin-top:4px">Limitations: KSA importer only · 3 partners (CHN/IND/JPN) · 9 curated HS4 product lines · no retaliation loop · pending validation against WITS desktop tool.</span>'
+    +'</div></div>';
+
+  return '<div style="margin-top:28px;border-top:1px solid #2A2A26;padding-top:24px">'
+    +'<div style="display:flex;align-items:center;gap:10px;margin-bottom:20px">'
+    +'<span style="font-size:18px">📊</span>'
+    +'<div><div style="font-family:monospace;font-size:13px;font-weight:600;color:#C8C7C2">SMART Simulation — '+calc.prod.name+'</div>'
+    +'<div style="font-family:monospace;font-size:9px;color:#5A5A52;margin-top:2px">HS'+calc.prod.code+' · KSA as importer · Tariff on '+targetRow.name+': '+(calc.newTariff*100).toFixed(1)+'% (was '+(targetRow.t0*100).toFixed(1)+'%)</div>'
+    +'</div></div>'
+    +kpis
+    +'<div class="psr-section-title" style="margin-bottom:12px">Partner-Level Import Impact</div>'
+    +bars
+    +note
+    +'</div>';
+}
+
+function psrSmartOnChange(){
+  var hsEl=document.getElementById('psr-sim-tr-hs4');
+  var ptEl=document.getElementById('psr-sim-tr-partner');
+  if(hsEl) _psrSmartParams.hs4=hsEl.value;
+  if(ptEl) _psrSmartParams.partner=ptEl.value;
+  _psrSmartParams.newTariff=null;
+  _psrSimRan=false;
+  psrRenderScenarios();
+}
+
 // ── SCENARIOS PANEL RENDERER ──────────────────────────────────────────────────
 function psrRenderScenarios(){
   var el = document.getElementById('psr-scenarios');
@@ -21058,7 +21228,14 @@ function psrRenderScenarios(){
     +'<div style="font-family:monospace;font-size:9px;color:#5A5A52;margin-bottom:16px">Select a scenario type, configure parameters, and run the simulation to model trade, volume, and cost impacts.</div>'
     +psrBuildSimBuilder(flow);
   if(_psrSimRan && _psrSimType){
-    html += psrBuildSimResults(flow, psrComputeSim(flow, _psrSimType, _psrSimParams[_psrSimType]));
+    if(_psrSimType==='tariff'){
+      var _sProd=PSR_SMART_DATA.find(function(d){return d.code===_psrSmartParams.hs4;})||PSR_SMART_DATA[0];
+      var _sPt=_sProd.partners.find(function(pp){return pp.id===_psrSmartParams.partner;})||_sProd.partners[0];
+      var _sNewT=(_psrSmartParams.newTariff!==null&&_psrSmartParams.newTariff!==undefined)?_psrSmartParams.newTariff:_sPt.t0;
+      html += psrBuildSmartResults(psrSmartCalc(_psrSmartParams.hs4,_psrSmartParams.partner,_sNewT));
+    } else {
+      html += psrBuildSimResults(flow, psrComputeSim(flow, _psrSimType, _psrSimParams[_psrSimType]));
+    }
   }
   html += '</div>';
   el.innerHTML = html;
@@ -21083,12 +21260,12 @@ function psrCaptureSimInputs(){
     if(cr) _psrSimParams.climate.region   = cr.value;
     if(cd) _psrSimParams.climate.duration = cd.value;
   } else if(t==='tariff'){
-    var tc=document.getElementById('psr-sim-tr-country'),
-        tp=document.getElementById('psr-sim-tr-pct'),
-        ts=document.getElementById('psr-sim-tr-scope');
-    if(tc) _psrSimParams.tariff.country = tc.value;
-    if(tp) _psrSimParams.tariff.pct     = parseInt(tp.value)||25;
-    if(ts) _psrSimParams.tariff.scope   = ts.value;
+    var th=document.getElementById('psr-sim-tr-hs4'),
+        tpt=document.getElementById('psr-sim-tr-partner'),
+        tsl=document.getElementById('psr-sim-tr-slider');
+    if(th)  _psrSmartParams.hs4     = th.value;
+    if(tpt) _psrSmartParams.partner = tpt.value;
+    if(tsl) _psrSmartParams.newTariff = parseFloat(tsl.value);
   } else if(t==='chokepoint'){
     var cc=document.getElementById('psr-sim-cp-id'),
         cl=document.getElementById('psr-sim-cp-level'),
@@ -21107,6 +21284,14 @@ window.psrRunSim = function(){
 };
 
 window.psrRunScenario = function(id){ _psrActiveScenario = id; };
+
+window.psrSmartOnChange = psrSmartOnChange;
+
+window.psrSmartOnSlider = function(v){
+  _psrSmartParams.newTariff = parseFloat(v);
+  var lbl = document.getElementById('psr-smart-slider-label');
+  if(lbl) lbl.textContent = Math.round(parseFloat(v)*1000)/10+'%';
+};
 
 // ── WATCHLIST TAB ─────────────────────────────────────────────────────────────
 function psrRenderWatchlist(){

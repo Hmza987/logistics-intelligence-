@@ -5156,6 +5156,25 @@ canvas { font-family: var(--f-mono); }
 .psr-ac-item:hover{background:#1E1E1C;color:#C8C7C2}
 .psr-ac-item:last-child{border-bottom:none}
 .psr-ac-code{color:#5A5A52;font-size:9px}
+/* Simulation Builder */
+.psr-sim-block{background:#111110;border:1px solid #1E1E1C;border-radius:4px;cursor:pointer;transition:border-color .15s,background .15s;user-select:none}
+.psr-sim-block:hover{border-color:#2A2A26}
+.psr-sim-block-active{border-color:#C9AE4E!important;background:#0F130A}
+.psr-sim-header{display:flex;align-items:center;gap:10px;padding:14px 16px}
+.psr-sim-params{padding:4px 16px 14px;border-top:1px solid #1E1E1C}
+.psr-sim-label{font-family:monospace;font-size:8px;letter-spacing:.1em;text-transform:uppercase;color:#5A5A52;margin-bottom:4px;margin-top:10px;display:block}
+.psr-sim-select,.psr-sim-input{width:100%;background:#0C0C0A;border:1px solid #2A2A26;border-radius:3px;color:#C8C7C2;font-family:monospace;font-size:10px;padding:6px 8px;outline:none;box-sizing:border-box}
+.psr-sim-select:focus,.psr-sim-input:focus{border-color:#C9AE4E66}
+.psr-run-btn{background:#C9AE4E;color:#0A0A08;font-family:monospace;font-size:11px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;border:none;border-radius:3px;padding:11px 28px;cursor:pointer;transition:opacity .15s}
+.psr-run-btn:hover{opacity:.85}
+.psr-run-btn:disabled{opacity:.25;cursor:not-allowed}
+/* Simulation Results */
+.psr-sim-kpi-strip{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:20px}
+.psr-sim-kpi{background:#0C0C0A;border:1px solid #1E1E1C;border-radius:4px;padding:12px 14px}
+.psr-sim-kpi-label{font-family:monospace;font-size:8px;letter-spacing:.1em;text-transform:uppercase;color:#5A5A52;margin-bottom:6px}
+.psr-sim-kpi-val{font-family:monospace;font-size:20px;font-weight:700;line-height:1}
+.psr-sim-kpi-sub{font-family:monospace;font-size:8px;color:#5A5A52;margin-top:4px}
+.psr-partner-impact-row{display:grid;grid-template-columns:22px 110px 80px 60px 80px 1fr;gap:8px;align-items:center;padding:7px 0;border-bottom:1px solid #141412;font-family:monospace;font-size:9px;color:#9A9A90}
 </style>
 
 <!-- ════════════════════════════ SUPPLY CHAIN RESILIENCE PAGE ════════════════════════════ -->
@@ -20676,104 +20695,418 @@ function psrRenderFlowMap() {
 
 // ── RESILIENCE LAB TAB ────────────────────────────────────────────────────────
 var _psrActiveScenario = null;
+var _psrSimType  = null;       // 'climate' | 'tariff' | 'chokepoint'
+var _psrSimRan   = false;
+var _psrSimParams = {
+  climate:    {type:'drought',    severity:'severe', region:'black_sea',    duration:'medium'},
+  tariff:     {country:'',        pct:25,            scope:'product'},
+  chokepoint: {id:'bab_el_mandeb',level:'severe',    duration:'weeks'}
+};
 
+var PSR_SIM_REGIONS = {
+  black_sea:    {label:'Black Sea / E. Europe', partners:['Ukraine','Russia','Turkey']},
+  south_asia:   {label:'South Asia',            partners:['India','Pakistan']},
+  asia_pacific: {label:'Asia-Pacific',          partners:['China','Japan','South Korea','Australia']},
+  north_america:{label:'North America',         partners:['USA','Canada']},
+  europe:       {label:'Western Europe',        partners:['Germany','Switzerland','UK','France']},
+  middle_east:  {label:'Middle East / GCC',     partners:['UAE']}
+};
+var PSR_SIM_SEVERITY = {
+  moderate:{mult:0.15, priceSpike:[10,20]},
+  severe:  {mult:0.30, priceSpike:[20,40]},
+  extreme: {mult:0.55, priceSpike:[45,80]}
+};
+var PSR_SIM_DURATION = {
+  short: {extraWeeks:[2,6]},
+  medium:{extraWeeks:[6,12]},
+  long:  {extraWeeks:[12,24]}
+};
+var PSR_CP_REROUTE = {
+  hormuz:       {expKey:'hormuz',  cpLabel:'Strait of Hormuz', partnerCpName:'Strait of Hormuz', rerouteDays:[14,18], rerouteVia:'Cape of Good Hope',    costPerTEU:'$800–1,400', costPct:[18,28]},
+  bab_el_mandeb:{expKey:'bab',     cpLabel:'Bab Al-Mandeb',    partnerCpName:'Bab Al-Mandeb',    rerouteDays:[10,14], rerouteVia:'Cape of Good Hope',    costPerTEU:'$600–1,000', costPct:[14,22]},
+  suez:         {expKey:'suez',    cpLabel:'Suez Canal',        partnerCpName:'Suez Canal',        rerouteDays:[8,12],  rerouteVia:'Cape of Good Hope',    costPerTEU:'$500–900',   costPct:[10,18]},
+  malacca:      {expKey:'malacca', cpLabel:'Malacca Strait',    partnerCpName:'Malacca Strait',    rerouteDays:[3,6],   rerouteVia:'Lombok / Sunda Strait', costPerTEU:'$300–600',   costPct:[6,12]}
+};
+
+// ── SIMULATION COMPUTATION ────────────────────────────────────────────────────
+function psrComputeSim(flow, type, params) {
+  var showImport = _psrDir !== 'export';
+  var showExport = _psrDir !== 'import';
+  var impV   = flow.importVal  || 0;
+  var expV   = flow.exportVal  || 0;
+  var impVol = flow.importVol  || 0;
+  var expVol = flow.exportVol  || 0;
+  var volUnit = flow.volUnit   || '';
+  var totalVal = (showImport?impV:0) + (showExport?expV:0);
+
+  function pBaseVol(p){ return showImport ? impVol*(p.importShare||0)/100 : expVol*(p.exportShare||0)/100; }
+  function pBaseVal(p){ return (showImport?Math.round(impV*(p.importShare||0)/100):0)+(showExport?Math.round(expV*(p.exportShare||0)/100):0); }
+  function fmtVol(v){
+    if(!v||v<0.001) return '—';
+    var s = v>=10 ? v.toFixed(1) : v.toPrecision(2);
+    return s+' '+volUnit;
+  }
+
+  var res = {type:type, volUnit:volUnit, fmtVol:fmtVol};
+
+  if(type==='climate'){
+    var sev = PSR_SIM_SEVERITY[params.severity]||PSR_SIM_SEVERITY.severe;
+    var reg = PSR_SIM_REGIONS[params.region];
+    var dur = PSR_SIM_DURATION[params.duration]||PSR_SIM_DURATION.medium;
+    var regNames = reg ? reg.partners : [];
+    var affected = flow.partners.filter(function(p){return regNames.indexOf(p.name)>=0;});
+    var safe     = flow.partners.filter(function(p){return regNames.indexOf(p.name)<0;});
+    var atRiskVal=0, atRiskVol=0;
+    affected.forEach(function(p){atRiskVal+=pBaseVal(p); atRiskVol+=pBaseVol(p);});
+    var clTypeLabel = {drought:'Drought',flood:'Flooding',storm:'Storm / Cyclone',heat:'Extreme Heat'}[params.type]||'Climate Event';
+    var sevLabel    = {moderate:'Moderate',severe:'Severe',extreme:'Extreme'}[params.severity]||'Severe';
+    res.headline      = clTypeLabel+' — '+(reg?reg.label:'selected region')+' · '+sevLabel;
+    res.valueAtRisk   = Math.round(atRiskVal*sev.mult);
+    res.pctDisrupted  = totalVal>0 ? Math.round(res.valueAtRisk/totalVal*100) : 0;
+    res.volDisrupted  = atRiskVol*sev.mult;
+    res.costPremiumLow  = sev.priceSpike[0];
+    res.costPremiumHigh = sev.priceSpike[1];
+    res.extraWeeksLow   = dur.extraWeeks[0];
+    res.extraWeeksHigh  = dur.extraWeeks[1];
+    res.partnerRows = affected.map(function(p){
+      var bv=pBaseVol(p);
+      return {flag:p.flag,name:p.name,baseVal:pBaseVal(p),baseVol:bv,disruptedPct:Math.round(sev.mult*100),gapVol:bv*sev.mult,status:'DISRUPTED'};
+    }).concat(safe.map(function(p){
+      return {flag:p.flag,name:p.name,baseVal:pBaseVal(p),baseVol:pBaseVol(p),disruptedPct:0,gapVol:0,status:'SAFE'};
+    }));
+    res.altSources  = (flow.altSuppliers||[]).map(function(s){return {name:s,capacity:'Medium',rampup:'4–8 wk'};});
+    res.procurement = [
+      'Emergency procurement tender: '+(flow.altSuppliers||[]).join(', '),
+      'Activate strategic stock buffer (+30 day minimum)',
+      'Issue force majeure advisory to affected supplier contracts',
+      'Increase monitoring cadence on '+clTypeLabel.toLowerCase()+' in '+(reg?reg.label:'affected region')
+    ];
+    res.routeNote  = 'Trade routes remain open. Impact is supply-side: production and export capacity reduction in the affected region.';
+    res.confidence = affected.length>0 ? 'Medium' : 'Low';
+  }
+
+  else if(type==='tariff'){
+    var tp = flow.partners.filter(function(p){return p.name===params.country;})[0]||flow.partners[0];
+    var tPct = params.pct||25;
+    var baseVal = pBaseVal(tp);
+    var baseVol = pBaseVol(tp);
+    var volShiftPct = Math.min(tPct*0.8, 65);
+    res.headline      = '+'+tPct+'% tariff on imports from '+tp.name;
+    res.valueAtRisk   = baseVal;
+    res.tariffCostAnn = Math.round(baseVal*tPct/100);
+    res.pctDisrupted  = totalVal>0 ? Math.round(baseVal/totalVal*100) : 0;
+    res.volDisrupted  = baseVol*volShiftPct/100;
+    res.costPremiumLow  = tPct;
+    res.costPremiumHigh = Math.round(tPct*1.12);
+    res.extraWeeksLow   = 2;
+    res.extraWeeksHigh  = 6;
+    res.partnerRows = [{
+      flag:tp.flag,name:tp.name,baseVal:baseVal,baseVol:baseVol,
+      disruptedPct:Math.round(volShiftPct),gapVol:baseVol*volShiftPct/100,status:'TARIFFED'
+    }].concat(flow.partners.filter(function(p){return p.name!==tp.name;}).map(function(p){
+      return {flag:p.flag,name:p.name,baseVal:pBaseVal(p),baseVol:pBaseVol(p),disruptedPct:0,gapVol:0,status:'SAFE'};
+    }));
+    res.altSources  = (flow.altSuppliers||[]).map(function(s){return {name:s,capacity:'Medium',rampup:'3–6 wk'};});
+    res.procurement = [
+      'Redirect ~'+fmtVol(res.volDisrupted)+' to alternative suppliers: '+(flow.altSuppliers||[]).join(', '),
+      'Initiate tariff exemption request under bilateral trade framework',
+      'Review supplier contracts — assess tariff pass-through clauses',
+      'Model long-run sourcing diversification if tariff becomes structural'
+    ];
+    res.routeNote  = 'Maritime routes unaffected. Challenge is cost competitiveness and supplier rebalancing.';
+    res.confidence = 'High';
+  }
+
+  else if(type==='chokepoint'){
+    var cpDef = PSR_CP_REROUTE[params.id]||PSR_CP_REROUTE.bab_el_mandeb;
+    var lvlMult = {partial:0.30,severe:0.70,full:1.00}[params.level]||0.70;
+    var lvlLabel = {partial:'Partial (30%)',severe:'Severe (70%)',full:'Full Closure'}[params.level]||'Severe';
+    var affected = flow.partners.filter(function(p){return (p.chokepoints||[]).indexOf(cpDef.partnerCpName)>=0;});
+    var safe     = flow.partners.filter(function(p){return (p.chokepoints||[]).indexOf(cpDef.partnerCpName)<0;});
+    var atRiskVal=0, atRiskVol=0;
+    affected.forEach(function(p){atRiskVal+=pBaseVal(p); atRiskVol+=pBaseVol(p);});
+    res.headline        = lvlLabel+' — '+cpDef.cpLabel;
+    res.valueAtRisk     = Math.round(atRiskVal*lvlMult);
+    res.pctDisrupted    = totalVal>0 ? Math.round(res.valueAtRisk/totalVal*100) : 0;
+    res.volDisrupted    = atRiskVol*lvlMult;
+    res.rerouteVia      = cpDef.rerouteVia;
+    res.rerouteCostTEU  = cpDef.costPerTEU;
+    res.rerouteDaysLow  = cpDef.rerouteDays[0];
+    res.rerouteDaysHigh = cpDef.rerouteDays[1];
+    res.costPremiumLow  = cpDef.costPct[0];
+    res.costPremiumHigh = cpDef.costPct[1];
+    res.extraWeeksLow   = +(cpDef.rerouteDays[0]/7).toFixed(1);
+    res.extraWeeksHigh  = +(cpDef.rerouteDays[1]/7).toFixed(1);
+    var statusLabel = params.level==='partial'?'RESTRICTED':params.level==='full'?'BLOCKED':'DISRUPTED';
+    res.partnerRows = affected.map(function(p){
+      var bv=pBaseVol(p);
+      return {flag:p.flag,name:p.name,baseVal:pBaseVal(p),baseVol:bv,disruptedPct:Math.round(lvlMult*100),gapVol:bv*lvlMult,status:statusLabel};
+    }).concat(safe.map(function(p){
+      return {flag:p.flag,name:p.name,baseVal:pBaseVal(p),baseVol:pBaseVol(p),disruptedPct:0,gapVol:0,status:'SAFE'};
+    }));
+    res.altSources  = (flow.altSuppliers||[]).map(function(s){return {name:s,capacity:'Medium',rampup:'2–4 wk'};});
+    res.procurement = [
+      'Activate rerouting via '+cpDef.rerouteVia+' (+'+cpDef.rerouteDays[0]+'–'+cpDef.rerouteDays[1]+' days, '+cpDef.costPerTEU+'/TEU)',
+      'Increase safety stock by 30–45 days to buffer extended transit times',
+      'Engage spot market from: '+(flow.altSuppliers||[]).join(', '),
+      'Monitor '+cpDef.cpLabel+' AIS vessel traffic for escalation signals'
+    ];
+    res.routeNote  = 'Rerouting via '+cpDef.rerouteVia+' adds '+cpDef.rerouteDays[0]+'–'+cpDef.rerouteDays[1]+' days to transit. Cost premium: '+cpDef.costPerTEU+'/TEU.';
+    res.confidence = 'High';
+  }
+
+  return res;
+}
+
+// ── WATCHLIST STRIP (compact) ──────────────────────────────────────────────────
+function psrBuildWatchlistStrip(flow){
+  var ckN = {hormuz:'Hormuz',bab:'Bab Al-Mandeb',suez:'Suez',malacca:'Malacca'};
+  var chips = [];
+  var topShare = flow.partners[0] ? Math.max(flow.partners[0].importShare,flow.partners[0].exportShare) : 0;
+  if(topShare>=25) chips.push({c:'#e8673c',t:'Concentration: '+flow.partners[0].name+' '+topShare+'%'});
+  var hCkpts = Object.keys(flow.chokepointExposure).filter(function(k){return flow.chokepointExposure[k]>=50;});
+  if(hCkpts.length) chips.push({c:'#c02030',t:'Chokepoint ≥50%: '+hCkpts.map(function(k){return ckN[k]||k;}).join(', ')});
+  var conflP = flow.partners.filter(function(p){return(p.riskFlags||[]).some(function(f){return f.toLowerCase().indexOf('conflict')>=0;});});
+  if(conflP.length) chips.push({c:'#e8673c',t:'Conflict zone: '+conflP.map(function(p){return p.name;}).join(', ')});
+  if(flow.stockDays&&flow.stockDays<45) chips.push({c:'#f0c84b',t:'Stock: '+flow.stockDays+'d (below 45d)'});
+  if(!chips.length) chips.push({c:'#3dd68c',t:'No critical flags'});
+  return '<div style="margin-bottom:20px">'
+    +'<div class="psr-section-title">Risk Signals <span style="color:#3A3A34;font-weight:normal;letter-spacing:0">· rule-based · DEMO</span></div>'
+    +'<div style="display:flex;flex-wrap:wrap;gap:6px">'
+    +chips.map(function(ch){
+      return '<span style="font-family:monospace;font-size:9px;color:'+ch.c+';background:'+ch.c+'18;border:1px solid '+ch.c+'44;border-radius:10px;padding:4px 10px">'+ch.t+'</span>';
+    }).join('')+'</div></div>';
+}
+
+// ── SIMULATION BUILDER HTML ────────────────────────────────────────────────────
+function psrBuildSimBuilder(flow){
+  var t = _psrSimType;
+  var p = _psrSimParams;
+  if(!p.tariff.country && flow.partners[0]) p.tariff.country = flow.partners[0].name;
+
+  function simBlock(type, icon, label, paramsHtml){
+    var active = t===type;
+    return '<div class="psr-sim-block'+(active?' psr-sim-block-active':'')+'" onclick="psrSelectSimType(\''+type+'\')">'
+      +'<div class="psr-sim-header">'
+      +'<span style="font-size:20px;flex-shrink:0">'+icon+'</span>'
+      +'<div style="flex:1">'
+      +'<div style="font-family:monospace;font-size:11px;color:'+(active?'#C9AE4E':'#C8C7C2')+';font-weight:'+(active?'600':'400')+'">'+label+'</div>'
+      +'<div style="font-family:monospace;font-size:8px;color:#5A5A52;margin-top:3px">'+(active?'Configured below':'Click to select')+'</div>'
+      +'</div>'
+      +'<div style="width:14px;height:14px;border-radius:50%;border:2px solid '+(active?'#C9AE4E':'#2A2A26')+';background:'+(active?'#C9AE4E':'transparent')+';flex-shrink:0;margin-top:1px"></div>'
+      +'</div>'
+      +(active?'<div class="psr-sim-params" onclick="event.stopPropagation()">'+paramsHtml+'</div>':'')
+      +'</div>';
+  }
+
+  function sel(id, opts, val){
+    return '<select class="psr-sim-select" id="'+id+'">'+opts.map(function(o){
+      return '<option value="'+o[0]+'"'+(val===o[0]?' selected':'')+'>'+o[1]+'</option>';
+    }).join('')+'</select>';
+  }
+
+  var climateParams =
+    '<label class="psr-sim-label">Event Type</label>'
+    +sel('psr-sim-cl-type',[['drought','Drought / Water shortage'],['flood','Flooding'],['storm','Storm / Cyclone'],['heat','Extreme Heat']],p.climate.type)
+    +'<label class="psr-sim-label">Severity</label>'
+    +sel('psr-sim-cl-severity',[['moderate','Moderate (−15% supply)'],['severe','Severe (−30% supply)'],['extreme','Extreme (−55% supply)']],p.climate.severity)
+    +'<label class="psr-sim-label">Affected Region</label>'
+    +sel('psr-sim-cl-region',[['black_sea','Black Sea / E. Europe'],['south_asia','South Asia'],['asia_pacific','Asia-Pacific'],['north_america','North America'],['europe','Western Europe'],['middle_east','Middle East / GCC']],p.climate.region)
+    +'<label class="psr-sim-label">Duration</label>'
+    +sel('psr-sim-cl-duration',[['short','Short (1–3 months)'],['medium','Medium (3–6 months)'],['long','Long (6–12 months+)']],p.climate.duration);
+
+  var partnerOpts = flow.partners.map(function(pt){return [pt.name, pt.flag+' '+pt.name];});
+  var tariffParams =
+    '<label class="psr-sim-label">Country Imposing Tariff on Imports From</label>'
+    +sel('psr-sim-tr-country', partnerOpts, p.tariff.country)
+    +'<label class="psr-sim-label">Tariff Increase (%)</label>'
+    +'<input class="psr-sim-input" type="number" id="psr-sim-tr-pct" min="1" max="200" value="'+p.tariff.pct+'" placeholder="e.g. 25"/>'
+    +'<label class="psr-sim-label">Scope</label>'
+    +sel('psr-sim-tr-scope',[['product','This product only (HS '+flow.hs+')'],['all','All traded goods with this country']],p.tariff.scope);
+
+  var cpExposure = flow.chokepointExposure||{};
+  var cpParams =
+    '<label class="psr-sim-label">Chokepoint</label>'
+    +sel('psr-sim-cp-id',[
+      ['hormuz','🔴 Strait of Hormuz ('+(cpExposure.hormuz||0)+'% exposure)'],
+      ['bab_el_mandeb','🟠 Bab Al-Mandeb ('+(cpExposure.bab||0)+'% exposure)'],
+      ['suez','🟡 Suez Canal ('+(cpExposure.suez||0)+'% exposure)'],
+      ['malacca','🟡 Malacca Strait ('+(cpExposure.malacca||0)+'% exposure)']
+    ],p.chokepoint.id)
+    +'<label class="psr-sim-label">Disruption Level</label>'
+    +sel('psr-sim-cp-level',[['partial','Partial Restriction (30% reduction)'],['severe','Severe Disruption (70% reduction)'],['full','Full Closure']],p.chokepoint.level)
+    +'<label class="psr-sim-label">Expected Duration</label>'
+    +sel('psr-sim-cp-duration',[['days','Days (acute incident)'],['weeks','Weeks (ongoing conflict)'],['months','Months (structural)']],p.chokepoint.duration);
+
+  var runDisabled = t?'':' disabled';
+  return '<div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;align-items:start;margin-bottom:16px">'
+    +simBlock('climate','🌡️','Climate Disruption',climateParams)
+    +simBlock('tariff','📈','Tariff Policy Shock',tariffParams)
+    +simBlock('chokepoint','🚫','Chokepoint Disruption',cpParams)
+    +'</div>'
+    +'<div style="display:flex;align-items:center;gap:16px">'
+    +'<button class="psr-run-btn"'+runDisabled+' onclick="event.stopPropagation();psrRunSim()">&#9654;&nbsp;&nbsp;RUN SIMULATION</button>'
+    +(t?'':'<span style="font-family:monospace;font-size:9px;color:#3A3A34">Select a scenario type above to enable</span>')
+    +'</div>';
+}
+
+// ── SIMULATION RESULTS HTML ────────────────────────────────────────────────────
+function psrBuildSimResults(flow, res){
+  var typeColor = {climate:'#7a5af5',tariff:'#5aa3f5',chokepoint:'#c02030'}[res.type]||'#C9AE4E';
+  var typeIcon  = {climate:'🌡️',tariff:'📈',chokepoint:'🚫'}[res.type]||'▶';
+  var confColor = {High:'#3dd68c',Medium:'#f0c84b',Low:'#5A5A52'}[res.confidence]||'#5A5A52';
+  var statusColors = {DISRUPTED:'#e8673c',BLOCKED:'#c02030',RESTRICTED:'#f0c84b',TARIFFED:'#5aa3f5',SAFE:'#3dd68c'};
+
+  var timeLabel = res.type==='chokepoint' ? res.rerouteDaysLow+'–'+res.rerouteDaysHigh+' d' : res.extraWeeksLow+'–'+res.extraWeeksHigh+' wk';
+  var timeSub   = res.type==='chokepoint' ? 'via '+res.rerouteVia : 'supply disruption horizon';
+
+  var kpiStrip = '<div class="psr-sim-kpi-strip">'
+    +'<div class="psr-sim-kpi"><div class="psr-sim-kpi-label">Value at Risk</div>'
+    +'<div class="psr-sim-kpi-val" style="color:'+typeColor+'">$'+psrFmt(res.valueAtRisk)+'</div>'
+    +'<div class="psr-sim-kpi-sub">'+res.pctDisrupted+'% of total trade</div></div>'
+    +'<div class="psr-sim-kpi"><div class="psr-sim-kpi-label">Volume Disrupted</div>'
+    +'<div class="psr-sim-kpi-val" style="color:'+typeColor+'">'+(res.volDisrupted>0.001?res.fmtVol(res.volDisrupted):'—')+'</div>'
+    +'<div class="psr-sim-kpi-sub">to source from alternatives</div></div>'
+    +'<div class="psr-sim-kpi"><div class="psr-sim-kpi-label">Cost Premium</div>'
+    +'<div class="psr-sim-kpi-val" style="color:'+typeColor+'">+'+res.costPremiumLow+'–'+res.costPremiumHigh+'%</div>'
+    +'<div class="psr-sim-kpi-sub">'+(res.type==='tariff'?'direct tariff cost':'vs. baseline')+'</div></div>'
+    +'<div class="psr-sim-kpi"><div class="psr-sim-kpi-label">'+(res.type==='chokepoint'?'Extra Transit':'Supply Delay')+'</div>'
+    +'<div class="psr-sim-kpi-val" style="color:'+typeColor+'">+'+timeLabel+'</div>'
+    +'<div class="psr-sim-kpi-sub">'+timeSub+'</div></div>'
+    +'</div>';
+
+  var partnerHeader = '<div class="psr-partner-impact-row" style="color:#4A4A44;font-size:8px;letter-spacing:.08em;text-transform:uppercase;border-bottom:1px solid #2A2A26">'
+    +'<span></span><span>Partner</span><span>Base Vol.</span><span>Impact</span><span>Vol. Gap</span><span>Status</span></div>';
+  var partnerRows = (res.partnerRows||[]).map(function(pr){
+    var sc = statusColors[pr.status]||'#5A5A52';
+    return '<div class="psr-partner-impact-row">'
+      +'<span style="font-size:12px">'+pr.flag+'</span>'
+      +'<span style="color:#C8C7C2">'+pr.name+'</span>'
+      +'<span>'+res.fmtVol(pr.baseVol)+'</span>'
+      +'<span style="color:'+sc+'">'+(pr.disruptedPct>0?'−'+pr.disruptedPct+'%':'—')+'</span>'
+      +'<span style="color:'+sc+'">'+(pr.gapVol>0.001?res.fmtVol(pr.gapVol):'—')+'</span>'
+      +'<span style="background:'+sc+'22;border:1px solid '+sc+'44;color:'+sc+';font-size:7px;padding:2px 6px;border-radius:2px;width:fit-content;letter-spacing:.06em">'+pr.status+'</span>'
+      +'</div>';
+  }).join('');
+
+  var altRows = (res.altSources||[]).map(function(a){
+    return '<div style="display:flex;align-items:center;gap:10px;padding:6px 0;border-bottom:1px solid #141412">'
+      +'<span style="font-family:monospace;font-size:10px;color:#C8C7C2;flex:1">'+a.name+'</span>'
+      +'<span style="font-family:monospace;font-size:9px;color:#5A5A52">'+a.capacity+' capacity</span>'
+      +'<span style="font-family:monospace;font-size:9px;color:#f0c84b">Ramp-up: '+a.rampup+'</span>'
+      +'</div>';
+  }).join('') || '<div style="font-family:monospace;font-size:10px;color:#5A5A52;padding:8px 0">No alternatives in dataset.</div>';
+
+  var costBlock = res.tariffCostAnn!=null
+    ? '<div><div class="psr-impact-label">Annual Tariff Exposure</div>'
+      +'<div style="font-family:monospace;font-size:16px;color:#e8673c;margin-top:4px">$'+psrFmt(res.tariffCostAnn)+'</div>'
+      +'<div style="font-family:monospace;font-size:9px;color:#5A5A52;margin-top:2px">additional annual cost (direct tariff)</div></div>'
+    : '<div><div class="psr-impact-label">Lead-Time Extension</div>'
+      +'<div style="font-family:monospace;font-size:16px;color:#f0c84b;margin-top:4px">+'+timeLabel+'</div>'
+      +'<div style="font-family:monospace;font-size:9px;color:#5A5A52;margin-top:2px">additional time to market</div></div>';
+
+  return '<div style="margin-top:28px;border-top:1px solid #2A2A26;padding-top:24px">'
+    +'<div style="display:flex;align-items:center;gap:10px;margin-bottom:20px">'
+    +'<span style="font-size:18px">'+typeIcon+'</span>'
+    +'<div><div style="font-family:monospace;font-size:13px;font-weight:600;color:#C8C7C2">'+res.headline+'</div>'
+    +'<div style="font-family:monospace;font-size:9px;color:#5A5A52;margin-top:2px">Impact Analysis · '+flow.product+' · '+flow.country+' · <span style="color:#C9AE4E">DEMO DATA</span></div>'
+    +'</div></div>'
+    +kpiStrip
+    +'<div style="display:grid;grid-template-columns:3fr 2fr;gap:20px;align-items:start">'
+    +'<div>'
+    +'<div class="psr-section-title">Trade Partner Impact</div>'
+    +partnerHeader+partnerRows
+    +'<div class="psr-section-title" style="margin-top:20px">Alternative Sourcing Markets</div>'
+    +altRows
+    +'</div>'
+    +'<div>'
+    +'<div class="psr-section-title">Price &amp; Cost Impact</div>'
+    +'<div style="background:#0C0C0A;border:1px solid #1E1E1C;border-radius:4px;padding:14px;margin-bottom:12px">'
+    +'<div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">'
+    +'<div><div class="psr-impact-label">Unit Cost Premium</div>'
+    +'<div style="font-family:monospace;font-size:16px;color:#e8673c;margin-top:4px">+'+res.costPremiumLow+'–'+res.costPremiumHigh+'%</div>'
+    +'<div style="font-family:monospace;font-size:9px;color:#5A5A52;margin-top:2px">vs. current baseline</div></div>'
+    +costBlock
+    +'</div></div>'
+    +'<div class="psr-section-title" style="margin-top:16px">Route &amp; Access Assessment</div>'
+    +'<div style="background:#111110;border-left:2px solid '+typeColor+';padding:10px 14px;border-radius:0 3px 3px 0;font-family:monospace;font-size:10px;color:#9A9A90;line-height:1.6;margin-bottom:14px">'+res.routeNote+'</div>'
+    +'<div class="psr-section-title">Recommended Procurement Actions</div>'
+    +(res.procurement||[]).map(function(a,i){
+      return '<div style="display:flex;gap:10px;padding:6px 0;border-bottom:1px solid #141412;font-family:monospace;font-size:9px;color:#9A9A90">'
+        +'<span style="color:'+typeColor+';flex-shrink:0;font-weight:600">'+(i+1)+'.</span><span>'+a+'</span></div>';
+    }).join('')
+    +'</div>'
+    +'</div>'
+    +'<div style="display:flex;align-items:center;gap:12px;margin-top:16px">'
+    +'<span style="font-family:monospace;font-size:9px;color:'+confColor+';border:1px solid '+confColor+'44;padding:3px 8px;border-radius:2px">Confidence: '+res.confidence+'</span>'
+    +'<span style="font-family:monospace;font-size:8px;color:#3A3A34">Illustrative simulation based on demo data. Not for operational decision-making.</span>'
+    +'</div>'
+    +'</div>';
+}
+
+// ── SCENARIOS PANEL RENDERER ──────────────────────────────────────────────────
 function psrRenderScenarios(){
   var el = document.getElementById('psr-scenarios');
   var flow = psrCurrentFlow();
   if(!flow){
-    el.innerHTML='<div style="padding:60px;text-align:center;font-family:monospace;font-size:11px;color:#4A4A44">Select a product with available data to run scenarios.</div>';
+    el.innerHTML='<div style="padding:60px;text-align:center;font-family:monospace;font-size:11px;color:#4A4A44">Select a product with available data to run simulations.</div>';
     return;
   }
-
-  // ── Watchlist alerts (embedded at top) ───────────────────────────────────
-  var alerts = [];
-  var ckptNames2 = {hormuz:'Strait of Hormuz',bab:'Bab Al-Mandeb',suez:'Suez Canal',malacca:'Malacca Strait',panama:'Panama Canal'};
-  var topShare = flow.partners[0] ? Math.max(flow.partners[0].importShare,flow.partners[0].exportShare) : 0;
-  if(topShare>=25) alerts.push({icon:'⚠️',color:'#e8673c',level:'HIGH',
-    title:'Supplier Concentration',
-    body:'Top partner ('+flow.partners[0].name+') = '+topShare+'% of trade. Single-source share above 25%.'});
-  var highCkpts = Object.keys(flow.chokepointExposure).filter(function(k){return flow.chokepointExposure[k]>=50;});
-  if(highCkpts.length) alerts.push({icon:'🚨',color:'#c02030',level:'CRITICAL',
-    title:'High Chokepoint Exposure',
-    body:highCkpts.map(function(k){return ckptNames2[k]+' '+flow.chokepointExposure[k]+'%';}).join(' · ')});
-  var altCount = flow.altSuppliers ? flow.altSuppliers.length : 0;
-  if(altCount<=2) alerts.push({icon:'🔶',color:'#f0c84b',level:'MEDIUM',
-    title:'Limited Alternatives',
-    body:'Only '+(altCount||'no')+' alternative supplier(s) identified for '+flow.product+'.'});
-  var conflictPartners = flow.partners.filter(function(p){return (p.riskFlags||[]).some(function(f){return f.toLowerCase().indexOf('conflict')>=0;});});
-  if(conflictPartners.length) alerts.push({icon:'🌐',color:'#e8673c',level:'HIGH',
-    title:'Conflict Zone Exposure',
-    body:conflictPartners.map(function(p){return p.name;}).join(', ')+' — monitor for export restrictions.'});
-  if(flow.stockDays&&flow.stockDays<45) alerts.push({icon:'📦',color:'#f0c84b',level:'MEDIUM',
-    title:'Low Strategic Stock',
-    body:'Estimated '+flow.stockDays+' days coverage — below 60-day threshold.'});
-  var highExp = Object.keys(flow.chokepointExposure).filter(function(k){return flow.chokepointExposure[k]>=30;});
-  if(highExp.length>=2) alerts.push({icon:'🔁',color:'#5aa3f5',level:'MONITOR',
-    title:'Multi-Chokepoint Dependency',
-    body:highExp.map(function(k){return ckptNames2[k];}).join(', ')+' simultaneously exposed.'});
-  if(!alerts.length) alerts.push({icon:'✅',color:'#3dd68c',level:'CLEAR',title:'No Critical Flags',body:'No rule-based flags triggered for this product.'});
-
-  var wlHtml = '<div style="margin-bottom:24px">'
-    +'<div class="psr-section-title">Auto-Generated Watchlist <span style="color:#3A3A34;font-weight:normal;letter-spacing:0">· rule-based · DEMO DATA</span></div>'
-    +'<div style="display:flex;flex-wrap:wrap;gap:8px">'
-    +alerts.map(function(a){
-      return '<div style="background:#111110;border:1px solid '+a.color+'33;border-left:2px solid '+a.color+';border-radius:3px;padding:8px 12px;min-width:200px;flex:1">'
-        +'<div style="display:flex;align-items:center;gap:6px;margin-bottom:3px">'
-        +'<span style="font-size:12px">'+a.icon+'</span>'
-        +'<span style="font-family:monospace;font-size:9px;font-weight:600;color:#C8C7C2">'+a.title+'</span>'
-        +'<span style="font-family:monospace;font-size:7px;color:'+a.color+';border:1px solid '+a.color+'44;padding:1px 5px;border-radius:2px;margin-left:auto">'+a.level+'</span>'
-        +'</div>'
-        +'<div style="font-family:monospace;font-size:9px;color:#6A6A60;line-height:1.5">'+a.body+'</div>'
-        +'</div>';
-    }).join('')
-    +'</div></div>';
-
-  // ── Scenario runner ───────────────────────────────────────────────────────
-  var cards = PSR_SCENARIOS.map(function(s){
-    var isActive = _psrActiveScenario===s.id;
-    return '<div class="psr-scenario-card'+(isActive?' active':'')+'" onclick="psrRunScenario(\''+s.id+'\')">'
-      +'<div style="display:flex;align-items:center;gap:10px">'
-      +'<span style="font-size:16px">'+s.icon+'</span>'
-      +'<div><div class="psr-scenario-title">'+s.name+'</div>'
-      +'<div class="psr-scenario-sub">'+s.desc+'</div></div>'
-      +'<span style="margin-left:auto;font-family:monospace;font-size:9px;color:'+(isActive?s.color:'#3A3A34')+'">'+(isActive?'▶':'▷')+'</span>'
-      +'</div></div>';
-  }).join('');
-
-  var impactHtml = '';
-  if(_psrActiveScenario){
-    var sc = PSR_SCENARIOS.filter(function(s){return s.id===_psrActiveScenario;})[0];
-    if(sc){
-      var res = sc.fn(flow);
-      impactHtml = '<div class="psr-section-title" style="color:'+sc.color+'">'+sc.icon+' Impact Analysis — '+sc.name+'</div>'
-        +'<div class="psr-impact-grid">'
-        +'<div class="psr-impact-cell"><div class="psr-impact-label">Value Exposed</div><div class="psr-impact-val" style="color:'+sc.color+'">$'+psrFmt(res.valueExposed)+'</div></div>'
-        +'<div class="psr-impact-cell"><div class="psr-impact-label">% of Trade</div><div class="psr-impact-val" style="color:'+sc.color+'">'+res.pctExposed+'%</div></div>'
-        +'<div class="psr-impact-cell"><div class="psr-impact-label">Affected Partners</div><div class="psr-impact-val" style="font-size:14px;color:#C8C7C2">'+(res.affectedPartners.length||'—')+'</div></div>'
-        +'</div>'
-        +'<div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:10px">'
-        +'<div class="psr-impact-cell"><div class="psr-impact-label">Affected Partners</div><div style="font-family:monospace;font-size:10px;color:#9A9A90;line-height:1.6">'+res.affectedPartners.join(', ')+'</div></div>'
-        +'<div class="psr-impact-cell"><div class="psr-impact-label">Cost Impact (est.)</div><div style="font-family:monospace;font-size:10px;color:#e8673c;line-height:1.6">'+res.costImpact+'</div></div>'
-        +'<div class="psr-impact-cell"><div class="psr-impact-label">Delay Impact (est.)</div><div style="font-family:monospace;font-size:10px;color:#f0c84b;line-height:1.6">'+res.delayImpact+'</div></div>'
-        +'<div class="psr-impact-cell"><div class="psr-impact-label">Alternative Routes / Suppliers</div><div style="font-family:monospace;font-size:10px;color:#3dd68c;line-height:1.6">'+res.altRoutes.join('<br>')+'</div></div>'
-        +'</div>'
-        +'<div style="margin-top:10px;font-family:monospace;font-size:8px;color:#3A3A34">* Indicative estimates based on illustrative demo data.</div>';
-    }
+  var html = '<div style="max-width:1100px">'
+    +psrBuildWatchlistStrip(flow)
+    +'<div class="psr-section-title">Simulation Builder <span style="color:#3A3A34;font-weight:normal;letter-spacing:0">· choose one scenario type · DEMO</span></div>'
+    +'<div style="font-family:monospace;font-size:9px;color:#5A5A52;margin-bottom:16px">Select a scenario type, configure parameters, and run the simulation to model trade, volume, and cost impacts.</div>'
+    +psrBuildSimBuilder(flow);
+  if(_psrSimRan && _psrSimType){
+    html += psrBuildSimResults(flow, psrComputeSim(flow, _psrSimType, _psrSimParams[_psrSimType]));
   }
-
-  el.innerHTML = '<div style="max-width:1100px">'
-    + wlHtml
-    +'<div class="psr-section-title">Scenario Runner</div>'
-    +'<div style="display:grid;grid-template-columns:300px 1fr;gap:20px;align-items:start">'
-    +'<div>'+cards+'</div>'
-    +'<div>'+(impactHtml||'<div style="padding:40px 0;font-family:monospace;font-size:11px;color:#3A3A34">Select a scenario to view impact analysis.</div>')+'</div>'
-    +'</div></div>';
+  html += '</div>';
+  el.innerHTML = html;
 }
 
-window.psrRunScenario = function(id){
-  _psrActiveScenario = id;
+window.psrSelectSimType = function(type){
+  psrCaptureSimInputs();
+  _psrSimType = (_psrSimType===type) ? null : type;
+  _psrSimRan  = false;
   psrRenderScenarios();
 };
+
+function psrCaptureSimInputs(){
+  var t = _psrSimType;
+  if(t==='climate'){
+    var ct=document.getElementById('psr-sim-cl-type'),
+        cs=document.getElementById('psr-sim-cl-severity'),
+        cr=document.getElementById('psr-sim-cl-region'),
+        cd=document.getElementById('psr-sim-cl-duration');
+    if(ct) _psrSimParams.climate.type     = ct.value;
+    if(cs) _psrSimParams.climate.severity = cs.value;
+    if(cr) _psrSimParams.climate.region   = cr.value;
+    if(cd) _psrSimParams.climate.duration = cd.value;
+  } else if(t==='tariff'){
+    var tc=document.getElementById('psr-sim-tr-country'),
+        tp=document.getElementById('psr-sim-tr-pct'),
+        ts=document.getElementById('psr-sim-tr-scope');
+    if(tc) _psrSimParams.tariff.country = tc.value;
+    if(tp) _psrSimParams.tariff.pct     = parseInt(tp.value)||25;
+    if(ts) _psrSimParams.tariff.scope   = ts.value;
+  } else if(t==='chokepoint'){
+    var cc=document.getElementById('psr-sim-cp-id'),
+        cl=document.getElementById('psr-sim-cp-level'),
+        cd2=document.getElementById('psr-sim-cp-duration');
+    if(cc)  _psrSimParams.chokepoint.id       = cc.value;
+    if(cl)  _psrSimParams.chokepoint.level    = cl.value;
+    if(cd2) _psrSimParams.chokepoint.duration = cd2.value;
+  }
+}
+
+window.psrRunSim = function(){
+  if(!_psrSimType) return;
+  psrCaptureSimInputs();
+  _psrSimRan = true;
+  psrRenderScenarios();
+};
+
+window.psrRunScenario = function(id){ _psrActiveScenario = id; };
 
 // ── WATCHLIST TAB ─────────────────────────────────────────────────────────────
 function psrRenderWatchlist(){

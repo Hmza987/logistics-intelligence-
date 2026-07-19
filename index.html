@@ -20779,6 +20779,35 @@ var PSR_SMART_SIGMA = 1.5; // WITS default substitution elasticity
 var _psrSmartParams = {hs4:'8802', partner:'chn'};
 var _psrSmartResult = null;
 
+// ── CLIMATE POLICY SHOCK DATA ──────────────────────────────────────────────────
+// Sectors: elasticities real (KNO 2008, EU5 median, winsorized).
+// Trade values, unit prices, emission intensities: illustrative placeholders.
+var CLIMATE_SECTORS=[
+  {code:'IRONSTEEL',name:'Iron & Steel',elasticity:-1.1519,elasticity_n:788,
+   exporters:[{id:'ksa',name:'Saudi Arabia',m0:620000000,intensity:2.1,unit_price:780,shipping_intensity:0.045},{id:'tur',name:'Turkey',m0:1450000000,intensity:1.6,unit_price:740,shipping_intensity:0.015},{id:'ind',name:'India',m0:980000000,intensity:2.6,unit_price:690,shipping_intensity:0.065}]},
+  {code:'ALUMINIUM',name:'Aluminium',elasticity:-1.0487,elasticity_n:162,
+   exporters:[{id:'ksa',name:'Saudi Arabia',m0:410000000,intensity:6.8,unit_price:2100,shipping_intensity:0.045},{id:'rus',name:'Russia',m0:560000000,intensity:5.9,unit_price:2050,shipping_intensity:0.055},{id:'ind',name:'India',m0:300000000,intensity:8.2,unit_price:1980,shipping_intensity:0.065}]},
+  {code:'CEMENT',name:'Cement',elasticity:-1.2944,elasticity_n:17,
+   exporters:[{id:'ksa',name:'Saudi Arabia',m0:95000000,intensity:0.85,unit_price:95,shipping_intensity:0.045},{id:'egy',name:'Egypt',m0:140000000,intensity:0.79,unit_price:88,shipping_intensity:0.02},{id:'tur',name:'Turkey',m0:180000000,intensity:0.72,unit_price:91,shipping_intensity:0.015}]},
+  {code:'FERTILIZERS',name:'Fertilizers',elasticity:-3.0213,elasticity_n:90,
+   exporters:[{id:'ksa',name:'Saudi Arabia',m0:705000000,intensity:1.9,unit_price:410,shipping_intensity:0.045},{id:'rus',name:'Russia',m0:890000000,intensity:2.4,unit_price:380,shipping_intensity:0.055},{id:'egy',name:'Egypt',m0:260000000,intensity:1.7,unit_price:400,shipping_intensity:0.02}]},
+  {code:'HYDROGEN',name:'Hydrogen',elasticity:-1.0863,elasticity_n:38,
+   exporters:[{id:'ksa',name:'Saudi Arabia',m0:60000000,intensity:9.5,unit_price:3200,shipping_intensity:0.045},{id:'ind',name:'India',m0:40000000,intensity:11.2,unit_price:3050,shipping_intensity:0.065}]},
+  {code:'ELECTRICITY',name:'Electricity',elasticity:-1.07,elasticity_n:0,
+   exporters:[{id:'ksa',name:'Saudi Arabia',m0:15000000,intensity:0.45,unit_price:60,shipping_intensity:0.045},{id:'egy',name:'Egypt',m0:22000000,intensity:0.41,unit_price:58,shipping_intensity:0.02}]}
+];
+var CLIMATE_CBAM_PRICE=75.28; // EUR/tCO2e, Q2 2026 published rate
+var CLIMATE_SIGMA=1.5;
+var _psrClimateState={
+  sector:'IRONSTEEL',
+  policies:{
+    cbam:    {enabled:true,  params:{cert_price:75.28}, sub:{enabled:false,params:{domestic_price:0}}},
+    subsidy: {enabled:false, params:{target:'',pct:10}},
+    maritime:{enabled:false, params:{price:75.28}},
+    ntm:     {enabled:false, params:{pct:8}}
+  }
+};
+
 // ── SIMULATION COMPUTATION ────────────────────────────────────────────────────
 function psrComputeSim(flow, type, params) {
   var showImport = _psrDir !== 'export';
@@ -21002,10 +21031,22 @@ function psrBuildSimBuilder(flow){
     +'<label class="psr-sim-label">Expected Duration</label>'
     +sel('psr-sim-cp-duration',[['days','Days (acute incident)'],['weeks','Weeks (ongoing conflict)'],['months','Months (structural)']],p.chokepoint.duration);
 
+  var _cs=psrClimateCurrentSector();
+  var climateParams=
+    '<label class="psr-sim-label">Product / Sector (CBAM-covered)</label>'
+    +'<select class="psr-sim-select" id="psr-sim-cl-sector" onchange="psrClimateOnSector(this.value)">'
+    +CLIMATE_SECTORS.map(function(s){return '<option value="'+s.code+'"'+(s.code===_cs.code?' selected':'')+'>'+s.name+'</option>';}).join('')
+    +'</select>'
+    +'<label class="psr-sim-label" style="margin-top:12px">Baseline CBAM Exposure <span style="text-transform:none;letter-spacing:0;color:#3A3A34">(read-only &middot; EU live Jan 2026)</span></label>'
+    +psrClimateBaselineHTML(_cs)
+    +'<label class="psr-sim-label" style="margin-top:12px">Policy Stack <span style="text-transform:none;letter-spacing:0;color:#3A3A34">&mdash; stack policies, then Run</span></label>'
+    +psrClimatePolicyStackHTML(_cs);
+
   var runDisabled = t?'':' disabled';
-  return '<div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;align-items:start;margin-bottom:16px">'
+  return '<div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;align-items:start;margin-bottom:16px">'
     +simBlock('tariff','📈','Tariff Policy Shock',tariffParams)
     +simBlock('chokepoint','🚫','Chokepoint Disruption',cpParams)
+    +simBlock('climate','🌍','Climate Policy Shock',climateParams)
     +'</div>'
     +'<div style="display:flex;align-items:center;gap:16px">'
     +'<button class="psr-run-btn"'+runDisabled+' onclick="event.stopPropagation();psrRunSim()">&#9654;&nbsp;&nbsp;RUN SIMULATION</button>'
@@ -21234,6 +21275,243 @@ function psrSmartOnChange(){
   psrRenderScenarios();
 }
 
+// ── CLIMATE POLICY SHOCK ENGINE ──────────────────────────────────────────────
+function fmtClimateUSD(v){
+  var sign=v<0?'-':''; var abs=Math.abs(v);
+  if(abs>=1e9) return sign+'$'+(abs/1e9).toFixed(2)+'B';
+  if(abs>=1e6) return sign+'$'+(abs/1e6).toFixed(1)+'M';
+  if(abs>=1e3) return sign+'$'+(abs/1e3).toFixed(0)+'K';
+  return sign+'$'+abs.toFixed(0);
+}
+function psrClimateCurrentSector(){
+  return CLIMATE_SECTORS.find(function(s){return s.code===_psrClimateState.sector;})||CLIMATE_SECTORS[0];
+}
+function psrClimateCbamRate(exp, certPrice){
+  return (exp.intensity * certPrice) / exp.unit_price;
+}
+function psrClimateExporterRate(exp){
+  var rate=0; var pol=_psrClimateState.policies;
+  if(pol.cbam.enabled){
+    var cp=pol.cbam.params.cert_price;
+    var r=psrClimateCbamRate(exp,cp);
+    if(exp.id==='ksa'&&pol.cbam.sub.enabled){r=psrClimateCbamRate(exp,Math.max(0,cp-pol.cbam.sub.params.domestic_price));}
+    rate+=r;
+  }
+  if(pol.subsidy.enabled&&pol.subsidy.params.target===exp.id) rate-=pol.subsidy.params.pct/100;
+  if(pol.maritime.enabled) rate+=(exp.shipping_intensity*pol.maritime.params.price)/exp.unit_price;
+  if(pol.ntm.enabled) rate+=pol.ntm.params.pct/100;
+  return rate;
+}
+function psrClimateActiveSummary(){
+  var parts=[]; var pol=_psrClimateState.policies; var sec=psrClimateCurrentSector();
+  if(pol.cbam.enabled){
+    var s='EU CBAM (€'+pol.cbam.params.cert_price.toFixed(0)+'/tCO₂e)';
+    if(pol.cbam.sub.enabled) s+=' + Saudi carbon credit (€'+pol.cbam.sub.params.domestic_price.toFixed(0)+')';
+    parts.push(s);
+  }
+  if(pol.subsidy.enabled){
+    var tgt=sec.exporters.find(function(e){return e.id===pol.subsidy.params.target;});
+    parts.push((tgt?tgt.name:'competitor')+' subsidy ('+pol.subsidy.params.pct.toFixed(0)+'%)');
+  }
+  if(pol.maritime.enabled) parts.push('EU Maritime Carbon Cost (€'+pol.maritime.params.price.toFixed(0)+'/tCO₂e)');
+  if(pol.ntm.enabled) parts.push('Environmental NTM (+'+pol.ntm.params.pct.toFixed(0)+'%)');
+  return parts.length?parts.join(' + '):'No policies active (baseline, free trade)';
+}
+function psrClimateBaselineHTML(sector){
+  var h='<div style="background:#111110;border:1px solid #1E1E1C;border-radius:5px;padding:12px;margin-top:8px">';
+  h+='<div style="font-family:monospace;font-size:9px;color:#4A4A44;margin-bottom:6px">Today\'s CBAM-only rate per exporter &mdash; EU live since Jan 2026</div>';
+  h+='<div style="font-family:monospace;font-size:9px;color:#3A3A34;margin-bottom:7px">Certificate price: €'+CLIMATE_CBAM_PRICE.toFixed(2)+'/tCO₂e</div>';
+  sector.exporters.forEach(function(e){
+    var rate=psrClimateCbamRate(e,CLIMATE_CBAM_PRICE);
+    var ksa=e.id==='ksa';
+    h+='<div style="display:flex;justify-content:space-between;font-family:monospace;font-size:9px;padding:3px 0;'+(ksa?'border-top:1px solid #1E1E1C;margin-top:3px;':'')+'">'
+      +'<span style="color:'+(ksa?'#5BB98C':'#888880')+'">'+(ksa?'★ ':'')+e.name+' — '+e.intensity.toFixed(2)+' tCO₂e/t</span>'
+      +'<span style="color:'+(ksa?'#5BB98C':'#C8C7C2')+';font-weight:600">'+(rate*100).toFixed(1)+'%</span></div>';
+  });
+  return h+'</div>';
+}
+function psrClimatePolicyStackHTML(sector){
+  var pol=_psrClimateState.policies; var h='';
+  var hideSubsidy=Math.abs(sector.elasticity)>2.0;
+
+  function chkBox(on){
+    return '<div style="width:14px;height:14px;border-radius:3px;border:1.5px solid '+(on?'#5BB98C':'#4A4A44')+';background:'+(on?'#5BB98C':'transparent')+';flex-shrink:0;display:flex;align-items:center;justify-content:center">'+(on?'<span style="font-size:9px;color:#0A140F;font-weight:700">✓</span>':'')+'</div>';
+  }
+  function block(on,clickFn,title,desc,params){
+    return '<div style="background:#111110;border:1px solid '+(on?'#356B52':'#1E1E1C')+';border-radius:5px;padding:12px;margin-top:8px">'
+      +'<div style="display:flex;align-items:center;gap:8px;cursor:pointer" onclick="'+clickFn+'">'+chkBox(on)+'<span style="font-family:monospace;font-size:11px;font-weight:600;color:#C8C7C2">'+title+'</span></div>'
+      +'<div style="font-family:monospace;font-size:9px;color:#5A5A52;margin:4px 0 0 22px">'+desc+'</div>'
+      +(on?params:'')
+      +'</div>';
+  }
+
+  // CBAM
+  var cbamOn=pol.cbam.enabled;
+  var cbamParams='';
+  if(cbamOn){
+    var cpV=pol.cbam.params.cert_price;
+    cbamParams='<div style="margin:10px 0 0 22px">'
+      +'<label class="psr-sim-label">CBAM certificate price <span id="psr-cp-lbl-cbam-cert_price" style="font-family:monospace;color:#5BB98C;font-size:10px;text-transform:none;letter-spacing:0">'+cpV.toFixed(1)+' €/tCO₂e</span></label>'
+      +'<input type="range" min="0" max="200" step="0.5" value="'+cpV.toFixed(1)+'" oninput="psrClimateOnSlider(\'cbam\',\'cert_price\',this.value)" style="width:100%;accent-color:#5BB98C;cursor:pointer">'
+      +'</div>';
+    // sub-policy
+    var subOn=pol.cbam.sub.enabled;
+    cbamParams+='<div style="margin:12px 0 0 22px;padding-top:10px;border-top:1px solid #1E1E1C">'
+      +'<div style="display:flex;align-items:center;gap:8px;cursor:pointer" onclick="psrClimateToggleSubPolicy(\'cbam\')">'+chkBox(subOn)+'<span style="font-family:monospace;font-size:10px;font-weight:600;color:#C8C7C2">Credit: Saudi domestic carbon price</span></div>'
+      +'<div style="font-family:monospace;font-size:9px;color:#5A5A52;margin:3px 0 0 22px">Domestic carbon price paid at origin is deducted from Saudi Arabia\'s CBAM liability.</div>';
+    if(subOn){
+      var domV=pol.cbam.sub.params.domestic_price;
+      cbamParams+='<div style="margin:10px 0 0 22px">'
+        +'<label class="psr-sim-label">Saudi domestic carbon price <span id="psr-cp-lbl-sub-cbam-domestic_price" style="font-family:monospace;color:#5BB98C;font-size:10px;text-transform:none;letter-spacing:0">'+domV.toFixed(1)+' €/tCO₂e</span></label>'
+        +'<input type="range" min="0" max="100" step="0.5" value="'+domV.toFixed(1)+'" oninput="psrClimateOnSubSlider(\'cbam\',\'domestic_price\',this.value)" style="width:100%;accent-color:#5BB98C;cursor:pointer">'
+        +'</div>';
+    }
+    cbamParams+='</div>';
+  }
+  h+=block(cbamOn,"psrClimateTogglePolicy('cbam')",'EU CBAM (carbon border tariff)','Applies to all exporters based on embedded emissions and the ETS-linked certificate price.',cbamParams);
+
+  // Competitor subsidy (hidden for |η| > 2)
+  if(!hideSubsidy){
+    var subOn2=pol.subsidy.enabled;
+    var subParams2='';
+    if(subOn2){
+      var competitors=sector.exporters.filter(function(e){return e.id!=='ksa';});
+      var curTgt=pol.subsidy.params.target||(competitors[0]?competitors[0].id:'');
+      subParams2='<div style="margin:10px 0 0 22px">'
+        +'<label class="psr-sim-label">Subsidized exporter</label>'
+        +'<select class="psr-sim-select" onchange="psrClimateOnSubSelect(\'subsidy\',\'target\',this.value)">'
+        +competitors.map(function(e){return '<option value="'+e.id+'"'+(e.id===curTgt?' selected':'')+'>'+e.name+'</option>';}).join('')
+        +'</select>'
+        +'<div style="margin-top:10px">'
+        +'<label class="psr-sim-label">Subsidy value <span id="psr-cp-lbl-subsidy-pct" style="font-family:monospace;color:#5BB98C;font-size:10px;text-transform:none;letter-spacing:0">'+pol.subsidy.params.pct.toFixed(1)+'%</span></label>'
+        +'<input type="range" min="0" max="30" step="0.5" value="'+pol.subsidy.params.pct.toFixed(1)+'" oninput="psrClimateOnSlider(\'subsidy\',\'pct\',this.value)" style="width:100%;accent-color:#5BB98C;cursor:pointer">'
+        +'</div></div>';
+    }
+    h+=block(subOn2,"psrClimateTogglePolicy('subsidy')",'Competitor green subsidy','A green-production subsidy lowers one exporter\'s effective cost (negative tariff for that country).',subParams2);
+  }
+
+  // Maritime
+  var marOn=pol.maritime.enabled;
+  var marParams='';
+  if(marOn){
+    var marV=pol.maritime.params.price;
+    marParams='<div style="margin:10px 0 0 22px">'
+      +'<label class="psr-sim-label">EU maritime carbon price <span id="psr-cp-lbl-maritime-price" style="font-family:monospace;color:#5BB98C;font-size:10px;text-transform:none;letter-spacing:0">'+marV.toFixed(1)+' €/tCO₂e</span></label>'
+      +'<input type="range" min="0" max="200" step="0.5" value="'+marV.toFixed(1)+'" oninput="psrClimateOnSlider(\'maritime\',\'price\',this.value)" style="width:100%;accent-color:#5BB98C;cursor:pointer">'
+      +'</div>';
+  }
+  h+=block(marOn,"psrClimateTogglePolicy('maritime')",'EU Maritime Carbon Cost (ETS + FuelEU)','Carbon cost of the sea voyage itself &mdash; priced by shipping distance, separate from cargo\'s embedded carbon under CBAM.',marParams);
+
+  // NTM
+  var ntmOn=pol.ntm.enabled;
+  var ntmParams='';
+  if(ntmOn){
+    var ntmV=pol.ntm.params.pct;
+    ntmParams='<div style="margin:10px 0 0 22px">'
+      +'<label class="psr-sim-label">Ad-valorem equivalent <span id="psr-cp-lbl-ntm-pct" style="font-family:monospace;color:#5BB98C;font-size:10px;text-transform:none;letter-spacing:0">'+ntmV.toFixed(1)+'%</span></label>'
+      +'<input type="range" min="0" max="30" step="0.5" value="'+ntmV.toFixed(1)+'" oninput="psrClimateOnSlider(\'ntm\',\'pct\',this.value)" style="width:100%;accent-color:#5BB98C;cursor:pointer">'
+      +'</div>';
+  }
+  h+=block(ntmOn,"psrClimateTogglePolicy('ntm')",'Environmental Import Restriction (NTM)','A flat EU-wide market-access barrier (e.g. deforestation-linked rules), applied on top of any carbon pricing.',ntmParams);
+
+  return h;
+}
+function psrClimateCalc(){
+  var sector=psrClimateCurrentSector(); var eta=sector.elasticity;
+  var totalM0=sector.exporters.reduce(function(s,e){return s+e.m0;},0);
+  var rows=sector.exporters.map(function(e){
+    var t0=psrClimateCbamRate(e,CLIMATE_CBAM_PRICE);
+    var t1=psrClimateExporterRate(e);
+    var share=e.m0/totalM0;
+    var dP_i=(t1-t0)/(1+Math.max(t0,0));
+    return {id:e.id,name:e.name,m0:e.m0,t0:t0,t1:t1,share:share,dP_i:dP_i};
+  });
+  var dP=rows.reduce(function(s,r){return s+r.share*r.dP_i;},0);
+  rows.forEach(function(r){
+    r.creation=r.m0*eta*dP;
+    r.diversion=r.m0*CLIMATE_SIGMA*(dP-r.dP_i);
+    r.newM=Math.max(0,r.m0+r.creation+r.diversion);
+    r.certOwed=r.newM*Math.max(0,r.t1);
+  });
+  var ksaRow=rows.find(function(r){return r.id==='ksa';})||rows[0];
+  var newTotal=rows.reduce(function(s,r){return s+r.newM;},0);
+  var totalCert=rows.reduce(function(s,r){return s+r.certOwed;},0);
+  var baselineCert=rows.reduce(function(s,r){return s+r.m0*Math.max(0,r.t0);},0);
+  return {sector:sector,rows:rows,ksaRow:ksaRow,newTotal:newTotal,totalM0:totalM0,totalCert:totalCert,baselineCert:baselineCert};
+}
+function psrBuildClimateResults(calc){
+  var ACC='#5BB98C'; var RED='#E05252';
+  var ksaRow=calc.ksaRow;
+  var ksaPct=(ksaRow.newM-ksaRow.m0)/ksaRow.m0;
+  var totalPct=(calc.newTotal-calc.totalM0)/calc.totalM0;
+  var certDelta=calc.totalCert-calc.baselineCert;
+
+  var kpis='<div style="display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:20px">'
+    +'<div class="psr-sim-kpi"><div class="psr-sim-kpi-label">Saudi Arabia &mdash; New Exports (EU)</div>'
+    +'<div style="font-family:monospace;font-size:18px;font-weight:600;color:'+ACC+';margin:6px 0 4px">'+fmtClimateUSD(ksaRow.newM)+'</div>'
+    +'<div style="font-family:monospace;font-size:10px;color:'+(ksaPct>=0?ACC:RED)+'">'+(ksaPct>=0?'+':'')+(ksaPct*100).toFixed(1)+'% vs baseline '+fmtClimateUSD(ksaRow.m0)+'</div></div>'
+    +'<div class="psr-sim-kpi"><div class="psr-sim-kpi-label">Sector Total &mdash; All Exporters</div>'
+    +'<div style="font-family:monospace;font-size:18px;font-weight:600;color:#C8C7C2;margin:6px 0 4px">'+fmtClimateUSD(calc.newTotal)+'</div>'
+    +'<div style="font-family:monospace;font-size:10px;color:'+(totalPct>=0?ACC:RED)+'">'+(totalPct>=0?'+':'')+(totalPct*100).toFixed(1)+'% vs baseline '+fmtClimateUSD(calc.totalM0)+'</div></div>'
+    +'<div class="psr-sim-kpi"><div class="psr-sim-kpi-label">Est. CBAM Certificates Owed</div>'
+    +'<div style="font-family:monospace;font-size:18px;font-weight:600;color:'+(certDelta>=0?RED:ACC)+';margin:6px 0 4px">'+fmtClimateUSD(calc.totalCert)+'</div>'
+    +'<div style="font-family:monospace;font-size:10px;color:'+(certDelta>=0?RED:ACC)+'">'+(certDelta>=0?'+':'')+fmtClimateUSD(certDelta)+' vs baseline '+fmtClimateUSD(calc.baselineCert)+'</div></div>'
+    +'</div>';
+
+  var maxVal=0;
+  calc.rows.forEach(function(r){if(Math.max(r.m0,r.newM)>maxVal)maxVal=Math.max(r.m0,r.newM);});
+  maxVal*=1.05;
+  var ordered=[ksaRow].concat(calc.rows.filter(function(r){return r.id!=='ksa';}).sort(function(a,b){return b.m0-a.m0;}));
+  var bars=ordered.map(function(r){
+    var pct=(r.newM-r.m0)/r.m0*100; var growing=r.newM>=r.m0;
+    var col=growing?ACC:RED;
+    var bW=maxVal>0?((r.m0/maxVal)*100).toFixed(1):0;
+    var nW=maxVal>0?((r.newM/maxVal)*100).toFixed(1):0;
+    return '<div style="margin-bottom:14px">'
+      +'<div style="display:flex;justify-content:space-between;font-family:monospace;font-size:11px;margin-bottom:5px">'
+      +'<span style="color:'+(r.id==='ksa'?ACC:'#C8C7C2')+'">'+r.name+(r.id==='ksa'?' · Saudi Arabia':'')+'</span>'
+      +'<span style="color:'+col+'">'+(growing?'+':'')+pct.toFixed(1)+'%</span></div>'
+      +'<div style="position:relative;height:16px;background:#1A1A18;border-radius:3px;overflow:hidden;margin-bottom:2px"><div style="position:absolute;top:0;left:0;height:100%;background:#2A2A26;border-radius:3px;width:'+bW+'%"></div></div>'
+      +'<div style="position:relative;height:16px;background:#1A1A18;border-radius:3px;overflow:hidden;margin-bottom:3px"><div style="position:absolute;top:0;left:0;height:100%;background:'+col+';border-radius:3px;width:'+nW+'%"></div></div>'
+      +'<div style="display:flex;justify-content:space-between;font-family:monospace;font-size:9px;color:#4A4A44">'
+      +'<span>baseline: '+fmtClimateUSD(r.m0)+'</span><span>new: '+fmtClimateUSD(r.newM)+'</span></div></div>';
+  }).join('');
+
+  var sec=calc.sector;
+  var note='<div style="margin-top:20px;border-top:1px solid #1E1E1C;padding-top:16px;font-family:monospace;font-size:9px;color:#4A4A44;line-height:1.7">'
+    +'<span style="color:#5A5A52">Method:</span> each active policy contributes an ad-valorem rate per exporter; combined rate runs through the WITS-SMART engine (trade creation from import-share-weighted avg rate × η='+sec.elasticity.toFixed(4)+'; diversion from each exporter\'s rate relative to that avg × σ=1.5). Baseline = today\'s CBAM-only rate.<br>'
+    +'<span style="color:#5A5A52">Elasticities:</span> Kee, Nicita &amp; Olarreaga (2008), World Bank &mdash; EU5 median, winsorized to [&minus;5, &minus;0.2], n='+sec.elasticity_n+(sec.elasticity_n===0?' (fallback — no direct KNO coverage)':'')+'. '
+    +'<span style="color:#5A5A52">Placeholder:</span> sector trade values, unit prices, emission intensities (illustrative). UK CBAM (Jan 2027), free-allocation phase-out, and behavioral decarbonization response not yet modeled.'
+    +'</div>';
+
+  return '<div style="margin-top:28px;border-top:1px solid #2A2A26;padding-top:22px">'
+    +'<div style="font-family:monospace;font-size:9px;letter-spacing:.08em;text-transform:uppercase;color:#5A5A52;margin-bottom:6px">Result &mdash; 🌍 Climate Policy Shock</div>'
+    +'<div style="font-family:monospace;font-size:10px;color:'+ACC+';margin-bottom:14px">Active policies: '+psrClimateActiveSummary()+'</div>'
+    +kpis
+    +'<div class="psr-section-title">Export Flow Impact &mdash; Saudi Arabia vs. Competitors</div>'
+    +'<div style="background:#0C0C0A;border:1px solid #1E1E1C;border-radius:4px;padding:14px;margin-bottom:8px">'
+    +bars+'</div>'
+    +note+'</div>';
+}
+function psrClimateOnSector(code){
+  _psrClimateState.sector=code;
+  var sec=CLIMATE_SECTORS.find(function(s){return s.code===code;})||CLIMATE_SECTORS[0];
+  _psrClimateState.policies.subsidy.params.target='';
+  if(Math.abs(sec.elasticity)>2.0) _psrClimateState.policies.subsidy.enabled=false;
+  _psrSimRan=false;
+  psrRenderScenarios();
+}
+function psrClimateTogglePolicy(id){
+  _psrClimateState.policies[id].enabled=!_psrClimateState.policies[id].enabled;
+  _psrSimRan=false;
+  psrRenderScenarios();
+}
+function psrClimateToggleSubPolicy(policyId){
+  _psrClimateState.policies[policyId].sub.enabled=!_psrClimateState.policies[policyId].sub.enabled;
+  _psrSimRan=false;
+  psrRenderScenarios();
+}
+
 // ── SCENARIOS PANEL RENDERER ──────────────────────────────────────────────────
 function psrRenderScenarios(){
   var el = document.getElementById('psr-scenarios');
@@ -21253,6 +21531,8 @@ function psrRenderScenarios(){
       var _sPt=_sProd.partners.find(function(pp){return pp.id===_psrSmartParams.partner;})||_sProd.partners[0];
       var _sNewT=(_psrSmartParams.newTariff!==null&&_psrSmartParams.newTariff!==undefined)?_psrSmartParams.newTariff:_sPt.t0;
       html += psrBuildSmartResults(psrSmartCalc(_psrSmartParams.hs4,_psrSmartParams.partner,_sNewT));
+    } else if(_psrSimType==='climate'){
+      html += psrBuildClimateResults(psrClimateCalc());
     } else {
       html += psrBuildSimResults(flow, psrComputeSim(flow, _psrSimType, _psrSimParams[_psrSimType]));
     }
@@ -21271,14 +21551,8 @@ window.psrSelectSimType = function(type){
 function psrCaptureSimInputs(){
   var t = _psrSimType;
   if(t==='climate'){
-    var ct=document.getElementById('psr-sim-cl-type'),
-        cs=document.getElementById('psr-sim-cl-severity'),
-        cr=document.getElementById('psr-sim-cl-region'),
-        cd=document.getElementById('psr-sim-cl-duration');
-    if(ct) _psrSimParams.climate.type     = ct.value;
-    if(cs) _psrSimParams.climate.severity = cs.value;
-    if(cr) _psrSimParams.climate.region   = cr.value;
-    if(cd) _psrSimParams.climate.duration = cd.value;
+    var clSec=document.getElementById('psr-sim-cl-sector');
+    if(clSec) _psrClimateState.sector=clSec.value;
   } else if(t==='tariff'){
     var th=document.getElementById('psr-sim-tr-hs4'),
         tpt=document.getElementById('psr-sim-tr-partner'),
@@ -21311,6 +21585,24 @@ window.psrSmartOnSlider = function(v){
   _psrSmartParams.newTariff = parseFloat(v);
   var lbl = document.getElementById('psr-smart-slider-label');
   if(lbl) lbl.textContent = '(set to '+(parseFloat(v)*100).toFixed(1)+'%)';
+};
+
+window.psrClimateOnSector = psrClimateOnSector;
+window.psrClimateTogglePolicy = psrClimateTogglePolicy;
+window.psrClimateToggleSubPolicy = psrClimateToggleSubPolicy;
+window.psrClimateOnSlider = function(pid,param,v){
+  _psrClimateState.policies[pid].params[param]=parseFloat(v);
+  var suffix=param==='pct'?'%':' €/tCO₂e';
+  var lbl=document.getElementById('psr-cp-lbl-'+pid+'-'+param);
+  if(lbl) lbl.textContent=parseFloat(v).toFixed(1)+suffix;
+};
+window.psrClimateOnSubSlider = function(pid,param,v){
+  _psrClimateState.policies[pid].sub.params[param]=parseFloat(v);
+  var lbl=document.getElementById('psr-cp-lbl-sub-'+pid+'-'+param);
+  if(lbl) lbl.textContent=parseFloat(v).toFixed(1)+' €/tCO₂e';
+};
+window.psrClimateOnSubSelect = function(pid,param,v){
+  _psrClimateState.policies[pid].params[param]=v;
 };
 
 // ── WATCHLIST TAB ─────────────────────────────────────────────────────────────

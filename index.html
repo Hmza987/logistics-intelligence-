@@ -21044,9 +21044,9 @@ function psrBuildSimBuilder(flow){
 
   var runDisabled = t?'':' disabled';
   return '<div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;align-items:start;margin-bottom:16px">'
-    +simBlock('tariff','📈','Tariff Policy Shock',tariffParams)
+    +simBlock('tariff','📈','Tariff Policy',tariffParams)
     +simBlock('chokepoint','🚫','Chokepoint Disruption',cpParams)
-    +simBlock('climate','🌍','Climate Policy Shock',climateParams)
+    +simBlock('climate','🌍','Climate Policy',climateParams)
     +'</div>'
     +'<div style="display:flex;align-items:center;gap:16px">'
     +'<button class="psr-run-btn"'+runDisabled+' onclick="event.stopPropagation();psrRunSim()">&#9654;&nbsp;&nbsp;RUN SIMULATION</button>'
@@ -21485,7 +21485,7 @@ function psrBuildClimateResults(calc){
     +'</div>';
 
   return '<div style="margin-top:28px;border-top:1px solid #2A2A26;padding-top:22px">'
-    +'<div style="font-family:monospace;font-size:9px;letter-spacing:.08em;text-transform:uppercase;color:#5A5A52;margin-bottom:6px">Result &mdash; 🌍 Climate Policy Shock</div>'
+    +'<div style="font-family:monospace;font-size:9px;letter-spacing:.08em;text-transform:uppercase;color:#5A5A52;margin-bottom:6px">Result &mdash; 🌍 Climate Policy</div>'
     +'<div style="font-family:monospace;font-size:10px;color:'+ACC+';margin-bottom:14px">Active policies: '+psrClimateActiveSummary()+'</div>'
     +kpis
     +'<div class="psr-section-title">Export Flow Impact &mdash; Saudi Arabia vs. Competitors</div>'

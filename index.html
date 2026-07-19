@@ -20159,6 +20159,7 @@ var PSR_FLOWS = {
     '1001': {
       product:'Wheat', hs:'1001', country:'Saudi Arabia',
       importVal:2800, exportVal:120, unit:'M USD',
+      importVol:11.2, exportVol:0.5, volUnit:'M MT',
       partners:[
         {name:'Ukraine',code:'UKR',flag:'🇺🇦',importShare:28,exportShare:0,routes:['Black Sea','Suez Canal','Red Sea'],chokepoints:['Bab Al-Mandeb','Suez Canal'],riskFlags:['Conflict zone','Single chokepoint']},
         {name:'Russia',code:'RUS',flag:'🇷🇺',importShare:22,exportShare:0,routes:['Black Sea','Suez Canal','Red Sea'],chokepoints:['Bab Al-Mandeb','Suez Canal'],riskFlags:['Sanctions exposure','Conflict zone']},
@@ -20172,6 +20173,7 @@ var PSR_FLOWS = {
     '2709': {
       product:'Crude Petroleum', hs:'2709', country:'Saudi Arabia',
       importVal:0, exportVal:185000, unit:'M USD',
+      importVol:0, exportVol:2300, volUnit:'M bbl',
       partners:[
         {name:'China',code:'CHN',flag:'🇨🇳',importShare:0,exportShare:26,routes:['Strait of Hormuz','Indian Ocean','Malacca Strait'],chokepoints:['Strait of Hormuz','Malacca Strait'],riskFlags:['Dual chokepoint','High concentration']},
         {name:'Japan',code:'JPN',flag:'🇯🇵',importShare:0,exportShare:16,routes:['Strait of Hormuz','Indian Ocean','Malacca Strait'],chokepoints:['Strait of Hormuz','Malacca Strait'],riskFlags:['Dual chokepoint']},
@@ -20185,6 +20187,7 @@ var PSR_FLOWS = {
     '8471': {
       product:'Computers & IT Equipment', hs:'8471', country:'Saudi Arabia',
       importVal:3400, exportVal:60, unit:'M USD',
+      importVol:850, exportVol:15, volUnit:'k MT',
       partners:[
         {name:'China',code:'CHN',flag:'🇨🇳',importShare:38,exportShare:0,routes:['Malacca Strait','Indian Ocean','Strait of Hormuz'],chokepoints:['Strait of Hormuz','Malacca Strait'],riskFlags:['High concentration','Dual chokepoint']},
         {name:'USA',code:'USA',flag:'🇺🇸',importShare:24,exportShare:6,routes:['Atlantic','Suez Canal','Red Sea'],chokepoints:['Suez Canal','Bab Al-Mandeb'],riskFlags:[]},
@@ -20198,6 +20201,7 @@ var PSR_FLOWS = {
     '3004': {
       product:'Medicaments', hs:'3004', country:'Saudi Arabia',
       importVal:4200, exportVal:180, unit:'M USD',
+      importVol:14, exportVol:0.6, volUnit:'k MT',
       partners:[
         {name:'Germany',code:'DEU',flag:'🇩🇪',importShare:22,exportShare:0,routes:['Mediterranean','Suez Canal','Red Sea'],chokepoints:['Suez Canal','Bab Al-Mandeb'],riskFlags:[]},
         {name:'Switzerland',code:'CHE',flag:'🇨🇭',importShare:18,exportShare:0,routes:['Mediterranean','Suez Canal','Red Sea'],chokepoints:['Suez Canal','Bab Al-Mandeb'],riskFlags:[]},
@@ -20211,6 +20215,7 @@ var PSR_FLOWS = {
     '7207': {
       product:'Steel Billets', hs:'7207', country:'Saudi Arabia',
       importVal:1600, exportVal:2400, unit:'M USD',
+      importVol:1.3, exportVol:2.0, volUnit:'M MT',
       partners:[
         {name:'China',code:'CHN',flag:'🇨🇳',importShare:32,exportShare:8,routes:['Malacca Strait','Indian Ocean','Strait of Hormuz'],chokepoints:['Strait of Hormuz','Malacca Strait'],riskFlags:['High concentration','Dual chokepoint']},
         {name:'Turkey',code:'TUR',flag:'🇹🇷',importShare:18,exportShare:12,routes:['Red Sea','Bab Al-Mandeb'],chokepoints:['Bab Al-Mandeb'],riskFlags:[]},
@@ -20455,9 +20460,9 @@ function psrRenderBaseline(){
     return {p:p, impVal:impVal, expVal:expVal, total:total};
   }).sort(function(a,b){return b.total-a.total;});
 
-  var tableHeader = '<div style="display:grid;grid-template-columns:28px 120px 180px 52px 140px 160px 1fr;gap:10px;align-items:center;'
+  var tableHeader = '<div style="display:grid;grid-template-columns:28px 120px 180px 80px 52px 140px 160px 1fr;gap:10px;align-items:center;'
     +'padding:6px 0;border-bottom:1px solid #2A2A26;font-family:monospace;font-size:8px;letter-spacing:.1em;color:#4A4A44;text-transform:uppercase">'
-    +'<span></span><span>Partner</span><span>Volume (est.)</span><span>Share</span><span>Chokepoints</span><span>Route</span><span>Risk</span>'
+    +'<span></span><span>Partner</span><span>Value (est.)</span><span>Volume</span><span>Share</span><span>Chokepoints</span><span>Route</span><span>Risk</span>'
     +'</div>';
 
   var combinedRows = partnerVols.map(function(pv){
@@ -20467,7 +20472,15 @@ function psrRenderBaseline(){
     var flags  = (pv.p.riskFlags||[]).map(function(f){
       return '<span class="psr-flag-pill '+psrRiskClass([f])+'">'+f+'</span>';
     }).join(' ');
-    return '<div style="display:grid;grid-template-columns:28px 120px 180px 52px 140px 160px 1fr;gap:10px;align-items:center;padding:8px 0;border-bottom:1px solid #141412">'
+    // Physical volume: share% of total import/export volume
+    var impSharePct = pv.p.importShare || 0;
+    var expSharePct = pv.p.exportShare || 0;
+    var impVol = showImport && flow.importVol ? flow.importVol * impSharePct / 100 : 0;
+    var expVol = showExport && flow.exportVol ? flow.exportVol * expSharePct / 100 : 0;
+    var totalVol = impVol + expVol;
+    var volUnit = flow.volUnit || '';
+    var volStr = totalVol > 0 ? (totalVol >= 10 ? totalVol.toFixed(1) : totalVol.toPrecision(2)) + ' ' + volUnit : '—';
+    return '<div style="display:grid;grid-template-columns:28px 120px 180px 80px 52px 140px 160px 1fr;gap:10px;align-items:center;padding:8px 0;border-bottom:1px solid #141412">'
       +'<span style="font-size:14px">'+pv.p.flag+'</span>'
       +'<span style="font-family:monospace;font-size:10px;color:#C8C7C2">'+pv.p.name+'</span>'
       +'<div>'
@@ -20477,6 +20490,7 @@ function psrRenderBaseline(){
         +'</div>'
         +'<span style="font-family:monospace;font-size:9px;color:#C9AE4E">$'+psrFmt(pv.total)+'</span>'
       +'</div>'
+      +'<span style="font-family:monospace;font-size:9px;color:#8A9AAA">'+volStr+'</span>'
       +'<span style="font-family:monospace;font-size:10px;color:#9A9A90;text-align:right">'+share+'%</span>'
       +'<span style="font-family:monospace;font-size:8px;color:#5A5A52;line-height:1.6">'+(pv.p.chokepoints||[]).join('<br>')+'</span>'
       +'<span style="font-family:monospace;font-size:8px;color:#5A5A52;line-height:1.6">'+(pv.p.routes||[]).join('<br>')+'</span>'

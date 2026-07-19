@@ -3557,7 +3557,6 @@ canvas { font-family: var(--f-mono); }
   <div class="tab" onclick="showTab('simulator',this)">&#9670; Scenario Simulator</div>
   <div class="tab" onclick="showTab('watchlist',this)">&#8881; Strategic Watchlist</div>
   <div class="tab" onclick="showTab('stress',this)">&#9670; Trade Explorer Lab</div>
-  <div class="tab" onclick="showTab('psr',this)">&#9670; Supply Chain Resilience</div>
 </div>
 
 <!-- MOBILE CURRENT-TAB INDICATOR -->
@@ -3603,10 +3602,6 @@ canvas { font-family: var(--f-mono); }
       <button class="mob-nav-item" id="mob-tab-stress" onclick="mobShowTab('stress')">
         <span class="mob-nav-icon">&#9670;</span>
         <span class="mob-nav-label">Trade Explorer Lab</span>
-      </button>
-      <button class="mob-nav-item" id="mob-tab-psr" onclick="mobShowTab('psr')">
-        <span class="mob-nav-icon">&#9670;</span>
-        <span class="mob-nav-label">Supply Chain Resilience</span>
       </button>
     </div>
     <div id="mob-nav-footer">
@@ -5117,6 +5112,55 @@ canvas { font-family: var(--f-mono); }
 
   </div><!-- /padding wrapper -->
 
+  <!-- ════════════════════════════ SUPPLY CHAIN RESILIENCE ════════════════════════════ -->
+  <div id="page-psr" style="border-top:2px solid #1E1E1C;margin-top:4px">
+
+    <!-- Top toolbar -->
+    <div id="psr-toolbar" style="background:#0C0C0A;border-bottom:1px solid #1E1E1C;padding:12px 28px;display:flex;align-items:center;gap:16px;flex-wrap:wrap">
+      <!-- Product search -->
+      <div style="position:relative;flex:1;min-width:220px;max-width:360px">
+        <input id="psr-search" type="text" placeholder="Search product (name or HS code)…"
+          oninput="psrSearch(this.value)"
+          style="width:100%;background:#141412;border:1px solid #2A2A26;border-radius:3px;color:#C8C7C2;font-family:monospace;font-size:11px;padding:7px 10px 7px 28px;outline:none;box-sizing:border-box"/>
+        <span style="position:absolute;left:9px;top:50%;transform:translateY(-50%);color:#4A4A44;font-size:11px">&#9673;</span>
+        <div id="psr-autocomplete" style="display:none;position:absolute;top:100%;left:0;right:0;background:#1A1A18;border:1px solid #2A2A26;border-top:none;z-index:200;max-height:220px;overflow-y:auto;border-radius:0 0 3px 3px"></div>
+      </div>
+      <!-- GCC country -->
+      <select id="psr-country" onchange="psrRender()" style="background:#141412;border:1px solid #2A2A26;border-radius:3px;color:#C8C7C2;font-family:monospace;font-size:11px;padding:7px 10px;outline:none">
+        <option value="SAU">Saudi Arabia</option>
+        <option value="ARE">UAE</option>
+        <option value="KWT">Kuwait</option>
+        <option value="QAT">Qatar</option>
+        <option value="BHR">Bahrain</option>
+        <option value="OMN">Oman</option>
+      </select>
+      <!-- Direction -->
+      <div style="display:flex;border:1px solid #2A2A26;border-radius:3px;overflow:hidden">
+        <button id="psr-dir-total"  onclick="psrDir('total')"  class="psr-dir-btn psr-dir-active">Total</button>
+        <button id="psr-dir-import" onclick="psrDir('import')" class="psr-dir-btn">Imports</button>
+        <button id="psr-dir-export" onclick="psrDir('export')" class="psr-dir-btn">Exports</button>
+      </div>
+      <!-- Year -->
+      <select id="psr-year" onchange="psrRender()" style="background:#141412;border:1px solid #2A2A26;border-radius:3px;color:#C8C7C2;font-family:monospace;font-size:11px;padding:7px 10px;outline:none">
+        <option value="2024">2024</option>
+        <option value="2023">2023</option>
+      </select>
+      <!-- Mock data badge -->
+      <span style="margin-left:auto;font-family:monospace;font-size:9px;color:#6A6A60;letter-spacing:.08em;border:1px solid #2A2A26;padding:4px 8px;border-radius:2px">&#9432; DEMO DATA — illustrative</span>
+    </div>
+
+    <!-- Sub-tabs -->
+    <div id="psr-tabs" style="background:#0F0F0D;border-bottom:1px solid #1E1E1C;padding:0 28px;display:flex;gap:0">
+      <button class="psr-stab psr-stab-active" id="psr-stab-baseline"  onclick="psrTab('baseline')">Baseline</button>
+      <button class="psr-stab" id="psr-stab-scenarios" onclick="psrTab('scenarios')">Resilience Lab &amp; Watchlist</button>
+    </div>
+
+    <!-- Content panels -->
+    <div id="psr-baseline"  class="psr-panel psr-panel-active"></div>
+    <div id="psr-scenarios" class="psr-panel"></div>
+
+  </div><!-- end page-psr embedded -->
+
 </div><!-- end page-stress -->
 
 <style>
@@ -5177,54 +5221,6 @@ canvas { font-family: var(--f-mono); }
 .psr-partner-impact-row{display:grid;grid-template-columns:22px 110px 80px 60px 80px 1fr;gap:8px;align-items:center;padding:7px 0;border-bottom:1px solid #141412;font-family:monospace;font-size:9px;color:#9A9A90}
 </style>
 
-<!-- ════════════════════════════ SUPPLY CHAIN RESILIENCE PAGE ════════════════════════════ -->
-<div class="page" id="page-psr">
-
-  <!-- Top toolbar -->
-  <div id="psr-toolbar" style="background:#0C0C0A;border-bottom:1px solid #1E1E1C;padding:12px 28px;display:flex;align-items:center;gap:16px;flex-wrap:wrap">
-    <!-- Product search -->
-    <div style="position:relative;flex:1;min-width:220px;max-width:360px">
-      <input id="psr-search" type="text" placeholder="Search product (name or HS code)…"
-        oninput="psrSearch(this.value)"
-        style="width:100%;background:#141412;border:1px solid #2A2A26;border-radius:3px;color:#C8C7C2;font-family:monospace;font-size:11px;padding:7px 10px 7px 28px;outline:none;box-sizing:border-box"/>
-      <span style="position:absolute;left:9px;top:50%;transform:translateY(-50%);color:#4A4A44;font-size:11px">&#9673;</span>
-      <div id="psr-autocomplete" style="display:none;position:absolute;top:100%;left:0;right:0;background:#1A1A18;border:1px solid #2A2A26;border-top:none;z-index:200;max-height:220px;overflow-y:auto;border-radius:0 0 3px 3px"></div>
-    </div>
-    <!-- GCC country -->
-    <select id="psr-country" onchange="psrRender()" style="background:#141412;border:1px solid #2A2A26;border-radius:3px;color:#C8C7C2;font-family:monospace;font-size:11px;padding:7px 10px;outline:none">
-      <option value="SAU">Saudi Arabia</option>
-      <option value="ARE">UAE</option>
-      <option value="KWT">Kuwait</option>
-      <option value="QAT">Qatar</option>
-      <option value="BHR">Bahrain</option>
-      <option value="OMN">Oman</option>
-    </select>
-    <!-- Direction -->
-    <div style="display:flex;border:1px solid #2A2A26;border-radius:3px;overflow:hidden">
-      <button id="psr-dir-total"  onclick="psrDir('total')"  class="psr-dir-btn psr-dir-active">Total</button>
-      <button id="psr-dir-import" onclick="psrDir('import')" class="psr-dir-btn">Imports</button>
-      <button id="psr-dir-export" onclick="psrDir('export')" class="psr-dir-btn">Exports</button>
-    </div>
-    <!-- Year -->
-    <select id="psr-year" onchange="psrRender()" style="background:#141412;border:1px solid #2A2A26;border-radius:3px;color:#C8C7C2;font-family:monospace;font-size:11px;padding:7px 10px;outline:none">
-      <option value="2024">2024</option>
-      <option value="2023">2023</option>
-    </select>
-    <!-- Mock data badge -->
-    <span style="margin-left:auto;font-family:monospace;font-size:9px;color:#6A6A60;letter-spacing:.08em;border:1px solid #2A2A26;padding:4px 8px;border-radius:2px">&#9432; DEMO DATA — illustrative</span>
-  </div>
-
-  <!-- Sub-tabs -->
-  <div id="psr-tabs" style="background:#0F0F0D;border-bottom:1px solid #1E1E1C;padding:0 28px;display:flex;gap:0">
-    <button class="psr-stab psr-stab-active" id="psr-stab-baseline"  onclick="psrTab('baseline')">Baseline</button>
-    <button class="psr-stab" id="psr-stab-scenarios" onclick="psrTab('scenarios')">Resilience Lab &amp; Watchlist</button>
-  </div>
-
-  <!-- Content panels -->
-  <div id="psr-baseline"  class="psr-panel psr-panel-active"></div>
-  <div id="psr-scenarios" class="psr-panel" style="overflow-y:auto;height:calc(100vh - 160px)"></div>
-
-</div><!-- end page-psr -->
 
 <!-- ═══════════════════════════════════ SITE FOOTER ═══════════════════════════════════ -->
 <footer id="site-footer">
@@ -5487,8 +5483,6 @@ function showTab(name, el) {
     }
     if (name === 'stress') {
       initTradeFlowTab();
-    }
-    if (name === 'psr') {
       initPSR();
     }
     if (name === 'trucking') {

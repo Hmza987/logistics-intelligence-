@@ -20329,6 +20329,21 @@ var PSR_FLOWS = {
       ],
       chokepointExposure:{hormuz:100,bab:0,suez:0,malacca:74,panama:0},
       stockDays:null, altSuppliers:['UAE','Kuwait','Singapore']
+    },
+    '1001': {
+      product:'Wheat', hs:'1001', country:'Saudi Arabia',
+      importVal:1850, exportVal:0, unit:'M USD',
+      importVol:4.5, exportVol:0, volUnit:'M MT',
+      partners:[
+        {name:'Russia',    code:'RUS',flag:'🇷🇺',importShare:28,exportShare:0,routes:['Black Sea','Turkish Straits','Mediterranean','Suez Canal','Red Sea','Bab-el-Mandeb'],chokepoints:['Turkish Straits','Bab-el-Mandeb','Suez Canal'],riskFlags:['Sanctions risk','Turkish Straits dependency','War disruption risk']},
+        {name:'Australia', code:'AUS',flag:'🇦🇺',importShare:27,exportShare:0,routes:['Indian Ocean','Red Sea','Bab-el-Mandeb'],chokepoints:['Bab-el-Mandeb'],riskFlags:['El Niño yield risk','Long transit (~25d)']},
+        {name:'Canada',    code:'CAN',flag:'🇨🇦',importShare:20,exportShare:0,routes:['Atlantic Ocean','Mediterranean','Suez Canal','Red Sea','Bab-el-Mandeb'],chokepoints:['Suez Canal','Bab-el-Mandeb'],riskFlags:[]},
+        {name:'USA',       code:'USA',flag:'🇺🇸',importShare:17,exportShare:0,routes:['Atlantic Ocean','Mediterranean','Suez Canal','Red Sea','Bab-el-Mandeb'],chokepoints:['Suez Canal','Bab-el-Mandeb'],riskFlags:[]},
+        {name:'Ukraine',   code:'UKR',flag:'🇺🇦',importShare:4, exportShare:0,routes:['Black Sea','Turkish Straits','Mediterranean','Suez Canal','Bab-el-Mandeb'],chokepoints:['Turkish Straits','Bab-el-Mandeb','Suez Canal'],riskFlags:['War disruption risk','Export uncertainty']},
+        {name:'EU',        code:'EU', flag:'🇪🇺',importShare:4, exportShare:0,routes:['Mediterranean','Suez Canal','Red Sea','Bab-el-Mandeb'],chokepoints:['Suez Canal','Bab-el-Mandeb'],riskFlags:[]}
+      ],
+      chokepointExposure:{hormuz:38,bab:82,suez:75,malacca:0,panama:4},
+      stockDays:180, altSuppliers:['Argentina','Kazakhstan','Romania','India']
     }
   }
 };
@@ -20530,7 +20545,7 @@ function psrRenderBaseline(){
   if(!flow){
     el.innerHTML='<div style="padding:60px;text-align:center;font-family:monospace;font-size:11px;color:#4A4A44">'
       +'No trade data available for <strong style="color:#C9AE4E">'+prodName+'</strong> — '+_psrCountry+'.<br><br>'
-      +'<span style="color:#3A3A34">Demo data currently covers: Wheat (1001), Crude Oil (2709), IT Equipment (8471), Medicaments (3004), Steel Billets (7207) for Saudi Arabia.</span></div>';
+      +'<span style="color:#3A3A34">Available for Saudi Arabia: Wheat (1001), Rice (1006), Crude Oil (2709), LNG (2711), IT Equipment (8471), Cars (8703), Phones (8517), Steel (7208), Polymers (3901).</span></div>';
     return;
   }
 

@@ -20816,7 +20816,7 @@ function psrRenderFlowMap() {
 
 // ── RESILIENCE LAB TAB ────────────────────────────────────────────────────────
 var _psrActiveScenario = null;
-var _psrSimType  = null;       // 'climate' | 'tariff' | 'chokepoint'
+var _psrSimTypes = [];          // any subset of ['tariff','chokepoint','climate']
 var _psrSimRan   = false;
 var _psrSimParams = {
   climate:    {type:'drought',    severity:'severe', region:'black_sea',    duration:'medium'},
@@ -21056,20 +21056,21 @@ function psrBuildWatchlistStrip(flow){
 
 // ── SIMULATION BUILDER HTML ────────────────────────────────────────────────────
 function psrBuildSimBuilder(flow){
-  var t = _psrSimType;
   var p = _psrSimParams;
   if(!p.tariff.country && flow.partners[0]) p.tariff.country = flow.partners[0].name;
 
   function simBlock(type, icon, label, paramsHtml){
-    var active = t===type;
+    var active = _psrSimTypes.indexOf(type) >= 0;
     return '<div class="psr-sim-block'+(active?' psr-sim-block-active':'')+'" onclick="psrSelectSimType(\''+type+'\')">'
       +'<div class="psr-sim-header">'
       +'<span style="font-size:20px;flex-shrink:0">'+icon+'</span>'
       +'<div style="flex:1">'
       +'<div style="font-family:monospace;font-size:11px;color:'+(active?'#C9AE4E':'#C8C7C2')+';font-weight:'+(active?'600':'400')+'">'+label+'</div>'
-      +'<div style="font-family:monospace;font-size:8px;color:#5A5A52;margin-top:3px">'+(active?'Configured below':'Click to select')+'</div>'
+      +'<div style="font-family:monospace;font-size:8px;color:#5A5A52;margin-top:3px">'+(active?'Active — configured below':'Click to add to simulation')+'</div>'
       +'</div>'
-      +'<div style="width:14px;height:14px;border-radius:50%;border:2px solid '+(active?'#C9AE4E':'#2A2A26')+';background:'+(active?'#C9AE4E':'transparent')+';flex-shrink:0;margin-top:1px"></div>'
+      +'<div style="width:14px;height:14px;border-radius:2px;border:2px solid '+(active?'#C9AE4E':'#2A2A26')+';background:'+(active?'#C9AE4E':'transparent')+';flex-shrink:0;margin-top:1px;display:flex;align-items:center;justify-content:center">'
+      +(active?'<span style="color:#0A0A09;font-size:10px;line-height:1;font-weight:900;margin-top:-1px">✓</span>':'')
+      +'</div>'
       +'</div>'
       +(active?'<div class="psr-sim-params" onclick="event.stopPropagation()">'+paramsHtml+'</div>':'')
       +'</div>';
@@ -21145,15 +21146,15 @@ function psrBuildSimBuilder(flow){
     +'<label class="psr-sim-label" style="margin-top:12px">Policy Stack <span style="text-transform:none;letter-spacing:0;color:#3A3A34">&mdash; stack policies, then Run</span></label>'
     +psrClimatePolicyStackHTML(_cs);
 
-  var runDisabled = t?'':' disabled';
+  var runDisabled = _psrSimTypes.length?'':' disabled';
   return '<div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;align-items:start;margin-bottom:16px">'
     +simBlock('tariff','📈','Tariff Policy',tariffParams)
     +simBlock('chokepoint','🚫','Chokepoint Disruption',cpParams)
     +simBlock('climate','🌍','Climate Policy',climateParams)
     +'</div>'
     +'<div style="display:flex;align-items:center;gap:16px">'
-    +'<button class="psr-run-btn"'+runDisabled+' onclick="event.stopPropagation();psrRunSim()">&#9654;&nbsp;&nbsp;RUN SIMULATION</button>'
-    +(t?'':'<span style="font-family:monospace;font-size:9px;color:#3A3A34">Select a scenario type above to enable</span>')
+    +'<button class="psr-run-btn"'+runDisabled+' onclick="event.stopPropagation();psrRunSim()">&#9654;&nbsp;&nbsp;RUN SIMULATION'+(_psrSimTypes.length>1?' &middot; '+_psrSimTypes.length+' SCENARIOS':'')+'</button>'
+    +(_psrSimTypes.length?'':'<span style="font-family:monospace;font-size:9px;color:#3A3A34">Activate one or more scenario types above to enable</span>')
     +'</div>';
 }
 
@@ -21625,20 +21626,22 @@ function psrRenderScenarios(){
   }
   var html = '<div style="max-width:1100px">'
     +psrBuildWatchlistStrip(flow)
-    +'<div class="psr-section-title">Simulation Builder <span style="color:#3A3A34;font-weight:normal;letter-spacing:0">· choose one scenario type · DEMO</span></div>'
-    +'<div style="font-family:monospace;font-size:9px;color:#5A5A52;margin-bottom:16px">Step 1: select a product above. Step 2: choose a scenario and configure parameters below. Step 3: click Run to see all four impact layers.</div>'
+    +'<div class="psr-section-title">Simulation Builder <span style="color:#3A3A34;font-weight:normal;letter-spacing:0">· combine any scenario types · DEMO</span></div>'
+    +'<div style="font-family:monospace;font-size:9px;color:#5A5A52;margin-bottom:16px">Step 1: select a product above. Step 2: activate one or more scenarios and configure parameters. Step 3: click Run — combined impact appears across all four layers.</div>'
     +psrBuildSimBuilder(flow);
-  if(_psrSimRan && _psrSimType){
-    if(_psrSimType==='tariff'){
-      var _sProd=PSR_SMART_DATA.find(function(d){return d.code===_psrSmartParams.hs4;})||PSR_SMART_DATA[0];
-      var _sPt=_sProd.partners.find(function(pp){return pp.id===_psrSmartParams.partner;})||_sProd.partners[0];
-      var _sNewT=(_psrSmartParams.newTariff!==null&&_psrSmartParams.newTariff!==undefined)?_psrSmartParams.newTariff:_sPt.t0;
-      html += psrBuildSmartResults(psrSmartCalc(_psrSmartParams.hs4,_psrSmartParams.partner,_sNewT));
-    } else if(_psrSimType==='climate'){
-      html += psrBuildClimateResults(psrClimateCalc());
-    } else {
-      html += psrBuildSimResults(flow, psrComputeSim(flow, _psrSimType, _psrSimParams[_psrSimType]));
-    }
+  if(_psrSimRan && _psrSimTypes.length){
+    _psrSimTypes.forEach(function(type){
+      if(type==='tariff'){
+        var _sProd=PSR_SMART_DATA.find(function(d){return d.code===_psrSmartParams.hs4;})||PSR_SMART_DATA[0];
+        var _sPt=_sProd.partners.find(function(pp){return pp.id===_psrSmartParams.partner;})||_sProd.partners[0];
+        var _sNewT=(_psrSmartParams.newTariff!==null&&_psrSmartParams.newTariff!==undefined)?_psrSmartParams.newTariff:_sPt.t0;
+        html += psrBuildSmartResults(psrSmartCalc(_psrSmartParams.hs4,_psrSmartParams.partner,_sNewT));
+      } else if(type==='climate'){
+        html += psrBuildClimateResults(psrClimateCalc());
+      } else {
+        html += psrBuildSimResults(flow, psrComputeSim(flow, type, _psrSimParams[type]));
+      }
+    });
     html += psrBuildResultLayers(flow);
   }
   html += '</div>';
@@ -21864,7 +21867,7 @@ function scrUpdateRouteStrip() {
 function psrBuildResultLayers(flow) {
   if (!flow) return '';
   var isImport = (_psrDir !== 'export');
-  var cpId = (_psrSimType==='chokepoint' && _psrSimRan) ? _psrSimParams.chokepoint.id : null;
+  var cpId = (_psrSimTypes.indexOf('chokepoint')>=0 && _psrSimRan) ? _psrSimParams.chokepoint.id : null;
   var cpLabel = {hormuz:'HORMUZ DISRUPTED',bab_el_mandeb:'BAB AL-MANDEB DISRUPTED',suez:'SUEZ DISRUPTED',malacca:'MALACCA DISRUPTED'}[cpId]||'';
   return '<div id="psr-result-layers" style="margin-top:24px;border-top:1px solid #2A2A26;padding-top:20px">'
     +'<div style="font-family:monospace;font-size:8px;font-weight:700;letter-spacing:.18em;color:#C9AE4E;margin-bottom:12px">&#9670;&nbsp;&nbsp;IMPACT ON TRADE VOLUME</div>'
@@ -21915,32 +21918,50 @@ function scrInitResultVolChart(flow) {
     var share = isImport?(p.importShare||0):(p.exportShare||0);
     return ((isImport?flow.importVol:flow.exportVol)||0)*share/100;
   });
-  var cpId = (_psrSimType==='chokepoint'&&_psrSimRan)?_psrSimParams.chokepoint.id:null;
+  var cpId = (_psrSimTypes.indexOf('chokepoint')>=0&&_psrSimRan)?_psrSimParams.chokepoint.id:null;
   var cpLevel = cpId?_psrSimParams.chokepoint.level:null;
   var cpRed = cpLevel==='partial'?0.30:cpLevel==='severe'?0.70:cpLevel==='full'?1.0:0;
   var CP_TO_NAME = {hormuz:'Strait of Hormuz',bab_el_mandeb:'Bab-el-Mandeb',suez:'Suez Canal',malacca:'Malacca Strait'};
   var disruptedCPName = cpId?CP_TO_NAME[cpId]:null;
   var scenVols = null;
-  if (cpId && cpRed > 0) {
-    scenVols = partners.map(function(p,i){
-      return (disruptedCPName&&p.chokepoints.indexOf(disruptedCPName)>=0) ? baseVols[i]*(1-cpRed) : baseVols[i];
-    });
+  if(_psrSimRan && _psrSimTypes.length){
+    scenVols = baseVols.slice();
+    // Layer 1: chokepoint — per-partner volume cut on exposed routes
+    if(_psrSimTypes.indexOf('chokepoint')>=0 && cpId && cpRed>0){
+      scenVols = scenVols.map(function(v,i){
+        return (disruptedCPName&&partners[i].chokepoints.indexOf(disruptedCPName)>=0)?v*(1-cpRed):v;
+      });
+    }
+    // Layer 2: tariff — SMART/WITS ratio applied to chokepoint-adjusted volumes
+    if(_psrSimTypes.indexOf('tariff')>=0 && _psrSmartParams.newTariff!=null){
+      try{
+        var calc=psrSmartCalc(_psrSmartParams.hs4,_psrSmartParams.partner,_psrSmartParams.newTariff);
+        if(calc&&calc.totalM0>0){
+          scenVols=scenVols.map(function(v,i){
+            var r=calc.rows.find(function(row){return row.name.toLowerCase()===partners[i].name.toLowerCase();});
+            return r?v*(r.newM/Math.max(r.m0,1)):v;
+          });
+        }
+      }catch(e){}
+    }
+    // Layer 3: climate — supply-side reduction for affected region partners
+    if(_psrSimTypes.indexOf('climate')>=0){
+      var clSev=PSR_SIM_SEVERITY[_psrSimParams.climate.severity]||PSR_SIM_SEVERITY.moderate;
+      var clMult=clSev.mult;
+      var clNames=(PSR_SIM_REGIONS[_psrSimParams.climate.region]||{}).partners||[];
+      scenVols=scenVols.map(function(v,i){
+        var affected=clNames.some(function(cn){return partners[i].name.toLowerCase().indexOf(cn.toLowerCase())>=0;});
+        return affected?v*(1-clMult):v;
+      });
+    }
+    var hasChange=scenVols.some(function(v,i){return Math.abs(v-baseVols[i])>0.0001;});
+    if(!hasChange) scenVols=null;
   }
-  if (_psrSimType==='tariff'&&_psrSimRan&&_psrSmartParams.newTariff!=null) {
-    try {
-      var calc = psrSmartCalc(_psrSmartParams.hs4,_psrSmartParams.partner,_psrSmartParams.newTariff);
-      if (calc&&calc.totalM0>0) {
-        scenVols = partners.map(function(p,i){
-          var r = calc.rows.find(function(row){ return row.name.toLowerCase()===p.name.toLowerCase(); });
-          return r ? baseVols[i]*(r.newM/Math.max(r.m0,1)) : baseVols[i];
-        });
-      }
-    } catch(e){}
-  }
+  var scenLabel=_psrSimTypes.length>1?'Combined Impact':(_psrSimTypes[0]==='tariff'?'Post-Tariff':_psrSimTypes[0]==='climate'?'Post-Climate':'Post-Disruption');
   var datasets = [{label:'Baseline',data:baseVols,backgroundColor:'#2A2A26',borderWidth:0}];
   if (scenVols) {
     datasets.push({
-      label:_psrSimType==='tariff'?'Post-Tariff':'Post-Disruption',
+      label:scenLabel,
       data:scenVols,
       backgroundColor:scenVols.map(function(v,i){ return v<baseVols[i]-0.001?'rgba(224,82,82,0.75)':'rgba(61,214,140,0.75)'; }),
       borderWidth:0
@@ -21969,7 +21990,7 @@ function scrInitResultMap(flow) {
   var map = L.map('psr-res-map',{zoomControl:true,attributionControl:false});
   L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png',{maxZoom:18}).addTo(map);
   SCR.resultMap = map;
-  var cpId = (_psrSimType==='chokepoint'&&_psrSimRan)?_psrSimParams.chokepoint.id:null;
+  var cpId = (_psrSimTypes.indexOf('chokepoint')>=0&&_psrSimRan)?_psrSimParams.chokepoint.id:null;
   var CP_TO_NAME = {hormuz:'Strait of Hormuz',bab_el_mandeb:'Bab-el-Mandeb',suez:'Suez Canal',malacca:'Malacca Strait'};
   var disruptedCPName = cpId?CP_TO_NAME[cpId]:null;
   var ROUTE_C = {
@@ -22042,7 +22063,7 @@ function scrInitResultMap(flow) {
 
 function scrInitResultFleet(flow) {
   var el=document.getElementById('psr-res-fleet'); if(!el) return;
-  var cpId=(_psrSimType==='chokepoint'&&_psrSimRan)?_psrSimParams.chokepoint.id:null;
+  var cpId=(_psrSimTypes.indexOf('chokepoint')>=0&&_psrSimRan)?_psrSimParams.chokepoint.id:null;
   var hs=flow.hs;
   var isPetro=(hs==='2709'||hs==='2711'||hs==='3901'||hs==='2710');
   var isBulk =(hs==='1001'||hs==='1006'||hs==='7208'||hs==='7209'||hs==='2601'||hs==='2701');
@@ -22081,7 +22102,7 @@ function scrInitResultFleet(flow) {
 
 function scrInitResultRouteStrip(flow) {
   var el=document.getElementById('psr-res-route-strip'); if(!el) return;
-  var cpId=(_psrSimType==='chokepoint'&&_psrSimRan)?_psrSimParams.chokepoint.id:null;
+  var cpId=(_psrSimTypes.indexOf('chokepoint')>=0&&_psrSimRan)?_psrSimParams.chokepoint.id:null;
   var expo=flow.chokepointExposure||{};
   var cpMap={hormuz:{label:'Hormuz',key:'hormuz'},bab_el_mandeb:{label:'Bab al-Mandeb',key:'bab'},suez:{label:'Suez Canal',key:'suez'},malacca:{label:'Malacca',key:'malacca'}};
   var sorted=Object.keys(cpMap).map(function(k){return {k:k,pct:expo[cpMap[k].key]||0,label:cpMap[k].label};}).sort(function(a,b){return b.pct-a.pct;}).slice(0,3);
@@ -22094,35 +22115,38 @@ function scrInitResultRouteStrip(flow) {
 
 window.psrSelectSimType = function(type){
   psrCaptureSimInputs();
-  _psrSimType = (_psrSimType===type) ? null : type;
-  _psrSimRan  = false;
+  var idx = _psrSimTypes.indexOf(type);
+  if(idx >= 0) _psrSimTypes.splice(idx, 1);
+  else _psrSimTypes.push(type);
+  _psrSimRan = false;
   psrRenderScenarios();
 };
 
 function psrCaptureSimInputs(){
-  var t = _psrSimType;
-  if(t==='climate'){
-    var clSec=document.getElementById('psr-sim-cl-sector');
-    if(clSec) _psrClimateState.sector=clSec.value;
-  } else if(t==='tariff'){
-    var th=document.getElementById('psr-sim-tr-hs4'),
-        tpt=document.getElementById('psr-sim-tr-partner'),
-        tsl=document.getElementById('psr-sim-tr-slider');
-    if(th)  _psrSmartParams.hs4     = th.value;
-    if(tpt) _psrSmartParams.partner = tpt.value;
-    if(tsl) _psrSmartParams.newTariff = parseFloat(tsl.value);
-  } else if(t==='chokepoint'){
-    var cc=document.getElementById('psr-sim-cp-id'),
-        cl=document.getElementById('psr-sim-cp-level'),
-        cd2=document.getElementById('psr-sim-cp-duration');
-    if(cc)  _psrSimParams.chokepoint.id       = cc.value;
-    if(cl)  _psrSimParams.chokepoint.level    = cl.value;
-    if(cd2) _psrSimParams.chokepoint.duration = cd2.value;
-  }
+  _psrSimTypes.forEach(function(t){
+    if(t==='climate'){
+      var clSec=document.getElementById('psr-sim-cl-sector');
+      if(clSec) _psrClimateState.sector=clSec.value;
+    } else if(t==='tariff'){
+      var th=document.getElementById('psr-sim-tr-hs4'),
+          tpt=document.getElementById('psr-sim-tr-partner'),
+          tsl=document.getElementById('psr-sim-tr-slider');
+      if(th)  _psrSmartParams.hs4       = th.value;
+      if(tpt) _psrSmartParams.partner   = tpt.value;
+      if(tsl) _psrSmartParams.newTariff = parseFloat(tsl.value);
+    } else if(t==='chokepoint'){
+      var cc=document.getElementById('psr-sim-cp-id'),
+          cl=document.getElementById('psr-sim-cp-level'),
+          cd2=document.getElementById('psr-sim-cp-duration');
+      if(cc)  _psrSimParams.chokepoint.id       = cc.value;
+      if(cl)  _psrSimParams.chokepoint.level    = cl.value;
+      if(cd2) _psrSimParams.chokepoint.duration = cd2.value;
+    }
+  });
 }
 
 window.psrRunSim = function(){
-  if(!_psrSimType) return;
+  if(!_psrSimTypes.length) return;
   psrCaptureSimInputs();
   _psrSimRan = true;
   psrRenderScenarios();

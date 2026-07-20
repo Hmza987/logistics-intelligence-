@@ -21091,18 +21091,21 @@ function psrBuildSimBuilder(flow){
     +'<label class="psr-sim-label">Duration</label>'
     +sel('psr-sim-cl-duration',[['short','Short (1–3 months)'],['medium','Medium (3–6 months)'],['long','Long (6–12 months+)']],p.climate.duration);
 
-  // SMART tariff UI — independent 9-product dataset (CHN/IND/JPN vs KSA)
+  // SMART tariff UI — syncs to globally-selected product; falls back to nearest demo dataset
+  var _matchedSP = flow ? PSR_SMART_DATA.find(function(d){return d.code===flow.hs;}) : null;
+  if(_matchedSP && _psrSmartParams.hs4!==_matchedSP.code){ _psrSmartParams.hs4=_matchedSP.code; _psrSmartParams.newTariff=null; }
   var _sp = PSR_SMART_DATA.find(function(d){return d.code===_psrSmartParams.hs4;})||PSR_SMART_DATA[0];
   var _spt = _sp.partners.find(function(pp){return pp.id===_psrSmartParams.partner;})||_sp.partners[0];
   var _sliderVal = (_psrSmartParams.newTariff!==null&&_psrSmartParams.newTariff!==undefined)?_psrSmartParams.newTariff:_spt.t0;
   var _sliderPct = (_sliderVal*100).toFixed(1);
   var _baselinePct = (_spt.t0*100).toFixed(1);
   var tariffParams =
-    '<label class="psr-sim-label">Product / HS4 Category</label>'
-    +'<select class="psr-sim-select" id="psr-sim-tr-hs4" onchange="psrSmartOnChange()">'
-    +PSR_SMART_DATA.map(function(d){return '<option value="'+d.code+'"'+(d.code===_sp.code?' selected':'')+'>'+d.name+' (HS4 '+d.code+')'+'</option>';}).join('')
-    +'</select>'
-    +'<label class="psr-sim-label" style="margin-top:12px">Trading Partner</label>'
+    '<label class="psr-sim-label">Product</label>'
+    +'<div style="font-family:monospace;font-size:11px;color:#C9AE4E;background:#111110;border:1px solid #2A2A26;border-radius:3px;padding:7px 10px;margin-bottom:10px">'
+    +(flow ? flow.product+'&thinsp;&middot;&thinsp;HS&thinsp;'+flow.hs : '—')
+    +(!_matchedSP ? '<br><span style="font-size:8px;color:#5A5A52">Tariff model: nearest match '+_sp.name+' (HS '+_sp.code+')</span>' : '')
+    +'</div>'
+    +'<label class="psr-sim-label">Trading Partner</label>'
     +'<select class="psr-sim-select" id="psr-sim-tr-partner" onchange="psrSmartOnChange()">'
     +_sp.partners.map(function(pp){return '<option value="'+pp.id+'"'+(pp.id===_spt.id?' selected':'')+'>'+pp.name+'</option>';}).join('')
     +'</select>'
@@ -21129,7 +21132,11 @@ function psrBuildSimBuilder(flow){
 
   var _cs=psrClimateCurrentSector();
   var climateParams=
-    '<label class="psr-sim-label">Product / Sector (CBAM-covered)</label>'
+    '<label class="psr-sim-label">Product</label>'
+    +'<div style="font-family:monospace;font-size:11px;color:#C9AE4E;background:#111110;border:1px solid #2A2A26;border-radius:3px;padding:7px 10px;margin-bottom:10px">'
+    +(flow ? flow.product+'&thinsp;&middot;&thinsp;HS&thinsp;'+flow.hs : '—')
+    +'</div>'
+    +'<label class="psr-sim-label">CBAM-Covered Sector <span style="text-transform:none;letter-spacing:0;color:#3A3A34">&mdash; adjust if needed</span></label>'
     +'<select class="psr-sim-select" id="psr-sim-cl-sector" onchange="psrClimateOnSector(this.value)">'
     +CLIMATE_SECTORS.map(function(s){return '<option value="'+s.code+'"'+(s.code===_cs.code?' selected':'')+'>'+s.name+'</option>';}).join('')
     +'</select>'
@@ -21619,7 +21626,7 @@ function psrRenderScenarios(){
   var html = '<div style="max-width:1100px">'
     +psrBuildWatchlistStrip(flow)
     +'<div class="psr-section-title">Simulation Builder <span style="color:#3A3A34;font-weight:normal;letter-spacing:0">· choose one scenario type · DEMO</span></div>'
-    +'<div style="font-family:monospace;font-size:9px;color:#5A5A52;margin-bottom:16px">Select a scenario type, configure parameters, and run the simulation to model trade, volume, and cost impacts.</div>'
+    +'<div style="font-family:monospace;font-size:9px;color:#5A5A52;margin-bottom:16px">Step 1: select a product above. Step 2: choose a scenario and configure parameters below. Step 3: click Run to see all four impact layers.</div>'
     +psrBuildSimBuilder(flow);
   if(_psrSimRan && _psrSimType){
     if(_psrSimType==='tariff'){
@@ -21632,11 +21639,11 @@ function psrRenderScenarios(){
     } else {
       html += psrBuildSimResults(flow, psrComputeSim(flow, _psrSimType, _psrSimParams[_psrSimType]));
     }
+    html += psrBuildResultLayers(flow);
   }
   html += '</div>';
-  html += psrBuildCorridorSimulator();
   el.innerHTML = html;
-  setTimeout(scrInit, 80);
+  setTimeout(function(){ scrInitResultLayers(psrCurrentFlow()); }, 80);
 }
 
 // ── CORRIDOR DISRUPTION SIMULATOR — HTML BUILDER ──────────────────────────────
@@ -21676,7 +21683,7 @@ function psrBuildCorridorSimulator() {
 }
 
 // ── CORRIDOR DISRUPTION SIMULATOR (SCR) ──────────────────────────────────────
-window.SCR = { disrupted: false, map: null, chart: null, suezLine: null, capeLine: null, babMarker: null };
+window.SCR = { disrupted: false, map: null, chart: null, suezLine: null, capeLine: null, babMarker: null, resultMap: null, volChart: null };
 
 window.scrToggle = function(state) {
   SCR.disrupted = (state === 'dis');
@@ -21851,6 +21858,238 @@ function scrUpdateRouteStrip() {
     +statCard('EST. TRANSIT', d ? '~41 days' : '~22 days', d ? 'via Cape (+19d vs Suez)' : 'via Suez Canal', d ? '#E05252' : '#C9AE4E')
     +statCard('DISTANCE', d ? '~12,800 nm' : '~6,800 nm', d ? 'Cape route' : 'Suez route', '#C9AE4E')
     +'<div style="flex:1;padding:10px 14px;background:#0D0D0B"><div style="font-size:7px;letter-spacing:.14em;color:#4A4A44;font-family:monospace;margin-bottom:5px">VLCC ROUTE</div><div style="font-size:10px;font-weight:700;font-family:monospace;color:#5aa3f5">Cape (all conditions)</div><div style="font-size:7px;color:#4A4A44;font-family:monospace;margin-top:3px">too large for laden Suez transit · ~41 days</div></div>';
+}
+
+// ── 4-LAYER RESULTS BUILDER ──────────────────────────────────────────────────
+function psrBuildResultLayers(flow) {
+  if (!flow) return '';
+  var isImport = (_psrDir !== 'export');
+  var cpId = (_psrSimType==='chokepoint' && _psrSimRan) ? _psrSimParams.chokepoint.id : null;
+  var cpLabel = {hormuz:'HORMUZ DISRUPTED',bab_el_mandeb:'BAB AL-MANDEB DISRUPTED',suez:'SUEZ DISRUPTED',malacca:'MALACCA DISRUPTED'}[cpId]||'';
+  return '<div id="psr-result-layers" style="margin-top:24px;border-top:1px solid #2A2A26;padding-top:20px">'
+    +'<div style="font-family:monospace;font-size:8px;font-weight:700;letter-spacing:.18em;color:#C9AE4E;margin-bottom:12px">&#9670;&nbsp;&nbsp;IMPACT ON TRADE VOLUME</div>'
+    +'<div style="background:#0D0D0B;border:1px solid #1E1E1C;border-radius:3px;padding:16px;margin-bottom:20px">'
+    +'<div style="height:160px"><canvas id="psr-res-vol-chart"></canvas></div>'
+    +'</div>'
+    +'<div style="font-family:monospace;font-size:8px;font-weight:700;letter-spacing:.18em;color:#C9AE4E;margin-bottom:12px">&#9670;&nbsp;&nbsp;IMPACT ON TRADE ROUTES'+(cpLabel?' &nbsp;<span style="color:#E05252">&#8226; '+cpLabel+'</span>':'')+'</div>'
+    +'<div style="display:grid;grid-template-columns:1fr 380px;gap:14px;margin-bottom:16px">'
+    +'<div>'
+    +'<div style="font-size:8px;font-weight:700;letter-spacing:.14em;color:#6A6A62;font-family:var(--f-mono);margin-bottom:8px">'+flow.product.toUpperCase()+' &middot; '+(isImport?'IMPORT ORIGINS &#8594; SAUDI ARABIA':'SAUDI ARABIA &#8594; EXPORT DESTINATIONS')+'</div>'
+    +'<div id="psr-res-map" style="height:400px;border:1px solid #1E1E1C;border-radius:3px;background:#060e18"></div>'
+    +'<div id="psr-res-route-strip" style="display:flex;border:1px solid #1E1E1C;border-top:none;border-radius:0 0 3px 3px;overflow:hidden"></div>'
+    +'</div>'
+    +'<div>'
+    +'<div style="font-family:monospace;font-size:8px;font-weight:700;letter-spacing:.18em;color:#C9AE4E;margin-bottom:8px">&#9670;&nbsp;&nbsp;FLEET DEPLOYMENT</div>'
+    +'<div style="background:#0D0D0B;border:1px solid #1E1E1C;border-radius:3px;padding:16px">'
+    +'<div style="font-size:8px;font-weight:700;letter-spacing:.14em;color:#6A6A62;font-family:var(--f-mono);margin-bottom:12px">VESSEL CLASS STATUS</div>'
+    +'<div id="psr-res-fleet"></div>'
+    +'</div>'
+    +'</div>'
+    +'</div>'
+    +'</div>';
+}
+
+function scrInitResultLayers(flow) {
+  if (!flow || !document.getElementById('psr-result-layers')) return;
+  if (!document.getElementById('scr-styles')) {
+    var s = document.createElement('style');
+    s.id = 'scr-styles';
+    s.textContent = '@keyframes scr-flow{from{stroke-dashoffset:28}to{stroke-dashoffset:0}}.scr-tt.leaflet-tooltip{background:#111110!important;border:1px solid #2A2A28!important;color:#C9AE4E!important;font-family:monospace!important;font-size:7px!important;font-weight:700!important;letter-spacing:.1em!important;padding:3px 8px!important;border-radius:2px!important;white-space:nowrap!important;box-shadow:none!important}.scr-tt.leaflet-tooltip::before{display:none!important}';
+    document.head.appendChild(s);
+  }
+  scrInitResultVolChart(flow);
+  scrInitResultMap(flow);
+  scrInitResultFleet(flow);
+  scrInitResultRouteStrip(flow);
+}
+
+function scrInitResultVolChart(flow) {
+  var canvas = document.getElementById('psr-res-vol-chart');
+  if (!canvas) return;
+  if (SCR.volChart) { try{SCR.volChart.destroy();}catch(e){} SCR.volChart=null; }
+  var isImport = (_psrDir !== 'export');
+  var partners = flow.partners.filter(function(p){ return isImport?(p.importShare||0)>0:(p.exportShare||0)>0; });
+  if (!partners.length) return;
+  var labels = partners.map(function(p){ return p.flag+' '+p.name; });
+  var baseVols = partners.map(function(p){
+    var share = isImport?(p.importShare||0):(p.exportShare||0);
+    return ((isImport?flow.importVol:flow.exportVol)||0)*share/100;
+  });
+  var cpId = (_psrSimType==='chokepoint'&&_psrSimRan)?_psrSimParams.chokepoint.id:null;
+  var cpLevel = cpId?_psrSimParams.chokepoint.level:null;
+  var cpRed = cpLevel==='partial'?0.30:cpLevel==='severe'?0.70:cpLevel==='full'?1.0:0;
+  var CP_TO_NAME = {hormuz:'Strait of Hormuz',bab_el_mandeb:'Bab-el-Mandeb',suez:'Suez Canal',malacca:'Malacca Strait'};
+  var disruptedCPName = cpId?CP_TO_NAME[cpId]:null;
+  var scenVols = null;
+  if (cpId && cpRed > 0) {
+    scenVols = partners.map(function(p,i){
+      return (disruptedCPName&&p.chokepoints.indexOf(disruptedCPName)>=0) ? baseVols[i]*(1-cpRed) : baseVols[i];
+    });
+  }
+  if (_psrSimType==='tariff'&&_psrSimRan&&_psrSmartParams.newTariff!=null) {
+    try {
+      var calc = psrSmartCalc(_psrSmartParams.hs4,_psrSmartParams.partner,_psrSmartParams.newTariff);
+      if (calc&&calc.totalM0>0) {
+        scenVols = partners.map(function(p,i){
+          var r = calc.rows.find(function(row){ return row.name.toLowerCase()===p.name.toLowerCase(); });
+          return r ? baseVols[i]*(r.newM/Math.max(r.m0,1)) : baseVols[i];
+        });
+      }
+    } catch(e){}
+  }
+  var datasets = [{label:'Baseline',data:baseVols,backgroundColor:'#2A2A26',borderWidth:0}];
+  if (scenVols) {
+    datasets.push({
+      label:_psrSimType==='tariff'?'Post-Tariff':'Post-Disruption',
+      data:scenVols,
+      backgroundColor:scenVols.map(function(v,i){ return v<baseVols[i]-0.001?'rgba(224,82,82,0.75)':'rgba(61,214,140,0.75)'; }),
+      borderWidth:0
+    });
+  }
+  SCR.volChart = new Chart(canvas.getContext('2d'), {
+    type:'bar', data:{labels:labels,datasets:datasets},
+    options:{
+      indexAxis:'y', responsive:true, maintainAspectRatio:false,
+      plugins:{
+        legend:{labels:{color:'#9A9A90',font:{family:'monospace',size:9},boxWidth:10}},
+        title:{display:true,text:'TRADE VOLUME BY PARTNER · '+(flow.volUnit||'').toUpperCase(),color:'#4A4A44',font:{family:'monospace',size:8,weight:'700'},padding:{bottom:8}}
+      },
+      scales:{
+        x:{ticks:{color:'#4A4A44',font:{family:'monospace',size:8}},grid:{color:'#1E1E1C'},title:{display:true,text:flow.volUnit||'',color:'#4A4A44',font:{family:'monospace',size:8}}},
+        y:{ticks:{color:'#C9AE4E',font:{family:'monospace',size:9,weight:'700'}},grid:{color:'#1E1E1C'}}
+      }
+    }
+  });
+}
+
+function scrInitResultMap(flow) {
+  var mapEl = document.getElementById('psr-res-map');
+  if (!mapEl) return;
+  if (SCR.resultMap) { try{SCR.resultMap.remove();}catch(e){} SCR.resultMap=null; }
+  var map = L.map('psr-res-map',{zoomControl:true,attributionControl:false});
+  L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png',{maxZoom:18}).addTo(map);
+  SCR.resultMap = map;
+  var cpId = (_psrSimType==='chokepoint'&&_psrSimRan)?_psrSimParams.chokepoint.id:null;
+  var CP_TO_NAME = {hormuz:'Strait of Hormuz',bab_el_mandeb:'Bab-el-Mandeb',suez:'Suez Canal',malacca:'Malacca Strait'};
+  var disruptedCPName = cpId?CP_TO_NAME[cpId]:null;
+  var ROUTE_C = {
+    'South China Sea':[14,115],'Philippine Sea':[17,127],'Malacca Strait':[1.3,103.8],
+    'Indian Ocean':[0,75],'Arabian Sea':[15,62],'Strait of Hormuz':[26.5,56.5],
+    'Bab-el-Mandeb':[12.6,43.45],'Red Sea':[20,38],'Suez Canal':[30.7,32.3],
+    'Mediterranean':[37,15],'Atlantic Ocean':[30,-30],'Black Sea':[43,33],'Turkish Straits':[41.1,29]
+  };
+  var PORTS = {
+    CHN:[31.4,121.9],JPN:[34.5,135.2],IND:[19.1,72.9],KOR:[35.1,129.0],
+    RUS:[46.5,37.5],UKR:[46.5,30.7],AUS:[-33.9,151.2],CAN:[49.3,-123.1],
+    USA:[40.7,-74.0],EU:[52.0,4.9],ARE:[25.1,55.2],THA:[13.1,100.9],
+    DEU:[53.5,10.0],VNM:[10.8,106.7],TWN:[22.6,120.3],PAK:[24.9,67.1],
+    BGD:[22.8,90.6],MYS:[3.1,101.7],SAU:[26.44,50.10]
+  };
+  var DEST_GULF=[26.44,50.10], DEST_RED=[21.48,39.17];
+  var isImport=(_psrDir!=='export');
+  var partners=flow.partners.filter(function(p){return isImport?(p.importShare||0)>0:(p.exportShare||0)>0;});
+  var COLORS=['#C9AE4E','#5aa3f5','#3dd68c','#f59e0b','#7a5af5','#e8673c'];
+  var allBounds=[];
+  partners.forEach(function(p,i){
+    var origin=PORTS[p.code]; if(!origin) return;
+    var usesHormuz=p.chokepoints.indexOf('Strait of Hormuz')>=0;
+    var dest=usesHormuz?DEST_GULF:DEST_RED;
+    var wp=[origin];
+    p.routes.forEach(function(r){if(ROUTE_C[r])wp.push(ROUTE_C[r]);});
+    wp.push(dest);
+    var isAffected=disruptedCPName&&p.chokepoints.indexOf(disruptedCPName)>=0;
+    var col=isAffected?'#3A3A34':COLORS[i%COLORS.length];
+    var share=isImport?(p.importShare||0):(p.exportShare||0);
+    var line=L.polyline(wp,{color:col,weight:1.5+(share/100)*3.5,opacity:isAffected?0.3:0.85})
+      .bindTooltip(p.flag+' '+p.name+' · '+(isImport?'import':'export')+' share: '+share+'%',{direction:'top',className:'scr-tt'})
+      .addTo(map);
+    if(!isAffected){var lp=line._path;if(lp){lp.style.strokeDasharray='10 4';lp.style.animation='scr-flow '+(1.8+i*0.3)+'s linear infinite';}}
+    L.circleMarker(origin,{radius:5,fillColor:col,color:'#0A0A09',weight:1,fillOpacity:0.9})
+      .bindTooltip(p.flag+' '+p.name,{direction:'right',className:'scr-tt'}).addTo(map);
+    wp.forEach(function(w){allBounds.push(L.latLng(w[0],w[1]));});
+  });
+  L.circleMarker(DEST_GULF,{radius:7,fillColor:'#C9AE4E',color:'#0A0A09',weight:1.5,fillOpacity:0.9})
+    .bindTooltip('🇸🇦 SAUDI ARABIA · Gulf',{permanent:true,direction:'right',className:'scr-tt'}).addTo(map);
+  allBounds.push(L.latLng(DEST_GULF[0],DEST_GULF[1]));
+  var needsRedSea=partners.some(function(p){return p.routes.indexOf('Bab-el-Mandeb')>=0||p.routes.indexOf('Red Sea')>=0;});
+  if(needsRedSea){
+    L.circleMarker(DEST_RED,{radius:7,fillColor:'#C9AE4E',color:'#0A0A09',weight:1.5,fillOpacity:0.9})
+      .bindTooltip('🇸🇦 SAUDI ARABIA · Jeddah',{permanent:true,direction:'right',className:'scr-tt'}).addTo(map);
+    allBounds.push(L.latLng(DEST_RED[0],DEST_RED[1]));
+  }
+  var expo=flow.chokepointExposure||{};
+  var CP_INFO={
+    hormuz:      {coord:[26.5,56.5], key:'hormuz',  name:'Hormuz'},
+    bab_el_mandeb:{coord:[12.6,43.45],key:'bab',    name:'Bab al-Mandeb'},
+    suez:        {coord:[30.7,32.3], key:'suez',    name:'Suez Canal'},
+    malacca:     {coord:[1.3,103.8], key:'malacca', name:'Malacca Strait'}
+  };
+  Object.keys(CP_INFO).forEach(function(k){
+    var info=CP_INFO[k];
+    var pct=expo[info.key]||0; if(!pct) return;
+    var isDisrupted=(k===cpId);
+    var col=isDisrupted?'#E05252':'#f59e0b';
+    L.circleMarker(info.coord,{radius:5+pct/12,fillColor:col,color:'#0A0A09',weight:2,fillOpacity:isDisrupted?0.9:0.6})
+      .bindTooltip(info.name+' · '+pct+'% exposure'+(isDisrupted?' · ⚠ DISRUPTED':''),{direction:'top',className:'scr-tt'}).addTo(map);
+    allBounds.push(L.latLng(info.coord[0],info.coord[1]));
+  });
+  setTimeout(function(){
+    map.invalidateSize();
+    if(allBounds.length>1) map.fitBounds(L.latLngBounds(allBounds),{padding:[30,30],maxZoom:6});
+    else map.setView([20,65],3);
+  }, 120);
+}
+
+function scrInitResultFleet(flow) {
+  var el=document.getElementById('psr-res-fleet'); if(!el) return;
+  var cpId=(_psrSimType==='chokepoint'&&_psrSimRan)?_psrSimParams.chokepoint.id:null;
+  var hs=flow.hs;
+  var isPetro=(hs==='2709'||hs==='2711'||hs==='3901'||hs==='2710');
+  var isBulk =(hs==='1001'||hs==='1006'||hs==='7208'||hs==='7209'||hs==='2601'||hs==='2701');
+  var babDis=(cpId==='bab_el_mandeb'), malDis=(cpId==='malacca'), hormDis=(cpId==='hormuz');
+  function badge(t,c,b){return '<span style="font-size:7px;font-weight:700;letter-spacing:.1em;padding:3px 9px;border-radius:2px;border:1px solid '+b+';color:'+c+';font-family:monospace">'+t+'</span>';}
+  function card(cls,dw,status,route,transit,note){
+    return '<div style="border:1px solid #1E1E1C;border-radius:3px;margin-bottom:10px;overflow:hidden">'
+      +'<div style="background:#131311;padding:8px 12px;display:flex;justify-content:space-between;align-items:center">'
+      +'<div><span style="font-size:9px;font-weight:700;letter-spacing:.1em;color:#F2F1ED;font-family:monospace">'+cls+'</span>'
+      +' <span style="font-size:8px;color:#4A4A44;font-family:monospace">'+dw+'</span></div>'+status+'</div>'
+      +'<div style="padding:9px 12px;display:grid;grid-template-columns:1fr 1fr;gap:8px">'
+      +'<div><div style="font-size:7px;letter-spacing:.12em;color:#4A4A44;font-family:monospace;margin-bottom:3px">ACTIVE ROUTE</div>'
+      +'<div style="font-size:9px;color:#C9AE4E;font-family:monospace">'+route+'</div></div>'
+      +'<div><div style="font-size:7px;letter-spacing:.12em;color:#4A4A44;font-family:monospace;margin-bottom:3px">TRANSIT</div>'
+      +'<div style="font-size:9px;color:#C9AE4E;font-family:monospace">'+transit+'</div></div>'
+      +'</div>'+(note?'<div style="padding:4px 12px 8px;font-size:7px;color:#4A4A44;font-family:monospace">'+note+'</div>':'')
+      +'</div>';
+  }
+  var html='';
+  if(isPetro){
+    html+=card('VLCC','200k–320k DWT',badge('CAPE ROUTE · UNAFFECTED','#5ACD6A','#3A7D44'),'Cape of Good Hope','~41 days','Too large for laden Suez transit regardless of disruption');
+    html+=card('Suezmax','120k–200k DWT',babDis?badge('REROUTED — CAPE','#E05252','rgba(224,82,82,.4)'):badge('PRIMARY — SUEZ','#C9AE4E','rgba(201,174,78,.4)'),babDis?'Cape of Good Hope':'Red Sea → Suez',babDis?'~41 days (+19d)':'~22 days');
+    html+=card('Aframax','80k–120k DWT',babDis?badge('REROUTED — CAPE','#E05252','rgba(224,82,82,.4)'):badge('PRIMARY — SUEZ','#C9AE4E','rgba(201,174,78,.4)'),babDis?'Cape of Good Hope':'Red Sea → Suez',babDis?'~41 days (+19d)':'~22 days');
+  } else if(isBulk){
+    html+=card('Capesize','150k–200k DWT',babDis?badge('REROUTED — CAPE','#E05252','rgba(224,82,82,.4)'):badge('NORMAL','#C9AE4E','rgba(201,174,78,.4)'),babDis?'Cape of Good Hope':'Red Sea / Arabian Sea',babDis?'~38 days (+16d)':'~22 days');
+    html+=card('Panamax','60k–80k DWT',babDis?badge('REROUTED — CAPE','#E05252','rgba(224,82,82,.4)'):badge('NORMAL','#C9AE4E','rgba(201,174,78,.4)'),babDis?'Cape of Good Hope':'Red Sea / Arabian Sea / Pacific',babDis?'~35 days (+13d)':'~22 days');
+    html+=card('Handymax','40k–60k DWT',badge('FLEXIBLE','#5ACD6A','#3A7D44'),'Red Sea / Arabian Sea / Pacific','~18–25 days','Can re-route via Cape with ~10-day penalty');
+  } else {
+    html+=card('ULCV','15k–24k TEU',malDis?badge('REROUTED — LOMBOK','#E05252','rgba(224,82,82,.4)'):badge('NORMAL','#C9AE4E','rgba(201,174,78,.4)'),malDis?'Lombok / Sunda Strait':'S. China Sea → Malacca → Hormuz',malDis?'~28 days (+4d)':'~24 days');
+    html+=card('New Panamax','5k–15k TEU',(babDis||malDis)?badge('REROUTED','#E05252','rgba(224,82,82,.4)'):badge('NORMAL','#C9AE4E','rgba(201,174,78,.4)'),(babDis||malDis)?'Cape / Alternate Straits':'S. China Sea → Malacca → Hormuz',(babDis||malDis)?'~35–40 days':'~24 days');
+    html+=card('Feeder','&lt; 5k TEU',badge('REGIONAL','#5aa3f5','rgba(90,163,245,.4)'),'Intra-regional transhipment','~7–14 days','Regional hubs: Salalah, Jeddah, Colombo');
+  }
+  html+='<div style="font-size:7px;color:#3A3A34;font-family:monospace;margin-top:6px">Vessel data is illustrative · source: field estimates</div>';
+  el.innerHTML=html;
+}
+
+function scrInitResultRouteStrip(flow) {
+  var el=document.getElementById('psr-res-route-strip'); if(!el) return;
+  var cpId=(_psrSimType==='chokepoint'&&_psrSimRan)?_psrSimParams.chokepoint.id:null;
+  var expo=flow.chokepointExposure||{};
+  var cpMap={hormuz:{label:'Hormuz',key:'hormuz'},bab_el_mandeb:{label:'Bab al-Mandeb',key:'bab'},suez:{label:'Suez Canal',key:'suez'},malacca:{label:'Malacca',key:'malacca'}};
+  var sorted=Object.keys(cpMap).map(function(k){return {k:k,pct:expo[cpMap[k].key]||0,label:cpMap[k].label};}).sort(function(a,b){return b.pct-a.pct;}).slice(0,3);
+  function sc(lbl,val,sub,col){return '<div style="flex:1;padding:10px 14px;background:#0D0D0B;border-right:1px solid #1E1E1C"><div style="font-size:7px;letter-spacing:.14em;color:#4A4A44;font-family:monospace;margin-bottom:5px">'+lbl+'</div><div style="font-size:15px;font-weight:700;font-family:monospace;color:'+col+'">'+val+'</div><div style="font-size:7px;color:#4A4A44;font-family:monospace;margin-top:3px">'+sub+'</div></div>';}
+  var html='';
+  sorted.forEach(function(e){html+=sc(e.label,e.pct+'%',(e.k===cpId?'⚠ DISRUPTED':'chokepoint exposure'),(e.k===cpId?'#E05252':'#C9AE4E'));});
+  html+=sc('PRODUCT',flow.product.split(' ').slice(0,2).join(' '),'HS '+flow.hs,'#5aa3f5');
+  el.innerHTML=html;
 }
 
 window.psrSelectSimType = function(type){

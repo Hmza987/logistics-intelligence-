@@ -21634,7 +21634,223 @@ function psrRenderScenarios(){
     }
   }
   html += '</div>';
+  html += psrBuildCorridorSimulator();
   el.innerHTML = html;
+  setTimeout(scrInit, 80);
+}
+
+// ── CORRIDOR DISRUPTION SIMULATOR — HTML BUILDER ──────────────────────────────
+function psrBuildCorridorSimulator() {
+  return '<div id="scr-root" style="margin-top:28px;border-top:1px solid #1E1E1C;padding-top:24px">'
+    // Header + toggle
+    +'<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:18px">'
+    +'<div style="font-size:9px;font-weight:700;letter-spacing:.18em;color:#C9AE4E;font-family:var(--f-mono)">&#9670;&nbsp;&nbsp;CORRIDOR DISRUPTION SIMULATOR</div>'
+    +'<div style="display:flex;align-items:center;gap:10px">'
+    +'<span style="font-size:8px;font-weight:700;letter-spacing:.12em;color:#6A6A62;font-family:var(--f-mono)">BAB AL-MANDEB CORRIDOR</span>'
+    +'<button id="scr-btn-open" onclick="scrToggle(\'open\')" style="font-size:8px;font-weight:700;letter-spacing:.1em;padding:6px 16px;border:1px solid #3A7D44;border-radius:3px 0 0 3px;cursor:pointer;background:#1A3020;color:#5ACD6A;font-family:var(--f-mono);transition:all .15s">OPEN</button>'
+    +'<button id="scr-btn-dis" onclick="scrToggle(\'dis\')" style="font-size:8px;font-weight:700;letter-spacing:.1em;padding:6px 16px;border:1px solid #1E1E1C;border-left:none;border-radius:0 3px 3px 0;cursor:pointer;background:#0D0D0B;color:#3A3A34;font-family:var(--f-mono);transition:all .15s">DISRUPTED</button>'
+    +'</div></div>'
+    // Main grid: map left, chart+fleet right
+    +'<div style="display:grid;grid-template-columns:1fr 380px;gap:14px;align-items:start">'
+    // Map column
+    +'<div>'
+    +'<div style="font-size:8px;font-weight:700;letter-spacing:.14em;color:#6A6A62;font-family:var(--f-mono);margin-bottom:8px">TRADE ROUTES · GULF → NORTHWEST EUROPE</div>'
+    +'<div id="scr-map-el" style="height:440px;border:1px solid #1E1E1C;border-radius:3px;background:#060e18"></div>'
+    +'<div id="scr-route-strip" style="display:flex;border:1px solid #1E1E1C;border-top:none;border-radius:0 0 3px 3px;overflow:hidden"></div>'
+    +'</div>'
+    // Right column: chart + fleet
+    +'<div style="display:flex;flex-direction:column;gap:14px">'
+    // Chart
+    +'<div style="background:#0D0D0B;border:1px solid #1E1E1C;border-radius:3px;padding:16px">'
+    +'<div style="font-size:8px;font-weight:700;letter-spacing:.14em;color:#6A6A62;font-family:var(--f-mono);margin-bottom:12px">VOLUME IMPACT</div>'
+    +'<div style="height:200px"><canvas id="scr-chart-el"></canvas></div>'
+    +'</div>'
+    // Fleet
+    +'<div style="background:#0D0D0B;border:1px solid #1E1E1C;border-radius:3px;padding:16px">'
+    +'<div style="font-size:8px;font-weight:700;letter-spacing:.14em;color:#6A6A62;font-family:var(--f-mono);margin-bottom:12px">FLEET DEPLOYMENT STATUS</div>'
+    +'<div id="scr-fleet-el"></div>'
+    +'</div>'
+    +'</div>'  // end right col
+    +'</div>'  // end grid
+    +'</div>'; // end scr-root
+}
+
+// ── CORRIDOR DISRUPTION SIMULATOR (SCR) ──────────────────────────────────────
+window.SCR = { disrupted: false, map: null, chart: null, suezLine: null, capeLine: null, babMarker: null };
+
+window.scrToggle = function(state) {
+  SCR.disrupted = (state === 'dis');
+  scrUpdateAll();
+};
+
+function scrInit() {
+  // Guard: inject CSS once
+  if (!document.getElementById('scr-styles')) {
+    var s = document.createElement('style');
+    s.id = 'scr-styles';
+    s.textContent = '@keyframes scr-flow{from{stroke-dashoffset:28}to{stroke-dashoffset:0}}.scr-tt.leaflet-tooltip{background:#111110!important;border:1px solid #2A2A28!important;color:#C9AE4E!important;font-family:monospace!important;font-size:7px!important;font-weight:700!important;letter-spacing:.1em!important;padding:3px 8px!important;border-radius:2px!important;white-space:nowrap!important;box-shadow:none!important}.scr-tt.leaflet-tooltip::before{display:none!important}';
+    document.head.appendChild(s);
+  }
+
+  // Destroy existing instances
+  if (SCR.map) { try { SCR.map.remove(); } catch(e){} SCR.map = null; }
+  if (SCR.chart) { try { SCR.chart.destroy(); } catch(e){} SCR.chart = null; }
+
+  var mapEl = document.getElementById('scr-map-el');
+  var chartEl = document.getElementById('scr-chart-el');
+  if (!mapEl || !chartEl) return;
+
+  // ── Leaflet map
+  SCR.map = L.map('scr-map-el', { zoomControl: true, attributionControl: false });
+  L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', { maxZoom: 18 }).addTo(SCR.map);
+  SCR.map.setView([20, 35], 3);
+
+  // Draw routes
+  var SCR_SUEZ_WP = [[26.63,50.16],[26.50,56.50],[22.50,59.80],[16.00,58.00],[12.60,51.00],[12.60,43.45],[14.00,42.00],[18.00,39.50],[24.00,37.00],[29.93,32.56],[31.26,32.31],[34.00,28.00],[35.50,23.00],[37.00,15.00],[38.50,5.00],[36.00,-5.35],[44.00,-9.50],[51.95,4.05]];
+  var SCR_CAPE_WP = [[26.63,50.16],[26.50,56.50],[22.50,59.80],[15.00,61.00],[5.00,63.00],[-5.00,60.00],[-15.00,55.00],[-25.00,42.00],[-34.35,18.47],[-30.00,8.00],[-20.00,0.00],[-10.00,-5.00],[0.00,-8.00],[10.00,-15.00],[20.00,-17.00],[36.00,-9.00],[44.00,-9.50],[51.95,4.05]];
+
+  SCR.suezLine = L.polyline(SCR_SUEZ_WP, { color:'#C9AE4E', weight:2.5, opacity:0.9 }).addTo(SCR.map);
+  SCR.capeLine = L.polyline(SCR_CAPE_WP, { color:'#5aa3f5', weight:2.0, opacity:0.6 }).addTo(SCR.map);
+
+  // Markers
+  function cm(latlng, color, r, tip, dir) {
+    return L.circleMarker(latlng, { radius:r, fillColor:color, color:'#0A0A09', weight:1, fillOpacity:0.9 })
+      .bindTooltip(tip, { permanent:true, direction:dir||'right', className:'scr-tt' })
+      .addTo(SCR.map);
+  }
+  cm([26.63,50.16],'#C9AE4E',7,'RAS TANURA · ORIGIN','right');
+  cm([31.26,32.31],'#C9AE4E',5,'SUEZ CANAL','top');
+  cm([51.95,4.05],'#5aa3f5',7,'ROTTERDAM · DESTINATION','top');
+  cm([-34.35,18.47],'#5aa3f5',5,'CAPE OF GOOD HOPE','left');
+  SCR.babMarker = cm([12.60,43.45],'#f59e0b',8,'BAB AL-MANDEB · CHOKEPOINT','top');
+
+  // ── Chart.js
+  var ctx = chartEl.getContext('2d');
+  SCR.chart = new Chart(ctx, {
+    type: 'bar',
+    data: {
+      labels: ['VLCC','Suezmax','Aframax'],
+      datasets: [
+        { label:'Baseline · Bab Open', data:[28,14,6], backgroundColor:'#C9AE4E', borderWidth:0 },
+        { label:'Disrupted · Cape Route', data:[28,8.4,3.6], backgroundColor:'rgba(192,48,48,0.2)', borderWidth:0 }
+      ]
+    },
+    options: {
+      indexAxis: 'y',
+      responsive: true,
+      maintainAspectRatio: false,
+      plugins: {
+        legend: { labels:{ color:'#C9AE4E', font:{family:'monospace',size:9}, boxWidth:10 } },
+        title: { display:true, text:'MONTHLY THROUGHPUT CAPACITY · M bbl · ILLUSTRATIVE', color:'#4A4A44', font:{family:'monospace',size:8,weight:'700'}, padding:{bottom:10} }
+      },
+      scales: {
+        x: { ticks:{color:'#4A4A44',font:{family:'monospace',size:8}}, grid:{color:'#1E1E1C'}, title:{display:true,text:'M bbl/month',color:'#4A4A44',font:{family:'monospace',size:8}} },
+        y: { ticks:{color:'#C9AE4E',font:{family:'monospace',size:9,weight:'700'}}, grid:{color:'#1E1E1C'} }
+      }
+    }
+  });
+
+  // Apply initial state
+  scrUpdateAll();
+}
+
+function scrUpdateAll() {
+  scrUpdateMap();
+  scrUpdateChart();
+  scrUpdateFleet();
+  scrUpdateRouteStrip();
+  // update toggle buttons
+  var ob = document.getElementById('scr-btn-open');
+  var db = document.getElementById('scr-btn-dis');
+  if (ob) { ob.style.background = SCR.disrupted ? '#0D0D0B' : '#1A3020'; ob.style.color = SCR.disrupted ? '#3A3A34' : '#5ACD6A'; ob.style.borderColor = SCR.disrupted ? '#1E1E1C' : '#3A7D44'; }
+  if (db) { db.style.background = SCR.disrupted ? '#3A1010' : '#0D0D0B'; db.style.color = SCR.disrupted ? '#E05252' : '#3A3A34'; db.style.borderColor = SCR.disrupted ? '#C03030' : '#1E1E1C'; }
+}
+
+function scrUpdateMap() {
+  if (!SCR.map || !SCR.suezLine || !SCR.capeLine) return;
+  function applyLine(line, color, weight, opacity, dash, anim) {
+    line.setStyle({ color:color, weight:weight, opacity:opacity, dashArray:dash });
+    var p = line._path;
+    if (p) {
+      p.style.strokeDasharray = dash;
+      p.style.animation = anim ? ('scr-flow ' + anim + ' linear infinite') : 'none';
+    }
+  }
+  if (!SCR.disrupted) {
+    applyLine(SCR.suezLine, '#C9AE4E', 2.5, 0.9, '10 4', '1.8s');
+    applyLine(SCR.capeLine, '#5aa3f5', 2.0, 0.6, '10 4', '2.4s');
+    if (SCR.babMarker) SCR.babMarker.setStyle({ fillColor: '#f59e0b' });
+  } else {
+    applyLine(SCR.suezLine, '#2A2A28', 1.5, 0.25, '4 10', null);
+    applyLine(SCR.capeLine, '#E05252', 3.0, 0.95, '10 4', '1.5s');
+    if (SCR.babMarker) SCR.babMarker.setStyle({ fillColor: '#E05252' });
+  }
+}
+
+function scrUpdateChart() {
+  if (!SCR.chart) return;
+  var ds = SCR.chart.data.datasets;
+  if (!SCR.disrupted) {
+    ds[0].backgroundColor = '#C9AE4E';
+    ds[1].backgroundColor = 'rgba(192,48,48,0.2)';
+  } else {
+    ds[0].backgroundColor = 'rgba(201,174,78,0.2)';
+    ds[1].backgroundColor = '#C03030';
+  }
+  SCR.chart.update();
+}
+
+function scrUpdateFleet() {
+  var el = document.getElementById('scr-fleet-el');
+  if (!el) return;
+  var d = SCR.disrupted;
+  function badge(text, color, border) {
+    return '<span style="font-size:7px;font-weight:700;letter-spacing:.1em;padding:3px 9px;border-radius:2px;border:1px solid '+border+';color:'+color+';font-family:monospace">'+text+'</span>';
+  }
+  function card(cls, dw, status, route, transit) {
+    return '<div style="border:1px solid #1E1E1C;border-radius:3px;margin-bottom:10px;overflow:hidden">'
+      +'<div style="background:#131311;padding:8px 12px;display:flex;justify-content:space-between;align-items:center">'
+      +'<div><span style="font-size:9px;font-weight:700;letter-spacing:.1em;color:#F2F1ED;font-family:monospace">'+cls+'</span>'
+      +' <span style="font-size:8px;color:#4A4A44;font-family:monospace">'+dw+'</span></div>'
+      +status+'</div>'
+      +'<div style="padding:9px 12px;display:grid;grid-template-columns:1fr 1fr;gap:8px">'
+      +'<div><div style="font-size:7px;letter-spacing:.12em;color:#4A4A44;font-family:monospace;margin-bottom:3px">ACTIVE ROUTE</div>'
+      +'<div style="font-size:9px;color:#C9AE4E;font-family:monospace">'+route+'</div></div>'
+      +'<div><div style="font-size:7px;letter-spacing:.12em;color:#4A4A44;font-family:monospace;margin-bottom:3px">TRANSIT TIME</div>'
+      +'<div style="font-size:9px;color:#C9AE4E;font-family:monospace">'+transit+'</div></div>'
+      +'</div></div>';
+  }
+  el.innerHTML =
+    card('VLCC','200k–320k DWT',
+      badge('UNAFFECTED','#5ACD6A','#3A7D44'),
+      'Cape of Good Hope', '~41 days')
+    +card('Suezmax','120k–200k DWT',
+      d ? badge('REROUTED — CAPE','#E05252','rgba(224,82,82,.4)') : badge('PRIMARY — SUEZ','#C9AE4E','rgba(201,174,78,.4)'),
+      d ? 'Cape of Good Hope' : 'Red Sea → Suez Canal',
+      d ? '~41 days (+19d)' : '~22 days')
+    +card('Aframax','80k–120k DWT',
+      d ? badge('REROUTED — CAPE','#E05252','rgba(224,82,82,.4)') : badge('PRIMARY — SUEZ','#C9AE4E','rgba(201,174,78,.4)'),
+      d ? 'Cape of Good Hope' : 'Red Sea → Suez Canal',
+      d ? '~41 days (+19d)' : '~22 days')
+    +'<div style="font-size:7px;color:#3A3A34;font-family:monospace;margin-top:6px">Vessel counts are illustrative placeholders · source: field estimate</div>';
+}
+
+function scrUpdateRouteStrip() {
+  var el = document.getElementById('scr-route-strip');
+  if (!el) return;
+  var d = SCR.disrupted;
+  function statCard(lbl, val, sub, color) {
+    return '<div style="flex:1;padding:10px 14px;background:#0D0D0B;border-right:1px solid #1E1E1C">'
+      +'<div style="font-size:7px;letter-spacing:.14em;color:#4A4A44;font-family:monospace;margin-bottom:5px">'+lbl+'</div>'
+      +'<div style="font-size:15px;font-weight:700;font-family:monospace;color:'+color+'">'+val+'</div>'
+      +'<div style="font-size:7px;color:#4A4A44;font-family:monospace;margin-top:3px">'+sub+'</div>'
+      +'</div>';
+  }
+  el.innerHTML =
+    statCard('SUEZMAX · AFRAMAX ROUTE', d ? 'Cape of Good Hope' : 'Red Sea → Suez', d ? 'rerouted · all classes' : 'primary route', d ? '#E05252' : '#C9AE4E')
+    +statCard('EST. TRANSIT', d ? '~41 days' : '~22 days', d ? 'via Cape (+19d vs Suez)' : 'via Suez Canal', d ? '#E05252' : '#C9AE4E')
+    +statCard('DISTANCE', d ? '~12,800 nm' : '~6,800 nm', d ? 'Cape route' : 'Suez route', '#C9AE4E')
+    +'<div style="flex:1;padding:10px 14px;background:#0D0D0B"><div style="font-size:7px;letter-spacing:.14em;color:#4A4A44;font-family:monospace;margin-bottom:5px">VLCC ROUTE</div><div style="font-size:10px;font-weight:700;font-family:monospace;color:#5aa3f5">Cape (all conditions)</div><div style="font-size:7px;color:#4A4A44;font-family:monospace;margin-top:3px">too large for laden Suez transit · ~41 days</div></div>';
 }
 
 window.psrSelectSimType = function(type){

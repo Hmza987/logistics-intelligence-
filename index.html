@@ -3789,11 +3789,11 @@ canvas { font-family: var(--f-mono); }
       <!-- BAR CHART -->
       <div class="card">
         <div class="card-label">Strait of Hormuz &mdash; 14-Day Transit Monitor</div>
-        <div class="card-sub">Jul 8&ndash;Jul 21 2026 &middot; IMF PortWatch (Oxford/UN Global Pulse AIS) &middot; baseline ~88/day commercial vessels &middot; dark fleet partially excluded &middot; <span style="color:#5aa3f5;font-weight:600">auto-updated daily</span></div>
+        <div class="card-sub">Jun 29&ndash;Jul 12 2026 &middot; IMF PortWatch (Oxford/UN Global Pulse AIS) &middot; baseline ~88/day commercial vessels &middot; dark fleet partially excluded &middot; <span style="color:#5aa3f5;font-weight:600">auto-updated daily</span></div>
         <div style="position:relative;height:200px">
           <canvas id="hChart" role="img" aria-label="Daily Hormuz crossings past 14 days"></canvas>
         </div>
-        <div class="src"><span>IMF PortWatch &middot; straits.live/api/v1/transits &middot; Oxford / UN Global Pulse</span><span id="h-badge" class="src-badge" style="background:rgba(217,119,6,.15);color:#f59e0b;border-color:rgba(217,119,6,.4)">data to jul 21 &middot; AIS est.</span></div>
+        <div class="src"><span>IMF PortWatch &middot; straits.live/api/v1/transits &middot; Oxford / UN Global Pulse</span><span id="h-badge" class="src-badge" style="background:rgba(217,119,6,.15);color:#f59e0b;border-color:rgba(217,119,6,.4)">data to jul 12 &middot; AIS est.</span></div>
         <div style="margin-top:10px;padding:10px 12px;background:rgba(251,191,36,.06);border:1px solid rgba(251,191,36,.18);border-left:3px solid #fbbf24;border-radius:3px;font-size:10.5px;line-height:1.6;color:#c8a830">
           <span style="font-weight:700;color:#fbbf24;letter-spacing:.03em">&#9888; DATA LIMITATION &mdash; AIS GAPS &amp; DARK FLEET</span><br>
           IMF PortWatch counts AIS-broadcasting commercial vessels only (Oxford/UN Global Pulse methodology). Vessels operating without transponders (dark fleet) are not captured &mdash; independent satellite synthesis estimates true throughput may run <strong style="color:#e8d080">1.3&ndash;1.8&times;</strong> higher than AIS-visible counts during periods of elevated dark-fleet activity. The Jun 24 peak of <strong style="color:#e8d080">52 AIS-visible transits</strong> likely understates actual flow by this margin. <strong style="color:#e8d080">Kpler</strong> (satellite + AIS synthesis) remains the most credible independent cross-check &mdash; <a href="https://www.kpler.com" target="_blank" rel="noopener" style="color:#e8d080">kpler.com &#8599;</a>.
@@ -3944,7 +3944,7 @@ canvas { font-family: var(--f-mono); }
     <div class="map-section-header">
       <div>
         <div class="map-section-title" style="color:#7a9eb8">&#9671; Global Shipping Lanes &amp; Port Call Imbalance &mdash; Hormuz Crisis</div>
-        <div class="map-section-sub">Bubble size = commercial vessel calls/week (AIS-calibrated) &bull; dashed ring = pre-crisis volume &bull; badge = live AIS vessel count &bull; hover any port for data &bull; 12 Jul 2026</div>
+        <div class="map-section-sub">Bubble size = commercial vessel calls/week (AIS-calibrated) &bull; dashed ring = pre-crisis volume &bull; badge = live AIS vessel count &bull; hover any port for data &bull; 13 Jul 2026</div>
       </div>
       <div style="display:flex;align-items:center;gap:8px">
         <div class="map-legend" style="padding:0;background:none;border:none;display:flex;flex-wrap:wrap;gap:8px;min-width:unset">
@@ -5615,9 +5615,9 @@ function yScale(color, opts) {
 // Dark fleet note: Windward imagery found 9 transits May 11 + 21 dark tankers
 // at anchor May 10. True count > AIS figure. IRGC claims 35/day (unverified).
 // MoU peace deal in advanced talks — high probability but NOT yet signed
-var L14 = ['07/08','07/09','07/10','07/11','07/12','07/13','07/14','07/15','07/16','07/17','07/18','07/19','07/20','07/21'];
+var L14 = ['06/29','06/30','07/01','07/02','07/03','07/04','07/05','07/06','07/07','07/08','07/09','07/10','07/11','07/12'];
 /* Jul 8–21: continued severe disruption · Iran re-declared closure Jul 21 · auto-updated daily via straits.live/api/v1/transits */
-var CROSS = [7, 8, 6, 7, 5, 4, 2, 3, 4, 3, 4, 5, 5, 6];
+var CROSS = [31, 21, 40, 34, 31, 22, 26, 28, 28, 15, 11, 9, 14, 10];
 // ↑ IMF PortWatch (Oxford/UN Global Pulse AIS) via straits.live — auto-updated daily at 09:00 UTC
 
 function initHormuzCharts() {
@@ -5668,7 +5668,7 @@ function initHormuzCharts() {
         ctx.fillStyle = 'rgba(251,191,36,0.9)';
         ctx.font = 'bold 7.5px IBM Plex Mono, monospace';
         ctx.textAlign = 'center';
-        ctx.fillText('8 peak', xPeak.x, xPeak.y - 5);
+        ctx.fillText('40 peak', xPeak.x, xPeak.y - 5);
         ctx.restore();
       }
     }
@@ -9027,25 +9027,25 @@ function initChokepointsMap() {
 
   // ── PORT CALLS LAYER ─────────────────────────────────────────────────────
   // pre = modelled commercial vessel calls/week pre-crisis
-  // cur = IMF PortWatch / AIS-calibrated 20 Jul 2026 · auto-updated daily
+  // cur = IMF PortWatch / AIS-calibrated 21 Jul 2026 · auto-updated daily
   // Key drivers: Hormuz at 32% of pre-crisis (27 transits/day vs 84, Jun 28) · Cape route 8/9 major carriers
   var PORT_CALLS = [
     // ── Asian export hubs (slight decline — some GCC-direct services suspended) ─
-    { name:'Shanghai',     country:'China',        lat:31.23, lng:121.48, pre:95,  cur:52  },
-    { name:'Busan',        country:'South Korea',  lat:35.10, lng:129.07, pre:85,  cur:57  },
+    { name:'Shanghai',     country:'China',        lat:31.23, lng:121.48, pre:95,  cur:39  },
+    { name:'Busan',        country:'South Korea',  lat:35.10, lng:129.07, pre:85,  cur:47  },
     { name:'Hong Kong',    country:'China',        lat:22.30, lng:114.17, pre:48,  cur:44  },
-    { name:'Singapore',    country:'Singapore',    lat:1.27,  lng:103.50, pre:185, cur:122, exp7:363 },  // slight up: Cape bunkering stop
+    { name:'Singapore',    country:'Singapore',    lat:1.27,  lng:103.50, pre:185, cur:91, exp7:363 },  // slight up: Cape bunkering stop
     { name:'Port Klang',   country:'Malaysia',     lat:2.95,  lng:101.18, pre:75,  cur:68  },
     // ── Indian Ocean waypoint (surging — Cape route stop + congestion) ────────
     { name:'Colombo',      country:'Sri Lanka',    lat:6.93,  lng:79.84,  pre:58,  cur:106, exp7:17 },  // 42.9% congestion rate (Portcast Jun 2026)
     // ── Gulf ports INSIDE Hormuz (collapsed — Hormuz at 11% of pre-crisis) ────
-    { name:'Jebel Ali',    country:'UAE',          lat:24.98, lng:55.05,  pre:62,  cur:11,  exp7:3  },  // IMF PortWatch Jun 20-26: 18 container/wk = 18.75% of Oct-2024 pre-crisis 96/wk
+    { name:'Jebel Ali',    country:'UAE',          lat:24.98, lng:55.05,  pre:62,  cur:8,  exp7:3  },  // IMF PortWatch Jun 20-26: 18 container/wk = 18.75% of Oct-2024 pre-crisis 96/wk
     { name:'Bandar Abbas', country:'Iran',         lat:27.20, lng:56.17,  pre:28,  cur:10  },  // IMF: 0 container calls; domestic/military traffic only
     { name:'Khalifa Port', country:'UAE',          lat:24.80, lng:54.58,  pre:22,  cur:4   },  // ~20% pre-crisis (consistent with Jebel Ali)
     { name:'Hamad Port',   country:'Qatar',        lat:24.92, lng:51.56,  pre:18,  cur:4   },  // ~20% pre-crisis
     { name:'Bahrain Port', country:'Bahrain',      lat:26.21, lng:50.56,  pre:15,  cur:3   },  // ~20% pre-crisis
-    { name:'Shuwaikh',     country:'Kuwait',       lat:29.36, lng:47.95,  pre:20,  cur:8   },  // IMF Jun 19-26: 0–1 container/wk (data gap risk); pre-crisis 5.1/wk
-    { name:'Dammam',       country:'Saudi Arabia', lat:26.47, lng:50.12,  pre:35,  cur:17  },  // IMF Jun 20-26: 5 container/wk = 35% of pre-crisis 14.4/wk
+    { name:'Shuwaikh',     country:'Kuwait',       lat:29.36, lng:47.95,  pre:20,  cur:4   },  // IMF Jun 19-26: 0–1 container/wk (data gap risk); pre-crisis 5.1/wk
+    { name:'Dammam',       country:'Saudi Arabia', lat:26.47, lng:50.12,  pre:35,  cur:15  },  // IMF Jun 20-26: 5 container/wk = 35% of pre-crisis 14.4/wk
     // ── Gulf OUTSIDE Hormuz (surging — confirmed primary diversion hubs) ─────
     { name:'Fujairah',     country:'UAE',          lat:25.13, lng:56.33,  pre:14,  cur:38,  exp7:24 },  // straits.live: 38 total/24h · Inchcape 5 Jun
     { name:'Salalah',      country:'Oman',         lat:17.00, lng:54.08,  pre:28,  cur:46  },  // primary Cape-diversion offload hub
@@ -9060,7 +9060,7 @@ function initChokepointsMap() {
     { name:'Port Sudan',   country:'Sudan',        lat:19.62, lng:37.22,  pre:10,  cur:5   },  // Sudan civil conflict limiting commercial activity; minimal container calls
     { name:'Aden',         country:'Yemen',        lat:12.78, lng:44.99,  pre:25,  cur:8   },  // Houthi interdiction risk; severely reduced; SCA coalition holds port but traffic minimal
     // ── East Africa (Cape route feeder — sustained surge) ─────────────────────
-    { name:'Djibouti',     country:'Djibouti',     lat:11.59, lng:43.10,  pre:32,  cur:23  },  // Red Sea disruption reducing transhipment; down from 21
+    { name:'Djibouti',     country:'Djibouti',     lat:11.59, lng:43.10,  pre:32,  cur:18  },  // Red Sea disruption reducing transhipment; down from 21
     { name:'Mombasa',      country:'Kenya',        lat:-4.05, lng:39.65,  pre:22,  cur:44  },
     { name:'Dar es Salaam',country:'Tanzania',     lat:-6.85, lng:39.30,  pre:16,  cur:46  },
     { name:'Maputo',       country:'Mozambique',   lat:-25.97,lng:32.57,  pre:8,   cur:20  },
@@ -9074,9 +9074,9 @@ function initChokepointsMap() {
     // ── North Africa / Atlantic gateway (surging — Cape vessels via Gibraltar) ─
     { name:'Tanger Med',   country:'Morocco',      lat:35.85, lng:-5.48,  pre:52,  cur:110, exp7:1  },  // primary European entry for Cape-routed vessels
     // ── European destination ports (broadly stable) ───────────────────────────
-    { name:'Rotterdam',    country:'Netherlands',  lat:51.91, lng:4.35,   pre:95,  cur:55,  exp7:62 },
+    { name:'Rotterdam',    country:'Netherlands',  lat:51.91, lng:4.35,   pre:95,  cur:45,  exp7:62 },
     { name:'Hamburg',      country:'Germany',      lat:53.54, lng:9.85,   pre:55,  cur:50  },
-    { name:'Antwerp',      country:'Belgium',      lat:51.22, lng:4.18,   pre:78,  cur:54  },
+    { name:'Antwerp',      country:'Belgium',      lat:51.22, lng:4.18,   pre:78,  cur:44  },
     { name:'Felixstowe',   country:'UK',           lat:51.95, lng:1.20,   pre:42,  cur:38  },
   ];
 

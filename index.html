@@ -17274,6 +17274,7 @@ function clearTFDisruptions() {
   clearTFOutputs();
   updateTFCPChips();
   renderGCCImpact();
+  if (TF_ACTIVE_COMM) renderTFTradeMatrix(TF_COMMODITIES[TF_ACTIVE_COMM]);
 }
 
 // ── GCC Food Security — Wheat country exposure ────────────────────────────────
@@ -17846,8 +17847,21 @@ function renderTFTradeMatrix(comm) {
   var el = document.getElementById('tf-trade-matrix');
   if (!el || !comm || !comm.matrix) return;
   var mat = comm.matrix;
-  function cellBg(v) {
+  var disruptions = TF_DISRUPTIONS || {};
+  var hasDisruption = Object.keys(disruptions).length > 0;
+  var level = (typeof TF_DISRUPTION_LEVEL !== 'undefined' ? TF_DISRUPTION_LEVEL : 100) / 100;
+
+  function isCellDisrupted(exporterName, importerName) {
+    if (!hasDisruption || !mat.matrixCps || !mat.matrixCps[exporterName]) return false;
+    var cps = mat.matrixCps[exporterName][importerName] || [];
+    return cps.some(function(cp){ return disruptions[cp]; });
+  }
+  function cellBg(v, disrupted) {
     if (!v) return 'transparent';
+    if (disrupted) {
+      var a = v < 0.3 ? 0.28 : v < 0.6 ? 0.44 : v < 1.0 ? 0.60 : v < 1.5 ? 0.76 : v < 2.0 ? 0.88 : 1.0;
+      return 'rgba(220,38,38,' + a + ')';
+    }
     if (v < 0.3) return 'rgba(194,162,62,0.15)';
     if (v < 0.6) return 'rgba(194,162,62,0.28)';
     if (v < 1.0) return 'rgba(194,162,62,0.46)';
@@ -17855,9 +17869,18 @@ function renderTFTradeMatrix(comm) {
     if (v < 2.0) return 'rgba(194,162,62,0.82)';
     return 'rgba(194,162,62,0.97)';
   }
-  function cellTxt(v) { return v >= 1.8 ? '#0A0A0A' : '#F2F1ED'; }
+  function cellTxt(v, disrupted) {
+    if (!v) return '#4A4A44';
+    if (disrupted) return '#F2F1ED';
+    return v >= 1.8 ? '#0A0A0A' : '#F2F1ED';
+  }
   var F = "font-family:var(--f-mono)";
-  var html = '<div style="display:flex;border-bottom:1px solid #2A2A26;background:#0D0D0B">';
+  // Header row with optional DISRUPTION ACTIVE badge
+  var headerExtra = hasDisruption
+    ? '<div style="padding:5px 12px;font-size:8px;font-weight:700;letter-spacing:.1em;color:#f87171;background:rgba(220,38,38,.08);border-bottom:1px solid rgba(220,38,38,.18);'+F+'">&#9670; DISRUPTION ACTIVE — affected corridors highlighted red</div>'
+    : '';
+  var html = headerExtra;
+  html += '<div style="display:flex;border-bottom:1px solid #2A2A26;background:#0D0D0B">';
   html += '<div style="width:140px;flex-shrink:0;padding:8px 6px;font-size:9px;letter-spacing:0.12em;color:#4A4A44;font-weight:700;'+F+'">ORIGIN</div>';
   mat.importers.forEach(function(d) {
     html += '<div style="flex:1;min-width:48px;text-align:center;padding:8px 4px;font-size:9px;letter-spacing:0.1em;color:#4A4A44;font-weight:700;border-left:1px solid #1A1A18;'+F+'">'+d+'</div>';
@@ -17865,20 +17888,25 @@ function renderTFTradeMatrix(comm) {
   html += '<div style="width:52px;flex-shrink:0;text-align:right;padding:8px 6px;font-size:9px;letter-spacing:0.1em;color:#C9AE4E;font-weight:700;border-left:1px solid #1A1A18;'+F+'">TOTAL</div></div>';
   mat.rows.forEach(function(row) {
     var tot = row.vals.reduce(function(s,v){return s+(v||0);},0);
+    var rowHasDisruption = mat.importers.some(function(imp){ return isCellDisrupted(row.name, imp); });
     html += '<div style="display:flex;border-bottom:1px solid #141412">';
     html += '<div style="width:140px;flex-shrink:0;padding:7px 6px;font-size:10px;font-weight:700;color:#D9D8D3;display:flex;align-items:center;gap:5px;'+F+'">'+tfFlag(row.name,9)+row.name+'</div>';
-    row.vals.forEach(function(v) {
+    row.vals.forEach(function(v, j) {
+      var imp = mat.importers[j];
+      var disrupted = isCellDisrupted(row.name, imp);
       var txt = v > 0 ? v.toFixed(1) : '';
-      html += '<div style="flex:1;min-width:48px;background:'+cellBg(v)+';text-align:center;font-size:10px;font-weight:'+(v>0?'700':'400')+';color:'+cellTxt(v)+';padding:7px 4px;border-left:1px solid #1A1A18;'+F+'">'+txt+'</div>';
+      html += '<div style="flex:1;min-width:48px;background:'+cellBg(v,disrupted)+';text-align:center;font-size:10px;font-weight:'+(v>0?'700':'400')+';color:'+cellTxt(v,disrupted)+';padding:7px 4px;border-left:1px solid #1A1A18;'+F+'">'+txt+'</div>';
     });
-    html += '<div style="width:52px;flex-shrink:0;text-align:right;padding:7px 6px;font-size:11px;font-weight:700;color:#C9AE4E;border-left:1px solid #1A1A18;'+F+'">'+tot.toFixed(1)+'</div></div>';
+    html += '<div style="width:52px;flex-shrink:0;text-align:right;padding:7px 6px;font-size:11px;font-weight:700;color:'+(rowHasDisruption?'#f87171':'#C9AE4E')+';border-left:1px solid #1A1A18;'+F+'">'+tot.toFixed(1)+'</div></div>';
   });
   var colTots = mat.importers.map(function(_,j){return mat.rows.reduce(function(s,r){return s+(r.vals[j]||0);},0);});
   var grand = colTots.reduce(function(s,v){return s+v;},0);
   html += '<div style="display:flex;background:#0D0D0B">';
   html += '<div style="width:140px;flex-shrink:0;padding:9px 6px;font-size:10px;font-weight:700;color:#C9AE4E;letter-spacing:0.1em;'+F+'">TOTAL</div>';
-  colTots.forEach(function(v){
-    html += '<div style="flex:1;min-width:48px;text-align:center;font-size:11px;font-weight:700;color:#C9AE4E;padding:9px 4px;border-left:1px solid #1A1A18;border-top:1px solid #2A2A26;'+F+'">'+v.toFixed(1)+'</div>';
+  colTots.forEach(function(v, j) {
+    var imp = mat.importers[j];
+    var colDisrupted = mat.rows.some(function(row){ return isCellDisrupted(row.name, imp); });
+    html += '<div style="flex:1;min-width:48px;text-align:center;font-size:11px;font-weight:700;color:'+(colDisrupted?'#f87171':'#C9AE4E')+';padding:9px 4px;border-left:1px solid #1A1A18;border-top:1px solid #2A2A26;'+F+'">'+v.toFixed(1)+'</div>';
   });
   html += '<div style="width:52px;flex-shrink:0;text-align:right;padding:9px 6px;font-size:12px;font-weight:700;color:#C9AE4E;border-left:1px solid #1A1A18;border-top:1px solid #2A2A26;'+F+'">'+grand.toFixed(1)+'</div></div>';
   el.innerHTML = html;
@@ -18220,6 +18248,7 @@ function runTFStressTest() {
 
   // Refresh trade flow matrix to highlight disrupted bilateral corridors
   renderTFBaseline(comm);
+  renderTFTradeMatrix(comm);
 
   // Flash outputs
   document.querySelectorAll('.tf-output-card').forEach(function(c) {

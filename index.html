@@ -21352,10 +21352,10 @@ function psrBuildSimBuilder(flow){
 
 // ── SIMULATION RESULTS HTML ────────────────────────────────────────────────────
 function psrBuildSimResults(flow, res){
-  var typeColor = {climate:'#7a5af5',tariff:'#5aa3f5',chokepoint:'#c02030'}[res.type]||'#C9AE4E';
+  var typeColor = {climate:'#7a5af5',tariff:'#5aa3f5',chokepoint:'#E05252'}[res.type]||'#C9AE4E';
   var typeIcon  = {climate:'🌡️',tariff:'📈',chokepoint:'🚫'}[res.type]||'▶';
-  var confColor = {High:'#3dd68c',Medium:'#f0c84b',Low:'#5A5A52'}[res.confidence]||'#5A5A52';
-  var statusColors = {DISRUPTED:'#e8673c',BLOCKED:'#c02030',RESTRICTED:'#f0c84b',TARIFFED:'#5aa3f5',SAFE:'#3dd68c'};
+  var confColor = {High:'#5FA86A',Medium:'#C9AE4E',Low:'#5A5A52'}[res.confidence]||'#5A5A52';
+  var statusColors = {DISRUPTED:'#E05252',BLOCKED:'#E05252',RESTRICTED:'#C9AE4E',TARIFFED:'#5aa3f5',SAFE:'#5FA86A'};
 
   var timeLabel = res.type==='chokepoint' ? res.rerouteDaysLow+'–'+res.rerouteDaysHigh+' d' : res.extraWeeksLow+'–'+res.extraWeeksHigh+' wk';
   var timeSub   = res.type==='chokepoint' ? 'via '+res.rerouteVia : 'supply disruption horizon';
@@ -21393,16 +21393,16 @@ function psrBuildSimResults(flow, res){
     return '<div style="display:flex;align-items:center;gap:10px;padding:6px 0;border-bottom:1px solid #141412">'
       +'<span style="font-family:monospace;font-size:10px;color:#C8C7C2;flex:1">'+a.name+'</span>'
       +'<span style="font-family:monospace;font-size:9px;color:#5A5A52">'+a.capacity+' capacity</span>'
-      +'<span style="font-family:monospace;font-size:9px;color:#f0c84b">Ramp-up: '+a.rampup+'</span>'
+      +'<span style="font-family:monospace;font-size:9px;color:#C9AE4E">Ramp-up: '+a.rampup+'</span>'
       +'</div>';
   }).join('') || '<div style="font-family:monospace;font-size:10px;color:#5A5A52;padding:8px 0">No alternatives in dataset.</div>';
 
   var costBlock = res.tariffCostAnn!=null
     ? '<div><div class="psr-impact-label">Annual Tariff Exposure</div>'
-      +'<div style="font-family:monospace;font-size:16px;color:#e8673c;margin-top:4px">$'+psrFmt(res.tariffCostAnn)+'</div>'
+      +'<div style="font-family:monospace;font-size:16px;color:#E05252;font-weight:700;margin-top:4px">$'+psrFmt(res.tariffCostAnn)+'</div>'
       +'<div style="font-family:monospace;font-size:9px;color:#5A5A52;margin-top:2px">additional annual cost (direct tariff)</div></div>'
     : '<div><div class="psr-impact-label">Lead-Time Extension</div>'
-      +'<div style="font-family:monospace;font-size:16px;color:#f0c84b;margin-top:4px">+'+timeLabel+'</div>'
+      +'<div style="font-family:monospace;font-size:16px;color:#C9AE4E;font-weight:700;margin-top:4px">+'+timeLabel+'</div>'
       +'<div style="font-family:monospace;font-size:9px;color:#5A5A52;margin-top:2px">additional time to market</div></div>';
 
   return '<div style="margin-top:28px;border-top:1px solid #2A2A26;padding-top:24px">'
@@ -21424,7 +21424,7 @@ function psrBuildSimResults(flow, res){
     +'<div style="background:#0C0C0A;border:1px solid #1E1E1C;border-radius:4px;padding:14px;margin-bottom:12px">'
     +'<div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">'
     +'<div><div class="psr-impact-label">Unit Cost Premium</div>'
-    +'<div style="font-family:monospace;font-size:16px;color:#e8673c;margin-top:4px">+'+res.costPremiumLow+'–'+res.costPremiumHigh+'%</div>'
+    +'<div style="font-family:monospace;font-size:16px;color:#E05252;font-weight:700;margin-top:4px">+'+res.costPremiumLow+'–'+res.costPremiumHigh+'%</div>'
     +'<div style="font-family:monospace;font-size:9px;color:#5A5A52;margin-top:2px">vs. current baseline</div></div>'
     +costBlock
     +'</div></div>'
@@ -21493,10 +21493,10 @@ function psrBuildSmartResults(calc){
   if(!calc) return '';
   var pct=calc.pctChange*100;
   var pctStr=(pct>=0?'+':'')+pct.toFixed(1)+'%';
-  var pctColor=pct<-0.05?'#3dd68c':(pct>0.05?'#e8673c':'#5A5A52');
+  var pctColor=pct<-0.05?'#5FA86A':(pct>0.05?'#E05252':'#5A8AB8');
   var revDelta=calc.revChange;
   var revDeltaStr=(revDelta>=0?'+':'-')+fmtSmartUSD(Math.abs(revDelta))+' vs baseline '+fmtSmartUSD(calc.revOld);
-  var revDeltaColor=revDelta>=0?'#3dd68c':'#e8673c';
+  var revDeltaColor=revDelta>=0?'#5FA86A':'#E05252';
   var creationStr=(calc.totalCreation>=0?'+':'-')+fmtSmartUSD(Math.abs(calc.totalCreation));
   var diversionStr='diversion: '+(calc.totalDiversion>=0?'+':'-')+fmtSmartUSD(Math.abs(calc.totalDiversion))+' (nets ~0)';
   var targetRow=calc.rows.find(function(r){return r.id===calc.partnerId;})||calc.rows[0];
@@ -21505,43 +21505,48 @@ function psrBuildSmartResults(calc){
   var kpis='<div style="display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:20px">'
     +'<div class="psr-sim-kpi">'
     +'<div class="psr-sim-kpi-label">Total imports, this product</div>'
-    +'<div style="font-family:monospace;font-size:18px;font-weight:600;color:#C8C7C2;margin:6px 0 4px">'+fmtSmartUSD(calc.totalNew)+'</div>'
+    +'<div style="font-family:monospace;font-size:18px;font-weight:600;color:#F2F1ED;margin:6px 0 4px">'+fmtSmartUSD(calc.totalNew)+'</div>'
     +'<div style="font-family:monospace;font-size:10px;color:'+pctColor+'">'+pctStr+' vs baseline '+fmtSmartUSD(calc.totalM0)+'</div>'
     +'</div>'
     +'<div class="psr-sim-kpi">'
     +'<div class="psr-sim-kpi-label">Trade creation / diversion</div>'
-    +'<div style="font-family:monospace;font-size:18px;font-weight:600;color:'+(calc.totalCreation>=0?'#3dd68c':'#e8673c')+';margin:6px 0 4px">'+creationStr+'</div>'
+    +'<div style="font-family:monospace;font-size:18px;font-weight:600;color:'+(calc.totalCreation>=0?'#5FA86A':'#E05252')+';margin:6px 0 4px">'+creationStr+'</div>'
     +'<div style="font-family:monospace;font-size:10px;color:#5A5A52">'+diversionStr+'</div>'
     +'</div>'
     +'<div class="psr-sim-kpi">'
     +'<div class="psr-sim-kpi-label">Tariff revenue, this product</div>'
-    +'<div style="font-family:monospace;font-size:18px;font-weight:600;color:#C8C7C2;margin:6px 0 4px">'+fmtSmartUSD(calc.revNew)+'</div>'
+    +'<div style="font-family:monospace;font-size:18px;font-weight:600;color:#F2F1ED;margin:6px 0 4px">'+fmtSmartUSD(calc.revNew)+'</div>'
     +'<div style="font-family:monospace;font-size:10px;color:'+revDeltaColor+'">'+revDeltaStr+'</div>'
     +'</div>'
     +'</div>';
 
-  // Two-track bar chart matching handoff (baseline grey / new coloured)
+  // Two-track bar chart (baseline dark grey / new coloured — high contrast for big-screen)
   var maxVal=Math.max.apply(null,calc.rows.map(function(r){return Math.max(r.m0,r.newM);}))*1.05;
   var bars=calc.rows.map(function(r){
     var baseW=maxVal>0?Math.min((r.m0/maxVal)*100,100).toFixed(1):0;
     var newW=maxVal>0?Math.min((r.newM/maxVal)*100,100).toFixed(1):0;
     var chg=r.m0>0?r.change/r.m0*100:0;
     var growing=r.newM>=r.m0;
-    var chgCol=chg<-0.05?'#3dd68c':(chg>0.05?'#e8673c':'#5A5A52');
+    var chgCol=chg<-0.05?'#5FA86A':(chg>0.05?'#E05252':'#5A8AB8');
     var isTarget=(r.id===calc.partnerId);
-    return '<div style="margin-bottom:16px">'
-      +'<div style="display:flex;justify-content:space-between;align-items:center;font-family:monospace;font-size:11px;margin-bottom:6px">'
-      +'<span style="color:'+( isTarget?'#C9AE4E':'#C8C7C2')+'">'+r.name+(isTarget?' &middot; adjusted':' &middot; unchanged')+'</span>'
-      +'<span style="color:'+chgCol+'">'+(growing?'+':'')+chg.toFixed(1)+'%</span>'
+    return '<div style="margin-bottom:20px">'
+      +'<div style="display:flex;justify-content:space-between;align-items:center;font-family:monospace;font-size:11px;margin-bottom:8px">'
+      +'<span style="color:'+( isTarget?'#C9AE4E':'#D9D8D3')+'">'+r.name+(isTarget?' &middot; adjusted':' &middot; unchanged')+'</span>'
+      +'<span style="color:'+chgCol+';font-weight:700">'+(growing?'+':'')+chg.toFixed(1)+'%</span>'
       +'</div>'
-      +'<div style="position:relative;height:16px;background:#1A1A16;border-radius:3px;overflow:hidden;margin-bottom:3px">'
-      +'<div style="position:absolute;top:0;left:0;height:100%;width:'+baseW+'%;background:#2A2A26;border-radius:3px"></div>'
+      +'<div style="display:flex;align-items:center;gap:8px;margin-bottom:4px">'
+      +'<span style="font-family:monospace;font-size:8px;color:#4A4A44;width:52px;flex-shrink:0">BASELINE</span>'
+      +'<div style="flex:1;position:relative;height:20px;background:#111110;border-radius:3px;overflow:hidden">'
+      +'<div style="position:absolute;top:0;left:0;height:100%;width:'+baseW+'%;background:#3D3D35;border-radius:3px"></div>'
       +'</div>'
-      +'<div style="position:relative;height:16px;background:#1A1A16;border-radius:3px;overflow:hidden;margin-bottom:4px">'
-      +'<div style="position:absolute;top:0;left:0;height:100%;width:'+newW+'%;background:'+chgCol+';border-radius:3px;opacity:.8"></div>'
+      +'<span style="font-family:monospace;font-size:9px;color:#6A6A62;width:80px;text-align:right;flex-shrink:0">'+fmtSmartUSD(r.m0)+'</span>'
       +'</div>'
-      +'<div style="display:flex;justify-content:space-between;font-family:monospace;font-size:9px;color:#5A5A52">'
-      +'<span>baseline: $'+fmtSmartUSD(r.m0)+'</span><span>new: $'+fmtSmartUSD(r.newM)+'</span>'
+      +'<div style="display:flex;align-items:center;gap:8px">'
+      +'<span style="font-family:monospace;font-size:8px;color:'+chgCol+';width:52px;flex-shrink:0">NEW</span>'
+      +'<div style="flex:1;position:relative;height:20px;background:#111110;border-radius:3px;overflow:hidden">'
+      +'<div style="position:absolute;top:0;left:0;height:100%;width:'+newW+'%;background:'+chgCol+';border-radius:3px"></div>'
+      +'</div>'
+      +'<span style="font-family:monospace;font-size:9px;color:'+chgCol+';font-weight:700;width:80px;text-align:right;flex-shrink:0">'+fmtSmartUSD(r.newM)+'</span>'
       +'</div>'
       +'</div>';
   }).join('');
@@ -21736,7 +21741,7 @@ function psrClimateCalc(){
   return {sector:sector,rows:rows,ksaRow:ksaRow,newTotal:newTotal,totalM0:totalM0,totalCert:totalCert,baselineCert:baselineCert};
 }
 function psrBuildClimateResults(calc){
-  var ACC='#5BB98C'; var RED='#E05252';
+  var ACC='#5FA86A'; var RED='#E05252';
   var ksaRow=calc.ksaRow;
   var ksaPct=(ksaRow.newM-ksaRow.m0)/ksaRow.m0;
   var totalPct=(calc.newTotal-calc.totalM0)/calc.totalM0;
@@ -21763,14 +21768,20 @@ function psrBuildClimateResults(calc){
     var col=growing?ACC:RED;
     var bW=maxVal>0?((r.m0/maxVal)*100).toFixed(1):0;
     var nW=maxVal>0?((r.newM/maxVal)*100).toFixed(1):0;
-    return '<div style="margin-bottom:14px">'
-      +'<div style="display:flex;justify-content:space-between;font-family:monospace;font-size:11px;margin-bottom:5px">'
-      +'<span style="color:'+(r.id==='ksa'?ACC:'#C8C7C2')+'">'+r.name+(r.id==='ksa'?' · Saudi Arabia':'')+'</span>'
-      +'<span style="color:'+col+'">'+(growing?'+':'')+pct.toFixed(1)+'%</span></div>'
-      +'<div style="position:relative;height:16px;background:#1A1A18;border-radius:3px;overflow:hidden;margin-bottom:2px"><div style="position:absolute;top:0;left:0;height:100%;background:#2A2A26;border-radius:3px;width:'+bW+'%"></div></div>'
-      +'<div style="position:relative;height:16px;background:#1A1A18;border-radius:3px;overflow:hidden;margin-bottom:3px"><div style="position:absolute;top:0;left:0;height:100%;background:'+col+';border-radius:3px;width:'+nW+'%"></div></div>'
-      +'<div style="display:flex;justify-content:space-between;font-family:monospace;font-size:9px;color:#4A4A44">'
-      +'<span>baseline: '+fmtClimateUSD(r.m0)+'</span><span>new: '+fmtClimateUSD(r.newM)+'</span></div></div>';
+    return '<div style="margin-bottom:20px">'
+      +'<div style="display:flex;justify-content:space-between;font-family:monospace;font-size:11px;margin-bottom:8px">'
+      +'<span style="color:'+(r.id==='ksa'?ACC:'#D9D8D3')+'">'+r.name+(r.id==='ksa'?' · Saudi Arabia':'')+'</span>'
+      +'<span style="color:'+col+';font-weight:700">'+(growing?'+':'')+pct.toFixed(1)+'%</span></div>'
+      +'<div style="display:flex;align-items:center;gap:8px;margin-bottom:4px">'
+      +'<span style="font-family:monospace;font-size:8px;color:#4A4A44;width:52px;flex-shrink:0">BASELINE</span>'
+      +'<div style="flex:1;position:relative;height:20px;background:#111110;border-radius:3px;overflow:hidden">'
+      +'<div style="position:absolute;top:0;left:0;height:100%;background:#3D3D35;border-radius:3px;width:'+bW+'%"></div></div>'
+      +'<span style="font-family:monospace;font-size:9px;color:#6A6A62;width:80px;text-align:right;flex-shrink:0">'+fmtClimateUSD(r.m0)+'</span></div>'
+      +'<div style="display:flex;align-items:center;gap:8px">'
+      +'<span style="font-family:monospace;font-size:8px;color:'+col+';width:52px;flex-shrink:0">NEW</span>'
+      +'<div style="flex:1;position:relative;height:20px;background:#111110;border-radius:3px;overflow:hidden">'
+      +'<div style="position:absolute;top:0;left:0;height:100%;background:'+col+';border-radius:3px;width:'+nW+'%"></div></div>'
+      +'<span style="font-family:monospace;font-size:9px;color:'+col+';font-weight:700;width:80px;text-align:right;flex-shrink:0">'+fmtClimateUSD(r.newM)+'</span></div></div>';
   }).join('');
 
   var sec=calc.sector;
@@ -22144,12 +22155,12 @@ function scrInitResultVolChart(flow) {
     if(!hasChange) scenVols=null;
   }
   var scenLabel=_psrSimTypes.length>1?'Combined Impact':(_psrSimTypes[0]==='tariff'?'Post-Tariff':_psrSimTypes[0]==='climate'?'Post-Climate':'Post-Disruption');
-  var datasets = [{label:'Baseline',data:baseVols,backgroundColor:'#2A2A26',borderWidth:0}];
+  var datasets = [{label:'Baseline',data:baseVols,backgroundColor:'#3D3D35',borderWidth:0}];
   if (scenVols) {
     datasets.push({
       label:scenLabel,
       data:scenVols,
-      backgroundColor:scenVols.map(function(v,i){ return v<baseVols[i]-0.001?'rgba(224,82,82,0.75)':'rgba(61,214,140,0.75)'; }),
+      backgroundColor:scenVols.map(function(v,i){ return v<baseVols[i]-0.001?'#E05252':'#5FA86A'; }),
       borderWidth:0
     });
   }

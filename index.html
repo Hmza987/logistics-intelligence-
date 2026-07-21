@@ -20850,29 +20850,66 @@ var PSR_CP_REROUTE = {
 };
 
 // ── SMART TARIFF ENGINE DATA (real OEC + World Bank elasticities) ──────────────
+// Source: Trade data base/Tariff Simulation/ksa_top3_trade_data_pack_v3.xlsx
+// m0: Import_HS4_Detail (import_value_usd); t0: Tariff_Detail (MFN applied rate, as decimal);
+// elasticity: Elasticities_SAU (Kee, Nicita & Olarreaga 2008, winsorized to [-5,-0.2])
 var PSR_SMART_DATA = [
-  {code:'8802', name:'Planes, Helicopters & Spacecraft', elasticity:-1.4566,
-   partners:[{id:'chn',name:'China',m0:365749323,t0:0.0303},{id:'ind',name:'India',m0:1532876625,t0:0.0269}]},
-  {code:'8541', name:'Semiconductor Devices', elasticity:-1.4542,
-   partners:[{id:'chn',name:'China',m0:1721307704,t0:0.0004},{id:'ind',name:'India',m0:752618,t0:0.1817},{id:'jpn',name:'Japan',m0:593334,t0:0.0}]},
-  {code:'8504', name:'Electrical Transformers', elasticity:-1.0524,
-   partners:[{id:'chn',name:'China',m0:995985645,t0:0.0170},{id:'ind',name:'India',m0:61238010,t0:0.1564},{id:'jpn',name:'Japan',m0:40347395,t0:0.0}]},
-  {code:'4011', name:'Rubber Tires', elasticity:-0.9830,
-   partners:[{id:'chn',name:'China',m0:852117521,t0:0.1125},{id:'ind',name:'India',m0:68517256,t0:0.1211},{id:'jpn',name:'Japan',m0:140069132,t0:0.0}]},
-  {code:'9503', name:'Other Toys', elasticity:-0.7317,
-   partners:[{id:'chn',name:'China',m0:788402894,t0:0.0},{id:'ind',name:'India',m0:347054,t0:0.7},{id:'jpn',name:'Japan',m0:93280,t0:0.0}]},
-  {code:'9403', name:'Other Furniture', elasticity:-0.9527,
-   partners:[{id:'chn',name:'China',m0:739426567,t0:0.0},{id:'ind',name:'India',m0:30626702,t0:0.25},{id:'jpn',name:'Japan',m0:334042,t0:0.0}]},
-  {code:'9405', name:'Light Fixtures', elasticity:-0.8259,
-   partners:[{id:'chn',name:'China',m0:749064103,t0:0.0752},{id:'ind',name:'India',m0:6664491,t0:0.25},{id:'jpn',name:'Japan',m0:866705,t0:0.0021}]},
-  {code:'8429', name:'Large Construction Vehicles', elasticity:-1.2670,
-   partners:[{id:'chn',name:'China',m0:559821570,t0:0.0718},{id:'ind',name:'India',m0:125896436,t0:0.075},{id:'jpn',name:'Japan',m0:54903345,t0:0.0}]},
-  {code:'8507', name:'Electric Batteries', elasticity:-0.6388,
-   partners:[{id:'chn',name:'China',m0:699092767,t0:0.0992},{id:'ind',name:'India',m0:25144982,t0:0.1086},{id:'jpn',name:'Japan',m0:4172687,t0:0.0}]}
+  // ── Import products ──────────────────────────────────────────────────────────
+  {code:'8703', name:'Passenger Cars', elasticity:-5.0,
+   partners:[
+     {id:'chn',name:'China', m0:4949933000, t0:0.150},
+     {id:'jpn',name:'Japan', m0:4727158000, t0:0.000},
+     {id:'ind',name:'India', m0:1306043000, t0:1.250}
+   ]},
+  {code:'8517', name:'Telephones & Mobile Devices', elasticity:-1.5568,
+   partners:[
+     {id:'chn',name:'China', m0:6378051000, t0:0.000},
+     {id:'ind',name:'India', m0:332373700,  t0:0.09515}
+   ]},
+  {code:'8471', name:'Computers & Data-Processing Equipment', elasticity:-5.0,
+   partners:[
+     {id:'chn',name:'China', m0:1825220000, t0:0.000},
+     {id:'ind',name:'India', m0:7004516,    t0:0.000}
+   ]},
+  {code:'7208', name:'Hot-Rolled Iron & Steel', elasticity:-1.7005,
+   partners:[
+     {id:'chn',name:'China', m0:1703617000, t0:0.05068},
+     {id:'jpn',name:'Japan', m0:100615600,  t0:0.000},
+     {id:'ind',name:'India', m0:19821410,   t0:0.075}
+   ]},
+  {code:'1006', name:'Rice', elasticity:-5.0,
+   partners:[
+     {id:'ind',name:'India', m0:1432782000, t0:0.73538}
+   ]},
+  {code:'1001', name:'Wheat', elasticity:-1.0,
+   partners:[
+     {id:'rus',name:'Russia',    m0:518000000, t0:0.25},
+     {id:'aus',name:'Australia', m0:499500000, t0:0.25},
+     {id:'can',name:'Canada',    m0:370000000, t0:0.25},
+     {id:'usa',name:'USA',       m0:314500000, t0:0.25}
+   ]},
+  // ── Export products (SAU importVal≈0; tariff model shows near-zero impact) ──
+  {code:'2709', name:'Crude Petroleum', elasticity:-0.5,
+   partners:[
+     {id:'chn',name:'China', m0:0, t0:0.000},
+     {id:'jpn',name:'Japan', m0:0, t0:0.000},
+     {id:'ind',name:'India', m0:0, t0:0.000}
+   ]},
+  {code:'2711', name:'Petroleum Gas (LNG/LPG)', elasticity:-5.0,
+   partners:[
+     {id:'chn',name:'China', m0:781057, t0:0.00587},
+     {id:'ind',name:'India', m0:3378,   t0:0.05613}
+   ]},
+  {code:'3901', name:'Ethylene Polymers (Plastics)', elasticity:-0.8484,
+   partners:[
+     {id:'chn',name:'China', m0:58486160, t0:0.065},
+     {id:'ind',name:'India', m0:19297860, t0:0.075},
+     {id:'jpn',name:'Japan', m0:6367081,  t0:0.02164}
+   ]}
 ];
 var PSR_SMART_SIGMA = 1.5; // WITS default substitution elasticity
 
-var _psrSmartParams = {hs4:'8802', partner:'chn'};
+var _psrSmartParams = {hs4:'8703', partner:'chn'};
 var _psrSmartResult = null;
 
 // ── CLIMATE POLICY SHOCK DATA ──────────────────────────────────────────────────
@@ -21303,18 +21340,18 @@ function psrBuildSmartResults(calc){
   var pctStr=(pct>=0?'+':'')+pct.toFixed(1)+'%';
   var pctColor=pct<-0.05?'#3dd68c':(pct>0.05?'#e8673c':'#5A5A52');
   var revDelta=calc.revChange;
-  var revDeltaStr=(revDelta>=0?'+':'')+'$'+fmtSmartUSD(Math.abs(revDelta))+' vs baseline '+fmtSmartUSD(calc.revOld);
+  var revDeltaStr=(revDelta>=0?'+':'-')+fmtSmartUSD(Math.abs(revDelta))+' vs baseline '+fmtSmartUSD(calc.revOld);
   var revDeltaColor=revDelta>=0?'#3dd68c':'#e8673c';
-  var creationStr=(calc.totalCreation>=0?'+':'')+'$'+fmtSmartUSD(Math.abs(calc.totalCreation));
-  var diversionStr='diversion: '+(calc.totalDiversion>=0?'+':'')+'$'+fmtSmartUSD(Math.abs(calc.totalDiversion))+' (nets ~0)';
+  var creationStr=(calc.totalCreation>=0?'+':'-')+fmtSmartUSD(Math.abs(calc.totalCreation));
+  var diversionStr='diversion: '+(calc.totalDiversion>=0?'+':'-')+fmtSmartUSD(Math.abs(calc.totalDiversion))+' (nets ~0)';
   var targetRow=calc.rows.find(function(r){return r.id===calc.partnerId;})||calc.rows[0];
 
   // 3 KPI cards matching handoff
   var kpis='<div style="display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:20px">'
     +'<div class="psr-sim-kpi">'
     +'<div class="psr-sim-kpi-label">Total imports, this product</div>'
-    +'<div style="font-family:monospace;font-size:18px;font-weight:600;color:#C8C7C2;margin:6px 0 4px">$'+fmtSmartUSD(calc.totalNew)+'</div>'
-    +'<div style="font-family:monospace;font-size:10px;color:'+pctColor+'">'+pctStr+' vs baseline $'+fmtSmartUSD(calc.totalM0)+'</div>'
+    +'<div style="font-family:monospace;font-size:18px;font-weight:600;color:#C8C7C2;margin:6px 0 4px">'+fmtSmartUSD(calc.totalNew)+'</div>'
+    +'<div style="font-family:monospace;font-size:10px;color:'+pctColor+'">'+pctStr+' vs baseline '+fmtSmartUSD(calc.totalM0)+'</div>'
     +'</div>'
     +'<div class="psr-sim-kpi">'
     +'<div class="psr-sim-kpi-label">Trade creation / diversion</div>'
@@ -21323,7 +21360,7 @@ function psrBuildSmartResults(calc){
     +'</div>'
     +'<div class="psr-sim-kpi">'
     +'<div class="psr-sim-kpi-label">Tariff revenue, this product</div>'
-    +'<div style="font-family:monospace;font-size:18px;font-weight:600;color:#C8C7C2;margin:6px 0 4px">$'+fmtSmartUSD(calc.revNew)+'</div>'
+    +'<div style="font-family:monospace;font-size:18px;font-weight:600;color:#C8C7C2;margin:6px 0 4px">'+fmtSmartUSD(calc.revNew)+'</div>'
     +'<div style="font-family:monospace;font-size:10px;color:'+revDeltaColor+'">'+revDeltaStr+'</div>'
     +'</div>'
     +'</div>';

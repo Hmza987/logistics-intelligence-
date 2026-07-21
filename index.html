@@ -5258,19 +5258,19 @@ canvas { font-family: var(--f-mono); }
 .psr-stab-active{color:#C9AE4E!important;border-bottom-color:#C9AE4E!important}
 .psr-panel{display:none;padding:24px 28px}
 .psr-panel-active{display:block}
-.psr-kpi-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:12px;margin-bottom:24px}
-.psr-kpi{background:#111110;border:1px solid #1E1E1C;border-radius:4px;padding:14px 16px}
-.psr-kpi-label{font-family:monospace;font-size:9px;letter-spacing:.12em;text-transform:uppercase;color:#5A5A52;margin-bottom:6px}
-.psr-kpi-value{font-family:monospace;font-size:24px;font-weight:700;color:#C8C7C2;line-height:1}
+.psr-kpi-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:24px}
+.psr-kpi{background:#111110;border:1px solid #1E1E1C;border-radius:6px;padding:18px 20px}
+.psr-kpi-label{font-family:monospace;font-size:9px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:#4A4A44;margin-bottom:6px}
+.psr-kpi-value{font-family:monospace;font-size:30px;font-weight:700;color:#C8C7C2;line-height:1;letter-spacing:-0.02em}
 .psr-kpi-sub{font-family:monospace;font-size:9px;color:#5A5A52;margin-top:4px}
-.psr-section-title{font-family:monospace;font-size:9px;letter-spacing:.14em;text-transform:uppercase;color:#5A5A52;margin:0 0 12px;padding-bottom:6px;border-bottom:1px solid #1A1A18}
-.psr-partner-row{display:grid;grid-template-columns:28px 1fr 80px 90px 1fr;align-items:center;gap:10px;padding:8px 0;border-bottom:1px solid #141412;font-family:monospace;font-size:10px;color:#9A9A90}
+.psr-section-title{font-family:monospace;font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:#C9AE4E;margin:0 0 12px}
+.psr-partner-row{display:grid;grid-template-columns:150px 1fr 90px 60px 160px 1fr;align-items:center;gap:10px;padding:16px 18px;border-bottom:1px solid #141412;font-family:monospace;font-size:10px;color:#9A9A90}
 .psr-partner-row:last-child{border-bottom:none}
-.psr-partner-header{color:#5A5A52!important;font-size:9px!important;padding-top:0!important;border-bottom:1px solid #1E1E1C!important}
-.psr-flag-pill{background:#1A1A18;border:1px solid #2A2A26;border-radius:10px;font-size:8px;padding:2px 7px;color:#7A7A72;white-space:nowrap}
-.psr-flag-high{border-color:#c02030;color:#c02030;background:rgba(192,32,48,.08)}
-.psr-flag-med{border-color:#e8673c;color:#e8673c;background:rgba(232,103,60,.08)}
-.psr-flag-low{border-color:#3dd68c;color:#3dd68c;background:rgba(61,214,140,.08)}
+.psr-partner-header{color:#4A4A44!important;font-size:8px!important;font-weight:700!important;letter-spacing:.12em!important;padding:10px 18px!important;border-bottom:1px solid #1A1A18!important}
+.psr-flag-pill{background:transparent;border:1px solid #2A2A26;border-radius:10px;font-size:9px;font-weight:700;letter-spacing:.04em;padding:3px 9px;color:#7A7A72;white-space:nowrap}
+.psr-flag-high{border-color:#E05252;color:#E05252;background:rgba(224,82,82,.08)}
+.psr-flag-med{border-color:#C98A2E;color:#C98A2E;background:rgba(201,138,46,.08)}
+.psr-flag-low{border-color:#5FA86A;color:#5FA86A;background:rgba(95,168,106,.08)}
 .psr-scenario-card{background:#111110;border:1px solid #1E1E1C;border-radius:4px;padding:16px 18px;margin-bottom:10px;cursor:pointer;transition:border-color .15s}
 .psr-scenario-card:hover{border-color:#2A2A26}
 .psr-scenario-card.active{border-color:#C9AE4E}
@@ -5287,7 +5287,7 @@ canvas { font-family: var(--f-mono); }
 .psr-ac-item:last-child{border-bottom:none}
 .psr-ac-code{color:#5A5A52;font-size:9px}
 /* Simulation Builder */
-.psr-sim-block{background:#111110;border:1px solid #1E1E1C;border-radius:4px;cursor:pointer;transition:border-color .15s,background .15s;user-select:none}
+.psr-sim-block{background:#111110;border:1px solid #1E1E1C;border-radius:6px;padding:18px;cursor:pointer;transition:border-color .15s,background .15s;user-select:none}
 .psr-sim-block:hover{border-color:#2A2A26}
 .psr-sim-block-active{border-color:#C9AE4E!important;background:#0F130A}
 .psr-sim-header{display:flex;align-items:center;gap:10px;padding:14px 16px}
@@ -20559,8 +20559,14 @@ function psrCurrentFlow(){
 function psrRiskClass(flags){
   if(!flags||!flags.length) return 'psr-flag-low';
   var txt = flags.join(' ').toLowerCase();
-  if(txt.indexOf('conflict')>=0||txt.indexOf('concentration')>=0||txt.indexOf('sanctions')>=0) return 'psr-flag-high';
-  if(txt.indexOf('chokepoint')>=0||txt.indexOf('dual')>=0||txt.indexOf('geopolit')>=0) return 'psr-flag-med';
+  // Red: conflict, sanctions, single chokepoint, near-total/single-source dependency, export ban, war, tech export risk, strategic dependency
+  if(txt.indexOf('conflict')>=0||txt.indexOf('sanctions')>=0||txt.indexOf('single chokepoint')>=0
+    ||txt.indexOf('near-total')>=0||txt.indexOf('single-source')>=0||txt.indexOf('export ban')>=0
+    ||txt.indexOf('war ')>=0||txt.indexOf('tech export')>=0||txt.indexOf('strategic dep')>=0) return 'psr-flag-high';
+  // Amber: dual chokepoint, geopolitical, anti-dumping, critical infrastructure, high concentration, turkish straits
+  if(txt.indexOf('dual chokepoint')>=0||txt.indexOf('geopolit')>=0||txt.indexOf('anti-dumping')>=0
+    ||txt.indexOf('critical infra')>=0||txt.indexOf('concentration')>=0||txt.indexOf('turkish')>=0) return 'psr-flag-med';
+  // Green: hormuz exposure, long transit, el niño, climate — lower severity
   return 'psr-flag-low';
 }
 
@@ -20656,6 +20662,19 @@ function psrRenderActive(){
 }
 
 // ── BASELINE TAB ──────────────────────────────────────────────────────────────
+function psrFlagCode(name){
+  var m={
+    'China':'cn','Japan':'jp','India':'in','Russia':'ru','Ukraine':'ua',
+    'Australia':'au','Canada':'ca','USA':'us','South Korea':'kr',
+    'Germany':'de','UK':'gb','France':'fr','Netherlands':'nl',
+    'Brazil':'br','Argentina':'ar','Turkey':'tr','Kuwait':'kw',
+    'UAE':'ae','Qatar':'qa','Iran':'ir','Egypt':'eg','Thailand':'th',
+    'Pakistan':'pk','Bangladesh':'bd','Sri Lanka':'lk','Vietnam':'vn',
+    'Malaysia':'my','Indonesia':'id','Singapore':'sg','Saudi Arabia':'sa'
+  };
+  return m[name]||'xx';
+}
+
 function psrRenderBaseline(){
   var el = document.getElementById('psr-baseline');
   var flow = psrCurrentFlow();
@@ -20669,18 +20688,17 @@ function psrRenderBaseline(){
     return;
   }
 
-  var tv = flow.importVal + flow.exportVal;
   var bal = flow.exportVal - flow.importVal;
   var top3share = flow.partners.slice(0,3).reduce(function(s,p){return s+(p.importShare||p.exportShare||0);},0);
 
-  // ── KPI cards (no chokepoint card here — see Resilience Lab tab) ─────────
+  // ── KPI cards ──────────────────────────────────────────────────────────────
   var kpiShow = [];
-  if(_psrDir!=='export' && flow.importVal>0) kpiShow.push({label:'Total Imports',val:'$'+psrFmt(flow.importVal),sub:flow.unit+' · demo',color:'#d97706'});
-  if(_psrDir!=='import' && flow.exportVal>0) kpiShow.push({label:'Total Exports',val:'$'+psrFmt(flow.exportVal),sub:flow.unit+' · demo',color:'#5aa3f5'});
-  if(_psrDir==='total') kpiShow.push({label:'Trade Balance',val:(bal>=0?'+':'')+psrFmt(bal),sub:bal>=0?'surplus':'deficit',color:bal>=0?'#3dd68c':'#c02030'});
-  kpiShow.push({label:'Trade Partners',val:flow.partners.length,sub:'tracked in dataset',color:'#C9AE4E'});
-  kpiShow.push({label:'Top-3 Partner Share',val:psrPct(top3share),sub:'of trade volume',color:'#C9AE4E'});
-  if(flow.stockDays) kpiShow.push({label:'Strategic Stock',val:flow.stockDays+'d',sub:'estimated coverage',color:'#3dd68c'});
+  if(_psrDir!=='export' && flow.importVal>0) kpiShow.push({label:'Total Imports',val:'$'+psrFmt(flow.importVal),sub:flow.unit+' · demo',color:'#C9AE4E'});
+  if(_psrDir!=='import' && flow.exportVal>0) kpiShow.push({label:'Total Exports',val:'$'+psrFmt(flow.exportVal),sub:flow.unit+' · demo',color:'#F2F1ED'});
+  if(_psrDir==='total') kpiShow.push({label:'Trade Balance',val:(bal>=0?'+':'')+psrFmt(bal),sub:bal>=0?'surplus':'deficit',color:bal>=0?'#5FA86A':'#E05252'});
+  kpiShow.push({label:'Trade Partners',val:flow.partners.length,sub:'tracked in dataset',color:'#F2F1ED'});
+  kpiShow.push({label:'Top-3 Partner Share',val:psrPct(top3share),sub:'of trade volume',color:'#5FA86A'});
+  if(flow.stockDays) kpiShow.push({label:'Strategic Stock',val:flow.stockDays+'d',sub:'estimated coverage',color:'#C9AE4E'});
 
   var kpiHtml = '<div class="psr-kpi-grid">'+kpiShow.map(function(k){
     return '<div class="psr-kpi"><div class="psr-kpi-label">'+k.label+'</div>'
@@ -20688,31 +20706,29 @@ function psrRenderBaseline(){
       +'<div class="psr-kpi-sub">'+k.sub+'</div></div>';
   }).join('')+'</div>';
 
-  // ── Combined partner table ─────────────────────────────────────────────────
+  // ── Partner table ──────────────────────────────────────────────────────────
   var showImport = _psrDir !== 'export';
   var showExport = _psrDir !== 'import';
-  var maxPartnerVal = 0;
+  var dirLabel = showImport && showExport ? 'TRADE PARTNERS' : showImport ? 'IMPORTS: TRADE PARTNERS' : 'EXPORTS: TRADE PARTNERS';
+
   var partnerVols = flow.partners.map(function(p){
     var impVal = showImport ? Math.round(flow.importVal * (p.importShare||0) / 100) : 0;
     var expVal = showExport ? Math.round(flow.exportVal * (p.exportShare||0) / 100) : 0;
     var total = impVal + expVal;
-    if(total > maxPartnerVal) maxPartnerVal = total;
     return {p:p, impVal:impVal, expVal:expVal, total:total};
   }).sort(function(a,b){return b.total-a.total;});
 
-  var tableHeader = '<div style="display:grid;grid-template-columns:28px 120px 180px 80px 52px 140px 160px 1fr;gap:10px;align-items:center;'
-    +'padding:6px 0;border-bottom:1px solid #2A2A26;font-family:monospace;font-size:8px;letter-spacing:.1em;color:#4A4A44;text-transform:uppercase">'
-    +'<span></span><span>Partner</span><span>Value (est.)</span><span>Volume</span><span>Share</span><span>Chokepoints</span><span>Route</span><span>Risk</span>'
+  var tableHeader = '<div style="display:grid;grid-template-columns:150px 1fr 90px 60px 160px 1fr;gap:10px;align-items:center;'
+    +'padding:10px 18px;border-bottom:1px solid #1A1A18;font-family:monospace;font-size:8px;font-weight:700;letter-spacing:.12em;color:#4A4A44;text-transform:uppercase">'
+    +'<span>Partner</span><span>Value (est.)</span><span>Volume</span><span>Share</span><span>Chokepoints</span><span>Risk</span>'
     +'</div>';
 
   var combinedRows = partnerVols.map(function(pv){
-    var impPct = maxPartnerVal ? (pv.impVal/maxPartnerVal*100) : 0;
-    var expPct = maxPartnerVal ? (pv.expVal/maxPartnerVal*100) : 0;
-    var share  = _psrDir==='export' ? (pv.p.exportShare||0) : (_psrDir==='import' ? (pv.p.importShare||0) : Math.max(pv.p.importShare||0,pv.p.exportShare||0));
-    var flags  = (pv.p.riskFlags||[]).map(function(f){
+    var share = _psrDir==='export' ? (pv.p.exportShare||0) : (_psrDir==='import' ? (pv.p.importShare||0) : Math.max(pv.p.importShare||0,pv.p.exportShare||0));
+    var barPct = Math.min(share, 100);
+    var flags = (pv.p.riskFlags||[]).map(function(f){
       return '<span class="psr-flag-pill '+psrRiskClass([f])+'">'+f+'</span>';
     }).join(' ');
-    // Physical volume: share% of total import/export volume
     var impSharePct = pv.p.importShare || 0;
     var expSharePct = pv.p.exportShare || 0;
     var impVol = showImport && flow.importVol ? flow.importVol * impSharePct / 100 : 0;
@@ -20720,51 +20736,50 @@ function psrRenderBaseline(){
     var totalVol = impVol + expVol;
     var volUnit = flow.volUnit || '';
     var volStr = totalVol > 0 ? (totalVol >= 10 ? totalVol.toFixed(1) : totalVol.toPrecision(2)) + ' ' + volUnit : '—';
-    return '<div style="display:grid;grid-template-columns:28px 120px 180px 80px 52px 140px 160px 1fr;gap:10px;align-items:center;padding:8px 0;border-bottom:1px solid #141412">'
-      +'<span style="font-size:14px">'+pv.p.flag+'</span>'
-      +'<span style="font-family:monospace;font-size:10px;color:#C8C7C2">'+pv.p.name+'</span>'
+    var cc = psrFlagCode(pv.p.name);
+    var flagImg = cc!=='xx' ? '<img src="https://flagcdn.com/16x12/'+cc+'.png" height="14" style="margin-right:8px;vertical-align:middle;flex-shrink:0" alt="">' : '';
+    var chkStr = (pv.p.chokepoints||[]).join(' · ') || '—';
+    return '<div style="display:grid;grid-template-columns:150px 1fr 90px 60px 160px 1fr;gap:10px;align-items:center;padding:16px 18px;border-bottom:1px solid #141412">'
+      +'<div style="display:flex;align-items:center">'+flagImg+'<span style="font-family:monospace;font-size:13px;font-weight:700;color:#F2F1ED">'+pv.p.name+'</span></div>'
       +'<div>'
-        +'<div style="position:relative;height:10px;background:#141412;border-radius:2px;overflow:hidden;margin-bottom:3px">'
-          +(pv.impVal>0?'<div style="position:absolute;left:0;top:0;height:100%;width:'+impPct.toFixed(1)+'%;background:#d97706;opacity:0.85"></div>':'')
-          +(pv.expVal>0?'<div style="position:absolute;left:'+impPct.toFixed(1)+'%;top:0;height:100%;width:'+expPct.toFixed(1)+'%;background:#5aa3f5;opacity:0.85"></div>':'')
-        +'</div>'
-        +'<span style="font-family:monospace;font-size:9px;color:#C9AE4E">$'+psrFmt(pv.total)+'</span>'
+        +'<div style="font-family:monospace;font-size:14px;font-weight:700;color:#F2F1ED">$'+psrFmt(pv.total)+'</div>'
+        +'<div style="font-family:monospace;font-size:9px;color:#4A4A44;margin-bottom:5px">value (est.)</div>'
+        +'<div style="height:5px;background:#1A1A18;border-radius:2px;max-width:220px"><div style="height:100%;background:#C2A23E;border-radius:2px;width:'+barPct.toFixed(1)+'%"></div></div>'
       +'</div>'
-      +'<span style="font-family:monospace;font-size:9px;color:#8A9AAA">'+volStr+'</span>'
-      +'<span style="font-family:monospace;font-size:10px;color:#9A9A90;text-align:right">'+share+'%</span>'
-      +'<span style="font-family:monospace;font-size:8px;color:#5A5A52;line-height:1.6">'+(pv.p.chokepoints||[]).join('<br>')+'</span>'
-      +'<span style="font-family:monospace;font-size:8px;color:#5A5A52;line-height:1.6">'+(pv.p.routes||[]).join('<br>')+'</span>'
+      +'<span style="font-family:monospace;font-size:11px;color:#D9D8D3">'+volStr+'</span>'
+      +'<span style="font-family:monospace;font-size:13px;font-weight:700;color:#C9AE4E">'+share+'%</span>'
+      +'<span style="font-family:monospace;font-size:9px;color:#5A5A52">'+chkStr+'</span>'
       +'<span style="display:flex;flex-wrap:wrap;gap:4px">'+flags+'</span>'
       +'</div>';
   }).join('');
 
   el.innerHTML = '<div style="max-width:1100px">'
-    +'<div style="font-family:monospace;font-size:10px;color:#5A5A52;margin-bottom:16px;letter-spacing:.06em">'
-    +'HS '+flow.hs+' · '+flow.product+' · '+flow.country+' · 2024 · <span style="color:#C9AE4E">DEMO DATA</span></div>'
+    +'<div style="font-family:monospace;font-size:11px;color:#5A5A52;margin-bottom:18px;letter-spacing:.04em">'
+    +'HS '+flow.hs+' · '+flow.product+' · '+flow.country+' · 2024 · <strong style="color:#C9AE4E;font-weight:700">DEMO DATA</strong></div>'
     + kpiHtml
-    +'<div class="psr-section-title">Trade Partners</div>'
-    +'<div style="display:flex;gap:16px;margin-bottom:8px;align-items:center">'
-    +(showImport?'<span style="font-family:monospace;font-size:9px;color:#d97706">&#9644; Imports</span>':'')
-    +(showExport?'<span style="font-family:monospace;font-size:9px;color:#5aa3f5">&#9644; Exports</span>':'')
-    +'<span style="font-family:monospace;font-size:8px;color:#3A3A34;margin-left:auto">Volume = share% × total · DEMO</span>'
-    +'</div>'
+    +'<div class="psr-section-title">&#8212;&nbsp;'+dirLabel+'</div>'
+    +'<div style="font-family:monospace;font-size:9px;color:#3A3A36;margin-bottom:8px">Volume = share% × total · demo</div>'
+    +'<div style="background:#111110;border:1px solid #1E1E1C;border-radius:6px;overflow:hidden;margin-bottom:28px">'
     + tableHeader + combinedRows
     +'</div>';
 
   // Append map section using DOM (not innerHTML) so Leaflet can attach to the div
   var mapWrap = document.createElement('div');
-  mapWrap.style.cssText = 'max-width:1100px;margin-top:28px';
-  mapWrap.innerHTML = '<div class="psr-section-title">Trade Flow Map</div>'
-    +'<div id="psr-leaflet-map" style="height:440px;border-radius:4px 4px 0 0"></div>'
-    +'<div style="background:#0C0C0A;border:1px solid #1E1E1C;border-top:none;border-radius:0 0 4px 4px;padding:8px 16px;display:flex;gap:20px;align-items:center;flex-wrap:wrap">'
-    +(showImport?'<span style="font-family:monospace;font-size:9px;color:#d97706">&#9644; Import route</span>':'')
+  mapWrap.style.cssText = 'max-width:1100px';
+  mapWrap.innerHTML = '<div class="psr-section-title" style="margin-bottom:12px">&#8212;&nbsp;TRADE FLOW MAP</div>'
+    +'<div style="border:1px solid #1E1E1C;border-radius:6px;overflow:hidden">'
+    +'<div id="psr-leaflet-map" style="height:440px"></div>'
+    +'<div style="background:#0C0C0A;border-top:1px solid #1E1E1C;padding:8px 16px;display:flex;gap:20px;align-items:center;flex-wrap:wrap">'
+    +(showImport?'<span style="font-family:monospace;font-size:9px;color:#C2A23E">&#9644; Import route</span>':'')
     +(showExport?'<span style="font-family:monospace;font-size:9px;color:#5aa3f5">&#9644; Export route</span>':'')
-    +'<span style="font-family:monospace;font-size:9px;color:#c02030">&#9711; &ge;50% exposure</span>'
-    +'<span style="font-family:monospace;font-size:9px;color:#e8673c">&#9711; &ge;25%</span>'
-    +'<span style="font-family:monospace;font-size:9px;color:#f0c84b">&#9711; &lt;25%</span>'
+    +'<span style="font-family:monospace;font-size:9px;color:#E05252">&#9711; &ge;50% exposure</span>'
+    +'<span style="font-family:monospace;font-size:9px;color:#C98A2E">&#9711; &ge;25%</span>'
+    +'<span style="font-family:monospace;font-size:9px;color:#C9AE4E">&#9711; &lt;25%</span>'
     +'<span style="font-family:monospace;font-size:8px;color:#3A3A34;margin-left:auto">Estimated maritime routing · DEMO</span>'
+    +'</div>'
     +'</div>';
   el.appendChild(mapWrap);
+  el.appendChild(document.createElement('div')).style.cssText='height:24px';
 
   // Destroy old Leaflet instance (its container was just replaced) then reinit
   if (PSR_MAP) { try { PSR_MAP.remove(); } catch(e){} PSR_MAP = null; PSR_MAP_READY = false; }
@@ -21212,19 +21227,22 @@ function psrComputeSim(flow, type, params) {
 function psrBuildWatchlistStrip(flow){
   var ckN = {hormuz:'Hormuz',bab:'Bab Al-Mandeb',suez:'Suez',malacca:'Malacca'};
   var chips = [];
-  var topShare = flow.partners[0] ? Math.max(flow.partners[0].importShare,flow.partners[0].exportShare) : 0;
-  if(topShare>=25) chips.push({c:'#e8673c',t:'Concentration: '+flow.partners[0].name+' '+topShare+'%'});
+  var topShare = flow.partners[0] ? Math.max(flow.partners[0].importShare||0,flow.partners[0].exportShare||0) : 0;
+  if(topShare>=50) chips.push({c:'#E05252',t:'Concentration: '+flow.partners[0].name+' '+topShare+'%'});
+  else if(topShare>=25) chips.push({c:'#C98A2E',t:'Concentration: '+flow.partners[0].name+' '+topShare+'%'});
   var hCkpts = Object.keys(flow.chokepointExposure).filter(function(k){return flow.chokepointExposure[k]>=50;});
-  if(hCkpts.length) chips.push({c:'#c02030',t:'Chokepoint ≥50%: '+hCkpts.map(function(k){return ckN[k]||k;}).join(', ')});
-  var conflP = flow.partners.filter(function(p){return(p.riskFlags||[]).some(function(f){return f.toLowerCase().indexOf('conflict')>=0;});});
-  if(conflP.length) chips.push({c:'#e8673c',t:'Conflict zone: '+conflP.map(function(p){return p.name;}).join(', ')});
-  if(flow.stockDays&&flow.stockDays<45) chips.push({c:'#f0c84b',t:'Stock: '+flow.stockDays+'d (below 45d)'});
-  if(!chips.length) chips.push({c:'#3dd68c',t:'No critical flags'});
+  var mCkpts = Object.keys(flow.chokepointExposure).filter(function(k){return flow.chokepointExposure[k]>=25&&flow.chokepointExposure[k]<50;});
+  if(hCkpts.length) chips.push({c:'#E05252',t:'Chokepoint ≥50%: '+hCkpts.map(function(k){return ckN[k]||k;}).join(', ')});
+  if(mCkpts.length) chips.push({c:'#C98A2E',t:'Chokepoint ≥25%: '+mCkpts.map(function(k){return ckN[k]||k;}).join(', ')});
+  var conflP = flow.partners.filter(function(p){return(p.riskFlags||[]).some(function(f){return f.toLowerCase().indexOf('conflict')>=0||f.toLowerCase().indexOf('sanctions')>=0;});});
+  if(conflP.length) chips.push({c:'#E05252',t:'Critical risk: '+conflP.map(function(p){return p.name;}).join(', ')});
+  if(flow.stockDays&&flow.stockDays<45) chips.push({c:'#C98A2E',t:'Stock: '+flow.stockDays+'d (below 45d threshold)'});
+  if(!chips.length) chips.push({c:'#5FA86A',t:'No critical flags detected'});
   return '<div style="margin-bottom:20px">'
-    +'<div class="psr-section-title">Risk Signals <span style="color:#3A3A34;font-weight:normal;letter-spacing:0">· rule-based · DEMO</span></div>'
+    +'<div class="psr-section-title" style="margin-bottom:10px">RISK SIGNALS <span style="color:#3A3A34;font-weight:normal;letter-spacing:0">&middot; RULE-BASED &middot; DEMO</span></div>'
     +'<div style="display:flex;flex-wrap:wrap;gap:6px">'
     +chips.map(function(ch){
-      return '<span style="font-family:monospace;font-size:9px;color:'+ch.c+';background:'+ch.c+'18;border:1px solid '+ch.c+'44;border-radius:10px;padding:4px 10px">'+ch.t+'</span>';
+      return '<span style="font-family:monospace;font-size:9px;font-weight:700;letter-spacing:.04em;color:'+ch.c+';background:'+ch.c+'14;border:1px solid '+ch.c+'55;border-radius:16px;padding:4px 11px">'+ch.t+'</span>';
     }).join('')+'</div></div>';
 }
 
@@ -22049,20 +22067,14 @@ function psrBuildResultLayers(flow) {
     +'<div style="height:160px"><canvas id="psr-res-vol-chart"></canvas></div>'
     +'</div>'
     +'<div style="font-family:monospace;font-size:8px;font-weight:700;letter-spacing:.18em;color:#C9AE4E;margin-bottom:12px">&#9670;&nbsp;&nbsp;IMPACT ON TRADE ROUTES'+(cpLabel?' &nbsp;<span style="color:#E05252">&#8226; '+cpLabel+'</span>':'')+'</div>'
-    +'<div style="display:grid;grid-template-columns:1fr 380px;gap:14px;margin-bottom:16px">'
-    +'<div>'
+    +'<div style="margin-bottom:16px">'
     +'<div style="font-size:8px;font-weight:700;letter-spacing:.14em;color:#6A6A62;font-family:var(--f-mono);margin-bottom:8px">'+flow.product.toUpperCase()+' &middot; '+(isImport?'IMPORT ORIGINS &#8594; SAUDI ARABIA':'SAUDI ARABIA &#8594; EXPORT DESTINATIONS')+'</div>'
-    +'<div id="psr-res-map" style="height:400px;border:1px solid #1E1E1C;border-radius:3px;background:#060e18"></div>'
+    +'<div id="psr-res-map" style="height:400px;border:1px solid #1E1E1C;border-radius:3px 3px 0 0;background:#060e18"></div>'
     +'<div id="psr-res-route-strip" style="display:flex;border:1px solid #1E1E1C;border-top:none;border-radius:0 0 3px 3px;overflow:hidden"></div>'
     +'</div>'
-    +'<div>'
     +'<div style="font-family:monospace;font-size:8px;font-weight:700;letter-spacing:.18em;color:#C9AE4E;margin-bottom:8px">&#9670;&nbsp;&nbsp;FLEET DEPLOYMENT</div>'
-    +'<div style="background:#0D0D0B;border:1px solid #1E1E1C;border-radius:3px;padding:16px">'
-    +'<div style="font-size:8px;font-weight:700;letter-spacing:.14em;color:#6A6A62;font-family:var(--f-mono);margin-bottom:12px">VESSEL CLASS STATUS</div>'
-    +'<div id="psr-res-fleet"></div>'
-    +'</div>'
-    +'</div>'
-    +'</div>'
+    +'<div style="font-size:8px;font-weight:700;letter-spacing:.14em;color:#6A6A62;font-family:var(--f-mono);margin-bottom:10px">VESSEL CLASS STATUS</div>'
+    +'<div id="psr-res-fleet" style="display:grid;grid-template-columns:repeat(3,1fr);gap:12px"></div>'
     +'</div>';
 }
 
@@ -22352,16 +22364,16 @@ function scrInitResultFleet(flow) {
   var babDis=(cpId==='bab_el_mandeb'), malDis=(cpId==='malacca'), hormDis=(cpId==='hormuz');
   function badge(t,c,b){return '<span style="font-size:7px;font-weight:700;letter-spacing:.1em;padding:3px 9px;border-radius:2px;border:1px solid '+b+';color:'+c+';font-family:monospace">'+t+'</span>';}
   function card(cls,dw,status,route,transit,note){
-    return '<div style="border:1px solid #1E1E1C;border-radius:3px;margin-bottom:10px;overflow:hidden">'
-      +'<div style="background:#131311;padding:8px 12px;display:flex;justify-content:space-between;align-items:center">'
-      +'<div><span style="font-size:9px;font-weight:700;letter-spacing:.1em;color:#F2F1ED;font-family:monospace">'+cls+'</span>'
-      +' <span style="font-size:8px;color:#4A4A44;font-family:monospace">'+dw+'</span></div>'+status+'</div>'
-      +'<div style="padding:9px 12px;display:grid;grid-template-columns:1fr 1fr;gap:8px">'
-      +'<div><div style="font-size:7px;letter-spacing:.12em;color:#4A4A44;font-family:monospace;margin-bottom:3px">ACTIVE ROUTE</div>'
+    return '<div style="background:#111110;border:1px solid #1E1E1C;border-radius:6px;padding:16px 18px;overflow:hidden">'
+      +'<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px">'
+      +'<div><div style="font-size:13px;font-weight:700;letter-spacing:0;color:#F2F1ED;font-family:monospace">'+cls+'</div>'
+      +'<div style="font-size:9px;color:#4A4A44;font-family:monospace;margin-top:2px">'+dw+'</div></div>'+status+'</div>'
+      +'<div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">'
+      +'<div><div style="font-size:7px;letter-spacing:.12em;color:#4A4A44;font-family:monospace;margin-bottom:4px">ACTIVE ROUTE</div>'
       +'<div style="font-size:9px;color:#C9AE4E;font-family:monospace">'+route+'</div></div>'
-      +'<div><div style="font-size:7px;letter-spacing:.12em;color:#4A4A44;font-family:monospace;margin-bottom:3px">TRANSIT</div>'
+      +'<div><div style="font-size:7px;letter-spacing:.12em;color:#4A4A44;font-family:monospace;margin-bottom:4px">TRANSIT</div>'
       +'<div style="font-size:9px;color:#C9AE4E;font-family:monospace">'+transit+'</div></div>'
-      +'</div>'+(note?'<div style="padding:4px 12px 8px;font-size:7px;color:#4A4A44;font-family:monospace">'+note+'</div>':'')
+      +'</div>'+(note?'<div style="margin-top:8px;font-size:7px;color:#4A4A44;font-family:monospace">'+note+'</div>':'')
       +'</div>';
   }
   var html='';
@@ -22378,8 +22390,11 @@ function scrInitResultFleet(flow) {
     html+=card('New Panamax','5k–15k TEU',(babDis||malDis)?badge('REROUTED','#E05252','rgba(224,82,82,.4)'):badge('NORMAL','#C9AE4E','rgba(201,174,78,.4)'),(babDis||malDis)?'Cape / Alternate Straits':'S. China Sea → Malacca → Hormuz',(babDis||malDis)?'~35–40 days':'~24 days');
     html+=card('Feeder','&lt; 5k TEU',badge('REGIONAL','#5aa3f5','rgba(90,163,245,.4)'),'Intra-regional transhipment','~7–14 days','Regional hubs: Salalah, Jeddah, Colombo');
   }
-  html+='<div style="font-size:7px;color:#3A3A34;font-family:monospace;margin-top:6px">Vessel data is illustrative · source: field estimates</div>';
   el.innerHTML=html;
+  var note=document.createElement('div');
+  note.style.cssText='font-size:7px;color:#3A3A34;font-family:monospace;margin-top:10px';
+  note.textContent='Vessel data is illustrative · source: field estimates';
+  el.parentNode&&el.parentNode.insertBefore(note,el.nextSibling);
 }
 
 function scrInitResultRouteStrip(flow) {

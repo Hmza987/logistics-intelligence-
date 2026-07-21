@@ -21335,11 +21335,13 @@ function psrBuildSimBuilder(flow){
     +'</select>'
     +'<label class="psr-sim-label" style="margin-top:12px">Baseline CBAM Exposure <span style="text-transform:none;letter-spacing:0;color:#3A3A34">(read-only &middot; EU live Jan 2026)</span></label>'
     +psrClimateBaselineHTML(_cs)
-    +'<label class="psr-sim-label" style="margin-top:12px">Policy Stack <span style="text-transform:none;letter-spacing:0;color:#3A3A34">&mdash; stack policies, then Run</span></label>'
-    +psrClimatePolicyStackHTML(_cs);
+    +'<label class="psr-sim-label" style="margin-top:12px">Policy Stack <span style="text-transform:none;letter-spacing:0;color:#3A3A34">&mdash; stack policies, then Run &nbsp;&#8595; scroll for more</span></label>'
+    +'<div style="max-height:240px;overflow-y:auto;background:#0D0D0B;border:1px solid #1E1E1C;border-radius:5px;padding:4px 8px 8px;scrollbar-width:thin;scrollbar-color:#2A2A26 transparent">'
+    +psrClimatePolicyStackHTML(_cs)
+    +'</div>';
 
   var runDisabled = _psrSimTypes.length?'':' disabled';
-  return '<div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;align-items:start;margin-bottom:16px">'
+  return '<div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;align-items:stretch;margin-bottom:16px">'
     +simBlock('tariff','📈','Tariff Policy',tariffParams)
     +simBlock('chokepoint','🚫','Chokepoint Disruption',cpParams)
     +simBlock('climate','🌍','Climate Policy',climateParams)

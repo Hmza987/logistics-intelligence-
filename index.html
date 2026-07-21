@@ -3839,11 +3839,11 @@ canvas { font-family: var(--f-mono); }
         <iframe id="sat-map" src="https://www.marinetraffic.com/en/ais/embed/zoom:8/centery:26.2/centerx:56.4/maptype:4/shownames:false/mmsi:0/shipid:0/fleet:/fleet_id:/showmenu:false/remember:false" width="100%" style="border:none;display:block" loading="lazy" allowfullscreen referrerpolicy="no-referrer-when-downgrade" title="MarineTraffic — Strait of Hormuz live AIS"></iframe>
         <div class="mapstats">
           <div class="mapstat"><span>Source:</span> <span style="color:#3dd68c">MarineTraffic live AIS &bull; auto-refresh</span></div>
-          <div class="mapstat"><span>AIS transits today:</span> <span id="snap-transits" class="red">~27</span> <span>/ 130 baseline &nbsp;<span style="color:#7a8494;font-size:8px">(dark fleet partially excluded &middot; IMF PortWatch)</span></span></div>
+          <div class="mapstat"><span>AIS transits today:</span> <span id="snap-transits" class="red">~10</span> <span>/ 88 baseline &nbsp;<span style="color:#7a8494;font-size:8px">(dark fleet partially excluded &middot; IMF PortWatch Jul 12)</span></span></div>
           <div style="margin-left:auto;font-size:7px;color:#7a8494;font-family:'IBM Plex Mono',monospace">MarineTraffic &copy; &middot; AIS data &middot; Jul 2026</div>
         </div>
         <div style="font-size:7px;color:#4a5568;padding:5px 8px;line-height:1.5;border-top:1px solid rgba(255,255,255,0.04)">
-          <strong style="color:#5a6478">Methodology:</strong> 130/day baseline = UNCTAD (all vessel types, both directions). IMF PortWatch directional baseline ~84/day (laden tankers, one direction). Transit counts from IMF PortWatch AIS; dark fleet estimates from Windward/Kpler.
+          <strong style="color:#5a6478">Methodology:</strong> 88/day baseline = IMF PortWatch pre-crisis median (Oxford/UN Global Pulse AIS, Feb 2026, chokepoint6). Transit counts from IMF PortWatch AIS; dark fleet estimates from Windward/Kpler.
         </div>
       </div>
 
@@ -9377,7 +9377,7 @@ function fetchLiveData() {
 
       // ── Transit metrics ─────────────────────────────────────────────────────
       var today    = t.today != null ? t.today : (CROSS.length ? CROSS[CROSS.length - 1] : 4);
-      var baseline = 130; // UNCTAD-confirmed pre-crisis Feb 2026 baseline
+      var baseline = 88; // IMF PortWatch pre-crisis baseline (Oxford/UN Global Pulse AIS, Feb 2026)
       setText('m-transits', today);
       var pct = Math.round((today - baseline) / baseline * 100);
       setText('m-decline', (pct > 0 ? '+' : '') + pct + '%');

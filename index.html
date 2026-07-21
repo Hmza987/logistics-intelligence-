@@ -184,9 +184,9 @@
   --f-ui:    'Inter', system-ui, sans-serif;
   --f-mono:  'IBM Plex Mono', 'Courier New', monospace;
 
-  /* Spacing */
+  /* Spacing — pad scales with viewport so content fills large/projected screens */
   --gap:     12px;
-  --pad:     18px;
+  --pad:     clamp(18px, 2vw, 36px);
   --r:       4px;
 
   /* Transitions */
@@ -1932,7 +1932,7 @@ canvas { font-family: var(--f-mono); }
   grid-template-columns: 1.25fr 1fr;
   gap: 48px;
   width: 100%;
-  max-width: 1040px;
+  max-width: min(100%, 1600px);
   margin-bottom: 30px;
   animation: cv-rise 1.2s cubic-bezier(.16,1,.3,1) .1s both;
 }
@@ -2140,7 +2140,7 @@ canvas { font-family: var(--f-mono); }
   align-items: center;
   gap: 16px;
   width: 100%;
-  max-width: 1040px;
+  max-width: min(100%, 1600px);
   margin-bottom: 14px;
   animation: cv-rise 1.3s cubic-bezier(.16,1,.3,1) .2s both;
 }
@@ -2162,7 +2162,7 @@ canvas { font-family: var(--f-mono); }
   grid-template-columns: repeat(3, 1fr);
   gap: 16px;
   width: 100%;
-  max-width: 1040px;
+  max-width: min(100%, 1600px);
   box-sizing: border-box;
   animation: cv-rise 1.4s cubic-bezier(.16,1,.3,1) .25s both;
 }
@@ -3023,7 +3023,7 @@ canvas { font-family: var(--f-mono); }
   background:linear-gradient(180deg,rgba(8,12,24,.0) 0%,rgba(8,12,24,.95) 100%);
 }
 .sf-inner {
-  max-width:1200px; margin:0 auto;
+  max-width:min(100%,1600px); margin:0 auto;
   padding:28px 28px 16px;
   display:flex; gap:40px; flex-wrap:wrap; align-items:flex-start;
 }
@@ -3714,7 +3714,7 @@ canvas { font-family: var(--f-mono); }
 
   <!-- ① CHOKEPOINT SUMMARY STRIP -->
   <div style="background:#0D0D0B;border-bottom:1px solid #1A1A18;display:flex">
-    <div style="padding:14px 28px;display:flex;align-items:center;justify-content:space-between;gap:48px">
+    <div style="flex:1;padding:14px 28px;display:flex;align-items:center;justify-content:space-between;gap:48px">
       <div>
         <div style="display:flex;align-items:center;gap:7px;margin-bottom:6px"><span style="width:7px;height:7px;border-radius:50%;background:#E05252;display:inline-block"></span><span style="font-size:8px;font-weight:700;letter-spacing:.16em;color:#E05252">CRITICAL</span></div>
         <div style="font-size:11px;font-weight:700;letter-spacing:.08em;color:#D9D8D3">STRAIT OF HORMUZ</div>
@@ -20753,7 +20753,7 @@ function psrRenderBaseline(){
       +'</div>';
   }).join('');
 
-  el.innerHTML = '<div style="max-width:1100px">'
+  el.innerHTML = '<div style="width:100%">'
     +'<div style="font-family:monospace;font-size:11px;color:#5A5A52;margin-bottom:18px;letter-spacing:.04em">'
     +'HS '+flow.hs+' · '+flow.product+' · '+flow.country+' · 2024 · <strong style="color:#C9AE4E;font-weight:700">DEMO DATA</strong></div>'
     + kpiHtml
@@ -20765,7 +20765,7 @@ function psrRenderBaseline(){
 
   // Append map section using DOM (not innerHTML) so Leaflet can attach to the div
   var mapWrap = document.createElement('div');
-  mapWrap.style.cssText = 'max-width:1100px';
+  mapWrap.style.cssText = 'width:100%';
   mapWrap.innerHTML = '<div class="psr-section-title" style="margin-bottom:12px">&#8212;&nbsp;TRADE FLOW MAP</div>'
     +'<div style="border:1px solid #1E1E1C;border-radius:6px;overflow:hidden">'
     +'<div id="psr-leaflet-map" style="height:440px"></div>'
@@ -21829,7 +21829,7 @@ function psrRenderScenarios(){
     el.innerHTML='<div style="padding:60px;text-align:center;font-family:monospace;font-size:11px;color:#4A4A44">Select a product with available data to run simulations.</div>';
     return;
   }
-  var html = '<div style="max-width:1100px">'
+  var html = '<div style="width:100%">'
     +psrBuildWatchlistStrip(flow)
     +'<div class="psr-section-title">Simulation Builder <span style="color:#3A3A34;font-weight:normal;letter-spacing:0">· combine any scenario types · DEMO</span></div>'
     +'<div style="font-family:monospace;font-size:9px;color:#5A5A52;margin-bottom:16px">Step 1: select a product above. Step 2: activate one or more scenarios and configure parameters. Step 3: click Run — combined impact appears across all four layers.</div>'

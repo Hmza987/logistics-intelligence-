@@ -5204,11 +5204,11 @@ canvas { font-family: var(--f-mono); }
     <div id="psr-toolbar" style="background:#0C0C0A;border-bottom:1px solid #1E1E1C;padding:12px 28px;display:flex;align-items:center;gap:16px;flex-wrap:wrap">
       <!-- Product search -->
       <div style="position:relative;flex:1;min-width:220px;max-width:360px">
-        <input id="psr-search" type="text" placeholder="Search product (name or HS code)…"
-          oninput="psrSearch(this.value)"
+        <input id="psr-search" type="text" placeholder="Search or browse all products…"
+          oninput="psrSearch(this.value)" onfocus="psrShowAll()"
           style="width:100%;background:#141412;border:1px solid #2A2A26;border-radius:3px;color:#C8C7C2;font-family:monospace;font-size:11px;padding:7px 10px 7px 28px;outline:none;box-sizing:border-box"/>
         <span style="position:absolute;left:9px;top:50%;transform:translateY(-50%);color:#4A4A44;font-size:11px">&#9673;</span>
-        <div id="psr-autocomplete" style="display:none;position:absolute;top:100%;left:0;right:0;background:#1A1A18;border:1px solid #2A2A26;border-top:none;z-index:200;max-height:220px;overflow-y:auto;border-radius:0 0 3px 3px"></div>
+        <div id="psr-autocomplete" style="display:none;position:absolute;top:100%;left:0;right:0;background:#1A1A18;border:1px solid #2A2A26;border-top:none;z-index:200;max-height:300px;overflow-y:auto;border-radius:0 0 4px 4px"></div>
       </div>
       <!-- GCC country -->
       <select id="psr-country" onchange="psrRender()" style="background:#141412;border:1px solid #2A2A26;border-radius:3px;color:#C8C7C2;font-family:monospace;font-size:11px;padding:7px 10px;outline:none">
@@ -20572,12 +20572,36 @@ window.initPSR = function(){
 };
 
 // ── SEARCH / AUTOCOMPLETE ─────────────────────────────────────────────────────
+window.psrShowAll = function(){
+  var box = document.getElementById('psr-autocomplete');
+  if(!box) return;
+  var currentName = (document.getElementById('psr-search')||{}).value||'';
+  var sectorOrder = ['Transport','Electronics','Machinery','Energy','Food & Feed','Metals','Chemicals','Petrochemicals','Pharma','Textiles','Luxury'];
+  var sectors = {};
+  PSR_PRODUCTS.forEach(function(p){
+    if(!sectors[p.sector]) sectors[p.sector] = [];
+    sectors[p.sector].push(p);
+  });
+  var html = '';
+  sectorOrder.forEach(function(sec){
+    if(!sectors[sec]) return;
+    html += '<div style="padding:4px 12px 3px;font-family:monospace;font-size:8px;letter-spacing:.1em;text-transform:uppercase;color:#4A4A44;background:#111110;border-bottom:1px solid #1E1E1C;position:sticky;top:0;z-index:1">'+sec+'</div>';
+    html += sectors[sec].map(function(p){
+      var active = p.name===currentName;
+      return '<div class="psr-ac-item" onclick="psrSelect(\''+p.hs+'\',\''+p.name+'\')" style="'+(active?'color:#C9AE4E;background:#161614;':'')+'">'
+        +'<span>'+p.name+'</span><span class="psr-ac-code" style="'+(active?'color:#C9AE4E;':'')+'">HS '+p.hs+'</span></div>';
+    }).join('');
+  });
+  box.innerHTML = html;
+  box.style.display = 'block';
+};
+
 window.psrSearch = function(q){
   var box = document.getElementById('psr-autocomplete');
-  if(!q||q.length<2){box.style.display='none';return;}
+  if(!q){ psrShowAll(); return; }
   var matches = PSR_PRODUCTS.filter(function(p){
     return p.name.toLowerCase().indexOf(q.toLowerCase())>=0 || p.hs.indexOf(q)>=0;
-  }).slice(0,8);
+  });
   if(!matches.length){box.style.display='none';return;}
   box.innerHTML = matches.map(function(p){
     return '<div class="psr-ac-item" onclick="psrSelect(\''+p.hs+'\',\''+p.name+'\')">'+

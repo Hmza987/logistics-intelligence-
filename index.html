@@ -20242,6 +20242,12 @@ var PSR_PRODUCTS = [
   {hs:'8471',name:'Computers & IT Equipment',sector:'Electronics'},
   {hs:'8517',name:'Telecom Equipment',sector:'Electronics'},
   {hs:'8703',name:'Passenger Vehicles',sector:'Transport'},
+  {hs:'8704',name:'Delivery Trucks',sector:'Transport'},
+  {hs:'8541',name:'Semiconductor Devices',sector:'Electronics'},
+  {hs:'8415',name:'Air Conditioners',sector:'Electronics'},
+  {hs:'8504',name:'Electrical Transformers',sector:'Machinery'},
+  {hs:'4011',name:'Rubber Tires',sector:'Transport'},
+  {hs:'8507',name:'Electric Batteries',sector:'Electronics'},
   {hs:'8431',name:'Machinery Parts',sector:'Machinery'},
   {hs:'8481',name:'Industrial Valves',sector:'Machinery'},
   {hs:'3004',name:'Medicaments',sector:'Pharma'},
@@ -20364,6 +20370,76 @@ var PSR_FLOWS = {
       ],
       chokepointExposure:{hormuz:38,bab:82,suez:75,malacca:0,panama:4},
       stockDays:180, altSuppliers:['Argentina','Kazakhstan','Romania','India']
+    },
+    '8704': {
+      product:'Delivery Trucks', hs:'8704', country:'Saudi Arabia',
+      importVal:1764, exportVal:0, unit:'M USD',
+      importVol:253, exportVol:0, volUnit:'k MT',
+      partners:[
+        {name:'China', code:'CHN',flag:'🇨🇳',importShare:54,exportShare:0,routes:['South China Sea','Malacca Strait','Indian Ocean','Strait of Hormuz'],chokepoints:['Malacca Strait','Strait of Hormuz'],riskFlags:['High concentration','Dual chokepoint']},
+        {name:'Japan', code:'JPN',flag:'🇯🇵',importShare:34,exportShare:0,routes:['Philippine Sea','Malacca Strait','Indian Ocean','Strait of Hormuz'],chokepoints:['Malacca Strait','Strait of Hormuz'],riskFlags:['Dual chokepoint']},
+        {name:'India', code:'IND',flag:'🇮🇳',importShare:12,exportShare:0,routes:['Arabian Sea','Strait of Hormuz'],chokepoints:['Strait of Hormuz'],riskFlags:[]}
+      ],
+      chokepointExposure:{hormuz:55,bab:45,suez:35,malacca:88,panama:0},
+      stockDays:45, altSuppliers:['South Korea','Germany','USA']
+    },
+    '8541': {
+      product:'Semiconductor Devices', hs:'8541', country:'Saudi Arabia',
+      importVal:1723, exportVal:0, unit:'M USD',
+      importVol:525, exportVol:0, volUnit:'k MT',
+      partners:[
+        {name:'China', code:'CHN',flag:'🇨🇳',importShare:100,exportShare:0,routes:['South China Sea','Malacca Strait','Indian Ocean','Strait of Hormuz'],chokepoints:['Malacca Strait','Strait of Hormuz'],riskFlags:['Near-total dependency','Dual chokepoint','Tech export risk']}
+      ],
+      chokepointExposure:{hormuz:55,bab:48,suez:40,malacca:99,panama:0},
+      stockDays:60, altSuppliers:['Taiwan','South Korea','USA','Netherlands']
+    },
+    '8415': {
+      product:'Air Conditioners', hs:'8415', country:'Saudi Arabia',
+      importVal:1351, exportVal:0, unit:'M USD',
+      importVol:290, exportVol:0, volUnit:'k MT',
+      partners:[
+        {name:'China', code:'CHN',flag:'🇨🇳',importShare:98,exportShare:0,routes:['South China Sea','Malacca Strait','Indian Ocean','Strait of Hormuz'],chokepoints:['Malacca Strait','Strait of Hormuz'],riskFlags:['High concentration','Dual chokepoint']},
+        {name:'India', code:'IND',flag:'🇮🇳',importShare:1, exportShare:0,routes:['Arabian Sea','Strait of Hormuz'],chokepoints:['Strait of Hormuz'],riskFlags:[]},
+        {name:'Japan', code:'JPN',flag:'🇯🇵',importShare:1, exportShare:0,routes:['Philippine Sea','Malacca Strait','Indian Ocean','Strait of Hormuz'],chokepoints:['Malacca Strait','Strait of Hormuz'],riskFlags:[]}
+      ],
+      chokepointExposure:{hormuz:55,bab:48,suez:40,malacca:98,panama:0},
+      stockDays:30, altSuppliers:['South Korea','Japan','USA']
+    },
+    '8504': {
+      product:'Electrical Transformers', hs:'8504', country:'Saudi Arabia',
+      importVal:1098, exportVal:0, unit:'M USD',
+      importVol:98, exportVol:0, volUnit:'k MT',
+      partners:[
+        {name:'China', code:'CHN',flag:'🇨🇳',importShare:91,exportShare:0,routes:['South China Sea','Malacca Strait','Indian Ocean','Strait of Hormuz'],chokepoints:['Malacca Strait','Strait of Hormuz'],riskFlags:['High concentration','Dual chokepoint','Critical infrastructure']},
+        {name:'India', code:'IND',flag:'🇮🇳',importShare:6, exportShare:0,routes:['Arabian Sea','Strait of Hormuz'],chokepoints:['Strait of Hormuz'],riskFlags:[]},
+        {name:'Japan', code:'JPN',flag:'🇯🇵',importShare:4, exportShare:0,routes:['Philippine Sea','Malacca Strait','Indian Ocean','Strait of Hormuz'],chokepoints:['Malacca Strait','Strait of Hormuz'],riskFlags:[]}
+      ],
+      chokepointExposure:{hormuz:55,bab:45,suez:35,malacca:95,panama:0},
+      stockDays:null, altSuppliers:['South Korea','Germany','UAE']
+    },
+    '4011': {
+      product:'Rubber Tires', hs:'4011', country:'Saudi Arabia',
+      importVal:1061, exportVal:0, unit:'M USD',
+      importVol:437, exportVol:0, volUnit:'k MT',
+      partners:[
+        {name:'China', code:'CHN',flag:'🇨🇳',importShare:80,exportShare:0,routes:['South China Sea','Malacca Strait','Indian Ocean','Strait of Hormuz'],chokepoints:['Malacca Strait','Strait of Hormuz'],riskFlags:['High concentration','Dual chokepoint','Anti-dumping risk']},
+        {name:'Japan', code:'JPN',flag:'🇯🇵',importShare:13,exportShare:0,routes:['Philippine Sea','Malacca Strait','Indian Ocean','Strait of Hormuz'],chokepoints:['Malacca Strait','Strait of Hormuz'],riskFlags:['Dual chokepoint']},
+        {name:'India', code:'IND',flag:'🇮🇳',importShare:7, exportShare:0,routes:['Arabian Sea','Strait of Hormuz'],chokepoints:['Strait of Hormuz'],riskFlags:[]}
+      ],
+      chokepointExposure:{hormuz:55,bab:45,suez:35,malacca:93,panama:0},
+      stockDays:30, altSuppliers:['South Korea','Germany','USA']
+    },
+    '8507': {
+      product:'Electric Batteries', hs:'8507', country:'Saudi Arabia',
+      importVal:728, exportVal:0, unit:'M USD',
+      importVol:89, exportVol:0, volUnit:'k MT',
+      partners:[
+        {name:'China', code:'CHN',flag:'🇨🇳',importShare:96,exportShare:0,routes:['South China Sea','Malacca Strait','Indian Ocean','Strait of Hormuz'],chokepoints:['Malacca Strait','Strait of Hormuz'],riskFlags:['High concentration','Dual chokepoint','Strategic dependency']},
+        {name:'India', code:'IND',flag:'🇮🇳',importShare:3, exportShare:0,routes:['Arabian Sea','Strait of Hormuz'],chokepoints:['Strait of Hormuz'],riskFlags:[]},
+        {name:'Japan', code:'JPN',flag:'🇯🇵',importShare:1, exportShare:0,routes:['Philippine Sea','Malacca Strait','Indian Ocean','Strait of Hormuz'],chokepoints:['Malacca Strait','Strait of Hormuz'],riskFlags:[]}
+      ],
+      chokepointExposure:{hormuz:55,bab:48,suez:40,malacca:97,panama:0},
+      stockDays:45, altSuppliers:['South Korea','Japan','USA']
     }
   }
 };
@@ -20905,6 +20981,43 @@ var PSR_SMART_DATA = [
      {id:'chn',name:'China', m0:58486160, t0:0.065},
      {id:'ind',name:'India', m0:19297860, t0:0.075},
      {id:'jpn',name:'Japan', m0:6367081,  t0:0.02164}
+   ]},
+  // ── Additional strategic imports ─────────────────────────────────────────────
+  {code:'8704', name:'Delivery Trucks', elasticity:-4.4329,
+   partners:[
+     {id:'chn',name:'China', m0:958300000,  t0:0.14734},
+     {id:'jpn',name:'Japan', m0:594000000,  t0:0.000},
+     {id:'ind',name:'India', m0:211300000,  t0:0.39994}
+   ]},
+  {code:'8541', name:'Semiconductor Devices', elasticity:-1.4542,
+   partners:[
+     {id:'chn',name:'China', m0:1721300000, t0:0.00041},
+     {id:'ind',name:'India', m0:752618,     t0:0.18173},
+     {id:'jpn',name:'Japan', m0:593334,     t0:0.000}
+   ]},
+  {code:'8415', name:'Air Conditioners', elasticity:-1.6924,
+   partners:[
+     {id:'chn',name:'China', m0:1329300000, t0:0.08433},
+     {id:'ind',name:'India', m0:16200000,   t0:0.200},
+     {id:'jpn',name:'Japan', m0:5300000,    t0:0.000}
+   ]},
+  {code:'8504', name:'Electrical Transformers', elasticity:-1.0524,
+   partners:[
+     {id:'chn',name:'China', m0:996000000,  t0:0.01702},
+     {id:'ind',name:'India', m0:61200000,   t0:0.15641},
+     {id:'jpn',name:'Japan', m0:40300000,   t0:0.000}
+   ]},
+  {code:'4011', name:'Rubber Tires', elasticity:-0.983,
+   partners:[
+     {id:'chn',name:'China', m0:852100000,  t0:0.11250},
+     {id:'jpn',name:'Japan', m0:140100000,  t0:0.000},
+     {id:'ind',name:'India', m0:68500000,   t0:0.12115}
+   ]},
+  {code:'8507', name:'Electric Batteries', elasticity:-0.6388,
+   partners:[
+     {id:'chn',name:'China', m0:699100000,  t0:0.09923},
+     {id:'ind',name:'India', m0:25100000,   t0:0.10857},
+     {id:'jpn',name:'Japan', m0:4200000,    t0:0.000}
    ]}
 ];
 var PSR_SMART_SIGMA = 1.5; // WITS default substitution elasticity

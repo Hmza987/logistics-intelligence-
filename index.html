@@ -22007,37 +22007,119 @@ function scrInitResultMap(flow) {
     BGD:[22.8,90.6],MYS:[3.1,101.7],SAU:[26.44,50.10]
   };
   var DEST_GULF=[26.44,50.10], DEST_RED=[21.48,39.17];
+  var CAPE=[-34.35,18.47], LOMBOK=[-8.78,115.74];
   var isImport=(_psrDir!=='export');
   var partners=flow.partners.filter(function(p){return isImport?(p.importShare||0)>0:(p.exportShare||0)>0;});
-  var COLORS=['#C9AE4E','#5aa3f5','#3dd68c','#f59e0b','#7a5af5','#e8673c'];
+  var COLORS=['#C9AE4E','#5aa3f5','#f59e0b','#7a5af5','#e8673c','#a78bfa'];
   var allBounds=[];
+  var anyAffected=false;
+
   partners.forEach(function(p,i){
     var origin=PORTS[p.code]; if(!origin) return;
     var usesHormuz=p.chokepoints.indexOf('Strait of Hormuz')>=0;
     var dest=usesHormuz?DEST_GULF:DEST_RED;
-    var wp=[origin];
-    p.routes.forEach(function(r){if(ROUTE_C[r])wp.push(ROUTE_C[r]);});
-    wp.push(dest);
-    var isAffected=disruptedCPName&&p.chokepoints.indexOf(disruptedCPName)>=0;
-    var col=isAffected?'#3A3A34':COLORS[i%COLORS.length];
+    // Primary route waypoints
+    var primaryWP=[origin];
+    p.routes.forEach(function(r){if(ROUTE_C[r])primaryWP.push(ROUTE_C[r]);});
+    primaryWP.push(dest);
+    var isAffected=!!(disruptedCPName&&p.chokepoints.indexOf(disruptedCPName)>=0);
+    if(isAffected) anyAffected=true;
     var share=isImport?(p.importShare||0):(p.exportShare||0);
-    var line=L.polyline(wp,{color:col,weight:1.5+(share/100)*3.5,opacity:isAffected?0.3:0.85})
-      .bindTooltip(p.flag+' '+p.name+' · '+(isImport?'import':'export')+' share: '+share+'%',{direction:'top',className:'scr-tt'})
-      .addTo(map);
-    if(!isAffected){var lp=line._path;if(lp){lp.style.strokeDasharray='10 4';lp.style.animation='scr-flow '+(1.8+i*0.3)+'s linear infinite';}}
-    L.circleMarker(origin,{radius:5,fillColor:col,color:'#0A0A09',weight:1,fillOpacity:0.9})
-      .bindTooltip(p.flag+' '+p.name,{direction:'right',className:'scr-tt'}).addTo(map);
-    wp.forEach(function(w){allBounds.push(L.latLng(w[0],w[1]));});
+    var col=COLORS[i%COLORS.length];
+
+    // Build alternative route based on which chokepoint is disrupted
+    var altWP=null;
+    if(isAffected&&cpId){
+      if(cpId==='bab_el_mandeb'){
+        // Skip Bab & Red Sea → reroute through Arabian Sea → Hormuz → Gulf
+        var ar=p.routes.filter(function(r){return r!=='Bab-el-Mandeb'&&r!=='Red Sea'&&r!=='Suez Canal'&&r!=='Mediterranean'&&r!=='Atlantic Ocean';});
+        altWP=[origin];
+        ar.forEach(function(r){if(ROUTE_C[r])altWP.push(ROUTE_C[r]);});
+        if(p.chokepoints.indexOf('Strait of Hormuz')<0) altWP.push(ROUTE_C['Strait of Hormuz']||[26.5,56.5]);
+        altWP.push(DEST_GULF);
+      } else if(cpId==='hormuz'){
+        // Skip Hormuz → deliver to Jeddah via Red Sea instead
+        var ar=p.routes.filter(function(r){return r!=='Strait of Hormuz';});
+        altWP=[origin];
+        ar.forEach(function(r){if(ROUTE_C[r])altWP.push(ROUTE_C[r]);});
+        if(altWP.indexOf(ROUTE_C['Red Sea'])<0) altWP.push(ROUTE_C['Arabian Sea']||[15,62]);
+        altWP.push([14,52]); // Oman coast
+        altWP.push(DEST_RED);
+      } else if(cpId==='suez'){
+        // Cape of Good Hope bypass: Atlantic → Cape → Indian Ocean → Bab → Red Sea
+        altWP=[origin,ROUTE_C['Atlantic Ocean']||[30,-30],[-5,-5],[-20,5],CAPE,[0,55],ROUTE_C['Arabian Sea']||[15,62],ROUTE_C['Bab-el-Mandeb']||[12.6,43.45],ROUTE_C['Red Sea']||[20,38],DEST_RED];
+      } else if(cpId==='malacca'){
+        // Lombok Strait bypass (south of Bali)
+        altWP=[origin,LOMBOK];
+        var ar=p.routes.filter(function(r){return r!=='Malacca Strait'&&r!=='South China Sea'&&r!=='Philippine Sea';});
+        ar.forEach(function(r){if(ROUTE_C[r])altWP.push(ROUTE_C[r]);});
+        altWP.push(dest);
+      }
+    }
+
+    if(isAffected){
+      // Disrupted primary: red, dashed, faded
+      L.polyline(primaryWP,{color:'#E05252',weight:1.5+(share/100)*3,opacity:0.28,dashArray:'4 10'})
+        .bindTooltip('⚠ '+p.flag+' '+p.name+' · route blocked at '+disruptedCPName,{direction:'top',className:'scr-tt'})
+        .addTo(map);
+      // Alternative: green, animated
+      if(altWP&&altWP.length>1){
+        var altLine=L.polyline(altWP,{color:'#3dd68c',weight:2+(share/100)*3,opacity:0.9})
+          .bindTooltip(p.flag+' '+p.name+' · alternative route (bypasses '+disruptedCPName+')',{direction:'top',className:'scr-tt'})
+          .addTo(map);
+        (function(ln,idx){
+          setTimeout(function(){
+            var lp=ln._path;
+            if(lp){lp.style.strokeDasharray='10 4';lp.style.animation='scr-flow '+(1.8+idx*0.35)+'s linear infinite';}
+          },60);
+        })(altLine,i);
+        altWP.forEach(function(w){allBounds.push(L.latLng(w[0],w[1]));});
+      }
+      // Origin marker: red when disrupted
+      L.circleMarker(origin,{radius:5,fillColor:'#E05252',color:'#0A0A09',weight:1,fillOpacity:0.85})
+        .bindTooltip('⚠ '+p.flag+' '+p.name+' · DISRUPTED',{direction:'right',className:'scr-tt'}).addTo(map);
+    } else {
+      // Normal route: gold/colored, animated dashed
+      var line=L.polyline(primaryWP,{color:col,weight:1.5+(share/100)*3.5,opacity:0.85})
+        .bindTooltip(p.flag+' '+p.name+' · '+(isImport?'import':'export')+' share: '+share+'%',{direction:'top',className:'scr-tt'})
+        .addTo(map);
+      (function(ln,idx){
+        setTimeout(function(){
+          var lp=ln._path;
+          if(lp){lp.style.strokeDasharray='10 4';lp.style.animation='scr-flow '+(1.8+idx*0.3)+'s linear infinite';}
+        },60);
+      })(line,i);
+      L.circleMarker(origin,{radius:5,fillColor:col,color:'#0A0A09',weight:1,fillOpacity:0.9})
+        .bindTooltip(p.flag+' '+p.name,{direction:'right',className:'scr-tt'}).addTo(map);
+    }
+    primaryWP.forEach(function(w){allBounds.push(L.latLng(w[0],w[1]));});
   });
+
+  // Saudi destination markers
   L.circleMarker(DEST_GULF,{radius:7,fillColor:'#C9AE4E',color:'#0A0A09',weight:1.5,fillOpacity:0.9})
     .bindTooltip('🇸🇦 SAUDI ARABIA · Gulf',{permanent:true,direction:'right',className:'scr-tt'}).addTo(map);
   allBounds.push(L.latLng(DEST_GULF[0],DEST_GULF[1]));
   var needsRedSea=partners.some(function(p){return p.routes.indexOf('Bab-el-Mandeb')>=0||p.routes.indexOf('Red Sea')>=0;});
-  if(needsRedSea){
+  var altNeedsRedSea=(cpId==='hormuz'||cpId==='suez')&&anyAffected;
+  if(needsRedSea||altNeedsRedSea){
     L.circleMarker(DEST_RED,{radius:7,fillColor:'#C9AE4E',color:'#0A0A09',weight:1.5,fillOpacity:0.9})
       .bindTooltip('🇸🇦 SAUDI ARABIA · Jeddah',{permanent:true,direction:'right',className:'scr-tt'}).addTo(map);
     allBounds.push(L.latLng(DEST_RED[0],DEST_RED[1]));
   }
+  // Cape marker for Cape-route alternatives
+  if((cpId==='bab_el_mandeb'||cpId==='suez')&&anyAffected){
+    L.circleMarker(CAPE,{radius:5,fillColor:'#3dd68c',color:'#0A0A09',weight:1.5,fillOpacity:0.85})
+      .bindTooltip('Cape of Good Hope · alternative bypass',{direction:'left',className:'scr-tt'}).addTo(map);
+    allBounds.push(L.latLng(CAPE[0],CAPE[1]));
+  }
+  // Lombok marker for Malacca alternative
+  if(cpId==='malacca'&&anyAffected){
+    L.circleMarker(LOMBOK,{radius:5,fillColor:'#3dd68c',color:'#0A0A09',weight:1.5,fillOpacity:0.85})
+      .bindTooltip('Lombok Strait · alternative bypass',{direction:'top',className:'scr-tt'}).addTo(map);
+    allBounds.push(L.latLng(LOMBOK[0],LOMBOK[1]));
+  }
+
+  // Chokepoint exposure circles
   var expo=flow.chokepointExposure||{};
   var CP_INFO={
     hormuz:      {coord:[26.5,56.5], key:'hormuz',  name:'Hormuz'},
@@ -22049,11 +22131,37 @@ function scrInitResultMap(flow) {
     var info=CP_INFO[k];
     var pct=expo[info.key]||0; if(!pct) return;
     var isDisrupted=(k===cpId);
-    var col=isDisrupted?'#E05252':'#f59e0b';
-    L.circleMarker(info.coord,{radius:5+pct/12,fillColor:col,color:'#0A0A09',weight:2,fillOpacity:isDisrupted?0.9:0.6})
+    var c=isDisrupted?'#E05252':'#f59e0b';
+    L.circleMarker(info.coord,{radius:5+pct/12,fillColor:c,color:'#0A0A09',weight:2,fillOpacity:isDisrupted?0.9:0.55})
       .bindTooltip(info.name+' · '+pct+'% exposure'+(isDisrupted?' · ⚠ DISRUPTED':''),{direction:'top',className:'scr-tt'}).addTo(map);
     allBounds.push(L.latLng(info.coord[0],info.coord[1]));
   });
+
+  // Legend
+  var legend=L.control({position:'bottomleft'});
+  legend.onAdd=function(){
+    var div=L.DomUtil.create('div');
+    div.style.cssText='background:rgba(13,13,11,0.92);border:1px solid #2A2A26;padding:9px 13px;font-family:monospace;border-radius:3px;pointer-events:none;min-width:170px';
+    var rows='<div style="font-size:7px;font-weight:700;letter-spacing:.14em;color:#4A4A44;margin-bottom:7px">LEGEND</div>';
+    if(cpId&&anyAffected){
+      rows+='<div style="display:flex;align-items:center;gap:8px;margin-bottom:5px">'
+        +'<svg width="24" height="6" style="flex-shrink:0"><line x1="0" y1="3" x2="24" y2="3" stroke="#E05252" stroke-width="2" stroke-dasharray="3 6" opacity="0.5"/></svg>'
+        +'<span style="font-size:8px;color:#E05252">Disrupted route</span></div>';
+      rows+='<div style="display:flex;align-items:center;gap:8px;margin-bottom:5px">'
+        +'<svg width="24" height="6" style="flex-shrink:0"><line x1="0" y1="3" x2="24" y2="3" stroke="#3dd68c" stroke-width="2.5"/></svg>'
+        +'<span style="font-size:8px;color:#3dd68c">Alternative route</span></div>';
+    }
+    rows+='<div style="display:flex;align-items:center;gap:8px;margin-bottom:5px">'
+      +'<svg width="24" height="6" style="flex-shrink:0"><line x1="0" y1="3" x2="24" y2="3" stroke="#C9AE4E" stroke-width="2" stroke-dasharray="6 3"/></svg>'
+      +'<span style="font-size:8px;color:#C9AE4E">Active route</span></div>';
+    rows+='<div style="display:flex;align-items:center;gap:8px">'
+      +'<svg width="10" height="10" style="flex-shrink:0"><circle cx="5" cy="5" r="4" fill="#E05252"/></svg>'
+      +'<span style="font-size:8px;color:#f59e0b">Chokepoint exposure</span></div>';
+    div.innerHTML=rows;
+    return div;
+  };
+  legend.addTo(map);
+
   setTimeout(function(){
     map.invalidateSize();
     if(allBounds.length>1) map.fitBounds(L.latLngBounds(allBounds),{padding:[30,30],maxZoom:6});

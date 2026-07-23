@@ -3944,7 +3944,7 @@ canvas { font-family: var(--f-mono); }
     <div class="map-section-header">
       <div>
         <div class="map-section-title" style="color:#7a9eb8">&#9671; Global Shipping Lanes &amp; Port Call Imbalance &mdash; Hormuz Crisis</div>
-        <div class="map-section-sub">Bubble size = commercial vessel calls/week (AIS-calibrated) &bull; dashed ring = pre-crisis volume &bull; badge = live AIS vessel count &bull; hover any port for data &bull; 14 Jul 2026</div>
+        <div class="map-section-sub">Bubble size = commercial vessel calls/week (AIS-calibrated) &bull; dashed ring = pre-crisis volume &bull; badge = live AIS vessel count &bull; hover any port for data &bull; 15 Jul 2026</div>
       </div>
       <div style="display:flex;align-items:center;gap:8px">
         <div class="map-legend" style="padding:0;background:none;border:none;display:flex;flex-wrap:wrap;gap:8px;min-width:unset">
@@ -9027,19 +9027,19 @@ function initChokepointsMap() {
 
   // ── PORT CALLS LAYER ─────────────────────────────────────────────────────
   // pre = modelled commercial vessel calls/week pre-crisis
-  // cur = IMF PortWatch / AIS-calibrated 22 Jul 2026 · auto-updated daily
+  // cur = IMF PortWatch / AIS-calibrated 23 Jul 2026 · auto-updated daily
   // Key drivers: Hormuz at 32% of pre-crisis (27 transits/day vs 84, Jun 28) · Cape route 8/9 major carriers
   var PORT_CALLS = [
     // ── Asian export hubs (slight decline — some GCC-direct services suspended) ─
     { name:'Shanghai',     country:'China',        lat:31.23, lng:121.48, pre:95,  cur:39  },
-    { name:'Busan',        country:'South Korea',  lat:35.10, lng:129.07, pre:85,  cur:68  },
+    { name:'Busan',        country:'South Korea',  lat:35.10, lng:129.07, pre:85,  cur:69  },
     { name:'Hong Kong',    country:'China',        lat:22.30, lng:114.17, pre:48,  cur:44  },
-    { name:'Singapore',    country:'Singapore',    lat:1.27,  lng:103.50, pre:185, cur:167, exp7:363 },  // slight up: Cape bunkering stop
+    { name:'Singapore',    country:'Singapore',    lat:1.27,  lng:103.50, pre:185, cur:172, exp7:363 },  // slight up: Cape bunkering stop
     { name:'Port Klang',   country:'Malaysia',     lat:2.95,  lng:101.18, pre:75,  cur:68  },
     // ── Indian Ocean waypoint (surging — Cape route stop + congestion) ────────
     { name:'Colombo',      country:'Sri Lanka',    lat:6.93,  lng:79.84,  pre:58,  cur:106, exp7:17 },  // 42.9% congestion rate (Portcast Jun 2026)
     // ── Gulf ports INSIDE Hormuz (collapsed — Hormuz at 11% of pre-crisis) ────
-    { name:'Jebel Ali',    country:'UAE',          lat:24.98, lng:55.05,  pre:62,  cur:12,  exp7:3  },  // IMF PortWatch Jun 20-26: 18 container/wk = 18.75% of Oct-2024 pre-crisis 96/wk
+    { name:'Jebel Ali',    country:'UAE',          lat:24.98, lng:55.05,  pre:62,  cur:11,  exp7:3  },  // IMF PortWatch Jun 20-26: 18 container/wk = 18.75% of Oct-2024 pre-crisis 96/wk
     { name:'Bandar Abbas', country:'Iran',         lat:27.20, lng:56.17,  pre:28,  cur:10  },  // IMF: 0 container calls; domestic/military traffic only
     { name:'Khalifa Port', country:'UAE',          lat:24.80, lng:54.58,  pre:22,  cur:4   },  // ~20% pre-crisis (consistent with Jebel Ali)
     { name:'Hamad Port',   country:'Qatar',        lat:24.92, lng:51.56,  pre:18,  cur:4   },  // ~20% pre-crisis
@@ -9060,7 +9060,7 @@ function initChokepointsMap() {
     { name:'Port Sudan',   country:'Sudan',        lat:19.62, lng:37.22,  pre:10,  cur:5   },  // Sudan civil conflict limiting commercial activity; minimal container calls
     { name:'Aden',         country:'Yemen',        lat:12.78, lng:44.99,  pre:25,  cur:8   },  // Houthi interdiction risk; severely reduced; SCA coalition holds port but traffic minimal
     // ── East Africa (Cape route feeder — sustained surge) ─────────────────────
-    { name:'Djibouti',     country:'Djibouti',     lat:11.59, lng:43.10,  pre:32,  cur:36  },  // Red Sea disruption reducing transhipment; down from 21
+    { name:'Djibouti',     country:'Djibouti',     lat:11.59, lng:43.10,  pre:32,  cur:38  },  // Red Sea disruption reducing transhipment; down from 21
     { name:'Mombasa',      country:'Kenya',        lat:-4.05, lng:39.65,  pre:22,  cur:44  },
     { name:'Dar es Salaam',country:'Tanzania',     lat:-6.85, lng:39.30,  pre:16,  cur:46  },
     { name:'Maputo',       country:'Mozambique',   lat:-25.97,lng:32.57,  pre:8,   cur:20  },
@@ -9074,9 +9074,9 @@ function initChokepointsMap() {
     // ── North Africa / Atlantic gateway (surging — Cape vessels via Gibraltar) ─
     { name:'Tanger Med',   country:'Morocco',      lat:35.85, lng:-5.48,  pre:52,  cur:110, exp7:1  },  // primary European entry for Cape-routed vessels
     // ── European destination ports (broadly stable) ───────────────────────────
-    { name:'Rotterdam',    country:'Netherlands',  lat:51.91, lng:4.35,   pre:95,  cur:94,  exp7:62 },
+    { name:'Rotterdam',    country:'Netherlands',  lat:51.91, lng:4.35,   pre:95,  cur:93,  exp7:62 },
     { name:'Hamburg',      country:'Germany',      lat:53.54, lng:9.85,   pre:55,  cur:50  },
-    { name:'Antwerp',      country:'Belgium',      lat:51.22, lng:4.18,   pre:78,  cur:78  },
+    { name:'Antwerp',      country:'Belgium',      lat:51.22, lng:4.18,   pre:78,  cur:71  },
     { name:'Felixstowe',   country:'UK',           lat:51.95, lng:1.20,   pre:42,  cur:38  },
   ];
 

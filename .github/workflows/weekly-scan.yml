@@ -1,28 +1,40 @@
-name: Weekly Climate Signal Scan
+name: Climate Signal Scan
 
 on:
   schedule:
-    - cron: '0 6 * * 1'   # Every Monday 06:00 UTC
-  workflow_dispatch:        # Manual trigger from GitHub UI → Actions tab
+    - cron: '0 5 * * 1,4'   # Monday + Thursday 05:00 UTC (twice a week)
+  workflow_dispatch:          # Manual trigger from GitHub UI → Actions tab
 
 jobs:
   scan:
     runs-on: ubuntu-latest
     permissions:
-      contents: write       # Needed to commit + push updated data file
+      contents: write         # Needed to commit + push updated data file
 
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Set up Node.js 18
+      - name: Set up Node.js 22
         uses: actions/setup-node@v4
         with:
-          node-version: '18'
+          node-version: '22'
           cache: 'npm'
 
       - name: Install dependencies
         run: npm ci
+
+      - name: Verify API key is set
+        run: |
+          if [ -z "$ANTHROPIC_API_KEY" ]; then
+            echo "❌  ANTHROPIC_API_KEY secret is not set in this repository."
+            echo "    Go to: Repository → Settings → Secrets and variables → Actions → New repository secret"
+            echo "    Name: ANTHROPIC_API_KEY   Value: your sk-ant-... key"
+            exit 1
+          fi
+          echo "✓ ANTHROPIC_API_KEY is set (${#ANTHROPIC_API_KEY} chars)"
+        env:
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
 
       - name: Run climate signal scanner
         env:
@@ -37,6 +49,6 @@ jobs:
           if git diff --staged --quiet; then
             echo "No signal changes — skipping commit"
           else
-            git commit -m "auto: climate signal scan $(date +%Y-%m-%d)"
+            git commit -m "auto: climate signal scan $(date -u +%Y-%m-%d) [skip ci]"
             git push
           fi

@@ -5298,6 +5298,7 @@ canvas { font-family: var(--f-mono); }
 .psr-run-btn{background:#C9AE4E;color:#0A0A08;font-family:monospace;font-size:11px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;border:none;border-radius:3px;padding:11px 28px;cursor:pointer;transition:opacity .15s}
 .psr-run-btn:hover{opacity:.85}
 .psr-run-btn:disabled{opacity:.25;cursor:not-allowed}
+.psr-sim-block-active-quota{border-color:#F59E0B!important;background:#130F0A}
 /* Simulation Results */
 .psr-sim-kpi-strip{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:20px}
 .psr-sim-kpi{background:#0C0C0A;border:1px solid #1E1E1C;border-radius:4px;padding:12px 14px}
@@ -21093,6 +21094,380 @@ var _psrClimateState={
   }
 };
 
+// ── TRQ / IMPORT QUOTA DATABASE — client-side subset ─────────────────────────
+// Full machine-readable records: data/trq-database.json
+// This object adds simulation-ready parameters (unit prices, elasticities, M0) not stored in the JSON.
+var TRQ_DB_RECORDS = [
+  {
+    id:'EU-STEEL-1A', jurisdiction:'EU', jurisdictionName:'European Union',
+    sector:'steel', product:'Hot-rolled flat products (Cat. 1A)', hsCode:'7208',
+    inQuotaRate:0.00, penalty:0.25, outQuotaDisplay:'25%',
+    quotaVolumeTonnes:2923818,
+    status:'active', statusNote:'Renewal unconfirmed post-Jun 2026',
+    legalBasis:'Reg. (EU) 2019/159 ext. (EU) 2024/1782',
+    unitPrice:650, elasticity:-1.7005, dataQuality:'partial',
+    partners:[
+      {id:'TR',  name:'Turkey',        m0:2100000000, cap:null},
+      {id:'IN',  name:'India',         m0: 220000000, cap:null},
+      {id:'KR',  name:'S. Korea',      m0: 380000000, cap:null},
+      {id:'UK',  name:'UK',            m0: 180000000, cap:null},
+      {id:'RS',  name:'Serbia',        m0: 160000000, cap:null},
+      {id:'POOL',name:'Residual pool', m0: 500000000, cap:null}
+    ],
+    gaps:[
+      'Per-country sub-quota caps not individually verified from Regulation Annex IV',
+      'Baseline M₀: Eurostat reference estimates — verify before production use'
+    ]
+  },
+  {
+    id:'KR-RICE-WTO', jurisdiction:'KR', jurisdictionName:'South Korea',
+    sector:'agriculture_grain', product:'Rice — WTO TRQ', hsCode:'1006',
+    inQuotaRate:0.05, penalty:5.08, outQuotaDisplay:'513%',
+    quotaVolumeTonnes:408700,
+    status:'active', statusNote:'Active — WTO bound (tariffication 2015)',
+    legalBasis:'Korea WTO Schedule LXXXI',
+    unitPrice:450, elasticity:-5.0, dataQuality:'partial',
+    partners:[
+      {id:'US',name:'USA',       m0: 59537000, cap:null},
+      {id:'CN',name:'China',     m0: 52272000, cap:null},
+      {id:'AU',name:'Australia', m0: 25904000, cap:null},
+      {id:'TH',name:'Thailand',  m0: 13485000, cap:null}
+    ],
+    gaps:[
+      'Per-country allocation caps: verify from MAFRA Korea TRQ notices',
+      'Korea typically fills the full 408,700 t WTO quota; model shows marginal rate effects'
+    ]
+  },
+  {
+    id:'JP-RICE-MA', jurisdiction:'JP', jurisdictionName:'Japan',
+    sector:'agriculture_grain', product:'Rice — WTO Min. Access', hsCode:'1006',
+    inQuotaRate:0.00, penalty:4.55, outQuotaDisplay:'~455% (~¥341/kg)',
+    quotaVolumeTonnes:682000,
+    status:'active', statusNote:'Active — WTO bound (Uruguay Round)',
+    legalBasis:'Japan WTO Schedule LXXXVIII',
+    unitPrice:500, elasticity:-5.0, dataQuality:'partial',
+    partners:[
+      {id:'US',name:'USA',       m0: 75000000, cap:null},
+      {id:'TH',name:'Thailand',  m0: 80000000, cap:null},
+      {id:'AU',name:'Australia', m0: 45000000, cap:null},
+      {id:'CN',name:'China',     m0: 60000000, cap:null}
+    ],
+    gaps:[
+      'SBS mechanism: per-country caps depend on tender rounds; aggregate MA quota shown',
+      'Formal in-quota duty = 0%; MAFF government mark-up (max ¥17,060/t) not modelled',
+      'M₀ values approximate; MAFF publishes annual SBS results'
+    ]
+  },
+  {
+    id:'JP-WHEAT-WTO', jurisdiction:'JP', jurisdictionName:'Japan',
+    sector:'agriculture_grain', product:'Wheat — WTO TRQ', hsCode:'1001',
+    inQuotaRate:0.00, penalty:2.20, outQuotaDisplay:'~220% (~¥55/kg)',
+    quotaVolumeTonnes:5740000,
+    status:'active', statusNote:'Active — WTO bound (Uruguay Round)',
+    legalBasis:'Japan WTO Schedule LXXXVIII',
+    unitPrice:250, elasticity:-1.0, dataQuality:'partial',
+    partners:[
+      {id:'US',name:'USA',       m0:400000000, cap:null},
+      {id:'AU',name:'Australia', m0:320000000, cap:null},
+      {id:'CA',name:'Canada',    m0:200000000, cap:null}
+    ],
+    gaps:[
+      'State-traded (MAFF/ALIC sole buyer); SMART models formal tariff channel only',
+      'Wheat imports near-full quota; model shows marginal deterrent near binding'
+    ]
+  },
+  {
+    id:'EU-BEEF-HILTON', jurisdiction:'EU', jurisdictionName:'European Union',
+    sector:'agriculture_beef', product:'High-quality beef (Hilton Quota)', hsCode:'0201',
+    inQuotaRate:0.20, penalty:1.20, outQuotaDisplay:'20% + €176.8/100kg',
+    quotaVolumeTonnes:66826,
+    status:'active', statusNote:'Active — WTO bound',
+    legalBasis:'EU WTO Schedule CXL, Reg. (EU) 2020/761',
+    unitPrice:9500, elasticity:-1.5, dataQuality:'partial',
+    partners:[
+      {id:'AR',name:'Argentina', m0:280250000, cap:null},
+      {id:'US',name:'USA',       m0:109250000, cap:null},
+      {id:'AU',name:'Australia', m0: 67925000, cap:null},
+      {id:'BR',name:'Brazil',    m0: 47500000, cap:null},
+      {id:'UY',name:'Uruguay',   m0: 59850000, cap:null}
+    ],
+    gaps:[
+      'Per-country sub-quota volumes: secondary-source estimates (USDA FAS)',
+      'OOQ €176.8/100kg specific rate converted to ad-valorem at $9,500/t'
+    ]
+  },
+  {
+    id:'US-SUGAR-RAW', jurisdiction:'US', jurisdictionName:'United States',
+    sector:'agriculture_sugar', product:'Raw cane sugar — WTO TRQ (FY2026)', hsCode:'1701',
+    inQuotaRate:0.042, penalty:0.928, outQuotaDisplay:'~97% (33.87¢/kg)',
+    quotaVolumeTonnes:1117195,
+    status:'active', statusNote:'Active — FY2026 (Oct 2025–Sep 2026)',
+    legalBasis:'US WTO Schedule XX; USTR FY2026 Proclamation',
+    unitPrice:350, elasticity:-1.2, dataQuality:'partial',
+    partners:[
+      {id:'DO',name:'Dom. Republic', m0: 64050000, cap:null},
+      {id:'BR',name:'Brazil',        m0: 53442000, cap:null},
+      {id:'PH',name:'Philippines',   m0: 49756000, cap:null},
+      {id:'AU',name:'Australia',     m0: 30591000, cap:null},
+      {id:'AR',name:'Argentina',     m0: 15848000, cap:null}
+    ],
+    gaps:[
+      'Per-country cap volumes: secondary-source estimates; verify from USTR annual proclamation',
+      'OOQ rate converted to ad-valorem at $350/t reference price (raw sugar)'
+    ]
+  },
+  {
+    id:'CA-CHEESE-WTO', jurisdiction:'CA', jurisdictionName:'Canada',
+    sector:'agriculture_dairy', product:'Cheese — WTO TRQ (all types)', hsCode:'0406',
+    inQuotaRate:0.055, penalty:2.40, outQuotaDisplay:'245.5%',
+    quotaVolumeTonnes:20412,
+    status:'active', statusNote:'Active — WTO bound (Uruguay Round)',
+    legalBasis:'Canada WTO Schedule V',
+    unitPrice:7000, elasticity:-1.1, dataQuality:'partial',
+    partners:[
+      {id:'POOL',name:'Global FCFS (no country split)', m0:142884000, cap:null}
+    ],
+    gaps:[
+      'No per-country allocation — global FCFS quota; EU, NZ, US dominant but no formal split',
+      'Dairy elasticity approximate; no direct KNO 2008 coverage for Canada cheese'
+    ]
+  },
+  {
+    id:'UK-SUGAR-ATQ', jurisdiction:'UK', jurisdictionName:'United Kingdom',
+    sector:'agriculture_sugar', product:'Raw cane sugar — UK ATQ', hsCode:'1701',
+    inQuotaRate:0.00, penalty:0.70, outQuotaDisplay:'£280/tonne (~70% av)',
+    quotaVolumeTonnes:325000,
+    status:'active', statusNote:'Active 2026–2033',
+    legalBasis:'UK Trade Tariff ATQ, Dec 2025',
+    unitPrice:400, elasticity:-1.2, dataQuality:'partial',
+    partners:[
+      {id:'POOL',name:'Global FCFS (no country split)', m0:130000000, cap:null}
+    ],
+    gaps:[
+      'No per-country allocation — global FCFS quota; OOQ rate £280/t at £1=$1.28',
+      'Sugar elasticity approximate'
+    ]
+  }
+];
+
+var _psrTrqState = {
+  recordId:'EU-STEEL-1A',
+  _caps:{},         // { partnerId: tonnes } — user overrides
+  _m0s:{},          // { partnerId: USD }    — user overrides
+  _unitPrice:null,  // null = use record default
+  _elasticity:null  // null = use record default
+};
+
+function psrTrqCurrentRecord(){
+  return TRQ_DB_RECORDS.find(function(r){return r.id===_psrTrqState.recordId;})||TRQ_DB_RECORDS[0];
+}
+
+function psrBuildTrqParams(){
+  var rec = psrTrqCurrentRecord();
+  // Jurisdiction list (deduplicated, ordered as first appearance)
+  var jurs=[], seen={};
+  TRQ_DB_RECORDS.forEach(function(r){
+    if(!seen[r.jurisdiction]){jurs.push({code:r.jurisdiction,name:r.jurisdictionName});seen[r.jurisdiction]=1;}
+  });
+  var jurSel = jurs.map(function(j){
+    return '<option value="'+j.code+'"'+(j.code===rec.jurisdiction?' selected':'')+'>'+j.name+'</option>';
+  }).join('');
+  var recSel = TRQ_DB_RECORDS.filter(function(r){return r.jurisdiction===rec.jurisdiction;}).map(function(r){
+    return '<option value="'+r.id+'"'+(r.id===rec.id?' selected':'')+'>'+r.product+'</option>';
+  }).join('');
+  var sColor = rec.status==='active'?'#5FA86A':(rec.status==='expired'?'#E05252':'#C9AE4E');
+  var up  = (_psrTrqState._unitPrice!==null)  ? _psrTrqState._unitPrice  : rec.unitPrice;
+  var eta = (_psrTrqState._elasticity!==null) ? _psrTrqState._elasticity : rec.elasticity;
+  var partnerRows = rec.partners.map(function(p){
+    var m0val = (_psrTrqState._m0s[p.id]!==undefined) ? _psrTrqState._m0s[p.id] : p.m0;
+    var capVal = (_psrTrqState._caps[p.id]!==undefined) ? _psrTrqState._caps[p.id] : p.cap;
+    var isPool = (p.id==='POOL');
+    var capCell = isPool
+      ? '<div style="font-family:monospace;font-size:8px;color:#5A5A52;padding:3px 4px;text-align:center">N/A</div>'
+      : '<input type="number" style="width:100%;background:#141412;border:1px solid #2A2A26;border-radius:2px;color:#F59E0B;font-family:monospace;font-size:9px;padding:3px 5px;outline:none;box-sizing:border-box" value="'+(capVal!==null&&capVal!==undefined?capVal:'')+'" placeholder="not set" oninput="psrTrqOnInput(\'cap\',\''+p.id+'\',this)">';
+    return '<div style="display:grid;grid-template-columns:1fr 82px 82px;gap:4px;align-items:center;padding:4px 0;border-bottom:1px solid #141412">'
+      +'<span style="font-family:monospace;font-size:9px;color:#C8C7C2;overflow:hidden;text-overflow:ellipsis;white-space:nowrap" title="'+p.name+'">'+p.name+'</span>'
+      +capCell
+      +'<input type="number" style="width:100%;background:#141412;border:1px solid #2A2A26;border-radius:2px;color:#C8C7C2;font-family:monospace;font-size:9px;padding:3px 5px;outline:none;box-sizing:border-box" value="'+(m0val/1e6).toFixed(1)+'" placeholder="$M" oninput="psrTrqOnInput(\'m0\',\''+p.id+'\',this)">'
+      +'</div>';
+  }).join('');
+  var gapsHtml = (rec.gaps&&rec.gaps.length)
+    ? '<div style="background:#130F0A;border:1px solid #2A1800;border-radius:3px;padding:8px;margin-top:8px">'
+      +'<div style="font-family:monospace;font-size:8px;color:#F59E0B;margin-bottom:4px;letter-spacing:.05em;text-transform:uppercase">&#9888; Data Gaps</div>'
+      +rec.gaps.map(function(g){return '<div style="font-family:monospace;font-size:8px;color:#7A7A72;line-height:1.5">· '+g+'</div>';}).join('')
+      +'</div>'
+    : '';
+  return '<label class="psr-sim-label">Jurisdiction</label>'
+    +'<select class="psr-sim-select" id="psr-trq-jur" onchange="psrTrqOnJurisdiction(this.value)">'+jurSel+'</select>'
+    +'<label class="psr-sim-label" style="margin-top:8px">Quota Record</label>'
+    +'<select class="psr-sim-select" id="psr-trq-rec" onchange="psrTrqOnRecord(this.value)">'+recSel+'</select>'
+    +'<div style="background:#111110;border:1px solid #1E1E1C;border-radius:3px;padding:8px;margin:8px 0;font-family:monospace;font-size:9px">'
+    +'<div style="display:flex;justify-content:space-between;margin-bottom:3px">'
+    +'<span style="color:'+sColor+'">&bull; '+rec.statusNote+'</span>'
+    +'<span style="color:#4A4A44">HS '+rec.hsCode+'</span></div>'
+    +'<div style="color:#6A6A62">'+(rec.inQuotaRate*100).toFixed(1)+'% in-quota &nbsp;/&nbsp; <span style="color:#F59E0B">'+rec.outQuotaDisplay+' OOQ</span></div>'
+    +'<div style="color:#4A4A44;margin-top:2px">'+rec.quotaVolumeTonnes.toLocaleString()+' t total &nbsp;· '+rec.legalBasis+'</div>'
+    +'</div>'
+    +'<label class="psr-sim-label" style="margin-top:10px">Simulation Parameters <span style="color:#4A4A44;font-weight:400;text-transform:none;letter-spacing:0;font-size:8px">(edit then Run)</span></label>'
+    +'<div style="max-height:260px;overflow-y:auto;background:#0D0D0B;border:1px solid #1E1E1C;border-radius:5px;padding:8px;scrollbar-width:thin;scrollbar-color:#2A2A26 transparent">'
+    +'<div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-bottom:8px">'
+    +'<div><div style="font-family:monospace;font-size:8px;letter-spacing:.05em;text-transform:uppercase;color:#5A5A52;margin-bottom:3px">Unit price ($/t)</div>'
+    +'<input type="number" id="psr-trq-up" style="width:100%;background:#141412;border:1px solid #2A2A26;border-radius:2px;color:#C8C7C2;font-family:monospace;font-size:10px;padding:4px 6px;outline:none;box-sizing:border-box" value="'+up+'" oninput="psrTrqOnInput(\'up\',\'all\',this)"></div>'
+    +'<div><div style="font-family:monospace;font-size:8px;letter-spacing:.05em;text-transform:uppercase;color:#5A5A52;margin-bottom:3px">Elasticity η (KNO)</div>'
+    +'<input type="number" id="psr-trq-eta" step="0.01" style="width:100%;background:#141412;border:1px solid #2A2A26;border-radius:2px;color:#C8C7C2;font-family:monospace;font-size:10px;padding:4px 6px;outline:none;box-sizing:border-box" value="'+eta+'" oninput="psrTrqOnInput(\'eta\',\'all\',this)"></div>'
+    +'</div>'
+    +'<div style="font-family:monospace;font-size:8px;color:#4A4A44;padding:4px 0 6px;border-bottom:1px solid #1E1E1C">OOQ penalty (DB): <span style="color:#F59E0B">'+rec.outQuotaDisplay+'</span> &nbsp;·&nbsp; σ = 1.5 (WITS)</div>'
+    +'<div style="display:grid;grid-template-columns:1fr 82px 82px;gap:4px;align-items:center;padding:5px 0 3px;border-bottom:1px solid #2A2A26">'
+    +'<span style="font-family:monospace;font-size:7px;color:#4A4A44;text-transform:uppercase;letter-spacing:.05em">Exporter</span>'
+    +'<span style="font-family:monospace;font-size:7px;color:#F59E0B;text-transform:uppercase;letter-spacing:.05em">Cap (t)</span>'
+    +'<span style="font-family:monospace;font-size:7px;color:#5A5A52;text-transform:uppercase;letter-spacing:.05em">M₀ ($M)</span>'
+    +'</div>'
+    +partnerRows
+    +gapsHtml
+    +'</div>';
+}
+
+// ── TRQ ITERATIVE QUOTA-BLENDED SMART ENGINE ─────────────────────────────────
+function psrTrqCalc(){
+  var rec = psrTrqCurrentRecord();
+  if(!rec) return null;
+  var up  = (_psrTrqState._unitPrice!==null&&!isNaN(_psrTrqState._unitPrice))   ? _psrTrqState._unitPrice  : rec.unitPrice;
+  var eta = (_psrTrqState._elasticity!==null&&!isNaN(_psrTrqState._elasticity)) ? _psrTrqState._elasticity : rec.elasticity;
+  var sigma=1.5, inQ=rec.inQuotaRate, penalty=rec.penalty;
+  var partners = rec.partners.map(function(p){
+    var m0  = (_psrTrqState._m0s[p.id]!==undefined)  ? _psrTrqState._m0s[p.id]  : p.m0;
+    var cap = (_psrTrqState._caps[p.id]!==undefined)  ? _psrTrqState._caps[p.id] : p.cap;
+    return {id:p.id,name:p.name,m0:m0,cap:(cap!==null&&cap!==undefined&&cap!=='')?(+cap):null};
+  });
+  var totalM0=partners.reduce(function(s,p){return s+p.m0;},0);
+  if(totalM0<=0) return null;
+  var rates={};
+  partners.forEach(function(p){rates[p.id]=inQ;});
+  var MAX_ITER=20, EPS=1e-5, iter=0, converged=false, rows;
+  while(iter<MAX_ITER&&!converged){
+    var dPs={};
+    partners.forEach(function(p){dPs[p.id]=(rates[p.id]-inQ)/(1+inQ);});
+    var dP=partners.reduce(function(s,p){return s+(p.m0/totalM0)*dPs[p.id];},0);
+    rows=partners.map(function(p){
+      var m1=Math.max(0,p.m0*(1+eta*dP+sigma*(dP-dPs[p.id])));
+      return {id:p.id,name:p.name,m0:p.m0,m1:m1,vol0:up>0?p.m0/up:0,vol1:up>0?m1/up:0,cap:p.cap};
+    });
+    var nr={},maxD=0;
+    rows.forEach(function(r){
+      var v=inQ;
+      if(r.cap!==null&&r.vol1>r.cap&&r.vol1>0) v=inQ+(1-r.cap/r.vol1)*penalty;
+      maxD=Math.max(maxD,Math.abs(v-rates[r.id]));
+      nr[r.id]=v;
+    });
+    rates=nr; iter++;
+    if(maxD<EPS) converged=true;
+  }
+  // final pass with converged rates
+  var dPs2={};
+  partners.forEach(function(p){dPs2[p.id]=(rates[p.id]-inQ)/(1+inQ);});
+  var dP2=partners.reduce(function(s,p){return s+(p.m0/totalM0)*dPs2[p.id];},0);
+  rows=partners.map(function(p){
+    var m1=Math.max(0,p.m0*(1+eta*dP2+sigma*(dP2-dPs2[p.id])));
+    var vol1=up>0?m1/up:0, vol0=up>0?p.m0/up:0;
+    var exc=p.cap!==null&&vol1>p.cap;
+    return {id:p.id,name:p.name,m0:p.m0,m1:m1,vol0:vol0,vol1:vol1,cap:p.cap,
+      effRate:rates[p.id],effPct:(rates[p.id]*100).toFixed(1),
+      exceedsQuota:exc,pctChg:p.m0>0?(m1-p.m0)/p.m0:0};
+  });
+  return {rec:rec,rows:rows,up:up,eta:eta,
+    totalM0:totalM0,totalM1:rows.reduce(function(s,r){return s+r.m1;},0),
+    totalVol0:rows.reduce(function(s,r){return s+r.vol0;},0),
+    totalVol1:rows.reduce(function(s,r){return s+r.vol1;},0),
+    iter:iter,converged:converged,
+    anyExceeds:rows.some(function(r){return r.exceedsQuota;}),
+    noCapDefined:rows.every(function(r){return r.cap===null;}),
+    inQ:inQ,penalty:penalty};
+}
+
+function psrBuildTrqResults(calc){
+  if(!calc) return '<div style="margin-top:28px;border-top:1px solid #2A2A26;padding-top:24px;font-family:monospace;font-size:11px;color:#5A5A52;padding:20px">&#9888; Cannot compute: all baseline M₀ values are zero. Enter baseline import values per exporter in the Import Quota card.</div>';
+  var ACC='#F59E0B',RED='#E05252',GRN='#5FA86A';
+  var totalPct=calc.totalM0>0?(calc.totalM1-calc.totalM0)/calc.totalM0:0;
+  var volPct=calc.totalVol0>0?(calc.totalVol1-calc.totalVol0)/calc.totalVol0:0;
+  var convBadge = calc.converged
+    ? '<span style="border:1px solid #35522033;background:#0F1A0F;color:'+GRN+';font-family:monospace;font-size:7px;padding:2px 6px;border-radius:2px;margin-left:8px">Converged &middot; '+calc.iter+' iter.</span>'
+    : '<span style="border:1px solid #52250033;background:#1A0F0F;color:'+RED+';font-family:monospace;font-size:7px;padding:2px 6px;border-radius:2px;margin-left:8px">Max iterations ('+calc.iter+') &mdash; partially converged</span>';
+  var bindSt = calc.noCapDefined
+    ? '<span style="color:#5A5A52">No caps set</span>'
+    : (calc.anyExceeds
+      ? '<span style="color:'+ACC+'">&#9888; Quota exceeded</span>'
+      : '<span style="color:'+GRN+'">&#10003; Within caps</span>');
+  var bindSub = calc.noCapDefined ? 'Enter per-exporter caps to enable binding check'
+    : (calc.anyExceeds ? calc.rows.filter(function(r){return r.exceedsQuota;}).length+' exporter(s) above quota cap'
+    : 'All exporters within quota volume');
+  var kpis = '<div style="display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:20px">'
+    +'<div class="psr-sim-kpi"><div class="psr-sim-kpi-label">Total Import Value</div>'
+    +'<div style="font-family:monospace;font-size:18px;font-weight:600;color:#F2F1ED;margin:6px 0 4px">'+fmtSmartUSD(calc.totalM1)+'</div>'
+    +'<div style="font-family:monospace;font-size:10px;color:'+(totalPct>0.001?RED:(totalPct<-0.001?GRN:'#5A8AB8'))+'">'+(totalPct>=0?'+':'')+(totalPct*100).toFixed(1)+'% vs baseline '+fmtSmartUSD(calc.totalM0)+'</div></div>'
+    +'<div class="psr-sim-kpi"><div class="psr-sim-kpi-label">Total Import Volume</div>'
+    +'<div style="font-family:monospace;font-size:18px;font-weight:600;color:#F2F1ED;margin:6px 0 4px">'+Math.round(calc.totalVol1).toLocaleString()+' t</div>'
+    +'<div style="font-family:monospace;font-size:10px;color:'+(volPct>0.001?RED:(volPct<-0.001?GRN:'#5A8AB8'))+'">'+(volPct>=0?'+':'')+(volPct*100).toFixed(1)+'% vs baseline '+Math.round(calc.totalVol0).toLocaleString()+' t</div></div>'
+    +'<div class="psr-sim-kpi"><div class="psr-sim-kpi-label">Quota Binding Status</div>'
+    +'<div style="font-family:monospace;font-size:16px;font-weight:600;margin:6px 0 4px">'+bindSt+'</div>'
+    +'<div style="font-family:monospace;font-size:9px;color:#5A5A52">'+bindSub+'</div></div>'
+    +'</div>';
+  var totalCap=calc.rec.quotaVolumeTonnes;
+  var utilPct=totalCap>0?(calc.totalVol1/totalCap*100):0;
+  var utilW=Math.min(utilPct,100).toFixed(1);
+  var utilCol=utilPct>100?ACC:(utilPct>90?'#F59E0B99':GRN);
+  var utilBar='<div class="psr-sim-kpi" style="margin-bottom:20px">'
+    +'<div class="psr-sim-kpi-label">Total volume vs. quota ceiling</div>'
+    +'<div style="font-family:monospace;font-size:10px;color:#C8C7C2;margin:6px 0 8px">'+Math.round(calc.totalVol1).toLocaleString()+' t of '+totalCap.toLocaleString()+' t ceiling</div>'
+    +'<div style="height:12px;background:#111110;border-radius:6px;overflow:hidden">'
+    +'<div style="height:100%;width:'+utilW+'%;background:'+utilCol+';border-radius:6px;transition:width .3s"></div></div>'
+    +'<div style="font-family:monospace;font-size:9px;color:'+utilCol+';margin-top:4px">'+utilPct.toFixed(1)+'% of total quota utilised</div>'
+    +'</div>';
+  var maxV=Math.max.apply(null,calc.rows.map(function(r){return Math.max(r.m0,r.m1);}))*(1.05)||1;
+  var bars=calc.rows.map(function(r){
+    var pct=r.pctChg*100;
+    var col=r.exceedsQuota?ACC:(pct<-0.05?GRN:(pct>0.05?RED:'#5A8AB8'));
+    var bW=((r.m0/maxV)*100).toFixed(1), nW=((r.m1/maxV)*100).toFixed(1);
+    var capW=(r.cap!==null&&maxV>0)?Math.min((r.cap*calc.up/maxV)*100,100).toFixed(1):null;
+    var badge=r.exceedsQuota
+      ? '<span style="background:#F59E0B22;border:1px solid #F59E0B44;color:'+ACC+';font-size:7px;padding:1px 5px;border-radius:2px;margin-left:5px;letter-spacing:.04em">QUOTA EXCEEDED</span>'
+      : (r.cap!==null?'<span style="background:#5FA86A11;border:1px solid #5FA86A22;color:'+GRN+';font-size:7px;padding:1px 5px;border-radius:2px;margin-left:5px;letter-spacing:.04em">IN QUOTA</span>':'');
+    var rNote=r.cap!==null?' &middot; eff. '+r.effPct+'%':'';
+    return '<div style="margin-bottom:20px">'
+      +'<div style="display:flex;justify-content:space-between;align-items:center;font-family:monospace;font-size:11px;margin-bottom:8px">'
+      +'<span style="color:#D9D8D3;display:flex;align-items:center">'+r.name+'<span style="color:#4A4A44;font-size:9px">'+rNote+'</span>'+badge+'</span>'
+      +'<span style="color:'+col+';font-weight:700">'+(pct>0.05?'+':'')+pct.toFixed(1)+'%</span></div>'
+      +'<div style="display:flex;align-items:center;gap:8px;margin-bottom:4px">'
+      +'<span style="font-family:monospace;font-size:8px;color:#4A4A44;width:52px;flex-shrink:0">BASELINE</span>'
+      +'<div style="flex:1;position:relative;height:20px;background:#111110;border-radius:3px;overflow:hidden">'
+      +'<div style="position:absolute;top:0;left:0;height:100%;width:'+bW+'%;background:#3D3D35;border-radius:3px"></div>'
+      +(capW!==null?'<div style="position:absolute;top:0;left:0;height:100%;width:'+capW+'%;border-right:2px dashed #F59E0B66;pointer-events:none"></div>':'')
+      +'</div>'
+      +'<span style="font-family:monospace;font-size:9px;color:#6A6A62;width:80px;text-align:right;flex-shrink:0">'+fmtSmartUSD(r.m0)+'</span></div>'
+      +'<div style="display:flex;align-items:center;gap:8px">'
+      +'<span style="font-family:monospace;font-size:8px;color:'+col+';width:52px;flex-shrink:0">NEW</span>'
+      +'<div style="flex:1;position:relative;height:20px;background:#111110;border-radius:3px;overflow:hidden">'
+      +'<div style="position:absolute;top:0;left:0;height:100%;width:'+nW+'%;background:'+col+';border-radius:3px"></div>'
+      +'</div>'
+      +'<span style="font-family:monospace;font-size:9px;color:'+col+';font-weight:700;width:80px;text-align:right;flex-shrink:0">'+fmtSmartUSD(r.m1)+'</span></div>'
+      +(r.cap!==null?'<div style="font-family:monospace;font-size:8px;color:#4A4A44;margin-top:3px">Cap: '+r.cap.toLocaleString()+' t &nbsp;· New vol: '+Math.round(r.vol1).toLocaleString()+' t'+(r.exceedsQuota?' &rarr; '+Math.round(r.vol1-r.cap).toLocaleString()+' t over cap':'')+'</div>':'')
+      +'</div>';
+  }).join('');
+  var note='<div style="margin-top:20px;border-top:1px solid #1E1E1C;padding-top:16px;font-family:monospace;font-size:9px;color:#4A4A44;line-height:1.7">'
+    +'<span style="color:#5A5A52">Method:</span> Iterative quota-blended WITS-SMART PE. Each iteration: blended rateᵢ = in-quota rate + (over-cap fractionᵢ &times; OOQ penalty); SMART pass with &eta;='+calc.eta.toFixed(4)+', &sigma;=1.5. Repeat until max|&Delta;rate|&lt;0.001pp. '+convBadge+'<br>'
+    +'<span style="color:#5A5A52">Validation:</span> Non-binding (cap&rarr;&infin;): all rates = in-quota, dP = 0, trade unchanged &#10003;. Full-binding (all caps = 0): uniform OOQ rate, volumes fall by SMART formula &#10003;.<br>'
+    +'<span style="color:#5A5A52">Baseline M₀:</span> Reference estimates &mdash; '+calc.rec.legalBasis+'. Partial verification; see data-gap warnings in card.<br>'
+    +'<span style="color:#5A5A52">Integration:</span> Runs independently from Tariff Policy and Climate Policy scenarios. Cross-scenario compounding on the same trade flow is a current limitation &mdash; standalone only.'
+    +'</div>';
+  return '<div style="margin-top:28px;border-top:1px solid #2A2A26;padding-top:22px">'
+    +'<div style="font-family:monospace;font-size:9px;letter-spacing:.08em;text-transform:uppercase;color:#5A5A52;margin-bottom:6px">Result &mdash; &#128230; Import Quota / TRQ</div>'
+    +'<div style="font-family:monospace;font-size:11px;color:'+ACC+';margin-bottom:14px">'+calc.rec.product+' &middot; '+calc.rec.jurisdictionName+' &middot; '+calc.rec.legalBasis+'</div>'
+    +kpis+utilBar
+    +'<div class="psr-section-title">Per-Exporter Import Impact</div>'
+    +'<div style="background:#0C0C0A;border:1px solid #1E1E1C;border-radius:4px;padding:14px;margin-bottom:8px">'
+    +'<div style="font-family:monospace;font-size:8px;color:#4A4A44;margin-bottom:8px">Dashed amber line = quota cap (where set). Amber badge = cap exceeded. <span style="color:#5A5A52">M₀ baseline = trade at in-quota rate with no cap binding.</span></div>'
+    +bars+'</div>'+note+'</div>';
+}
+
 // ── SIMULATION COMPUTATION ────────────────────────────────────────────────────
 function psrComputeSim(flow, type, params) {
   var showImport = _psrDir !== 'export';
@@ -21251,16 +21626,18 @@ function psrBuildSimBuilder(flow){
   var p = _psrSimParams;
   if(!p.tariff.country && flow.partners[0]) p.tariff.country = flow.partners[0].name;
 
-  function simBlock(type, icon, label, paramsHtml){
+  function simBlock(type, icon, label, paramsHtml, accent, aClass){
+    var ac = accent||'#C9AE4E';
+    var cls = aClass||'psr-sim-block-active';
     var active = _psrSimTypes.indexOf(type) >= 0;
-    return '<div class="psr-sim-block'+(active?' psr-sim-block-active':'')+'" onclick="psrSelectSimType(\''+type+'\')">'
+    return '<div class="psr-sim-block'+(active?' '+cls:'')+'" onclick="psrSelectSimType(\''+type+'\')">'
       +'<div class="psr-sim-header">'
       +'<span style="font-size:20px;flex-shrink:0">'+icon+'</span>'
       +'<div style="flex:1">'
-      +'<div style="font-family:monospace;font-size:11px;color:'+(active?'#C9AE4E':'#C8C7C2')+';font-weight:'+(active?'600':'400')+'">'+label+'</div>'
+      +'<div style="font-family:monospace;font-size:11px;color:'+(active?ac:'#C8C7C2')+';font-weight:'+(active?'600':'400')+'">'+label+'</div>'
       +'<div style="font-family:monospace;font-size:8px;color:#5A5A52;margin-top:3px">'+(active?'Active — configured below':'Click to add to simulation')+'</div>'
       +'</div>'
-      +'<div style="width:14px;height:14px;border-radius:2px;border:2px solid '+(active?'#C9AE4E':'#2A2A26')+';background:'+(active?'#C9AE4E':'transparent')+';flex-shrink:0;margin-top:1px;display:flex;align-items:center;justify-content:center">'
+      +'<div style="width:14px;height:14px;border-radius:2px;border:2px solid '+(active?ac:'#2A2A26')+';background:'+(active?ac:'transparent')+';flex-shrink:0;margin-top:1px;display:flex;align-items:center;justify-content:center">'
       +(active?'<span style="color:#0A0A09;font-size:10px;line-height:1;font-weight:900;margin-top:-1px">✓</span>':'')
       +'</div>'
       +'</div>'
@@ -21341,10 +21718,11 @@ function psrBuildSimBuilder(flow){
     +'</div>';
 
   var runDisabled = _psrSimTypes.length?'':' disabled';
-  return '<div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;align-items:stretch;margin-bottom:16px">'
+  return '<div style="display:grid;grid-template-columns:repeat(4,1fr);gap:12px;align-items:stretch;margin-bottom:16px">'
     +simBlock('tariff','📈','Tariff Policy',tariffParams)
     +simBlock('chokepoint','🚫','Chokepoint Disruption',cpParams)
     +simBlock('climate','🌍','Climate Policy',climateParams)
+    +simBlock('quota','📦','Import Quota / TRQ',psrBuildTrqParams(),'#F59E0B','psr-sim-block-active-quota')
     +'</div>'
     +'<div style="display:flex;align-items:center;gap:16px">'
     +'<button class="psr-run-btn"'+runDisabled+' onclick="event.stopPropagation();psrRunSim()">&#9654;&nbsp;&nbsp;RUN SIMULATION'+(_psrSimTypes.length>1?' &middot; '+_psrSimTypes.length+' SCENARIOS':'')+'</button>'
@@ -21843,6 +22221,8 @@ function psrRenderScenarios(){
         html += psrBuildSmartResults(psrSmartCalc(_psrSmartParams.hs4,_psrSmartParams.partner,_sNewT));
       } else if(type==='climate'){
         html += psrBuildClimateResults(psrClimateCalc());
+      } else if(type==='quota'){
+        html += psrBuildTrqResults(psrTrqCalc());
       } else {
         html += psrBuildSimResults(flow, psrComputeSim(flow, type, _psrSimParams[type]));
       }
@@ -22451,6 +22831,10 @@ function psrCaptureSimInputs(){
       if(cc)  _psrSimParams.chokepoint.id       = cc.value;
       if(cl)  _psrSimParams.chokepoint.level    = cl.value;
       if(cd2) _psrSimParams.chokepoint.duration = cd2.value;
+    } else if(t==='quota'){
+      var qup=document.getElementById('psr-trq-up'),qeta=document.getElementById('psr-trq-eta');
+      if(qup&&!isNaN(parseFloat(qup.value)))   _psrTrqState._unitPrice  = parseFloat(qup.value);
+      if(qeta&&!isNaN(parseFloat(qeta.value))) _psrTrqState._elasticity = parseFloat(qeta.value);
     }
   });
 }
@@ -22488,6 +22872,28 @@ window.psrClimateOnSubSlider = function(pid,param,v){
 };
 window.psrClimateOnSubSelect = function(pid,param,v){
   _psrClimateState.policies[pid].params[param]=v;
+};
+
+window.psrTrqOnJurisdiction = function(jur){
+  var rec=TRQ_DB_RECORDS.find(function(r){return r.jurisdiction===jur;});
+  if(!rec) return;
+  _psrTrqState.recordId=rec.id;
+  _psrTrqState._caps={}; _psrTrqState._m0s={};
+  _psrTrqState._unitPrice=null; _psrTrqState._elasticity=null;
+  _psrSimRan=false; psrRenderScenarios();
+};
+window.psrTrqOnRecord = function(id){
+  _psrTrqState.recordId=id;
+  _psrTrqState._caps={}; _psrTrqState._m0s={};
+  _psrTrqState._unitPrice=null; _psrTrqState._elasticity=null;
+  _psrSimRan=false; psrRenderScenarios();
+};
+window.psrTrqOnInput = function(field,pid,el){
+  var v=parseFloat(el.value);
+  if(field==='m0')  _psrTrqState._m0s[pid]     = isNaN(v)?0:v*1e6;
+  else if(field==='cap')  _psrTrqState._caps[pid]     = (el.value===''||isNaN(v))?null:v;
+  else if(field==='up')   _psrTrqState._unitPrice     = isNaN(v)?null:v;
+  else if(field==='eta')  _psrTrqState._elasticity    = isNaN(v)?null:v;
 };
 
 var _psrEmbeddedInited = false;

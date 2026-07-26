@@ -1,0 +1,901 @@
+{
+  "_meta": {
+    "version": "1.0",
+    "generated": "2026-07-26",
+    "description": "Global Import Quota / Tariff-Rate Quota (TRQ) database — seed data for the Import Quota scenario block",
+    "methodology": "Records compiled from primary regulatory sources: WTO I-TIP, EUR-Lex, USITC HTS, UK Trade Tariff, national customs authorities. Verification levels: 'verified' = primary regulation text located and read; 'partial' = reliable secondary reference found but primary text not retrieved.",
+    "sources": [
+      "WTO Integrated Trade Intelligence Portal (I-TIP): https://i-tip.wto.org/goods/",
+      "EUR-Lex (EU Official Journal): https://eur-lex.europa.eu/",
+      "USITC Harmonized Tariff Schedule (HTS), Chapter 99: https://hts.usitc.gov/",
+      "USTR TRQ allocations: https://ustr.gov/",
+      "UK Trade Tariff: https://www.trade-tariff.service.gov.uk/",
+      "Japan MAFF WTO schedule: https://www.maff.go.jp/e/",
+      "WTO Member Tariff Schedules: https://www.wto.org/english/tratop_e/tariffs_e/tariff_data_e.htm",
+      "Canada Global Affairs TRQ notices: https://www.international.gc.ca/trade-commerce/controls-controles/",
+      "UK Government TRQ guidance: https://www.gov.uk/guidance/uk-tariff-rate-quotas-2025"
+    ],
+    "recordCount": {
+      "verified": 12,
+      "partial": 11,
+      "total": 23
+    },
+    "lastUpdated": "2026-07-26"
+  },
+
+  "jurisdictions": [
+    { "code": "EU",  "name": "European Union",  "type": "bloc",    "memberCount": 27 },
+    { "code": "US",  "name": "United States",   "type": "country" },
+    { "code": "UK",  "name": "United Kingdom",  "type": "country", "note": "Post-Brexit autonomous schedule from Jan 2021" },
+    { "code": "JP",  "name": "Japan",           "type": "country" },
+    { "code": "KR",  "name": "South Korea",     "type": "country" },
+    { "code": "CA",  "name": "Canada",          "type": "country" },
+    { "code": "AU",  "name": "Australia",       "type": "country" },
+    { "code": "IN",  "name": "India",           "type": "country" },
+    { "code": "CN",  "name": "China",           "type": "country" },
+    { "code": "TR",  "name": "Turkey",          "type": "country" },
+    { "code": "MX",  "name": "Mexico",          "type": "country" },
+    { "code": "CH",  "name": "Switzerland",     "type": "country" },
+    { "code": "NO",  "name": "Norway",          "type": "country" },
+    { "code": "TW",  "name": "Taiwan",          "type": "country" }
+  ],
+
+  "sectors": [
+    { "id": "steel",               "name": "Iron & Steel",              "hsChapter": "72",   "hsDescription": "Iron and steel; articles of iron or steel" },
+    { "id": "aluminum",            "name": "Aluminium",                 "hsChapter": "76",   "hsDescription": "Aluminium and articles thereof" },
+    { "id": "other_metals",        "name": "Other Base Metals",         "hsChapters": ["73","74","75","78","79","80","81"], "hsDescription": "Steel tubes/pipes, copper, nickel, lead, zinc, tin, other base metals" },
+    { "id": "agriculture_sugar",   "name": "Sugar",                     "hsChapter": "17",   "hsDescription": "Sugars and sugar confectionery" },
+    { "id": "agriculture_dairy",   "name": "Dairy",                     "hsChapter": "04",   "hsDescription": "Dairy produce; butter, cheese, milk, cream, whey" },
+    { "id": "agriculture_beef",    "name": "Beef & Veal",               "hsHeadings": ["0201","0202"], "hsDescription": "Bovine meat, fresh/chilled/frozen" },
+    { "id": "agriculture_poultry", "name": "Poultry Meat",              "hsHeadings": ["0207","0210"], "hsDescription": "Meat and offal of poultry" },
+    { "id": "agriculture_grain",   "name": "Grains & Cereals",          "hsChapter": "10",   "hsDescription": "Cereals: wheat, rice, barley, maize, oats, rye" },
+    { "id": "agriculture_pork",    "name": "Pork & Pig Meat",           "hsHeadings": ["0203","0209"], "hsDescription": "Pig meat, fresh/chilled/frozen" },
+    { "id": "agriculture_other",   "name": "Other Agricultural",        "hsChapters": ["07","08","09","12","15","16","20","21","22","23"], "hsDescription": "Vegetables, fruit, coffee, oilseeds, animal fats, prepared foods, beverages" },
+    { "id": "textiles",            "name": "Textiles & Apparel",        "hsChapters": ["50","51","52","53","54","55","56","57","58","59","60","61","62","63"], "hsDescription": "Silk, wool, cotton, synthetic fibres, yarn, fabric, garments" },
+    { "id": "other",               "name": "Other",                     "hsChapters": [],    "hsDescription": "Miscellaneous products with TRQ regimes" }
+  ],
+
+  "quotaTypes": {
+    "global_aggregate":    "Single pool; all exporting countries compete equally on FCFS or pro-rata basis",
+    "country_specific":    "Fixed volume reserved for a single named exporting country; no residual pool",
+    "combined":            "Named country allocations for major suppliers plus a residual FCFS pool for others",
+    "residual_fcfs":       "A residual pool distributed first-come-first-served after country-specific allocations are exhausted"
+  },
+
+  "quotas": [
+
+    {
+      "id": "EU-STEEL-1A",
+      "jurisdiction": "EU",
+      "sector": "steel",
+      "product": "Hot-rolled flat products (Category 1A)",
+      "hsCodeRef": "7208.10–7208.54, 7211.13, 7211.14, 7225.30, 7225.40, 7226.91 (full CN list: Annex I, Reg. 2019/159)",
+      "quotaType": "combined",
+      "legalBasis": {
+        "primaryRegulation": "Commission Implementing Regulation (EU) 2019/159 of 31 January 2019",
+        "amendments": [
+          "Reg. (EU) 2021/1529 — extension",
+          "Reg. (EU) 2022/434 — extension",
+          "Reg. (EU) 2023/1063 — extension",
+          "Reg. (EU) 2024/1782 of 26 Jun 2024 — extended through 30 Jun 2026",
+          "Reg. (EU) 2025/612 of 27 Mar 2025 — quota volume adjustment"
+        ],
+        "celex": "02019R0159-20250326",
+        "ojRef": "OJ L 31, 1.2.2019, p. 27"
+      },
+      "volume": {
+        "value": 2923818,
+        "unit": "tonnes",
+        "period": "annual",
+        "note": "2025–2026 period (Year 7); grows ~5% p.a.; preceding year was ~2,784,588 t"
+      },
+      "tariffsInQuota":     { "rate": 0,  "type": "ad_valorem_percent", "note": "Duty-free within quota" },
+      "tariffsOutOfQuota":  { "rate": 25, "type": "ad_valorem_percent", "note": "25% additional safeguard duty on top of normal MFN" },
+      "countryAllocations": [
+        { "country": "TR", "note": "Country-specific sub-quota; exact volume in Annex IV.1 of the regulation" },
+        { "country": "IN", "note": "Country-specific sub-quota" },
+        { "country": "KR", "note": "Country-specific sub-quota" },
+        { "country": "UK", "note": "Country-specific sub-quota" },
+        { "country": "RS", "note": "Country-specific sub-quota (Serbia)" },
+        { "country": "OTHER", "note": "Residual FCFS pool for all other origins" }
+      ],
+      "effectiveDates": { "start": "2019-02-01", "end": "2026-06-30" },
+      "status": "expired",
+      "verificationLevel": "verified",
+      "sources": [
+        { "label": "EUR-Lex CELEX 02019R0159-20250326", "url": "https://eur-lex.europa.eu/legal-content/EN/ALL/?uri=CELEX:02019R0159-20250326" }
+      ],
+      "notes": "Expired 30 Jun 2026; European Commission renewal proceedings likely. Largest EU steel safeguard category by volume."
+    },
+
+    {
+      "id": "EU-STEEL-2",
+      "jurisdiction": "EU",
+      "sector": "steel",
+      "product": "Cold-rolled flat products (Category 2)",
+      "hsCodeRef": "7209, 7211.23, 7211.29, 7225.50, 7226.92 (full CN list: Annex I, Reg. 2019/159)",
+      "quotaType": "combined",
+      "legalBasis": {
+        "primaryRegulation": "Commission Implementing Regulation (EU) 2019/159",
+        "celex": "02019R0159-20250326"
+      },
+      "volume": { "value": 1282278, "unit": "tonnes", "period": "annual", "note": "2025–2026 period" },
+      "tariffsInQuota":    { "rate": 0,  "type": "ad_valorem_percent" },
+      "tariffsOutOfQuota": { "rate": 25, "type": "ad_valorem_percent" },
+      "countryAllocations": [
+        { "country": "IN",    "note": "Country-specific sub-quota" },
+        { "country": "KR",    "note": "Country-specific sub-quota" },
+        { "country": "UK",    "note": "Country-specific sub-quota" },
+        { "country": "UA",    "note": "Country-specific sub-quota" },
+        { "country": "RS",    "note": "Country-specific sub-quota (Serbia)" },
+        { "country": "OTHER", "note": "Residual FCFS pool" }
+      ],
+      "effectiveDates": { "start": "2019-02-01", "end": "2026-06-30" },
+      "status": "expired",
+      "verificationLevel": "verified",
+      "sources": [
+        { "label": "EUR-Lex CELEX 02019R0159-20250326", "url": "https://eur-lex.europa.eu/legal-content/EN/ALL/?uri=CELEX:02019R0159-20250326" }
+      ]
+    },
+
+    {
+      "id": "EU-STEEL-4A",
+      "jurisdiction": "EU",
+      "sector": "steel",
+      "product": "Metallic coated flat products (Category 4A)",
+      "hsCodeRef": "7210.20–7210.90, 7212.20–7212.60, 7225.91, 7225.92, 7226.93, 7226.99 (full list: Annex I)",
+      "quotaType": "combined",
+      "legalBasis": {
+        "primaryRegulation": "Commission Implementing Regulation (EU) 2019/159",
+        "celex": "02019R0159-20250326"
+      },
+      "volume": { "value": 1615126, "unit": "tonnes", "period": "annual", "note": "2025–2026 period; includes galvanised/aluzinc coated" },
+      "tariffsInQuota":    { "rate": 0,  "type": "ad_valorem_percent" },
+      "tariffsOutOfQuota": { "rate": 25, "type": "ad_valorem_percent" },
+      "countryAllocations": [
+        { "country": "KR",    "note": "Country-specific sub-quota" },
+        { "country": "IN",    "note": "Country-specific sub-quota" },
+        { "country": "UK",    "note": "Country-specific sub-quota" },
+        { "country": "OTHER", "note": "Residual FCFS pool" }
+      ],
+      "effectiveDates": { "start": "2019-02-01", "end": "2026-06-30" },
+      "status": "expired",
+      "verificationLevel": "verified",
+      "sources": [
+        { "label": "EUR-Lex CELEX 02019R0159-20250326", "url": "https://eur-lex.europa.eu/legal-content/EN/ALL/?uri=CELEX:02019R0159-20250326" }
+      ]
+    },
+
+    {
+      "id": "EU-STEEL-7",
+      "jurisdiction": "EU",
+      "sector": "steel",
+      "product": "Quarto plates (Category 7)",
+      "hsCodeRef": "7208.51, 7208.52, 7225.40.90, 7226.91.91 (full list: Annex I)",
+      "quotaType": "combined",
+      "legalBasis": {
+        "primaryRegulation": "Commission Implementing Regulation (EU) 2019/159",
+        "celex": "02019R0159-20250326"
+      },
+      "volume": { "value": 1981881, "unit": "tonnes", "period": "annual", "note": "2025–2026 period; second-largest volume category" },
+      "tariffsInQuota":    { "rate": 0,  "type": "ad_valorem_percent" },
+      "tariffsOutOfQuota": { "rate": 25, "type": "ad_valorem_percent" },
+      "countryAllocations": [
+        { "country": "UA",    "note": "Country-specific sub-quota (Ukraine); largest allocation" },
+        { "country": "OTHER", "note": "Residual global pool; no other named country allocations in this category" }
+      ],
+      "effectiveDates": { "start": "2019-02-01", "end": "2026-06-30" },
+      "status": "expired",
+      "verificationLevel": "verified",
+      "sources": [
+        { "label": "EUR-Lex CELEX 02019R0159-20250326", "url": "https://eur-lex.europa.eu/legal-content/EN/ALL/?uri=CELEX:02019R0159-20250326" }
+      ],
+      "notes": "Ukraine's sub-quota was suspended/modified in 2022–2024 context; check current Annex IV for live figures."
+    },
+
+    {
+      "id": "EU-STEEL-12",
+      "jurisdiction": "EU",
+      "sector": "steel",
+      "product": "Merchant bars (Category 12)",
+      "hsCodeRef": "7214, 7215.90 (full list: Annex I)",
+      "quotaType": "combined",
+      "legalBasis": {
+        "primaryRegulation": "Commission Implementing Regulation (EU) 2019/159",
+        "celex": "02019R0159-20250326"
+      },
+      "volume": { "value": 607717, "unit": "tonnes", "period": "annual" },
+      "tariffsInQuota":    { "rate": 0,  "type": "ad_valorem_percent" },
+      "tariffsOutOfQuota": { "rate": 25, "type": "ad_valorem_percent" },
+      "countryAllocations": [
+        { "country": "CN",    "note": "Country-specific sub-quota (China)" },
+        { "country": "UK",    "note": "Country-specific sub-quota" },
+        { "country": "TR",    "note": "Country-specific sub-quota" },
+        { "country": "CH",    "note": "Country-specific sub-quota (Switzerland)" },
+        { "country": "OTHER", "note": "Residual FCFS pool" }
+      ],
+      "effectiveDates": { "start": "2019-02-01", "end": "2026-06-30" },
+      "status": "expired",
+      "verificationLevel": "verified",
+      "sources": [
+        { "label": "EUR-Lex CELEX 02019R0159-20250326", "url": "https://eur-lex.europa.eu/legal-content/EN/ALL/?uri=CELEX:02019R0159-20250326" }
+      ]
+    },
+
+    {
+      "id": "EU-STEEL-13",
+      "jurisdiction": "EU",
+      "sector": "steel",
+      "product": "Rebars (Category 13)",
+      "hsCodeRef": "7214.20 (full list: Annex I)",
+      "quotaType": "combined",
+      "legalBasis": {
+        "primaryRegulation": "Commission Implementing Regulation (EU) 2019/159",
+        "celex": "02019R0159-20250326"
+      },
+      "volume": { "value": 744855, "unit": "tonnes", "period": "annual" },
+      "tariffsInQuota":    { "rate": 0,  "type": "ad_valorem_percent" },
+      "tariffsOutOfQuota": { "rate": 25, "type": "ad_valorem_percent" },
+      "countryAllocations": [
+        { "country": "TR",    "note": "Country-specific sub-quota (Turkey); largest allocation" },
+        { "country": "UA",    "note": "Country-specific sub-quota" },
+        { "country": "BA",    "note": "Country-specific sub-quota (Bosnia & Herzegovina)" },
+        { "country": "MD",    "note": "Country-specific sub-quota (Moldova)" },
+        { "country": "OTHER", "note": "Residual FCFS pool" }
+      ],
+      "effectiveDates": { "start": "2019-02-01", "end": "2026-06-30" },
+      "status": "expired",
+      "verificationLevel": "verified",
+      "sources": [
+        { "label": "EUR-Lex CELEX 02019R0159-20250326", "url": "https://eur-lex.europa.eu/legal-content/EN/ALL/?uri=CELEX:02019R0159-20250326" }
+      ]
+    },
+
+    {
+      "id": "EU-STEEL-16",
+      "jurisdiction": "EU",
+      "sector": "steel",
+      "product": "Wire rod, non-alloy (Category 16)",
+      "hsCodeRef": "7213.10, 7213.20, 7213.91, 7213.99 (full list: Annex I)",
+      "quotaType": "combined",
+      "legalBasis": {
+        "primaryRegulation": "Commission Implementing Regulation (EU) 2019/159",
+        "celex": "02019R0159-20250326"
+      },
+      "volume": { "value": 635469, "unit": "tonnes", "period": "annual" },
+      "tariffsInQuota":    { "rate": 0,  "type": "ad_valorem_percent" },
+      "tariffsOutOfQuota": { "rate": 25, "type": "ad_valorem_percent" },
+      "countryAllocations": [
+        { "country": "UK",    "note": "Country-specific sub-quota" },
+        { "country": "UA",    "note": "Country-specific sub-quota" },
+        { "country": "CH",    "note": "Country-specific sub-quota (Switzerland)" },
+        { "country": "TR",    "note": "Country-specific sub-quota" },
+        { "country": "MD",    "note": "Country-specific sub-quota (Moldova)" },
+        { "country": "OTHER", "note": "Residual FCFS pool" }
+      ],
+      "effectiveDates": { "start": "2019-02-01", "end": "2026-06-30" },
+      "status": "expired",
+      "verificationLevel": "verified",
+      "sources": [
+        { "label": "EUR-Lex CELEX 02019R0159-20250326", "url": "https://eur-lex.europa.eu/legal-content/EN/ALL/?uri=CELEX:02019R0159-20250326" }
+      ]
+    },
+
+    {
+      "id": "UK-STEEL-SG8",
+      "jurisdiction": "UK",
+      "sector": "steel",
+      "product": "Steel safeguard — all product categories (Year 8 aggregate)",
+      "hsCodeRef": "Chapter 72 (multiple product categories; see Trade Remedies Notice 2025/26)",
+      "quotaType": "combined",
+      "legalBasis": {
+        "primaryRegulation": "Trade Remedies (Increase in Imports Causing Serious Injury to UK Producers) (EU Exit) Regulations 2019",
+        "notices": [
+          "Trade Remedies Notice 2025/26 — Year 8: 1 Jul 2025 – 30 Jun 2026",
+          "Trade Remedies Notice 2024/06 — Year 7",
+          "Trade Remedies Notice 2023/10 — Year 6"
+        ],
+        "source": "UK Trade Remedies Authority (TRA)"
+      },
+      "volume": {
+        "valueApprox": 8000000,
+        "unit": "tonnes",
+        "period": "annual",
+        "note": "Approximate aggregate across all categories; Category 1A ~1 MT, Category 1B ~2.3 MT (global basis); exact per-category volumes in Trade Remedies Notice 2025/26"
+      },
+      "tariffsInQuota":    { "rate": 0,  "type": "ad_valorem_percent", "note": "Duty-free within quota" },
+      "tariffsOutOfQuota": { "rate": 25, "type": "ad_valorem_percent" },
+      "countryAllocations": [
+        { "country": "EU",    "note": "Country-specific allocation across multiple product categories" },
+        { "country": "TR",    "note": "Country-specific allocation" },
+        { "country": "TW",    "note": "Country-specific allocation (Taiwan)" },
+        { "country": "UA",    "note": "Ukraine: suspended from safeguard measure (exempted)" },
+        { "country": "OTHER", "note": "Residual global FCFS pool" }
+      ],
+      "effectiveDates": {
+        "start": "2022-06-01",
+        "end": "2026-06-30",
+        "note": "Year 8 period: 1 Jul 2025 – 30 Jun 2026; TRA initiated Year 9 review Feb 2025"
+      },
+      "status": "expired",
+      "verificationLevel": "verified",
+      "sources": [
+        { "label": "Trade Remedies Notice 2025/26 (gov.uk)", "url": "https://www.gov.uk/government/publications/trade-remedies-notices-tariff-rate-quotas-on-steel-goods/trade-remedies-notice-202526-safeguard-measure-tariff-rate-quota-on-steel-goods" },
+        { "label": "TRA blog: UK steel safeguards history", "url": "https://traderemedies.blog.gov.uk/2024/02/09/uk-steel-safeguards-a-story-of-transition-extension-suspension-and-amendment/" }
+      ],
+      "notes": "Parallel to EU safeguard; UK adopted own regime post-Brexit. TRA reviewed in Feb 2025; Year 9 continuance (from Jul 2026) status unconfirmed as of database date."
+    },
+
+    {
+      "id": "UK-SUGAR-ATQ",
+      "jurisdiction": "UK",
+      "sector": "agriculture_sugar",
+      "product": "Raw cane sugar for refining — Autonomous Tariff Quota (ATQ)",
+      "hsCodeRef": "1701.13, 1701.14",
+      "quotaType": "global_aggregate",
+      "legalBasis": {
+        "primaryRegulation": "UK Trade Tariff autonomous tariff quota, administered under Taxation (Cross-border Trade) Act 2018",
+        "instruments": [
+          "Updated volume to 325,000 t effective 1 Jan 2026 (UK Trade Tariff notice, Dec 2025)",
+          "Previous volume: 260,000 t (2025 ATQ)",
+          "Valid through 31 December 2033 per government review outcome"
+        ]
+      },
+      "volume": {
+        "value": 325000,
+        "unit": "tonnes",
+        "period": "annual",
+        "quotaYearRef": "1 Jan 2026 – 31 Dec 2026 (and each calendar year through 2033)"
+      },
+      "tariffsInQuota":    { "rate": 0,    "type": "ad_valorem_percent", "note": "Zero duty within ATQ (autonomous suspension)" },
+      "tariffsOutOfQuota": { "value": 280, "type": "specific", "unit": "GBP/tonne", "note": "UK Global Tariff (UKGT) out-of-quota rate of £280/tonne" },
+      "countryAllocations": [
+        { "country": "OTHER", "note": "Global first-come-first-served; no per-country allocation. Major suppliers: Brazil, Eswatini, Fiji, Guyana, Belize, Mauritius" }
+      ],
+      "effectiveDates": { "start": "2026-01-01", "end": "2033-12-31" },
+      "status": "active",
+      "verificationLevel": "verified",
+      "sources": [
+        { "label": "UK Trade Tariff: ATQ volume update Dec 2025", "url": "https://www.trade-tariff.service.gov.uk/news/stories/update-to-volume-to-autonomous-tariff-quota-for-raw-cane-sugar--17-december-2025" },
+        { "label": "Gov.uk: Review of raw cane sugar ATQ 2025", "url": "https://www.gov.uk/government/publications/review-of-raw-cane-sugar-atq-and-related-considerations-2025/review-of-raw-cane-sugar-atq-and-related-considerations" }
+      ],
+      "notes": "Increased from 260,000 t to 325,000 t following 2025 review. UK has one refinery (Tate & Lyle) dependent on raw cane imports; ATQ supports domestic refining capacity."
+    },
+
+    {
+      "id": "JP-RICE-MA",
+      "jurisdiction": "JP",
+      "sector": "agriculture_grain",
+      "product": "Rice — WTO Minimum Access (MA) quota",
+      "hsCodeRef": "1006 (rice in the husk, husked, semi-milled, wholly milled, broken)",
+      "quotaType": "combined",
+      "legalBasis": {
+        "primaryRegulation": "Japan WTO Schedule LXXXVIII — Uruguay Round concession; 1994",
+        "mechanism": "Simultaneous Buy-and-Sell (SBS) managed by MAFF / Agriculture and Livestock Industries Corporation (ALIC)",
+        "hsNote": "Administered under the Staple Food Law (Law No. 112 of 1994)"
+      },
+      "volume": {
+        "value": 682000,
+        "unit": "tonnes",
+        "period": "annual",
+        "note": "682,200 t milled basis; set at 8% of 1986–88 domestic consumption per Uruguay Round. Japan has maintained at this level since 2000."
+      },
+      "tariffsInQuota":    { "rate": 0, "type": "ad_valorem_percent", "note": "Duty-free; managed through government SBS mechanism. Effectively captured via government mark-up on resale." },
+      "tariffsOutOfQuota": { "value": 341, "type": "specific", "unit": "JPY/kg", "note": "¥341/kg (~700% ad valorem at prevailing world prices)" },
+      "countryAllocations": [
+        { "country": "US",    "note": "Largest SBS quota holder; approx. 150,000–180,000 t p.a." },
+        { "country": "AU",    "note": "Significant allocation; medium-grain varieties" },
+        { "country": "TH",    "note": "Thailand; long-grain/jasmine rice" },
+        { "country": "CN",    "note": "China; various varieties" },
+        { "country": "OTHER", "note": "Other WTO members compete under the SBS scheme" }
+      ],
+      "effectiveDates": { "start": "1995-01-01", "end": null, "note": "Ongoing WTO bound commitment; no sunset" },
+      "status": "active",
+      "verificationLevel": "verified",
+      "sources": [
+        { "label": "MAFF Japan: WTO rice commitments", "url": "https://www.maff.go.jp/e/policies/trade_agri/trq.html" },
+        { "label": "WTO Tariff Profile — Japan", "url": "https://www.wto.org/english/res_e/statis_e/daily_update_e/tariff_profiles/jp_e.pdf" }
+      ],
+      "notes": "Out-of-quota rate is among the world's highest agricultural tariffs. Japan has consistently resisted tariffication pressure; MA quota is a practical ceiling on commercial rice trade."
+    },
+
+    {
+      "id": "JP-WHEAT-WTO",
+      "jurisdiction": "JP",
+      "sector": "agriculture_grain",
+      "product": "Wheat — WTO TRQ",
+      "hsCodeRef": "1001 (wheat and meslin)",
+      "quotaType": "combined",
+      "legalBasis": {
+        "primaryRegulation": "Japan WTO Schedule LXXXVIII — Uruguay Round concession",
+        "mechanism": "State Trading: imports managed by the Ministry of Agriculture / Farmland and Water Bureau (formerly Food Agency). Government buys at CIF world price; resells domestically with a mark-up (price stabilisation markup ≤ ¥17,060/t).",
+        "domesticLaw": "Food Control Act (repealed 1994); now managed under Grain Management Law"
+      },
+      "volume": {
+        "value": 5740000,
+        "unit": "tonnes",
+        "period": "annual",
+        "note": "5.74 MT WTO bound access; Japan's actual wheat imports typically exceed the TRQ volume at in-quota rates via state trading"
+      },
+      "tariffsInQuota":    { "rate": 0, "type": "ad_valorem_percent", "note": "Technically duty-free at the border; effective protection delivered via government mark-up system" },
+      "tariffsOutOfQuota": { "value": 55000, "type": "specific", "unit": "JPY/tonne", "note": "¥55/kg = ¥55,000/t (approx. 150–250% ad valorem depending on world price)" },
+      "countryAllocations": [
+        { "country": "US",    "note": "Approximately 50% of total; hard red winter / dark northern spring" },
+        { "country": "AU",    "note": "Approximately 30%; ASW, APW, soft white" },
+        { "country": "CA",    "note": "Approximately 20%; CWRS, CPS" }
+      ],
+      "effectiveDates": { "start": "1995-01-01", "end": null },
+      "status": "active",
+      "verificationLevel": "verified",
+      "sources": [
+        { "label": "MAFF Japan: grain trade overview", "url": "https://www.maff.go.jp/e/policies/trade_agri/trq.html" },
+        { "label": "WTO — Japan tariff schedule (Schedule LXXXVIII)", "url": "https://www.wto.org/english/tratop_e/schedules_e/goods_schedules_table_e.htm" }
+      ]
+    },
+
+    {
+      "id": "JP-BARLEY-WTO",
+      "jurisdiction": "JP",
+      "sector": "agriculture_grain",
+      "product": "Barley — WTO TRQ",
+      "hsCodeRef": "1003 (barley)",
+      "quotaType": "combined",
+      "legalBasis": {
+        "primaryRegulation": "Japan WTO Schedule LXXXVIII — Uruguay Round concession",
+        "mechanism": "State trading; same government-managed mark-up system as wheat (MAFF/ALIC)"
+      },
+      "volume": {
+        "value": 1369000,
+        "unit": "tonnes",
+        "period": "annual",
+        "note": "1.369 MT WTO bound access; includes malt barley and feed barley"
+      },
+      "tariffsInQuota":    { "rate": 0, "type": "ad_valorem_percent", "note": "Duty-free; effective protection via government mark-up" },
+      "tariffsOutOfQuota": { "value": 39000, "type": "specific", "unit": "JPY/tonne", "note": "¥39/kg = ¥39,000/t; approx. 150% ad valorem" },
+      "countryAllocations": [
+        { "country": "AU", "note": "Largest supplier; feed and malting barley" },
+        { "country": "CA", "note": "Second-largest; malting barley" },
+        { "country": "US", "note": "Third; malt and feed" }
+      ],
+      "effectiveDates": { "start": "1995-01-01", "end": null },
+      "status": "active",
+      "verificationLevel": "verified",
+      "sources": [
+        { "label": "MAFF Japan: grain TRQ information", "url": "https://www.maff.go.jp/e/policies/trade_agri/trq.html" }
+      ]
+    },
+
+    {
+      "id": "EU-STEEL-OTHER",
+      "jurisdiction": "EU",
+      "sector": "steel",
+      "product": "Remaining EU steel safeguard categories (1B, 3, 4B, 5, 6, 8–11, 14–15, 17–28)",
+      "hsCodeRef": "Chapter 72 — 19 remaining product categories not individually listed above",
+      "quotaType": "combined",
+      "legalBasis": {
+        "primaryRegulation": "Commission Implementing Regulation (EU) 2019/159",
+        "celex": "02019R0159-20250326",
+        "note": "All 26 product categories subject to same 0%/25% rate structure; individual volumes in Annex IV"
+      },
+      "volume": {
+        "valueApprox": 8500000,
+        "unit": "tonnes",
+        "period": "annual",
+        "note": "Estimated residual; total safeguard is ~18.3 MT p.a. across all 26 categories; 7 individually listed categories account for ~9.79 MT, leaving ~8.5 MT across these 19"
+      },
+      "tariffsInQuota":    { "rate": 0,  "type": "ad_valorem_percent" },
+      "tariffsOutOfQuota": { "rate": 25, "type": "ad_valorem_percent" },
+      "countryAllocations": [
+        { "country": "TR",    "note": "Named in multiple category-level allocations" },
+        { "country": "IN",    "note": "Named in multiple categories" },
+        { "country": "KR",    "note": "Named in multiple categories" },
+        { "country": "UK",    "note": "Named in multiple categories" },
+        { "country": "UA",    "note": "Named in multiple categories" },
+        { "country": "CN",    "note": "Named in some long-products categories" },
+        { "country": "OTHER", "note": "Residual FCFS pools in each category" }
+      ],
+      "effectiveDates": { "start": "2019-02-01", "end": "2026-06-30" },
+      "status": "expired",
+      "verificationLevel": "partial",
+      "sources": [
+        { "label": "EUR-Lex CELEX 02019R0159-20250326 (Annex IV for per-category volumes)", "url": "https://eur-lex.europa.eu/legal-content/EN/ALL/?uri=CELEX:02019R0159-20250326" }
+      ],
+      "notes": "Individual category volumes require reading Annex IV tables in the consolidated regulation text. The 19 remaining categories cover: 1B (other hot-rolled flat), 3 (electrical sheets non-GOES), 4B (organic coated), 5 (tinmill), 6 (GOES electrical), 8–11 (stainless products), 14–15 (stainless/alloy wire/bars), 17 (structural sections), 18 (non-alloy sheets/plates), 19–25 (hollow/tubular products), 26–28 (alloy wire rod, seamless gas service, boiler tubes)."
+    },
+
+    {
+      "id": "US-SUGAR-RAW",
+      "jurisdiction": "US",
+      "sector": "agriculture_sugar",
+      "product": "Raw cane sugar — WTO TRQ",
+      "hsCodeRef": "1701.13, 1701.14 (HTS AUSN 5 to Chapter 17)",
+      "quotaType": "combined",
+      "legalBasis": {
+        "primaryRegulation": "US WTO Schedule XX — Uruguay Round concession (1994)",
+        "administration": "USDA Agricultural Marketing Service (AMS) allocates country-specific quotas; CBP enforces",
+        "ustrRef": "Annual USTR Presidential Proclamation sets FY quota total"
+      },
+      "volume": {
+        "value": 1117195,
+        "unit": "MTRV",
+        "period": "annual",
+        "quotaYearRef": "FY2026 (1 Oct 2025 – 30 Sep 2026)",
+        "note": "MTRV = metric tons raw value; FY2026 allocation per USTR Proclamation. Additional refined sugar TRQ: 22,000 MTRV."
+      },
+      "tariffsInQuota": {
+        "value": 1.46,
+        "type": "specific",
+        "unit": "cents/kg",
+        "note": "Approximately 4% ad valorem at prevailing world raw sugar prices"
+      },
+      "tariffsOutOfQuota": {
+        "value": 33.87,
+        "type": "specific",
+        "unit": "cents/kg",
+        "note": "MFN out-of-quota rate; effectively prohibitive above-TRQ imports from most origins"
+      },
+      "countryAllocations": [
+        { "country": "DO", "note": "Dominican Republic — largest single allocation (~183,000 MTRV)" },
+        { "country": "BR", "note": "Brazil — second largest (~152,691 MTRV)" },
+        { "country": "PH", "note": "Philippines (~142,160 MTRV)" },
+        { "country": "AR", "note": "Argentina (~45,281 MTRV)" },
+        { "country": "AU", "note": "Australia (~87,402 MTRV)" },
+        { "country": "CO", "note": "Colombia" },
+        { "country": "EC", "note": "Ecuador" },
+        { "country": "GT", "note": "Guatemala — combined DR-CAFTA allocation" },
+        { "country": "HN", "note": "Honduras" },
+        { "country": "NI", "note": "Nicaragua" },
+        { "country": "MX", "note": "Mexico — separate unlimited access under USMCA" },
+        { "country": "OTHER", "note": "~40 additional countries share remaining WTO schedule allocation" }
+      ],
+      "effectiveDates": { "start": "1995-01-01", "end": null, "note": "Ongoing WTO bound; country allocations reset each FY via Presidential Proclamation" },
+      "status": "active",
+      "verificationLevel": "partial",
+      "sources": [
+        { "label": "USTR: Sugar TRQ allocations", "url": "https://ustr.gov/issue-areas/industry-manufacturing/sugar" },
+        { "label": "CBP Quota Bulletin QB 26-201 (raw cane sugar FY2026)", "url": "https://www.cbp.gov/trade/quota/bulletins/qb-26-201-2026" }
+      ],
+      "notes": "Country allocations (individual volumes) are confirmed at country level from multiple secondary sources; exact MTRV per country requires USTR proclamation text. USMCA provides Mexico effectively unlimited access to US sugar market since FY2023."
+    },
+
+    {
+      "id": "US-BEEF-WTO",
+      "jurisdiction": "US",
+      "sector": "agriculture_beef",
+      "product": "Beef — WTO TRQ (all fresh/frozen/chilled bovine)",
+      "hsCodeRef": "0201, 0202 (and related offal); HTS Chapter 02 AUSNs; Chapter 99 Note 10",
+      "quotaType": "combined",
+      "legalBasis": {
+        "primaryRegulation": "US WTO Schedule XX — Uruguay Round concession (1994)",
+        "administration": "US Customs and Border Protection (CBP); country-specific quotas allocated by US Trade Representative"
+      },
+      "volume": {
+        "value": 696621,
+        "unit": "tonnes",
+        "period": "annual",
+        "note": "Approximate aggregate WTO bound TRQ across all beef categories; verify exact volume from current USITC HTS Chapter 02 Additional US Note 3 or CBP QB 26-202."
+      },
+      "tariffsInQuota": {
+        "value": 4.4,
+        "type": "specific",
+        "unit": "cents/kg",
+        "note": "4.4 cents/kg for fresh/chilled (0201); 3.0 cents/kg for frozen (0202)"
+      },
+      "tariffsOutOfQuota": {
+        "rate": 26.4,
+        "type": "ad_valorem_percent",
+        "note": "26.4% ad valorem out-of-quota (over-access) rate"
+      },
+      "countryAllocations": [
+        { "country": "AU", "note": "Australia — largest allocation; approx. 378,214 t p.a." },
+        { "country": "NZ", "note": "New Zealand — second largest; approx. 213,402 t p.a." },
+        { "country": "CA", "note": "Canada — approx. 37,400 t p.a." },
+        { "country": "JP", "note": "Japan — small historical allocation (~200 t)" },
+        { "country": "OTHER", "note": "Remainder distributed globally; actual over-quota imports at 26.4% are common from major exporters" }
+      ],
+      "effectiveDates": { "start": "1995-01-01", "end": null },
+      "status": "active",
+      "verificationLevel": "partial",
+      "sources": [
+        { "label": "CBP: Commodities Subject to Import Quotas", "url": "https://www.cbp.gov/trade/quota/guide-import-goods/commodities" },
+        { "label": "USITC HTS Chapter 02", "url": "https://hts.usitc.gov/reststop/file?release=currentRelease&filename=Chapter+2" }
+      ],
+      "notes": "Country allocation volumes are well-established in secondary literature but exact primary-source volumes require current CBP quota bulletin; marked partial accordingly. Australia and NZ are consistently the dominant users of US beef TRQ."
+    },
+
+    {
+      "id": "EU-BEEF-HILTON",
+      "jurisdiction": "EU",
+      "sector": "agriculture_beef",
+      "product": "High-quality beef — 'Hilton Quota' (grain-fed bovine cuts)",
+      "hsCodeRef": "0201.20, 0201.30, 0202.20, 0202.30 (specific high-quality cuts; see regulation annex for exact CN codes)",
+      "quotaType": "combined",
+      "legalBasis": {
+        "primaryRegulation": "EU WTO Schedule CXL — GATT concession",
+        "administration": "Commission Implementing Regulation (EU) 2020/761 of 17 Dec 2019 on TRQ management",
+        "ojRef": "OJ L 185, 12.6.2020"
+      },
+      "volume": {
+        "value": 66826,
+        "unit": "tonnes",
+        "period": "annual",
+        "note": "Product weight (bone-in equivalent); covers fresh/chilled and frozen high-quality grain-fed cuts"
+      },
+      "tariffsInQuota":    { "rate": 20, "type": "ad_valorem_percent", "note": "20% ad valorem in-quota duty" },
+      "tariffsOutOfQuota": {
+        "rateAdValorem": 12.8,
+        "specificRate": 176.8,
+        "specificUnit": "EUR/100kg",
+        "note": "MFN rate for fresh/chilled beef: 12.8% + 176.8 EUR/100kg (effectively prohibitive for most non-preferential origins)"
+      },
+      "countryAllocations": [
+        { "country": "US",    "note": "United States — approximately 11,500 t" },
+        { "country": "AR",    "note": "Argentina — approximately 29,500 t; largest single allocation" },
+        { "country": "UY",    "note": "Uruguay — approximately 6,300 t" },
+        { "country": "AU",    "note": "Australia — approximately 7,150 t" },
+        { "country": "NZ",    "note": "New Zealand — approximately 1,300 t" },
+        { "country": "BR",    "note": "Brazil — approximately 5,000 t" },
+        { "country": "CA",    "note": "Canada — approximately 1,500 t" },
+        { "country": "PY",    "note": "Paraguay — approximately 1,000 t" },
+        { "country": "OTHER", "note": "Residual for other qualifying suppliers" }
+      ],
+      "effectiveDates": { "start": "1995-01-01", "end": null, "note": "Ongoing WTO bound; managed under Reg. 2020/761 framework" },
+      "status": "active",
+      "verificationLevel": "partial",
+      "sources": [
+        { "label": "EUR-Lex: Reg. (EU) 2020/761", "url": "https://eur-lex.europa.eu/legal-content/EN/ALL/?uri=CELEX:32020R0761" },
+        { "label": "USDA FAS EU beef TRQ overview", "url": "https://apps.fas.usda.gov/newgainapi/api/Report/DownloadReportByFileName?fileName=Updated+Comparison+of+EU+Tariff+Rate+Quotas+for+High+Quality+Bovine+Meat_Brussels+USEU_European+Union_E42022-0045" }
+      ],
+      "notes": "Known as the 'Hilton quota' after US USTR Robert Strauss's aide Carla Hills who negotiated it; traditional premium beef access. Country allocation volumes sourced from secondary USDA FAS reports; exact EU OJ publication volumes may differ marginally."
+    },
+
+    {
+      "id": "EU-SUGAR-RAW",
+      "jurisdiction": "EU",
+      "sector": "agriculture_sugar",
+      "product": "Raw cane sugar for refining — WTO TRQ",
+      "hsCodeRef": "1701.13, 1701.14",
+      "quotaType": "combined",
+      "legalBasis": {
+        "primaryRegulation": "EU WTO Schedule CXL — GATT/Uruguay Round concession",
+        "administration": "Commission Implementing Regulation (EU) 2020/761 (TRQ management framework)",
+        "note": "Successor to the ACP Sugar Protocol (expired 2009); replaced by EPA preferential access for ACP countries"
+      },
+      "volume": {
+        "value": 198748,
+        "unit": "tonnes",
+        "period": "annual",
+        "note": "WTO bound minimum access for raw cane sugar for refining; separate MFN quota. ACP/EPA countries have additional preferential access."
+      },
+      "tariffsInQuota":    { "value": 98, "type": "specific", "unit": "EUR/tonne", "note": "€98/tonne in-quota rate for raw cane sugar for refining" },
+      "tariffsOutOfQuota": { "value": 339, "type": "specific", "unit": "EUR/tonne", "note": "Approx. €339/tonne standard MFN tariff for raw cane sugar (out-of-quota)" },
+      "countryAllocations": [
+        { "country": "CU", "note": "Cuba — approximately 58,969 t (largest WTO allocation)" },
+        { "country": "BR", "note": "Brazil — approximately 23,930 t" },
+        { "country": "OTHER", "note": "Remaining balance distributed to other WTO members; ACP countries have separate EPA-based preferential access" }
+      ],
+      "effectiveDates": { "start": "1995-01-01", "end": null },
+      "status": "active",
+      "verificationLevel": "partial",
+      "sources": [
+        { "label": "EU Agriculture: TRQ management (sugar sector)", "url": "https://agriculture.ec.europa.eu/common-agricultural-policy/market-measures/trqs_en" },
+        { "label": "EC Agri: Sugar TRQ status report 2025–26", "url": "https://agriculture.ec.europa.eu/document/download/3e1790c5-c89a-40b2-8939-ac933749908a_en?filename=sugar-trq-2025-26_en.pdf" }
+      ],
+      "notes": "198,748 t is the WTO-bound MFN TRQ. Additional ACP/LDC sugar access under Economic Partnership Agreements (duty-free) supplements this significantly."
+    },
+
+    {
+      "id": "CA-BUTTER-WTO",
+      "jurisdiction": "CA",
+      "sector": "agriculture_dairy",
+      "product": "Butter — WTO supply-managed TRQ",
+      "hsCodeRef": "0405 (butter and other fats and oils derived from milk)",
+      "quotaType": "global_aggregate",
+      "legalBasis": {
+        "primaryRegulation": "Canada WTO Schedule V — Uruguay Round concession (1994)",
+        "administration": "Global Affairs Canada; import permits administered under Export and Import Permits Act",
+        "notice": "WTO Serial No. 968 / 1104 / 1131 / 1141 (annual notices)"
+      },
+      "volume": {
+        "value": 3274,
+        "unit": "tonnes",
+        "period": "annual",
+        "note": "WTO bound access quantity; additional access provided under CUSMA (USMCA) to US and CPTPP partners — CUSMA TRQ for butter adds ~1,507 t to US alone by full phase-in"
+      },
+      "tariffsInQuota":    { "rate": 5.62, "type": "ad_valorem_percent", "note": "Within-access rate under import permit system" },
+      "tariffsOutOfQuota": { "rate": 298.5, "type": "ad_valorem_percent", "note": "Over-access MFN tariff; part of Canada's supply management system" },
+      "countryAllocations": [
+        { "country": "OTHER", "note": "WTO TRQ is global (no country-specific allocation); permits allocated to importers by Global Affairs Canada" }
+      ],
+      "effectiveDates": { "start": "1995-01-01", "end": null },
+      "status": "active",
+      "verificationLevel": "partial",
+      "sources": [
+        { "label": "Canada Global Affairs: Key dates and access quantities 2026–27", "url": "https://www.international.gc.ca/trade-commerce/controls-controles/trq-dates-ct.aspx?lang=eng" },
+        { "label": "WTO: Canada — TRQ for butter (ID 126 context)", "url": "https://tradeconcerns.wto.org/en/stcs/details?imsId=126&domainId=CMA" }
+      ],
+      "notes": "Out-of-quota rate of 298.5% is effectively prohibitive; supply management ensures domestic pricing. CUSMA/CPTPP created new FTA-specific TRQs on top of this WTO base quantity."
+    },
+
+    {
+      "id": "CA-CHEESE-WTO",
+      "jurisdiction": "CA",
+      "sector": "agriculture_dairy",
+      "product": "Cheese — WTO supply-managed TRQ (all types)",
+      "hsCodeRef": "0406 (cheese and curd)",
+      "quotaType": "global_aggregate",
+      "legalBasis": {
+        "primaryRegulation": "Canada WTO Schedule V — Uruguay Round concession",
+        "administration": "Global Affairs Canada; annual notices under Export and Import Permits Act"
+      },
+      "volume": {
+        "value": 20412,
+        "unit": "tonnes",
+        "period": "annual",
+        "note": "WTO bound access quantity for cheese of all types combined; additional CUSMA TRQ provides ~17,042 t to US alone by 2024"
+      },
+      "tariffsInQuota":    { "rate": 5.5, "type": "ad_valorem_percent", "note": "Within-access import permit rate (approximate; varies slightly by cheese type)" },
+      "tariffsOutOfQuota": { "rate": 245.5, "type": "ad_valorem_percent", "note": "Over-access MFN tariff (245.5% average; ranges to ~300% for some types)" },
+      "countryAllocations": [
+        { "country": "OTHER", "note": "Global WTO TRQ; no per-country allocation. EU, NZ, US, AU are dominant in-quota suppliers." }
+      ],
+      "effectiveDates": { "start": "1995-01-01", "end": null },
+      "status": "active",
+      "verificationLevel": "partial",
+      "sources": [
+        { "label": "Canada Global Affairs: Supply-managed TRQ administration", "url": "https://www.international.gc.ca/trade-commerce/controls-controles/supply_managed-gestion_offre.aspx?lang=eng" },
+        { "label": "2024 WTO Cheese Quota Holders List", "url": "https://www.international.gc.ca/trade-commerce/controls-controles/dairy-laitiers/notices-avis/2024_wto_cheeses_all-2024_omc_fromages_tous.aspx?lang=eng" }
+      ],
+      "notes": "Canada's cheese TRQ system was a source of WTO dispute (DS103). CUSMA created additional US-specific TRQ that significantly exceeds the WTO base; EU also has separate CETA TRQ."
+    },
+
+    {
+      "id": "KR-RICE-WTO",
+      "jurisdiction": "KR",
+      "sector": "agriculture_grain",
+      "product": "Rice — WTO TRQ",
+      "hsCodeRef": "1006 (rice)",
+      "quotaType": "combined",
+      "legalBasis": {
+        "primaryRegulation": "Korea WTO Schedule LXXXI — Renegotiated concession; Korea agreed to tariffication in 2015 (implemented 2015 Doha Round schedule renegotiation, Art. 28 GATT)",
+        "mechanism": "Government designated entities (Korea Agro-Fisheries & Food Trade Corp, AT) hold authority to apply in-quota rates; private-sector over-quota imports at 513%"
+      },
+      "volume": {
+        "value": 408700,
+        "unit": "tonnes",
+        "period": "annual",
+        "note": "408,700 MT milled basis (revised to ~412,695 t from 2024 onwards per updated WTO schedule); Korea fully utilised quota in 2024"
+      },
+      "tariffsInQuota":    { "rate": 5, "type": "ad_valorem_percent", "note": "5% in-quota rate; only government-designated entities may apply this rate" },
+      "tariffsOutOfQuota": { "rate": 513, "type": "ad_valorem_percent", "note": "513% current applied out-of-quota tariff; Korea's bound rate under renegotiated schedule" },
+      "countryAllocations": [
+        { "country": "US",    "note": "United States — largest single allocation under WTO; approx. 132,304 t" },
+        { "country": "CN",    "note": "China — approx. 116,160 t" },
+        { "country": "AU",    "note": "Australia — approx. 57,564 t" },
+        { "country": "TH",    "note": "Thailand — approx. 29,963 t" },
+        { "country": "OTHER", "note": "Residual distributed globally" }
+      ],
+      "effectiveDates": { "start": "2015-01-01", "end": null, "note": "Tariffication with TRQ implemented from 1 Jan 2015; prior WTO schedule used MA quota without tariffication" },
+      "status": "active",
+      "verificationLevel": "partial",
+      "sources": [
+        { "label": "WTO — Korea tariff profile", "url": "https://www.wto.org/english/res_e/statis_e/daily_update_e/tariff_profiles/kr_e.pdf" },
+        { "label": "USDA FAS: South Korea Grain and Feed Update", "url": "https://www.fas.usda.gov/data/south-korea-grain-and-feed-update-26" }
+      ],
+      "notes": "Korea fully utilised its 2024 WTO rice quota. The 513% out-of-quota rate is one of the highest agricultural tariffs globally after Japan's rice tariff."
+    },
+
+    {
+      "id": "UK-BEEF-GATT",
+      "jurisdiction": "UK",
+      "sector": "agriculture_beef",
+      "product": "Frozen beef and veal — GATT global TRQ",
+      "hsCodeRef": "0202, 0206.29.91 (frozen boneless beef/veal)",
+      "quotaType": "global_aggregate",
+      "legalBasis": {
+        "primaryRegulation": "The Customs (Tariff Quota) (EU Exit) Regulations 2020, Statutory Instrument 2020 No. 1432",
+        "mechanism": "Import licences administered by Rural Payments Agency (RPA) via UK APHA",
+        "notice": "CBP Notice to Traders 98/24 (period ending 31 Dec 2024); annual notices from RPA"
+      },
+      "volume": {
+        "value": 16174,
+        "unit": "tonnes",
+        "period": "annual",
+        "note": "Approximate annual total: H1 2025 allocation was 8,087,365 kg per Notice to Traders 79/24; annual estimate based on H1 × 2. Expressed as boneless meat equivalent."
+      },
+      "tariffsInQuota":    { "rate": 0, "type": "ad_valorem_percent", "note": "Zero duty on frozen beef within quota" },
+      "tariffsOutOfQuota": {
+        "rateAdValorem": 12.8,
+        "specificRate": 176.8,
+        "specificUnit": "GBP/100kg",
+        "note": "UK Global Tariff out-of-quota rate: 12.8% + £176.8/100 kg product weight"
+      },
+      "countryAllocations": [
+        { "country": "OTHER", "note": "Global FCFS TRQ; no country-specific allocations. Main supplying countries: Argentina, Brazil, Australia, Uruguay, New Zealand." }
+      ],
+      "effectiveDates": { "start": "2021-01-01", "end": null, "note": "Post-Brexit autonomous schedule; UK maintained GATT TRQ at EU-inherited level" },
+      "status": "active",
+      "verificationLevel": "partial",
+      "sources": [
+        { "label": "gov.uk: Notice to Traders 98/24 — frozen beef GATT quota", "url": "https://www.gov.uk/government/publications/notice-to-traders-9824-import-of-frozen-beef-and-veal-quota-gatt-under-statutory-instrument-2020-no-1432/notice-to-traders-9824-import-of-frozen-beef-and-veal-quota-gatt-under-statutory-instrument-2020-no-1432" },
+        { "label": "gov.uk: UK TRQs 2025", "url": "https://www.gov.uk/guidance/uk-tariff-rate-quotas-2025" }
+      ],
+      "notes": "Annual volume derived from H1 allocation × 2; actual annual volume should be confirmed from full-year RPA notice. UK GATT beef quota is considerably smaller than the pre-Brexit EU share of the equivalent WTO TRQ."
+    },
+
+    {
+      "id": "US-STEEL-232-KR",
+      "jurisdiction": "US",
+      "sector": "steel",
+      "product": "Section 232 steel TRQ — South Korea (all steel products)",
+      "hsCodeRef": "Chapter 72, 73 steel products listed in Annex I of Proclamation 9740",
+      "quotaType": "country_specific",
+      "legalBasis": {
+        "primaryRegulation": "Presidential Proclamation 9740 of 22 April 2018 (establishing Korea TRQ under Section 232)",
+        "termination": "Presidential Proclamation [2025] of 11 March 2025 — all Section 232 country-specific TRQs terminated effective 12 March 2025; 25% tariff restored on all Korean steel",
+        "legalAuthority": "Trade Expansion Act of 1962, Section 232"
+      },
+      "volume": {
+        "value": null,
+        "unit": "tonnes",
+        "period": "annual",
+        "note": "Set at 100% of Korea's average annual steel exports to US in 2015–2017 (~2.39 million metric tonnes); individual product-level quotas published in Proclamation 9740 Annex"
+      },
+      "tariffsInQuota":    { "rate": 0,  "type": "ad_valorem_percent", "note": "0% — Korea was the only country exempted from the 25% S232 tariff for in-quota imports" },
+      "tariffsOutOfQuota": { "rate": 25, "type": "ad_valorem_percent", "note": "25% Section 232 tariff applied on all Korean steel above TRQ volume; now applies to all Korean steel post-termination" },
+      "countryAllocations": [
+        { "country": "KR", "note": "Country-specific TRQ; all volume reserved for Korea. No residual pool for other origins." }
+      ],
+      "effectiveDates": {
+        "start": "2018-05-01",
+        "end": "2025-03-12",
+        "note": "TERMINATED 12 March 2025 per Presidential Proclamation. Korean steel now subject to full 25% S232 tariff with no TRQ exemption."
+      },
+      "status": "expired",
+      "verificationLevel": "partial",
+      "sources": [
+        { "label": "USTR: Section 232 — Korea TRQ background", "url": "https://ustr.gov/issue-areas/industry-manufacturing/section-232-investigations" },
+        { "label": "Federal Register: Proclamation 9740", "url": "https://www.federalregister.gov/documents/2018/04/30/2018-09422/adjusting-imports-of-steel-into-the-united-states" }
+      ],
+      "notes": "Korea TRQ was the only quota-based exemption from S232 steel tariffs; all others (Canada, Mexico, EU, UK, Japan, Australia, Argentina, Brazil) obtained full tariff exemptions or separate arrangements. Termination March 2025 was part of broader S232 tariff policy reset."
+    },
+
+    {
+      "id": "US-STEEL-232-BRA",
+      "jurisdiction": "US",
+      "sector": "steel",
+      "product": "Section 232 steel TRQ — Brazil and Argentina (all steel products)",
+      "hsCodeRef": "Chapter 72, 73 steel products listed in Proclamation annexes",
+      "quotaType": "country_specific",
+      "legalBasis": {
+        "primaryRegulation": "Presidential Proclamation 10328 (Brazil TRQ, 2022); Proclamation 9759 (Argentina TRQ, 2018)",
+        "termination": "Both TRQs TERMINATED 12 March 2025; full 25% S232 tariff restored on Brazilian and Argentine steel",
+        "legalAuthority": "Trade Expansion Act of 1962, Section 232"
+      },
+      "volume": {
+        "value": null,
+        "unit": "tonnes",
+        "period": "annual",
+        "note": "Brazil: approx. 3.5 million t p.a. (set at 2018–2020 average); Argentina: approx. 135,000 t p.a. (small producer). Individual product-level volumes in proclamation annexes."
+      },
+      "tariffsInQuota":    { "rate": 0,  "type": "ad_valorem_percent" },
+      "tariffsOutOfQuota": { "rate": 25, "type": "ad_valorem_percent" },
+      "countryAllocations": [
+        { "country": "BR", "note": "Brazil-specific TRQ under Proclamation 10328" },
+        { "country": "AR", "note": "Argentina-specific TRQ under Proclamation 9759" }
+      ],
+      "effectiveDates": {
+        "start": "2018-06-01",
+        "end": "2025-03-12",
+        "note": "TERMINATED 12 March 2025. Both countries now subject to full 25% S232 tariff."
+      },
+      "status": "expired",
+      "verificationLevel": "partial",
+      "sources": [
+        { "label": "USTR: Section 232 investigations and country TRQs", "url": "https://ustr.gov/issue-areas/industry-manufacturing/section-232-investigations" }
+      ],
+      "notes": "Terminated concurrently with Korea TRQ on 12 March 2025. Post-termination, Brazil and Argentina joined all other non-exempted countries in paying the full 25% S232 steel tariff."
+    }
+
+  ]
+}

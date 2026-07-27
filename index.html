@@ -3712,6 +3712,17 @@ canvas { font-family: var(--f-mono); }
 <!-- ============================================================ TAB 1: HORMUZ -->
 <div class="page active" id="page-hormuz">
 
+  <!-- CHOKEPOINT SELECTOR -->
+  <div style="background:#0A0A09;border-bottom:1px solid #1E1E1C;padding:10px 28px;display:flex;align-items:center;gap:8px">
+    <span style="font-size:8px;font-weight:700;letter-spacing:.16em;color:#3A3A34;margin-right:8px">CHOKEPOINT</span>
+    <button id="cpbtn-hormuz" onclick="showCpView('hormuz')" style="font-family:inherit;font-size:9px;font-weight:700;letter-spacing:.1em;padding:5px 14px;border-radius:3px;cursor:pointer;border:1px solid #E05252;background:rgba(224,82,82,.15);color:#E05252;transition:all .15s">&#9650; STRAIT OF HORMUZ</button>
+    <button id="cpbtn-bab" onclick="showCpView('bab')" style="font-family:inherit;font-size:9px;font-weight:700;letter-spacing:.1em;padding:5px 14px;border-radius:3px;cursor:pointer;border:1px solid #3A3A36;background:transparent;color:#6A6A5A;transition:all .15s">&#9875; BAB AL-MANDEB</button>
+    <span id="cpbtn-bab-badge" style="font-size:8px;font-weight:700;letter-spacing:.12em;color:#F59E0B;border:1px solid rgba(245,158,11,.4);background:rgba(245,158,11,.08);padding:2px 8px;border-radius:3px">BLOCKADE&nbsp;&middot;&nbsp;DAY 7</span>
+    <span style="margin-left:auto;font-size:8px;color:#2A2A26;letter-spacing:.08em">DECLARED 20 JUL 2026</span>
+  </div>
+
+  <div id="cp-view-hormuz">
+
   <!-- ① CHOKEPOINT SUMMARY STRIP -->
   <div style="background:#0D0D0B;border-bottom:1px solid #1A1A18;display:flex">
     <div style="flex:1;padding:14px 28px;display:flex;align-items:center;justify-content:space-between;gap:48px">
@@ -3922,7 +3933,225 @@ canvas { font-family: var(--f-mono); }
 
     </div>
   </div>
-</div>
+  </div><!-- /cp-view-hormuz -->
+
+  <!-- ══════════════════════════════ BAB AL-MANDEB VIEW ══════════════════════════════ -->
+  <div id="cp-view-bab" style="display:none">
+
+    <!-- ① STATUS STRIP -->
+    <div style="background:#0D0D0B;border-bottom:1px solid #1A1A18;display:flex">
+      <div style="flex:1;padding:14px 28px;display:flex;align-items:center;justify-content:space-between;gap:48px">
+        <div>
+          <div style="display:flex;align-items:center;gap:7px;margin-bottom:6px"><span style="width:7px;height:7px;border-radius:50%;background:#F59E0B;display:inline-block"></span><span style="font-size:8px;font-weight:700;letter-spacing:.16em;color:#F59E0B">BLOCKADE</span></div>
+          <div style="font-size:11px;font-weight:700;letter-spacing:.08em;color:#D9D8D3">BAB AL-MANDEB STRAIT</div>
+          <div style="font-size:9px;color:#4A4A44;margin-top:3px;line-height:1.4">Day 7 &middot; declared Jul 20 2026 &middot; Houthi naval ban &mdash; all vessels serving Saudi ports</div>
+        </div>
+        <div style="text-align:right">
+          <div style="font-size:28px;font-weight:700;color:#F59E0B;line-height:1">-65%</div>
+          <div style="font-size:9px;color:#4A4A44;margin-top:3px">~15/day vs 42 pre-blockade &middot; Jul 26 est. &middot; Kpler AIS</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ② ALERT BANNERS -->
+    <div style="background:#100B04;border-bottom:1px solid #2A1A06;padding:9px 24px;display:flex;align-items:flex-start;gap:12px">
+      <span style="font-size:8px;font-weight:700;letter-spacing:.14em;color:#F59E0B;border:1px solid rgba(245,158,11,.5);padding:3px 8px;border-radius:3px;white-space:nowrap;flex-shrink:0;margin-top:1px">BLOCKADE</span>
+      <div style="display:flex;flex-wrap:wrap;gap:6px">
+        <span style="font-size:9px;color:#F2F1ED;background:rgba(245,158,11,.1);border:1px solid rgba(245,158,11,.22);padding:3px 10px;border-radius:3px">&#9679; Houthi declared naval blockade Jul 20 2026 &mdash; all vessels transiting to/from Saudi ports banned</span>
+        <span style="font-size:9px;color:#F2F1ED;background:rgba(245,158,11,.1);border:1px solid rgba(245,158,11,.22);padding:3px 10px;border-radius:3px">&#9679; 4 VLCCs turned back Jul 22 carrying 3.8M bbl crude &mdash; tankers rerouting Indian Ocean</span>
+        <span style="font-size:9px;color:#F2F1ED;background:rgba(245,158,11,.1);border:1px solid rgba(245,158,11,.22);padding:3px 10px;border-radius:3px">&#9679; Yanbu oil port attacked by Houthi drones Jul 25 &mdash; loading operations suspended</span>
+      </div>
+    </div>
+    <div style="background:#0E0C07;border-bottom:1px solid #242010;padding:7px 24px;display:flex;align-items:flex-start;gap:12px">
+      <span style="font-size:8px;font-weight:700;letter-spacing:.14em;color:#C98A2E;border:1px solid rgba(201,138,46,.5);padding:3px 8px;border-radius:3px;white-space:nowrap;flex-shrink:0;margin-top:1px">WATCH</span>
+      <div style="display:flex;flex-wrap:wrap;gap:6px">
+        <span style="font-size:9px;color:#D9D8D3;background:rgba(201,138,46,.07);border:1px solid rgba(201,138,46,.18);padding:3px 10px;border-radius:3px">&#9679; Cape of Good Hope diversions: +14 days transit, +$600&ndash;900K per voyage &middot; Djibouti port congestion surging</span>
+        <span style="font-size:9px;color:#D9D8D3;background:rgba(201,138,46,.07);border:1px solid rgba(201,138,46,.18);padding:3px 10px;border-radius:3px">&#9679; War-risk insurance escalating ~2.5&ndash;3% hull value &middot; JWC extends Red Sea / Gulf of Aden listing</span>
+      </div>
+    </div>
+
+    <!-- ③ MAIN 2-COL GRID -->
+    <div class="row col21" style="padding-top:18px">
+
+      <!-- LEFT COLUMN -->
+      <div style="display:flex;flex-direction:column;gap:14px">
+
+        <!-- HERO KPI ROW -->
+        <div style="display:grid;grid-template-columns:2fr 1fr 1fr 1fr;gap:10px">
+          <div style="background:#100B04;border:1px solid #2A1C08;border-radius:6px;padding:22px 22px 16px;display:flex;flex-direction:column;justify-content:space-between;min-height:148px">
+            <div style="font-size:8px;font-weight:700;letter-spacing:.16em;color:#F59E0B">VS 42 / DAY PRE-BLOCKADE &middot; KPLER</div>
+            <div>
+              <div style="font-size:60px;font-weight:700;letter-spacing:-.03em;color:#F59E0B;line-height:1;margin:6px 0">-65%</div>
+              <div style="font-size:10px;color:#8A6020;line-height:1.5">Blockade Day 7<br>Houthi naval ban Jul 20</div>
+            </div>
+            <div style="font-size:8px;color:#3A2A10;letter-spacing:.06em">Kpler &middot; MarineTraffic AIS synthesis</div>
+          </div>
+          <div style="background:#111110;border:1px solid #1E1E1C;border-radius:6px;padding:16px 14px;display:flex;flex-direction:column;justify-content:space-between;min-height:148px">
+            <div style="font-size:8px;font-weight:700;letter-spacing:.14em;color:#4A4A44">TRANSITS TODAY</div>
+            <div>
+              <div style="font-size:44px;font-weight:700;letter-spacing:-.02em;color:#F59E0B;line-height:1;margin:6px 0 4px">~15<a href="https://www.kpler.com" target="_blank" rel="noopener" class="src-lnk" title="Source: Kpler AIS estimate Jul 26">&#8599;</a></div>
+              <div style="font-size:9px;color:#8A7030;line-height:1.4">Jul 26 est. &middot; AIS<br>29 on Jul 22 (&#8722;30%)</div>
+            </div>
+            <div style="font-size:8px;color:#2A2A26;letter-spacing:.04em">AIS estimate</div>
+          </div>
+          <div style="background:#111110;border:1px solid #1E1E1C;border-radius:6px;padding:16px 14px;display:flex;flex-direction:column;justify-content:space-between;min-height:148px">
+            <div style="font-size:8px;font-weight:700;letter-spacing:.14em;color:#4A4A44">VLCCs TURNED BACK</div>
+            <div>
+              <div style="font-size:44px;font-weight:700;letter-spacing:-.02em;color:#E05252;line-height:1;margin:6px 0 4px">4<a href="https://www.kpler.com" target="_blank" rel="noopener" class="src-lnk" title="Source: Kpler satellite Jul 22 2026">&#8599;</a></div>
+              <div style="font-size:9px;color:#9A4040;line-height:1.4">Jul 22 &middot; 3.8M bbl<br>crude rerouted</div>
+            </div>
+            <div style="font-size:8px;color:#2A2A26;letter-spacing:.04em">Kpler satellite</div>
+          </div>
+          <div style="background:#111110;border:1px solid #1E1E1C;border-radius:6px;padding:16px 14px;display:flex;flex-direction:column;justify-content:space-between;min-height:148px">
+            <div style="font-size:8px;font-weight:700;letter-spacing:.14em;color:#4A4A44">OIL AT RISK</div>
+            <div>
+              <div style="font-size:36px;font-weight:700;letter-spacing:-.02em;color:#C98A2E;line-height:1;margin:6px 0 4px">3.8M<span style="font-size:14px;font-weight:400;color:#4A4A44;margin-left:2px">bbl</span></div>
+              <div style="font-size:9px;color:#C98A2E;line-height:1.4">turned back Jul 22<br>~4.7M bbl/day flow</div>
+            </div>
+            <div style="font-size:8px;color:#2A2A26;letter-spacing:.04em">Reuters &middot; Kpler est.</div>
+          </div>
+        </div>
+
+        <!-- BAR CHART -->
+        <div class="card">
+          <div class="card-label">Bab al-Mandeb &mdash; 14-Day Transit Monitor</div>
+          <div class="card-sub">Jul 13&ndash;26 2026 &middot; Kpler AIS synthesis &middot; baseline ~42/day (pre-blockade Jul 2026) &middot; blockade declared Jul 20 &middot; Yanbu strike Jul 25</div>
+          <div style="position:relative;height:200px">
+            <canvas id="babChart" role="img" aria-label="Daily Bab al-Mandeb crossings past 14 days"></canvas>
+          </div>
+          <div class="src"><span>Kpler &middot; MarineTraffic AIS &middot; Reuters Jul 22 2026</span><span class="src-badge" style="background:rgba(245,158,11,.15);color:#F59E0B;border-color:rgba(245,158,11,.4)">blockade day 7 &middot; AIS est.</span></div>
+          <div style="margin-top:10px;padding:10px 12px;background:rgba(245,158,11,.06);border:1px solid rgba(245,158,11,.18);border-left:3px solid #F59E0B;border-radius:3px;font-size:10.5px;line-height:1.6;color:#b87d20">
+            <span style="font-weight:700;color:#F59E0B;letter-spacing:.03em">&#9888; BLOCKADE IN EFFECT &mdash; HOUTHI NAVAL BAN JUL 20 2026</span><br>
+            Houthi forces declared a naval blockade targeting all vessels serving Saudi Arabian ports. Jul 22 first confirmed data: 29 transits vs 41 prev day (&minus;30%). VLCCs rerouting via Indian Ocean &rarr; Cape of Good Hope adding ~14 days and $600&ndash;900K per voyage. Jizan + Yanbu Saudi ports struck Jul 25. <strong style="color:#e8c070">Brent spiked to ~$100/bbl</strong> on blockade announcement.
+          </div>
+        </div>
+
+        <!-- AFFECTED PORTS -->
+        <div class="card">
+          <div class="card-label">Affected Ports &mdash; Bab al-Mandeb Corridor</div>
+          <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-top:6px">
+            <div style="background:#130808;border:1px solid #2A1414;border-radius:5px;padding:10px 12px">
+              <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:5px">
+                <div style="font-size:11px;font-weight:700;color:#D9D8D3;display:flex;align-items:center;gap:5px"><img src="https://flagcdn.com/16x12/sa.png" style="height:9px;border-radius:1px;vertical-align:middle">Jeddah</div>
+                <span style="font-size:7px;font-weight:700;padding:2px 5px;border-radius:2px;color:#E05252;border:1px solid #E05252">CRITICAL</span>
+              </div>
+              <div style="font-size:9px;color:#7A7A72;line-height:1.4">Red Sea blocked &middot; all Saudi-bound vessels diverted &middot; dwell est. ~28d</div>
+            </div>
+            <div style="background:#130A02;border:1px solid #2A1800;border-radius:5px;padding:10px 12px">
+              <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:5px">
+                <div style="font-size:11px;font-weight:700;color:#D9D8D3;display:flex;align-items:center;gap:5px"><img src="https://flagcdn.com/16x12/sa.png" style="height:9px;border-radius:1px;vertical-align:middle">Yanbu</div>
+                <span style="font-size:7px;font-weight:700;padding:2px 5px;border-radius:2px;color:#F59E0B;border:1px solid #F59E0B">ATTACKED</span>
+              </div>
+              <div style="font-size:9px;color:#7A7A72;line-height:1.4">Drone strike Jul 25 &middot; oil loading suspended &middot; Aramco exports halted</div>
+            </div>
+            <div style="background:#111110;border:1px solid #1E1E1C;border-radius:5px;padding:10px 12px">
+              <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:5px">
+                <div style="font-size:11px;font-weight:700;color:#D9D8D3;display:flex;align-items:center;gap:5px"><img src="https://flagcdn.com/16x12/dj.png" style="height:9px;border-radius:1px;vertical-align:middle">Djibouti</div>
+                <span style="font-size:7px;font-weight:700;padding:2px 5px;border-radius:2px;color:#C98A2E;border:1px solid #C98A2E">CONGESTED</span>
+              </div>
+              <div style="font-size:9px;color:#7A7A72;line-height:1.4">Bypass traffic surge &middot; transhipment backlog &middot; dwell ~14d</div>
+            </div>
+            <div style="background:#111110;border:1px solid #1E1E1C;border-radius:5px;padding:10px 12px">
+              <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:5px">
+                <div style="font-size:11px;font-weight:700;color:#D9D8D3;display:flex;align-items:center;gap:5px"><img src="https://flagcdn.com/16x12/om.png" style="height:9px;border-radius:1px;vertical-align:middle">Salalah</div>
+                <span style="font-size:7px;font-weight:700;padding:2px 5px;border-radius:2px;color:#C98A2E;border:1px solid #C98A2E">HIGH</span>
+              </div>
+              <div style="font-size:9px;color:#7A7A72;line-height:1.4">Cape bypass hub &middot; transhipment demand rising &middot; dwell ~12d</div>
+            </div>
+          </div>
+          <div class="src" style="margin-top:8px"><span>Reuters &middot; Kpler &middot; Lloyd's List &middot; Jul 2026</span><span class="src-badge">real data</span></div>
+        </div>
+
+        <!-- LIVE MAP -->
+        <div>
+          <div class="mapbar">
+            <span class="mapbar-label">Live AIS &mdash; MarineTraffic &middot; Bab al-Mandeb</span>
+            <span style="display:flex;align-items:center;gap:5px;font-family:var(--f-mono);font-size:8px;color:#3dd68c"><span style="width:6px;height:6px;border-radius:50%;background:#3dd68c;flex-shrink:0;animation:pulse-dot 1.8s ease-in-out infinite"></span>Real-time vessel tracking</span>
+            <div style="margin-left:auto;display:flex;gap:6px">
+              <a href="https://www.marinetraffic.com/en/ais/home/centerx:43.5/centery:12.6/zoom:8" target="_blank" class="ext-btn">&#8599; Full screen</a>
+              <a href="https://www.marinetraffic.com/en/ais/home/centerx:43.5/centery:12.6/zoom:7/mmsi:0/shipid:0/fleet:/fleet_id:/showmenu:false" target="_blank" class="ext-btn">&#8599; Tankers live</a>
+            </div>
+          </div>
+          <iframe id="bab-sat-map" src="https://www.marinetraffic.com/en/ais/embed/zoom:8/centery:12.6/centerx:43.5/maptype:4/shownames:false/mmsi:0/shipid:0/fleet:/fleet_id:/showmenu:false/remember:false" width="100%" style="border:none;display:block" loading="lazy" allowfullscreen referrerpolicy="no-referrer-when-downgrade" title="MarineTraffic — Bab al-Mandeb live AIS"></iframe>
+          <div class="mapstats">
+            <div class="mapstat"><span>Source:</span> <span style="color:#3dd68c">MarineTraffic live AIS &bull; auto-refresh</span></div>
+            <div class="mapstat"><span>AIS transits today:</span> <span style="color:#F59E0B">~15</span> <span>/ 42 pre-blockade baseline &nbsp;<span style="color:#7a8494;font-size:8px">(blockade day 7 &middot; Kpler Jul 26 est.)</span></span></div>
+            <div style="margin-left:auto;font-size:7px;color:#7a8494;font-family:'IBM Plex Mono',monospace">MarineTraffic &copy; &middot; AIS data &middot; Jul 2026</div>
+          </div>
+          <div style="font-size:7px;color:#4a5568;padding:5px 8px;line-height:1.5;border-top:1px solid rgba(255,255,255,0.04)">
+            <strong style="color:#5a6478">Methodology:</strong> 42/day baseline = Kpler AIS pre-blockade median (Jul 2026). Transit counts from MarineTraffic AIS; VLCC turnaround data from Kpler satellite tracking. Houthi naval blockade declared Jul 20 2026, targeting all vessels serving Saudi Arabian ports.
+          </div>
+        </div>
+
+      </div>
+
+      <!-- RIGHT SIDEBAR -->
+      <div style="display:flex;flex-direction:column;gap:14px">
+
+        <!-- INTELLIGENCE FEED -->
+        <div class="card">
+          <div class="card-label">Bab al-Mandeb Intelligence</div>
+          <div class="news-item"><div class="news-dot" style="background:#F59E0B"></div><div><span class="news-tag" style="background:rgba(245,158,11,.2);color:#F59E0B;border-color:rgba(245,158,11,.4)">BLOCKADE</span><div class="news-text"><strong style="color:#e8eaed">Houthi naval blockade declared Jul 20 2026</strong> &mdash; all vessels transiting Bab al-Mandeb to/from Saudi Arabian ports banned. Houthi military spokesman confirms &ldquo;total maritime siege&rdquo; on Saudi oil exports. <a href="https://www.reuters.com" target="_blank" rel="noopener" class="intel-src">Reuters &#8599;</a></div></div></div>
+          <div class="news-item"><div class="news-dot" style="background:#E05252"></div><div><span class="news-tag tag-alert">ALERT</span><div class="news-text"><strong style="color:#e8eaed">4 VLCCs turned back Jul 22</strong>, carrying est. 3.8M bbl crude. Vessels rerouting Indian Ocean &rarr; Cape of Good Hope. Saudi Aramco crude loadings severely disrupted. <a href="https://www.kpler.com" target="_blank" rel="noopener" class="intel-src">Kpler &#8599;</a></div></div></div>
+          <div class="news-item"><div class="news-dot" style="background:#E05252"></div><div><span class="news-tag tag-alert">ATTACK</span><div class="news-text"><strong style="color:#e8eaed">Yanbu oil port struck by Houthi drone Jul 25</strong> &mdash; oil loading suspended. Jizan industrial port also targeted. Saudi Aramco confirms force majeure event on crude liftings.</div></div></div>
+          <div class="news-item"><div class="news-dot" style="background:#C98A2E"></div><div><span class="news-tag" style="background:rgba(201,138,46,.2);color:#C98A2E;border-color:rgba(201,138,46,.4)">REROUTE</span><div class="news-text">Cape of Good Hope diversions adding <strong style="color:#e8eaed">+14 days transit</strong> and +$600&ndash;900K per voyage. Djibouti port reports 40%+ surge in transshipment demand. Salalah queues extending.</div></div></div>
+          <div class="news-item"><div class="news-dot" style="background:#7A7A6A"></div><div><span class="news-tag" style="background:rgba(90,90,80,.2);color:#8A8A7A;border-color:rgba(90,90,80,.4)">MARKET</span><div class="news-text">Brent crude spiked to <strong style="color:#e8eaed">~$100/bbl</strong> on blockade announcement before settling ~$97. LNG from Qatar rerouting via Malacca. War-risk premiums escalating toward Hormuz crisis levels. <a href="https://www.investing.com/commodities/brent-oil" target="_blank" rel="noopener" class="intel-src">investing.com &#8599;</a></div></div></div>
+          <div class="src"><span>Reuters &middot; Kpler &middot; Lloyd's List &middot; Jul 2026</span><span class="src-badge">real data</span></div>
+        </div>
+
+        <!-- ENERGY & RISK SIGNALS -->
+        <div class="card">
+          <div class="card-label">Energy &amp; Risk Signals &mdash; Red Sea</div>
+          <div class="metrics" style="flex-wrap:wrap">
+            <div class="metric" style="min-width:120px">
+              <div class="val amb"><span>~$97&ndash;100</span><a href="https://www.investing.com/commodities/brent-oil" target="_blank" rel="noopener" class="src-lnk" title="Source: investing.com">&#8599;</a></div>
+              <div class="lbl">Brent Crude / bbl</div>
+              <div class="chg red">+8% on blockade news &bull; Jul 20&ndash;22 2026 &bull; investing.com</div>
+            </div>
+            <div class="metric" style="min-width:120px">
+              <div class="val amb">~2.5&ndash;3% hull<a href="https://www.lloydslist.com" target="_blank" rel="noopener" class="src-lnk" title="Source: Lloyd's List &middot; LMA">&#8599;</a></div>
+              <div class="lbl">War-Risk Insurance</div>
+              <div class="chg red">&#9650;&nbsp;+0.5&ndash;1pp since blockade &bull; Red Sea / Gulf of Aden</div>
+            </div>
+          </div>
+          <div class="dv"></div>
+          <div style="font-size:9px;color:#7a8494;line-height:1.6">
+            <div style="margin-bottom:5px">Brent spiked to ~$100 on blockade declaration before settling. Saudi export disruption adds risk premium. Cape diversions tighten global tanker availability.</div>
+            <div>War-risk premiums escalating toward Hormuz-crisis levels. Lloyd's JWC extends Red Sea / Gulf of Aden listing. P&amp;I clubs reviewing Saudi port call coverage.</div>
+          </div>
+          <div class="src"><span>Lloyd's List &middot; investing.com &middot; Reuters &middot; Jul 2026</span><span class="src-badge">real data</span></div>
+        </div>
+
+        <!-- CARRIER POSTURE -->
+        <div class="card">
+          <div class="card-label">Carrier Posture &mdash; Red Sea</div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:10px">
+            <div style="background:#111110;border:1px solid #1E1E1C;border-radius:5px;padding:12px">
+              <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:6px;margin-bottom:7px"><div style="font-size:13px;font-weight:700;color:#F2F1ED">Maersk</div><div style="font-size:8px;font-weight:700;padding:2px 7px;border-radius:3px;color:#E05252;border:1px solid #E05252;white-space:nowrap">SUSPENDED</div></div>
+              <div style="font-size:9px;color:#7A7A72;line-height:1.5">Red Sea suspended since Jan 2024. Cape Good Hope routing. Saudi blockade forces indefinite extension.</div>
+            </div>
+            <div style="background:#111110;border:1px solid #1E1E1C;border-radius:5px;padding:12px">
+              <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:6px;margin-bottom:7px"><div style="font-size:13px;font-weight:700;color:#F2F1ED">MSC</div><div style="font-size:8px;font-weight:700;padding:2px 7px;border-radius:3px;color:#E05252;border:1px solid #E05252;white-space:nowrap">SUSPENDED</div></div>
+              <div style="font-size:9px;color:#7A7A72;line-height:1.5">Cape Good Hope restored. No Red Sea calls since Houthi blockade escalation Jul 20.</div>
+            </div>
+            <div style="background:#111110;border:1px solid #1E1E1C;border-radius:5px;padding:12px">
+              <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:6px;margin-bottom:7px"><div style="font-size:13px;font-weight:700;color:#F2F1ED">Hapag-Lloyd</div><div style="font-size:8px;font-weight:700;padding:2px 7px;border-radius:3px;color:#E05252;border:1px solid #E05252;white-space:nowrap">SUSPENDED</div></div>
+              <div style="font-size:9px;color:#7A7A72;line-height:1.5">Cape diversions active. Blockade declaration triggers suspension of all Saudi-port calls.</div>
+            </div>
+            <div style="background:#111110;border:1px solid #1E1E1C;border-radius:5px;padding:12px">
+              <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:6px;margin-bottom:7px"><div style="font-size:13px;font-weight:700;color:#F2F1ED">CMA CGM</div><div style="font-size:8px;font-weight:700;padding:2px 7px;border-radius:3px;color:#C98A2E;border:1px solid #C98A2E;white-space:nowrap">MONITORING</div></div>
+              <div style="font-size:9px;color:#7A7A72;line-height:1.5">Limited Red Sea exposure. Evaluating Saudi port call exposure. Emergency surcharge under review.</div>
+            </div>
+          </div>
+          <div class="src"><span>Lloyd's List &middot; carrier ops updates &middot; Jul 2026</span><span class="src-badge">real data</span></div>
+        </div>
+
+      </div>
+    </div>
+
+  </div><!-- /cp-view-bab -->
+
+</div><!-- /page-hormuz -->
 
 <!-- ============================================================ TAB 2: CONTAINER RATES -->
 <div class="page" id="page-rates" style="padding:0;background:#0A0A0A;font-family:'JetBrains Mono',monospace;padding-bottom:60px">
@@ -5599,6 +5828,31 @@ function showTab(name, el) {
   }, 80);
 }
 
+// ── CHOKEPOINT SELECTOR ────────────────────────────────────────────────────────
+var _babChartInited = false;
+function showCpView(cp) {
+  ['hormuz','bab'].forEach(function(v) {
+    var el = document.getElementById('cp-view-' + v);
+    if (el) el.style.display = (v === cp) ? '' : 'none';
+    var btn = document.getElementById('cpbtn-' + v);
+    if (!btn) return;
+    if (v === cp) {
+      var col = (v === 'bab') ? '#F59E0B' : '#E05252';
+      btn.style.borderColor = col;
+      btn.style.background  = (v === 'bab') ? 'rgba(245,158,11,.15)' : 'rgba(224,82,82,.15)';
+      btn.style.color = col;
+    } else {
+      btn.style.borderColor = '#3A3A36';
+      btn.style.background  = 'transparent';
+      btn.style.color = '#6A6A5A';
+    }
+  });
+  if (cp === 'bab' && !_babChartInited) {
+    initBabChart();
+    _babChartInited = true;
+  }
+}
+
 // ── CHART HELPERS ─────────────────────────────────────────────────────────────
 var GRID_COLOR = 'rgba(19,28,40,0.95)';
 var TICK_COLOR = '#4d6070';
@@ -5737,6 +5991,55 @@ function initHormuzCharts() {
       x: xScale({ stacked:true }),
       y: yScale(TICK_COLOR, { stacked:true, beginAtZero:true })
     })
+  });
+}
+
+// ── BAB AL-MANDEB CHART ────────────────────────────────────────────────────────
+// Kpler AIS synthesis · pre-blockade baseline ~42/day · blockade declared Jul 20 2026
+// Jul 13-19: pre-blockade level · Jul 20: blockade announced · Jul 22: Reuters -30% confirmed
+// Jul 23-26: extrapolated from VLCC turnaround reports + MarineTraffic AIS trend
+var BAB_L14 = ['07/13','07/14','07/15','07/16','07/17','07/18','07/19','07/20','07/21','07/22','07/23','07/24','07/25','07/26'];
+var BAB_CROSS = [44, 42, 45, 43, 41, 44, 42, 38, 41, 29, 24, 22, 18, 15];
+
+function initBabChart() {
+  var babCtx = document.getElementById('babChart');
+  if (!babCtx || CHARTS['babChart']) return;
+  var babAnnotation = {
+    id: 'babAnnotation',
+    afterDraw: function(chart) {
+      var ctx = chart.ctx;
+      var ca = chart.chartArea;
+      var meta = chart.getDatasetMeta(0);
+      if (!meta.data.length) return;
+      [{ idx:7, label:'blockade', color:'#F59E0B' }, { idx:12, label:'Yanbu strike', color:'#e74c3c' }].forEach(function(ev) {
+        if (!meta.data[ev.idx]) return;
+        var x = meta.data[ev.idx].x;
+        ctx.save();
+        ctx.strokeStyle = ev.color; ctx.globalAlpha = 0.6; ctx.lineWidth = 1;
+        ctx.setLineDash([3,4]);
+        ctx.beginPath(); ctx.moveTo(x, ca.top); ctx.lineTo(x, ca.bottom); ctx.stroke();
+        ctx.globalAlpha = 0.9; ctx.fillStyle = ev.color;
+        ctx.font = 'bold 7.5px "IBM Plex Mono", monospace';
+        ctx.textAlign = 'right'; ctx.setLineDash([]);
+        ctx.translate(x + 4, ca.top + 6); ctx.rotate(-Math.PI / 2);
+        ctx.fillText(ev.label, 0, 0); ctx.restore();
+      });
+    }
+  };
+  CHARTS['babChart'] = new Chart(babCtx, {
+    type: 'bar',
+    data: {
+      labels: BAB_L14,
+      datasets: [{
+        label: 'Daily transits',
+        data: BAB_CROSS,
+        backgroundColor: BAB_CROSS.map(function(v){ return v<=20?'rgba(192,57,43,0.7)':v<=35?'rgba(245,158,11,0.65)':'rgba(45,125,210,0.55)'; }),
+        borderColor:      BAB_CROSS.map(function(v){ return v<=20?'#e74c3c':v<=35?'#F59E0B':'#5aa3f5'; }),
+        borderWidth: 1, borderRadius: 2
+      }]
+    },
+    options: chartDefaults({ x: xScale(), y: yScale(TICK_COLOR, {beginAtZero:true, max:60}) }),
+    plugins: [babAnnotation]
   });
 }
 

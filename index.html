@@ -3743,6 +3743,18 @@ canvas { font-family: var(--f-mono); }
       <span style="font-size:9px;color:#D9D8D3;background:rgba(201,138,46,.07);border:1px solid rgba(201,138,46,.18);padding:3px 10px;border-radius:3px">&#9679; 339 vessels anchored/stopped in zone &middot; Cape of Good Hope reroute active</span>
     </div>
   </div>
+  <div style="background:#130A04;border-bottom:1px solid #3A1A06;padding:9px 24px;display:flex;align-items:flex-start;gap:12px">
+    <div style="display:flex;flex-direction:column;gap:3px;flex-shrink:0">
+      <span style="font-size:8px;font-weight:700;letter-spacing:.14em;color:#E05252;border:1px solid rgba(224,82,82,.5);padding:3px 8px;border-radius:3px;white-space:nowrap">CRITICAL</span>
+      <span style="font-size:7px;font-weight:700;letter-spacing:.1em;color:#F59E0B;text-align:center;padding-top:2px">RED SEA</span>
+    </div>
+    <div style="display:flex;flex-wrap:wrap;gap:6px">
+      <span style="font-size:9px;color:#F2F1ED;background:rgba(245,158,11,.08);border:1px solid rgba(245,158,11,.25);padding:3px 10px;border-radius:3px">&#9679; Houthis declare full naval blockade of Saudi Arabia &mdash; Jul 20 2026 &middot; all vessels serving Saudi ports targeted</span>
+      <span style="font-size:9px;color:#F2F1ED;background:rgba(245,158,11,.08);border:1px solid rgba(245,158,11,.25);padding:3px 10px;border-radius:3px">&#9679; 4 VLCCs (3.8M bbl crude, gasoil, naphtha) turned back before Bab al-Mandeb Jul 22 &middot; Windward / Kpler</span>
+      <span style="font-size:9px;color:#F2F1ED;background:rgba(245,158,11,.08);border:1px solid rgba(245,158,11,.25);padding:3px 10px;border-radius:3px">&#9679; Houthi strikes hit Jizan refinery &amp; Yanbu terminal Jul 25 &middot; Yanbu = ~92% of Saudi seaborne crude exports</span>
+      <span style="font-size:9px;color:#F2F1ED;background:rgba(245,158,11,.08);border:1px solid rgba(245,158,11,.25);padding:3px 10px;border-radius:3px">&#9679; Bab al-Mandeb transits &minus;30% on Jul 22 &middot; EU naval mission warns Saudi-, US- &amp; Israel-linked vessels to avoid Red Sea</span>
+    </div>
+  </div>
 
   <!-- ③ MAIN 2-COL GRID -->
   <div class="row col21" style="padding-top:18px">
@@ -5929,9 +5941,13 @@ var INTEL_POOL = [
     text:'Qatar LNG exports rerouting via Arabian Sea directly to Asia buyers, bypassing Hormuz via Oman corridor. Three Q-Flex vessels confirmed rerouted since May 18. Spot LNG premium at $4.20/MMBtu.',
     src:'QatarEnergy', srcUrl:'https://www.qatarenergy.qa/en/MediaCenter' },
   // 7
-  { dot:'#5aa3f5', dotX:'', tagClass:'tag-info', tagStyle:'', tag:'INFO',
-    text:'Trans-Arabian pipeline (TAP) at 80% capacity: 1.75M bbl/day westbound to Yanbu. IPSA pipeline emergency upgrade request filed — could add 1.65M bbl/day if approved within 30 days.',
-    src:'Aramco', srcUrl:'https://www.aramco.com/en/news-media' },
+  { dot:'#e74c3c', dotX:'box-shadow:0 0 5px rgba(231,76,60,.5)', tagClass:'', tagStyle:'background:rgba(231,76,60,.15);color:#e74c3c;border-color:rgba(231,76,60,.3)', tag:'ALERT',
+    text:'<strong style="color:#e74c3c">Houthis declare naval blockade of Saudi Arabia — Jul 20 2026.</strong> All vessels loading/discharging at Saudi ports declared prohibited. 4 VLCCs (3.8M bbl) turned back at Bab al-Mandeb Jul 22 (Windward/Kpler). Bab transits −30% in 24h. Jizan Aramco refinery and Yanbu terminal struck Jul 25 — Yanbu handles ~92% of Saudi seaborne crude exports. Brent back above $100.',
+    src:'Al Jazeera / Lloyd\'s List', srcUrl:'https://www.lloydslistintelligence.com/resources/blog/red-sea-brief-23-july-2026' },
+  // 7b
+  { dot:'#fbbf24', dotX:'', tagClass:'tag-watch', tagStyle:'', tag:'WATCH',
+    text:'TAP pipeline (1.75M bbl/day westbound to Yanbu) remains operational but Yanbu export terminal attacked Jul 25 — tankers avoiding Bab al-Mandeb southbound transit. Saudi seaborne crude exports now face dual blockade: Hormuz closed (east), Bab al-Mandeb blocked (west). Reroute via Sumed/East-Med limited to ~2.5M bbl/day combined.',
+    src:'Aramco / TWZ', srcUrl:'https://www.twz.com/news-features/houthis-blockade-on-saudi-red-sea-oil-transits-threatens-to-widen-war-strangle-energy-supply' },
   // 8
   { dot:'#fbbf24', dotX:'', tagClass:'tag-watch', tagStyle:'', tag:'WATCH',
     text:'UAE emergency trucking corridor via Oman: 2,400 trucks/day at Al Wajajah checkpoint (up from 850 pre-crisis). Border wait times 4–6 hrs. Saudi-Oman transit fees waived under GCC emergency designation.',
@@ -6044,7 +6060,8 @@ var gcssCpMarkers  = {};
 var gcssTimeframe  = '72h';
 
 // Chokepoint state: 1=Open 2=Partial 3=Escort-only 4=Blockade 5=Closed
-var GCSS_CP = { hormuz:5, bab:1, suez:1, blacksea:1, malacca:1 };
+// bab: updated 4 (BLOCKADE) — Houthis declared naval blockade of Saudi Arabia Jul 20 2026; Jizan+Yanbu struck Jul 25
+var GCSS_CP = { hormuz:5, bab:4, suez:1, blacksea:1, malacca:1 };
 
 var CP_LABELS = {
   1:'OPEN', 2:'PARTIAL', 3:'ESCORT', 4:'BLOCKADE', 5:'CLOSED'
@@ -6076,8 +6093,8 @@ var TF_MULT = { '72h':0.15, '1W':0.4, '1M':1.0, '3M':2.2, '1Y':4.5 };
 
 // Preset scenarios
 var GCSS_PRESETS = [
-  // 0: Hormuz Closed (current reality)
-  { cp:{ hormuz:5, bab:1, suez:1, blacksea:1, malacca:1 }, esc:5, freight:38, ins:72, cong:55, conf:32, truck:118, oil:104, lng:68 },
+  // 0: Dual Crisis — Hormuz Closed + Bab al-Mandeb Blockade (current reality as of Jul 20 2026)
+  { cp:{ hormuz:5, bab:4, suez:1, blacksea:1, malacca:1 }, esc:6, freight:50, ins:88, cong:68, conf:18, truck:132, oil:118, lng:78 },
   // 1: Dual Closure
   { cp:{ hormuz:5, bab:5, suez:1, blacksea:1, malacca:1 }, esc:6, freight:55, ins:95, cong:80, conf:15, truck:145, oil:133, lng:88 },
   // 2: Houthi Surge (Red Sea / Bab crisis, Hormuz open)
@@ -8927,7 +8944,7 @@ var chokepointsMap = null, chokepointsMapReady = false;
 // radius ∝ trade volume (px): Malacca 25%→16, Hormuz 20%→14, Suez 13%→12, BaM 10%→10, Gib 8%→9, Cape crisis→12, Bosporus 5%→8, Panama 5%→8
 var CHOKEPOINTS = [
   { name:'Strait of Hormuz',          lat:26.6,  lng:56.4,   r:14, status:'CLOSED',      color:'#a03020', oil:'21M bbl/day', trade:'~20% global oil',      transits:'~10/day (Jul 2026; ~11% pre-crisis)', note:'IRGC naval control — Day 146. ~10 transits/day (Jul 2026, IMF PortWatch) = ~11% of pre-crisis 88/day.' },
-  { name:'Bab el-Mandeb',             lat:12.6,  lng:43.5,   r:10, status:'HIGH THREAT', color:'#c07830', oil:'4.7M bbl/day',trade:'10% global trade',     transits:'Reduced — escort required',      note:'Houthi anti-ship missiles active. JWC listed area. Most carriers rerouting via Cape.' },
+  { name:'Bab el-Mandeb',             lat:12.6,  lng:43.5,   r:12, status:'BLOCKADE',    color:'#a03020', oil:'4.7M bbl/day',trade:'10% global trade',     transits:'−30% Jul 22 · VLCCs turning back', note:'BLOCKADE declared Jul 20 2026. Houthis ban all vessels serving Saudi ports. 4 VLCCs (3.8M bbl) turned back. Jizan refinery + Yanbu terminal struck Jul 25. EU naval mission advisory active. Sources: Al Jazeera, Lloyd\'s List, Windward, CNBC.' },
   { name:'Suez Canal',                lat:30.0,  lng:32.55,  r:12, status:'OPEN',        color:'#3a7a5a', oil:'—',           trade:'12–15% global trade',  transits:'~40–50 vessels/day (reduced)',   note:'Operational. Reduced throughput as Bab el-Mandeb threat deters approach.' },
   { name:'Strait of Malacca',         lat:1.3,   lng:103.85, r:16, status:'OPEN',        color:'#3a7a5a', oil:'16M bbl/day', trade:'25% global trade',     transits:'~90,000 vessels/year',           note:"World's busiest chokepoint. Normal operations. Low piracy risk." },
   { name:'Strait of Gibraltar',       lat:35.97, lng:-5.5,   r:9,  status:'OPEN',        color:'#3a7a5a', oil:'—',           trade:'Atlantic–Med gateway', transits:'~300 vessels/day',               note:'Fully open. Key junction for Cape-rerouted Asia–Europe cargo.' },

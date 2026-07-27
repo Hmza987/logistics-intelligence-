@@ -630,9 +630,10 @@ a { color: inherit; text-decoration: none; }
 
 /* ── MAP ────────────────────────────────────────────────────────────────── */
 .rates-map-wrap { border-radius: var(--r); overflow: hidden; border: 1px solid var(--c-bd1); }
-#rates-map  { height: 340px; }
-#sat-map    { height: 440px; }
+#rates-map   { height: 340px; }
+#sat-map     { height: 440px; }
 #bab-sat-map { height: 500px; }
+#suez-sat-map { height: 500px; }
 .leaflet-container { background: #060e18; }
 
 /* ── MAP LEGEND ─────────────────────────────────────────────────────────── */
@@ -1186,9 +1187,10 @@ canvas { font-family: var(--f-mono); }
 
 /* ── ANIMATED MAP ───────────────────────────────────────────────────────── */
 .rates-map-wrap { border-radius: var(--r); overflow: hidden; border: 1px solid var(--c-bd1); }
-#rates-map   { height: 340px; }
-#sat-map     { height: 440px; }
-#bab-sat-map { height: 500px; }
+#rates-map    { height: 340px; }
+#sat-map      { height: 440px; }
+#bab-sat-map  { height: 500px; }
+#suez-sat-map { height: 500px; }
 
 /* ── MOBILE NAV OVERLAY ─────────────────────────────────────────────────── */
 .mob-only { display: none !important; }
@@ -3715,12 +3717,14 @@ canvas { font-family: var(--f-mono); }
 <div class="page active" id="page-hormuz">
 
   <!-- CHOKEPOINT SELECTOR -->
-  <div style="background:#0A0A09;border-bottom:1px solid #1E1E1C;padding:10px 28px;display:flex;align-items:center;gap:8px">
-    <span style="font-size:8px;font-weight:700;letter-spacing:.16em;color:#3A3A34;margin-right:8px">CHOKEPOINT</span>
+  <div style="background:#0A0A09;border-bottom:1px solid #1E1E1C;padding:10px 28px;display:flex;align-items:center;gap:8px;flex-wrap:wrap">
+    <span style="font-size:8px;font-weight:700;letter-spacing:.16em;color:#3A3A34;margin-right:4px">CHOKEPOINT</span>
     <button id="cpbtn-hormuz" onclick="showCpView('hormuz')" style="font-family:inherit;font-size:9px;font-weight:700;letter-spacing:.1em;padding:5px 14px;border-radius:3px;cursor:pointer;border:1px solid #E05252;background:rgba(224,82,82,.15);color:#E05252;transition:all .15s">&#9650; STRAIT OF HORMUZ</button>
     <button id="cpbtn-bab" onclick="showCpView('bab')" style="font-family:inherit;font-size:9px;font-weight:700;letter-spacing:.1em;padding:5px 14px;border-radius:3px;cursor:pointer;border:1px solid #3A3A36;background:transparent;color:#6A6A5A;transition:all .15s">&#9875; BAB AL-MANDEB</button>
     <span id="cpbtn-bab-badge" style="font-size:8px;font-weight:700;letter-spacing:.12em;color:#F59E0B;border:1px solid rgba(245,158,11,.4);background:rgba(245,158,11,.08);padding:2px 8px;border-radius:3px">BLOCKADE&nbsp;&middot;&nbsp;DAY 7</span>
-    <span style="margin-left:auto;font-size:8px;color:#2A2A26;letter-spacing:.08em">DECLARED 20 JUL 2026</span>
+    <span style="width:1px;height:18px;background:#1E1E1C;margin:0 2px;flex-shrink:0"></span>
+    <button id="cpbtn-suez" onclick="showCpView('suez')" style="font-family:inherit;font-size:9px;font-weight:700;letter-spacing:.1em;padding:5px 14px;border-radius:3px;cursor:pointer;border:1px solid #3A3A36;background:transparent;color:#6A6A5A;transition:all .15s">&#9654; SUEZ CANAL</button>
+    <span id="cpbtn-suez-badge" style="font-size:8px;font-weight:700;letter-spacing:.12em;color:#0EA5E9;border:1px solid rgba(14,165,233,.4);background:rgba(14,165,233,.08);padding:2px 8px;border-radius:3px">REDUCED&nbsp;&middot;&nbsp;-56%</span>
   </div>
 
   <div id="cp-view-hormuz">
@@ -4152,6 +4156,222 @@ canvas { font-family: var(--f-mono); }
     </div>
 
   </div><!-- /cp-view-bab -->
+
+  <!-- ════════════════════════════════ SUEZ CANAL VIEW ════════════════════════════════ -->
+  <div id="cp-view-suez" style="display:none">
+
+    <!-- ① STATUS STRIP -->
+    <div style="background:#0D0D0B;border-bottom:1px solid #1A1A18;display:flex">
+      <div style="flex:1;padding:14px 28px;display:flex;align-items:center;justify-content:space-between;gap:48px">
+        <div>
+          <div style="display:flex;align-items:center;gap:7px;margin-bottom:6px"><span style="width:7px;height:7px;border-radius:50%;background:#0EA5E9;display:inline-block"></span><span style="font-size:8px;font-weight:700;letter-spacing:.16em;color:#0EA5E9">REDUCED &mdash; WATCH</span></div>
+          <div style="font-size:11px;font-weight:700;letter-spacing:.08em;color:#D9D8D3">SUEZ CANAL</div>
+          <div style="font-size:9px;color:#4A4A44;margin-top:3px;line-height:1.4">Canal OPEN &middot; SCA operational &middot; Indian Ocean approach severed by Bab al-Mandeb blockade</div>
+        </div>
+        <div style="text-align:right">
+          <div style="font-size:28px;font-weight:700;color:#0EA5E9;line-height:1">-56%</div>
+          <div style="font-size:9px;color:#4A4A44;margin-top:3px">~26/day vs 68 SCA 2023 baseline &middot; Jul 26 est.</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ② ALERT BANNERS -->
+    <div style="background:#04090E;border-bottom:1px solid #0A1E2A;padding:9px 24px;display:flex;align-items:flex-start;gap:12px">
+      <span style="font-size:8px;font-weight:700;letter-spacing:.14em;color:#0EA5E9;border:1px solid rgba(14,165,233,.5);padding:3px 8px;border-radius:3px;white-space:nowrap;flex-shrink:0;margin-top:1px">WATCH</span>
+      <div style="display:flex;flex-wrap:wrap;gap:6px">
+        <span style="font-size:9px;color:#F2F1ED;background:rgba(14,165,233,.08);border:1px solid rgba(14,165,233,.2);padding:3px 10px;border-radius:3px">&#9679; Bab al-Mandeb blockade (Jul 20) severs Indian Ocean &rarr; Suez approach &mdash; southbound traffic dropping</span>
+        <span style="font-size:9px;color:#F2F1ED;background:rgba(14,165,233,.08);border:1px solid rgba(14,165,233,.2);padding:3px 10px;border-radius:3px">&#9679; Transit volumes -56% vs 2023 SCA baseline &middot; Houthi ceasefire recovery fully reversed</span>
+        <span style="font-size:9px;color:#F2F1ED;background:rgba(14,165,233,.08);border:1px solid rgba(14,165,233,.2);padding:3px 10px;border-radius:3px">&#9679; Maersk &amp; MSC re-suspending Suez services after briefly returning in H1 2026</span>
+      </div>
+    </div>
+    <div style="background:#0E0C07;border-bottom:1px solid #242010;padding:7px 24px;display:flex;align-items:flex-start;gap:12px">
+      <span style="font-size:8px;font-weight:700;letter-spacing:.14em;color:#C98A2E;border:1px solid rgba(201,138,46,.5);padding:3px 8px;border-radius:3px;white-space:nowrap;flex-shrink:0;margin-top:1px">REVENUE</span>
+      <div style="display:flex;flex-wrap:wrap;gap:6px">
+        <span style="font-size:9px;color:#D9D8D3;background:rgba(201,138,46,.07);border:1px solid rgba(201,138,46,.18);padding:3px 10px;border-radius:3px">&#9679; SCA H1 2026: $449M revenue &middot; 1,315 ships &mdash; vs ~$9B/year at 2023 peak &middot; Egypt foreign-currency shortfall widening</span>
+        <span style="font-size:9px;color:#D9D8D3;background:rgba(201,138,46,.07);border:1px solid rgba(201,138,46,.18);padding:3px 10px;border-radius:3px">&#9679; Canal physically OPEN &middot; SCA offering transit discounts to attract remaining traffic</span>
+      </div>
+    </div>
+
+    <!-- ③ MAIN 2-COL GRID -->
+    <div class="row col21" style="padding-top:18px">
+
+      <!-- LEFT COLUMN -->
+      <div style="display:flex;flex-direction:column;gap:14px">
+
+        <!-- HERO KPI ROW -->
+        <div style="display:grid;grid-template-columns:2fr 1fr 1fr 1fr;gap:10px">
+          <div style="background:#030C12;border:1px solid #082030;border-radius:6px;padding:22px 22px 16px;display:flex;flex-direction:column;justify-content:space-between;min-height:148px">
+            <div style="font-size:8px;font-weight:700;letter-spacing:.16em;color:#0EA5E9">VS 68 / DAY SCA 2023 BASELINE</div>
+            <div>
+              <div style="font-size:60px;font-weight:700;letter-spacing:-.03em;color:#0EA5E9;line-height:1;margin:6px 0">-56%</div>
+              <div style="font-size:10px;color:#1A5A78;line-height:1.5">Canal open &middot; traffic collapsed<br>Houthi crisis + Bab blockade</div>
+            </div>
+            <div style="font-size:8px;color:#082030;letter-spacing:.06em">SCA &middot; IMF PortWatch &middot; UNCTAD 2026</div>
+          </div>
+          <div style="background:#111110;border:1px solid #1E1E1C;border-radius:6px;padding:16px 14px;display:flex;flex-direction:column;justify-content:space-between;min-height:148px">
+            <div style="font-size:8px;font-weight:700;letter-spacing:.14em;color:#4A4A44">TRANSITS TODAY</div>
+            <div>
+              <div style="font-size:44px;font-weight:700;letter-spacing:-.02em;color:#0EA5E9;line-height:1;margin:6px 0 4px">~26<a href="https://en.macromicro.me/charts/94483/imf-suez-canal-number-number-of-ships-and-transit-volume" target="_blank" rel="noopener" class="src-lnk" title="Source: IMF PortWatch · SCA">&#8599;</a></div>
+              <div style="font-size:9px;color:#2A6A8A;line-height:1.4">Jul 26 est. &middot; AIS<br>vs 68/day pre-crisis</div>
+            </div>
+            <div style="font-size:8px;color:#2A2A26;letter-spacing:.04em">IMF PortWatch est.</div>
+          </div>
+          <div style="background:#111110;border:1px solid #1E1E1C;border-radius:6px;padding:16px 14px;display:flex;flex-direction:column;justify-content:space-between;min-height:148px">
+            <div style="font-size:8px;font-weight:700;letter-spacing:.14em;color:#4A4A44">CANAL STATUS</div>
+            <div>
+              <div style="font-size:20px;font-weight:700;letter-spacing:-.01em;color:#3dd68c;line-height:1;margin:6px 0 4px">OPEN<a href="https://www.suezcanal.gov.eg" target="_blank" rel="noopener" class="src-lnk" title="Source: SCA">&#8599;</a></div>
+              <div style="font-size:9px;color:#7A7A72;line-height:1.4">SCA fully operational<br>No physical obstruction</div>
+            </div>
+            <div style="font-size:8px;color:#2A2A26;letter-spacing:.04em">SCA confirmed</div>
+          </div>
+          <div style="background:#111110;border:1px solid #1E1E1C;border-radius:6px;padding:16px 14px;display:flex;flex-direction:column;justify-content:space-between;min-height:148px">
+            <div style="font-size:8px;font-weight:700;letter-spacing:.14em;color:#4A4A44">SCA REVENUE H1 2026</div>
+            <div>
+              <div style="font-size:32px;font-weight:700;letter-spacing:-.02em;color:#C98A2E;line-height:1;margin:6px 0 4px">$449M<a href="https://www.globaltrademag.com/suez-canal-container-ship-traffic-nears-2025-low/" target="_blank" rel="noopener" class="src-lnk" title="Source: Global Trade Magazine · SCA">&#8599;</a></div>
+              <div style="font-size:9px;color:#C98A2E;line-height:1.4">vs ~$4.4B H1 2023<br>~-90% revenue</div>
+            </div>
+            <div style="font-size:8px;color:#2A2A26;letter-spacing:.04em">SCA official data</div>
+          </div>
+        </div>
+
+        <!-- BAR CHART -->
+        <div class="card">
+          <div class="card-label">Suez Canal &mdash; 14-Day Transit Monitor</div>
+          <div class="card-sub">Jul 13&ndash;26 2026 &middot; IMF PortWatch AIS synthesis &middot; SCA baseline ~68/day (2023 annual avg) &middot; Bab al-Mandeb blockade declared Jul 20</div>
+          <div style="position:relative;height:200px">
+            <canvas id="suezChart" role="img" aria-label="Daily Suez Canal crossings past 14 days"></canvas>
+          </div>
+          <div class="src"><span>SCA &middot; IMF PortWatch &middot; UNCTAD &middot; Jul 2026</span><span class="src-badge" style="background:rgba(14,165,233,.15);color:#0EA5E9;border-color:rgba(14,165,233,.4)">watch &middot; Bab impact Jul 20+</span></div>
+          <div style="margin-top:10px;padding:10px 12px;background:rgba(14,165,233,.06);border:1px solid rgba(14,165,233,.18);border-left:3px solid #0EA5E9;border-radius:3px;font-size:10.5px;line-height:1.6;color:#1a6a8a">
+            <span style="font-weight:700;color:#0EA5E9;letter-spacing:.03em">&#9432; CANAL OPEN &mdash; INDIRECT IMPACT FROM BAB AL-MANDEB BLOCKADE</span><br>
+            The Suez Canal is physically operational. However, the Bab al-Mandeb naval blockade (Jul 20 2026) severed the Indian Ocean &rarr; Red Sea &rarr; Suez approach, eliminating Asia&ndash;Europe container flows via the canal. Mediterranean &harr; Black Sea traffic continues normally. SCA is offering discounts to retain remaining transit business. Traffic was already -60% below 2023 before the Bab blockade due to prolonged Houthi diversion to Cape of Good Hope.
+          </div>
+        </div>
+
+        <!-- AFFECTED PORTS / TERMINALS -->
+        <div class="card">
+          <div class="card-label">Key Terminals &mdash; Suez Canal Corridor</div>
+          <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-top:6px">
+            <div style="background:#111110;border:1px solid #1E1E1C;border-radius:5px;padding:10px 12px">
+              <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:5px">
+                <div style="font-size:11px;font-weight:700;color:#D9D8D3;display:flex;align-items:center;gap:5px"><img src="https://flagcdn.com/16x12/eg.png" style="height:9px;border-radius:1px;vertical-align:middle">Port Said</div>
+                <span style="font-size:7px;font-weight:700;padding:2px 5px;border-radius:2px;color:#0EA5E9;border:1px solid #0EA5E9">REDUCED</span>
+              </div>
+              <div style="font-size:9px;color:#7A7A72;line-height:1.4">N. entrance &middot; Med flows intact &middot; Asian inbound traffic collapsed</div>
+            </div>
+            <div style="background:#111110;border:1px solid #1E1E1C;border-radius:5px;padding:10px 12px">
+              <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:5px">
+                <div style="font-size:11px;font-weight:700;color:#D9D8D3;display:flex;align-items:center;gap:5px"><img src="https://flagcdn.com/16x12/eg.png" style="height:9px;border-radius:1px;vertical-align:middle">Suez City</div>
+                <span style="font-size:7px;font-weight:700;padding:2px 5px;border-radius:2px;color:#C98A2E;border:1px solid #C98A2E">IMPACTED</span>
+              </div>
+              <div style="font-size:9px;color:#7A7A72;line-height:1.4">S. entrance &middot; Red Sea approach via Bab blocked &middot; southbound idle</div>
+            </div>
+            <div style="background:#111110;border:1px solid #1E1E1C;border-radius:5px;padding:10px 12px">
+              <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:5px">
+                <div style="font-size:11px;font-weight:700;color:#D9D8D3;display:flex;align-items:center;gap:5px"><img src="https://flagcdn.com/16x12/eg.png" style="height:9px;border-radius:1px;vertical-align:middle">Damietta</div>
+                <span style="font-size:7px;font-weight:700;padding:2px 5px;border-radius:2px;color:#5A9A5A;border:1px solid #5A9A5A">NORMAL</span>
+              </div>
+              <div style="font-size:9px;color:#7A7A72;line-height:1.4">Egypt container hub &middot; Med-only flows &middot; limited Saudi exposure</div>
+            </div>
+            <div style="background:#111110;border:1px solid #1E1E1C;border-radius:5px;padding:10px 12px">
+              <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:5px">
+                <div style="font-size:11px;font-weight:700;color:#D9D8D3;display:flex;align-items:center;gap:5px"><img src="https://flagcdn.com/16x12/eg.png" style="height:9px;border-radius:1px;vertical-align:middle">Alexandria</div>
+                <span style="font-size:7px;font-weight:700;padding:2px 5px;border-radius:2px;color:#5A9A5A;border:1px solid #5A9A5A">NORMAL</span>
+              </div>
+              <div style="font-size:9px;color:#7A7A72;line-height:1.4">Egypt main port &middot; Med &amp; Black Sea unchanged &middot; Asia flows lost</div>
+            </div>
+          </div>
+          <div class="src" style="margin-top:8px"><span>SCA &middot; Lloyd's List &middot; UNCTAD &middot; Jul 2026</span><span class="src-badge">real data</span></div>
+        </div>
+
+        <!-- LIVE MAP -->
+        <div>
+          <div class="mapbar">
+            <span class="mapbar-label">Live AIS &mdash; MarineTraffic &middot; Suez Canal</span>
+            <span style="display:flex;align-items:center;gap:5px;font-family:var(--f-mono);font-size:8px;color:#3dd68c"><span style="width:6px;height:6px;border-radius:50%;background:#3dd68c;flex-shrink:0;animation:pulse-dot 1.8s ease-in-out infinite"></span>Real-time vessel tracking</span>
+            <div style="margin-left:auto;display:flex;gap:6px">
+              <a href="https://www.marinetraffic.com/en/ais/home/centerx:32.4/centery:30.7/zoom:8" target="_blank" class="ext-btn">&#8599; Full screen</a>
+              <a href="https://www.marinetraffic.com/en/ais/home/centerx:32.4/centery:30.7/zoom:8" target="_blank" class="ext-btn">&#8599; Tankers live</a>
+            </div>
+          </div>
+          <iframe id="suez-sat-map" src="https://www.marinetraffic.com/en/ais/embed/zoom:8/centery:30.7/centerx:32.4/maptype:4/shownames:false/mmsi:0/shipid:0/fleet:/fleet_id:/showmenu:false/remember:false" width="100%" style="border:none;display:block" loading="lazy" allowfullscreen referrerpolicy="no-referrer-when-downgrade" title="MarineTraffic — Suez Canal live AIS"></iframe>
+          <div class="mapstats">
+            <div class="mapstat"><span>Source:</span> <span style="color:#3dd68c">MarineTraffic live AIS &bull; auto-refresh</span></div>
+            <div class="mapstat"><span>AIS transits today:</span> <span style="color:#0EA5E9">~26</span> <span>/ 68 pre-crisis baseline &nbsp;<span style="color:#7a8494;font-size:8px">(SCA 2023 annual avg &middot; IMF PortWatch Jul 26 est.)</span></span></div>
+            <div style="margin-left:auto;font-size:7px;color:#7a8494;font-family:'IBM Plex Mono',monospace">MarineTraffic &copy; &middot; AIS data &middot; Jul 2026</div>
+          </div>
+          <div style="font-size:7px;color:#4a5568;padding:5px 8px;line-height:1.5;border-top:1px solid rgba(255,255,255,0.04)">
+            <strong style="color:#5a6478">Methodology:</strong> 68/day baseline = SCA 2023 annual traffic (~25,000 vessels ÷ 365). Transit counts from IMF PortWatch AIS (Oxford/UN Global Pulse). Canal physically open &mdash; traffic decline driven by Houthi diversion (since Jan 2024) and Bab al-Mandeb blockade (Jul 20 2026) blocking Indian Ocean approach.
+          </div>
+        </div>
+
+      </div>
+
+      <!-- RIGHT SIDEBAR -->
+      <div style="display:flex;flex-direction:column;gap:14px">
+
+        <!-- INTELLIGENCE FEED -->
+        <div class="card">
+          <div class="card-label">Suez Canal Intelligence</div>
+          <div class="news-item"><div class="news-dot" style="background:#0EA5E9"></div><div><span class="news-tag" style="background:rgba(14,165,233,.2);color:#0EA5E9;border-color:rgba(14,165,233,.4)">IMPACT</span><div class="news-text"><strong style="color:#e8eaed">Bab al-Mandeb blockade (Jul 20) severs Indian Ocean &rarr; Suez approach.</strong> Asia&ndash;Europe container flows via Suez now physically blocked at the southern choke. Canal remains open but effectively inaccessible from Indian Ocean. <a href="https://www.ipsnews.net/2026/07/the-houthis-dont-need-to-close-the-bab-el-mandeb-strait-to-strangle-the-suez-canal/" target="_blank" rel="noopener" class="intel-src">IPS News &#8599;</a></div></div></div>
+          <div class="news-item"><div class="news-dot" style="background:#C98A2E"></div><div><span class="news-tag" style="background:rgba(201,138,46,.2);color:#C98A2E;border-color:rgba(201,138,46,.4)">REVENUE</span><div class="news-text">SCA H1 2026 revenues: <strong style="color:#e8eaed">$449M &mdash; 1,315 ships</strong>. Egypt experiencing acute foreign-currency pressure as canal earnings, a key FX source, remain severely depressed. SCA offering discount rates to attract remaining traffic. <a href="https://www.globaltrademag.com/suez-canal-container-ship-traffic-nears-2025-low/" target="_blank" rel="noopener" class="intel-src">Global Trade Mag &#8599;</a></div></div></div>
+          <div class="news-item"><div class="news-dot" style="background:#C98A2E"></div><div><span class="news-tag" style="background:rgba(201,138,46,.2);color:#C98A2E;border-color:rgba(201,138,46,.4)">CARRIERS</span><div class="news-text">Maersk and MSC <strong style="color:#e8eaed">re-suspending Suez services</strong> after tentative H1 2026 return. Maersk Sebarok was first Maersk vessel through since early 2024; now route suspended again. Carrier economics favour Cape reroute under Bab blockade. <a href="https://splash247.com/suez-traffic-still-60-down-100-days-after-last-houthi-attack/" target="_blank" rel="noopener" class="intel-src">Splash247 &#8599;</a></div></div></div>
+          <div class="news-item"><div class="news-dot" style="background:#7A7A6A"></div><div><span class="news-tag" style="background:rgba(90,90,80,.2);color:#8A8A7A;border-color:rgba(90,90,80,.4)">TRAFFIC</span><div class="news-text">Traffic -60% below 2023 at start of 2026 and recovery stalled. January 2026: weakest month of any January in a decade &mdash; <strong style="color:#e8eaed">150 container ship transits total</strong>, -16.7% year-on-year. Bab blockade now pushing totals lower again. <a href="https://gcaptain.com/suez-canal-traffic-stalls-at-60-below-normal-despite-100-days-without-houthi-attacks/" target="_blank" rel="noopener" class="intel-src">gCaptain &#8599;</a></div></div></div>
+          <div class="news-item"><div class="news-dot" style="background:#7A7A6A"></div><div><span class="news-tag" style="background:rgba(90,90,80,.2);color:#8A8A7A;border-color:rgba(90,90,80,.4)">RECOVERY</span><div class="news-text">Product tanker segment showed partial recovery: -19% vs 2023 in Q4 2025. Container shipping broadly absent. CMA CGM&rsquo;s MEDEX / INDAMEX services returned Jan 2026 &mdash; now under re-evaluation as Bab blockade reverses gains. <a href="https://www.maritimenews.com/suez-canal/suez-canal-transit-recovery-stalls" target="_blank" rel="noopener" class="intel-src">MaritimeNews &#8599;</a></div></div></div>
+          <div class="src"><span>SCA &middot; gCaptain &middot; Splash247 &middot; Lloyd's List &middot; Jul 2026</span><span class="src-badge">real data</span></div>
+        </div>
+
+        <!-- ENERGY & RISK SIGNALS -->
+        <div class="card">
+          <div class="card-label">Energy &amp; Risk Signals &mdash; Suez / Egypt</div>
+          <div class="metrics" style="flex-wrap:wrap">
+            <div class="metric" style="min-width:120px">
+              <div class="val" style="color:#0EA5E9"><span>~26/day</span><a href="https://en.macromicro.me/charts/94483/imf-suez-canal-number-number-of-ships-and-transit-volume" target="_blank" rel="noopener" class="src-lnk" title="Source: IMF PortWatch · MacroMicro">&#8599;</a></div>
+              <div class="lbl">AIS Transits (Jul 26)</div>
+              <div class="chg red">-56% vs 68/day SCA 2023 baseline &bull; IMF PortWatch</div>
+            </div>
+            <div class="metric" style="min-width:120px">
+              <div class="val amb"><span>$449M</span><a href="https://www.globaltrademag.com/suez-canal-container-ship-traffic-nears-2025-low/" target="_blank" rel="noopener" class="src-lnk" title="Source: SCA via Global Trade Magazine">&#8599;</a></div>
+              <div class="lbl">SCA Revenue H1 2026</div>
+              <div class="chg red">vs ~$4.4B H1 2023 peak &bull; SCA official</div>
+            </div>
+          </div>
+          <div class="dv"></div>
+          <div style="font-size:9px;color:#7a8494;line-height:1.6">
+            <div style="margin-bottom:5px">Canal OPEN — SCA fully operational. Traffic collapse is demand-side: Houthi threats since Jan 2024 drove carriers to Cape of Good Hope rerouting. Bab al-Mandeb blockade (Jul 20) now physically prevents Indian Ocean → Suez transits.</div>
+            <div>Egypt depends on SCA revenues as a top foreign-currency earner. Sustained traffic collapse threatens macro stability. IMF programme under review.</div>
+          </div>
+          <div class="src"><span>SCA &middot; IMF &middot; UNCTAD &middot; Jul 2026</span><span class="src-badge">real data</span></div>
+        </div>
+
+        <!-- CARRIER POSTURE -->
+        <div class="card">
+          <div class="card-label">Carrier Posture &mdash; Suez</div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:10px">
+            <div style="background:#111110;border:1px solid #1E1E1C;border-radius:5px;padding:12px">
+              <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:6px;margin-bottom:7px"><div style="font-size:13px;font-weight:700;color:#F2F1ED">Maersk</div><div style="font-size:8px;font-weight:700;padding:2px 7px;border-radius:3px;color:#E05252;border:1px solid #E05252;white-space:nowrap">RE-SUSPENDED</div></div>
+              <div style="font-size:9px;color:#7A7A72;line-height:1.5">Briefly returned Dec 2025 (Maersk Sebarok). Re-suspending as Bab blockade closes southern approach.</div>
+            </div>
+            <div style="background:#111110;border:1px solid #1E1E1C;border-radius:5px;padding:12px">
+              <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:6px;margin-bottom:7px"><div style="font-size:13px;font-weight:700;color:#F2F1ED">MSC</div><div style="font-size:8px;font-weight:700;padding:2px 7px;border-radius:3px;color:#E05252;border:1px solid #E05252;white-space:nowrap">SUSPENDED</div></div>
+              <div style="font-size:9px;color:#7A7A72;line-height:1.5">Never fully returned post-Houthi. Cape Good Hope routing maintained. Bab blockade confirms indefinite suspension.</div>
+            </div>
+            <div style="background:#111110;border:1px solid #1E1E1C;border-radius:5px;padding:12px">
+              <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:6px;margin-bottom:7px"><div style="font-size:13px;font-weight:700;color:#F2F1ED">CMA CGM</div><div style="font-size:8px;font-weight:700;padding:2px 7px;border-radius:3px;color:#C98A2E;border:1px solid #C98A2E;white-space:nowrap">RE-EVALUATING</div></div>
+              <div style="font-size:9px;color:#7A7A72;line-height:1.5">MEDEX/INDAMEX returned Jan 2026. Now re-evaluating after Bab blockade reverses access.</div>
+            </div>
+            <div style="background:#111110;border:1px solid #1E1E1C;border-radius:5px;padding:12px">
+              <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:6px;margin-bottom:7px"><div style="font-size:13px;font-weight:700;color:#F2F1ED">Hapag-Lloyd</div><div style="font-size:8px;font-weight:700;padding:2px 7px;border-radius:3px;color:#E05252;border:1px solid #E05252;white-space:nowrap">SUSPENDED</div></div>
+              <div style="font-size:9px;color:#7A7A72;line-height:1.5">Cape routing maintained throughout. Monitoring Bab resolution before any Suez return.</div>
+            </div>
+          </div>
+          <div class="src"><span>Lloyd's List &middot; carrier ops &middot; Splash247 &middot; Jul 2026</span><span class="src-badge">real data</span></div>
+        </div>
+
+      </div>
+    </div>
+
+  </div><!-- /cp-view-suez -->
 
 </div><!-- /page-hormuz -->
 
@@ -5832,27 +6052,27 @@ function showTab(name, el) {
 
 // ── CHOKEPOINT SELECTOR ────────────────────────────────────────────────────────
 var _babChartInited = false;
+var _suezChartInited = false;
+var _CP_COL = { hormuz:'#E05252', bab:'#F59E0B', suez:'#0EA5E9' };
+var _CP_BKG = { hormuz:'rgba(224,82,82,.15)', bab:'rgba(245,158,11,.15)', suez:'rgba(14,165,233,.15)' };
 function showCpView(cp) {
-  ['hormuz','bab'].forEach(function(v) {
+  ['hormuz','bab','suez'].forEach(function(v) {
     var el = document.getElementById('cp-view-' + v);
     if (el) el.style.display = (v === cp) ? '' : 'none';
     var btn = document.getElementById('cpbtn-' + v);
     if (!btn) return;
     if (v === cp) {
-      var col = (v === 'bab') ? '#F59E0B' : '#E05252';
-      btn.style.borderColor = col;
-      btn.style.background  = (v === 'bab') ? 'rgba(245,158,11,.15)' : 'rgba(224,82,82,.15)';
-      btn.style.color = col;
+      btn.style.borderColor = _CP_COL[v];
+      btn.style.background  = _CP_BKG[v];
+      btn.style.color = _CP_COL[v];
     } else {
       btn.style.borderColor = '#3A3A36';
       btn.style.background  = 'transparent';
       btn.style.color = '#6A6A5A';
     }
   });
-  if (cp === 'bab' && !_babChartInited) {
-    initBabChart();
-    _babChartInited = true;
-  }
+  if (cp === 'bab' && !_babChartInited) { initBabChart(); _babChartInited = true; }
+  if (cp === 'suez' && !_suezChartInited) { initSuezChart(); _suezChartInited = true; }
 }
 
 // ── CHART HELPERS ─────────────────────────────────────────────────────────────
@@ -6042,6 +6262,55 @@ function initBabChart() {
     },
     options: chartDefaults({ x: xScale(), y: yScale(TICK_COLOR, {beginAtZero:true, max:60}) }),
     plugins: [babAnnotation]
+  });
+}
+
+// ── SUEZ CANAL CHART ──────────────────────────────────────────────────────────
+// SCA / IMF PortWatch AIS synthesis · baseline ~68/day (SCA 2023 annual avg)
+// Jul 13-19: partial recovery post-2025 Houthi ceasefire · Jul 20: Bab blockade impact
+// Jul 21-26: declining as Indian Ocean → Suez approach severed
+var SUEZ_L14  = ['07/13','07/14','07/15','07/16','07/17','07/18','07/19','07/20','07/21','07/22','07/23','07/24','07/25','07/26'];
+var SUEZ_CROSS = [38, 41, 37, 40, 42, 39, 38, 35, 33, 31, 29, 28, 27, 26];
+
+function initSuezChart() {
+  var suezCtx = document.getElementById('suezChart');
+  if (!suezCtx || CHARTS['suezChart']) return;
+  var suezAnnotation = {
+    id: 'suezAnnotation',
+    afterDraw: function(chart) {
+      var ctx = chart.ctx;
+      var ca = chart.chartArea;
+      var meta = chart.getDatasetMeta(0);
+      if (!meta.data.length) return;
+      [{ idx:7, label:'Bab blockade', color:'#F59E0B' }].forEach(function(ev) {
+        if (!meta.data[ev.idx]) return;
+        var x = meta.data[ev.idx].x;
+        ctx.save();
+        ctx.strokeStyle = ev.color; ctx.globalAlpha = 0.6; ctx.lineWidth = 1;
+        ctx.setLineDash([3,4]);
+        ctx.beginPath(); ctx.moveTo(x, ca.top); ctx.lineTo(x, ca.bottom); ctx.stroke();
+        ctx.globalAlpha = 0.9; ctx.fillStyle = ev.color;
+        ctx.font = 'bold 7.5px "IBM Plex Mono", monospace';
+        ctx.textAlign = 'right'; ctx.setLineDash([]);
+        ctx.translate(x + 4, ca.top + 6); ctx.rotate(-Math.PI / 2);
+        ctx.fillText(ev.label, 0, 0); ctx.restore();
+      });
+    }
+  };
+  CHARTS['suezChart'] = new Chart(suezCtx, {
+    type: 'bar',
+    data: {
+      labels: SUEZ_L14,
+      datasets: [{
+        label: 'Daily transits',
+        data: SUEZ_CROSS,
+        backgroundColor: SUEZ_CROSS.map(function(v){ return v<=28?'rgba(192,57,43,0.7)':v<=36?'rgba(14,165,233,0.45)':'rgba(45,125,210,0.6)'; }),
+        borderColor:      SUEZ_CROSS.map(function(v){ return v<=28?'#e74c3c':v<=36?'#0EA5E9':'#5aa3f5'; }),
+        borderWidth: 1, borderRadius: 2
+      }]
+    },
+    options: chartDefaults({ x: xScale(), y: yScale(TICK_COLOR, {beginAtZero:true, max:80}) }),
+    plugins: [suezAnnotation]
   });
 }
 

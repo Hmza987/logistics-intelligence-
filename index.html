@@ -5483,8 +5483,8 @@ canvas { font-family: var(--f-mono); }
       </div>
       <div style="flex:1;padding:18px 20px;border-right:1px solid #1A1A18;display:flex;flex-direction:column;gap:4px">
         <div style="font-size:9px;font-weight:700;letter-spacing:0.14em;color:#4A4A44;font-family:var(--f-mono)">RE-ROUTABLE VOLUME</div>
-        <div style="font-size:26px;font-weight:700;letter-spacing:-0.02em;color:#C98A2E;line-height:1;margin:4px 0">~14 M</div>
-        <div style="font-size:9px;color:#5A5A52;line-height:1.4;font-family:var(--f-mono)">bbl/day with viable Cape alternative</div>
+        <div style="font-size:26px;font-weight:700;letter-spacing:-0.02em;color:#C98A2E;line-height:1;margin:4px 0">~6.3 M</div>
+        <div style="font-size:9px;color:#5A5A52;line-height:1.4;font-family:var(--f-mono)">Mb/d pipeline bypass capacity (Petroline 4.8 + ADCOP 1.5)</div>
       </div>
       <div style="flex:1;padding:18px 20px;display:flex;flex-direction:column;gap:4px">
         <div style="font-size:9px;font-weight:700;letter-spacing:0.14em;color:#4A4A44;font-family:var(--f-mono)">ADDITIONAL TRANSIT</div>
@@ -15386,7 +15386,7 @@ var TF_COMMODITIES = {
       importers:['China','Europe','India','USA','S. Korea','Japan'],
       rows:[
         { name:'Saudi Arabia', vals:[1.8, 0.5, 0.8, 0.4, 0.6, 0.9] },
-        { name:'Russia',       vals:[2.0, 1.0, 1.5, 0.0, 0.2, 0.1] },
+        { name:'Russia',       vals:[2.0, 0.6, 1.5, 0.0, 0.2, 0.1] },
         { name:'USA',          vals:[0.2, 1.8, 0.4, 0.0, 0.4, 0.3] },
         { name:'Iraq',         vals:[1.5, 0.5, 1.1, 0.1, 0.1, 0.1] },
         { name:'UAE',          vals:[0.6, 0.2, 0.5, 0.1, 0.4, 0.7] },
@@ -18056,7 +18056,7 @@ var TF_GCC_DATA = [
     cps:['hormuz','malacca','bab_el_mandeb'],
     normal:{
       stats:[{val:'4.0 Mb/d',lbl:'crude production'},{val:'97.8 Gb',lbl:'proven reserves'}],
-      facts:'Jebel Ali port (world’s 9th busiest) \xb7 Fujairah terminal on Indian Ocean (ADCOP exit) \xb7 ADCOP pipeline: Habshan → Fujairah (1.5 Mb/d) \xb7 Dubai re-exports $400B/yr',
+      facts:'Jebel Ali port (world’s 9th busiest) \xb7 Fujairah terminal on Indian Ocean (ADCOP exit) \xb7 ADCOP pipeline: Habshan → Fujairah (1.5 Mb/d) \xb7 Dubai re-exports ~$160B/yr',
       bypass:'▶ Bypass: UAE ADCOP → Fujairah (1.5 Mb/d)',bypassClass:'gcc-bypass'
     },
     scenarios:{
@@ -18167,7 +18167,7 @@ var TF_GCC_DATA = [
     cps:['hormuz'],
     normal:{
       stats:[{val:'267 kbd',lbl:'refinery throughput'},{val:'0.1 Gb',lbl:'proven reserves'}],
-      facts:'Sitra Refinery (267 kbd, est. 1936) \xb7 ALBA smelter: 4th largest globally, ~$1.4B annual exports \xb7 Khalifa Bin Salman Port \xb7 GCC’s financial centre (400+ banks & funds)',
+      facts:'Sitra Refinery (267 kbd, est. 1936) \xb7 ALBA smelter: largest single-site outside China, ~$1.4B annual exports \xb7 Khalifa Bin Salman Port \xb7 GCC’s financial centre (400+ banks & funds)',
       bypass:'⚠ No bypass — island state within the Arabian Gulf',bypassClass:'gcc-no-bypass'
     },
     scenarios:{

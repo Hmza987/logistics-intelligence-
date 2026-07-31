@@ -5407,7 +5407,277 @@ canvas { font-family: var(--f-mono); }
 
   </div>
 
+  <!-- ── RISK LANDSCAPE 3D SCATTER ──────────────────────────────── -->
+  <div id="wl-3d-section" style="margin:24px 28px 44px">
+    <div style="display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:14px;flex-wrap:wrap;gap:10px">
+      <div>
+        <div style="font-size:9px;font-weight:700;letter-spacing:.22em;color:#3A4A54;font-family:var(--f-mono);text-transform:uppercase;margin-bottom:5px">◈ Risk Landscape — All Signals</div>
+        <div style="font-size:13px;font-weight:700;color:#a0b4c4;letter-spacing:.02em">Time to Impact &nbsp;·&nbsp; Severity &nbsp;·&nbsp; Decision-Maker Perception</div>
+        <div style="font-size:7.5px;color:#263848;margin-top:5px;letter-spacing:.1em;font-family:var(--f-mono)">Drag to rotate &nbsp;·&nbsp; Scroll to zoom &nbsp;·&nbsp; Hover for signal details</div>
+      </div>
+      <div id="wl3d-legend" style="display:flex;gap:7px;flex-wrap:wrap;justify-content:flex-end;align-items:center;max-width:55%"></div>
+    </div>
+    <div id="wl3d-wrap" style="position:relative;border:1px solid #14222e;border-radius:5px;background:#060810">
+      <canvas id="wl3d-cv" style="display:block;width:100%;height:540px;cursor:grab"></canvas>
+      <div id="wl3d-tip" style="position:absolute;display:none;background:rgba(4,6,14,.97);border:1px solid #182c44;border-radius:4px;padding:12px 14px;max-width:272px;pointer-events:none;font-family:var(--f-mono);z-index:10;box-shadow:0 6px 24px rgba(0,0,0,.75)">
+        <div id="wl3d-tn" style="color:#dce8f0;font-size:10.5px;font-weight:700;line-height:1.35;margin-bottom:3px"></div>
+        <div id="wl3d-tc" style="font-size:7px;letter-spacing:.2em;color:#306080;margin-bottom:8px"></div>
+        <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;border-top:1px solid #121e30;padding-top:8px">
+          <div><div style="font-size:7px;letter-spacing:.12em;color:#223040;margin-bottom:2px">SEVERITY</div><div id="wl3d-ts" style="font-size:12px;font-weight:700"></div></div>
+          <div><div style="font-size:7px;letter-spacing:.12em;color:#223040;margin-bottom:2px">HORIZON</div><div id="wl3d-th" style="font-size:9px;font-weight:600;line-height:1.3;margin-top:1px"></div></div>
+          <div><div style="font-size:7px;letter-spacing:.12em;color:#223040;margin-bottom:2px">PERCEIVED</div><div id="wl3d-tp" style="font-size:10px;font-weight:700"></div></div>
+        </div>
+      </div>
+    </div>
+    <div style="display:flex;gap:22px;justify-content:center;margin-top:10px;flex-wrap:wrap">
+      <span style="display:flex;align-items:center;gap:6px;font-size:7px;letter-spacing:.14em;color:#1e3040;text-transform:uppercase;font-family:var(--f-mono)"><span style="width:14px;height:1.5px;background:#2a7898;border-radius:1px;display:inline-block"></span>Time to Impact</span>
+      <span style="display:flex;align-items:center;gap:6px;font-size:7px;letter-spacing:.14em;color:#1e3040;text-transform:uppercase;font-family:var(--f-mono)"><span style="width:14px;height:1.5px;background:#2a9862;border-radius:1px;display:inline-block"></span>Severity (↑ higher)</span>
+      <span style="display:flex;align-items:center;gap:6px;font-size:7px;letter-spacing:.14em;color:#1e3040;text-transform:uppercase;font-family:var(--f-mono)"><span style="width:14px;height:1.5px;background:#987030;border-radius:1px;display:inline-block"></span>Risk Perception (→ more perceived)</span>
+      <span style="display:flex;align-items:center;gap:6px;font-size:7px;letter-spacing:.14em;color:#1e3040;text-transform:uppercase;font-family:var(--f-mono)"><span style="width:7px;height:7px;border-radius:50%;background:rgba(160,180,200,.2);border:1px solid #2a4060;display:inline-block"></span>Bubble size = systemic impact</span>
+    </div>
+  </div>
+
 </div>
+
+<script>
+window.addEventListener('load', function() {
+  var cv = document.getElementById('wl3d-cv');
+  if (!cv || typeof WL_SIGNALS === 'undefined') return;
+  var ctx = cv.getContext('2d');
+  var W, H, dpr = 1;
+
+  function setSize() {
+    dpr = window.devicePixelRatio || 1;
+    var r = cv.getBoundingClientRect();
+    cv.width  = Math.round(r.width  * dpr);
+    cv.height = Math.round(r.height * dpr);
+    W = cv.width; H = cv.height;
+  }
+  setSize();
+  if (typeof ResizeObserver !== 'undefined') {
+    new ResizeObserver(function() { setSize(); draw(); }).observe(cv);
+  }
+
+  /* ── data ── */
+  var CC = {
+    'Climate / Infrastructure':          '#f59e0b',
+    'Climate / Food Security':           '#84cc16',
+    'Climate / Ocean Systems':           '#22d3ee',
+    'Climate / Hydrology':               '#38bdf8',
+    'Climate / Agriculture':             '#4ade80',
+    'Climate / Maritime Infrastructure': '#a5f3fc',
+    'Climate / Maritime Operations':     '#67e8f9',
+    'Regulatory / Trade Policy':         '#818cf8',
+    'Trade Policy & Regulation':         '#a78bfa',
+    'Economic / Demand Dynamics':        '#f97316',
+    'Economic / Financial':              '#fb923c',
+    'Currency / Trade Flows':            '#fcd34d',
+    'Geopolitical / Infrastructure':     '#e05252',
+    'Energy Transition / Maritime':      '#34d399',
+    'Technology & Digital':              '#06b6d4',
+    'Demographic & Social':              '#94a3b8'
+  };
+  var CP = {
+    'Climate / Infrastructure':3.5,'Climate / Food Security':2.5,'Climate / Ocean Systems':2.0,
+    'Climate / Hydrology':2.0,'Climate / Agriculture':2.5,'Climate / Maritime Infrastructure':3.0,
+    'Climate / Maritime Operations':3.0,'Regulatory / Trade Policy':6.5,'Trade Policy & Regulation':6.0,
+    'Economic / Demand Dynamics':5.5,'Economic / Financial':5.0,'Currency / Trade Flows':5.5,
+    'Geopolitical / Infrastructure':8.0,'Energy Transition / Maritime':5.0,
+    'Technology & Digital':4.0,'Demographic & Social':3.5
+  };
+  function hToM(h) {
+    var iy=/year/i.test(h), n=(h.match(/\d+/g)||[]).map(Number);
+    if (!n.length) return 24;
+    var mid = n.length>1 ? (n[0]+n[1])/2 : n[0];
+    return iy ? mid*12 : mid;
+  }
+  function mToT(m) { return Math.min(10, Math.max(0, 10*Math.log(m+1)/Math.log(130))); }
+
+  var PTS = WL_SIGNALS.map(function(s) {
+    var mid = hToM(s.horizon||'12-36 months');
+    return {
+      name:s.title, cat:s.category||'Other',
+      color:CC[s.category]||'#6a8aa8',
+      horizon:s.horizon||'—', impact:s.systemicImpact||50,
+      t:mToT(mid), s:(s.systemicImpact||50)/10,
+      p:CP[s.category]!=null?CP[s.category]:4.0
+    };
+  });
+
+  /* ── camera ── */
+  var G=4.5, rotY=-0.4, rotX=0.28, zoom=1, drag=false, lx=0, ly=0, hov=null;
+
+  function proj(px,py,pz) {
+    var cY=Math.cos(rotY),sY=Math.sin(rotY);
+    var x1=px*cY+pz*sY, z1=-px*sY+pz*cY;
+    var cX=Math.cos(rotX),sX=Math.sin(rotX);
+    var y1=py*cX-z1*sX, z2=py*sX+z1*cX;
+    var sc=Math.min(W,H)*0.195*zoom, fov=850;
+    var f=fov/(fov+z2*sc*0.28);
+    return {sx:W*0.5+x1*sc*f, sy:H*0.52-y1*sc*f, depth:z2, persp:f};
+  }
+  function xyz(r){return{px:(r.t/10)*2*G-G, py:(r.s/10)*2*G-G, pz:(r.p/10)*2*G-G};}
+  function clamp(v,a,b){return Math.max(a,Math.min(b,v));}
+
+  /* ── events ── */
+  cv.addEventListener('mousedown', function(e){drag=true;lx=e.offsetX*dpr;ly=e.offsetY*dpr;cv.style.cursor='grabbing';});
+  cv.addEventListener('mouseup',   function(){drag=false;cv.style.cursor='grab';});
+  cv.addEventListener('mouseleave',function(){drag=false;hov=null;hideTip();draw();});
+  cv.addEventListener('mousemove', function(e){
+    var mx=e.offsetX*dpr, my=e.offsetY*dpr;
+    if(drag){rotY+=(mx-lx)*0.007;rotX=clamp(rotX+(my-ly)*0.005,-0.72,0.90);lx=mx;ly=my;}
+    checkHov(e.offsetX,e.offsetY); draw();
+  });
+  cv.addEventListener('wheel',function(e){zoom=clamp(zoom*(e.deltaY>0?.92:1.09),0.3,3.0);draw();e.preventDefault();},{passive:false});
+
+  var PL=['BLIND SPOT','BLIND SPOT','UNDETECTED','EMERGING','EMERGING','PARTIAL','PARTIAL','KNOWN','KNOWN','MAINSTREAM','MAINSTREAM'];
+  var PC_=['#e05252','#e05252','#f87171','#f59e0b','#f59e0b','#c9ae4e','#c9ae4e','#4ade80','#4ade80','#38bdf8','#38bdf8'];
+
+  function checkHov(cmx,cmy){
+    var found=null,best=Infinity;
+    PTS.forEach(function(r){
+      var c=xyz(r),p=proj(c.px,c.py,c.pz);
+      var rad=(2.2+r.impact*0.065)*clamp(p.persp,0.4,2.0)*zoom/dpr+8;
+      var d=Math.hypot(cmx-p.sx/dpr,cmy-p.sy/dpr);
+      if(d<rad&&d<best){best=d;found=r;}
+    });
+    if(found!==hov){hov=found;found?showTip(found,cmx,cmy):hideTip();}
+  }
+  function showTip(r,mx,my){
+    var pi=Math.round(r.p);
+    var wrap=document.getElementById('wl3d-wrap');
+    document.getElementById('wl3d-tn').textContent=r.name.length>92?r.name.slice(0,91)+'…':r.name;
+    document.getElementById('wl3d-tc').textContent=r.cat;
+    var sv=document.getElementById('wl3d-ts');sv.textContent=r.impact+'/100';sv.style.color=r.color;
+    document.getElementById('wl3d-th').textContent=r.horizon;
+    var pv=document.getElementById('wl3d-tp');pv.textContent=PL[pi]||'PARTIAL';pv.style.color=PC_[pi]||'#c0d0e0';
+    var tip=document.getElementById('wl3d-tip');
+    tip.style.display='block';
+    var cw=wrap.offsetWidth,tx=mx+14,ty=my-14;
+    if(tx+290>cw)tx=mx-295;if(ty<0)ty=8;
+    tip.style.left=tx+'px';tip.style.top=ty+'px';
+  }
+  function hideTip(){document.getElementById('wl3d-tip').style.display='none';}
+
+  /* ── drawing ── */
+  function ln3(ax,ay,az,bx,by,bz,col,w,dash){
+    var a=proj(ax,ay,az),b=proj(bx,by,bz);
+    ctx.strokeStyle=col;ctx.lineWidth=w||dpr;
+    ctx.setLineDash(dash||[]);
+    ctx.beginPath();ctx.moveTo(a.sx,a.sy);ctx.lineTo(b.sx,b.sy);ctx.stroke();
+    ctx.setLineDash([]);
+  }
+  function face3(corners,fill,stroke,sw){
+    var pp=corners.map(function(c){return proj(c[0],c[1],c[2]);});
+    ctx.beginPath();ctx.moveTo(pp[0].sx,pp[0].sy);
+    for(var i=1;i<pp.length;i++)ctx.lineTo(pp[i].sx,pp[i].sy);
+    ctx.closePath();
+    if(fill){ctx.fillStyle=fill;ctx.fill();}
+    if(stroke){ctx.strokeStyle=stroke;ctx.lineWidth=sw||0.5*dpr;ctx.stroke();}
+  }
+
+  function draw(){
+    if(!W||!H)return;
+    ctx.clearRect(0,0,W,H);
+    ctx.fillStyle='#060810';ctx.fillRect(0,0,W,H);
+
+    /* grid */
+    var N=3,GC='rgba(18,40,60,0.6)',GW=0.42*dpr;
+    for(var i=0;i<=N;i++){
+      var f=-G+i*(2*G/N);
+      ln3(f,-G,-G,f,-G,G,GC,GW);ln3(-G,-G,f,G,-G,f,GC,GW);
+      ln3(f,-G,G,f,G,G,GC,GW);ln3(-G,f,G,G,f,G,GC,GW);
+      ln3(-G,f,-G,-G,f,G,GC,GW);ln3(-G,-G,f,-G,G,f,GC,GW);
+    }
+
+    /* blind-spot zone */
+    var BF='rgba(160,28,28,0.04)',BS='rgba(190,44,44,0.18)',BW=0.55*dpr;
+    face3([[-G,0,-G],[0,0,-G],[0,G,-G],[-G,G,-G]],BF,BS,BW);
+    face3([[-G,0,0],[0,0,0],[0,G,0],[-G,G,0]],BF,BS,BW);
+    face3([[-G,0,-G],[-G,G,-G],[-G,G,0],[-G,0,0]],BF,BS,BW);
+    face3([[0,0,-G],[0,G,-G],[0,G,0],[0,0,0]],BF,BS,BW);
+    face3([[-G,G,-G],[0,G,-G],[0,G,0],[-G,G,0]],BF,BS,BW);
+    face3([[-G,0,-G],[0,0,-G],[0,0,0],[-G,0,0]],BF,BS,BW);
+    var zm=proj(-G*.54,G*.7,-G*.5);
+    ctx.textAlign='center';
+    ctx.font='bold '+(8.5*dpr)+'px JetBrains Mono,monospace';
+    ctx.fillStyle='rgba(205,55,55,0.8)';ctx.fillText('⚠ GCC BLIND SPOT',zm.sx,zm.sy-5*dpr);
+    ctx.font=(7*dpr)+'px JetBrains Mono,monospace';
+    ctx.fillStyle='rgba(165,48,48,0.5)';ctx.fillText('NEAR-TERM · SEVERE · UNPERCEIVED',zm.sx,zm.sy+8*dpr);
+
+    /* axes */
+    ln3(-G,-G,-G,G+0.6,-G,-G,'#1e5878',1.5*dpr);
+    ln3(-G,-G,-G,-G,G+0.6,-G,'#1e7850',1.5*dpr);
+    ln3(-G,-G,-G,-G,-G,G+0.6,'#785028',1.5*dpr);
+
+    /* tick labels */
+    ctx.textAlign='center';
+    [[-G,'SHORT','#e05252'],[0,'MID','#f59e0b'],[G,'LONG','#4ade80']].forEach(function(t){
+      var p=proj(t[0],-G,-G);
+      ctx.font='bold '+(7.5*dpr)+'px JetBrains Mono,monospace';
+      ctx.fillStyle=t[2]+'88';ctx.fillText(t[1],p.sx,p.sy+15*dpr);
+    });
+    ctx.textAlign='right';
+    [[-G,'LOW','#4ade80'],[0,'MED','#f59e0b'],[G,'HIGH','#e05252']].forEach(function(t){
+      var p=proj(-G,t[0],-G);
+      ctx.font='bold '+(7.5*dpr)+'px JetBrains Mono,monospace';
+      ctx.fillStyle=t[2]+'88';ctx.fillText(t[1],p.sx-6*dpr,p.sy+3*dpr);
+    });
+    ctx.textAlign='center';
+    [[-G,'BLIND','#e05252'],[0,'EMERGING','#f59e0b'],[G,'MAINSTREAM','#38bdf8']].forEach(function(t){
+      var p=proj(-G,-G,t[0]);
+      ctx.font='bold '+(7.5*dpr)+'px JetBrains Mono,monospace';
+      ctx.fillStyle=t[2]+'88';ctx.fillText(t[1],p.sx,p.sy+15*dpr);
+    });
+
+    /* axis titles */
+    ctx.font='bold '+(8*dpr)+'px JetBrains Mono,monospace';
+    var xt=proj(0,-G,-G);ctx.textAlign='center';ctx.fillStyle='#1e5878';
+    ctx.fillText('TIME TO IMPACT →',xt.sx,xt.sy+30*dpr);
+    var zt=proj(-G,-G,0);ctx.fillStyle='#785028';
+    ctx.fillText('RISK PERCEPTION →',zt.sx,zt.sy+30*dpr);
+    var yt=proj(-G,0,-G);
+    ctx.save();ctx.translate(yt.sx-34*dpr,yt.sy);ctx.rotate(-Math.PI/2);
+    ctx.fillStyle='#1e7850';ctx.textAlign='center';ctx.fillText('SEVERITY →',0,0);ctx.restore();
+
+    /* points */
+    var all=PTS.map(function(r){var c=xyz(r);return{r:r,c:c,pr:proj(c.px,c.py,c.pz)};});
+    all.sort(function(a,b){return b.pr.depth-a.pr.depth;});
+    all.forEach(function(item){
+      var r=item.r,c=item.c,p=item.pr,isH=r===hov;
+      var rad=(2.2+r.impact*0.07)*clamp(p.persp,0.4,2.0)*zoom*dpr;
+      var fl=proj(c.px,-G,c.pz);
+      ctx.strokeStyle=r.color+'18';ctx.lineWidth=0.5*dpr;
+      ctx.setLineDash([2*dpr,4*dpr]);
+      ctx.beginPath();ctx.moveTo(p.sx,p.sy);ctx.lineTo(fl.sx,fl.sy);ctx.stroke();
+      ctx.setLineDash([]);
+      ctx.fillStyle=r.color+'28';ctx.beginPath();ctx.arc(fl.sx,fl.sy,1.5*dpr,0,Math.PI*2);ctx.fill();
+      var gR=rad*(isH?4.5:2.8);
+      var gr=ctx.createRadialGradient(p.sx,p.sy,0,p.sx,p.sy,gR);
+      gr.addColorStop(0,r.color+(isH?'55':'20'));gr.addColorStop(1,'transparent');
+      ctx.fillStyle=gr;ctx.beginPath();ctx.arc(p.sx,p.sy,gR,0,Math.PI*2);ctx.fill();
+      ctx.fillStyle=r.color+(isH?'f0':'c8');
+      ctx.strokeStyle=r.color+(isH?'ff':'55');
+      ctx.lineWidth=(isH?1.5:0.6)*dpr;
+      ctx.beginPath();ctx.arc(p.sx,p.sy,rad,0,Math.PI*2);ctx.fill();ctx.stroke();
+    });
+  }
+
+  /* legend */
+  var seen={},legItems=[];
+  PTS.forEach(function(r){if(!seen[r.cat]){seen[r.cat]=r.color;legItems.push({cat:r.cat,color:r.color});}});
+  var leg=document.getElementById('wl3d-legend');
+  if(leg){leg.innerHTML=legItems.map(function(i){
+    return '<div style="display:flex;align-items:center;gap:5px;font-size:7px;color:#3a5870;white-space:nowrap;font-family:var(--f-mono)">'
+          +'<div style="width:5px;height:5px;border-radius:50%;background:'+i.color+'70;border:1px solid '+i.color+';flex-shrink:0"></div>'
+          +i.cat+'</div>';
+  }).join('');}
+
+  window.wl3dOnShow = function() { setSize(); draw(); };
+
+  draw();
+});
+</script>
 
 <!-- ============================================================ TAB 6: TRADE FLOW STRESS TEST -->
 <div class="page" id="page-stress" style="padding:0">
@@ -6030,6 +6300,7 @@ function showTab(name, el) {
     }
     if (name === 'watchlist') {
       initWatchlist();
+      if (typeof wl3dOnShow === 'function') wl3dOnShow();
     }
     if (name === 'stress') {
       initTradeFlowTab();

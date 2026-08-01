@@ -5558,23 +5558,37 @@ window.addEventListener('load', function() {
     group.add(m);
   }
 
-  // Backbone: chain in time-to-impact order
-  var ord = positions.map(function(_,i){return i;}).sort(function(a,b){return NODES[a].t-NODES[b].t;});
-  for (var k=0; k<ord.length-1; k++) bond(positions[ord[k]], positions[ord[k+1]], 0.028, 0x4a4a52);
+  // ── Influence bonds: GCC sector-impact cosine similarity ─────
+  // Two signals are bonded when their country×sector impact matrices are
+  // highly correlated (≥0.80) — they compound the same GCC sectors and
+  // genuinely interact. Bond thickness scales with similarity strength.
+  function buildVec(sig) {
+    if (!sig || !sig.gcc || !sig.gcc.data) return null;
+    var v = [];
+    sig.gcc.data.forEach(function(row) { row.forEach(function(x) { v.push(x||0); }); });
+    return v;
+  }
+  function cosSim(a, b) {
+    if (!a || !b) return 0;
+    var n=Math.min(a.length,b.length), dot=0, ma=0, mb=0;
+    for (var i=0;i<n;i++) { dot+=a[i]*b[i]; ma+=a[i]*a[i]; mb+=b[i]*b[i]; }
+    var denom=Math.sqrt(ma*mb); return denom<0.001?0:dot/denom;
+  }
 
-  // Cross-links: nearest same-perception neighbor
-  var linked = {};
-  positions.forEach(function(p,i){
-    var best=-1, bd=Infinity;
-    positions.forEach(function(q,j){
-      if (i===j||q.perception!==p.perception) return;
-      var d=Math.sqrt((p.x-q.x)**2+(p.y-q.y)**2+(p.z-q.z)**2);
-      if (d<bd){bd=d;best=j;}
-    });
-    if (best>=0&&bd<2.4){
-      var key=i<best?i+'-'+best:best+'-'+i;
-      if (!linked[key]){ linked[key]=1; bond(positions[i],positions[best],0.016,PCOL[p.perception]); }
+  var vecs = WL_SIGNALS.map(buildVec);
+  var pairs = [];
+  for (var ii=0; ii<positions.length-1; ii++) {
+    for (var jj=ii+1; jj<positions.length; jj++) {
+      var sim = cosSim(vecs[ii], vecs[jj]);
+      if (sim > 0.80) pairs.push({ a:ii, b:jj, sim:sim });
     }
+  }
+  // Top-40 strongest pairs to keep the scene readable
+  pairs.sort(function(x,y){ return y.sim-x.sim; });
+  pairs.slice(0,40).forEach(function(p) {
+    var pa=positions[p.a], pb=positions[p.b];
+    var col = (pa.perception===pb.perception) ? PCOL[pa.perception] : 0x5a6a78;
+    bond(pa, pb, 0.012 + p.sim*0.020, col);
   });
 
   // "To Monitor" zone wireframe + glow

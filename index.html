@@ -5444,8 +5444,8 @@ canvas { font-family: var(--f-mono); }
 </div>
 
 <script type="module">
-import * as THREE from 'https://unpkg.com/three@0.163.0/build/three.module.js';
-import { OrbitControls } from 'https://unpkg.com/three@0.163.0/examples/jsm/controls/OrbitControls.js';
+import * as THREE from 'https://esm.sh/three@0.163.0';
+import { OrbitControls } from 'https://esm.sh/three@0.163.0/examples/jsm/controls/OrbitControls.js';
 
 // ── Perception mapping (from category awareness scores) ───────
 var CP_MAP = {
@@ -5486,8 +5486,13 @@ window.addEventListener('load', function() {
   });
 
   // ── Scene ─────────────────────────────────────────────────────
-  var container = canvas.parentElement;
-  var W = container ? container.clientWidth : 900, H = 760;
+  // Canvas may be inside a hidden tab (clientWidth=0) on load — use window width as fallback
+  var H = 760;
+  function getW() {
+    var c = canvas.parentElement;
+    return (c && c.clientWidth > 10) ? c.clientWidth : Math.max(window.innerWidth - 60, 600);
+  }
+  var W = getW();
   var renderer = new THREE.WebGLRenderer({ canvas:canvas, antialias:true });
   renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
   renderer.setSize(W, H);
@@ -5618,7 +5623,7 @@ window.addEventListener('load', function() {
 
   // ── Resize ────────────────────────────────────────────────────
   function onResize() {
-    var w = (canvas.parentElement||{}).clientWidth || W;
+    var w = getW();
     renderer.setSize(w, H);
     camera.aspect = w/H;
     camera.updateProjectionMatrix();

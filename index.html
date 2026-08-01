@@ -5407,42 +5407,29 @@ canvas { font-family: var(--f-mono); }
 
   </div>
 
-  <!-- ── RISK LANDSCAPE 3D SCATTER ──────────────────────────────── -->
+  <!-- ── RISK LANDSCAPE 3D NETWORK ──────────────────────────────── -->
   <div id="wl-3d-section" style="margin:24px 28px 44px">
-    <div style="display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:14px;flex-wrap:wrap;gap:10px">
-      <div>
-        <div style="font-size:9px;font-weight:700;letter-spacing:.22em;color:#3A4A54;font-family:var(--f-mono);text-transform:uppercase;margin-bottom:5px">◈ Risk Landscape — All Signals</div>
-        <div style="font-size:13px;font-weight:700;color:#a0b4c4;letter-spacing:.02em">Time to Impact &nbsp;·&nbsp; Severity &nbsp;·&nbsp; Decision-Maker Perception</div>
-        <div style="font-size:7.5px;color:#263848;margin-top:5px;letter-spacing:.1em;font-family:var(--f-mono)">Hover any signal for details &nbsp;·&nbsp; Columns = time horizon &nbsp;·&nbsp; Rows = severity &nbsp;·&nbsp; Dot = decision-maker perception</div>
+    <div style="font-size:11px;font-weight:700;letter-spacing:.12em;color:#4A4A44;margin-bottom:14px">&#9670; RISK LANDSCAPE &mdash; ALL SIGNALS</div>
+    <div style="border:1px solid #1E1E1C;border-radius:6px;overflow:hidden;background:#07070a;position:relative;height:760px">
+      <canvas id="wl3d-canvas" style="width:100%;height:760px;display:block;"></canvas>
+      <!-- top-left caption -->
+      <div style="position:absolute;top:24px;left:28px;pointer-events:none">
+        <div style="font-size:24px;font-weight:700;letter-spacing:.02em;color:#C9AE4E;font-family:'JetBrains Mono',monospace">RISK NETWORK</div>
+        <div style="font-size:19px;font-weight:700;color:#F2F1ED;margin-top:6px;letter-spacing:-.01em;font-family:'JetBrains Mono',monospace">Systemic Risk Signals, in 3D</div>
+        <div style="font-size:10px;font-weight:700;letter-spacing:.1em;color:#8E8E84;margin-top:8px;font-family:'JetBrains Mono',monospace">TIME TO IMPACT &nbsp;&middot;&nbsp; SEVERITY &nbsp;&middot;&nbsp; RISK PERCEPTION</div>
+        <div style="font-size:10.5px;color:#6A6A62;margin-top:6px;max-width:320px;line-height:1.5;font-family:'JetBrains Mono',monospace">Each atom is a tracked signal &mdash; position = time to impact, sphere size = severity, atom color = risk perception, bonds = related-signal chains. Drag to orbit &middot; scroll to zoom.</div>
       </div>
-      <div id="wl3d-legend" style="display:flex;gap:7px;flex-wrap:wrap;justify-content:flex-end;align-items:center;max-width:55%"></div>
-    </div>
-    <div id="wl3d-wrap" style="position:relative;border:1px solid #14222e;border-radius:5px;background:#060810;overflow:hidden">
-      <!-- Risk matrix: [row-hdr | SHORT | MID | LONG] × [col-hdr | HIGH | MED | LOW] -->
-      <div style="display:grid;grid-template-columns:40px 1fr 1fr 1fr;gap:1px;background:#0e1e2c;margin:12px;border-radius:3px;overflow:hidden">
-        <!-- column headers -->
-        <div style="background:#07101a;padding:9px 6px"></div>
-        <div style="background:#07101a;padding:10px 10px;text-align:center;font-family:var(--f-mono);font-size:7px;font-weight:700;letter-spacing:.18em;color:#2a5070;text-transform:uppercase">SHORT-TERM<br><span style="font-size:6px;font-weight:400;letter-spacing:.06em;color:#17283a">&lt; 12 months</span></div>
-        <div style="background:#07101a;padding:10px 10px;text-align:center;font-family:var(--f-mono);font-size:7px;font-weight:700;letter-spacing:.18em;color:#2a5070;text-transform:uppercase">MID-TERM<br><span style="font-size:6px;font-weight:400;letter-spacing:.06em;color:#17283a">1 – 5 years</span></div>
-        <div style="background:#07101a;padding:10px 10px;text-align:center;font-family:var(--f-mono);font-size:7px;font-weight:700;letter-spacing:.18em;color:#2a5070;text-transform:uppercase">LONG-TERM<br><span style="font-size:6px;font-weight:400;letter-spacing:.06em;color:#17283a">5 years +</span></div>
-        <!-- HIGH row -->
-        <div style="background:#0a0e14;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:6px 3px;font-family:var(--f-mono);font-size:7px;font-weight:700;letter-spacing:.1em;color:#c04040;text-transform:uppercase;text-align:center;gap:3px">HIGH<br><span style="font-size:5.5px;font-weight:400;color:#4a2020">72–100</span></div>
-        <div id="rm-H-S" style="background:rgba(140,18,18,0.12);padding:8px 8px;display:flex;flex-direction:column;gap:3px;min-height:52px"><div style="font-family:var(--f-mono);font-size:6.5px;font-weight:700;letter-spacing:.15em;color:rgba(200,50,50,.5);padding-bottom:5px;flex-shrink:0">⚠ BLIND SPOT ZONE</div></div>
-        <div id="rm-H-M" style="background:#050a10;padding:8px 8px;display:flex;flex-direction:column;gap:3px;min-height:52px"></div>
-        <div id="rm-H-L" style="background:#050a10;padding:8px 8px;display:flex;flex-direction:column;gap:3px;min-height:52px"></div>
-        <!-- MED row -->
-        <div style="background:#0a0e14;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:6px 3px;font-family:var(--f-mono);font-size:7px;font-weight:700;letter-spacing:.1em;color:#b07828;text-transform:uppercase;text-align:center;gap:3px">MED<br><span style="font-size:5.5px;font-weight:400;color:#483010">55–71</span></div>
-        <div id="rm-M-S" style="background:rgba(100,68,5,0.09);padding:8px 8px;display:flex;flex-direction:column;gap:3px;min-height:52px"></div>
-        <div id="rm-M-M" style="background:#050a10;padding:8px 8px;display:flex;flex-direction:column;gap:3px;min-height:52px"></div>
-        <div id="rm-M-L" style="background:#050a10;padding:8px 8px;display:flex;flex-direction:column;gap:3px;min-height:52px"></div>
-        <!-- LOW row -->
-        <div style="background:#0a0e14;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:6px 3px;font-family:var(--f-mono);font-size:7px;font-weight:700;letter-spacing:.1em;color:#307050;text-transform:uppercase;text-align:center;gap:3px">LOW<br><span style="font-size:5.5px;font-weight:400;color:#1a3020">≤ 54</span></div>
-        <div id="rm-L-S" style="background:#050a10;padding:8px 8px;display:flex;flex-direction:column;gap:3px;min-height:52px"></div>
-        <div id="rm-L-M" style="background:#050a10;padding:8px 8px;display:flex;flex-direction:column;gap:3px;min-height:52px"></div>
-        <div id="rm-L-L" style="background:#050a10;padding:8px 8px;display:flex;flex-direction:column;gap:3px;min-height:52px"></div>
+      <!-- top-right legend -->
+      <div style="position:absolute;top:24px;right:28px;background:rgba(10,10,9,.72);border:1px solid #1E1E1C;border-radius:6px;padding:14px 16px;pointer-events:none;backdrop-filter:blur(4px)">
+        <div style="font-size:9px;font-weight:700;letter-spacing:.12em;color:#4A4A44;margin-bottom:8px;font-family:'JetBrains Mono',monospace">PERCEPTION (ATOM COLOR)</div>
+        <div style="display:flex;flex-direction:column;gap:6px">
+          <div style="display:flex;align-items:center;gap:6px"><span style="width:11px;height:11px;border-radius:50%;background:#C98A2E;display:inline-block"></span><span style="font-size:9.5px;color:#B8B7B0;font-family:'JetBrains Mono',monospace">To monitor</span></div>
+          <div style="display:flex;align-items:center;gap:6px"><span style="width:11px;height:11px;border-radius:50%;background:#5A8AB8;display:inline-block"></span><span style="font-size:9.5px;color:#B8B7B0;font-family:'JetBrains Mono',monospace">Mainstream</span></div>
+          <div style="display:flex;align-items:center;gap:6px"><span style="width:11px;height:11px;border-radius:50%;background:#5FA86A;display:inline-block"></span><span style="font-size:9.5px;color:#B8B7B0;font-family:'JetBrains Mono',monospace">Monitored</span></div>
+        </div>
       </div>
-      <!-- shared floating tooltip (position:fixed so it escapes overflow:hidden) -->
-      <div id="wl3d-tip" style="position:fixed;display:none;background:rgba(4,6,14,.97);border:1px solid #182c44;border-radius:4px;padding:12px 14px;max-width:280px;pointer-events:none;font-family:var(--f-mono);z-index:9999;box-shadow:0 6px 24px rgba(0,0,0,.75)">
+      <!-- hover tooltip (position:fixed escapes overflow:hidden) -->
+      <div id="wl3d-tip" style="position:fixed;display:none;background:rgba(4,6,14,.97);border:1px solid #182c44;border-radius:4px;padding:12px 14px;max-width:280px;pointer-events:none;font-family:'JetBrains Mono',monospace;z-index:9999;box-shadow:0 6px 24px rgba(0,0,0,.75)">
         <div id="wl3d-tn" style="color:#dce8f0;font-size:10.5px;font-weight:700;line-height:1.35;margin-bottom:3px"></div>
         <div id="wl3d-tc" style="font-size:7px;letter-spacing:.2em;color:#306080;margin-bottom:8px"></div>
         <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;border-top:1px solid #121e30;padding-top:8px">
@@ -5452,130 +5439,209 @@ canvas { font-family: var(--f-mono); }
         </div>
       </div>
     </div>
-    <div style="display:flex;gap:20px;justify-content:center;margin-top:10px;flex-wrap:wrap">
-      <span style="display:flex;align-items:center;gap:6px;font-size:7px;letter-spacing:.14em;color:#1e3040;text-transform:uppercase;font-family:var(--f-mono)"><span style="width:3px;height:12px;background:#2a7898;border-radius:1px;display:inline-block"></span>Left stripe = risk category</span>
-      <span style="display:flex;align-items:center;gap:6px;font-size:7px;letter-spacing:.14em;color:#1e3040;text-transform:uppercase;font-family:var(--f-mono)"><span style="width:6px;height:6px;border-radius:50%;background:#e05252;display:inline-block"></span>Red dot = blind spot</span>
-      <span style="display:flex;align-items:center;gap:6px;font-size:7px;letter-spacing:.14em;color:#1e3040;text-transform:uppercase;font-family:var(--f-mono)"><span style="width:6px;height:6px;border-radius:50%;background:#f59e0b;display:inline-block"></span>Amber dot = emerging</span>
-      <span style="display:flex;align-items:center;gap:6px;font-size:7px;letter-spacing:.14em;color:#1e3040;text-transform:uppercase;font-family:var(--f-mono)"><span style="width:6px;height:6px;border-radius:50%;background:#38bdf8;display:inline-block"></span>Blue dot = mainstream</span>
-    </div>
   </div>
 
 </div>
 
-<script>
+<script type="module">
+import * as THREE from 'https://unpkg.com/three@0.163.0/build/three.module.js';
+import { OrbitControls } from 'https://unpkg.com/three@0.163.0/examples/jsm/controls/OrbitControls.js';
+
+// ── Perception mapping (from category awareness scores) ───────
+var CP_MAP = {
+  'Climate / Infrastructure':3.5,'Climate / Food Security':2.5,'Climate / Ocean Systems':2.0,
+  'Climate / Hydrology':2.0,'Climate / Agriculture':2.5,'Climate / Maritime Infrastructure':3.0,
+  'Climate / Maritime Operations':3.0,'Regulatory / Trade Policy':6.5,'Trade Policy & Regulation':6.0,
+  'Economic / Demand Dynamics':5.5,'Economic / Financial':5.0,'Currency / Trade Flows':5.5,
+  'Geopolitical / Infrastructure':8.0,'Energy Transition / Maritime':5.0,
+  'Technology & Digital':4.0,'Demographic & Social':3.5
+};
+var PCOL  = { toMonitor:0xC98A2E, mainstream:0x5A8AB8, monitored:0x5FA86A };
+var POFF  = { toMonitor:-1.4,     mainstream:0.7,      monitored:1.9 };
+var PHEX  = { toMonitor:'#C98A2E',mainstream:'#5A8AB8',monitored:'#5FA86A' };
+var PLBL  = { toMonitor:'To monitor',mainstream:'Mainstream',monitored:'Monitored' };
+
+function hToM(h) {
+  var iy = /year/i.test(h), n = (h.match(/\d+/g)||[]).map(Number);
+  if (!n.length) return 24;
+  return iy ? (n.length>1?(n[0]+n[1])/2:n[0])*12 : (n.length>1?(n[0]+n[1])/2:n[0]);
+}
+function cpToPct(cp) { return cp >= 7 ? 'mainstream' : cp >= 5 ? 'monitored' : 'toMonitor'; }
+function seeded(i, s) { var x=Math.sin(i*999.7+s*37.1)*10000; return x-Math.floor(x); }
+
+// Module scripts are deferred — WL_SIGNALS (defined at line ~10408 in a regular script)
+// is guaranteed in global scope by the time this body executes.
 window.addEventListener('load', function() {
-  if (typeof WL_SIGNALS === 'undefined') return;
+  var canvas = document.getElementById('wl3d-canvas');
+  if (!canvas || typeof WL_SIGNALS === 'undefined') return;
 
-  var CC = {
-    'Climate / Infrastructure':'#f59e0b','Climate / Food Security':'#84cc16',
-    'Climate / Ocean Systems':'#22d3ee','Climate / Hydrology':'#38bdf8',
-    'Climate / Agriculture':'#4ade80','Climate / Maritime Infrastructure':'#a5f3fc',
-    'Climate / Maritime Operations':'#67e8f9','Regulatory / Trade Policy':'#818cf8',
-    'Trade Policy & Regulation':'#a78bfa','Economic / Demand Dynamics':'#f97316',
-    'Economic / Financial':'#fb923c','Currency / Trade Flows':'#fcd34d',
-    'Geopolitical / Infrastructure':'#e05252','Energy Transition / Maritime':'#34d399',
-    'Technology & Digital':'#06b6d4','Demographic & Social':'#94a3b8'
-  };
-  var CP = {
-    'Climate / Infrastructure':3.5,'Climate / Food Security':2.5,'Climate / Ocean Systems':2.0,
-    'Climate / Hydrology':2.0,'Climate / Agriculture':2.5,'Climate / Maritime Infrastructure':3.0,
-    'Climate / Maritime Operations':3.0,'Regulatory / Trade Policy':6.5,'Trade Policy & Regulation':6.0,
-    'Economic / Demand Dynamics':5.5,'Economic / Financial':5.0,'Currency / Trade Flows':5.5,
-    'Geopolitical / Infrastructure':8.0,'Energy Transition / Maritime':5.0,
-    'Technology & Digital':4.0,'Demographic & Social':3.5
-  };
-  var PL  = ['BLIND SPOT','BLIND SPOT','UNDETECTED','EMERGING','EMERGING','PARTIAL','PARTIAL','KNOWN','KNOWN','MAINSTREAM','MAINSTREAM'];
-  var PC_ = ['#e05252','#e05252','#f87171','#f59e0b','#f59e0b','#c9ae4e','#c9ae4e','#4ade80','#4ade80','#38bdf8','#38bdf8'];
-
-  function hToM(h) {
-    var iy=/year/i.test(h), n=(h.match(/\d+/g)||[]).map(Number);
-    if (!n.length) return 24;
-    return iy ? (n.length>1?(n[0]+n[1])/2:n[0])*12 : (n.length>1?(n[0]+n[1])/2:n[0]);
-  }
-
-  var PTS = WL_SIGNALS.map(function(s) {
-    var mid = hToM(s.horizon||'12-36 months');
-    var tZ  = mid < 12 ? 'S' : mid < 60 ? 'M' : 'L';
-    var imp = s.systemicImpact || 50;
-    var sZ  = imp >= 72 ? 'H' : imp >= 55 ? 'M' : 'L';
-    return {
-      name:s.title, cat:s.category||'Other',
-      color:CC[s.category]||'#6a8aa8',
-      horizon:s.horizon||'—', impact:imp,
-      p:CP[s.category]!=null ? CP[s.category] : 4.0,
-      cell:'rm-'+sZ+'-'+tZ
-    };
-  });
-  PTS.sort(function(a,b){ return b.impact-a.impact; });
-
-  /* ── tooltip ── */
-  var tip = document.getElementById('wl3d-tip');
-  function showTip(r, cx, cy) {
-    var pi = Math.round(r.p);
-    document.getElementById('wl3d-tn').textContent = r.name;
-    document.getElementById('wl3d-tc').textContent = r.cat;
-    var sv = document.getElementById('wl3d-ts'); sv.textContent = r.impact+'/100'; sv.style.color = r.color;
-    document.getElementById('wl3d-th').textContent = r.horizon;
-    var pv = document.getElementById('wl3d-tp'); pv.textContent = PL[pi]||'PARTIAL'; pv.style.color = PC_[pi]||'#c0d0e0';
-    tip.style.display = 'block';
-    posTip(cx, cy);
-  }
-  function posTip(cx, cy) {
-    var vw = window.innerWidth, vh = window.innerHeight;
-    var tx = cx+16, ty = cy-14;
-    if (tx+292 > vw) tx = cx-300;
-    if (ty < 4) ty = 4;
-    if (ty+140 > vh) ty = vh-144;
-    tip.style.left = tx+'px'; tip.style.top = ty+'px';
-  }
-  function hideTip() { tip.style.display = 'none'; }
-
-  /* ── build chips ── */
-  PTS.forEach(function(r) {
-    var cell = document.getElementById(r.cell);
-    if (!cell) return;
-    var pi   = Math.round(r.p);
-    var pcol = PC_[pi] || '#c0d0e0';
-
-    var chip = document.createElement('div');
-    chip.style.cssText = 'display:flex;align-items:center;gap:5px;padding:3px 7px 3px 8px;border-radius:2px;cursor:pointer;border-left:2px solid '+r.color+';background:'+r.color+'0d;min-width:0;flex-shrink:0';
-
-    var lbl = document.createElement('span');
-    lbl.style.cssText = 'font-family:var(--f-mono);font-size:7.5px;color:#4a6880;flex:1;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;line-height:1.6;letter-spacing:.01em';
-    lbl.textContent = r.name;
-
-    var dot = document.createElement('span');
-    dot.style.cssText = 'width:5px;height:5px;min-width:5px;border-radius:50%;background:'+pcol+';flex-shrink:0';
-
-    chip.appendChild(lbl);
-    chip.appendChild(dot);
-
-    chip.addEventListener('mouseenter', function(e) {
-      chip.style.background = r.color+'26';
-      lbl.style.color = '#8ab0cc';
-      showTip(r, e.clientX, e.clientY);
-    });
-    chip.addEventListener('mousemove',  function(e) { posTip(e.clientX, e.clientY); });
-    chip.addEventListener('mouseleave', function() {
-      chip.style.background = r.color+'0d';
-      lbl.style.color = '#4a6880';
-      hideTip();
-    });
-
-    cell.appendChild(chip);
+  // ── Map WL_SIGNALS → 3D node data ────────────────────────────
+  var NODES = WL_SIGNALS.map(function(s, i) {
+    var months = hToM(s.horizon || '12-36 months');
+    var t      = Math.min(100, months / 0.84);          // 84 mo = 7 yr cap → t=100
+    var impact = s.systemicImpact || 50;
+    var cp     = CP_MAP[s.category] != null ? CP_MAP[s.category] : 4.0;
+    return { label:s.title, category:s.category||'Other', horizon:s.horizon||'—',
+             t:t, impact:impact, perception:cpToPct(cp) };
   });
 
-  /* ── category legend ── */
-  var seen={}, legItems=[];
-  PTS.forEach(function(r){ if(!seen[r.cat]){seen[r.cat]=r.color;legItems.push({cat:r.cat,color:r.color});} });
-  var leg = document.getElementById('wl3d-legend');
-  if (leg) { leg.innerHTML = legItems.map(function(i){
-    return '<div style="display:flex;align-items:center;gap:5px;font-size:7px;color:#3a5870;white-space:nowrap;font-family:var(--f-mono)">'
-          +'<div style="width:5px;height:5px;border-radius:50%;background:'+i.color+'70;border:1px solid '+i.color+';flex-shrink:0"></div>'
-          +i.cat+'</div>';
-  }).join(''); }
+  // ── Scene ─────────────────────────────────────────────────────
+  var container = canvas.parentElement;
+  var W = container ? container.clientWidth : 900, H = 760;
+  var renderer = new THREE.WebGLRenderer({ canvas:canvas, antialias:true });
+  renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+  renderer.setSize(W, H);
+  renderer.setClearColor(0x07070a, 1);
 
-  window.wl3dOnShow = function() {};
+  var scene  = new THREE.Scene();
+  scene.background = new THREE.Color(0x07070a);
+  var camera = new THREE.PerspectiveCamera(45, W/H, 0.01, 100);
+  camera.position.set(0, 0, 14);
+
+  // Lighting — soft studio
+  scene.add(new THREE.AmbientLight(0xffffff, 0.45));
+  var d1 = new THREE.DirectionalLight(0xffffff, 0.9); d1.position.set(5,8,6); scene.add(d1);
+  var d2 = new THREE.DirectionalLight(0x8888ff, 0.3); d2.position.set(-5,-3,-4); scene.add(d2);
+  var pt = new THREE.PointLight(0xC98A2E, 0.4, 20);   pt.position.set(-3,2,3); scene.add(pt);
+
+  // OrbitControls
+  var controls = new OrbitControls(camera, renderer.domElement);
+  controls.enableDamping   = true;
+  controls.dampingFactor   = 0.08;
+  controls.autoRotate      = true;
+  controls.autoRotateSpeed = 0.4;
+  controls.addEventListener('start', function() { controls.autoRotate = false; });
+
+  // ── Geometry ──────────────────────────────────────────────────
+  var group = new THREE.Group();
+  scene.add(group);
+
+  var positions = NODES.map(function(n, i) {
+    var pct = n.perception;
+    var x   = (n.t / 100) * 11 - 5.5;
+    var y   = ((n.impact - 40) / 60) * 8 - 4;
+    var z   = POFF[pct] + (seeded(i,1) - 0.5) * 1.3;
+    var r   = 0.17 + ((n.impact - 40) / 60) * 0.36;
+    return { x:x, y:y, z:z, r:r, node:n, perception:pct };
+  });
+
+  // Spheres
+  var spheres = [];
+  positions.forEach(function(p, i) {
+    var col = PCOL[p.perception];
+    var mat = new THREE.MeshStandardMaterial({
+      color:col, roughness:0.28, metalness:0.18, emissive:col, emissiveIntensity:0.16
+    });
+    var mesh = new THREE.Mesh(new THREE.SphereGeometry(p.r, 24, 24), mat);
+    mesh.position.set(p.x, p.y, p.z);
+    mesh.userData.idx = i;
+    group.add(mesh);
+    spheres.push(mesh);
+  });
+
+  // Bond helper
+  function bond(p1, p2, br, col) {
+    var s=new THREE.Vector3(p1.x,p1.y,p1.z), e=new THREE.Vector3(p2.x,p2.y,p2.z);
+    var d=new THREE.Vector3().subVectors(e,s), len=d.length();
+    var mid=s.clone().add(d.clone().multiplyScalar(0.5));
+    var m=new THREE.Mesh(
+      new THREE.CylinderGeometry(br,br,len,8,1),
+      new THREE.MeshStandardMaterial({color:col,roughness:0.5,metalness:0.2})
+    );
+    m.position.copy(mid);
+    m.quaternion.setFromUnitVectors(new THREE.Vector3(0,1,0), d.clone().normalize());
+    group.add(m);
+  }
+
+  // Backbone: chain in time-to-impact order
+  var ord = positions.map(function(_,i){return i;}).sort(function(a,b){return NODES[a].t-NODES[b].t;});
+  for (var k=0; k<ord.length-1; k++) bond(positions[ord[k]], positions[ord[k+1]], 0.028, 0x4a4a52);
+
+  // Cross-links: nearest same-perception neighbor
+  var linked = {};
+  positions.forEach(function(p,i){
+    var best=-1, bd=Infinity;
+    positions.forEach(function(q,j){
+      if (i===j||q.perception!==p.perception) return;
+      var d=Math.sqrt((p.x-q.x)**2+(p.y-q.y)**2+(p.z-q.z)**2);
+      if (d<bd){bd=d;best=j;}
+    });
+    if (best>=0&&bd<2.4){
+      var key=i<best?i+'-'+best:best+'-'+i;
+      if (!linked[key]){ linked[key]=1; bond(positions[i],positions[best],0.016,PCOL[p.perception]); }
+    }
+  });
+
+  // "To Monitor" zone wireframe + glow
+  var zn = positions.filter(function(p){return p.perception==='toMonitor';});
+  if (zn.length) {
+    var pad=0.6;
+    var mnX=Math.min.apply(null,zn.map(function(p){return p.x-p.r;}))-pad;
+    var mxX=Math.max.apply(null,zn.map(function(p){return p.x+p.r;}))+pad;
+    var mnY=Math.min.apply(null,zn.map(function(p){return p.y-p.r;}))-pad;
+    var mxY=Math.max.apply(null,zn.map(function(p){return p.y+p.r;}))+pad;
+    var mnZ=Math.min.apply(null,zn.map(function(p){return p.z-p.r;}))-pad;
+    var mxZ=Math.max.apply(null,zn.map(function(p){return p.z+p.r;}))+pad;
+    var zw=mxX-mnX,zh=mxY-mnY,zd=mxZ-mnZ,cx=(mnX+mxX)/2,cy=(mnY+mxY)/2,cz=(mnZ+mxZ)/2;
+    var bg=new THREE.BoxGeometry(zw,zh,zd);
+    var fr=new THREE.LineSegments(new THREE.EdgesGeometry(bg),
+      new THREE.LineBasicMaterial({color:0xC98A2E,transparent:true,opacity:0.5}));
+    fr.position.set(cx,cy,cz); group.add(fr);
+    var gw=new THREE.Mesh(bg, new THREE.MeshBasicMaterial({color:0xC98A2E,transparent:true,opacity:0.04,side:THREE.BackSide}));
+    gw.position.set(cx,cy,cz); group.add(gw);
+  }
+
+  // ── Raycaster + tooltip ───────────────────────────────────────
+  var ray=new THREE.Raycaster(), mouse=new THREE.Vector2();
+  var tip=document.getElementById('wl3d-tip');
+  renderer.domElement.addEventListener('mousemove', function(e){
+    var rect=renderer.domElement.getBoundingClientRect();
+    mouse.x = ((e.clientX-rect.left)/rect.width)*2-1;
+    mouse.y = -((e.clientY-rect.top)/rect.height)*2+1;
+    ray.setFromCamera(mouse, camera);
+    var hits=ray.intersectObjects(spheres);
+    if (hits.length) {
+      var p=positions[hits[0].object.userData.idx], n=p.node;
+      document.getElementById('wl3d-tn').textContent = n.label;
+      document.getElementById('wl3d-tc').textContent = n.category;
+      var ts=document.getElementById('wl3d-ts'); ts.textContent=n.impact+'/100'; ts.style.color=PHEX[p.perception];
+      document.getElementById('wl3d-th').textContent = n.horizon;
+      var tp=document.getElementById('wl3d-tp'); tp.textContent=PLBL[p.perception]; tp.style.color=PHEX[p.perception];
+      var vw=window.innerWidth, vh=window.innerHeight;
+      var tx=e.clientX+16, ty=e.clientY-14;
+      if (tx+292>vw) tx=e.clientX-300;
+      if (ty<4) ty=4; if (ty+164>vh) ty=vh-168;
+      tip.style.left=tx+'px'; tip.style.top=ty+'px'; tip.style.display='block';
+    } else { tip.style.display='none'; }
+  });
+  renderer.domElement.addEventListener('mouseleave', function(){ tip.style.display='none'; });
+
+  // ── Resize ────────────────────────────────────────────────────
+  function onResize() {
+    var w = (canvas.parentElement||{}).clientWidth || W;
+    renderer.setSize(w, H);
+    camera.aspect = w/H;
+    camera.updateProjectionMatrix();
+  }
+  window.addEventListener('resize', onResize);
+
+  // ── Render loop (lazy-start) ──────────────────────────────────
+  var running = false;
+  function startLoop() {
+    if (running) return;
+    running = true;
+    (function loop(){ if(!running)return; requestAnimationFrame(loop); controls.update(); renderer.render(scene,camera); })();
+  }
+  function stopLoop() { running = false; }
+
+  // Hook called by showTab('watchlist')
+  window.wl3dOnShow = function() { onResize(); startLoop(); };
+  // Hook called when leaving the watchlist tab (wire up in showTab if needed)
+  window.wl3dOnHide = function() { stopLoop(); };
+
+  // Start immediately if watchlist is already visible on load
+  var pg = document.getElementById('page-watchlist');
+  if (pg && getComputedStyle(pg).display !== 'none') startLoop();
 });
 </script>
 

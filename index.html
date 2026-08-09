@@ -21812,22 +21812,58 @@ var PSR_CP_REROUTE = {
   malacca:      {expKey:'malacca', cpLabel:'Malacca Strait',    partnerCpName:'Malacca Strait',    rerouteDays:[3,6],   rerouteVia:'Lombok / Sunda Strait', costPerTEU:'$300–600',   costPct:[6,12]}
 };
 
+// ── SAUDI ARABIA OFFICIAL TARIFF REFERENCE DATABASE ───────────────────────────
+// Source: ZATCA (Zakat, Tax and Customs Authority) — zatca.gov.sa/en/eServices/Pages/eServices_220.aspx
+// GCC Common External Tariff (CET) applies uniformly to all MFN partners (no FTA with China, Japan, India).
+// ITA = WTO Information Technology Agreement (Saudi Arabia is a signatory; zero duty on all covered IT goods).
+// Last verified: Aug 2026 against ZATCA Integrated Tariff portal + Deloitte/EY trade advisory notices.
+// Note: All rates apply to imports into Saudi Arabia (KSA) — the MFN applied rate is identical across
+// all non-GCC, non-FTA origin countries unless an explicit bilateral exemption is in force (none for CHN/JPN/IND).
+//
+// Key sources:
+//   • ZATCA Integrated Tariff: https://zatca.gov.sa/en/RulesRegulations/Taxes/Pages/Integrated-Tarrifs.aspx
+//   • GCC CET (5% standard + exemption list): GCC Secretariat, implemented Jan 2025 at 12-digit level
+//   • ITA zero-duty commitment: WTO ITA, Saudi Arabia signatory — https://www.wto.org/english/tratop_e/inftec_e/inftec_e.htm
+//   • Air conditioner rate increase (5%→15%): KSA Ministerial Decree, Jun 2022 (Deloitte advisory)
+//   • Wheat / Rice zero duty: USTR NTE 2009 / WTO TPR S/256 — food security exemptions, still in force
+//   • Passenger cars 5%: ZATCA / wcshipping.com confirmed Aug 2025
+var PSR_TARIFF_REF = {
+  // HS    Product                       MFN rate    Basis / Notes
+  '8703': { rate:0.050, label:'5%',   basis:'GCC CET',  note:'Passenger cars, SUVs — uniform MFN; confirmed ZATCA Aug 2025' },
+  '8704': { rate:0.050, label:'5%',   basis:'GCC CET',  note:'Goods motor vehicles (trucks, vans) — standard GCC CET Chapter 87' },
+  '8517': { rate:0.000, label:'0%',   basis:'ITA',      note:'Telephones, mobile devices — ITA zero-duty; Saudi Arabia ITA signatory since 1997' },
+  '8471': { rate:0.000, label:'0%',   basis:'ITA',      note:'Computers & data-processing equipment — ITA zero-duty' },
+  '8541': { rate:0.000, label:'0%',   basis:'ITA',      note:'Semiconductor devices, diodes — ITA zero-duty (expanded ITA 2015)' },
+  '8415': { rate:0.150, label:'15%',  basis:'GCC CET*', note:'Air conditioners — raised from 5% to 15% by KSA Ministerial Decree Jun 2022 (Deloitte advisory); protective rate to support local HVAC industry' },
+  '8504': { rate:0.050, label:'5%',   basis:'GCC CET',  note:'Electrical transformers, rectifiers — standard 5% CET; distinct from switching apparatus (HS 8535/8536) raised to 15% in Jul 2024' },
+  '8507': { rate:0.050, label:'5%',   basis:'GCC CET',  note:'Electric storage batteries (incl. Li-ion) — standard GCC CET' },
+  '4011': { rate:0.050, label:'5%',   basis:'GCC CET',  note:'New pneumatic rubber tires — standard GCC CET Chapter 40' },
+  '7208': { rate:0.050, label:'5%',   basis:'GCC CET',  note:'Hot-rolled flat-rolled iron/steel — standard GCC CET Chapter 72' },
+  '3901': { rate:0.065, label:'6.5%', basis:'GCC CET',  note:'Ethylene polymers in primary forms — GCC protective rate; Saudi Arabia / SABIC major producer' },
+  '2711': { rate:0.000, label:'0%',   basis:'GCC CET',  note:'Petroleum gas (LNG/LPG) — energy product, zero CET; Saudi Arabia is major exporter so no protective rate needed' },
+  '2709': { rate:0.000, label:'0%',   basis:'GCC CET',  note:'Crude petroleum — export product, zero import duty' },
+  '1006': { rate:0.000, label:'0%',   basis:'Exemption', note:'Rice — food security exemption; exempted from CET per GCC Secretariat basic foodstuffs list (USTR NTE / WTO TPR confirmed)' },
+  '1001': { rate:0.000, label:'0%',   basis:'Exemption', note:'Wheat — food security exemption; Saudi Arabia exempted wheat & flour from import duty Mar 2008, still in force (WTO TPR S/256 §3.23)' }
+};
+
 // ── SMART TARIFF ENGINE DATA (real OEC + World Bank elasticities) ──────────────
 // Source: Trade data base/Tariff Simulation/ksa_top3_trade_data_pack_v3.xlsx
-// m0: Import_HS4_Detail (import_value_usd); t0: Tariff_Detail (MFN applied rate, as decimal);
+// m0: Import_HS4_Detail (import_value_usd); t0: MFN applied rate (decimal) — corrected Aug 2026 against
+//     ZATCA official schedule; prior version had systematic errors (partner country rates mixed in).
 // elasticity: Elasticities_SAU (Kee, Nicita & Olarreaga 2008, winsorized to [-5,-0.2])
+// All t0 values now uniform across partners: GCC CET applies equally to China, Japan, India (no FTA).
 var PSR_SMART_DATA = [
   // ── Import products ──────────────────────────────────────────────────────────
   {code:'8703', name:'Passenger Cars', elasticity:-5.0,
    partners:[
-     {id:'chn',name:'China', m0:4949933000, t0:0.150},
-     {id:'jpn',name:'Japan', m0:4727158000, t0:0.000},
-     {id:'ind',name:'India', m0:1306043000, t0:1.250}
+     {id:'chn',name:'China', m0:4949933000, t0:0.050},
+     {id:'jpn',name:'Japan', m0:4727158000, t0:0.050},
+     {id:'ind',name:'India', m0:1306043000, t0:0.050}
    ]},
   {code:'8517', name:'Telephones & Mobile Devices', elasticity:-1.5568,
    partners:[
      {id:'chn',name:'China', m0:6378051000, t0:0.000},
-     {id:'ind',name:'India', m0:332373700,  t0:0.09515}
+     {id:'ind',name:'India', m0:332373700,  t0:0.000}
    ]},
   {code:'8471', name:'Computers & Data-Processing Equipment', elasticity:-5.0,
    partners:[
@@ -21836,20 +21872,20 @@ var PSR_SMART_DATA = [
    ]},
   {code:'7208', name:'Hot-Rolled Iron & Steel', elasticity:-1.7005,
    partners:[
-     {id:'chn',name:'China', m0:1703617000, t0:0.05068},
-     {id:'jpn',name:'Japan', m0:100615600,  t0:0.000},
-     {id:'ind',name:'India', m0:19821410,   t0:0.075}
+     {id:'chn',name:'China', m0:1703617000, t0:0.050},
+     {id:'jpn',name:'Japan', m0:100615600,  t0:0.050},
+     {id:'ind',name:'India', m0:19821410,   t0:0.050}
    ]},
   {code:'1006', name:'Rice', elasticity:-5.0,
    partners:[
-     {id:'ind',name:'India', m0:1432782000, t0:0.73538}
+     {id:'ind',name:'India', m0:1432782000, t0:0.000}
    ]},
   {code:'1001', name:'Wheat', elasticity:-1.0,
    partners:[
-     {id:'rus',name:'Russia',    m0:518000000, t0:0.25},
-     {id:'aus',name:'Australia', m0:499500000, t0:0.25},
-     {id:'can',name:'Canada',    m0:370000000, t0:0.25},
-     {id:'usa',name:'USA',       m0:314500000, t0:0.25}
+     {id:'rus',name:'Russia',    m0:518000000, t0:0.000},
+     {id:'aus',name:'Australia', m0:499500000, t0:0.000},
+     {id:'can',name:'Canada',    m0:370000000, t0:0.000},
+     {id:'usa',name:'USA',       m0:314500000, t0:0.000}
    ]},
   // ── Export products (SAU importVal≈0; tariff model shows near-zero impact) ──
   {code:'2709', name:'Crude Petroleum', elasticity:-0.5,
@@ -21860,51 +21896,51 @@ var PSR_SMART_DATA = [
    ]},
   {code:'2711', name:'Petroleum Gas (LNG/LPG)', elasticity:-5.0,
    partners:[
-     {id:'chn',name:'China', m0:781057, t0:0.00587},
-     {id:'ind',name:'India', m0:3378,   t0:0.05613}
+     {id:'chn',name:'China', m0:781057, t0:0.000},
+     {id:'ind',name:'India', m0:3378,   t0:0.000}
    ]},
   {code:'3901', name:'Ethylene Polymers (Plastics)', elasticity:-0.8484,
    partners:[
      {id:'chn',name:'China', m0:58486160, t0:0.065},
-     {id:'ind',name:'India', m0:19297860, t0:0.075},
-     {id:'jpn',name:'Japan', m0:6367081,  t0:0.02164}
+     {id:'ind',name:'India', m0:19297860, t0:0.065},
+     {id:'jpn',name:'Japan', m0:6367081,  t0:0.065}
    ]},
   // ── Additional strategic imports ─────────────────────────────────────────────
   {code:'8704', name:'Delivery Trucks', elasticity:-4.4329,
    partners:[
-     {id:'chn',name:'China', m0:958300000,  t0:0.14734},
-     {id:'jpn',name:'Japan', m0:594000000,  t0:0.000},
-     {id:'ind',name:'India', m0:211300000,  t0:0.39994}
+     {id:'chn',name:'China', m0:958300000,  t0:0.050},
+     {id:'jpn',name:'Japan', m0:594000000,  t0:0.050},
+     {id:'ind',name:'India', m0:211300000,  t0:0.050}
    ]},
   {code:'8541', name:'Semiconductor Devices', elasticity:-1.4542,
    partners:[
-     {id:'chn',name:'China', m0:1721300000, t0:0.00041},
-     {id:'ind',name:'India', m0:752618,     t0:0.18173},
+     {id:'chn',name:'China', m0:1721300000, t0:0.000},
+     {id:'ind',name:'India', m0:752618,     t0:0.000},
      {id:'jpn',name:'Japan', m0:593334,     t0:0.000}
    ]},
   {code:'8415', name:'Air Conditioners', elasticity:-1.6924,
    partners:[
-     {id:'chn',name:'China', m0:1329300000, t0:0.08433},
-     {id:'ind',name:'India', m0:16200000,   t0:0.200},
-     {id:'jpn',name:'Japan', m0:5300000,    t0:0.000}
+     {id:'chn',name:'China', m0:1329300000, t0:0.150},
+     {id:'ind',name:'India', m0:16200000,   t0:0.150},
+     {id:'jpn',name:'Japan', m0:5300000,    t0:0.150}
    ]},
   {code:'8504', name:'Electrical Transformers', elasticity:-1.0524,
    partners:[
-     {id:'chn',name:'China', m0:996000000,  t0:0.01702},
-     {id:'ind',name:'India', m0:61200000,   t0:0.15641},
-     {id:'jpn',name:'Japan', m0:40300000,   t0:0.000}
+     {id:'chn',name:'China', m0:996000000,  t0:0.050},
+     {id:'ind',name:'India', m0:61200000,   t0:0.050},
+     {id:'jpn',name:'Japan', m0:40300000,   t0:0.050}
    ]},
   {code:'4011', name:'Rubber Tires', elasticity:-0.983,
    partners:[
-     {id:'chn',name:'China', m0:852100000,  t0:0.11250},
-     {id:'jpn',name:'Japan', m0:140100000,  t0:0.000},
-     {id:'ind',name:'India', m0:68500000,   t0:0.12115}
+     {id:'chn',name:'China', m0:852100000,  t0:0.050},
+     {id:'jpn',name:'Japan', m0:140100000,  t0:0.050},
+     {id:'ind',name:'India', m0:68500000,   t0:0.050}
    ]},
   {code:'8507', name:'Electric Batteries', elasticity:-0.6388,
    partners:[
-     {id:'chn',name:'China', m0:699100000,  t0:0.09923},
-     {id:'ind',name:'India', m0:25100000,   t0:0.10857},
-     {id:'jpn',name:'Japan', m0:4200000,    t0:0.000}
+     {id:'chn',name:'China', m0:699100000,  t0:0.050},
+     {id:'ind',name:'India', m0:25100000,   t0:0.050},
+     {id:'jpn',name:'Japan', m0:4200000,    t0:0.050}
    ]}
 ];
 var PSR_SMART_SIGMA = 1.5; // WITS default substitution elasticity

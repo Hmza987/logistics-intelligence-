@@ -6293,6 +6293,7 @@ function showTab(name, el) {
     if (name === 'trucking') {
       setTimeout(initGCCCorridorsMap, 100);
       setTimeout(initCorridorMaps, 150);
+      if (typeof google !== 'undefined' && google.maps) setTimeout(initCrossingWaits, 200);
     } else {
       // Tear down corridor maps when leaving trucking tab to free network bandwidth
       if (corridorMapsReady) {
@@ -20479,15 +20480,15 @@ document.addEventListener('keydown', function(e) {
     });
   };
 
-  // Fallback: Maps API cached → callback may fire before this script runs
-  window.addEventListener('load', function () {
-    if (typeof google !== 'undefined' && google.maps && !_cwDone) {
-      window.initCrossingWaits();
-    }
-  });
+  // Only fire DistanceMatrix calls if the trucking tab is already open when Maps loads.
+  // If not, showTab('trucking') calls initCrossingWaits() once the tab is first opened.
+  window.gccMapsReady = function() {
+    var pg = document.getElementById('page-trucking');
+    if (pg && pg.classList.contains('active')) initCrossingWaits();
+  };
 })();
 </script>
-<script async src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAw0u2J875W3L2BgE_go1o5dlY9k130Qv8&callback=initCrossingWaits&loading=async"></script>
+<script async src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAw0u2J875W3L2BgE_go1o5dlY9k130Qv8&callback=gccMapsReady&loading=async"></script>
 
 <!-- ══════════════════════════════════════════════════════════════════
      BILATERAL TRADE EXPLORER

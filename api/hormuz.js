@@ -14,8 +14,8 @@ const CACHE_TTL = 10 * 60 * 1000;
 // Kept in sync manually; scraper/API results replace these when available.
 // IMF PortWatch AIS-verified (chokepoint6) — May 11-17 confirmed, May 18-24 estimated
 // UNCTAD pre-crisis baseline: ~130/day (Feb 2026). Current: ~2-6/day AIS-verified.
-const FALLBACK_COUNTS    = [7,8,6,7,5,4,2,3,4,3,4,5,5,6];
-const FALLBACK_TANKERS   = [4,5,4,4,3,2,1,2,2,2,2,3,3,4];
+const FALLBACK_COUNTS    = [4,9,3,6,7,1,1,4,6,6,5,4,7,3]; // straits.live Aug 10–23 2026
+const FALLBACK_TANKERS   = [2,2,1,2,2,1,1,3,4,4,2,2,1,1];
 const FALLBACK_CONTAINERS= [0,0,0,0,0,0,0,0,0,0,0,0,0,0];
 const FALLBACK_LNG       = [1,1,1,1,1,1,1,1,1,1,1,1,1,1];
 const FALLBACK_OTHER     = [2,2,1,2,1,1,0,0,1,0,1,1,1,1];
@@ -114,8 +114,9 @@ async function fetchBDI() {
 // ─── Source 1: IMF PortWatch public ArcGIS REST API ──────────────────────────
 // Chokepoint 6 = Strait of Hormuz
 // Docs: https://portwatch.imf.org  (ArcGIS FeatureService, open access)
+// Note: service migrated Aug 2026 from services8/RoXJobLkqBWynurN to services9/weJ1QsnbMYJlCHdG
 async function fetchIMFPortWatch() {
-  const base   = 'https://services8.arcgis.com/RoXJobLkqBWynurN/arcgis/rest/services/portwatch_chokepoints_daily/FeatureServer/0/query';
+  const base   = 'https://services9.arcgis.com/weJ1QsnbMYJlCHdG/arcgis/rest/services/Daily_Chokepoints_Data/FeatureServer/0/query';
   const params = new URLSearchParams({
     where:            "chokepoint_id='6'",
     outFields:        'date,n_total,n_tanker,n_container,n_bulk,n_other',
@@ -172,52 +173,48 @@ async function fetchIMFPortWatch() {
   };
 }
 
-// ─── Source 2: straits.live HTML scrape ──────────────────────────────────────
-// straits.live shows vessel events per strait. We look for transit-count patterns.
-// Selectors/regex here may need updating if their HTML structure changes.
+// ─── Source 2: straits.live JSON API ─────────────────────────────────────────
+// /api/v1/transits returns a structured 14-day history — no scraping needed.
 async function fetchStraitsLive() {
-  const { status, body } = await rawFetch('https://straits.live');
-  if (status !== 200) throw new Error(`straits.live HTTP ${status}`);
+  const { status, body } = await rawFetch('https://straits.live/api/v1/transits?history=1&limit=20');
+  if (status !== 200) throw new Error(`straits.live API HTTP ${status}`);
 
-  const lines = body
-    .replace(/<script[\s\S]*?<\/script>/gi, '')
-    .replace(/<style[\s\S]*?<\/style>/gi, '')
-    .replace(/<[^>]+>/g, ' ')
-    .replace(/&nbsp;/g, ' ')
-    .replace(/\s+/g, ' ');
+  const json = JSON.parse(body);
+  if (!json.history || json.history.length === 0) throw new Error('straits.live: empty history');
 
-  // Look for patterns like "3 vessels", "5 transits", "2/day" near "Hormuz"
-  const hormuzIdx = lines.toLowerCase().indexOf('hormuz');
-  if (hormuzIdx === -1) throw new Error('straits.live: Hormuz not found on page');
+  // API returns newest-first; take the most recent 14 complete days
+  const rows = json.history.slice().reverse().slice(-14);
+  if (rows.length < 7) throw new Error('straits.live: insufficient history');
 
-  // Grab ±800 chars around the first "Hormuz" mention
-  const snippet = lines.slice(Math.max(0, hormuzIdx - 200), hormuzIdx + 600);
-
-  // Try to pull a daily count: "N transits" or "N vessels"
-  const countMatch = snippet.match(/(\d+)\s*(?:vessel|transit|crossing|ship)/i);
-  if (!countMatch) throw new Error('straits.live: no transit count found in snippet');
-
-  const today = parseInt(countMatch[1], 10);
-
-  // Build a rolling 14-day array — we only have today's number from this scrape,
-  // so we blend it into the fallback series for the prior 13 days
-  const fb     = buildFallback();
-  const counts = [...fb.transits.counts.slice(0, 13), today];
+  const labels     = rows.map(r => {
+    const [, m, d] = r.date.split('-').map(Number);
+    return m.toString().padStart(2, '0') + '/' + d.toString().padStart(2, '0');
+  });
+  const counts     = rows.map(r => r.nTotal    ?? 0);
+  const tankers    = rows.map(r => r.nTanker    ?? 0);
+  const containers = rows.map(r => r.nContainer ?? 0);
+  const other      = rows.map(r => Math.max(0, (r.nTotal ?? 0) - (r.nTanker ?? 0) - (r.nContainer ?? 0)));
+  const today      = counts[counts.length - 1];
 
   return {
     source:   'straits-live',
     updated:  new Date().toISOString(),
     transits: {
-      labels:     fb.transits.labels,
+      labels,
       counts,
       today,
-      tankers:    fb.transits.tankers,
-      containers: fb.transits.containers,
-      lng:        fb.transits.lng,
-      other:      fb.transits.other,
+      tankers,
+      containers,
+      lng:   counts.map(() => 0),
+      other,
     },
-    vessels:  fb.vessels,
-    status:   `Hormuz live · ${today} transits today (straits.live)`,
+    vessels: {
+      tankers:    tankers[tankers.length - 1],
+      containers: containers[containers.length - 1],
+      lng:        0,
+      other:      other[other.length - 1],
+    },
+    status: `Hormuz live · ${today} transits/day (straits.live)`,
   };
 }
 

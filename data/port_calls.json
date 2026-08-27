@@ -1,9 +1,34 @@
 {
-  "generated": "2026-08-26",
+  "generated": "2026-08-27",
   "source": "IMF PortWatch ArcGIS REST API",
   "queryWindow": {
-    "start": "2026-08-12",
-    "end": "2026-08-18"
+    "start": "2026-08-13",
+    "end": "2026-08-19"
   },
-  "updates": {}
+  "updates": {
+    "Jebel Ali": {
+      "newCur": 6,
+      "ratio": 0.09375,
+      "imfCur": 9,
+      "imfPre": 96,
+      "dashPre": 62,
+      "window": "2026-08-13–2026-08-19"
+    },
+    "Dammam": {
+      "newCur": 17,
+      "ratio": 0.4861111111111111,
+      "imfCur": 7,
+      "imfPre": 14.4,
+      "dashPre": 35,
+      "window": "2026-08-13–2026-08-19"
+    },
+    "Rotterdam": {
+      "newCur": 84,
+      "ratio": 0.8795269770879526,
+      "imfCur": 119,
+      "imfPre": 135.3,
+      "dashPre": 95,
+      "window": "2026-08-13–2026-08-19"
+    }
+  }
 }

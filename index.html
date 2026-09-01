@@ -7277,8 +7277,8 @@ function initGCSSMap() {
     attributionControl: false,
     minZoom: 2, maxZoom: 7
   });
-  L.tileLayer('https://cartodb-basemaps-{s}.global.ssl.fastly.net/dark_nolabels/{z}/{x}/{y}.png', {
-    subdomains: 'abcd', maxZoom: 19
+  L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Dark_Gray_Base/MapServer/tile/{z}/{y}/{x}', {
+    maxZoom: 19
   }).addTo(gcssMap);
   gcssMapReady = true;
 
@@ -8959,9 +8959,12 @@ function initGCCCorridorsMap() {
   });
   gccCorridorsMap.fitBounds([[20.5, 37.5], [30.5, 59.5]], { padding: [18, 18] });
 
-  // Dark base tiles (CartoDB Dark Matter)
-  L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}.png', {
-    subdomains: 'abcd', maxZoom: 18
+  // Dark base tiles (Esri Dark Gray Canvas)
+  L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Dark_Gray_Base/MapServer/tile/{z}/{y}/{x}', {
+    maxZoom: 18
+  }).addTo(gccCorridorsMap);
+  L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/Reference/World_Boundaries_and_Places/MapServer/tile/{z}/{y}/{x}', {
+    maxZoom: 18, opacity: 0.8
   }).addTo(gccCorridorsMap);
 
   // ── Road corridors ────────────────────────────────────────────────────
@@ -9267,7 +9270,8 @@ function initTheatreMap() {
   theatreMapReady = true;
 
   theatreMap = L.map('theatre-map', { center:[20,52], zoom:4, zoomControl:true, attributionControl:false, minZoom:3, maxZoom:9 });
-  L.tileLayer('https://cartodb-basemaps-{s}.global.ssl.fastly.net/dark_all/{z}/{x}/{y}.png', { subdomains:'abcd', maxZoom:19 }).addTo(theatreMap);
+  L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Dark_Gray_Base/MapServer/tile/{z}/{y}/{x}', { maxZoom:19 }).addTo(theatreMap);
+  L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/Reference/World_Boundaries_and_Places/MapServer/tile/{z}/{y}/{x}', { maxZoom:19, opacity:0.8 }).addTo(theatreMap);
 
   // Yemen / Houthi threat area
   L.polygon([[15.5,42.5],[15.5,53.0],[11.0,51.0],[11.0,43.5],[13.5,42.0]],
@@ -9443,8 +9447,10 @@ function initCorridorMaps() {
       doubleClickZoom: false, touchZoom: false
     });
 
-    L.tileLayer('https://cartodb-basemaps-{s}.global.ssl.fastly.net/dark_all/{z}/{x}/{y}.png',
-      { subdomains:'abcd', maxZoom:19 }).addTo(m);
+    L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Dark_Gray_Base/MapServer/tile/{z}/{y}/{x}',
+      { maxZoom:19 }).addTo(m);
+    L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/Reference/World_Boundaries_and_Places/MapServer/tile/{z}/{y}/{x}',
+      { maxZoom:19, opacity:0.8 }).addTo(m);
 
     c.roads.forEach(function(r) {
       L.polyline(r[2], { color:r[0], weight:r[1], opacity:0.9, lineCap:'round', lineJoin:'round' }).addTo(m);
@@ -9793,7 +9799,7 @@ function initChokepointsMap() {
   chokepointsMap = L.map('chokepoints-map', { center:[15,25], zoom:2, zoomControl:true, attributionControl:false, minZoom:2, maxZoom:7 });
 
   // Base dark tiles (no labels) — CSS blue filter applied via #chokepoints-map .leaflet-tile-pane
-  L.tileLayer('https://cartodb-basemaps-{s}.global.ssl.fastly.net/dark_nolabels/{z}/{x}/{y}.png', { subdomains:'abcd', maxZoom:19 }).addTo(chokepointsMap);
+  L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Dark_Gray_Base/MapServer/tile/{z}/{y}/{x}', { maxZoom:19 }).addTo(chokepointsMap);
 
   // English-only labels in a separate pane so they are NOT blue-filtered
   chokepointsMap.createPane('cpLabels');
@@ -13872,8 +13878,8 @@ function wlRenderGeoMap(sig) {
         scrollWheelZoom:false, dragging:false,
         doubleClickZoom:false, boxZoom:false, keyboard:false
       });
-      L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_nolabels/{z}/{x}/{y}{r}.png', {
-        attribution:'© OSM © CARTO', maxZoom:8
+      L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Dark_Gray_Base/MapServer/tile/{z}/{y}/{x}', {
+        maxZoom:8
       }).addTo(wlGeoMap);
     }
 
@@ -16666,9 +16672,8 @@ function initTradeFlowTab() {
 function initTFMap() {
   if (TF_MAP_READY || !document.getElementById('tf-world-map')) return;
   TF_MAP = L.map('tf-world-map', { center:[15,25], zoom:2, minZoom:1, maxZoom:5, worldCopyJump:true });
-  L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_nolabels/{z}/{x}/{y}{r}.png', {
-    attribution:'&copy; OpenStreetMap contributors &copy; CARTO',
-    subdomains:'abcd', maxZoom:19
+  L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Dark_Gray_Base/MapServer/tile/{z}/{y}/{x}', {
+    maxZoom:19
   }).addTo(TF_MAP);
   L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/Reference/World_Boundaries_and_Places/MapServer/tile/{z}/{y}/{x}', {
     attribution:'Labels &copy; Esri', maxZoom:19, opacity:0.9
@@ -21689,8 +21694,8 @@ function psrInitMap() {
   var el = document.getElementById('psr-leaflet-map');
   if (!el) return;
   PSR_MAP = L.map('psr-leaflet-map', {center:[20,50],zoom:2,minZoom:1,maxZoom:6,worldCopyJump:true});
-  L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_nolabels/{z}/{x}/{y}{r}.png',
-    {attribution:'&copy; OpenStreetMap &copy; CARTO',subdomains:'abcd',maxZoom:19}).addTo(PSR_MAP);
+  L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Dark_Gray_Base/MapServer/tile/{z}/{y}/{x}',
+    {maxZoom:19}).addTo(PSR_MAP);
   L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/Reference/World_Boundaries_and_Places/MapServer/tile/{z}/{y}/{x}',
     {attribution:'Labels &copy; Esri',maxZoom:19,opacity:0.9}).addTo(PSR_MAP);
   PSR_MAP_READY = true;
@@ -23181,7 +23186,8 @@ function scrInit() {
 
   // ── Leaflet map
   SCR.map = L.map('scr-map-el', { zoomControl: true, attributionControl: false });
-  L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', { maxZoom: 18 }).addTo(SCR.map);
+  L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Dark_Gray_Base/MapServer/tile/{z}/{y}/{x}', { maxZoom: 18 }).addTo(SCR.map);
+  L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/Reference/World_Boundaries_and_Places/MapServer/tile/{z}/{y}/{x}', { maxZoom: 18, opacity: 0.8 }).addTo(SCR.map);
   SCR.map.setView([20, 35], 3);
 
   // Draw routes
@@ -23451,7 +23457,8 @@ function scrInitResultMap(flow) {
   if (!mapEl) return;
   if (SCR.resultMap) { try{SCR.resultMap.remove();}catch(e){} SCR.resultMap=null; }
   var map = L.map('psr-res-map',{zoomControl:true,attributionControl:false});
-  L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png',{maxZoom:18}).addTo(map);
+  L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Dark_Gray_Base/MapServer/tile/{z}/{y}/{x}',{maxZoom:18}).addTo(map);
+  L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/Reference/World_Boundaries_and_Places/MapServer/tile/{z}/{y}/{x}',{maxZoom:18,opacity:0.8}).addTo(map);
   SCR.resultMap = map;
   var cpId = (_psrSimTypes.indexOf('chokepoint')>=0&&_psrSimRan)?_psrSimParams.chokepoint.id:null;
   var CP_TO_NAME = {hormuz:'Strait of Hormuz',bab_el_mandeb:'Bab-el-Mandeb',suez:'Suez Canal',malacca:'Malacca Strait'};

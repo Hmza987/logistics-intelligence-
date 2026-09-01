@@ -3225,6 +3225,7 @@ canvas { font-family: var(--f-mono); }
   <button id="gcc-auth-back" onclick="gccHideAuth()" style="position:absolute;top:22px;left:28px;background:none;border:none;color:#2d4a62;font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:.12em;cursor:pointer;padding:0">&#8592;&nbsp;BACK TO OVERVIEW</button>
   <div class="gcc-auth-title">GCC Logistics Intelligence Platform <span style="font-size:11px;font-weight:400;color:#4a6a8a;letter-spacing:.12em;vertical-align:middle;">BETA</span></div>
   <div class="gcc-auth-card">
+    <div style="font-size:8.5px;letter-spacing:.1em;color:#3a6a8a;margin-bottom:10px;font-family:'IBM Plex Mono',monospace">RESTRICTED SECTION — ADVANCED ANALYTICS</div>
     <label class="gcc-auth-label" for="gcc-auth-pwd">Access Code</label>
     <input class="gcc-auth-input" id="gcc-auth-pwd" type="password"
            placeholder="&#x2022;&#x2022;&#x2022;&#x2022;&#x2022;&#x2022;&#x2022;&#x2022;"
@@ -3248,9 +3249,9 @@ canvas { font-family: var(--f-mono); }
   var _authed  = false; // in-memory only — resets on every page load/refresh
 
   function hideOverlay() {
-    // Restore landing page immediately (synchronous, before overlay starts fading)
+    // Restore landing page only if user hasn't entered the dashboard yet
     var cv = document.getElementById('cover');
-    if (cv) {
+    if (cv && cv.style.display !== 'none') {
       cv.classList.remove('cv-out');
       cv.style.display   = 'flex';
       cv.style.opacity   = '1';
@@ -3277,9 +3278,12 @@ canvas { font-family: var(--f-mono); }
     }
   });
 
+  // Tabs that are publicly accessible without a password
+  var FREE_TABS = { hormuz: 1, rates: 1 };
+
   window.gccShowAuth = function(tabId) {
-    // Already authenticated this session — skip the modal
-    if (_authed) {
+    // Free tabs and already-authenticated sessions go straight through
+    if (_authed || FREE_TABS[tabId]) {
       if (typeof cvGoTab === 'function') cvGoTab(tabId || 'hormuz');
       return;
     }
@@ -3315,6 +3319,7 @@ canvas { font-family: var(--f-mono); }
     .then(function(d){
       if (d.ok) {
         _authed = true;
+        window._gccAuthed = true; // expose for showTab gating
         hideOverlay();
         setTimeout(function(){
           if (typeof cvGoTab === 'function') cvGoTab(pendingTab);
@@ -3329,6 +3334,8 @@ canvas { font-family: var(--f-mono); }
     })
     .catch(function(){
       // No server / DASHBOARD_PASSWORD not set — allow through
+      _authed = true;
+      window._gccAuthed = true;
       sessionStorage.setItem('gcc_authed', '1');
       hideOverlay();
       setTimeout(function(){
@@ -6272,7 +6279,15 @@ document.addEventListener('DOMContentLoaded', function() {
   document.addEventListener('DOMContentLoaded', reorderTruckingTab);
 })();
 
+var RESTRICTED_TABS = { trucking:1, simulator:1, watchlist:1, stress:1 };
+
 function showTab(name, el) {
+  // Gate restricted tabs: show auth overlay if not yet authenticated
+  if (RESTRICTED_TABS[name] && !window._gccAuthed) {
+    if (typeof gccShowAuth === 'function') gccShowAuth(name);
+    return;
+  }
+
   document.querySelectorAll('.tab').forEach(function(t){ t.classList.remove('active'); });
   document.querySelectorAll('.page').forEach(function(p){ p.classList.remove('active'); });
   el.classList.add('active');

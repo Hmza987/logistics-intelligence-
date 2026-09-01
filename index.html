@@ -1523,18 +1523,22 @@ canvas { font-family: var(--f-mono); }
 #theatre-map, #chokepoints-map {
   background: #060d17 !important;
 }
-/* OSM inversion: converts light OSM tiles → near-black land / dark-blue ocean (matches CARTO Dark Matter aesthetic) */
+/* OSM inversion — world-level maps: invert gives near-black land + dark-blue ocean */
 #gcss-map .leaflet-tile-pane,
-#gcc-corridors-map .leaflet-tile-pane,
-#theatre-map .leaflet-tile-pane,
 #wl-geo-map .leaflet-tile-pane,
 #psr-leaflet-map .leaflet-tile-pane,
 #scr-map-el .leaflet-tile-pane,
 #psr-res-map .leaflet-tile-pane,
-[id^="cm-map-"] .leaflet-tile-pane,
 #chokepoints-map .leaflet-tile-pane,
 #tf-world-map .leaflet-tile-pane {
   filter: invert(100%) hue-rotate(180deg) brightness(0.85) contrast(0.9);
+}
+/* OSM inversion — regional maps (Arabian Peninsula): grayscale first to neutralize
+   OSM's sandy/desert terrain color, which otherwise inverts to brownish rather than near-black */
+#gcc-corridors-map .leaflet-tile-pane,
+#theatre-map .leaflet-tile-pane,
+[id^="cm-map-"] .leaflet-tile-pane {
+  filter: grayscale(100%) invert(100%) brightness(0.82) contrast(1.0);
 }
 /* cpLabels pane (chokepoints reference labels) must NOT be inverted — separate pane in JS */
 

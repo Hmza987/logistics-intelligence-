@@ -6278,6 +6278,9 @@ function showTab(name, el) {
   el.classList.add('active');
   document.getElementById('page-' + name).classList.add('active');
 
+  // Update URL for deep-linking and browser back/forward
+  try { history.replaceState({ gcc_tab: name }, '', '?tab=' + name); } catch(e) {}
+
   // Sync mobile tab indicator
   var ind = document.getElementById('mob-tab-indicator-name');
   var indWrap = document.getElementById('mob-tab-indicator');
@@ -6319,6 +6322,18 @@ function showTab(name, el) {
 
   }, 80);
 }
+
+// ── Browser back/forward: switch tab when URL changes ─────────────────────────
+window.addEventListener('popstate', function(e) {
+  if (e.state && e.state.gcc_tab) {
+    var tabMap = { hormuz:0, rates:1, trucking:2, simulator:3, watchlist:4, stress:5 };
+    var idx = tabMap[e.state.gcc_tab];
+    if (idx !== undefined) {
+      var tab = document.querySelectorAll('#tabs .tab')[idx];
+      if (tab) showTab(e.state.gcc_tab, tab);
+    }
+  }
+});
 
 // ── CHOKEPOINT SELECTOR ────────────────────────────────────────────────────────
 var _babChartInited = false;
@@ -20048,6 +20063,22 @@ function initCvTicker() {
 
   // Start the rolling signals ticker whenever the cover is in the DOM
   initCvTicker();
+})();
+
+// ── Deep-link: honour ?tab= on initial page load ───────────────────────────────
+// Wraps cvGoTab once so the first call (post-auth/cover dismiss) lands on the
+// requested tab. Restores the original immediately after so subsequent calls
+// (e.g. cover "Go to Rates" buttons) behave normally.
+(function() {
+  var params  = new URLSearchParams(window.location.search);
+  var deepTab = params.get('tab');
+  var valid   = { hormuz:1, rates:1, trucking:1, simulator:1, watchlist:1, stress:1 };
+  if (!deepTab || !valid[deepTab] || deepTab === 'hormuz') return; // hormuz is the default, no override needed
+  var orig = window.cvGoTab;
+  window.cvGoTab = function() {
+    window.cvGoTab = orig;
+    orig(deepTab);
+  };
 })();
 
 </script>

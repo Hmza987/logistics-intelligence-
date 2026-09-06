@@ -8,7 +8,7 @@
 <style>
 #gcc-auth-overlay {
   position:fixed; inset:0; z-index:999999;
-  background:#0a0806;
+  background:#05070f;
   display:none; align-items:center; justify-content:center; flex-direction:column;
   font-family:'IBM Plex Mono',monospace;
   opacity:0;
@@ -30,7 +30,7 @@
   margin-bottom:36px;
 }
 .gcc-auth-card {
-  background:#0f0d0b; border:1px solid #251f18; border-radius:6px;
+  background:#0d1220; border:1px solid #1a2535; border-radius:6px;
   padding:32px 36px; width:340px; max-width:92vw;
 }
 .gcc-auth-label {
@@ -38,7 +38,7 @@
   display:block; margin-bottom:8px;
 }
 .gcc-auth-input {
-  width:100%; background:#100d0a; border:1px solid #251f18; border-radius:4px;
+  width:100%; background:#080c18; border:1px solid #1a2535; border-radius:4px;
   padding:11px 14px; font-size:15px; font-family:'IBM Plex Mono',monospace;
   color:#e8eaed; outline:none; letter-spacing:.08em;
   transition:border-color .15s;
@@ -63,7 +63,7 @@
 .gcc-auth-error.gcc-auth-err-show { display:block; }
 .gcc-auth-footer {
   margin-top:20px; font-size:8px; letter-spacing:.1em;
-  color:#251f18; text-align:center;
+  color:#1a2535; text-align:center;
 }
 /* ── Briefing Request Modal ─────────────────────────────────────────────── */
 #gcc-briefing-overlay {
@@ -77,7 +77,7 @@
 #gcc-briefing-overlay.brfg-visible { opacity:1; }
 #gcc-briefing-overlay.brfg-hide    { opacity:0; pointer-events:none; }
 .brfg-card {
-  background:#0f0d0b; border:1px solid #251f18; border-radius:6px;
+  background:#0d1220; border:1px solid #1a2535; border-radius:6px;
   padding:36px 40px; width:420px; max-width:94vw; position:relative;
 }
 .brfg-title {
@@ -94,7 +94,7 @@
   font-size:9px; letter-spacing:.14em; color:#3a5268; text-transform:uppercase;
 }
 .brfg-input {
-  background:#100d0a; border:1px solid #251f18; border-radius:4px;
+  background:#080c18; border:1px solid #1a2535; border-radius:4px;
   padding:11px 14px; font-size:13px; font-family:'IBM Plex Mono',monospace;
   color:#e8eaed; outline:none; letter-spacing:.04em; transition:border-color .15s;
   width:100%;
@@ -147,28 +147,28 @@
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
 :root {
-  /* Surface hierarchy — petroleum charcoal, warm carbon base */
-  --c-bg:        #12100e;   /* page background   */
-  --c-s0:        #0f0d0b;   /* deepest surface   */
-  --c-s1:        #1a1713;   /* card background   */
-  --c-s2:        #221e18;   /* elevated surface  */
-  --c-s3:        #2a251e;   /* hover / active    */
+  /* Surface hierarchy — true black base, micro-contrast steps */
+  --c-bg:        #05070a;   /* page background   */
+  --c-s0:        #080b0f;   /* deepest surface   */
+  --c-s1:        #0c1018;   /* card background   */
+  --c-s2:        #111722;   /* elevated surface  */
+  --c-s3:        #172030;   /* hover / active    */
 
-  /* Borders */
-  --c-bd0:       #251f18;
-  --c-bd1:       #332a20;
-  --c-bd2:       #443828;
+  /* Borders — barely visible, military-grade restraint */
+  --c-bd0:       #131c28;
+  --c-bd1:       #1a2535;
+  --c-bd2:       #243040;
 
   /* Text hierarchy */
-  --c-tx0:       #e8ddd0;   /* primary text      */
-  --c-tx1:       #a89882;   /* secondary text    */
-  --c-tx2:       #6a5c4e;   /* tertiary / muted  */
-  --c-tx3:       #3a3028;   /* disabled          */
+  --c-tx0:       #e8ecf0;   /* primary text      */
+  --c-tx1:       #8fa0b5;   /* secondary text    */
+  --c-tx2:       #4d6070;   /* tertiary / muted  */
+  --c-tx3:       #2d3d50;   /* disabled          */
 
   /* Signal colours — highly controlled palette */
-  --c-gold:      #4a9fd4;   /* primary accent — ice blue, precision */
-  --c-gold-hi:   #68b5e6;   /* highlight */
-  --c-gold-dim:  #2a608a;   /* dim accent */
+  --c-gold:      #b8952a;   /* primary accent — authority, not flashy */
+  --c-gold-hi:   #d4aa3a;   /* highlight */
+  --c-gold-dim:  #6b561a;   /* dim accent */
   --c-red:       #c0392b;
   --c-red-hi:    #d94e40;
   --c-amber:     #c47a1a;
@@ -777,11 +777,11 @@ a { color: inherit; text-decoration: none; }
 
 /* Port calls popup */
 .pc-popup .leaflet-popup-content-wrapper {
-  background:#100d0a!important; border:1px solid #332a20!important;
+  background:#080c18!important; border:1px solid #1e3040!important;
   border-radius:6px!important; box-shadow:0 6px 28px rgba(0,0,0,0.85)!important;
   padding:0!important;
 }
-.pc-popup .leaflet-popup-tip { background:#100d0a!important; }
+.pc-popup .leaflet-popup-tip { background:#080c18!important; }
 .pc-popup .leaflet-popup-content { margin:0!important; padding:0!important; }
 .pc-popup-wrap { font-family:'IBM Plex Mono',monospace; font-size:9px; padding:12px 14px; min-width:270px; }
 .pc-popup-title { font-size:11px; font-weight:700; color:#7a9eb8; margin-bottom:5px; letter-spacing:.04em; }
@@ -805,11 +805,11 @@ a { color: inherit; text-decoration: none; }
 
 /* ── PORT DETAIL POPUP ────────────────────────────────────────────────────── */
 .pp-popup .leaflet-popup-content-wrapper {
-  background:#0f0d0b!important; border:1px solid #251f18!important;
+  background:#0d1220!important; border:1px solid #1a2535!important;
   border-radius:8px!important; padding:0!important; overflow:hidden;
   box-shadow:0 12px 48px rgba(0,0,0,.9)!important;
 }
-.pp-popup .leaflet-popup-tip { background:#0f0d0b!important; }
+.pp-popup .leaflet-popup-tip { background:#0d1220!important; }
 .pp-popup .leaflet-popup-content { margin:0!important; padding:0!important; width:340px!important; }
 .pp-popup .leaflet-popup-close-button { color:#4a6070!important; z-index:10; font-size:16px!important; padding:4px 8px!important; }
 .pp-hdr { width:100%; height:118px; position:relative; overflow:hidden; display:flex; align-items:flex-end; flex-shrink:0; }
@@ -1858,7 +1858,7 @@ canvas { font-family: var(--f-mono); }
   position: fixed;
   inset: 0;
   z-index: 9999;
-  background:#12100e;
+  background:#0A0A0A;
   display: flex;
   flex-direction: column;
   overflow: hidden;
@@ -3113,7 +3113,7 @@ canvas { font-family: var(--f-mono); }
 .tf-comm-btn.wip:hover{border-color:rgba(255,255,255,0.12);}
 /* Legacy stress-test elements hidden in new design */
 #tf-outputs,#tf-price-card,#tf-alert-strip,#tf-map-legend,#tf-map-lower-rows,#tf-wip-screen{display:none!important;}
-#tf-world-map{height:480px;border-radius:6px;background:#12100e;}
+#tf-world-map{height:480px;border-radius:6px;background:#0A0A0A;}
 #tf-world-map .leaflet-tile-pane{/* inversion handled by shared rule above */}
 #tf-world-map .leaflet-overlay-pane,#tf-world-map .leaflet-marker-pane,#tf-world-map .leaflet-shadow-pane{filter:none;}
 /* New Trade Explorer filter strip overrides */
@@ -3233,7 +3233,7 @@ canvas { font-family: var(--f-mono); }
 .gcc-snav-item { display: flex; align-items: center; gap: 10px; padding: 8px 18px; cursor: pointer; border-left: 2px solid transparent; transition: background var(--t), border-color var(--t); user-select: none; }
 .gcc-snav-item:hover { background: rgba(232,236,240,.022); }
 .gcc-snav-item:hover .gcc-sni-lbl, .gcc-snav-item:hover .gcc-sni-icon { color: var(--c-tx1); }
-.gcc-snav-item.active { border-left-color: var(--c-gold); background: rgba(74,159,212,.08); }
+.gcc-snav-item.active { border-left-color: var(--c-gold); background: rgba(184,149,42,.08); }
 .gcc-snav-item.active .gcc-sni-lbl, .gcc-snav-item.active .gcc-sni-icon { color: var(--c-gold-hi); }
 .gcc-snav-item.gcc-locked { opacity: .4; cursor: default; }
 .gcc-snav-item.gcc-locked:hover { background: none; }
@@ -3891,7 +3891,7 @@ function gccSidebarNav(name) {
      METHODOLOGY MODAL
      ════════════════════════════════════════════════════════════════════════ -->
 <div id="gcc-info-overlay" style="display:none;position:fixed;inset:0;z-index:999997;background:rgba(4,8,16,.82);backdrop-filter:blur(6px);align-items:center;justify-content:center;opacity:0;transition:opacity .25s">
-  <div style="background:#0f0d0b;border:1px solid #251f18;border-radius:4px;padding:36px 40px;max-width:580px;width:90%;position:relative;max-height:82vh;overflow-y:auto;font-family:'IBM Plex Mono','JetBrains Mono',monospace">
+  <div style="background:#0d1220;border:1px solid #1a2535;border-radius:4px;padding:36px 40px;max-width:580px;width:90%;position:relative;max-height:82vh;overflow-y:auto;font-family:'IBM Plex Mono','JetBrains Mono',monospace">
     <button onclick="closeInfoModal()" style="position:absolute;top:16px;right:18px;background:none;border:none;color:#2d4a62;font-size:18px;cursor:pointer;line-height:1;padding:4px">&#10005;</button>
 
     <!-- METHODOLOGY content -->
@@ -3942,12 +3942,12 @@ function gccSidebarNav(name) {
 <div class="page active" id="page-hormuz">
 
   <!-- CHOKEPOINT SELECTOR -->
-  <div style="background:#0A0A09;border-bottom:1px solid #251f18;padding:10px 28px;display:flex;align-items:center;gap:8px;flex-wrap:wrap">
+  <div style="background:#0A0A09;border-bottom:1px solid #1a2535;padding:10px 28px;display:flex;align-items:center;gap:8px;flex-wrap:wrap">
     <span style="font-size:8px;font-weight:700;letter-spacing:.16em;color:#3A3A34;margin-right:4px">CHOKEPOINT</span>
     <button id="cpbtn-hormuz" onclick="showCpView('hormuz')" style="font-family:inherit;font-size:9px;font-weight:700;letter-spacing:.1em;padding:5px 14px;border-radius:3px;cursor:pointer;border:1px solid #E05252;background:rgba(224,82,82,.15);color:#E05252;transition:all .15s">&#9650; STRAIT OF HORMUZ</button>
     <button id="cpbtn-bab" onclick="showCpView('bab')" style="font-family:inherit;font-size:9px;font-weight:700;letter-spacing:.1em;padding:5px 14px;border-radius:3px;cursor:pointer;border:1px solid #3A3A36;background:transparent;color:#6A6A5A;transition:all .15s">&#9875; BAB AL-MANDEB</button>
     <span id="cpbtn-bab-badge" style="font-size:8px;font-weight:700;letter-spacing:.12em;color:#F59E0B;border:1px solid rgba(245,158,11,.4);background:rgba(245,158,11,.08);padding:2px 8px;border-radius:3px">BLOCKADE&nbsp;&middot;&nbsp;DAY 14</span>
-    <span style="width:1px;height:18px;background:#251f18;margin:0 2px;flex-shrink:0"></span>
+    <span style="width:1px;height:18px;background:#1a2535;margin:0 2px;flex-shrink:0"></span>
     <button id="cpbtn-suez" onclick="showCpView('suez')" style="font-family:inherit;font-size:9px;font-weight:700;letter-spacing:.1em;padding:5px 14px;border-radius:3px;cursor:pointer;border:1px solid #3A3A36;background:transparent;color:#6A6A5A;transition:all .15s">&#9654; SUEZ CANAL</button>
     <span id="cpbtn-suez-badge" style="font-size:8px;font-weight:700;letter-spacing:.12em;color:#0EA5E9;border:1px solid rgba(14,165,233,.4);background:rgba(14,165,233,.08);padding:2px 8px;border-radius:3px">REDUCED&nbsp;&middot;&nbsp;-56%</span>
   </div>
@@ -4014,7 +4014,7 @@ function gccSidebarNav(name) {
           </div>
           <div style="font-size:8px;color:#3A2020;letter-spacing:.06em">Kpler &middot; Windward AIS synthesis</div>
         </div>
-        <div style="background:#1a1713;border:1px solid #251f18;border-radius:6px;padding:16px 14px;display:flex;flex-direction:column;justify-content:space-between;min-height:148px">
+        <div style="background:#111110;border:1px solid #1a2535;border-radius:6px;padding:16px 14px;display:flex;flex-direction:column;justify-content:space-between;min-height:148px">
           <div style="font-size:8px;font-weight:700;letter-spacing:.14em;color:#4A4A44">TRANSITS TODAY</div>
           <div>
             <div style="font-size:44px;font-weight:700;letter-spacing:-.02em;color:#F2F1ED;line-height:1;margin:6px 0 4px"><span id="m-transits">10</span><a href="https://www.kpler.com" target="_blank" rel="noopener" class="src-lnk" title="Source: IMF PortWatch · Kpler satellite+AIS">&#8599;</a></div>
@@ -4022,7 +4022,7 @@ function gccSidebarNav(name) {
           </div>
           <div style="font-size:8px;color:#2A2A26;letter-spacing:.04em">AIS-verified</div>
         </div>
-        <div style="background:#1a1713;border:1px solid #251f18;border-radius:6px;padding:16px 14px;display:flex;flex-direction:column;justify-content:space-between;min-height:148px">
+        <div style="background:#111110;border:1px solid #1a2535;border-radius:6px;padding:16px 14px;display:flex;flex-direction:column;justify-content:space-between;min-height:148px">
           <div style="font-size:8px;font-weight:700;letter-spacing:.14em;color:#4A4A44">TANKERS 24H</div>
           <div>
             <div style="font-size:44px;font-weight:700;letter-spacing:-.02em;color:#F2F1ED;line-height:1;margin:6px 0 4px"><span id="m-tankers">2</span><a href="https://www.kpler.com" target="_blank" rel="noopener" class="src-lnk" title="Source: Kpler satellite+AIS">&#8599;</a></div>
@@ -4030,7 +4030,7 @@ function gccSidebarNav(name) {
           </div>
           <div style="font-size:8px;color:#2A2A26;letter-spacing:.04em">Kpler estimate</div>
         </div>
-        <div style="background:#1a1713;border:1px solid #251f18;border-radius:6px;padding:16px 14px;display:flex;flex-direction:column;justify-content:space-between;min-height:148px">
+        <div style="background:#111110;border:1px solid #1a2535;border-radius:6px;padding:16px 14px;display:flex;flex-direction:column;justify-content:space-between;min-height:148px">
           <div style="font-size:8px;font-weight:700;letter-spacing:.14em;color:#4A4A44">CONTAINER SHIPS</div>
           <div>
             <div style="font-size:44px;font-weight:700;letter-spacing:-.02em;color:#C98A2E;line-height:1;margin:6px 0 4px"><span id="m-containers">2</span><a href="https://www.kpler.com" target="_blank" rel="noopener" class="src-lnk" title="Source: Kpler satellite+AIS">&#8599;</a></div>
@@ -4141,20 +4141,20 @@ function gccSidebarNav(name) {
       <div class="card">
         <div class="card-label">Carrier Posture</div>
         <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:10px">
-          <div style="background:#1a1713;border:1px solid #251f18;border-radius:5px;padding:12px">
+          <div style="background:#111110;border:1px solid #1a2535;border-radius:5px;padding:12px">
             <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:6px;margin-bottom:7px"><div style="font-size:13px;font-weight:700;color:#F2F1ED">MSC</div><div style="font-size:8px;font-weight:700;padding:2px 7px;border-radius:3px;color:#E05252;border:1px solid #E05252;white-space:nowrap">SUSPENDED</div></div>
             <div style="font-size:9px;color:#7A7A72;line-height:1.5;margin-bottom:7px">Cape Good Hope restored post-Jun 27. Briefly resumed Jun 18&ndash;24.</div>
             <div style="font-size:9px;color:#C9AE4E;font-weight:700;border-top:1px solid #1A1A18;padding-top:6px">$1,200/TEU surcharge active</div>
           </div>
-          <div style="background:#1a1713;border:1px solid #251f18;border-radius:5px;padding:12px">
+          <div style="background:#111110;border:1px solid #1a2535;border-radius:5px;padding:12px">
             <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:6px;margin-bottom:7px"><div style="font-size:13px;font-weight:700;color:#F2F1ED">Hapag-Lloyd</div><div style="font-size:8px;font-weight:700;padding:2px 7px;border-radius:3px;color:#E05252;border:1px solid #E05252;white-space:nowrap">SUSPENDED</div></div>
             <div style="font-size:9px;color:#7A7A72;line-height:1.5">Cape diversions active. No Hormuz calls since Jun 27.</div>
           </div>
-          <div style="background:#1a1713;border:1px solid #251f18;border-radius:5px;padding:12px">
+          <div style="background:#111110;border:1px solid #1a2535;border-radius:5px;padding:12px">
             <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:6px;margin-bottom:7px"><div style="font-size:13px;font-weight:700;color:#F2F1ED">Maersk</div><div style="font-size:8px;font-weight:700;padding:2px 7px;border-radius:3px;color:#E05252;border:1px solid #E05252;white-space:nowrap">SUSPENDED</div></div>
             <div style="font-size:9px;color:#7A7A72;line-height:1.5">Second suspension confirmed Jun 27. Cape reroute restored. $1,000/TEU surcharge.</div>
           </div>
-          <div style="background:#1a1713;border:1px solid #251f18;border-radius:5px;padding:12px">
+          <div style="background:#111110;border:1px solid #1a2535;border-radius:5px;padding:12px">
             <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:6px;margin-bottom:7px"><div style="font-size:13px;font-weight:700;color:#F2F1ED">CMA CGM</div><div style="font-size:8px;font-weight:700;padding:2px 7px;border-radius:3px;color:#C98A2E;border:1px solid #C98A2E;white-space:nowrap">MONITORING</div></div>
             <div style="font-size:9px;color:#7A7A72;line-height:1.5">Limited GCC exposure. Pausing evaluation post-Jun 27.</div>
           </div>
@@ -4217,7 +4217,7 @@ function gccSidebarNav(name) {
             </div>
             <div style="font-size:8px;color:#3A2A10;letter-spacing:.06em">The National &middot; Jul 27 2026 &middot; AIS</div>
           </div>
-          <div style="background:#1a1713;border:1px solid #251f18;border-radius:6px;padding:16px 14px;display:flex;flex-direction:column;justify-content:space-between;min-height:148px">
+          <div style="background:#111110;border:1px solid #1a2535;border-radius:6px;padding:16px 14px;display:flex;flex-direction:column;justify-content:space-between;min-height:148px">
             <div style="font-size:8px;font-weight:700;letter-spacing:.14em;color:#4A4A44">TRANSITS TODAY</div>
             <div>
               <div style="font-size:44px;font-weight:700;letter-spacing:-.02em;color:#F59E0B;line-height:1;margin:6px 0 4px">~15<a href="https://www.kpler.com" target="_blank" rel="noopener" class="src-lnk" title="Source: Kpler AIS estimate Jul 26">&#8599;</a></div>
@@ -4225,7 +4225,7 @@ function gccSidebarNav(name) {
             </div>
             <div style="font-size:8px;color:#2A2A26;letter-spacing:.04em">AIS estimate</div>
           </div>
-          <div style="background:#1a1713;border:1px solid #251f18;border-radius:6px;padding:16px 14px;display:flex;flex-direction:column;justify-content:space-between;min-height:148px">
+          <div style="background:#111110;border:1px solid #1a2535;border-radius:6px;padding:16px 14px;display:flex;flex-direction:column;justify-content:space-between;min-height:148px">
             <div style="font-size:8px;font-weight:700;letter-spacing:.14em;color:#4A4A44">VLCCs TURNED BACK</div>
             <div>
               <div style="font-size:44px;font-weight:700;letter-spacing:-.02em;color:#E05252;line-height:1;margin:6px 0 4px">4<a href="https://www.kpler.com" target="_blank" rel="noopener" class="src-lnk" title="Source: Kpler satellite Jul 22 2026">&#8599;</a></div>
@@ -4233,7 +4233,7 @@ function gccSidebarNav(name) {
             </div>
             <div style="font-size:8px;color:#2A2A26;letter-spacing:.04em">Kpler satellite</div>
           </div>
-          <div style="background:#1a1713;border:1px solid #251f18;border-radius:6px;padding:16px 14px;display:flex;flex-direction:column;justify-content:space-between;min-height:148px">
+          <div style="background:#111110;border:1px solid #1a2535;border-radius:6px;padding:16px 14px;display:flex;flex-direction:column;justify-content:space-between;min-height:148px">
             <div style="font-size:8px;font-weight:700;letter-spacing:.14em;color:#4A4A44">OIL AT RISK</div>
             <div>
               <div style="font-size:36px;font-weight:700;letter-spacing:-.02em;color:#C98A2E;line-height:1;margin:6px 0 4px">3.8M<span style="font-size:14px;font-weight:400;color:#4A4A44;margin-left:2px">bbl</span></div>
@@ -4275,14 +4275,14 @@ function gccSidebarNav(name) {
               </div>
               <div style="font-size:9px;color:#7A7A72;line-height:1.4">Drone strike Jul 25 &middot; oil loading suspended &middot; Aramco exports halted</div>
             </div>
-            <div style="background:#1a1713;border:1px solid #251f18;border-radius:5px;padding:10px 12px">
+            <div style="background:#111110;border:1px solid #1a2535;border-radius:5px;padding:10px 12px">
               <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:5px">
                 <div style="font-size:11px;font-weight:700;color:#D9D8D3;display:flex;align-items:center;gap:5px"><img src="https://flagcdn.com/16x12/dj.png" style="height:9px;border-radius:1px;vertical-align:middle">Djibouti</div>
                 <span style="font-size:7px;font-weight:700;padding:2px 5px;border-radius:2px;color:#C98A2E;border:1px solid #C98A2E">CONGESTED</span>
               </div>
               <div style="font-size:9px;color:#7A7A72;line-height:1.4">Bypass traffic surge &middot; transhipment backlog &middot; dwell ~14d</div>
             </div>
-            <div style="background:#1a1713;border:1px solid #251f18;border-radius:5px;padding:10px 12px">
+            <div style="background:#111110;border:1px solid #1a2535;border-radius:5px;padding:10px 12px">
               <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:5px">
                 <div style="font-size:11px;font-weight:700;color:#D9D8D3;display:flex;align-items:center;gap:5px"><img src="https://flagcdn.com/16x12/om.png" style="height:9px;border-radius:1px;vertical-align:middle">Salalah</div>
                 <span style="font-size:7px;font-weight:700;padding:2px 5px;border-radius:2px;color:#C98A2E;border:1px solid #C98A2E">HIGH</span>
@@ -4357,19 +4357,19 @@ function gccSidebarNav(name) {
         <div class="card">
           <div class="card-label">Carrier Posture &mdash; Red Sea</div>
           <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:10px">
-            <div style="background:#1a1713;border:1px solid #251f18;border-radius:5px;padding:12px">
+            <div style="background:#111110;border:1px solid #1a2535;border-radius:5px;padding:12px">
               <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:6px;margin-bottom:7px"><div style="font-size:13px;font-weight:700;color:#F2F1ED">Maersk</div><div style="font-size:8px;font-weight:700;padding:2px 7px;border-radius:3px;color:#E05252;border:1px solid #E05252;white-space:nowrap">SUSPENDED</div></div>
               <div style="font-size:9px;color:#7A7A72;line-height:1.5">Red Sea suspended since Jan 2024. Cape Good Hope routing. Saudi blockade forces indefinite extension.</div>
             </div>
-            <div style="background:#1a1713;border:1px solid #251f18;border-radius:5px;padding:12px">
+            <div style="background:#111110;border:1px solid #1a2535;border-radius:5px;padding:12px">
               <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:6px;margin-bottom:7px"><div style="font-size:13px;font-weight:700;color:#F2F1ED">MSC</div><div style="font-size:8px;font-weight:700;padding:2px 7px;border-radius:3px;color:#E05252;border:1px solid #E05252;white-space:nowrap">SUSPENDED</div></div>
               <div style="font-size:9px;color:#7A7A72;line-height:1.5">Cape Good Hope restored. No Red Sea calls since Houthi blockade escalation Jul 20.</div>
             </div>
-            <div style="background:#1a1713;border:1px solid #251f18;border-radius:5px;padding:12px">
+            <div style="background:#111110;border:1px solid #1a2535;border-radius:5px;padding:12px">
               <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:6px;margin-bottom:7px"><div style="font-size:13px;font-weight:700;color:#F2F1ED">Hapag-Lloyd</div><div style="font-size:8px;font-weight:700;padding:2px 7px;border-radius:3px;color:#E05252;border:1px solid #E05252;white-space:nowrap">SUSPENDED</div></div>
               <div style="font-size:9px;color:#7A7A72;line-height:1.5">Cape diversions active. Blockade declaration triggers suspension of all Saudi-port calls.</div>
             </div>
-            <div style="background:#1a1713;border:1px solid #251f18;border-radius:5px;padding:12px">
+            <div style="background:#111110;border:1px solid #1a2535;border-radius:5px;padding:12px">
               <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:6px;margin-bottom:7px"><div style="font-size:13px;font-weight:700;color:#F2F1ED">CMA CGM</div><div style="font-size:8px;font-weight:700;padding:2px 7px;border-radius:3px;color:#C98A2E;border:1px solid #C98A2E;white-space:nowrap">MONITORING</div></div>
               <div style="font-size:9px;color:#7A7A72;line-height:1.5">Limited Red Sea exposure. Evaluating Saudi port call exposure. Emergency surcharge under review.</div>
             </div>
@@ -4433,7 +4433,7 @@ function gccSidebarNav(name) {
             </div>
             <div style="font-size:8px;color:#082030;letter-spacing:.06em">SCA &middot; IMF PortWatch &middot; UNCTAD 2026</div>
           </div>
-          <div style="background:#1a1713;border:1px solid #251f18;border-radius:6px;padding:16px 14px;display:flex;flex-direction:column;justify-content:space-between;min-height:148px">
+          <div style="background:#111110;border:1px solid #1a2535;border-radius:6px;padding:16px 14px;display:flex;flex-direction:column;justify-content:space-between;min-height:148px">
             <div style="font-size:8px;font-weight:700;letter-spacing:.14em;color:#4A4A44">TRANSITS TODAY</div>
             <div>
               <div style="font-size:44px;font-weight:700;letter-spacing:-.02em;color:#0EA5E9;line-height:1;margin:6px 0 4px">~26<a href="https://en.macromicro.me/charts/94483/imf-suez-canal-number-number-of-ships-and-transit-volume" target="_blank" rel="noopener" class="src-lnk" title="Source: IMF PortWatch · SCA">&#8599;</a></div>
@@ -4441,7 +4441,7 @@ function gccSidebarNav(name) {
             </div>
             <div style="font-size:8px;color:#2A2A26;letter-spacing:.04em">IMF PortWatch est.</div>
           </div>
-          <div style="background:#1a1713;border:1px solid #251f18;border-radius:6px;padding:16px 14px;display:flex;flex-direction:column;justify-content:space-between;min-height:148px">
+          <div style="background:#111110;border:1px solid #1a2535;border-radius:6px;padding:16px 14px;display:flex;flex-direction:column;justify-content:space-between;min-height:148px">
             <div style="font-size:8px;font-weight:700;letter-spacing:.14em;color:#4A4A44">CANAL STATUS</div>
             <div>
               <div style="font-size:20px;font-weight:700;letter-spacing:-.01em;color:#3dd68c;line-height:1;margin:6px 0 4px">OPEN<a href="https://www.suezcanal.gov.eg" target="_blank" rel="noopener" class="src-lnk" title="Source: SCA">&#8599;</a></div>
@@ -4449,7 +4449,7 @@ function gccSidebarNav(name) {
             </div>
             <div style="font-size:8px;color:#2A2A26;letter-spacing:.04em">SCA confirmed</div>
           </div>
-          <div style="background:#1a1713;border:1px solid #251f18;border-radius:6px;padding:16px 14px;display:flex;flex-direction:column;justify-content:space-between;min-height:148px">
+          <div style="background:#111110;border:1px solid #1a2535;border-radius:6px;padding:16px 14px;display:flex;flex-direction:column;justify-content:space-between;min-height:148px">
             <div style="font-size:8px;font-weight:700;letter-spacing:.14em;color:#4A4A44">SCA REVENUE H1 2026</div>
             <div>
               <div style="font-size:32px;font-weight:700;letter-spacing:-.02em;color:#C98A2E;line-height:1;margin:6px 0 4px">$449M<a href="https://www.globaltrademag.com/suez-canal-container-ship-traffic-nears-2025-low/" target="_blank" rel="noopener" class="src-lnk" title="Source: Global Trade Magazine · SCA">&#8599;</a></div>
@@ -4477,28 +4477,28 @@ function gccSidebarNav(name) {
         <div class="card">
           <div class="card-label">Key Terminals &mdash; Suez Canal Corridor</div>
           <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-top:6px">
-            <div style="background:#1a1713;border:1px solid #251f18;border-radius:5px;padding:10px 12px">
+            <div style="background:#111110;border:1px solid #1a2535;border-radius:5px;padding:10px 12px">
               <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:5px">
                 <div style="font-size:11px;font-weight:700;color:#D9D8D3;display:flex;align-items:center;gap:5px"><img src="https://flagcdn.com/16x12/eg.png" style="height:9px;border-radius:1px;vertical-align:middle">Port Said</div>
                 <span style="font-size:7px;font-weight:700;padding:2px 5px;border-radius:2px;color:#0EA5E9;border:1px solid #0EA5E9">REDUCED</span>
               </div>
               <div style="font-size:9px;color:#7A7A72;line-height:1.4">N. entrance &middot; Med flows intact &middot; Asian inbound traffic collapsed</div>
             </div>
-            <div style="background:#1a1713;border:1px solid #251f18;border-radius:5px;padding:10px 12px">
+            <div style="background:#111110;border:1px solid #1a2535;border-radius:5px;padding:10px 12px">
               <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:5px">
                 <div style="font-size:11px;font-weight:700;color:#D9D8D3;display:flex;align-items:center;gap:5px"><img src="https://flagcdn.com/16x12/eg.png" style="height:9px;border-radius:1px;vertical-align:middle">Suez City</div>
                 <span style="font-size:7px;font-weight:700;padding:2px 5px;border-radius:2px;color:#C98A2E;border:1px solid #C98A2E">IMPACTED</span>
               </div>
               <div style="font-size:9px;color:#7A7A72;line-height:1.4">S. entrance &middot; Red Sea approach via Bab blocked &middot; southbound idle</div>
             </div>
-            <div style="background:#1a1713;border:1px solid #251f18;border-radius:5px;padding:10px 12px">
+            <div style="background:#111110;border:1px solid #1a2535;border-radius:5px;padding:10px 12px">
               <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:5px">
                 <div style="font-size:11px;font-weight:700;color:#D9D8D3;display:flex;align-items:center;gap:5px"><img src="https://flagcdn.com/16x12/eg.png" style="height:9px;border-radius:1px;vertical-align:middle">Damietta</div>
                 <span style="font-size:7px;font-weight:700;padding:2px 5px;border-radius:2px;color:#5A9A5A;border:1px solid #5A9A5A">NORMAL</span>
               </div>
               <div style="font-size:9px;color:#7A7A72;line-height:1.4">Egypt container hub &middot; Med-only flows &middot; limited Saudi exposure</div>
             </div>
-            <div style="background:#1a1713;border:1px solid #251f18;border-radius:5px;padding:10px 12px">
+            <div style="background:#111110;border:1px solid #1a2535;border-radius:5px;padding:10px 12px">
               <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:5px">
                 <div style="font-size:11px;font-weight:700;color:#D9D8D3;display:flex;align-items:center;gap:5px"><img src="https://flagcdn.com/16x12/eg.png" style="height:9px;border-radius:1px;vertical-align:middle">Alexandria</div>
                 <span style="font-size:7px;font-weight:700;padding:2px 5px;border-radius:2px;color:#5A9A5A;border:1px solid #5A9A5A">NORMAL</span>
@@ -4573,19 +4573,19 @@ function gccSidebarNav(name) {
         <div class="card">
           <div class="card-label">Carrier Posture &mdash; Suez</div>
           <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:10px">
-            <div style="background:#1a1713;border:1px solid #251f18;border-radius:5px;padding:12px">
+            <div style="background:#111110;border:1px solid #1a2535;border-radius:5px;padding:12px">
               <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:6px;margin-bottom:7px"><div style="font-size:13px;font-weight:700;color:#F2F1ED">Maersk</div><div style="font-size:8px;font-weight:700;padding:2px 7px;border-radius:3px;color:#E05252;border:1px solid #E05252;white-space:nowrap">RE-SUSPENDED</div></div>
               <div style="font-size:9px;color:#7A7A72;line-height:1.5">Briefly returned Dec 2025 (Maersk Sebarok). Re-suspending as Bab blockade closes southern approach.</div>
             </div>
-            <div style="background:#1a1713;border:1px solid #251f18;border-radius:5px;padding:12px">
+            <div style="background:#111110;border:1px solid #1a2535;border-radius:5px;padding:12px">
               <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:6px;margin-bottom:7px"><div style="font-size:13px;font-weight:700;color:#F2F1ED">MSC</div><div style="font-size:8px;font-weight:700;padding:2px 7px;border-radius:3px;color:#E05252;border:1px solid #E05252;white-space:nowrap">SUSPENDED</div></div>
               <div style="font-size:9px;color:#7A7A72;line-height:1.5">Never fully returned post-Houthi. Cape Good Hope routing maintained. Bab blockade confirms indefinite suspension.</div>
             </div>
-            <div style="background:#1a1713;border:1px solid #251f18;border-radius:5px;padding:12px">
+            <div style="background:#111110;border:1px solid #1a2535;border-radius:5px;padding:12px">
               <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:6px;margin-bottom:7px"><div style="font-size:13px;font-weight:700;color:#F2F1ED">CMA CGM</div><div style="font-size:8px;font-weight:700;padding:2px 7px;border-radius:3px;color:#C98A2E;border:1px solid #C98A2E;white-space:nowrap">RE-EVALUATING</div></div>
               <div style="font-size:9px;color:#7A7A72;line-height:1.5">MEDEX/INDAMEX returned Jan 2026. Now re-evaluating after Bab blockade reverses access.</div>
             </div>
-            <div style="background:#1a1713;border:1px solid #251f18;border-radius:5px;padding:12px">
+            <div style="background:#111110;border:1px solid #1a2535;border-radius:5px;padding:12px">
               <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:6px;margin-bottom:7px"><div style="font-size:13px;font-weight:700;color:#F2F1ED">Hapag-Lloyd</div><div style="font-size:8px;font-weight:700;padding:2px 7px;border-radius:3px;color:#E05252;border:1px solid #E05252;white-space:nowrap">SUSPENDED</div></div>
               <div style="font-size:9px;color:#7A7A72;line-height:1.5">Cape routing maintained throughout. Monitoring Bab resolution before any Suez return.</div>
             </div>
@@ -4601,7 +4601,7 @@ function gccSidebarNav(name) {
 </div><!-- /page-hormuz -->
 
 <!-- ============================================================ TAB 2: CONTAINER RATES -->
-<div class="page" id="page-rates" style="padding:0;background:#12100e;font-family:'JetBrains Mono',monospace;padding-bottom:60px">
+<div class="page" id="page-rates" style="padding:0;background:#0A0A0A;font-family:'JetBrains Mono',monospace;padding-bottom:60px">
 
   <!-- KPI STRIP -->
   <div style="display:grid;grid-template-columns:repeat(4,1fr);border-bottom:1px solid #1A1A18">
@@ -4660,7 +4660,7 @@ function gccSidebarNav(name) {
   <div style="padding:20px 28px 0;display:grid;grid-template-columns:1fr 1fr;gap:16px">
 
     <!-- TREND CHART -->
-    <div style="background:#1a1713;border:1px solid #251f18;border-radius:6px;padding:18px 16px">
+    <div style="background:#111110;border:1px solid #1a2535;border-radius:6px;padding:18px 16px">
       <div style="font-size:11px;font-weight:700;letter-spacing:.14em;color:#F2F1ED;margin-bottom:4px">FREIGHT INDEX TREND &ndash; 20 WEEKS</div>
       <div style="font-size:9px;color:#4A4A44;margin-bottom:14px;line-height:1.4">FBX Shanghai &rarr; Middle East / India <span style="color:#C2A23E">&#9632;</span> vs Baltic Dry Index <span style="color:#5A8AB8">&#9632;</span> &middot; dual axis &middot; wks 13&ndash;19 interpolated &middot; wk 20 = Jul 19 2026</div>
       <div style="position:relative;height:200px">
@@ -4676,7 +4676,7 @@ function gccSidebarNav(name) {
     <div style="display:flex;flex-direction:column;gap:14px">
 
       <!-- SHA to GCC -->
-      <div style="background:#1a1713;border:1px solid #251f18;border-radius:6px;overflow:hidden">
+      <div style="background:#111110;border:1px solid #1a2535;border-radius:6px;overflow:hidden">
         <div style="padding:13px 16px 10px;border-bottom:1px solid #1A1A18;display:flex;align-items:baseline;justify-content:space-between">
           <div>
             <div style="font-size:11px;font-weight:700;letter-spacing:.12em;color:#F2F1ED">ROUTE RATES &ndash; SHANGHAI (SHA) &rarr; GCC</div>
@@ -4747,7 +4747,7 @@ function gccSidebarNav(name) {
       </div>
 
       <!-- HAM to GCC -->
-      <div style="background:#1a1713;border:1px solid #251f18;border-radius:6px;overflow:hidden">
+      <div style="background:#111110;border:1px solid #1a2535;border-radius:6px;overflow:hidden">
         <div style="padding:13px 16px 10px;border-bottom:1px solid #1A1A18">
           <div style="font-size:11px;font-weight:700;letter-spacing:.12em;color:#F2F1ED">ROUTE RATES &ndash; HAMBURG (HAM) &rarr; GCC</div>
           <div style="font-size:9px;color:#4A4A44;margin-top:3px">Spot rates per FEU &middot; Jul 2026 &middot; avg multi-carrier &middot; Jun 2026 ref in footnote</div>
@@ -4806,7 +4806,7 @@ function gccSidebarNav(name) {
       </div>
 
       <!-- SIN to GCC -->
-      <div style="background:#1a1713;border:1px solid #251f18;border-radius:6px;overflow:hidden">
+      <div style="background:#111110;border:1px solid #1a2535;border-radius:6px;overflow:hidden">
         <div style="padding:13px 16px 10px;border-bottom:1px solid #1A1A18">
           <div style="font-size:11px;font-weight:700;letter-spacing:.12em;color:#F2F1ED">ROUTE RATES &ndash; SINGAPORE (SIN) &rarr; GCC</div>
           <div style="font-size:9px;color:#4A4A44;margin-top:3px">SeaRates &lsquo;alternative&rsquo; (bookable) rates only &middot; indicative rates excluded &middot; Jul 2026</div>
@@ -4869,7 +4869,7 @@ function gccSidebarNav(name) {
 
 </div>
 <!-- ============================================================ TAB 3: TRUCKING -->
-<div class="page" id="page-trucking" style="padding:0;background:#12100e;font-family:'JetBrains Mono',monospace">
+<div class="page" id="page-trucking" style="padding:0;background:#0A0A0A;font-family:'JetBrains Mono',monospace">
 
 <!-- SUMMARY STRIP -->
 <div style="background:#0D0D0B;border-bottom:1px solid #1A1A18;padding:12px 28px;display:flex;align-items:center;gap:32px;flex-wrap:wrap">
@@ -4904,7 +4904,7 @@ function gccSidebarNav(name) {
 <div style="display:grid;grid-template-columns:repeat(5,1fr);gap:12px;margin-bottom:32px">
 
   <!-- JEDDAH -->
-  <div id="pdt-jeddah" style="background:#1a1713;border:1px solid #251f18;border-radius:6px;padding:18px 14px;display:flex;flex-direction:column;align-items:center;gap:10px">
+  <div id="pdt-jeddah" style="background:#111110;border:1px solid #1a2535;border-radius:6px;padding:18px 14px;display:flex;flex-direction:column;align-items:center;gap:10px">
     <div style="display:flex;align-items:center;justify-content:space-between;width:100%">
       <div style="font-size:11px;font-weight:700;letter-spacing:.08em;color:#D9D8D3;display:flex;align-items:center;gap:6px"><img src="https://flagcdn.com/16x12/sa.png" alt="sa" style="height:11px;width:auto;border-radius:1px;vertical-align:middle"> JEDDAH</div>
       <div style="font-size:8px;font-weight:700;letter-spacing:.1em;padding:2px 8px;border-radius:3px;color:#E05252;border:1px solid #E05252">CRITICAL</div>
@@ -4924,7 +4924,7 @@ function gccSidebarNav(name) {
   </div>
 
   <!-- YANBU -->
-  <div id="pdt-yanbu" style="background:#1a1713;border:1px solid #251f18;border-radius:6px;padding:18px 14px;display:flex;flex-direction:column;align-items:center;gap:10px">
+  <div id="pdt-yanbu" style="background:#111110;border:1px solid #1a2535;border-radius:6px;padding:18px 14px;display:flex;flex-direction:column;align-items:center;gap:10px">
     <div style="display:flex;align-items:center;justify-content:space-between;width:100%">
       <div style="font-size:11px;font-weight:700;letter-spacing:.08em;color:#D9D8D3;display:flex;align-items:center;gap:6px"><img src="https://flagcdn.com/16x12/sa.png" alt="sa" style="height:11px;width:auto;border-radius:1px;vertical-align:middle"> YANBU</div>
       <div style="font-size:8px;font-weight:700;letter-spacing:.1em;padding:2px 8px;border-radius:3px;color:#E05252;border:1px solid #E05252">CRITICAL</div>
@@ -4944,7 +4944,7 @@ function gccSidebarNav(name) {
   </div>
 
   <!-- SOHAR -->
-  <div id="pdt-sohar" style="background:#1a1713;border:1px solid #251f18;border-radius:6px;padding:18px 14px;display:flex;flex-direction:column;align-items:center;gap:10px">
+  <div id="pdt-sohar" style="background:#111110;border:1px solid #1a2535;border-radius:6px;padding:18px 14px;display:flex;flex-direction:column;align-items:center;gap:10px">
     <div style="display:flex;align-items:center;justify-content:space-between;width:100%">
       <div style="font-size:11px;font-weight:700;letter-spacing:.08em;color:#D9D8D3;display:flex;align-items:center;gap:6px"><img src="https://flagcdn.com/16x12/om.png" alt="om" style="height:11px;width:auto;border-radius:1px;vertical-align:middle"> SOHAR</div>
       <div style="font-size:8px;font-weight:700;letter-spacing:.1em;padding:2px 8px;border-radius:3px;color:#E05252;border:1px solid #E05252">CRITICAL</div>
@@ -4964,7 +4964,7 @@ function gccSidebarNav(name) {
   </div>
 
   <!-- KHOR FAKKAN -->
-  <div id="pdt-khor_fakkan" style="background:#1a1713;border:1px solid #251f18;border-radius:6px;padding:18px 14px;display:flex;flex-direction:column;align-items:center;gap:10px">
+  <div id="pdt-khor_fakkan" style="background:#111110;border:1px solid #1a2535;border-radius:6px;padding:18px 14px;display:flex;flex-direction:column;align-items:center;gap:10px">
     <div style="display:flex;align-items:center;justify-content:space-between;width:100%">
       <div style="font-size:11px;font-weight:700;letter-spacing:.08em;color:#D9D8D3;display:flex;align-items:center;gap:6px"><img src="https://flagcdn.com/16x12/ae.png" alt="ae" style="height:11px;width:auto;border-radius:1px;vertical-align:middle"> KHOR FAKKAN</div>
       <div style="font-size:8px;font-weight:700;letter-spacing:.1em;padding:2px 8px;border-radius:3px;color:#E05252;border:1px solid #E05252">CRITICAL</div>
@@ -4984,7 +4984,7 @@ function gccSidebarNav(name) {
   </div>
 
   <!-- SALALAH -->
-  <div id="pdt-salalah" style="background:#1a1713;border:1px solid #251f18;border-radius:6px;padding:18px 14px;display:flex;flex-direction:column;align-items:center;gap:10px">
+  <div id="pdt-salalah" style="background:#111110;border:1px solid #1a2535;border-radius:6px;padding:18px 14px;display:flex;flex-direction:column;align-items:center;gap:10px">
     <div style="display:flex;align-items:center;justify-content:space-between;width:100%">
       <div style="font-size:11px;font-weight:700;letter-spacing:.08em;color:#D9D8D3;display:flex;align-items:center;gap:6px"><img src="https://flagcdn.com/16x12/om.png" alt="om" style="height:11px;width:auto;border-radius:1px;vertical-align:middle"> SALALAH</div>
       <div style="font-size:8px;font-weight:700;letter-spacing:.1em;padding:2px 8px;border-radius:3px;color:#C98A2E;border:1px solid #C98A2E">HIGH</div>
@@ -5028,7 +5028,7 @@ function gccSidebarNav(name) {
 
   <!-- AL BAT'HA -->
   <a href="https://www.google.com/maps/place/24.0970,51.5970/@24.0970,51.5970,14z" target="_blank" rel="noopener" style="text-decoration:none;color:inherit;display:flex">
-  <div style="background:#1a1713;border:1px solid #251f18;border-radius:6px;padding:24px 20px;cursor:pointer;width:100%;display:flex;flex-direction:column;gap:0">
+  <div style="background:#111110;border:1px solid #1a2535;border-radius:6px;padding:24px 20px;cursor:pointer;width:100%;display:flex;flex-direction:column;gap:0">
     <div style="display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:18px">
       <div>
         <div style="font-size:14px;font-weight:700;letter-spacing:.07em;color:#F2F1ED;margin-bottom:6px">AL BAT'HA</div>
@@ -5045,7 +5045,7 @@ function gccSidebarNav(name) {
 
   <!-- KING FAHD -->
   <a href="https://www.google.com/maps/place/26.1840,50.3240/@26.1840,50.3240,14z" target="_blank" rel="noopener" style="text-decoration:none;color:inherit;display:flex">
-  <div style="background:#1a1713;border:1px solid #251f18;border-radius:6px;padding:24px 20px;cursor:pointer;width:100%;display:flex;flex-direction:column;gap:0">
+  <div style="background:#111110;border:1px solid #1a2535;border-radius:6px;padding:24px 20px;cursor:pointer;width:100%;display:flex;flex-direction:column;gap:0">
     <div style="display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:18px">
       <div>
         <div style="font-size:14px;font-weight:700;letter-spacing:.07em;color:#F2F1ED;margin-bottom:6px">KING FAHD CAUSEWAY</div>
@@ -5062,7 +5062,7 @@ function gccSidebarNav(name) {
 
   <!-- SALWA -->
   <a href="https://www.google.com/maps/place/24.7350,50.8700/@24.7350,50.8700,14z" target="_blank" rel="noopener" style="text-decoration:none;color:inherit;display:flex">
-  <div style="background:#1a1713;border:1px solid #251f18;border-radius:6px;padding:24px 20px;cursor:pointer;width:100%;display:flex;flex-direction:column;gap:0">
+  <div style="background:#111110;border:1px solid #1a2535;border-radius:6px;padding:24px 20px;cursor:pointer;width:100%;display:flex;flex-direction:column;gap:0">
     <div style="display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:18px">
       <div>
         <div style="font-size:14px;font-weight:700;letter-spacing:.07em;color:#F2F1ED;margin-bottom:6px">SALWA BORDER</div>
@@ -5079,7 +5079,7 @@ function gccSidebarNav(name) {
 
   <!-- AL NUWAISEEB -->
   <a href="https://www.google.com/maps/place/28.5550,48.3900/@28.5550,48.3900,13z" target="_blank" rel="noopener" style="text-decoration:none;color:inherit;display:flex">
-  <div style="background:#1a1713;border:1px solid #251f18;border-radius:6px;padding:24px 20px;cursor:pointer;width:100%;display:flex;flex-direction:column;gap:0">
+  <div style="background:#111110;border:1px solid #1a2535;border-radius:6px;padding:24px 20px;cursor:pointer;width:100%;display:flex;flex-direction:column;gap:0">
     <div style="display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:18px">
       <div>
         <div style="font-size:14px;font-weight:700;letter-spacing:.07em;color:#F2F1ED;margin-bottom:6px">AL NUWAISEEB</div>
@@ -5096,7 +5096,7 @@ function gccSidebarNav(name) {
 
   <!-- SOHAR HWY 95 -->
   <a href="https://www.google.com/maps/place/24.5025,56.6062/@24.5025,56.6062,15z" target="_blank" rel="noopener" style="text-decoration:none;color:inherit;display:flex">
-  <div style="background:#1a1713;border:1px solid #251f18;border-radius:6px;padding:24px 20px;cursor:pointer;width:100%;display:flex;flex-direction:column;gap:0">
+  <div style="background:#111110;border:1px solid #1a2535;border-radius:6px;padding:24px 20px;cursor:pointer;width:100%;display:flex;flex-direction:column;gap:0">
     <div style="display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:18px">
       <div>
         <div style="font-size:14px;font-weight:700;letter-spacing:.07em;color:#F2F1ED;margin-bottom:6px">SOHAR PORT – HWY 95</div>
@@ -5113,7 +5113,7 @@ function gccSidebarNav(name) {
 
   <!-- JEDDAH ISLAMIC PORT -->
   <a href="https://www.google.com/maps/place/21.4838,39.1734/@21.4838,39.1734,15z" target="_blank" rel="noopener" style="text-decoration:none;color:inherit;display:flex">
-  <div style="background:#1a1713;border:1px solid #251f18;border-radius:6px;padding:24px 20px;cursor:pointer;width:100%;display:flex;flex-direction:column;gap:0">
+  <div style="background:#111110;border:1px solid #1a2535;border-radius:6px;padding:24px 20px;cursor:pointer;width:100%;display:flex;flex-direction:column;gap:0">
     <div style="display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:18px">
       <div>
         <div style="font-size:14px;font-weight:700;letter-spacing:.07em;color:#F2F1ED;margin-bottom:6px">JEDDAH ISLAMIC PORT</div>
@@ -5143,15 +5143,15 @@ function gccSidebarNav(name) {
     <div>
       <div style="font-size:10px;font-weight:700;letter-spacing:.14em;color:#5FA86A;margin-bottom:10px;padding-bottom:8px;border-bottom:1px solid #1A1A18;display:flex;align-items:center;gap:6px"><img src="https://flagcdn.com/16x12/sa.png" alt="sa" style="height:10px;width:auto;border-radius:1px;vertical-align:middle"> FROM JEDDAH</div>
       <div style="display:flex;flex-direction:column;gap:6px">
-        <div style="background:#1a1713;border:1px solid #251f18;border-left:2px solid #5FA86A;border-radius:0 4px 4px 0;padding:14px 16px;display:flex;align-items:center;justify-content:space-between;gap:12px">
+        <div style="background:#111110;border:1px solid #1a2535;border-left:2px solid #5FA86A;border-radius:0 4px 4px 0;padding:14px 16px;display:flex;align-items:center;justify-content:space-between;gap:12px">
           <div style="font-size:13px;font-weight:700;color:#F2F1ED;line-height:1.4"><span style="display:inline-flex;align-items:center;gap:5px"><img src="https://flagcdn.com/16x12/sa.png" alt="sa" style="height:9px;width:auto;border-radius:1px;vertical-align:middle"> Jeddah</span><br><span style="color:#8E8E84;font-weight:400;display:inline-flex;align-items:center;gap:5px">→ <img src="https://flagcdn.com/16x12/qa.png" alt="qa" style="height:9px;width:auto;border-radius:1px;vertical-align:middle"> Doha</span></div>
           <div style="font-size:20px;font-weight:700;color:#E05252;white-space:nowrap;letter-spacing:-.01em">$2,840–3,640</div>
         </div>
-        <div style="background:#1a1713;border:1px solid #251f18;border-left:2px solid #5FA86A;border-radius:0 4px 4px 0;padding:14px 16px;display:flex;align-items:center;justify-content:space-between;gap:12px">
+        <div style="background:#111110;border:1px solid #1a2535;border-left:2px solid #5FA86A;border-radius:0 4px 4px 0;padding:14px 16px;display:flex;align-items:center;justify-content:space-between;gap:12px">
           <div style="font-size:13px;font-weight:700;color:#F2F1ED;line-height:1.4"><span style="display:inline-flex;align-items:center;gap:5px"><img src="https://flagcdn.com/16x12/sa.png" alt="sa" style="height:9px;width:auto;border-radius:1px;vertical-align:middle"> Jeddah</span><br><span style="color:#8E8E84;font-weight:400;display:inline-flex;align-items:center;gap:5px">→ <img src="https://flagcdn.com/16x12/bh.png" alt="bh" style="height:9px;width:auto;border-radius:1px;vertical-align:middle"> Manama</span></div>
           <div style="font-size:20px;font-weight:700;color:#C98A2E;white-space:nowrap;letter-spacing:-.01em">$2,435–3,235</div>
         </div>
-        <div style="background:#1a1713;border:1px solid #251f18;border-left:2px solid #5FA86A;border-radius:0 4px 4px 0;padding:14px 16px;display:flex;align-items:center;justify-content:space-between;gap:12px">
+        <div style="background:#111110;border:1px solid #1a2535;border-left:2px solid #5FA86A;border-radius:0 4px 4px 0;padding:14px 16px;display:flex;align-items:center;justify-content:space-between;gap:12px">
           <div style="font-size:13px;font-weight:700;color:#F2F1ED;line-height:1.4"><span style="display:inline-flex;align-items:center;gap:5px"><img src="https://flagcdn.com/16x12/sa.png" alt="sa" style="height:9px;width:auto;border-radius:1px;vertical-align:middle"> Jeddah</span><br><span style="color:#8E8E84;font-weight:400;display:inline-flex;align-items:center;gap:5px">→ <img src="https://flagcdn.com/16x12/kw.png" alt="kw" style="height:9px;width:auto;border-radius:1px;vertical-align:middle"> Kuwait City</span></div>
           <div style="font-size:20px;font-weight:700;color:#E05252;white-space:nowrap;letter-spacing:-.01em">$2,855–3,855</div>
         </div>
@@ -5162,11 +5162,11 @@ function gccSidebarNav(name) {
     <div>
       <div style="font-size:10px;font-weight:700;letter-spacing:.14em;color:#8B72C8;margin-bottom:10px;padding-bottom:8px;border-bottom:1px solid #1A1A18;display:flex;align-items:center;gap:6px"><img src="https://flagcdn.com/16x12/om.png" alt="om" style="height:10px;width:auto;border-radius:1px;vertical-align:middle"> FROM SOHAR</div>
       <div style="display:flex;flex-direction:column;gap:6px">
-        <div style="background:#1a1713;border:1px solid #251f18;border-left:2px solid #8B72C8;border-radius:0 4px 4px 0;padding:14px 16px;display:flex;align-items:center;justify-content:space-between;gap:12px">
+        <div style="background:#111110;border:1px solid #1a2535;border-left:2px solid #8B72C8;border-radius:0 4px 4px 0;padding:14px 16px;display:flex;align-items:center;justify-content:space-between;gap:12px">
           <div style="font-size:13px;font-weight:700;color:#F2F1ED;line-height:1.4"><span style="display:inline-flex;align-items:center;gap:5px"><img src="https://flagcdn.com/16x12/om.png" alt="om" style="height:9px;width:auto;border-radius:1px;vertical-align:middle"> Sohar</span><br><span style="color:#8E8E84;font-weight:400;display:inline-flex;align-items:center;gap:5px">→ <img src="https://flagcdn.com/16x12/qa.png" alt="qa" style="height:9px;width:auto;border-radius:1px;vertical-align:middle"> Doha</span></div>
           <div style="font-size:20px;font-weight:700;color:#E05252;white-space:nowrap;letter-spacing:-.01em">$2,210–2,910</div>
         </div>
-        <div style="background:#1a1713;border:1px solid #251f18;border-left:2px solid #8B72C8;border-radius:0 4px 4px 0;padding:14px 16px;display:flex;align-items:center;justify-content:space-between;gap:12px">
+        <div style="background:#111110;border:1px solid #1a2535;border-left:2px solid #8B72C8;border-radius:0 4px 4px 0;padding:14px 16px;display:flex;align-items:center;justify-content:space-between;gap:12px">
           <div style="font-size:13px;font-weight:700;color:#F2F1ED;line-height:1.4"><span style="display:inline-flex;align-items:center;gap:5px"><img src="https://flagcdn.com/16x12/om.png" alt="om" style="height:9px;width:auto;border-radius:1px;vertical-align:middle"> Sohar</span><br><span style="color:#8E8E84;font-weight:400;display:inline-flex;align-items:center;gap:5px">→ <img src="https://flagcdn.com/16x12/bh.png" alt="bh" style="height:9px;width:auto;border-radius:1px;vertical-align:middle"> Manama</span></div>
           <div style="font-size:20px;font-weight:700;color:#C98A2E;white-space:nowrap;letter-spacing:-.01em">$2,105–2,755</div>
         </div>
@@ -5177,11 +5177,11 @@ function gccSidebarNav(name) {
     <div>
       <div style="font-size:10px;font-weight:700;letter-spacing:.14em;color:#C9AE4E;margin-bottom:10px;padding-bottom:8px;border-bottom:1px solid #1A1A18">OTHER KEY ROUTES</div>
       <div style="display:flex;flex-direction:column;gap:6px">
-        <div style="background:#1a1713;border:1px solid #251f18;border-left:2px solid #C9AE4E;border-radius:0 4px 4px 0;padding:14px 16px;display:flex;align-items:center;justify-content:space-between;gap:12px">
+        <div style="background:#111110;border:1px solid #1a2535;border-left:2px solid #C9AE4E;border-radius:0 4px 4px 0;padding:14px 16px;display:flex;align-items:center;justify-content:space-between;gap:12px">
           <div style="font-size:13px;font-weight:700;color:#F2F1ED;line-height:1.4"><span style="display:inline-flex;align-items:center;gap:5px"><img src="https://flagcdn.com/16x12/ae.png" alt="ae" style="height:9px;width:auto;border-radius:1px;vertical-align:middle"> Dubai / Jebel Ali</span><br><span style="color:#8E8E84;font-weight:400;display:inline-flex;align-items:center;gap:5px">→ <img src="https://flagcdn.com/16x12/sa.png" alt="sa" style="height:9px;width:auto;border-radius:1px;vertical-align:middle"> Riyadh</span></div>
           <div style="font-size:20px;font-weight:700;color:#C2A23E;white-space:nowrap;letter-spacing:-.01em">$1,895–2,495</div>
         </div>
-        <div style="background:#1a1713;border:1px solid #251f18;border-left:2px solid #C9AE4E;border-radius:0 4px 4px 0;padding:14px 16px;display:flex;align-items:center;justify-content:space-between;gap:12px">
+        <div style="background:#111110;border:1px solid #1a2535;border-left:2px solid #C9AE4E;border-radius:0 4px 4px 0;padding:14px 16px;display:flex;align-items:center;justify-content:space-between;gap:12px">
           <div style="font-size:13px;font-weight:700;color:#F2F1ED;line-height:1.4"><span style="display:inline-flex;align-items:center;gap:5px"><img src="https://flagcdn.com/16x12/om.png" alt="om" style="height:9px;width:auto;border-radius:1px;vertical-align:middle"> Oman (Hwy 95)</span><br><span style="color:#8E8E84;font-weight:400;display:inline-flex;align-items:center;gap:5px">→ <img src="https://flagcdn.com/16x12/sa.png" alt="sa" style="height:9px;width:auto;border-radius:1px;vertical-align:middle"> Riyadh</span></div>
           <div style="font-size:20px;font-weight:700;color:#C98A2E;white-space:nowrap;letter-spacing:-.01em">$2,320–3,120</div>
         </div>
@@ -5195,15 +5195,15 @@ function gccSidebarNav(name) {
 <div>
   <div style="font-size:11px;font-weight:700;letter-spacing:.18em;color:#C9AE4E;margin-bottom:16px">FLEET &amp; OPERATOR SIGNALS <span style="font-size:9px;font-weight:400;color:#3A3A36;letter-spacing:.06em">· Capacity changes since Hormuz closure · Jun 2026</span></div>
   <div style="display:grid;grid-template-columns:repeat(2,1fr);gap:10px">
-    <div style="background:#1a1713;border:1px solid #251f18;border-left:2px solid #8B72C8;border-radius:0 6px 6px 0;padding:14px 18px;font-size:12px;line-height:1.6;color:#C8C7C2"><span style="font-weight:700;color:#F2F1ED;display:inline-flex;align-items:center;gap:6px"><img src="https://flagcdn.com/16x12/ae.png" alt="ae" style="height:11px;width:auto;border-radius:1px;vertical-align:middle"> TruKKer (UAE)</span> — scaling 60 to 500 moves/day. Fixed transparent rates from Khorfakkan activated.</div>
-    <div style="background:#1a1713;border:1px solid #251f18;border-left:2px solid #C9AE4E;border-radius:0 6px 6px 0;padding:14px 18px;font-size:12px;line-height:1.6;color:#C8C7C2"><span style="font-weight:700;color:#F2F1ED;display:inline-flex;align-items:center;gap:6px"><img src="https://flagcdn.com/16x12/sa.png" alt="sa" style="height:11px;width:auto;border-radius:1px;vertical-align:middle"> Flow Progressive (SA)</span> — fleet 340 to 500+ 40ft trailers since conflict began.</div>
-    <div style="background:#1a1713;border:1px solid #251f18;border-left:2px solid #5FA86A;border-radius:0 6px 6px 0;padding:14px 18px;font-size:12px;line-height:1.6;color:#C8C7C2"><span style="font-weight:700;color:#F2F1ED;display:inline-flex;align-items:center;gap:6px"><img src="https://flagcdn.com/16x12/sa.png" alt="sa" style="height:11px;width:auto;border-radius:1px;vertical-align:middle"> Saudi TGA</span> — eased GCC refrigerated truck entry rules March 2026. Hwy 95 goods tripled to $830M.</div>
-    <div style="background:#1a1713;border:1px solid #251f18;border-left:2px solid #E05252;border-radius:0 6px 6px 0;padding:14px 18px;font-size:12px;line-height:1.6;color:#C8C7C2"><span style="font-weight:700;color:#F2F1ED;display:inline-flex;align-items:center;gap:6px"><img src="https://flagcdn.com/16x12/sa.png" alt="sa" style="height:11px;width:auto;border-radius:1px;vertical-align:middle"> Saudi Landbridge</span> — Jeddah–Dammam rail ($7B, 1,300 km). Projected $4.2B/yr transport cost savings.</div>
+    <div style="background:#111110;border:1px solid #1a2535;border-left:2px solid #8B72C8;border-radius:0 6px 6px 0;padding:14px 18px;font-size:12px;line-height:1.6;color:#C8C7C2"><span style="font-weight:700;color:#F2F1ED;display:inline-flex;align-items:center;gap:6px"><img src="https://flagcdn.com/16x12/ae.png" alt="ae" style="height:11px;width:auto;border-radius:1px;vertical-align:middle"> TruKKer (UAE)</span> — scaling 60 to 500 moves/day. Fixed transparent rates from Khorfakkan activated.</div>
+    <div style="background:#111110;border:1px solid #1a2535;border-left:2px solid #C9AE4E;border-radius:0 6px 6px 0;padding:14px 18px;font-size:12px;line-height:1.6;color:#C8C7C2"><span style="font-weight:700;color:#F2F1ED;display:inline-flex;align-items:center;gap:6px"><img src="https://flagcdn.com/16x12/sa.png" alt="sa" style="height:11px;width:auto;border-radius:1px;vertical-align:middle"> Flow Progressive (SA)</span> — fleet 340 to 500+ 40ft trailers since conflict began.</div>
+    <div style="background:#111110;border:1px solid #1a2535;border-left:2px solid #5FA86A;border-radius:0 6px 6px 0;padding:14px 18px;font-size:12px;line-height:1.6;color:#C8C7C2"><span style="font-weight:700;color:#F2F1ED;display:inline-flex;align-items:center;gap:6px"><img src="https://flagcdn.com/16x12/sa.png" alt="sa" style="height:11px;width:auto;border-radius:1px;vertical-align:middle"> Saudi TGA</span> — eased GCC refrigerated truck entry rules March 2026. Hwy 95 goods tripled to $830M.</div>
+    <div style="background:#111110;border:1px solid #1a2535;border-left:2px solid #E05252;border-radius:0 6px 6px 0;padding:14px 18px;font-size:12px;line-height:1.6;color:#C8C7C2"><span style="font-weight:700;color:#F2F1ED;display:inline-flex;align-items:center;gap:6px"><img src="https://flagcdn.com/16x12/sa.png" alt="sa" style="height:11px;width:auto;border-radius:1px;vertical-align:middle"> Saudi Landbridge</span> — Jeddah–Dammam rail ($7B, 1,300 km). Projected $4.2B/yr transport cost savings.</div>
   </div>
 </div>
 
 <!-- GCC Corridors Map (kept for interactivity) -->
-<div style="margin-top:32px;border:1px solid #251f18;border-radius:6px;overflow:hidden">
+<div style="margin-top:32px;border:1px solid #1a2535;border-radius:6px;overflow:hidden">
   <div style="padding:12px 16px;border-bottom:1px solid #1A1A18;display:flex;justify-content:space-between;align-items:center">
     <div style="font-size:10px;font-weight:700;letter-spacing:.12em;color:#C9AE4E">GCC LAND CORRIDORS — ACTIVE HIGHWAYS 2026</div>
     <div style="font-size:9px;color:#3A3A36">wait now: Google Maps traffic · trucks/day: assessed Jul 2026</div>
@@ -5218,7 +5218,7 @@ function gccSidebarNav(name) {
 
 
 <!-- ============================================================ TAB 4: SIMULATOR -->
-<div class="page" id="page-simulator" style="padding:0;background:#12100e;font-family:'JetBrains Mono',monospace;padding-bottom:60px">
+<div class="page" id="page-simulator" style="padding:0;background:#0A0A0A;font-family:'JetBrains Mono',monospace;padding-bottom:60px">
   <div style="padding:24px 24px 0">
 
     <!-- TITLE -->
@@ -5244,7 +5244,7 @@ function gccSidebarNav(name) {
         </div>
       </div>
 
-      <div class="scard" id="sc-2" onclick="selectScenario(2)" style="--sc-color:#fbbf24;background:#1a1713;border:1px solid #251f18;border-radius:6px;padding:20px 18px;display:flex;flex-direction:column;gap:10px;min-height:148px;cursor:pointer;transition:border-color .15s">
+      <div class="scard" id="sc-2" onclick="selectScenario(2)" style="--sc-color:#fbbf24;background:#111110;border:1px solid #1a2535;border-radius:6px;padding:20px 18px;display:flex;flex-direction:column;gap:10px;min-height:148px;cursor:pointer;transition:border-color .15s">
         <div style="font-size:20px;line-height:1">&#9875;</div>
         <div>
           <div style="font-size:14px;font-weight:700;color:#F2F1ED;letter-spacing:-.01em;margin-bottom:4px">Hormuz: IRGC Escort Only</div>
@@ -5256,7 +5256,7 @@ function gccSidebarNav(name) {
         </div>
       </div>
 
-      <div class="scard" id="sc-3" onclick="selectScenario(3)" style="--sc-color:#f0c84b;background:#1a1713;border:1px solid #251f18;border-radius:6px;padding:20px 18px;display:flex;flex-direction:column;gap:10px;min-height:148px;cursor:pointer;transition:border-color .15s">
+      <div class="scard" id="sc-3" onclick="selectScenario(3)" style="--sc-color:#f0c84b;background:#111110;border:1px solid #1a2535;border-radius:6px;padding:20px 18px;display:flex;flex-direction:column;gap:10px;min-height:148px;cursor:pointer;transition:border-color .15s">
         <div style="font-size:20px;line-height:1">&#9868;</div>
         <div>
           <div style="font-size:14px;font-weight:700;color:#F2F1ED;letter-spacing:-.01em;margin-bottom:4px">Hormuz: Negotiated Partial</div>
@@ -5268,7 +5268,7 @@ function gccSidebarNav(name) {
         </div>
       </div>
 
-      <div class="scard" id="sc-4" onclick="selectScenario(4)" style="--sc-color:#3dd68c;background:#1a1713;border:1px solid #251f18;border-radius:6px;padding:20px 18px;display:flex;flex-direction:column;gap:10px;min-height:148px;cursor:pointer;transition:border-color .15s">
+      <div class="scard" id="sc-4" onclick="selectScenario(4)" style="--sc-color:#3dd68c;background:#111110;border:1px solid #1a2535;border-radius:6px;padding:20px 18px;display:flex;flex-direction:column;gap:10px;min-height:148px;cursor:pointer;transition:border-color .15s">
         <div style="font-size:20px;line-height:1">&#128260;</div>
         <div>
           <div style="font-size:14px;font-weight:700;color:#F2F1ED;letter-spacing:-.01em;margin-bottom:4px">Post-Crisis Recovery</div>
@@ -5280,7 +5280,7 @@ function gccSidebarNav(name) {
         </div>
       </div>
 
-      <div class="scard" id="sc-5" onclick="selectScenario(5)" style="--sc-color:#e74c3c;background:#1a1713;border:1px solid #251f18;border-radius:6px;padding:20px 18px;display:flex;flex-direction:column;gap:10px;min-height:148px;cursor:pointer;transition:border-color .15s">
+      <div class="scard" id="sc-5" onclick="selectScenario(5)" style="--sc-color:#e74c3c;background:#111110;border:1px solid #1a2535;border-radius:6px;padding:20px 18px;display:flex;flex-direction:column;gap:10px;min-height:148px;cursor:pointer;transition:border-color .15s">
         <div style="font-size:20px;line-height:1">&#128683;</div>
         <div>
           <div style="font-size:14px;font-weight:700;color:#F2F1ED;letter-spacing:-.01em;margin-bottom:4px">Bab el-Mandeb Closed</div>
@@ -5292,7 +5292,7 @@ function gccSidebarNav(name) {
         </div>
       </div>
 
-      <div class="scard" id="sc-6" onclick="selectScenario(6)" style="--sc-color:#e74c3c;background:#1a1713;border:1px solid #251f18;border-radius:6px;padding:20px 18px;display:flex;flex-direction:column;gap:10px;min-height:148px;cursor:pointer;transition:border-color .15s">
+      <div class="scard" id="sc-6" onclick="selectScenario(6)" style="--sc-color:#e74c3c;background:#111110;border:1px solid #1a2535;border-radius:6px;padding:20px 18px;display:flex;flex-direction:column;gap:10px;min-height:148px;cursor:pointer;transition:border-color .15s">
         <div style="font-size:20px;line-height:1">&#9888;</div>
         <div>
           <div style="font-size:14px;font-weight:700;color:#F2F1ED;letter-spacing:-.01em;margin-bottom:4px">Dual Closure</div>
@@ -5309,11 +5309,11 @@ function gccSidebarNav(name) {
 
     <!-- STEP 2 -->
     <div style="font-size:9px;font-weight:700;letter-spacing:.18em;color:#4A4A44;margin-bottom:12px">STEP 2 &mdash; SHIPMENT PARAMETERS</div>
-    <div style="background:#1a1713;border:1px solid #251f18;border-radius:6px;padding:22px 20px;margin-bottom:14px">
+    <div style="background:#111110;border:1px solid #1a2535;border-radius:6px;padding:22px 20px;margin-bottom:14px">
       <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:16px">
         <div>
           <div style="font-size:9px;font-weight:700;letter-spacing:.14em;color:#4A4A44;margin-bottom:8px">ORIGIN PORT</div>
-          <select id="inp-origin" onchange="simAutoRun()" style="background:#12100e;border:1px solid #2A2A26;color:#F2F1ED;font-family:'JetBrains Mono',monospace;font-size:12px;border-radius:4px;padding:10px 12px;width:100%;outline:none">
+          <select id="inp-origin" onchange="simAutoRun()" style="background:#0A0A0A;border:1px solid #2A2A26;color:#F2F1ED;font-family:'JetBrains Mono',monospace;font-size:12px;border-radius:4px;padding:10px 12px;width:100%;outline:none">
             <option value="SHA">Shanghai (SHA)</option>
             <option value="HAM">Hamburg (HAM)</option>
             <option value="ROT">Rotterdam (ROT)</option>
@@ -5323,7 +5323,7 @@ function gccSidebarNav(name) {
         </div>
         <div>
           <div style="font-size:9px;font-weight:700;letter-spacing:.14em;color:#4A4A44;margin-bottom:8px">FINAL DESTINATION (GCC)</div>
-          <select id="inp-dest" onchange="simAutoRun()" style="background:#12100e;border:1px solid #2A2A26;color:#F2F1ED;font-family:'JetBrains Mono',monospace;font-size:12px;border-radius:4px;padding:10px 12px;width:100%;outline:none">
+          <select id="inp-dest" onchange="simAutoRun()" style="background:#0A0A0A;border:1px solid #2A2A26;color:#F2F1ED;font-family:'JetBrains Mono',monospace;font-size:12px;border-radius:4px;padding:10px 12px;width:100%;outline:none">
             <option value="DXB">Dubai / Jebel Ali</option>
             <option value="RUH">Riyadh</option>
             <option value="DMM">Dammam / Khobar</option>
@@ -5335,11 +5335,11 @@ function gccSidebarNav(name) {
         </div>
         <div>
           <div style="font-size:9px;font-weight:700;letter-spacing:.14em;color:#4A4A44;margin-bottom:8px">VOLUME (FEU / MONTH)</div>
-          <input type="number" id="inp-teu" value="50" min="1" max="10000" onchange="simAutoRun()" style="background:#12100e;border:1px solid #2A2A26;color:#F2F1ED;font-family:'JetBrains Mono',monospace;font-size:12px;border-radius:4px;padding:10px 12px;width:100%;outline:none"/>
+          <input type="number" id="inp-teu" value="50" min="1" max="10000" onchange="simAutoRun()" style="background:#0A0A0A;border:1px solid #2A2A26;color:#F2F1ED;font-family:'JetBrains Mono',monospace;font-size:12px;border-radius:4px;padding:10px 12px;width:100%;outline:none"/>
         </div>
         <div>
           <div style="font-size:9px;font-weight:700;letter-spacing:.14em;color:#4A4A44;margin-bottom:8px">COMMODITY TYPE</div>
-          <select id="inp-commodity" onchange="simAutoRun()" style="background:#12100e;border:1px solid #2A2A26;color:#F2F1ED;font-family:'JetBrains Mono',monospace;font-size:12px;border-radius:4px;padding:10px 12px;width:100%;outline:none">
+          <select id="inp-commodity" onchange="simAutoRun()" style="background:#0A0A0A;border:1px solid #2A2A26;color:#F2F1ED;font-family:'JetBrains Mono',monospace;font-size:12px;border-radius:4px;padding:10px 12px;width:100%;outline:none">
             <option value="general">General / mixed cargo</option>
             <option value="consumer">Consumer goods / FMCG</option>
             <option value="auto">Automotive parts</option>
@@ -5356,7 +5356,7 @@ function gccSidebarNav(name) {
           <input type="date" id="inp-shipdate"
                  onchange="updateSeasonalBadge(); simAutoRun();"
                  oninput="updateSeasonalBadge(); simAutoRun();"
-                 style="background:#12100e;border:1px solid #2A2A26;color:#F2F1ED;font-family:'JetBrains Mono',monospace;font-size:12px;border-radius:4px;padding:10px 12px;width:180px;outline:none"/>
+                 style="background:#0A0A0A;border:1px solid #2A2A26;color:#F2F1ED;font-family:'JetBrains Mono',monospace;font-size:12px;border-radius:4px;padding:10px 12px;width:180px;outline:none"/>
         </div>
         <div id="seasonal-badge-wrap" style="display:flex;flex-direction:column;gap:3px;padding-top:22px">
           <span id="seasonal-label" style="font-size:9px;font-weight:700;color:#C9AE4E"></span>
@@ -5417,7 +5417,7 @@ function gccSidebarNav(name) {
       </div>
 
       <!-- MODEL VARIABLES -->
-      <div class="sim-panel" id="reg-panel" style="background:#1a1713;border:1px solid #251f18;border-radius:6px;margin-bottom:20px;overflow:hidden;padding:0">
+      <div class="sim-panel" id="reg-panel" style="background:#111110;border:1px solid #1a2535;border-radius:6px;margin-bottom:20px;overflow:hidden;padding:0">
         <div style="padding:14px 20px;border-bottom:1px solid #1A1A18">
           <div class="sim-panel-title" style="font-size:11px;font-weight:700;letter-spacing:.14em;color:#8B72C8;margin-bottom:4px">&#402; SPOT INDEX REGRESSION &mdash; MODEL VARIABLES</div>
           <div class="sim-panel-sub" style="font-size:10px;color:#4A4A44;line-height:1.5;margin-bottom:0">Rate = Base &times; [ 1 + &beta;&#8321;(B&minus;72) + &beta;&#8322;&middot;(U&minus;72%)^p + &beta;&#8323;(D&divide;100) + &beta;&#8324;(W&minus;1) + &beta;&#8325;&middot;C ] &times; CommoditySurcharge &nbsp;&bull;&nbsp; <span style="color:#5FA86A">auto-calibrated</span> &nbsp;&bull;&nbsp; Red Sea 2024 backtest MAE &lt;3%</div>
@@ -5429,7 +5429,7 @@ function gccSidebarNav(name) {
       <div class="sim-views" style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:20px">
 
         <!-- VIEW 1: Route Cost Matrix -->
-        <div class="sim-panel" style="background:#1a1713;border:1px solid #251f18;border-radius:6px;overflow:hidden;padding:0">
+        <div class="sim-panel" style="background:#111110;border:1px solid #1a2535;border-radius:6px;overflow:hidden;padding:0">
           <div style="padding:13px 16px 10px;border-bottom:1px solid #1A1A18">
             <div class="sim-panel-title" style="font-size:11px;font-weight:700;letter-spacing:.12em;color:#C9AE4E;margin-bottom:3px">&#9671; VIEW 1 &mdash; ROUTE COST MATRIX</div>
             <div class="sim-panel-sub" id="v1-sub" style="font-size:9px;color:#4A4A44;margin-bottom:0">Routing options ranked by total sea freight cost per FEU &bull; origin to GCC entry port</div>
@@ -5453,7 +5453,7 @@ function gccSidebarNav(name) {
         </div>
 
         <!-- VIEW 2: End-to-End Landed Cost -->
-        <div class="sim-panel" style="background:#1a1713;border:1px solid #251f18;border-radius:6px;overflow:hidden;padding:0">
+        <div class="sim-panel" style="background:#111110;border:1px solid #1a2535;border-radius:6px;overflow:hidden;padding:0">
           <div style="padding:13px 16px 10px;border-bottom:1px solid #1A1A18">
             <div class="sim-panel-title" style="font-size:11px;font-weight:700;letter-spacing:.12em;color:#C9AE4E;margin-bottom:3px">&#9672; VIEW 2 &mdash; END-TO-END LANDED COST</div>
             <div class="sim-panel-sub" id="v2-sub" style="font-size:9px;color:#4A4A44;margin-bottom:0">Port of origin &rarr; final GCC city including sea + port + inland trucking</div>
@@ -5469,10 +5469,10 @@ function gccSidebarNav(name) {
       </div>
 
       <!-- ANNUAL IMPACT STRIP -->
-      <div id="annual-grid" style="display:grid;grid-template-columns:1fr 1.2fr 1fr 1fr;border:1px solid #251f18;border-radius:6px;overflow:hidden;margin-bottom:20px"></div>
+      <div id="annual-grid" style="display:grid;grid-template-columns:1fr 1.2fr 1fr 1fr;border:1px solid #1a2535;border-radius:6px;overflow:hidden;margin-bottom:20px"></div>
 
       <!-- VIEW 3: STRATEGIC IMPLICATIONS -->
-      <div class="sim-panel" style="background:#1a1713;border:1px solid #251f18;border-radius:6px;padding:16px 18px;margin-bottom:14px">
+      <div class="sim-panel" style="background:#111110;border:1px solid #1a2535;border-radius:6px;padding:16px 18px;margin-bottom:14px">
         <div class="sim-panel-title" style="font-size:11px;font-weight:700;letter-spacing:.14em;color:#C9AE4E;margin-bottom:4px">&#9651; VIEW 3 &mdash; STRATEGIC IMPLICATIONS</div>
         <div class="sim-panel-sub" id="v3-sub" style="font-size:10px;color:#4A4A44;margin-bottom:14px;line-height:1.5">What this scenario means for GCC logistics, ports, trucking demand and key operators</div>
         <div class="impl-grid" id="impl-grid" style="display:grid;grid-template-columns:1fr 1fr;gap:14px"></div>
@@ -5635,7 +5635,7 @@ function gccSidebarNav(name) {
   <!-- ── RISK LANDSCAPE 3D NETWORK ──────────────────────────────── -->
   <div id="wl-3d-section" style="margin:24px 28px 44px">
     <div style="font-size:11px;font-weight:700;letter-spacing:.12em;color:#4A4A44;margin-bottom:14px">&#9670; RISK LANDSCAPE &mdash; ALL SIGNALS</div>
-    <div style="border:1px solid #251f18;border-radius:6px;overflow:hidden;background:#07070a;position:relative;height:760px">
+    <div style="border:1px solid #1a2535;border-radius:6px;overflow:hidden;background:#07070a;position:relative;height:760px">
       <canvas id="wl3d-canvas" style="width:100%;height:760px;display:block;"></canvas>
       <!-- top-left caption -->
       <div style="position:absolute;top:24px;left:28px;pointer-events:none">
@@ -5645,7 +5645,7 @@ function gccSidebarNav(name) {
         <div style="font-size:10.5px;color:#6A6A62;margin-top:6px;max-width:320px;line-height:1.5;font-family:'JetBrains Mono',monospace">Each atom is a tracked signal &mdash; position = time to impact, sphere size = severity, atom color = risk perception, bonds = related-signal chains. Drag to orbit &middot; scroll to zoom.</div>
       </div>
       <!-- top-right legend -->
-      <div style="position:absolute;top:24px;right:28px;background:rgba(10,10,9,.72);border:1px solid #251f18;border-radius:6px;padding:14px 16px;pointer-events:none;backdrop-filter:blur(4px)">
+      <div style="position:absolute;top:24px;right:28px;background:rgba(10,10,9,.72);border:1px solid #1a2535;border-radius:6px;padding:14px 16px;pointer-events:none;backdrop-filter:blur(4px)">
         <div style="font-size:9px;font-weight:700;letter-spacing:.12em;color:#4A4A44;margin-bottom:8px;font-family:'JetBrains Mono',monospace">PERCEPTION (ATOM COLOR)</div>
         <div style="display:flex;flex-direction:column;gap:6px">
           <div style="display:flex;align-items:center;gap:6px"><span style="width:11px;height:11px;border-radius:50%;background:#C98A2E;display:inline-block"></span><span style="font-size:9.5px;color:#B8B7B0;font-family:'JetBrains Mono',monospace">To monitor</span></div>
@@ -5945,7 +5945,7 @@ window.addEventListener('load', function() {
   <div style="padding:0 28px 28px">
 
     <!-- ── KPI SUMMARY STRIP ─────────────────────────────────────────────── -->
-    <div style="display:flex;align-items:stretch;border:1px solid #251f18;border-radius:6px;overflow:hidden;background:#1a1713;margin-top:20px">
+    <div style="display:flex;align-items:stretch;border:1px solid #1a2535;border-radius:6px;overflow:hidden;background:#111110;margin-top:20px">
       <div style="flex:1;padding:18px 20px;border-right:1px solid #1A1A18;display:flex;flex-direction:column;gap:4px">
         <div style="font-size:9px;font-weight:700;letter-spacing:0.14em;color:#4A4A44;font-family:var(--f-mono)">GLOBAL SEABORNE CRUDE</div>
         <div style="font-size:26px;font-weight:700;letter-spacing:-0.02em;color:#F2F1ED;line-height:1;margin:4px 0">100 M</div>
@@ -5974,7 +5974,7 @@ window.addEventListener('load', function() {
     </div>
 
     <!-- ── TRADE ARCHITECTURE MAP ─────────────────────────────────────────── -->
-    <div style="border:1px solid #251f18;border-radius:6px;overflow:hidden;margin-top:20px">
+    <div style="border:1px solid #1a2535;border-radius:6px;overflow:hidden;margin-top:20px">
       <div id="tf-world-map"></div>
     </div>
 
@@ -5985,27 +5985,27 @@ window.addEventListener('load', function() {
         <div style="font-size:9px;color:#3A3A36;letter-spacing:0.06em;font-family:var(--f-mono)">Source: IEA Oil Market Report 2024 &middot; EIA &middot; Clarkson Research</div>
       </div>
       <div style="display:grid;grid-template-columns:repeat(5,1fr);gap:10px;margin-bottom:28px">
-        <div style="background:#1a1713;border:1px solid #251f18;border-radius:6px;padding:16px 14px">
+        <div style="background:#111110;border:1px solid #1a2535;border-radius:6px;padding:16px 14px">
           <div style="font-size:9px;font-weight:700;letter-spacing:0.12em;color:#4A4A44;margin-bottom:10px;font-family:var(--f-mono)">GLOBAL SEABORNE TRADE</div>
           <div style="font-size:20px;font-weight:700;color:#F2F1ED;letter-spacing:-0.01em;line-height:1">100 M bbl/day</div>
           <div style="font-size:9px;color:#5A5A52;margin-top:5px;line-height:1.4;font-family:var(--f-mono)">IEA Oil Market Report 2024</div>
         </div>
-        <div style="background:#1a1713;border:1px solid #251f18;border-radius:6px;padding:16px 14px">
+        <div style="background:#111110;border:1px solid #1a2535;border-radius:6px;padding:16px 14px">
           <div style="font-size:9px;font-weight:700;letter-spacing:0.12em;color:#4A4A44;margin-bottom:10px;font-family:var(--f-mono)">PRICE REFERENCE</div>
           <div style="font-size:20px;font-weight:700;color:#F2F1ED;letter-spacing:-0.01em;line-height:1">Brent spot</div>
           <div style="font-size:9px;color:#5A5A52;margin-top:5px;line-height:1.4;font-family:var(--f-mono)">$/bbl &middot; benchmark for crude trade flows</div>
         </div>
-        <div style="background:#1a1713;border:1px solid #251f18;border-radius:6px;padding:16px 14px">
+        <div style="background:#111110;border:1px solid #1a2535;border-radius:6px;padding:16px 14px">
           <div style="font-size:9px;font-weight:700;letter-spacing:0.12em;color:#4A4A44;margin-bottom:10px;font-family:var(--f-mono)">TYPICAL VESSEL</div>
           <div style="font-size:20px;font-weight:700;color:#F2F1ED;letter-spacing:-0.01em;line-height:1">VLCC / Suezmax</div>
           <div style="font-size:9px;color:#5A5A52;margin-top:5px;line-height:1.4;font-family:var(--f-mono)">200&ndash;320k DWT primary &middot; 120&ndash;200k secondary</div>
         </div>
-        <div style="background:#1a1713;border:1px solid #251f18;border-radius:6px;padding:16px 14px">
+        <div style="background:#111110;border:1px solid #1a2535;border-radius:6px;padding:16px 14px">
           <div style="font-size:9px;font-weight:700;letter-spacing:0.12em;color:#4A4A44;margin-bottom:10px;font-family:var(--f-mono)">AVG FLEET SPEED</div>
           <div style="font-size:20px;font-weight:700;color:#F2F1ED;letter-spacing:-0.01em;line-height:1">13 knots</div>
           <div style="font-size:9px;color:#5A5A52;margin-top:5px;line-height:1.4;font-family:var(--f-mono)">Avg laden/ballast average fleet speed</div>
         </div>
-        <div style="background:#1a1713;border:1px solid #251f18;border-radius:6px;padding:16px 14px">
+        <div style="background:#111110;border:1px solid #1a2535;border-radius:6px;padding:16px 14px">
           <div style="font-size:9px;font-weight:700;letter-spacing:0.12em;color:#4A4A44;margin-bottom:10px;font-family:var(--f-mono)">DEMAND ELASTICITY</div>
           <div style="font-size:20px;font-weight:700;color:#F2F1ED;letter-spacing:-0.01em;line-height:1">-0.05</div>
           <div style="font-size:9px;color:#5A5A52;margin-top:5px;line-height:1.4;font-family:var(--f-mono)">&epsilon;<sub>d</sub> &middot; Hamilton (2009) &middot; short-run oil price</div>
@@ -6017,7 +6017,7 @@ window.addEventListener('load', function() {
     <div style="margin-bottom:28px">
       <div style="font-size:11px;font-weight:700;letter-spacing:0.16em;color:#C9AE4E;margin-bottom:6px;font-family:var(--f-mono)">TRADE FLOW MATRIX <span style="font-weight:400;color:#4A4A44">&mdash; M bbl/day</span></div>
       <div style="font-size:9px;color:#3A3A36;letter-spacing:0.04em;margin-bottom:12px;font-family:var(--f-mono)">Major documented bilateral flows only &middot; rows may not sum to total export volumes &middot; Source IEA, EIA, Vortexa 2023</div>
-      <div id="tf-trade-matrix" style="background:#1a1713;border:1px solid #251f18;border-radius:6px;overflow:hidden;overflow-x:auto">
+      <div id="tf-trade-matrix" style="background:#111110;border:1px solid #1a2535;border-radius:6px;overflow:hidden;overflow-x:auto">
         <!-- Matrix populated by JS on init -->
       </div>
     </div>
@@ -6137,14 +6137,14 @@ window.addEventListener('load', function() {
   <!-- ════════════════════════════ SUPPLY CHAIN RESILIENCE ════════════════════════════ -->
   <div id="psr-modal-overlay" style="display:none;position:fixed;inset:0;z-index:9000;background:rgba(0,0,0,.93);overflow-y:auto;font-family:'JetBrains Mono',monospace">
     <!-- sticky close bar -->
-    <div style="position:sticky;top:0;z-index:9001;background:#0C0C0A;border-bottom:1px solid #251f18;padding:10px 28px;display:flex;align-items:center;justify-content:space-between">
+    <div style="position:sticky;top:0;z-index:9001;background:#0C0C0A;border-bottom:1px solid #1a2535;padding:10px 28px;display:flex;align-items:center;justify-content:space-between">
       <span style="font-size:9px;font-weight:700;letter-spacing:.16em;color:#C9AE4E">&#9670;&nbsp;&nbsp;SUPPLY CHAIN RESILIENCE ANALYSIS</span>
       <button onclick="psrToggleEmbedded()" style="font-size:9px;font-weight:700;letter-spacing:.12em;color:#7A7A72;background:none;border:1px solid #2A2A28;padding:6px 16px;border-radius:3px;cursor:pointer;font-family:inherit;transition:color .15s,border-color .15s" onmouseover="this.style.color='#D9D8D3';this.style.borderColor='#5A5A52'" onmouseout="this.style.color='#7A7A72';this.style.borderColor='#2A2A28'">&#10005;&nbsp;&nbsp;CLOSE</button>
     </div>
-  <div id="page-psr" style="background:#12100e;min-height:100vh">
+  <div id="page-psr" style="background:#0A0A0A;min-height:100vh">
 
     <!-- Top toolbar -->
-    <div id="psr-toolbar" style="background:#0C0C0A;border-bottom:1px solid #251f18;padding:12px 28px;display:flex;align-items:center;gap:16px;flex-wrap:wrap">
+    <div id="psr-toolbar" style="background:#0C0C0A;border-bottom:1px solid #1a2535;padding:12px 28px;display:flex;align-items:center;gap:16px;flex-wrap:wrap">
       <!-- Product search -->
       <div style="position:relative;flex:1;min-width:220px;max-width:360px">
         <input id="psr-search" type="text" placeholder="Search or browse all products…"
@@ -6178,7 +6178,7 @@ window.addEventListener('load', function() {
     </div>
 
     <!-- Sub-tabs -->
-    <div id="psr-tabs" style="background:#0F0F0D;border-bottom:1px solid #251f18;padding:0 28px;display:flex;gap:0">
+    <div id="psr-tabs" style="background:#0F0F0D;border-bottom:1px solid #1a2535;padding:0 28px;display:flex;gap:0">
       <button class="psr-stab psr-stab-active" id="psr-stab-baseline"  onclick="psrTab('baseline')">Baseline</button>
       <button class="psr-stab" id="psr-stab-scenarios" onclick="psrTab('scenarios')">Resilience Lab</button>
     </div>
@@ -6194,15 +6194,15 @@ window.addEventListener('load', function() {
 
 <style>
 .psr-dir-btn{background:none;border:none;color:#6A6A60;font-family:monospace;font-size:10px;padding:6px 12px;cursor:pointer;letter-spacing:.06em;transition:background .15s,color .15s}
-.psr-dir-btn:hover{background:#251f18;color:#C8C7C2}
-.psr-dir-active{background:#251f18!important;color:#C9AE4E!important}
+.psr-dir-btn:hover{background:#1a2535;color:#C8C7C2}
+.psr-dir-active{background:#1a2535!important;color:#C9AE4E!important}
 .psr-stab{background:none;border:none;border-bottom:2px solid transparent;color:#6A6A60;font-family:monospace;font-size:10px;letter-spacing:.1em;text-transform:uppercase;padding:12px 20px;cursor:pointer;transition:color .15s,border-color .15s}
 .psr-stab:hover{color:#C8C7C2}
 .psr-stab-active{color:#C9AE4E!important;border-bottom-color:#C9AE4E!important}
 .psr-panel{display:none;padding:24px 28px}
 .psr-panel-active{display:block}
 .psr-kpi-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:24px}
-.psr-kpi{background:#1a1713;border:1px solid #251f18;border-radius:6px;padding:18px 20px}
+.psr-kpi{background:#111110;border:1px solid #1a2535;border-radius:6px;padding:18px 20px}
 .psr-kpi-label{font-family:monospace;font-size:9px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:#4A4A44;margin-bottom:6px}
 .psr-kpi-value{font-family:monospace;font-size:30px;font-weight:700;color:#C8C7C2;line-height:1;letter-spacing:-0.02em}
 .psr-kpi-sub{font-family:monospace;font-size:9px;color:#5A5A52;margin-top:4px}
@@ -6214,27 +6214,27 @@ window.addEventListener('load', function() {
 .psr-flag-high{border-color:#E05252;color:#E05252;background:rgba(224,82,82,.08)}
 .psr-flag-med{border-color:#C98A2E;color:#C98A2E;background:rgba(201,138,46,.08)}
 .psr-flag-low{border-color:#5FA86A;color:#5FA86A;background:rgba(95,168,106,.08)}
-.psr-scenario-card{background:#1a1713;border:1px solid #251f18;border-radius:4px;padding:16px 18px;margin-bottom:10px;cursor:pointer;transition:border-color .15s}
+.psr-scenario-card{background:#111110;border:1px solid #1a2535;border-radius:4px;padding:16px 18px;margin-bottom:10px;cursor:pointer;transition:border-color .15s}
 .psr-scenario-card:hover{border-color:#2A2A26}
 .psr-scenario-card.active{border-color:#C9AE4E}
 .psr-scenario-title{font-family:monospace;font-size:11px;color:#C8C7C2;margin-bottom:4px}
 .psr-scenario-sub{font-family:monospace;font-size:9px;color:#5A5A52;letter-spacing:.06em}
 .psr-impact-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:16px}
-.psr-impact-cell{background:#0C0C0A;border:1px solid #251f18;border-radius:3px;padding:10px 12px}
+.psr-impact-cell{background:#0C0C0A;border:1px solid #1a2535;border-radius:3px;padding:10px 12px}
 .psr-impact-label{font-family:monospace;font-size:8px;letter-spacing:.1em;text-transform:uppercase;color:#5A5A52;margin-bottom:4px}
 .psr-impact-val{font-family:monospace;font-size:16px;font-weight:700}
-.psr-wl-row{background:#1a1713;border:1px solid #251f18;border-radius:4px;padding:12px 16px;margin-bottom:8px;display:flex;align-items:flex-start;gap:12px}
+.psr-wl-row{background:#111110;border:1px solid #1a2535;border-radius:4px;padding:12px 16px;margin-bottom:8px;display:flex;align-items:flex-start;gap:12px}
 .psr-wl-icon{width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:12px;flex-shrink:0;margin-top:1px}
 .psr-ac-item{padding:8px 12px;font-family:monospace;font-size:10px;color:#9A9A90;cursor:pointer;border-bottom:1px solid #1A1A18;display:flex;justify-content:space-between;gap:8px}
-.psr-ac-item:hover{background:#251f18;color:#C8C7C2}
+.psr-ac-item:hover{background:#1a2535;color:#C8C7C2}
 .psr-ac-item:last-child{border-bottom:none}
 .psr-ac-code{color:#5A5A52;font-size:9px}
 /* Simulation Builder */
-.psr-sim-block{background:#1a1713;border:1px solid #251f18;border-radius:6px;padding:18px;cursor:pointer;transition:border-color .15s,background .15s;user-select:none}
+.psr-sim-block{background:#111110;border:1px solid #1a2535;border-radius:6px;padding:18px;cursor:pointer;transition:border-color .15s,background .15s;user-select:none}
 .psr-sim-block:hover{border-color:#2A2A26}
 .psr-sim-block-active{border-color:#C9AE4E!important;background:#0F130A}
 .psr-sim-header{display:flex;align-items:center;gap:10px;padding:14px 16px}
-.psr-sim-params{padding:4px 16px 14px;border-top:1px solid #251f18}
+.psr-sim-params{padding:4px 16px 14px;border-top:1px solid #1a2535}
 .psr-sim-label{font-family:monospace;font-size:8px;letter-spacing:.1em;text-transform:uppercase;color:#5A5A52;margin-bottom:4px;margin-top:10px;display:block}
 .psr-sim-select,.psr-sim-input{width:100%;background:#0C0C0A;border:1px solid #2A2A26;border-radius:3px;color:#C8C7C2;font-family:monospace;font-size:10px;padding:6px 8px;outline:none;box-sizing:border-box}
 .psr-sim-select:focus,.psr-sim-input:focus{border-color:#C9AE4E66}
@@ -6244,7 +6244,7 @@ window.addEventListener('load', function() {
 .psr-sim-block-active-quota{border-color:#F59E0B!important;background:#130F0A}
 /* Simulation Results */
 .psr-sim-kpi-strip{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:20px}
-.psr-sim-kpi{background:#0C0C0A;border:1px solid #251f18;border-radius:4px;padding:12px 14px}
+.psr-sim-kpi{background:#0C0C0A;border:1px solid #1a2535;border-radius:4px;padding:12px 14px}
 .psr-sim-kpi-label{font-family:monospace;font-size:8px;letter-spacing:.1em;text-transform:uppercase;color:#5A5A52;margin-bottom:6px}
 .psr-sim-kpi-val{font-family:monospace;font-size:20px;font-weight:700;line-height:1}
 .psr-sim-kpi-sub{font-family:monospace;font-size:8px;color:#5A5A52;margin-top:4px}
@@ -8503,7 +8503,7 @@ function runSimulator() {
     var cards = dynCards;
     ig.innerHTML = cards.map(function(imp) {
       var catHtml = imp.cat ? '<div style="font-size:9px;font-weight:700;letter-spacing:.16em;color:#4A4A44;margin-bottom:8px">'+imp.cat+'</div>' : '';
-      return '<div style="background:#0D0D0B;border:1px solid #251f18;border-left:3px solid '+imp.color+';border-radius:0 6px 6px 0;padding:20px 18px">'+
+      return '<div style="background:#0D0D0B;border:1px solid #1a2535;border-left:3px solid '+imp.color+';border-radius:0 6px 6px 0;padding:20px 18px">'+
         catHtml+
         '<div style="font-size:20px;font-weight:700;color:'+imp.color+';letter-spacing:-.01em;margin-bottom:8px;line-height:1.2">'+imp.metric+'</div>'+
         '<div style="font-size:11px;font-weight:700;color:#D9D8D3;margin-bottom:8px">'+imp.title+'</div>'+
@@ -20323,7 +20323,7 @@ function initCvTicker() {
       Port of NEOM has no active commercial liner services operating at scale today. The port is under phased commissioning as part of the NEOM megaproject, and no verified spot-market data is available from Freightos, Xeneta, or Drewry for this lane.<br><br>
       We are actively working to calibrate freight estimates as carrier loops are announced and the port opens to commercial traffic. Rates will be published here once reliable data becomes available.
     </div>
-    <div style="font-size:8px;color:#3a4a5a;border-top:1px solid #251f18;padding-top:10px;line-height:1.7">
+    <div style="font-size:8px;color:#3a4a5a;border-top:1px solid #1a2535;padding-top:10px;line-height:1.7">
       <span style="color:#5a6878">What we know:</span><br>
       &bull;&nbsp; Location: Gulf of Aqaba, northwest Saudi Arabia (lat 28.2°N)<br>
       &bull;&nbsp; Routing: Red Sea / Suez — unaffected by Hormuz closure<br>
@@ -20771,14 +20771,14 @@ document.addEventListener('keydown', function(e) {
 .bt-tab-btn:hover{color:#8A8A7E}
 .bt-tab-btn.bt-on{color:#C9AE4E;border-bottom-color:#C9AE4E}
 .bt-ci{display:flex;align-items:center;gap:9px;padding:7px 14px;font-size:10px;font-family:var(--f-mono);cursor:pointer;color:#6A6A62;border-left:2px solid transparent;transition:all .1s;white-space:nowrap}
-.bt-ci:hover{background:#1a1713;color:#C8C7C2}
+.bt-ci:hover{background:#111110;color:#C8C7C2}
 .bt-ci.bt-sel{background:#0F0F0D;color:#C9AE4E;border-left-color:#C9AE4E}
 .bt-ci.bt-dim{opacity:.35;cursor:default}
 .bt-ci.bt-dim:hover{background:none;color:#6A6A62}
 </style>
 
 <div id="bt-overlay" style="display:none;position:fixed;inset:0;z-index:99000;background:#090909;flex-direction:column">
-  <div style="background:#0D0D0B;border-bottom:1px solid #251f18;padding:0 24px;height:52px;display:flex;align-items:center;justify-content:space-between;flex-shrink:0">
+  <div style="background:#0D0D0B;border-bottom:1px solid #1a2535;padding:0 24px;height:52px;display:flex;align-items:center;justify-content:space-between;flex-shrink:0">
     <div style="display:flex;align-items:center;gap:18px">
       <span style="font-size:9px;font-weight:700;letter-spacing:.2em;color:#C9AE4E;font-family:var(--f-mono)">BILATERAL TRADE EXPLORER</span>
       <span id="bt-ctag" style="font-size:9px;color:#4A4A44;font-family:var(--f-mono)"></span>
@@ -20792,12 +20792,12 @@ document.addEventListener('keydown', function(e) {
     <div style="width:226px;flex-shrink:0;background:#0A0A09;border-right:1px solid #1A1A18;display:flex;flex-direction:column;overflow:hidden">
       <div style="padding:10px 12px;border-bottom:1px solid #141412;flex-shrink:0">
         <input id="bt-srch" oninput="btFilter(this.value)" placeholder="Search country…" autocomplete="off"
-          style="width:100%;box-sizing:border-box;background:#1a1713;border:1px solid #222220;color:#C8C7C2;font-size:10px;padding:7px 10px;border-radius:3px;font-family:var(--f-mono);outline:none">
+          style="width:100%;box-sizing:border-box;background:#111110;border:1px solid #222220;color:#C8C7C2;font-size:10px;padding:7px 10px;border-radius:3px;font-family:var(--f-mono);outline:none">
       </div>
       <div id="bt-clist" style="flex:1;overflow-y:auto;padding:6px 0"></div>
     </div>
     <div style="flex:1;overflow:hidden;display:flex;flex-direction:column">
-      <div style="background:#0D0D0B;border-bottom:1px solid #251f18;padding:0 28px;display:flex;flex-shrink:0">
+      <div style="background:#0D0D0B;border-bottom:1px solid #1a2535;padding:0 28px;display:flex;flex-shrink:0">
         <button id="bt-tb-ov" class="bt-tab-btn bt-on" onclick="btTab('ov')">OVERVIEW</button>
         <button id="bt-tb-pr" class="bt-tab-btn" onclick="btTab('pr')">TOP PRODUCTS</button>
         <button id="bt-tb-mx" class="bt-tab-btn" onclick="btTab('mx')">COMPLEXITY MATRIX</button>
@@ -21143,9 +21143,9 @@ function bRenderOv(d){
     {l:'IMPORTS',       v:bFmt(t.imports),  c:'#d97706', sub:(t.imports/t.total*100).toFixed(1)+'% of total trade'},
     {l:'TRADE BALANCE', v:(t.balance>0?'+':'')+bFmt(t.balance), c:'#4A9E6A', sub:'KSA net surplus'}
   ];
-  h+='<div style="display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:#181816;border:1px solid #251f18;border-radius:6px;overflow:hidden;margin-bottom:36px">';
+  h+='<div style="display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:#181816;border:1px solid #1a2535;border-radius:6px;overflow:hidden;margin-bottom:36px">';
   kpis.forEach(function(k){
-    h+='<div style="background:#1a1713;padding:22px 22px 18px">'
+    h+='<div style="background:#111110;padding:22px 22px 18px">'
       +'<div style="font-size:8px;font-weight:700;letter-spacing:.18em;color:#333331;font-family:var(--f-mono);margin-bottom:10px">'+k.l+'</div>'
       +'<div style="font-size:32px;font-weight:700;color:'+k.c+';letter-spacing:-.03em;line-height:1;font-family:var(--f-mono)">'+k.v+'</div>'
       +'<div style="font-size:8px;color:#282826;font-family:var(--f-mono);margin-top:8px">'+k.sub+'</div>'
@@ -21713,7 +21713,7 @@ window.psrShowAll = function(){
   var html = '';
   sectorOrder.forEach(function(sec){
     if(!sectors[sec]) return;
-    html += '<div style="padding:4px 12px 3px;font-family:monospace;font-size:8px;letter-spacing:.1em;text-transform:uppercase;color:#4A4A44;background:#1a1713;border-bottom:1px solid #251f18;position:sticky;top:0;z-index:1">'+sec+'</div>';
+    html += '<div style="padding:4px 12px 3px;font-family:monospace;font-size:8px;letter-spacing:.1em;text-transform:uppercase;color:#4A4A44;background:#111110;border-bottom:1px solid #1a2535;position:sticky;top:0;z-index:1">'+sec+'</div>';
     html += sectors[sec].map(function(p){
       var active = p.name===currentName;
       return '<div class="psr-ac-item" onclick="psrSelect(\''+p.hs+'\',\''+p.name+'\')" style="'+(active?'color:#C9AE4E;background:#161614;':'')+'">'
@@ -21881,7 +21881,7 @@ function psrRenderBaseline(){
     + kpiHtml
     +'<div class="psr-section-title">&#8212;&nbsp;'+dirLabel+'</div>'
     +'<div style="font-family:monospace;font-size:9px;color:#3A3A36;margin-bottom:8px">Volume = share% × total · demo</div>'
-    +'<div style="background:#1a1713;border:1px solid #251f18;border-radius:6px;overflow:hidden;margin-bottom:28px">'
+    +'<div style="background:#111110;border:1px solid #1a2535;border-radius:6px;overflow:hidden;margin-bottom:28px">'
     + tableHeader + combinedRows
     +'</div>';
 
@@ -21889,9 +21889,9 @@ function psrRenderBaseline(){
   var mapWrap = document.createElement('div');
   mapWrap.style.cssText = 'width:100%';
   mapWrap.innerHTML = '<div class="psr-section-title" style="margin-bottom:12px">&#8212;&nbsp;TRADE FLOW MAP</div>'
-    +'<div style="border:1px solid #251f18;border-radius:6px;overflow:hidden">'
+    +'<div style="border:1px solid #1a2535;border-radius:6px;overflow:hidden">'
     +'<div id="psr-leaflet-map" style="height:440px"></div>'
-    +'<div style="background:#0C0C0A;border-top:1px solid #251f18;padding:8px 16px;display:flex;gap:20px;align-items:center;flex-wrap:wrap">'
+    +'<div style="background:#0C0C0A;border-top:1px solid #1a2535;padding:8px 16px;display:flex;gap:20px;align-items:center;flex-wrap:wrap">'
     +(showImport?'<span style="font-family:monospace;font-size:9px;color:#C2A23E">&#9644; Import route</span>':'')
     +(showExport?'<span style="font-family:monospace;font-size:9px;color:#5aa3f5">&#9644; Export route</span>':'')
     +'<span style="font-family:monospace;font-size:9px;color:#E05252">&#9711; &ge;50% exposure</span>'
@@ -22033,7 +22033,7 @@ function psrRenderFlowMap() {
   if (!PSR_MAP_BOX_READY) {
     el.innerHTML =
       '<div id="psr-leaflet-map" style="height:500px;border-radius:4px 4px 0 0"></div>'
-      +'<div style="background:#0C0C0A;border:1px solid #251f18;border-top:none;border-radius:0 0 4px 4px;padding:8px 16px;display:flex;gap:20px;align-items:center;flex-wrap:wrap">'
+      +'<div style="background:#0C0C0A;border:1px solid #1a2535;border-top:none;border-radius:0 0 4px 4px;padding:8px 16px;display:flex;gap:20px;align-items:center;flex-wrap:wrap">'
       +'<span style="font-family:monospace;font-size:9px;color:#d97706">&#9644; Import route</span>'
       +'<span style="font-family:monospace;font-size:9px;color:#5aa3f5">&#9644; Export route</span>'
       +'<span style="font-family:monospace;font-size:9px;color:#c02030">&#9711; Chokepoint (&ge;50% exposure)</span>'
@@ -22458,7 +22458,7 @@ function psrBuildTrqParams(){
     +'<select class="psr-sim-select" id="psr-trq-jur" onchange="psrTrqOnJurisdiction(this.value)">'+jurSel+'</select>'
     +'<label class="psr-sim-label" style="margin-top:8px">Quota Record</label>'
     +'<select class="psr-sim-select" id="psr-trq-rec" onchange="psrTrqOnRecord(this.value)">'+recSel+'</select>'
-    +'<div style="background:#1a1713;border:1px solid #251f18;border-radius:3px;padding:8px;margin:8px 0;font-family:monospace;font-size:9px">'
+    +'<div style="background:#111110;border:1px solid #1a2535;border-radius:3px;padding:8px;margin:8px 0;font-family:monospace;font-size:9px">'
     +'<div style="display:flex;justify-content:space-between;margin-bottom:3px">'
     +'<span style="color:'+sColor+'">&bull; '+rec.statusNote+'</span>'
     +'<span style="color:#4A4A44">HS '+rec.hsCode+'</span></div>'
@@ -22466,14 +22466,14 @@ function psrBuildTrqParams(){
     +'<div style="color:#4A4A44;margin-top:2px">'+rec.quotaVolumeTonnes.toLocaleString()+' t total &nbsp;· '+rec.legalBasis+'</div>'
     +'</div>'
     +'<label class="psr-sim-label" style="margin-top:10px">Simulation Parameters <span style="color:#4A4A44;font-weight:400;text-transform:none;letter-spacing:0;font-size:8px">(edit then Run)</span></label>'
-    +'<div style="max-height:260px;overflow-y:auto;background:#0D0D0B;border:1px solid #251f18;border-radius:5px;padding:8px;scrollbar-width:thin;scrollbar-color:#2A2A26 transparent">'
+    +'<div style="max-height:260px;overflow-y:auto;background:#0D0D0B;border:1px solid #1a2535;border-radius:5px;padding:8px;scrollbar-width:thin;scrollbar-color:#2A2A26 transparent">'
     +'<div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-bottom:8px">'
     +'<div><div style="font-family:monospace;font-size:8px;letter-spacing:.05em;text-transform:uppercase;color:#5A5A52;margin-bottom:3px">Unit price ($/t)</div>'
     +'<input type="number" id="psr-trq-up" style="width:100%;background:#141412;border:1px solid #2A2A26;border-radius:2px;color:#C8C7C2;font-family:monospace;font-size:10px;padding:4px 6px;outline:none;box-sizing:border-box" value="'+up+'" oninput="psrTrqOnInput(\'up\',\'all\',this)"></div>'
     +'<div><div style="font-family:monospace;font-size:8px;letter-spacing:.05em;text-transform:uppercase;color:#5A5A52;margin-bottom:3px">Elasticity η (KNO)</div>'
     +'<input type="number" id="psr-trq-eta" step="0.01" style="width:100%;background:#141412;border:1px solid #2A2A26;border-radius:2px;color:#C8C7C2;font-family:monospace;font-size:10px;padding:4px 6px;outline:none;box-sizing:border-box" value="'+eta+'" oninput="psrTrqOnInput(\'eta\',\'all\',this)"></div>'
     +'</div>'
-    +'<div style="font-family:monospace;font-size:8px;color:#4A4A44;padding:4px 0 6px;border-bottom:1px solid #251f18">OOQ penalty (DB): <span style="color:#F59E0B">'+rec.outQuotaDisplay+'</span> &nbsp;·&nbsp; σ = 1.5 (WITS)</div>'
+    +'<div style="font-family:monospace;font-size:8px;color:#4A4A44;padding:4px 0 6px;border-bottom:1px solid #1a2535">OOQ penalty (DB): <span style="color:#F59E0B">'+rec.outQuotaDisplay+'</span> &nbsp;·&nbsp; σ = 1.5 (WITS)</div>'
     +'<div style="display:grid;grid-template-columns:1fr 82px 82px;gap:4px;align-items:center;padding:5px 0 3px;border-bottom:1px solid #2A2A26">'
     +'<span style="font-family:monospace;font-size:7px;color:#4A4A44;text-transform:uppercase;letter-spacing:.05em">Exporter</span>'
     +'<span style="font-family:monospace;font-size:7px;color:#F59E0B;text-transform:uppercase;letter-spacing:.05em">Cap (t)</span>'
@@ -22575,7 +22575,7 @@ function psrBuildTrqResults(calc){
   var utilBar='<div class="psr-sim-kpi" style="margin-bottom:20px">'
     +'<div class="psr-sim-kpi-label">Total volume vs. quota ceiling</div>'
     +'<div style="font-family:monospace;font-size:10px;color:#C8C7C2;margin:6px 0 8px">'+Math.round(calc.totalVol1).toLocaleString()+' t of '+totalCap.toLocaleString()+' t ceiling</div>'
-    +'<div style="height:12px;background:#1a1713;border-radius:6px;overflow:hidden">'
+    +'<div style="height:12px;background:#111110;border-radius:6px;overflow:hidden">'
     +'<div style="height:100%;width:'+utilW+'%;background:'+utilCol+';border-radius:6px;transition:width .3s"></div></div>'
     +'<div style="font-family:monospace;font-size:9px;color:'+utilCol+';margin-top:4px">'+utilPct.toFixed(1)+'% of total quota utilised</div>'
     +'</div>';
@@ -22595,21 +22595,21 @@ function psrBuildTrqResults(calc){
       +'<span style="color:'+col+';font-weight:700">'+(pct>0.05?'+':'')+pct.toFixed(1)+'%</span></div>'
       +'<div style="display:flex;align-items:center;gap:8px;margin-bottom:4px">'
       +'<span style="font-family:monospace;font-size:8px;color:#4A4A44;width:52px;flex-shrink:0">BASELINE</span>'
-      +'<div style="flex:1;position:relative;height:20px;background:#1a1713;border-radius:3px;overflow:hidden">'
+      +'<div style="flex:1;position:relative;height:20px;background:#111110;border-radius:3px;overflow:hidden">'
       +'<div style="position:absolute;top:0;left:0;height:100%;width:'+bW+'%;background:#3D3D35;border-radius:3px"></div>'
       +(capW!==null?'<div style="position:absolute;top:0;left:0;height:100%;width:'+capW+'%;border-right:2px dashed #F59E0B66;pointer-events:none"></div>':'')
       +'</div>'
       +'<span style="font-family:monospace;font-size:9px;color:#6A6A62;width:80px;text-align:right;flex-shrink:0">'+fmtSmartUSD(r.m0)+'</span></div>'
       +'<div style="display:flex;align-items:center;gap:8px">'
       +'<span style="font-family:monospace;font-size:8px;color:'+col+';width:52px;flex-shrink:0">NEW</span>'
-      +'<div style="flex:1;position:relative;height:20px;background:#1a1713;border-radius:3px;overflow:hidden">'
+      +'<div style="flex:1;position:relative;height:20px;background:#111110;border-radius:3px;overflow:hidden">'
       +'<div style="position:absolute;top:0;left:0;height:100%;width:'+nW+'%;background:'+col+';border-radius:3px"></div>'
       +'</div>'
       +'<span style="font-family:monospace;font-size:9px;color:'+col+';font-weight:700;width:80px;text-align:right;flex-shrink:0">'+fmtSmartUSD(r.m1)+'</span></div>'
       +(r.cap!==null?'<div style="font-family:monospace;font-size:8px;color:#4A4A44;margin-top:3px">Cap: '+r.cap.toLocaleString()+' t &nbsp;· New vol: '+Math.round(r.vol1).toLocaleString()+' t'+(r.exceedsQuota?' &rarr; '+Math.round(r.vol1-r.cap).toLocaleString()+' t over cap':'')+'</div>':'')
       +'</div>';
   }).join('');
-  var note='<div style="margin-top:20px;border-top:1px solid #251f18;padding-top:16px;font-family:monospace;font-size:9px;color:#4A4A44;line-height:1.7">'
+  var note='<div style="margin-top:20px;border-top:1px solid #1a2535;padding-top:16px;font-family:monospace;font-size:9px;color:#4A4A44;line-height:1.7">'
     +'<span style="color:#5A5A52">Method:</span> Iterative quota-blended WITS-SMART PE. Each iteration: blended rateᵢ = in-quota rate + (over-cap fractionᵢ &times; OOQ penalty); SMART pass with &eta;='+calc.eta.toFixed(4)+', &sigma;=1.5. Repeat until max|&Delta;rate|&lt;0.001pp. '+convBadge+'<br>'
     +'<span style="color:#5A5A52">Validation:</span> Non-binding (cap&rarr;&infin;): all rates = in-quota, dP = 0, trade unchanged &#10003;. Full-binding (all caps = 0): uniform OOQ rate, volumes fall by SMART formula &#10003;.<br>'
     +'<span style="color:#5A5A52">Baseline M₀:</span> Reference estimates &mdash; '+calc.rec.legalBasis+'. Partial verification; see data-gap warnings in card.<br>'
@@ -22620,7 +22620,7 @@ function psrBuildTrqResults(calc){
     +'<div style="font-family:monospace;font-size:11px;color:'+ACC+';margin-bottom:14px">'+calc.rec.product+' &middot; '+calc.rec.jurisdictionName+' &middot; '+calc.rec.legalBasis+'</div>'
     +kpis+utilBar
     +'<div class="psr-section-title">Per-Exporter Import Impact</div>'
-    +'<div style="background:#0C0C0A;border:1px solid #251f18;border-radius:4px;padding:14px;margin-bottom:8px">'
+    +'<div style="background:#0C0C0A;border:1px solid #1a2535;border-radius:4px;padding:14px;margin-bottom:8px">'
     +'<div style="font-family:monospace;font-size:8px;color:#4A4A44;margin-bottom:8px">Dashed amber line = quota cap (where set). Amber badge = cap exceeded. <span style="color:#5A5A52">M₀ baseline = trade at in-quota rate with no cap binding.</span></div>'
     +bars+'</div>'+note+'</div>';
 }
@@ -22828,7 +22828,7 @@ function psrBuildSimBuilder(flow){
   var _baselinePct = (_spt.t0*100).toFixed(1);
   var tariffParams =
     '<label class="psr-sim-label">Product</label>'
-    +'<div style="font-family:monospace;font-size:11px;color:#C9AE4E;background:#1a1713;border:1px solid #2A2A26;border-radius:3px;padding:7px 10px;margin-bottom:10px">'
+    +'<div style="font-family:monospace;font-size:11px;color:#C9AE4E;background:#111110;border:1px solid #2A2A26;border-radius:3px;padding:7px 10px;margin-bottom:10px">'
     +(flow ? flow.product+'&thinsp;&middot;&thinsp;HS&thinsp;'+flow.hs : '—')
     +(!_matchedSP ? '<br><span style="font-size:8px;color:#5A5A52">Tariff model: nearest match '+_sp.name+' (HS '+_sp.code+')</span>' : '')
     +'</div>'
@@ -22860,7 +22860,7 @@ function psrBuildSimBuilder(flow){
   var _cs=psrClimateCurrentSector();
   var climateParams=
     '<label class="psr-sim-label">Product</label>'
-    +'<div style="font-family:monospace;font-size:11px;color:#C9AE4E;background:#1a1713;border:1px solid #2A2A26;border-radius:3px;padding:7px 10px;margin-bottom:10px">'
+    +'<div style="font-family:monospace;font-size:11px;color:#C9AE4E;background:#111110;border:1px solid #2A2A26;border-radius:3px;padding:7px 10px;margin-bottom:10px">'
     +(flow ? flow.product+'&thinsp;&middot;&thinsp;HS&thinsp;'+flow.hs : '—')
     +'</div>'
     +'<label class="psr-sim-label">CBAM-Covered Sector <span style="text-transform:none;letter-spacing:0;color:#3A3A34">&mdash; adjust if needed</span></label>'
@@ -22870,7 +22870,7 @@ function psrBuildSimBuilder(flow){
     +'<label class="psr-sim-label" style="margin-top:12px">Baseline CBAM Exposure <span style="text-transform:none;letter-spacing:0;color:#3A3A34">(read-only &middot; EU live Jan 2026)</span></label>'
     +psrClimateBaselineHTML(_cs)
     +'<label class="psr-sim-label" style="margin-top:12px">Policy Stack <span style="text-transform:none;letter-spacing:0;color:#3A3A34">&mdash; stack policies, then Run &nbsp;&#8595; scroll for more</span></label>'
-    +'<div style="max-height:240px;overflow-y:auto;background:#0D0D0B;border:1px solid #251f18;border-radius:5px;padding:4px 8px 8px;scrollbar-width:thin;scrollbar-color:#2A2A26 transparent">'
+    +'<div style="max-height:240px;overflow-y:auto;background:#0D0D0B;border:1px solid #1a2535;border-radius:5px;padding:4px 8px 8px;scrollbar-width:thin;scrollbar-color:#2A2A26 transparent">'
     +psrClimatePolicyStackHTML(_cs)
     +'</div>';
 
@@ -22958,7 +22958,7 @@ function psrBuildSimResults(flow, res){
     +'</div>'
     +'<div>'
     +'<div class="psr-section-title">Price &amp; Cost Impact</div>'
-    +'<div style="background:#0C0C0A;border:1px solid #251f18;border-radius:4px;padding:14px;margin-bottom:12px">'
+    +'<div style="background:#0C0C0A;border:1px solid #1a2535;border-radius:4px;padding:14px;margin-bottom:12px">'
     +'<div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">'
     +'<div><div class="psr-impact-label">Unit Cost Premium</div>'
     +'<div style="font-family:monospace;font-size:16px;color:#E05252;font-weight:700;margin-top:4px">+'+res.costPremiumLow+'–'+res.costPremiumHigh+'%</div>'
@@ -22966,7 +22966,7 @@ function psrBuildSimResults(flow, res){
     +costBlock
     +'</div></div>'
     +'<div class="psr-section-title" style="margin-top:16px">Route &amp; Access Assessment</div>'
-    +'<div style="background:#1a1713;border-left:2px solid '+typeColor+';padding:10px 14px;border-radius:0 3px 3px 0;font-family:monospace;font-size:10px;color:#9A9A90;line-height:1.6;margin-bottom:14px">'+res.routeNote+'</div>'
+    +'<div style="background:#111110;border-left:2px solid '+typeColor+';padding:10px 14px;border-radius:0 3px 3px 0;font-family:monospace;font-size:10px;color:#9A9A90;line-height:1.6;margin-bottom:14px">'+res.routeNote+'</div>'
     +'<div class="psr-section-title">Recommended Procurement Actions</div>'
     +(res.procurement||[]).map(function(a,i){
       return '<div style="display:flex;gap:10px;padding:6px 0;border-bottom:1px solid #141412;font-family:monospace;font-size:9px;color:#9A9A90">'
@@ -23073,14 +23073,14 @@ function psrBuildSmartResults(calc){
       +'</div>'
       +'<div style="display:flex;align-items:center;gap:8px;margin-bottom:4px">'
       +'<span style="font-family:monospace;font-size:8px;color:#4A4A44;width:52px;flex-shrink:0">BASELINE</span>'
-      +'<div style="flex:1;position:relative;height:20px;background:#1a1713;border-radius:3px;overflow:hidden">'
+      +'<div style="flex:1;position:relative;height:20px;background:#111110;border-radius:3px;overflow:hidden">'
       +'<div style="position:absolute;top:0;left:0;height:100%;width:'+baseW+'%;background:#3D3D35;border-radius:3px"></div>'
       +'</div>'
       +'<span style="font-family:monospace;font-size:9px;color:#6A6A62;width:80px;text-align:right;flex-shrink:0">'+fmtSmartUSD(r.m0)+'</span>'
       +'</div>'
       +'<div style="display:flex;align-items:center;gap:8px">'
       +'<span style="font-family:monospace;font-size:8px;color:'+chgCol+';width:52px;flex-shrink:0">NEW</span>'
-      +'<div style="flex:1;position:relative;height:20px;background:#1a1713;border-radius:3px;overflow:hidden">'
+      +'<div style="flex:1;position:relative;height:20px;background:#111110;border-radius:3px;overflow:hidden">'
       +'<div style="position:absolute;top:0;left:0;height:100%;width:'+newW+'%;background:'+chgCol+';border-radius:3px"></div>'
       +'</div>'
       +'<span style="font-family:monospace;font-size:9px;color:'+chgCol+';font-weight:700;width:80px;text-align:right;flex-shrink:0">'+fmtSmartUSD(r.newM)+'</span>'
@@ -23088,7 +23088,7 @@ function psrBuildSmartResults(calc){
       +'</div>';
   }).join('');
 
-  var note='<div style="margin-top:20px;border-top:1px solid #251f18;padding-top:16px;font-family:monospace;font-size:9px;color:#4A4A44;line-height:1.7">'
+  var note='<div style="margin-top:20px;border-top:1px solid #1a2535;padding-top:16px;font-family:monospace;font-size:9px;color:#4A4A44;line-height:1.7">'
     +'<span style="color:#5A5A52">Method:</span> WITS-SMART partial equilibrium (trade creation from import-share-weighted avg tariff change × product elasticity; diversion from each partner\'s price change relative to that average × substitution elasticity '+PSR_SMART_SIGMA+'). Small-country assumption: world prices fixed.<br>'
     +'<span style="color:#5A5A52">Elasticities:</span> Kee, Nicita &amp; Olarreaga (2008), World Bank — HS4-aggregated for Saudi Arabia, winsorized to [−5, −0.2]. η='+calc.eta.toFixed(4)+' for this product.<br>'
     +'<span style="color:#5A5A52">Scope:</span> Saudi Arabia as importer · China / India / Japan · single-country model, retaliation loop not yet included · not yet validated against WITS desktop SMART tool.<br>'
@@ -23156,13 +23156,13 @@ function psrClimateActiveSummary(){
   return parts.length?parts.join(' + '):'No policies active (baseline, free trade)';
 }
 function psrClimateBaselineHTML(sector){
-  var h='<div style="background:#1a1713;border:1px solid #251f18;border-radius:5px;padding:12px;margin-top:8px">';
+  var h='<div style="background:#111110;border:1px solid #1a2535;border-radius:5px;padding:12px;margin-top:8px">';
   h+='<div style="font-family:monospace;font-size:9px;color:#4A4A44;margin-bottom:6px">Today\'s CBAM-only rate per exporter &mdash; EU live since Jan 2026</div>';
   h+='<div style="font-family:monospace;font-size:9px;color:#3A3A34;margin-bottom:7px">Certificate price: €'+CLIMATE_CBAM_PRICE.toFixed(2)+'/tCO₂e</div>';
   sector.exporters.forEach(function(e){
     var rate=psrClimateCbamRate(e,CLIMATE_CBAM_PRICE);
     var ksa=e.id==='ksa';
-    h+='<div style="display:flex;justify-content:space-between;font-family:monospace;font-size:9px;padding:3px 0;'+(ksa?'border-top:1px solid #251f18;margin-top:3px;':'')+'">'
+    h+='<div style="display:flex;justify-content:space-between;font-family:monospace;font-size:9px;padding:3px 0;'+(ksa?'border-top:1px solid #1a2535;margin-top:3px;':'')+'">'
       +'<span style="color:'+(ksa?'#5BB98C':'#888880')+'">'+(ksa?'★ ':'')+e.name+' — '+e.intensity.toFixed(2)+' tCO₂e/t</span>'
       +'<span style="color:'+(ksa?'#5BB98C':'#C8C7C2')+';font-weight:600">'+(rate*100).toFixed(1)+'%</span></div>';
   });
@@ -23176,7 +23176,7 @@ function psrClimatePolicyStackHTML(sector){
     return '<div style="width:14px;height:14px;border-radius:3px;border:1.5px solid '+(on?'#5BB98C':'#4A4A44')+';background:'+(on?'#5BB98C':'transparent')+';flex-shrink:0;display:flex;align-items:center;justify-content:center">'+(on?'<span style="font-size:9px;color:#0A140F;font-weight:700">✓</span>':'')+'</div>';
   }
   function block(on,clickFn,title,desc,params){
-    return '<div style="background:#1a1713;border:1px solid '+(on?'#356B52':'#251f18')+';border-radius:5px;padding:12px;margin-top:8px">'
+    return '<div style="background:#111110;border:1px solid '+(on?'#356B52':'#1a2535')+';border-radius:5px;padding:12px;margin-top:8px">'
       +'<div style="display:flex;align-items:center;gap:8px;cursor:pointer" onclick="'+clickFn+'">'+chkBox(on)+'<span style="font-family:monospace;font-size:11px;font-weight:600;color:#C8C7C2">'+title+'</span></div>'
       +'<div style="font-family:monospace;font-size:9px;color:#5A5A52;margin:4px 0 0 22px">'+desc+'</div>'
       +(on?params:'')
@@ -23194,7 +23194,7 @@ function psrClimatePolicyStackHTML(sector){
       +'</div>';
     // sub-policy
     var subOn=pol.cbam.sub.enabled;
-    cbamParams+='<div style="margin:12px 0 0 22px;padding-top:10px;border-top:1px solid #251f18">'
+    cbamParams+='<div style="margin:12px 0 0 22px;padding-top:10px;border-top:1px solid #1a2535">'
       +'<div style="display:flex;align-items:center;gap:8px;cursor:pointer" onclick="psrClimateToggleSubPolicy(\'cbam\')">'+chkBox(subOn)+'<span style="font-family:monospace;font-size:10px;font-weight:600;color:#C8C7C2">Credit: Saudi domestic carbon price</span></div>'
       +'<div style="font-family:monospace;font-size:9px;color:#5A5A52;margin:3px 0 0 22px">Domestic carbon price paid at origin is deducted from Saudi Arabia\'s CBAM liability.</div>';
     if(subOn){
@@ -23311,18 +23311,18 @@ function psrBuildClimateResults(calc){
       +'<span style="color:'+col+';font-weight:700">'+(growing?'+':'')+pct.toFixed(1)+'%</span></div>'
       +'<div style="display:flex;align-items:center;gap:8px;margin-bottom:4px">'
       +'<span style="font-family:monospace;font-size:8px;color:#4A4A44;width:52px;flex-shrink:0">BASELINE</span>'
-      +'<div style="flex:1;position:relative;height:20px;background:#1a1713;border-radius:3px;overflow:hidden">'
+      +'<div style="flex:1;position:relative;height:20px;background:#111110;border-radius:3px;overflow:hidden">'
       +'<div style="position:absolute;top:0;left:0;height:100%;background:#3D3D35;border-radius:3px;width:'+bW+'%"></div></div>'
       +'<span style="font-family:monospace;font-size:9px;color:#6A6A62;width:80px;text-align:right;flex-shrink:0">'+fmtClimateUSD(r.m0)+'</span></div>'
       +'<div style="display:flex;align-items:center;gap:8px">'
       +'<span style="font-family:monospace;font-size:8px;color:'+col+';width:52px;flex-shrink:0">NEW</span>'
-      +'<div style="flex:1;position:relative;height:20px;background:#1a1713;border-radius:3px;overflow:hidden">'
+      +'<div style="flex:1;position:relative;height:20px;background:#111110;border-radius:3px;overflow:hidden">'
       +'<div style="position:absolute;top:0;left:0;height:100%;background:'+col+';border-radius:3px;width:'+nW+'%"></div></div>'
       +'<span style="font-family:monospace;font-size:9px;color:'+col+';font-weight:700;width:80px;text-align:right;flex-shrink:0">'+fmtClimateUSD(r.newM)+'</span></div></div>';
   }).join('');
 
   var sec=calc.sector;
-  var note='<div style="margin-top:20px;border-top:1px solid #251f18;padding-top:16px;font-family:monospace;font-size:9px;color:#4A4A44;line-height:1.7">'
+  var note='<div style="margin-top:20px;border-top:1px solid #1a2535;padding-top:16px;font-family:monospace;font-size:9px;color:#4A4A44;line-height:1.7">'
     +'<span style="color:#5A5A52">Method:</span> each active policy contributes an ad-valorem rate per exporter; combined rate runs through the WITS-SMART engine (trade creation from import-share-weighted avg rate × η='+sec.elasticity.toFixed(4)+'; diversion from each exporter\'s rate relative to that avg × σ=1.5). Baseline = today\'s CBAM-only rate.<br>'
     +'<span style="color:#5A5A52">Elasticities:</span> Kee, Nicita &amp; Olarreaga (2008), World Bank &mdash; EU5 median, winsorized to [&minus;5, &minus;0.2], n='+sec.elasticity_n+(sec.elasticity_n===0?' (fallback — no direct KNO coverage)':'')+'. '
     +'<span style="color:#5A5A52">Placeholder:</span> sector trade values, unit prices, emission intensities (illustrative). UK CBAM (Jan 2027), free-allocation phase-out, and behavioral decarbonization response not yet modeled.'
@@ -23333,7 +23333,7 @@ function psrBuildClimateResults(calc){
     +'<div style="font-family:monospace;font-size:10px;color:'+ACC+';margin-bottom:14px">Active policies: '+psrClimateActiveSummary()+'</div>'
     +kpis
     +'<div class="psr-section-title">Export Flow Impact &mdash; Saudi Arabia vs. Competitors</div>'
-    +'<div style="background:#0C0C0A;border:1px solid #251f18;border-radius:4px;padding:14px;margin-bottom:8px">'
+    +'<div style="background:#0C0C0A;border:1px solid #1a2535;border-radius:4px;padding:14px;margin-bottom:8px">'
     +bars+'</div>'
     +note+'</div>';
 }
@@ -23393,32 +23393,32 @@ function psrRenderScenarios(){
 
 // ── CORRIDOR DISRUPTION SIMULATOR — HTML BUILDER ──────────────────────────────
 function psrBuildCorridorSimulator() {
-  return '<div id="scr-root" style="margin-top:28px;border-top:1px solid #251f18;padding-top:24px">'
+  return '<div id="scr-root" style="margin-top:28px;border-top:1px solid #1a2535;padding-top:24px">'
     // Header + toggle
     +'<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:18px">'
     +'<div style="font-size:9px;font-weight:700;letter-spacing:.18em;color:#C9AE4E;font-family:var(--f-mono)">&#9670;&nbsp;&nbsp;CORRIDOR DISRUPTION SIMULATOR</div>'
     +'<div style="display:flex;align-items:center;gap:10px">'
     +'<span style="font-size:8px;font-weight:700;letter-spacing:.12em;color:#6A6A62;font-family:var(--f-mono)">BAB AL-MANDEB CORRIDOR</span>'
     +'<button id="scr-btn-open" onclick="scrToggle(\'open\')" style="font-size:8px;font-weight:700;letter-spacing:.1em;padding:6px 16px;border:1px solid #3A7D44;border-radius:3px 0 0 3px;cursor:pointer;background:#1A3020;color:#5ACD6A;font-family:var(--f-mono);transition:all .15s">OPEN</button>'
-    +'<button id="scr-btn-dis" onclick="scrToggle(\'dis\')" style="font-size:8px;font-weight:700;letter-spacing:.1em;padding:6px 16px;border:1px solid #251f18;border-left:none;border-radius:0 3px 3px 0;cursor:pointer;background:#0D0D0B;color:#3A3A34;font-family:var(--f-mono);transition:all .15s">DISRUPTED</button>'
+    +'<button id="scr-btn-dis" onclick="scrToggle(\'dis\')" style="font-size:8px;font-weight:700;letter-spacing:.1em;padding:6px 16px;border:1px solid #1a2535;border-left:none;border-radius:0 3px 3px 0;cursor:pointer;background:#0D0D0B;color:#3A3A34;font-family:var(--f-mono);transition:all .15s">DISRUPTED</button>'
     +'</div></div>'
     // Main grid: map left, chart+fleet right
     +'<div style="display:grid;grid-template-columns:1fr 380px;gap:14px;align-items:start">'
     // Map column
     +'<div>'
     +'<div style="font-size:8px;font-weight:700;letter-spacing:.14em;color:#6A6A62;font-family:var(--f-mono);margin-bottom:8px">TRADE ROUTES · GULF → NORTHWEST EUROPE</div>'
-    +'<div id="scr-map-el" style="height:440px;border:1px solid #251f18;border-radius:3px;background:#060e18"></div>'
-    +'<div id="scr-route-strip" style="display:flex;border:1px solid #251f18;border-top:none;border-radius:0 0 3px 3px;overflow:hidden"></div>'
+    +'<div id="scr-map-el" style="height:440px;border:1px solid #1a2535;border-radius:3px;background:#060e18"></div>'
+    +'<div id="scr-route-strip" style="display:flex;border:1px solid #1a2535;border-top:none;border-radius:0 0 3px 3px;overflow:hidden"></div>'
     +'</div>'
     // Right column: chart + fleet
     +'<div style="display:flex;flex-direction:column;gap:14px">'
     // Chart
-    +'<div style="background:#0D0D0B;border:1px solid #251f18;border-radius:3px;padding:16px">'
+    +'<div style="background:#0D0D0B;border:1px solid #1a2535;border-radius:3px;padding:16px">'
     +'<div style="font-size:8px;font-weight:700;letter-spacing:.14em;color:#6A6A62;font-family:var(--f-mono);margin-bottom:12px">VOLUME IMPACT</div>'
     +'<div style="height:200px"><canvas id="scr-chart-el"></canvas></div>'
     +'</div>'
     // Fleet
-    +'<div style="background:#0D0D0B;border:1px solid #251f18;border-radius:3px;padding:16px">'
+    +'<div style="background:#0D0D0B;border:1px solid #1a2535;border-radius:3px;padding:16px">'
     +'<div style="font-size:8px;font-weight:700;letter-spacing:.14em;color:#6A6A62;font-family:var(--f-mono);margin-bottom:12px">FLEET DEPLOYMENT STATUS</div>'
     +'<div id="scr-fleet-el"></div>'
     +'</div>'
@@ -23440,7 +23440,7 @@ function scrInit() {
   if (!document.getElementById('scr-styles')) {
     var s = document.createElement('style');
     s.id = 'scr-styles';
-    s.textContent = '@keyframes scr-flow{from{stroke-dashoffset:28}to{stroke-dashoffset:0}}.scr-tt.leaflet-tooltip{background:#1a1713!important;border:1px solid #2A2A28!important;color:#C9AE4E!important;font-family:monospace!important;font-size:7px!important;font-weight:700!important;letter-spacing:.1em!important;padding:3px 8px!important;border-radius:2px!important;white-space:nowrap!important;box-shadow:none!important}.scr-tt.leaflet-tooltip::before{display:none!important}';
+    s.textContent = '@keyframes scr-flow{from{stroke-dashoffset:28}to{stroke-dashoffset:0}}.scr-tt.leaflet-tooltip{background:#111110!important;border:1px solid #2A2A28!important;color:#C9AE4E!important;font-family:monospace!important;font-size:7px!important;font-weight:700!important;letter-spacing:.1em!important;padding:3px 8px!important;border-radius:2px!important;white-space:nowrap!important;box-shadow:none!important}.scr-tt.leaflet-tooltip::before{display:none!important}';
     document.head.appendChild(s);
   }
 
@@ -23496,8 +23496,8 @@ function scrInit() {
         title: { display:true, text:'MONTHLY THROUGHPUT CAPACITY · M bbl · ILLUSTRATIVE', color:'#4A4A44', font:{family:'monospace',size:8,weight:'700'}, padding:{bottom:10} }
       },
       scales: {
-        x: { ticks:{color:'#4A4A44',font:{family:'monospace',size:8}}, grid:{color:'#251f18'}, title:{display:true,text:'M bbl/month',color:'#4A4A44',font:{family:'monospace',size:8}} },
-        y: { ticks:{color:'#C9AE4E',font:{family:'monospace',size:9,weight:'700'}}, grid:{color:'#251f18'} }
+        x: { ticks:{color:'#4A4A44',font:{family:'monospace',size:8}}, grid:{color:'#1a2535'}, title:{display:true,text:'M bbl/month',color:'#4A4A44',font:{family:'monospace',size:8}} },
+        y: { ticks:{color:'#C9AE4E',font:{family:'monospace',size:9,weight:'700'}}, grid:{color:'#1a2535'} }
       }
     }
   });
@@ -23514,8 +23514,8 @@ function scrUpdateAll() {
   // update toggle buttons
   var ob = document.getElementById('scr-btn-open');
   var db = document.getElementById('scr-btn-dis');
-  if (ob) { ob.style.background = SCR.disrupted ? '#0D0D0B' : '#1A3020'; ob.style.color = SCR.disrupted ? '#3A3A34' : '#5ACD6A'; ob.style.borderColor = SCR.disrupted ? '#251f18' : '#3A7D44'; }
-  if (db) { db.style.background = SCR.disrupted ? '#3A1010' : '#0D0D0B'; db.style.color = SCR.disrupted ? '#E05252' : '#3A3A34'; db.style.borderColor = SCR.disrupted ? '#C03030' : '#251f18'; }
+  if (ob) { ob.style.background = SCR.disrupted ? '#0D0D0B' : '#1A3020'; ob.style.color = SCR.disrupted ? '#3A3A34' : '#5ACD6A'; ob.style.borderColor = SCR.disrupted ? '#1a2535' : '#3A7D44'; }
+  if (db) { db.style.background = SCR.disrupted ? '#3A1010' : '#0D0D0B'; db.style.color = SCR.disrupted ? '#E05252' : '#3A3A34'; db.style.borderColor = SCR.disrupted ? '#C03030' : '#1a2535'; }
 }
 
 function scrUpdateMap() {
@@ -23560,7 +23560,7 @@ function scrUpdateFleet() {
     return '<span style="font-size:7px;font-weight:700;letter-spacing:.1em;padding:3px 9px;border-radius:2px;border:1px solid '+border+';color:'+color+';font-family:monospace">'+text+'</span>';
   }
   function card(cls, dw, status, route, transit) {
-    return '<div style="border:1px solid #251f18;border-radius:3px;margin-bottom:10px;overflow:hidden">'
+    return '<div style="border:1px solid #1a2535;border-radius:3px;margin-bottom:10px;overflow:hidden">'
       +'<div style="background:#131311;padding:8px 12px;display:flex;justify-content:space-between;align-items:center">'
       +'<div><span style="font-size:9px;font-weight:700;letter-spacing:.1em;color:#F2F1ED;font-family:monospace">'+cls+'</span>'
       +' <span style="font-size:8px;color:#4A4A44;font-family:monospace">'+dw+'</span></div>'
@@ -23592,7 +23592,7 @@ function scrUpdateRouteStrip() {
   if (!el) return;
   var d = SCR.disrupted;
   function statCard(lbl, val, sub, color) {
-    return '<div style="flex:1;padding:10px 14px;background:#0D0D0B;border-right:1px solid #251f18">'
+    return '<div style="flex:1;padding:10px 14px;background:#0D0D0B;border-right:1px solid #1a2535">'
       +'<div style="font-size:7px;letter-spacing:.14em;color:#4A4A44;font-family:monospace;margin-bottom:5px">'+lbl+'</div>'
       +'<div style="font-size:15px;font-weight:700;font-family:monospace;color:'+color+'">'+val+'</div>'
       +'<div style="font-size:7px;color:#4A4A44;font-family:monospace;margin-top:3px">'+sub+'</div>'
@@ -23613,14 +23613,14 @@ function psrBuildResultLayers(flow) {
   var cpLabel = {hormuz:'HORMUZ DISRUPTED',bab_el_mandeb:'BAB AL-MANDEB DISRUPTED',suez:'SUEZ DISRUPTED',malacca:'MALACCA DISRUPTED'}[cpId]||'';
   return '<div id="psr-result-layers" style="margin-top:24px;border-top:1px solid #2A2A26;padding-top:20px">'
     +'<div style="font-family:monospace;font-size:8px;font-weight:700;letter-spacing:.18em;color:#C9AE4E;margin-bottom:12px">&#9670;&nbsp;&nbsp;IMPACT ON TRADE VOLUME</div>'
-    +'<div style="background:#0D0D0B;border:1px solid #251f18;border-radius:3px;padding:16px;margin-bottom:20px">'
+    +'<div style="background:#0D0D0B;border:1px solid #1a2535;border-radius:3px;padding:16px;margin-bottom:20px">'
     +'<div style="height:160px"><canvas id="psr-res-vol-chart"></canvas></div>'
     +'</div>'
     +'<div style="font-family:monospace;font-size:8px;font-weight:700;letter-spacing:.18em;color:#C9AE4E;margin-bottom:12px">&#9670;&nbsp;&nbsp;IMPACT ON TRADE ROUTES'+(cpLabel?' &nbsp;<span style="color:#E05252">&#8226; '+cpLabel+'</span>':'')+'</div>'
     +'<div style="margin-bottom:16px">'
     +'<div style="font-size:8px;font-weight:700;letter-spacing:.14em;color:#6A6A62;font-family:var(--f-mono);margin-bottom:8px">'+flow.product.toUpperCase()+' &middot; '+(isImport?'IMPORT ORIGINS &#8594; SAUDI ARABIA':'SAUDI ARABIA &#8594; EXPORT DESTINATIONS')+'</div>'
-    +'<div id="psr-res-map" style="height:400px;border:1px solid #251f18;border-radius:3px 3px 0 0;background:#060e18"></div>'
-    +'<div id="psr-res-route-strip" style="display:flex;border:1px solid #251f18;border-top:none;border-radius:0 0 3px 3px;overflow:hidden"></div>'
+    +'<div id="psr-res-map" style="height:400px;border:1px solid #1a2535;border-radius:3px 3px 0 0;background:#060e18"></div>'
+    +'<div id="psr-res-route-strip" style="display:flex;border:1px solid #1a2535;border-top:none;border-radius:0 0 3px 3px;overflow:hidden"></div>'
     +'</div>'
     +'<div style="font-family:monospace;font-size:8px;font-weight:700;letter-spacing:.18em;color:#C9AE4E;margin-bottom:8px">&#9670;&nbsp;&nbsp;FLEET DEPLOYMENT</div>'
     +'<div style="font-size:8px;font-weight:700;letter-spacing:.14em;color:#6A6A62;font-family:var(--f-mono);margin-bottom:10px">VESSEL CLASS STATUS</div>'
@@ -23633,7 +23633,7 @@ function scrInitResultLayers(flow) {
   if (!document.getElementById('scr-styles')) {
     var s = document.createElement('style');
     s.id = 'scr-styles';
-    s.textContent = '@keyframes scr-flow{from{stroke-dashoffset:28}to{stroke-dashoffset:0}}.scr-tt.leaflet-tooltip{background:#1a1713!important;border:1px solid #2A2A28!important;color:#C9AE4E!important;font-family:monospace!important;font-size:7px!important;font-weight:700!important;letter-spacing:.1em!important;padding:3px 8px!important;border-radius:2px!important;white-space:nowrap!important;box-shadow:none!important}.scr-tt.leaflet-tooltip::before{display:none!important}';
+    s.textContent = '@keyframes scr-flow{from{stroke-dashoffset:28}to{stroke-dashoffset:0}}.scr-tt.leaflet-tooltip{background:#111110!important;border:1px solid #2A2A28!important;color:#C9AE4E!important;font-family:monospace!important;font-size:7px!important;font-weight:700!important;letter-spacing:.1em!important;padding:3px 8px!important;border-radius:2px!important;white-space:nowrap!important;box-shadow:none!important}.scr-tt.leaflet-tooltip::before{display:none!important}';
     document.head.appendChild(s);
   }
   scrInitResultVolChart(flow);
@@ -23712,8 +23712,8 @@ function scrInitResultVolChart(flow) {
         title:{display:true,text:'TRADE VOLUME BY PARTNER · '+(flow.volUnit||'').toUpperCase(),color:'#4A4A44',font:{family:'monospace',size:8,weight:'700'},padding:{bottom:8}}
       },
       scales:{
-        x:{ticks:{color:'#4A4A44',font:{family:'monospace',size:8}},grid:{color:'#251f18'},title:{display:true,text:flow.volUnit||'',color:'#4A4A44',font:{family:'monospace',size:8}}},
-        y:{ticks:{color:'#C9AE4E',font:{family:'monospace',size:9,weight:'700'}},grid:{color:'#251f18'}}
+        x:{ticks:{color:'#4A4A44',font:{family:'monospace',size:8}},grid:{color:'#1a2535'},title:{display:true,text:flow.volUnit||'',color:'#4A4A44',font:{family:'monospace',size:8}}},
+        y:{ticks:{color:'#C9AE4E',font:{family:'monospace',size:9,weight:'700'}},grid:{color:'#1a2535'}}
       }
     }
   });
@@ -23914,7 +23914,7 @@ function scrInitResultFleet(flow) {
   var babDis=(cpId==='bab_el_mandeb'), malDis=(cpId==='malacca'), hormDis=(cpId==='hormuz');
   function badge(t,c,b){return '<span style="font-size:7px;font-weight:700;letter-spacing:.1em;padding:3px 9px;border-radius:2px;border:1px solid '+b+';color:'+c+';font-family:monospace">'+t+'</span>';}
   function card(cls,dw,status,route,transit,note){
-    return '<div style="background:#1a1713;border:1px solid #251f18;border-radius:6px;padding:16px 18px;overflow:hidden">'
+    return '<div style="background:#111110;border:1px solid #1a2535;border-radius:6px;padding:16px 18px;overflow:hidden">'
       +'<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px">'
       +'<div><div style="font-size:13px;font-weight:700;letter-spacing:0;color:#F2F1ED;font-family:monospace">'+cls+'</div>'
       +'<div style="font-size:9px;color:#4A4A44;font-family:monospace;margin-top:2px">'+dw+'</div></div>'+status+'</div>'
@@ -23953,7 +23953,7 @@ function scrInitResultRouteStrip(flow) {
   var expo=flow.chokepointExposure||{};
   var cpMap={hormuz:{label:'Hormuz',key:'hormuz'},bab_el_mandeb:{label:'Bab al-Mandeb',key:'bab'},suez:{label:'Suez Canal',key:'suez'},malacca:{label:'Malacca',key:'malacca'}};
   var sorted=Object.keys(cpMap).map(function(k){return {k:k,pct:expo[cpMap[k].key]||0,label:cpMap[k].label};}).sort(function(a,b){return b.pct-a.pct;}).slice(0,3);
-  function sc(lbl,val,sub,col){return '<div style="flex:1;padding:10px 14px;background:#0D0D0B;border-right:1px solid #251f18"><div style="font-size:7px;letter-spacing:.14em;color:#4A4A44;font-family:monospace;margin-bottom:5px">'+lbl+'</div><div style="font-size:15px;font-weight:700;font-family:monospace;color:'+col+'">'+val+'</div><div style="font-size:7px;color:#4A4A44;font-family:monospace;margin-top:3px">'+sub+'</div></div>';}
+  function sc(lbl,val,sub,col){return '<div style="flex:1;padding:10px 14px;background:#0D0D0B;border-right:1px solid #1a2535"><div style="font-size:7px;letter-spacing:.14em;color:#4A4A44;font-family:monospace;margin-bottom:5px">'+lbl+'</div><div style="font-size:15px;font-weight:700;font-family:monospace;color:'+col+'">'+val+'</div><div style="font-size:7px;color:#4A4A44;font-family:monospace;margin-top:3px">'+sub+'</div></div>';}
   var html='';
   sorted.forEach(function(e){html+=sc(e.label,e.pct+'%',(e.k===cpId?'⚠ DISRUPTED':'chokepoint exposure'),(e.k===cpId?'#E05252':'#C9AE4E'));});
   html+=sc('PRODUCT',flow.product.split(' ').slice(0,2).join(' '),'HS '+flow.hs,'#5aa3f5');

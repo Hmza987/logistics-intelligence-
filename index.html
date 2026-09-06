@@ -147,28 +147,28 @@
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
 :root {
-  /* Surface hierarchy — deep navy base, professional analytics palette */
-  --c-bg:        #0d1421;   /* page background   */
-  --c-s0:        #0f1725;   /* deepest surface   */
-  --c-s1:        #131d2e;   /* card background   */
-  --c-s2:        #172338;   /* elevated surface  */
-  --c-s3:        #1d2b42;   /* hover / active    */
+  /* Surface hierarchy — petroleum charcoal, warm carbon base */
+  --c-bg:        #12100e;   /* page background   */
+  --c-s0:        #0f0d0b;   /* deepest surface   */
+  --c-s1:        #1a1713;   /* card background   */
+  --c-s2:        #221e18;   /* elevated surface  */
+  --c-s3:        #2a251e;   /* hover / active    */
 
   /* Borders */
-  --c-bd0:       #16223a;
-  --c-bd1:       #1e2d46;
-  --c-bd2:       #263852;
+  --c-bd0:       #251f18;
+  --c-bd1:       #332a20;
+  --c-bd2:       #443828;
 
   /* Text hierarchy */
-  --c-tx0:       #e2e8f0;   /* primary text      */
-  --c-tx1:       #8b9eb5;   /* secondary text    */
-  --c-tx2:       #4d6480;   /* tertiary / muted  */
-  --c-tx3:       #2d3f55;   /* disabled          */
+  --c-tx0:       #e8ddd0;   /* primary text      */
+  --c-tx1:       #a89882;   /* secondary text    */
+  --c-tx2:       #6a5c4e;   /* tertiary / muted  */
+  --c-tx3:       #3a3028;   /* disabled          */
 
   /* Signal colours — highly controlled palette */
-  --c-gold:      #b8952a;   /* primary accent — authority, not flashy */
-  --c-gold-hi:   #d4aa3a;   /* highlight */
-  --c-gold-dim:  #6b561a;   /* dim accent */
+  --c-gold:      #b87030;   /* primary accent — copper amber, petroleum */
+  --c-gold-hi:   #d08840;   /* highlight */
+  --c-gold-dim:  #7a4a1a;   /* dim accent */
   --c-red:       #c0392b;
   --c-red-hi:    #d94e40;
   --c-amber:     #c47a1a;
@@ -3284,7 +3284,7 @@ canvas { font-family: var(--f-mono); }
 .gcc-tk-amb { color: var(--c-amber-hi); }
 .gcc-tk-grn { color: var(--c-green-hi); }
 /* ── Content offset — push pages clear of sidebar + topbar + ticker ── */
-.page { margin-left: var(--gcc-sw) !important; margin-top: var(--gcc-off) !important; min-height: calc(100vh - var(--gcc-off)); }
+.page { margin-left: var(--gcc-sw) !important; margin-top: var(--gcc-off) !important; min-height: calc(100vh - var(--gcc-off)); background: var(--c-bg) !important; }
 /* ── Hide old nav elements ───────────────────────────────────────── */
 #header             { display: none !important; }
 #tabs               { display: none !important; }

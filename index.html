@@ -141,7 +141,7 @@
    Confidential — prepared for ministerial & strategic decision-makers
 ═══════════════════════════════════════════════════════════════════════════ */
 
-@import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@300;400;500;600&family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@400;600;700&family=IBM+Plex+Mono:wght@300;400;500;600&family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap');
 
 /* ── RESET & TOKENS ─────────────────────────────────────────────────────── */
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
@@ -3205,6 +3205,92 @@ canvas { font-family: var(--f-mono); }
 .gcc-no-bypass{font-size:7.5px;color:rgba(220,38,38,0.6);font-family:var(--f-mono);}
 .gcc-safe{font-size:7.5px;color:#3dd68c;font-family:var(--f-mono);}
 @media(max-width:900px){.gcc-grid{grid-template-columns:repeat(2,1fr);}}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   GCC SIDEBAR REDESIGN — left-sidebar shell, signals ticker, new topbar.
+   All existing .page content is untouched — just offset right and down.
+═══════════════════════════════════════════════════════════════════════════ */
+:root {
+  --f-bc:     'Barlow Condensed', var(--f-ui);
+  --gcc-sw:   220px;
+  --gcc-th:   46px;
+  --gcc-tkh:  28px;
+  --gcc-off:  calc(var(--gcc-th) + var(--gcc-tkh));
+}
+/* ── Sidebar ─────────────────────────────────────────────────────── */
+#gcc-sidebar {
+  position: fixed; left: 0; top: 0; bottom: 0;
+  width: var(--gcc-sw); z-index: 90;
+  background: var(--c-s0); border-right: 1px solid var(--c-bd1);
+  display: flex; flex-direction: column; overflow-y: auto; overflow-x: hidden;
+}
+.gcc-wm { padding: 18px 18px 14px; border-bottom: 1px solid var(--c-bd0); flex-shrink: 0; }
+.gcc-wm-eye { font-family: var(--f-bc); font-size: 7px; font-weight: 700; letter-spacing: .24em; color: var(--c-tx3); text-transform: uppercase; margin-bottom: 4px; }
+.gcc-wm-name { font-family: var(--f-bc); font-size: 15px; font-weight: 700; letter-spacing: .02em; color: var(--c-tx0); line-height: 1.2; }
+.gcc-wm-beta { font-family: var(--f-mono); font-size: 8px; color: var(--c-gold); letter-spacing: .1em; margin-top: 5px; opacity: .75; }
+.gcc-snav { flex: 1; padding: 8px 0; overflow-y: auto; }
+.gcc-sg-lbl { display: block; font-family: var(--f-bc); font-size: 7px; font-weight: 700; letter-spacing: .26em; text-transform: uppercase; color: var(--c-tx3); padding: 11px 18px 4px; }
+.gcc-sg-sep { height: 1px; background: var(--c-bd0); margin: 7px 18px; }
+.gcc-snav-item { display: flex; align-items: center; gap: 10px; padding: 8px 18px; cursor: pointer; border-left: 2px solid transparent; transition: background var(--t), border-color var(--t); user-select: none; }
+.gcc-snav-item:hover { background: rgba(232,236,240,.022); }
+.gcc-snav-item:hover .gcc-sni-lbl, .gcc-snav-item:hover .gcc-sni-icon { color: var(--c-tx1); }
+.gcc-snav-item.active { border-left-color: var(--c-gold); background: rgba(184,149,42,.08); }
+.gcc-snav-item.active .gcc-sni-lbl, .gcc-snav-item.active .gcc-sni-icon { color: var(--c-gold-hi); }
+.gcc-snav-item.gcc-locked { opacity: .4; cursor: default; }
+.gcc-snav-item.gcc-locked:hover { background: none; }
+.gcc-snav-item.gcc-locked:hover .gcc-sni-lbl, .gcc-snav-item.gcc-locked:hover .gcc-sni-icon { color: var(--c-tx2); }
+.gcc-sni-icon { width: 15px; flex-shrink: 0; color: var(--c-tx2); transition: color var(--t); display: flex; align-items: center; }
+.gcc-sni-lbl { font-family: var(--f-bc); font-size: 12.5px; font-weight: 600; letter-spacing: .06em; color: var(--c-tx2); flex: 1; transition: color var(--t); line-height: 1; }
+.gcc-sni-badge { font-family: var(--f-mono); font-size: 7px; letter-spacing: .06em; padding: 2px 6px; border-radius: 2px; white-space: nowrap; }
+.gcc-sni-live { color: var(--c-green-hi); background: rgba(26,122,74,.08); border: 1px solid rgba(37,160,102,.28); }
+.gcc-sni-lock { color: var(--c-tx3); border: 1px solid var(--c-bd1); }
+.gcc-sf { border-top: 1px solid var(--c-bd0); padding: 11px 18px; flex-shrink: 0; }
+.gcc-sf-row { display: flex; align-items: center; gap: 7px; margin-bottom: 5px; }
+.gcc-sf-row:last-child { margin-bottom: 0; }
+.gcc-sf-dot { width: 5px; height: 5px; border-radius: 50%; flex-shrink: 0; }
+.gcc-sf-dot.ok   { background: var(--c-green-hi); }
+.gcc-sf-dot.warn { background: var(--c-amber-hi); }
+.gcc-sf-dot.err  { background: var(--c-red-hi); }
+.gcc-sf-txt { font-family: var(--f-mono); font-size: 8px; color: var(--c-tx3); letter-spacing: .05em; }
+/* ── Topbar ──────────────────────────────────────────────────────── */
+#gcc-topbar {
+  position: fixed; left: var(--gcc-sw); right: 0; top: 0;
+  height: var(--gcc-th); z-index: 89;
+  background: var(--c-bg); border-bottom: 1px solid var(--c-bd0);
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 0 24px;
+}
+.gcc-tb-title { font-family: var(--f-bc); font-size: 12px; font-weight: 700; letter-spacing: .2em; text-transform: uppercase; color: var(--c-tx0); }
+.gcc-tb-right { display: flex; align-items: center; gap: 14px; }
+.gcc-tb-pill { display: flex; align-items: center; gap: 5px; font-family: var(--f-mono); font-size: 8px; color: var(--c-tx2); letter-spacing: .05em; }
+.gcc-tb-dot { width: 5px; height: 5px; border-radius: 50%; flex-shrink: 0; }
+.gcc-tb-pill strong { color: var(--c-tx1); font-weight: 500; }
+.gcc-tb-btn { font-family: var(--f-mono); font-size: 8px; letter-spacing: .08em; color: var(--c-tx2); background: none; border: 1px solid var(--c-bd1); border-radius: var(--r); padding: 4px 10px; cursor: pointer; transition: border-color var(--t), color var(--t); text-decoration: none; }
+.gcc-tb-btn:hover { border-color: var(--c-bd2); color: var(--c-tx1); }
+/* ── Ticker ──────────────────────────────────────────────────────── */
+#gcc-ticker {
+  position: fixed; left: var(--gcc-sw); right: 0; top: var(--gcc-th);
+  height: var(--gcc-tkh); z-index: 88;
+  background: var(--c-s0); border-bottom: 1px solid var(--c-bd0);
+  display: flex; align-items: center; overflow: hidden;
+}
+.gcc-tk-lbl { font-family: var(--f-bc); font-size: 8px; font-weight: 700; letter-spacing: .2em; text-transform: uppercase; color: var(--c-gold); padding: 0 14px 0 16px; white-space: nowrap; flex-shrink: 0; border-right: 1px solid var(--c-bd1); background: var(--c-s0); z-index: 2; height: 100%; display: flex; align-items: center; gap: 6px; }
+.gcc-tk-dot { width: 5px; height: 5px; border-radius: 50%; background: var(--c-green-hi); animation: sig-pulse 2s ease-in-out infinite; }
+.gcc-tk-wrap { overflow: hidden; flex: 1; position: relative; }
+.gcc-tk-track { display: flex; align-items: center; animation: gcc-ticker-scroll 70s linear infinite; white-space: nowrap; padding-left: 18px; }
+@keyframes gcc-ticker-scroll { 0% { transform: translateX(0); } 100% { transform: translateX(-50%); } }
+.gcc-tk-item { font-family: var(--f-mono); font-size: 8.5px; color: var(--c-tx2); letter-spacing: .05em; padding: 0 22px; border-right: 1px solid var(--c-bd0); }
+.gcc-tk-item strong { font-weight: 500; }
+.gcc-tk-red { color: var(--c-red-hi); }
+.gcc-tk-amb { color: var(--c-amber-hi); }
+.gcc-tk-grn { color: var(--c-green-hi); }
+/* ── Content offset — push pages clear of sidebar + topbar + ticker ── */
+.page { margin-left: var(--gcc-sw) !important; margin-top: var(--gcc-off) !important; min-height: calc(100vh - var(--gcc-off)); }
+/* ── Hide old nav elements ───────────────────────────────────────── */
+#header             { display: none !important; }
+#tabs               { display: none !important; }
+#mob-tab-indicator  { display: none !important; }
+#mob-nav            { display: none !important; }
 </style>
 <script defer src="/_vercel/insights/script.js"></script>
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-SYB1WZ21GG"></script>
@@ -3554,6 +3640,126 @@ canvas { font-family: var(--f-mono); }
   </div>
 
 </div>
+
+<!-- ══════════════════════════════════════════════════════════════════════════
+     SIDEBAR — redesigned left navigation shell
+════════════════════════════════════════════════════════════════════════════ -->
+<aside id="gcc-sidebar">
+  <div class="gcc-wm">
+    <div class="gcc-wm-eye">GCC Logistics Intelligence</div>
+    <div class="gcc-wm-name">GCC Logistics<br>Intelligence</div>
+    <div class="gcc-wm-beta">BETA &middot; SEP 2026</div>
+  </div>
+  <nav class="gcc-snav">
+    <span class="gcc-sg-lbl">Live Intelligence</span>
+    <div class="gcc-snav-item active" data-tab="hormuz" onclick="gccSidebarNav('hormuz')">
+      <span class="gcc-sni-icon"><svg width="15" height="15" viewBox="0 0 15 15" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M1 5.5Q3.75 3 7.5 5.5Q11.25 8 14 5.5"/><path d="M1 9.5Q3.75 7 7.5 9.5Q11.25 12 14 9.5"/></svg></span>
+      <span class="gcc-sni-lbl">Chokepoint Traffic</span>
+      <span class="gcc-sni-badge gcc-sni-live">LIVE</span>
+    </div>
+    <div class="gcc-snav-item" data-tab="rates" onclick="gccSidebarNav('rates')">
+      <span class="gcc-sni-icon"><svg width="15" height="15" viewBox="0 0 15 15" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="1.5,11.5 5,7.5 9,10 13.5,3.5"/><polyline points="10.5,3.5 13.5,3.5 13.5,6.5"/></svg></span>
+      <span class="gcc-sni-lbl">Freight Rate Tracker</span>
+      <span class="gcc-sni-badge gcc-sni-live">LIVE</span>
+    </div>
+    <div class="gcc-sg-sep"></div>
+    <span class="gcc-sg-lbl">Advanced Analytics</span>
+    <div class="gcc-snav-item gcc-locked" data-tab="trucking" onclick="gccSidebarNav('trucking')">
+      <span class="gcc-sni-icon"><svg width="15" height="15" viewBox="0 0 15 15" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M1.5 11h5V7H1.5z"/><path d="M6.5 11h7V4h-7z"/></svg></span>
+      <span class="gcc-sni-lbl">Corridor Monitor</span>
+      <span class="gcc-sni-badge gcc-sni-lock">&#x1F512;</span>
+    </div>
+    <div class="gcc-snav-item gcc-locked" data-tab="simulator" onclick="gccSidebarNav('simulator')">
+      <span class="gcc-sni-icon"><svg width="15" height="15" viewBox="0 0 15 15" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><circle cx="7.5" cy="7.5" r="2.8"/><path d="M7.5 1.5v1.8M7.5 11.7v1.8M1.5 7.5h1.8M11.7 7.5h1.8M3.3 3.3l1.3 1.3M10.4 10.4l1.3 1.3M3.3 11.7l1.3-1.3M10.4 4.6l1.3-1.3"/></svg></span>
+      <span class="gcc-sni-lbl">Scenario Simulator</span>
+      <span class="gcc-sni-badge gcc-sni-lock">&#x1F512;</span>
+    </div>
+    <div class="gcc-snav-item gcc-locked" data-tab="watchlist" onclick="gccSidebarNav('watchlist')">
+      <span class="gcc-sni-icon"><svg width="15" height="15" viewBox="0 0 15 15" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><circle cx="7.5" cy="7.5" r="5.8"/><circle cx="7.5" cy="7.5" r="2"/></svg></span>
+      <span class="gcc-sni-lbl">Strategic Watchlist</span>
+      <span class="gcc-sni-badge gcc-sni-lock">&#x1F512;</span>
+    </div>
+    <div class="gcc-snav-item gcc-locked" data-tab="stress" onclick="gccSidebarNav('stress')">
+      <span class="gcc-sni-icon"><svg width="15" height="15" viewBox="0 0 15 15" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M7.5 1.5Q5.2 4.5 5.2 7.5Q5.2 10.5 7.5 13.5Q9.8 10.5 9.8 7.5Q9.8 4.5 7.5 1.5Z"/><line x1="1.5" y1="7.5" x2="13.5" y2="7.5"/></svg></span>
+      <span class="gcc-sni-lbl">Trade Explorer Lab</span>
+      <span class="gcc-sni-badge gcc-sni-lock">&#x1F512;</span>
+    </div>
+  </nav>
+  <div class="gcc-sf">
+    <div class="gcc-sf-row"><span class="gcc-sf-dot ok"></span><span class="gcc-sf-txt">IMF PortWatch &middot; live</span></div>
+    <div class="gcc-sf-row"><span class="gcc-sf-dot ok"></span><span class="gcc-sf-txt">straits.live &middot; live</span></div>
+    <div class="gcc-sf-row"><span class="gcc-sf-dot ok"></span><span class="gcc-sf-txt">Yahoo Finance &middot; live</span></div>
+    <div class="gcc-sf-row" style="margin-top:7px;padding-top:7px;border-top:1px solid var(--c-bd0)">
+      <span class="gcc-sf-txt" id="gcc-sf-clock">&mdash;</span>
+    </div>
+  </div>
+</aside>
+
+<!-- ══════════════════════════════════════════════════════════════════════════
+     TOPBAR — redesigned header strip
+════════════════════════════════════════════════════════════════════════════ -->
+<div id="gcc-topbar">
+  <span class="gcc-tb-title" id="gcc-tb-title">Chokepoint Traffic</span>
+  <div class="gcc-tb-right">
+    <div class="gcc-tb-pill"><div class="gcc-tb-dot" style="background:var(--c-red-hi)"></div><strong>HORMUZ</strong>&nbsp;RESTRICTED</div>
+    <div class="gcc-tb-pill"><div class="gcc-tb-dot" style="background:var(--c-amber-hi)"></div><strong>BAB BLOCKADE</strong>&nbsp;DAY 43+</div>
+    <div class="gcc-tb-pill" style="opacity:.5"><span id="gcc-tb-ts"></span></div>
+    <button onclick="location.reload()" class="gcc-tb-btn">&#8635; Refresh</button>
+    <a href="mailto:hamza.el.mounhi@strategyand.pwc.com" class="gcc-tb-btn" style="display:inline-block">&#9993; Contact</a>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════════════════════════════════
+     SIGNALS TICKER — live signals strip below topbar
+════════════════════════════════════════════════════════════════════════════ -->
+<div id="gcc-ticker">
+  <div class="gcc-tk-lbl"><div class="gcc-tk-dot"></div>LIVE SIGNALS</div>
+  <div class="gcc-tk-wrap">
+    <div class="gcc-tk-track" id="gcc-tk-track">
+      <span class="gcc-tk-item gcc-tk-red">&#9679;&nbsp;<strong>HORMUZ</strong> &middot; Day 146 re-escalation &middot; ~10 transits/day vs 130 baseline &middot; IMF PortWatch AIS-verified</span>
+      <span class="gcc-tk-item gcc-tk-amb">&#9679;&nbsp;<strong>BAB EL-MANDEB BLOCKADE</strong> &middot; Houthi naval ban active &middot; all Saudi-bound cargo &middot; Day 43+</span>
+      <span class="gcc-tk-item">&#9679;&nbsp;<strong>BRENT CRUDE</strong> $88.10/bbl &middot; +22% vs pre-crisis &middot; Yahoo Finance</span>
+      <span class="gcc-tk-item">&#9679;&nbsp;<strong>FBX GLOBAL</strong> $2,889/FEU &middot; +46% from May &middot; Freightos Baltic Index</span>
+      <span class="gcc-tk-item gcc-tk-amb">&#9679;&nbsp;<strong>JEBEL ALI</strong> &middot; 5 container calls/wk &middot; &minus;91% vs baseline &middot; IMF PortWatch Aug 17&ndash;23</span>
+      <span class="gcc-tk-item gcc-tk-red">&#9679;&nbsp;<strong>WAR-RISK PREMIUM</strong> &middot; ~3.2% hull value/voyage &middot; Lloyd&rsquo;s &middot; Red Sea corridor</span>
+      <span class="gcc-tk-item gcc-tk-amb">&#9679;&nbsp;<strong>CAPE DIVERSIONS</strong> &middot; Asia&ndash;GCC +14&ndash;18 days transit &middot; +$600&ndash;900K/voyage &middot; Freightos</span>
+      <span class="gcc-tk-item">&#9679;&nbsp;<strong>ASIA&ndash;GULF SPOT</strong> $8,400/FEU &middot; &minus;4.0% WoW &middot; Freightos FBX SHA&rarr;ME</span>
+      <span class="gcc-tk-item gcc-tk-red">&#9679;&nbsp;<strong>DAMMAM</strong> &middot; 10 calls/wk &middot; &minus;71% vs baseline &middot; IMF PortWatch</span>
+      <span class="gcc-tk-item gcc-tk-grn">&#9679;&nbsp;<strong>DJIBOUTI</strong> &middot; 29 calls/wk &middot; Cape-route diversion benefiting Red Sea hubs</span>
+      <!-- duplicate set for seamless infinite loop -->
+      <span class="gcc-tk-item gcc-tk-red">&#9679;&nbsp;<strong>HORMUZ</strong> &middot; Day 146 re-escalation &middot; ~10 transits/day vs 130 baseline &middot; IMF PortWatch AIS-verified</span>
+      <span class="gcc-tk-item gcc-tk-amb">&#9679;&nbsp;<strong>BAB EL-MANDEB BLOCKADE</strong> &middot; Houthi naval ban active &middot; all Saudi-bound cargo &middot; Day 43+</span>
+      <span class="gcc-tk-item">&#9679;&nbsp;<strong>BRENT CRUDE</strong> $88.10/bbl &middot; +22% vs pre-crisis &middot; Yahoo Finance</span>
+      <span class="gcc-tk-item">&#9679;&nbsp;<strong>FBX GLOBAL</strong> $2,889/FEU &middot; +46% from May &middot; Freightos Baltic Index</span>
+      <span class="gcc-tk-item gcc-tk-amb">&#9679;&nbsp;<strong>JEBEL ALI</strong> &middot; 5 container calls/wk &middot; &minus;91% vs baseline &middot; IMF PortWatch Aug 17&ndash;23</span>
+      <span class="gcc-tk-item gcc-tk-red">&#9679;&nbsp;<strong>WAR-RISK PREMIUM</strong> &middot; ~3.2% hull value/voyage &middot; Lloyd&rsquo;s &middot; Red Sea corridor</span>
+      <span class="gcc-tk-item gcc-tk-amb">&#9679;&nbsp;<strong>CAPE DIVERSIONS</strong> &middot; Asia&ndash;GCC +14&ndash;18 days transit &middot; +$600&ndash;900K/voyage &middot; Freightos</span>
+      <span class="gcc-tk-item">&#9679;&nbsp;<strong>ASIA&ndash;GULF SPOT</strong> $8,400/FEU &middot; &minus;4.0% WoW &middot; Freightos FBX SHA&rarr;ME</span>
+      <span class="gcc-tk-item gcc-tk-red">&#9679;&nbsp;<strong>DAMMAM</strong> &middot; 10 calls/wk &middot; &minus;71% vs baseline &middot; IMF PortWatch</span>
+      <span class="gcc-tk-item gcc-tk-grn">&#9679;&nbsp;<strong>DJIBOUTI</strong> &middot; 29 calls/wk &middot; Cape-route diversion benefiting Red Sea hubs</span>
+    </div>
+  </div>
+</div>
+<script>
+/* ── Sidebar clock ────────────────────────────────────────────────────── */
+(function(){
+  function tick(){
+    var d = new Date();
+    var s = d.toUTCString().slice(5,22).toUpperCase() + ' UTC';
+    var el = document.getElementById('gcc-sf-clock');
+    var t2 = document.getElementById('gcc-tb-ts');
+    if (el) el.textContent = s;
+    if (t2) t2.textContent = s;
+  }
+  tick(); setInterval(tick, 1000);
+})();
+/* ── Sidebar nav helper ────────────────────────────────────────────── */
+function gccSidebarNav(name) {
+  var tabIdx = {hormuz:0, rates:1, trucking:2, simulator:3, watchlist:4, stress:5};
+  var tab = document.querySelectorAll('#tabs .tab')[tabIdx[name]];
+  if (tab) showTab(name, tab);
+}
+</script>
 
 <!-- HEADER -->
 <div id="header">
@@ -6292,6 +6498,16 @@ function showTab(name, el) {
   document.querySelectorAll('.page').forEach(function(p){ p.classList.remove('active'); });
   el.classList.add('active');
   document.getElementById('page-' + name).classList.add('active');
+
+  // Sync sidebar active state + topbar title
+  (function() {
+    var TITLES = { hormuz:'Chokepoint Traffic', rates:'Freight Rate Tracker', trucking:'Corridor Performance Monitor', simulator:'Scenario Simulator', watchlist:'Strategic Watchlist', stress:'Trade Explorer Lab' };
+    document.querySelectorAll('#gcc-sidebar .gcc-snav-item').forEach(function(i){ i.classList.remove('active'); });
+    var si = document.querySelector('#gcc-sidebar .gcc-snav-item[data-tab="' + name + '"]');
+    if (si) si.classList.add('active');
+    var t = document.getElementById('gcc-tb-title');
+    if (t) t.textContent = TITLES[name] || name;
+  })();
 
   // Update URL for deep-linking and browser back/forward
   try { history.replaceState({ gcc_tab: name }, '', '?tab=' + name); } catch(e) {}

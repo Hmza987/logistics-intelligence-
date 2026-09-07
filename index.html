@@ -4427,7 +4427,7 @@ canvas { font-family: var(--f-mono); }
     <div class="map-section-header">
       <div>
         <div class="map-section-title" style="color:#7a9eb8">&#9671; Global Shipping Lanes &amp; Port Call Imbalance &mdash; Hormuz Crisis</div>
-        <div class="map-section-sub">Bubble size = commercial vessel calls/week (AIS-calibrated) &bull; dashed ring = pre-crisis volume &bull; badge = live AIS vessel count &bull; hover any port for data &bull; 29 Aug 2026</div>
+        <div class="map-section-sub">Bubble size = commercial vessel calls/week (AIS-calibrated) &bull; dashed ring = pre-crisis volume &bull; badge = live AIS vessel count &bull; hover any port for data &bull; 30 Aug 2026</div>
       </div>
       <div style="display:flex;align-items:center;gap:8px">
         <div class="map-legend" style="padding:0;background:none;border:none;display:flex;flex-wrap:wrap;gap:8px;min-width:unset">
@@ -9924,9 +9924,9 @@ function initChokepointsMap() {
   var PORT_CALLS = [
     // ── Asian export hubs (slight decline — some GCC-direct services suspended) ─
     { name:'Shanghai',     country:'China',        lat:31.23, lng:121.48, pre:95,  cur:39  },
-    { name:'Busan',        country:'South Korea',  lat:35.10, lng:129.07, pre:85,  cur:54  },
+    { name:'Busan',        country:'South Korea',  lat:35.10, lng:129.07, pre:85,  cur:44  },
     { name:'Hong Kong',    country:'China',        lat:22.30, lng:114.17, pre:48,  cur:44  },
-    { name:'Singapore',    country:'Singapore',    lat:1.27,  lng:103.50, pre:185, cur:142, exp7:1034 },  // slight up: Cape bunkering stop
+    { name:'Singapore',    country:'Singapore',    lat:1.27,  lng:103.50, pre:185, cur:122, exp7:1034 },  // slight up: Cape bunkering stop
     { name:'Port Klang',   country:'Malaysia',     lat:2.95,  lng:101.18, pre:75,  cur:68  },
     // ── Indian Ocean waypoint (surging — Cape route stop + congestion) ────────
     { name:'Colombo',      country:'Sri Lanka',    lat:6.93,  lng:79.84,  pre:58,  cur:106, exp7:81 },  // 42.9% congestion rate (Portcast Jun 2026)
@@ -9966,9 +9966,9 @@ function initChokepointsMap() {
     // ── North Africa / Atlantic gateway (surging — Cape vessels via Gibraltar) ─
     { name:'Tanger Med',   country:'Morocco',      lat:35.85, lng:-5.48,  pre:52,  cur:110, exp7:12 },  // primary European entry for Cape-routed vessels
     // ── European destination ports (broadly stable) ───────────────────────────
-    { name:'Rotterdam',    country:'Netherlands',  lat:51.91, lng:4.35,   pre:95,  cur:72,  exp7:1001 },
+    { name:'Rotterdam',    country:'Netherlands',  lat:51.91, lng:4.35,   pre:95,  cur:62,  exp7:1001 },
     { name:'Hamburg',      country:'Germany',      lat:53.54, lng:9.85,   pre:55,  cur:50  },
-    { name:'Antwerp',      country:'Belgium',      lat:51.22, lng:4.18,   pre:78,  cur:56  },
+    { name:'Antwerp',      country:'Belgium',      lat:51.22, lng:4.18,   pre:78,  cur:46  },
     { name:'Felixstowe',   country:'UK',           lat:51.95, lng:1.20,   pre:42,  cur:38  },
   ];
 

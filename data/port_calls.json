@@ -1,18 +1,18 @@
 {
-  "generated": "2026-09-08",
+  "generated": "2026-09-09",
   "source": "IMF PortWatch ArcGIS REST API",
   "queryWindow": {
-    "start": "2026-08-25",
-    "end": "2026-08-31"
+    "start": "2026-08-26",
+    "end": "2026-09-01"
   },
   "updates": {
     "Jebel Ali": {
-      "newCur": 4,
-      "ratio": 0.0625,
-      "imfCur": 6,
+      "newCur": 9,
+      "ratio": 0.14583333333333334,
+      "imfCur": 14,
       "imfPre": 96,
       "dashPre": 62,
-      "window": "2026-08-25–2026-08-31"
+      "window": "2026-08-26–2026-09-01"
     },
     "Shuwaikh": {
       "newCur": 4,
@@ -20,55 +20,47 @@
       "imfCur": 1,
       "imfPre": 5.1,
       "dashPre": 20,
-      "window": "2026-08-25–2026-08-31"
+      "window": "2026-08-26–2026-09-01"
     },
     "Dammam": {
-      "newCur": 15,
-      "ratio": 0.41666666666666663,
-      "imfCur": 6,
+      "newCur": 12,
+      "ratio": 0.3472222222222222,
+      "imfCur": 5,
       "imfPre": 14.4,
       "dashPre": 35,
-      "window": "2026-08-25–2026-08-31"
+      "window": "2026-08-26–2026-09-01"
     },
     "Busan": {
-      "newCur": 37,
-      "ratio": 0.4380165289256198,
-      "imfCur": 106,
+      "newCur": 68,
+      "ratio": 0.8016528925619835,
+      "imfCur": 194,
       "imfPre": 242,
       "dashPre": 85,
-      "window": "2026-08-25–2026-08-31"
+      "window": "2026-08-26–2026-09-01"
     },
     "Singapore": {
-      "newCur": 94,
-      "ratio": 0.5104166666666666,
-      "imfCur": 147,
+      "newCur": 155,
+      "ratio": 0.8402777777777778,
+      "imfCur": 242,
       "imfPre": 288,
       "dashPre": 185,
-      "window": "2026-08-25–2026-08-31"
-    },
-    "Rotterdam": {
-      "newCur": 51,
-      "ratio": 0.532150776053215,
-      "imfCur": 72,
-      "imfPre": 135.3,
-      "dashPre": 95,
-      "window": "2026-08-25–2026-08-31"
+      "window": "2026-08-26–2026-09-01"
     },
     "Antwerp": {
-      "newCur": 36,
-      "ratio": 0.45555555555555555,
-      "imfCur": 41,
+      "newCur": 69,
+      "ratio": 0.8888888888888888,
+      "imfCur": 80,
       "imfPre": 90,
       "dashPre": 78,
-      "window": "2026-08-25–2026-08-31"
+      "window": "2026-08-26–2026-09-01"
     },
     "Djibouti": {
-      "newCur": 18,
-      "ratio": 0.5633802816901409,
-      "imfCur": 8,
+      "newCur": 32,
+      "ratio": 0.9859154929577465,
+      "imfCur": 14,
       "imfPre": 14.2,
       "dashPre": 32,
-      "window": "2026-08-25–2026-08-31"
+      "window": "2026-08-26–2026-09-01"
     }
   }
 }

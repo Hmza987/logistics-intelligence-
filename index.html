@@ -1946,20 +1946,14 @@ canvas { font-family: var(--f-mono); }
 /* ── Hero — 2-column split (Landing B) ── */
 #cv-hero {
   position: relative;
-  display: flex;
-  width: 100%;
-  max-width: min(100%, 1600px);
-  margin-bottom: 20px;
-  padding: 56px;
-  min-height: 380px;
-  animation: cv-rise 1.2s cubic-bezier(.16,1,.3,1) .1s both;
-}
-#cv-signals-row {
-  display: flex;
-  justify-content: flex-end;
+  display: grid;
+  grid-template-columns: 1.25fr 1fr;
+  gap: 48px;
   width: 100%;
   max-width: min(100%, 1600px);
   margin-bottom: 30px;
+  padding: 48px;
+  animation: cv-rise 1.2s cubic-bezier(.16,1,.3,1) .1s both;
 }
 #cv-hero-media {
   position: absolute;
@@ -1981,8 +1975,6 @@ canvas { font-family: var(--f-mono); }
   background: linear-gradient(100deg, rgba(5,7,10,.90) 0%, rgba(5,7,10,.68) 30%, rgba(5,7,10,.22) 58%, rgba(5,7,10,.32) 100%);
 }
 .cv-hero-left, .cv-hero-right { position: relative; z-index: 2; }
-.cv-hero-left { max-width: 560px; }
-.cv-hero-right { width: 100%; max-width: 420px; }
 @keyframes cv-rise {
   from { opacity:0; transform:translateY(20px); }
   to   { opacity:1; transform:translateY(0); }
@@ -2378,10 +2370,9 @@ canvas { font-family: var(--f-mono); }
   #cv-topnav { padding: 14px 20px; }
   #cv-topnav-nav span:not(.cv-nav-access) { display: none; }
   #cv-content { padding: 22px 20px 14px; }
-  #cv-hero { padding: 28px 22px; background: #0A0A0A; border-radius: 8px; min-height: 0; }
+  #cv-hero { grid-template-columns: 1fr; gap: 20px; padding: 28px 22px; background: #0A0A0A; border-radius: 8px; }
   #cv-hero-media { display: none; }
-  .cv-hero-left { max-width: 100%; }
-  #cv-signals-row { display: none; }
+  .cv-hero-right { display: none; }
   .cv-headline { font-size: clamp(28px, 7vw, 44px); }
   #cv-nav-label { display: none; }
 }
@@ -3525,10 +3516,6 @@ canvas { font-family: var(--f-mono); }
         </div>
         <div class="cv-hero-trust">Trusted by GCC authorities, decision-makers and operators</div>
       </div>
-    </div>
-
-    <!-- Signals card — moved below the hero so the video isn't obscured -->
-    <div id="cv-signals-row">
       <div class="cv-hero-right">
         <div class="cv-signals-card">
           <div class="cv-signals-header">

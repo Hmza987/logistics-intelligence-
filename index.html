@@ -1945,14 +1945,36 @@ canvas { font-family: var(--f-mono); }
 
 /* ── Hero — 2-column split (Landing B) ── */
 #cv-hero {
+  position: relative;
   display: grid;
   grid-template-columns: 1.25fr 1fr;
   gap: 48px;
   width: 100%;
   max-width: min(100%, 1600px);
   margin-bottom: 30px;
+  padding: 48px;
   animation: cv-rise 1.2s cubic-bezier(.16,1,.3,1) .1s both;
 }
+#cv-hero-media {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  overflow: hidden;
+  border-radius: 8px;
+}
+#cv-hero-video {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+#cv-hero-video-overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(100deg, rgba(5,7,10,.90) 0%, rgba(5,7,10,.68) 30%, rgba(5,7,10,.22) 58%, rgba(5,7,10,.32) 100%);
+}
+.cv-hero-left, .cv-hero-right { position: relative; z-index: 2; }
 @keyframes cv-rise {
   from { opacity:0; transform:translateY(20px); }
   to   { opacity:1; transform:translateY(0); }
@@ -2348,7 +2370,8 @@ canvas { font-family: var(--f-mono); }
   #cv-topnav { padding: 14px 20px; }
   #cv-topnav-nav span:not(.cv-nav-access) { display: none; }
   #cv-content { padding: 22px 20px 14px; }
-  #cv-hero { grid-template-columns: 1fr; gap: 20px; }
+  #cv-hero { grid-template-columns: 1fr; gap: 20px; padding: 28px 22px; background: #0A0A0A; border-radius: 8px; }
+  #cv-hero-media { display: none; }
   .cv-hero-right { display: none; }
   .cv-headline { font-size: clamp(28px, 7vw, 44px); }
   #cv-nav-label { display: none; }
@@ -3477,6 +3500,12 @@ canvas { font-family: var(--f-mono); }
 
     <!-- Hero — 2-column split (Landing B) -->
     <div id="cv-hero">
+      <div id="cv-hero-media">
+        <video id="cv-hero-video" autoplay muted loop playsinline preload="auto">
+          <source src="Assets/Videos/hero-hormuz-1.mp4" type="video/mp4">
+        </video>
+        <div id="cv-hero-video-overlay"></div>
+      </div>
       <div class="cv-hero-left">
         <div id="cv-badge">GCC&nbsp;Logistics&nbsp;Intelligence&nbsp;Platform</div>
         <div class="cv-headline">Read the Gulf<br>before it moves.</div>

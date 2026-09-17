@@ -590,6 +590,13 @@ a { color: inherit; text-decoration: none; }
 .gli-dl-row { display: flex; align-items: center; gap: 10px; padding: 5px 0; }
 .gli-dl-name { flex: 1 1 auto; min-width: 0; font-size: 13px; color: var(--n-800); }
 .gli-dl-pct { flex: none; font-size: 13px; color: var(--n-900); }
+.gli-portgrid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 8px; margin-top: 14px; }
+.gli-portitem { background: var(--c-s2); border: 1px solid var(--c-bd1); border-radius: 6px; padding: 10px 12px; }
+.gli-portitem-hd { display: flex; align-items: center; justify-content: space-between; gap: 6px; margin-bottom: 5px; }
+.gli-portitem-name { font-size: 11px; font-weight: 600; color: var(--n-900); display: flex; align-items: center; gap: 5px; }
+.gli-portitem-name img { height: 9px; border-radius: 1px; vertical-align: middle; }
+.gli-portitem-badge { font-size: 7px; font-weight: 700; padding: 2px 5px; border-radius: 2px; border: 1px solid; white-space: nowrap; }
+.gli-portitem-body { font-size: 9px; color: var(--c-tx1); line-height: 1.4; }
 
 /* ── PAGE HEADER ────────────────────────────────────────────────────────── */
 .gli-pghdr {
@@ -4046,9 +4053,11 @@ document.addEventListener('DOMContentLoaded', function(){
   if (el) el.textContent = new Date().toLocaleDateString('en-US', { weekday:'short', month:'short', day:'numeric', year:'numeric' });
   var now = new Date();
   var ts = now.toLocaleDateString('en-US', { weekday:'short', month:'short', day:'numeric', year:'numeric' }) + '   ' + now.toLocaleTimeString('en-US', { hour:'2-digit', minute:'2-digit' }) + ' GST';
-  var hts = document.getElementById('gli-hormuz-ts');
-  if (hts) hts.textContent = ts;
-  document.querySelectorAll('.gli-hormuz-ts-inline').forEach(function(e){ e.textContent = ts; });
+  ['hormuz','bab','suez'].forEach(function(cp){
+    var el2 = document.getElementById('gli-' + cp + '-ts');
+    if (el2) el2.textContent = ts;
+    document.querySelectorAll('.gli-' + cp + '-ts-inline').forEach(function(e){ e.textContent = ts; });
+  });
 });
 /* ── Sidebar nav helper ────────────────────────────────────────────── */
 function gccSidebarNav(name) {
@@ -4561,214 +4570,160 @@ function gccSidebarNav(name) {
   <!-- ══════════════════════════════ BAB AL-MANDEB VIEW ══════════════════════════════ -->
   <div id="cp-view-bab" style="display:none">
 
-    <!-- ① STATUS STRIP -->
-    <div style="background:#0D0D0B;border-bottom:1px solid #1A1A18;display:flex">
-      <div style="flex:1;padding:14px 28px;display:flex;align-items:center;justify-content:space-between;gap:48px">
-        <div>
-          <div style="display:flex;align-items:center;gap:7px;margin-bottom:6px"><span style="width:7px;height:7px;border-radius:50%;background:#F59E0B;display:inline-block"></span><span style="font-size:8px;font-weight:700;letter-spacing:.16em;color:#F59E0B">BLOCKADE</span></div>
-          <div style="font-size:11px;font-weight:700;letter-spacing:.08em;color:#D9D8D3">BAB AL-MANDEB STRAIT</div>
-          <div style="font-size:9px;color:#4A4A44;margin-top:3px;line-height:1.4">Day 14 &middot; declared Jul 20 2026 &middot; Houthi naval ban &mdash; all vessels serving Saudi ports</div>
-        </div>
-        <div style="text-align:right">
-          <div style="font-size:28px;font-weight:700;color:#F59E0B;line-height:1">-56%</div>
-          <div style="font-size:9px;color:#4A4A44;margin-top:3px">15/day vs 34 on Jul 20 &middot; Jul 27 confirmed &middot; The National</div>
+    <!-- HERO BAND -->
+    <div style="padding:18px 24px 0">
+      <div class="gli-hero">
+        <div class="gli-hero-grad"></div>
+        <div class="gli-hero-inner">
+          <div class="gli-hero-l">
+            <div class="gli-breadcrumb"><span>Chokepoints</span><span class="sep">&rsaquo;</span><span class="leaf">Bab al&#8209;Mandab</span></div>
+            <div class="gli-hero-title">Chokepoint Intelligence: Bab al&#8209;Mandab Strait</div>
+            <div class="gli-hero-desc">Live view of the Houthi naval blockade, Red Sea insurance risk, carrier posture, and Gulf corridor implications.</div>
+          </div>
+          <div class="gli-hero-r">
+            <div class="gli-hero-ts" id="gli-bab-ts">&mdash;</div>
+            <button type="button" class="gli-export-btn" onclick="window.print()"><svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v11"/><path d="m8 11 4 4 4-4"/><path d="M4 19h16"/></svg>Export Brief</button>
+            <div class="gli-hero-tagline">A more resilient<br>Gulf tomorrow.</div>
+          </div>
         </div>
       </div>
     </div>
 
-    <!-- ② ALERT BANNERS -->
-    <div style="background:#100B04;border-bottom:1px solid #2A1A06;padding:9px 24px;display:flex;align-items:flex-start;gap:12px">
-      <span style="font-size:8px;font-weight:700;letter-spacing:.14em;color:#F59E0B;border:1px solid rgba(245,158,11,.5);padding:3px 8px;border-radius:3px;white-space:nowrap;flex-shrink:0;margin-top:1px">BLOCKADE</span>
-      <div style="display:flex;flex-wrap:wrap;gap:6px">
-        <span style="font-size:9px;color:#F2F1ED;background:rgba(245,158,11,.1);border:1px solid rgba(245,158,11,.22);padding:3px 10px;border-radius:3px">&#9679; Houthi declared naval blockade Jul 20 2026 &mdash; all vessels transiting to/from Saudi ports banned</span>
-        <span style="font-size:9px;color:#F2F1ED;background:rgba(245,158,11,.1);border:1px solid rgba(245,158,11,.22);padding:3px 10px;border-radius:3px">&#9679; 4 VLCCs turned back Jul 22 carrying 3.8M bbl crude &mdash; tankers rerouting Indian Ocean</span>
-        <span style="font-size:9px;color:#F2F1ED;background:rgba(245,158,11,.1);border:1px solid rgba(245,158,11,.22);padding:3px 10px;border-radius:3px">&#9679; Yanbu oil port attacked by Houthi drones Jul 25 &mdash; loading operations suspended</span>
+    <!-- SIX STATUS CARDS -->
+    <div class="gli-status-grid">
+      <div class="gli-status-card">
+        <div class="gli-status-title">Transit Status</div>
+        <div class="gli-status-word-row"><span class="gli-status-dot" style="background:var(--c-amber-hi)"></span><span class="gli-status-word" style="color:var(--c-amber-hi)">Naval blockade</span></div>
+        <div class="gli-status-body">All vessels serving Saudi ports banned since Jul 20.</div>
+        <div class="gli-status-src">Source: The National<br>Updated <span class="gli-bab-ts-inline">&mdash;</span></div>
+      </div>
+      <div class="gli-status-card">
+        <div class="gli-status-title">Transit Index</div>
+        <div class="gli-status-figure" style="color:var(--c-amber-hi)">-56%</div>
+        <div class="gli-status-sub">vs. 34/day Jul 20 baseline</div>
+        <svg class="gli-status-spark" viewBox="0 0 120 34" preserveAspectRatio="none"><line x1="0" y1="3" x2="120" y2="3" stroke="#3a4650" stroke-width="1" stroke-dasharray="3 3" vector-effect="non-scaling-stroke"/><polyline points="1,4 20,7 40,11 60,15 80,19 100,24 119,27" fill="none" stroke="var(--c-amber-hi)" stroke-width="1.4" vector-effect="non-scaling-stroke"/></svg>
+        <div class="gli-status-src">Source: Kpler AIS<br>Updated <span class="gli-bab-ts-inline">&mdash;</span></div>
+      </div>
+      <div class="gli-status-card">
+        <div class="gli-status-title">War&#8209;Risk Premium</div>
+        <div class="gli-status-figure">~2.5&ndash;3%</div>
+        <div class="gli-status-sub">of vessel value</div>
+        <div class="gli-status-delta" style="color:var(--c-amber-hi)">&#8599; +0.5&ndash;1 pp</div>
+        <div class="gli-status-sub" style="margin-top:2px">since blockade declared</div>
+        <div class="gli-status-src">Source: Lloyd's List &middot; LMA<br>Updated <span class="gli-bab-ts-inline">&mdash;</span></div>
+      </div>
+      <div class="gli-status-card">
+        <div class="gli-status-title">Carrier Posture</div>
+        <div class="gli-status-word-row"><span class="gli-status-dot" style="background:var(--c-red-hi)"></span><span class="gli-status-word gli-status-word-sm" style="color:var(--c-red-hi)">Suspended</span></div>
+        <div class="gli-status-body">Maersk, MSC, Hapag&#8209;Lloyd suspended; CMA CGM monitoring.</div>
+        <div class="gli-status-src">Source: Carrier advisories<br>Updated <span class="gli-bab-ts-inline">&mdash;</span></div>
+      </div>
+      <div class="gli-status-card">
+        <div class="gli-status-title">Capacity Impact</div>
+        <div class="gli-status-figure" style="color:var(--c-red-hi)">4 VLCCs</div>
+        <div class="gli-status-sub">turned back Jul 22 &middot; 3.8M bbl crude</div>
+        <div class="gli-status-src">Source: Kpler satellite<br>Updated <span class="gli-bab-ts-inline">&mdash;</span></div>
+      </div>
+      <div class="gli-status-card">
+        <div class="gli-status-title">Confidence Level</div>
+        <div class="gli-status-word-row"><span class="gli-status-dot" style="background:var(--c-green-hi)"></span><span class="gli-status-word" style="color:var(--c-green-hi)">High</span></div>
+        <div class="gli-status-body">Reuters, Kpler and Lloyd's List corroborated.</div>
+        <div class="gli-status-src">Source: GLI assessment<br>Updated <span class="gli-bab-ts-inline">&mdash;</span></div>
       </div>
     </div>
-    <div style="background:#0E0C07;border-bottom:1px solid #242010;padding:7px 24px;display:flex;align-items:flex-start;gap:12px">
-      <span style="font-size:8px;font-weight:700;letter-spacing:.14em;color:#C98A2E;border:1px solid rgba(201,138,46,.5);padding:3px 8px;border-radius:3px;white-space:nowrap;flex-shrink:0;margin-top:1px">WATCH</span>
-      <div style="display:flex;flex-wrap:wrap;gap:6px">
-        <span style="font-size:9px;color:#D9D8D3;background:rgba(201,138,46,.07);border:1px solid rgba(201,138,46,.18);padding:3px 10px;border-radius:3px">&#9679; Cape of Good Hope diversions: +14 days transit, +$600&ndash;900K per voyage &middot; Djibouti port congestion surging</span>
-        <span style="font-size:9px;color:#D9D8D3;background:rgba(201,138,46,.07);border:1px solid rgba(201,138,46,.18);padding:3px 10px;border-radius:3px">&#9679; War-risk insurance escalating ~2.5&ndash;3% hull value &middot; JWC extends Red Sea / Gulf of Aden listing</span>
+
+    <!-- TAB STRIP -->
+    <div class="gli-tabstrip">
+      <span class="gli-tab active">Overview</span>
+      <span class="gli-tab">Transit Monitor</span>
+      <span class="gli-tab">Insurance &amp; Surcharges</span>
+      <span class="gli-tab">Carrier Posture</span>
+      <span class="gli-tab">Corridor Implications</span>
+      <span class="gli-tab">Evidence Log</span>
+    </div>
+
+    <!-- MAP + KEY TAKEAWAYS ROW -->
+    <div class="gli-2row">
+      <div class="gli-map-panel">
+        <div class="gli-map-hdr">
+          <span class="gli-map-title">Bab al&#8209;Mandab &ndash; Maritime Traffic</span>
+          <div class="gli-map-chips">
+            <span class="gli-filterchip">Vessel type <strong>All vessels</strong><svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg></span>
+            <span class="gli-filterchip">Time period <strong>Last 7 days</strong><svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg></span>
+          </div>
+        </div>
+        <div class="gli-map-legend">
+          <span class="gli-map-legend-item"><span class="gli-dot" style="background:var(--c-amber-hi)"></span>Vessel density<span class="gli-density-bar"></span>High</span>
+          <span class="gli-map-legend-item"><span class="gli-line-solid"></span>Major shipping route</span>
+          <span class="gli-map-legend-item"><span class="gli-line-dashed"></span>Cape of Good Hope reroute</span>
+        </div>
+        <div class="gli-map-surface">
+          <iframe id="bab-sat-map" src="https://www.marinetraffic.com/en/ais/embed/zoom:8/centery:12.6/centerx:43.5/maptype:4/shownames:false/mmsi:0/shipid:0/fleet:/fleet_id:/showmenu:false/remember:false" width="100%" height="100%" style="border:none;display:block" loading="lazy" allowfullscreen referrerpolicy="no-referrer-when-downgrade" title="MarineTraffic — Bab al-Mandeb live AIS"></iframe>
+        </div>
+        <div class="src" style="padding:10px 16px"><span>MarineTraffic live AIS &middot; auto-refresh &middot; AIS transits today: <span style="color:var(--c-amber-hi)">~15</span> / 34 Jul 20 baseline</span><span class="src-badge">live</span></div>
+      </div>
+
+      <div class="gli-takeaways">
+        <div class="gli-card-hd2"><span class="gli-panel-heading">Key Takeaways</span><a href="#" onclick="return false" class="gli-link">View detailed analysis &rarr;</a></div>
+        <div class="gli-tk-item">
+          <span class="gli-tk-icon" style="background:rgba(251,191,36,.14);color:var(--c-amber-hi)"><svg viewBox="0 0 24 24" width="17" height="17" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v9"/><path d="m8 11 4 4 4-4"/><circle cx="12" cy="12" r="9"/></svg></span>
+          <div class="gli-tk-body"><div class="gli-tk-title" style="color:var(--c-amber-hi)">What changed?</div><div class="gli-tk-text">Houthi forces declared a naval blockade Jul 20 2026 on all vessels serving Saudi ports. 4 VLCCs carrying 3.8M bbl crude turned back Jul 22; Yanbu oil terminal was struck by drones Jul 25, suspending loading operations.</div></div>
+        </div>
+        <div class="gli-tk-item">
+          <span class="gli-tk-icon" style="background:rgba(63,142,247,.14);color:var(--c-blue)"><svg viewBox="0 0 24 24" width="17" height="17" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 16v-5M12 8h.01"/></svg></span>
+          <div class="gli-tk-body"><div class="gli-tk-title" style="color:var(--c-blue)">Why it matters?</div><div class="gli-tk-text">Brent crude spiked to ~$100/bbl on the blockade announcement before settling near $97. War-risk premiums are escalating toward Hormuz-crisis levels (~2.5&ndash;3% hull value), a structural cost increase for Saudi-linked energy trade.</div></div>
+        </div>
+        <div class="gli-tk-item">
+          <span class="gli-tk-icon" style="background:rgba(61,214,140,.14);color:var(--c-green-hi)"><svg viewBox="0 0 24 24" width="17" height="17" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v12"/><path d="m8 11 4 4 4-4"/><path d="M4 19h16"/></svg></span>
+          <div class="gli-tk-body"><div class="gli-tk-title" style="color:var(--c-green-hi)">Decision relevance</div><div class="gli-tk-text">Maersk, MSC and Hapag&#8209;Lloyd have suspended Saudi-port calls; CMA CGM is monitoring. Cape of Good Hope reroutes add ~14 days and $600&ndash;900K per voyage. Djibouti and Salalah are absorbing bypass traffic and congesting.</div></div>
+        </div>
+        <div class="gli-tk-item">
+          <span class="gli-tk-icon" style="background:rgba(167,139,250,.14);color:var(--c-purple)"><svg viewBox="0 0 24 24" width="17" height="17" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg></span>
+          <div class="gli-tk-body"><div class="gli-tk-title" style="color:var(--c-purple)">Next signals to watch</div>
+            <ul class="gli-tk-list"><li>JWC Red Sea / Gulf of Aden risk-area listing</li><li>Jeddah and Yanbu port recovery</li><li>Djibouti and Salalah congestion levels</li><li>Carrier reinstatement timelines</li><li>Houthi ceasefire / de-escalation talks</li></ul>
+          </div>
+        </div>
       </div>
     </div>
 
-    <!-- ③ MAIN 2-COL GRID -->
-    <div class="row col21" style="padding-top:18px">
-
-      <!-- LEFT COLUMN -->
-      <div style="display:flex;flex-direction:column;gap:14px">
-
-        <!-- HERO KPI ROW -->
-        <div style="display:grid;grid-template-columns:2fr 1fr 1fr 1fr;gap:10px">
-          <div style="background:#100B04;border:1px solid #2A1C08;border-radius:6px;padding:22px 22px 16px;display:flex;flex-direction:column;justify-content:space-between;min-height:148px">
-            <div style="font-size:8px;font-weight:700;letter-spacing:.16em;color:#F59E0B">VS 34 / DAY JUL 20 BASELINE &middot; THE NATIONAL</div>
-            <div>
-              <div style="font-size:60px;font-weight:700;letter-spacing:-.03em;color:#F59E0B;line-height:1;margin:6px 0">-56%</div>
-              <div style="font-size:10px;color:#8A6020;line-height:1.5">Blockade Day 14<br>15 vessels Jul 27 &middot; confirmed</div>
-            </div>
-            <div style="font-size:8px;color:#3A2A10;letter-spacing:.06em">The National &middot; Jul 27 2026 &middot; AIS</div>
-          </div>
-          <div style="background:#111110;border:1px solid #1a2535;border-radius:6px;padding:16px 14px;display:flex;flex-direction:column;justify-content:space-between;min-height:148px">
-            <div style="font-size:8px;font-weight:700;letter-spacing:.14em;color:#4A4A44">TRANSITS TODAY</div>
-            <div>
-              <div style="font-size:44px;font-weight:700;letter-spacing:-.02em;color:#F59E0B;line-height:1;margin:6px 0 4px">~15<a href="https://www.kpler.com" target="_blank" rel="noopener" class="src-lnk" title="Source: Kpler AIS estimate Jul 26">&#8599;</a></div>
-              <div style="font-size:9px;color:#8A7030;line-height:1.4">Jul 26 est. &middot; AIS<br>29 on Jul 22 (&#8722;30%)</div>
-            </div>
-            <div style="font-size:8px;color:#2A2A26;letter-spacing:.04em">AIS estimate</div>
-          </div>
-          <div style="background:#111110;border:1px solid #1a2535;border-radius:6px;padding:16px 14px;display:flex;flex-direction:column;justify-content:space-between;min-height:148px">
-            <div style="font-size:8px;font-weight:700;letter-spacing:.14em;color:#4A4A44">VLCCs TURNED BACK</div>
-            <div>
-              <div style="font-size:44px;font-weight:700;letter-spacing:-.02em;color:#E05252;line-height:1;margin:6px 0 4px">4<a href="https://www.kpler.com" target="_blank" rel="noopener" class="src-lnk" title="Source: Kpler satellite Jul 22 2026">&#8599;</a></div>
-              <div style="font-size:9px;color:#9A4040;line-height:1.4">Jul 22 &middot; 3.8M bbl<br>crude rerouted</div>
-            </div>
-            <div style="font-size:8px;color:#2A2A26;letter-spacing:.04em">Kpler satellite</div>
-          </div>
-          <div style="background:#111110;border:1px solid #1a2535;border-radius:6px;padding:16px 14px;display:flex;flex-direction:column;justify-content:space-between;min-height:148px">
-            <div style="font-size:8px;font-weight:700;letter-spacing:.14em;color:#4A4A44">OIL AT RISK</div>
-            <div>
-              <div style="font-size:36px;font-weight:700;letter-spacing:-.02em;color:#C98A2E;line-height:1;margin:6px 0 4px">3.8M<span style="font-size:14px;font-weight:400;color:#4A4A44;margin-left:2px">bbl</span></div>
-              <div style="font-size:9px;color:#C98A2E;line-height:1.4">turned back Jul 22<br>~4.7M bbl/day flow</div>
-            </div>
-            <div style="font-size:8px;color:#2A2A26;letter-spacing:.04em">Reuters &middot; Kpler est.</div>
-          </div>
+    <!-- THREE ANALYTICS CARDS -->
+    <div class="gli-3row">
+      <div class="gli-chart-card" style="flex:1.15 1 380px">
+        <div class="gli-card-hd2"><span class="gli-panel-heading">Transit Volumes</span><a href="#" onclick="return false" class="gli-link">View more &rarr;</a></div>
+        <div class="gli-panel-sub">Daily vessel transits through Bab al&#8209;Mandab &middot; Kpler AIS synthesis</div>
+        <div class="gli-chart-headline">
+          <span class="gli-chart-figure">~15</span>
+          <span class="gli-chart-figure-lbl">vessels per day</span>
+          <span class="gli-chart-delta" style="color:var(--c-amber-hi)">&#8600; -56%</span>
         </div>
-
-        <!-- BAR CHART -->
-        <div class="card">
-          <div class="card-label">Bab al-Mandeb &mdash; 14-Day Transit Monitor</div>
-          <div class="card-sub">Jul 13&ndash;26 2026 &middot; Kpler AIS synthesis &middot; baseline 34/day (Jul 20 · The National) &middot; blockade declared Jul 20 &middot; Yanbu strike Jul 25 &middot; 15 vessels Jul 27 confirmed</div>
-          <div style="position:relative;height:200px">
-            <canvas id="babChart" role="img" aria-label="Daily Bab al-Mandeb crossings past 14 days"></canvas>
-          </div>
-          <div class="src"><span>Kpler &middot; MarineTraffic AIS &middot; Reuters Jul 22 2026</span><span class="src-badge" style="background:rgba(245,158,11,.15);color:#F59E0B;border-color:rgba(245,158,11,.4)">blockade day 7 &middot; AIS est.</span></div>
-          <div style="margin-top:10px;padding:10px 12px;background:rgba(245,158,11,.06);border:1px solid rgba(245,158,11,.18);border-left:3px solid #F59E0B;border-radius:3px;font-size:10.5px;line-height:1.6;color:#b87d20">
-            <span style="font-weight:700;color:#F59E0B;letter-spacing:.03em">&#9888; BLOCKADE IN EFFECT &mdash; HOUTHI NAVAL BAN JUL 20 2026</span><br>
-            Houthi forces declared a naval blockade targeting all vessels serving Saudi Arabian ports. Jul 22 first confirmed data: 29 transits vs 41 prev day (&minus;30%). VLCCs rerouting via Indian Ocean &rarr; Cape of Good Hope adding ~14 days and $600&ndash;900K per voyage. Jizan + Yanbu Saudi ports struck Jul 25. <strong style="color:#e8c070">Brent spiked to ~$100/bbl</strong> on blockade announcement.
-          </div>
-        </div>
-
-        <!-- AFFECTED PORTS -->
-        <div class="card">
-          <div class="card-label">Affected Ports &mdash; Bab al-Mandeb Corridor</div>
-          <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-top:6px">
-            <div style="background:#130808;border:1px solid #2A1414;border-radius:5px;padding:10px 12px">
-              <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:5px">
-                <div style="font-size:11px;font-weight:700;color:#D9D8D3;display:flex;align-items:center;gap:5px"><img src="https://flagcdn.com/16x12/sa.png" style="height:9px;border-radius:1px;vertical-align:middle">Jeddah</div>
-                <span style="font-size:7px;font-weight:700;padding:2px 5px;border-radius:2px;color:#E05252;border:1px solid #E05252">CRITICAL</span>
-              </div>
-              <div style="font-size:9px;color:#7A7A72;line-height:1.4">Red Sea blocked &middot; all Saudi-bound vessels diverted &middot; dwell est. ~28d</div>
-            </div>
-            <div style="background:#130A02;border:1px solid #2A1800;border-radius:5px;padding:10px 12px">
-              <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:5px">
-                <div style="font-size:11px;font-weight:700;color:#D9D8D3;display:flex;align-items:center;gap:5px"><img src="https://flagcdn.com/16x12/sa.png" style="height:9px;border-radius:1px;vertical-align:middle">Yanbu</div>
-                <span style="font-size:7px;font-weight:700;padding:2px 5px;border-radius:2px;color:#F59E0B;border:1px solid #F59E0B">ATTACKED</span>
-              </div>
-              <div style="font-size:9px;color:#7A7A72;line-height:1.4">Drone strike Jul 25 &middot; oil loading suspended &middot; Aramco exports halted</div>
-            </div>
-            <div style="background:#111110;border:1px solid #1a2535;border-radius:5px;padding:10px 12px">
-              <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:5px">
-                <div style="font-size:11px;font-weight:700;color:#D9D8D3;display:flex;align-items:center;gap:5px"><img src="https://flagcdn.com/16x12/dj.png" style="height:9px;border-radius:1px;vertical-align:middle">Djibouti</div>
-                <span style="font-size:7px;font-weight:700;padding:2px 5px;border-radius:2px;color:#C98A2E;border:1px solid #C98A2E">CONGESTED</span>
-              </div>
-              <div style="font-size:9px;color:#7A7A72;line-height:1.4">Bypass traffic surge &middot; transhipment backlog &middot; dwell ~14d</div>
-            </div>
-            <div style="background:#111110;border:1px solid #1a2535;border-radius:5px;padding:10px 12px">
-              <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:5px">
-                <div style="font-size:11px;font-weight:700;color:#D9D8D3;display:flex;align-items:center;gap:5px"><img src="https://flagcdn.com/16x12/om.png" style="height:9px;border-radius:1px;vertical-align:middle">Salalah</div>
-                <span style="font-size:7px;font-weight:700;padding:2px 5px;border-radius:2px;color:#C98A2E;border:1px solid #C98A2E">HIGH</span>
-              </div>
-              <div style="font-size:9px;color:#7A7A72;line-height:1.4">Cape bypass hub &middot; transhipment demand rising &middot; dwell ~12d</div>
-            </div>
-          </div>
-          <div class="src" style="margin-top:8px"><span>Reuters &middot; Kpler &middot; Lloyd's List &middot; Aug 2026</span><span class="src-badge">real data</span></div>
-        </div>
-
-        <!-- LIVE MAP -->
-        <div>
-          <div class="mapbar">
-            <span class="mapbar-label">Live AIS &mdash; MarineTraffic &middot; Bab al-Mandeb</span>
-            <span style="display:flex;align-items:center;gap:5px;font-family:var(--f-mono);font-size:8px;color:#3dd68c"><span style="width:6px;height:6px;border-radius:50%;background:#3dd68c;flex-shrink:0;animation:pulse-dot 1.8s ease-in-out infinite"></span>Real-time vessel tracking</span>
-            <div style="margin-left:auto;display:flex;gap:6px">
-              <a href="https://www.marinetraffic.com/en/ais/home/centerx:43.5/centery:12.6/zoom:8" target="_blank" class="ext-btn">&#8599; Full screen</a>
-              <a href="https://www.marinetraffic.com/en/ais/home/centerx:43.5/centery:12.6/zoom:7/mmsi:0/shipid:0/fleet:/fleet_id:/showmenu:false" target="_blank" class="ext-btn">&#8599; Tankers live</a>
-            </div>
-          </div>
-          <iframe id="bab-sat-map" src="https://www.marinetraffic.com/en/ais/embed/zoom:8/centery:12.6/centerx:43.5/maptype:4/shownames:false/mmsi:0/shipid:0/fleet:/fleet_id:/showmenu:false/remember:false" width="100%" style="border:none;display:block" loading="lazy" allowfullscreen referrerpolicy="no-referrer-when-downgrade" title="MarineTraffic — Bab al-Mandeb live AIS"></iframe>
-          <div class="mapstats">
-            <div class="mapstat"><span>Source:</span> <span style="color:#3dd68c">MarineTraffic live AIS &bull; auto-refresh</span></div>
-            <div class="mapstat"><span>AIS transits today:</span> <span style="color:#F59E0B">15</span> <span>/ 34 Jul 20 baseline &nbsp;<span style="color:#7a8494;font-size:8px">(&minus;56% &middot; The National Jul 27 2026 &middot; confirmed)</span></span></div>
-            <div style="margin-left:auto;font-size:7px;color:#7a8494;font-family:'IBM Plex Mono',monospace">MarineTraffic &copy; &middot; AIS data &middot; Aug 2026</div>
-          </div>
-          <div style="font-size:7px;color:#4a5568;padding:5px 8px;line-height:1.5;border-top:1px solid rgba(255,255,255,0.04)">
-            <strong style="color:#5a6478">Methodology:</strong> 34/day baseline = vessels transiting Jul 20 2026 (The National, Jul 27 2026). Confirmed -56%: 15 vessels Jul 27 vs 34 on Jul 20. VLCC turnaround data from Kpler satellite tracking. Houthi naval blockade declared Jul 20 2026, targeting all vessels serving Saudi Arabian ports.
-          </div>
-        </div>
-
+        <div style="position:relative;height:170px;margin-top:10px"><canvas id="babChart" role="img" aria-label="Daily Bab al-Mandeb crossings past 14 days"></canvas></div>
+        <div class="src"><span>Kpler &middot; MarineTraffic AIS &middot; Reuters</span><span class="src-badge">AIS est.</span></div>
       </div>
 
-      <!-- RIGHT SIDEBAR -->
-      <div style="display:flex;flex-direction:column;gap:14px">
-
-        <!-- INTELLIGENCE FEED -->
-        <div class="card">
-          <div class="card-label">Bab al-Mandeb Intelligence</div>
-          <div class="news-item"><div class="news-dot" style="background:#F59E0B"></div><div><span class="news-tag" style="background:rgba(245,158,11,.2);color:#F59E0B;border-color:rgba(245,158,11,.4)">BLOCKADE</span><div class="news-text"><strong style="color:#e8eaed">Houthi naval blockade declared Jul 20 2026</strong> &mdash; all vessels transiting Bab al-Mandeb to/from Saudi Arabian ports banned. Houthi military spokesman confirms &ldquo;total maritime siege&rdquo; on Saudi oil exports. <a href="https://www.reuters.com" target="_blank" rel="noopener" class="intel-src">Reuters &#8599;</a></div></div></div>
-          <div class="news-item"><div class="news-dot" style="background:#E05252"></div><div><span class="news-tag tag-alert">ALERT</span><div class="news-text"><strong style="color:#e8eaed">4 VLCCs turned back Jul 22</strong>, carrying est. 3.8M bbl crude. Vessels rerouting Indian Ocean &rarr; Cape of Good Hope. Saudi Aramco crude loadings severely disrupted. <a href="https://www.kpler.com" target="_blank" rel="noopener" class="intel-src">Kpler &#8599;</a></div></div></div>
-          <div class="news-item"><div class="news-dot" style="background:#E05252"></div><div><span class="news-tag tag-alert">ATTACK</span><div class="news-text"><strong style="color:#e8eaed">Yanbu oil port struck by Houthi drone Jul 25</strong> &mdash; oil loading suspended. Jizan industrial port also targeted. Saudi Aramco confirms force majeure event on crude liftings.</div></div></div>
-          <div class="news-item"><div class="news-dot" style="background:#C98A2E"></div><div><span class="news-tag" style="background:rgba(201,138,46,.2);color:#C98A2E;border-color:rgba(201,138,46,.4)">REROUTE</span><div class="news-text">Cape of Good Hope diversions adding <strong style="color:#e8eaed">+14 days transit</strong> and +$600&ndash;900K per voyage. Djibouti port reports 40%+ surge in transshipment demand. Salalah queues extending.</div></div></div>
-          <div class="news-item"><div class="news-dot" style="background:#7A7A6A"></div><div><span class="news-tag" style="background:rgba(90,90,80,.2);color:#8A8A7A;border-color:rgba(90,90,80,.4)">MARKET</span><div class="news-text">Brent crude spiked to <strong style="color:#e8eaed">~$100/bbl</strong> on blockade announcement before settling ~$97. LNG from Qatar rerouting via Malacca. War-risk premiums escalating toward Hormuz crisis levels. <a href="https://www.investing.com/commodities/brent-oil" target="_blank" rel="noopener" class="intel-src">investing.com &#8599;</a></div></div></div>
-          <div class="src"><span>Reuters &middot; Kpler &middot; Lloyd's List &middot; Aug 2026</span><span class="src-badge">real data</span></div>
+      <div class="gli-chart-card" style="flex:1 1 320px">
+        <div class="gli-card-hd2"><span class="gli-panel-heading">Affected Ports</span><a href="#" onclick="return false" class="gli-link">View more &rarr;</a></div>
+        <div class="gli-panel-sub">Bab al&#8209;Mandab corridor &middot; Reuters &middot; Kpler &middot; Lloyd's List</div>
+        <div class="gli-portgrid">
+          <div class="gli-portitem"><div class="gli-portitem-hd"><span class="gli-portitem-name"><img src="https://flagcdn.com/16x12/sa.png">Jeddah</span><span class="gli-portitem-badge" style="color:var(--c-red-hi);border-color:var(--c-red-hi)">CRITICAL</span></div><div class="gli-portitem-body">Red Sea blocked &middot; all Saudi-bound vessels diverted.</div></div>
+          <div class="gli-portitem"><div class="gli-portitem-hd"><span class="gli-portitem-name"><img src="https://flagcdn.com/16x12/sa.png">Yanbu</span><span class="gli-portitem-badge" style="color:var(--c-amber-hi);border-color:var(--c-amber-hi)">ATTACKED</span></div><div class="gli-portitem-body">Drone strike Jul 25 &middot; oil loading suspended.</div></div>
+          <div class="gli-portitem"><div class="gli-portitem-hd"><span class="gli-portitem-name"><img src="https://flagcdn.com/16x12/dj.png">Djibouti</span><span class="gli-portitem-badge" style="color:var(--c-amber-hi);border-color:var(--c-amber-hi)">CONGESTED</span></div><div class="gli-portitem-body">Bypass surge &middot; transhipment backlog, dwell ~14d.</div></div>
+          <div class="gli-portitem"><div class="gli-portitem-hd"><span class="gli-portitem-name"><img src="https://flagcdn.com/16x12/om.png">Salalah</span><span class="gli-portitem-badge" style="color:var(--c-amber-hi);border-color:var(--c-amber-hi)">HIGH</span></div><div class="gli-portitem-body">Cape bypass hub &middot; demand rising, dwell ~12d.</div></div>
         </div>
+      </div>
 
-        <!-- ENERGY & RISK SIGNALS -->
-        <div class="card">
-          <div class="card-label">Energy &amp; Risk Signals &mdash; Red Sea</div>
-          <div class="metrics" style="flex-wrap:wrap">
-            <div class="metric" style="min-width:120px">
-              <div class="val amb"><span>~$97&ndash;100</span><a href="https://www.investing.com/commodities/brent-oil" target="_blank" rel="noopener" class="src-lnk" title="Source: investing.com">&#8599;</a></div>
-              <div class="lbl">Brent Crude / bbl</div>
-              <div class="chg red">+8% on blockade news &bull; Jul 20&ndash;22 2026 &bull; investing.com</div>
-            </div>
-            <div class="metric" style="min-width:120px">
-              <div class="val amb">~2.5&ndash;3% hull<a href="https://www.lloydslist.com" target="_blank" rel="noopener" class="src-lnk" title="Source: Lloyd's List &middot; LMA">&#8599;</a></div>
-              <div class="lbl">War-Risk Insurance</div>
-              <div class="chg red">&#9650;&nbsp;+0.5&ndash;1pp since blockade &bull; Red Sea / Gulf of Aden</div>
-            </div>
-          </div>
-          <div class="dv"></div>
-          <div style="font-size:9px;color:#7a8494;line-height:1.6">
-            <div style="margin-bottom:5px">Brent spiked to ~$100 on blockade declaration before settling. Saudi export disruption adds risk premium. Cape diversions tighten global tanker availability.</div>
-            <div>War-risk premiums escalating toward Hormuz-crisis levels. Lloyd's JWC extends Red Sea / Gulf of Aden listing. P&amp;I clubs reviewing Saudi port call coverage.</div>
-          </div>
-          <div class="src"><span>Lloyd's List &middot; investing.com &middot; Reuters &middot; Aug 2026</span><span class="src-badge">real data</span></div>
+      <div class="gli-chart-card" style="flex:1.1 1 360px">
+        <div class="gli-card-hd2"><span class="gli-panel-heading">Energy &amp; Risk Signals</span><a href="#" onclick="return false" class="gli-link">View more &rarr;</a></div>
+        <div class="gli-panel-sub">Brent crude &amp; war&#8209;risk premium &middot; investing.com &middot; Lloyd's List</div>
+        <div class="gli-chart-headline">
+          <span class="gli-chart-figure">~$97&ndash;100</span>
+          <span class="gli-chart-delta" style="color:var(--c-red-hi)">&#8599; +8%</span>
+          <span class="gli-chart-figure-lbl">Brent, on blockade news</span>
         </div>
-
-        <!-- CARRIER POSTURE -->
-        <div class="card">
-          <div class="card-label">Carrier Posture &mdash; Red Sea</div>
-          <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:10px">
-            <div style="background:#111110;border:1px solid #1a2535;border-radius:5px;padding:12px">
-              <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:6px;margin-bottom:7px"><div style="font-size:13px;font-weight:700;color:#F2F1ED">Maersk</div><div style="font-size:8px;font-weight:700;padding:2px 7px;border-radius:3px;color:#E05252;border:1px solid #E05252;white-space:nowrap">SUSPENDED</div></div>
-              <div style="font-size:9px;color:#7A7A72;line-height:1.5">Red Sea suspended since Jan 2024. Cape Good Hope routing. Saudi blockade forces indefinite extension.</div>
-            </div>
-            <div style="background:#111110;border:1px solid #1a2535;border-radius:5px;padding:12px">
-              <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:6px;margin-bottom:7px"><div style="font-size:13px;font-weight:700;color:#F2F1ED">MSC</div><div style="font-size:8px;font-weight:700;padding:2px 7px;border-radius:3px;color:#E05252;border:1px solid #E05252;white-space:nowrap">SUSPENDED</div></div>
-              <div style="font-size:9px;color:#7A7A72;line-height:1.5">Cape Good Hope restored. No Red Sea calls since Houthi blockade escalation Jul 20.</div>
-            </div>
-            <div style="background:#111110;border:1px solid #1a2535;border-radius:5px;padding:12px">
-              <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:6px;margin-bottom:7px"><div style="font-size:13px;font-weight:700;color:#F2F1ED">Hapag-Lloyd</div><div style="font-size:8px;font-weight:700;padding:2px 7px;border-radius:3px;color:#E05252;border:1px solid #E05252;white-space:nowrap">SUSPENDED</div></div>
-              <div style="font-size:9px;color:#7A7A72;line-height:1.5">Cape diversions active. Blockade declaration triggers suspension of all Saudi-port calls.</div>
-            </div>
-            <div style="background:#111110;border:1px solid #1a2535;border-radius:5px;padding:12px">
-              <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:6px;margin-bottom:7px"><div style="font-size:13px;font-weight:700;color:#F2F1ED">CMA CGM</div><div style="font-size:8px;font-weight:700;padding:2px 7px;border-radius:3px;color:#C98A2E;border:1px solid #C98A2E;white-space:nowrap">MONITORING</div></div>
-              <div style="font-size:9px;color:#7A7A72;line-height:1.5">Limited Red Sea exposure. Evaluating Saudi port call exposure. Emergency surcharge under review.</div>
-            </div>
-          </div>
-          <div class="src"><span>Lloyd's List &middot; carrier ops updates &middot; Aug 2026</span><span class="src-badge">real data</span></div>
+        <div class="gli-chart-headline" style="margin-top:10px">
+          <span class="gli-chart-figure" style="font-size:22px">~2.5&ndash;3%</span>
+          <span class="gli-chart-figure-lbl">war-risk, hull value</span>
         </div>
-
+        <div class="gli-panel-sub" style="margin-top:12px">Lloyd's JWC extends Red Sea / Gulf of Aden listing; P&amp;I clubs reviewing Saudi port call coverage.</div>
       </div>
     </div>
 
@@ -4777,214 +4732,157 @@ function gccSidebarNav(name) {
   <!-- ════════════════════════════════ SUEZ CANAL VIEW ════════════════════════════════ -->
   <div id="cp-view-suez" style="display:none">
 
-    <!-- ① STATUS STRIP -->
-    <div style="background:#0D0D0B;border-bottom:1px solid #1A1A18;display:flex">
-      <div style="flex:1;padding:14px 28px;display:flex;align-items:center;justify-content:space-between;gap:48px">
-        <div>
-          <div style="display:flex;align-items:center;gap:7px;margin-bottom:6px"><span style="width:7px;height:7px;border-radius:50%;background:#0EA5E9;display:inline-block"></span><span style="font-size:8px;font-weight:700;letter-spacing:.16em;color:#0EA5E9">REDUCED &mdash; WATCH</span></div>
-          <div style="font-size:11px;font-weight:700;letter-spacing:.08em;color:#D9D8D3">SUEZ CANAL</div>
-          <div style="font-size:9px;color:#4A4A44;margin-top:3px;line-height:1.4">Canal OPEN &middot; SCA operational &middot; Indian Ocean approach severed by Bab al-Mandeb blockade</div>
-        </div>
-        <div style="text-align:right">
-          <div style="font-size:28px;font-weight:700;color:#0EA5E9;line-height:1">-56%</div>
-          <div style="font-size:9px;color:#4A4A44;margin-top:3px">~26/day vs 68 SCA 2023 baseline &middot; Jul 26 est.</div>
+    <!-- HERO BAND -->
+    <div style="padding:18px 24px 0">
+      <div class="gli-hero">
+        <div class="gli-hero-grad"></div>
+        <div class="gli-hero-inner">
+          <div class="gli-hero-l">
+            <div class="gli-breadcrumb"><span>Chokepoints</span><span class="sep">&rsaquo;</span><span class="leaf">Suez Canal</span></div>
+            <div class="gli-hero-title">Chokepoint Intelligence: Suez Canal</div>
+            <div class="gli-hero-desc">Canal is physically open &mdash; the disruption is indirect, driven by the Bab al&#8209;Mandab blockade severing the Indian Ocean approach.</div>
+          </div>
+          <div class="gli-hero-r">
+            <div class="gli-hero-ts" id="gli-suez-ts">&mdash;</div>
+            <button type="button" class="gli-export-btn" onclick="window.print()"><svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v11"/><path d="m8 11 4 4 4-4"/><path d="M4 19h16"/></svg>Export Brief</button>
+            <div class="gli-hero-tagline">A more resilient<br>Gulf tomorrow.</div>
+          </div>
         </div>
       </div>
     </div>
 
-    <!-- ② ALERT BANNERS -->
-    <div style="background:#04090E;border-bottom:1px solid #0A1E2A;padding:9px 24px;display:flex;align-items:flex-start;gap:12px">
-      <span style="font-size:8px;font-weight:700;letter-spacing:.14em;color:#0EA5E9;border:1px solid rgba(14,165,233,.5);padding:3px 8px;border-radius:3px;white-space:nowrap;flex-shrink:0;margin-top:1px">WATCH</span>
-      <div style="display:flex;flex-wrap:wrap;gap:6px">
-        <span style="font-size:9px;color:#F2F1ED;background:rgba(14,165,233,.08);border:1px solid rgba(14,165,233,.2);padding:3px 10px;border-radius:3px">&#9679; Bab al-Mandeb blockade (Jul 20) severs Indian Ocean &rarr; Suez approach &mdash; southbound traffic dropping</span>
-        <span style="font-size:9px;color:#F2F1ED;background:rgba(14,165,233,.08);border:1px solid rgba(14,165,233,.2);padding:3px 10px;border-radius:3px">&#9679; Transit volumes -56% vs 2023 SCA baseline &middot; Houthi ceasefire recovery fully reversed</span>
-        <span style="font-size:9px;color:#F2F1ED;background:rgba(14,165,233,.08);border:1px solid rgba(14,165,233,.2);padding:3px 10px;border-radius:3px">&#9679; Maersk &amp; MSC re-suspending Suez services after briefly returning in H1 2026</span>
+    <!-- SIX STATUS CARDS -->
+    <div class="gli-status-grid">
+      <div class="gli-status-card">
+        <div class="gli-status-title">Transit Status</div>
+        <div class="gli-status-word-row"><span class="gli-status-dot" style="background:var(--c-blue)"></span><span class="gli-status-word gli-status-word-sm" style="color:var(--c-blue)">Reduced &mdash; watch</span></div>
+        <div class="gli-status-body">Indian Ocean approach severed by Bab al&#8209;Mandab blockade.</div>
+        <div class="gli-status-src">Source: SCA<br>Updated <span class="gli-suez-ts-inline">&mdash;</span></div>
+      </div>
+      <div class="gli-status-card">
+        <div class="gli-status-title">Transit Index</div>
+        <div class="gli-status-figure" style="color:var(--c-blue)">-56%</div>
+        <div class="gli-status-sub">vs. 68/day SCA 2023 baseline</div>
+        <svg class="gli-status-spark" viewBox="0 0 120 34" preserveAspectRatio="none"><line x1="0" y1="3" x2="120" y2="3" stroke="#3a4650" stroke-width="1" stroke-dasharray="3 3" vector-effect="non-scaling-stroke"/><polyline points="1,4 20,8 40,12 60,16 80,21 100,25 119,28" fill="none" stroke="var(--c-blue)" stroke-width="1.4" vector-effect="non-scaling-stroke"/></svg>
+        <div class="gli-status-src">Source: IMF PortWatch<br>Updated <span class="gli-suez-ts-inline">&mdash;</span></div>
+      </div>
+      <div class="gli-status-card">
+        <div class="gli-status-title">Canal Status</div>
+        <div class="gli-status-word-row"><span class="gli-status-dot" style="background:var(--c-green-hi)"></span><span class="gli-status-word" style="color:var(--c-green-hi)">Open</span></div>
+        <div class="gli-status-body">SCA fully operational &mdash; no physical obstruction.</div>
+        <div class="gli-status-src">Source: SCA confirmed<br>Updated <span class="gli-suez-ts-inline">&mdash;</span></div>
+      </div>
+      <div class="gli-status-card">
+        <div class="gli-status-title">Carrier Posture</div>
+        <div class="gli-status-word-row"><span class="gli-status-dot" style="background:var(--c-red-hi)"></span><span class="gli-status-word gli-status-word-sm" style="color:var(--c-red-hi)">Re&#8209;suspending</span></div>
+        <div class="gli-status-body">Maersk re-suspended, MSC suspended, CMA CGM re-evaluating.</div>
+        <div class="gli-status-src">Source: Carrier advisories<br>Updated <span class="gli-suez-ts-inline">&mdash;</span></div>
+      </div>
+      <div class="gli-status-card">
+        <div class="gli-status-title">Capacity Impact</div>
+        <div class="gli-status-figure" style="color:var(--c-amber-hi)">$449M</div>
+        <div class="gli-status-sub">SCA revenue H1 2026 &middot; vs ~$4.4B H1 2023</div>
+        <div class="gli-status-src">Source: SCA official data<br>Updated <span class="gli-suez-ts-inline">&mdash;</span></div>
+      </div>
+      <div class="gli-status-card">
+        <div class="gli-status-title">Confidence Level</div>
+        <div class="gli-status-word-row"><span class="gli-status-dot" style="background:var(--c-green-hi)"></span><span class="gli-status-word" style="color:var(--c-green-hi)">High</span></div>
+        <div class="gli-status-body">SCA official data, IMF PortWatch and UNCTAD corroborated.</div>
+        <div class="gli-status-src">Source: GLI assessment<br>Updated <span class="gli-suez-ts-inline">&mdash;</span></div>
       </div>
     </div>
-    <div style="background:#0E0C07;border-bottom:1px solid #242010;padding:7px 24px;display:flex;align-items:flex-start;gap:12px">
-      <span style="font-size:8px;font-weight:700;letter-spacing:.14em;color:#C98A2E;border:1px solid rgba(201,138,46,.5);padding:3px 8px;border-radius:3px;white-space:nowrap;flex-shrink:0;margin-top:1px">REVENUE</span>
-      <div style="display:flex;flex-wrap:wrap;gap:6px">
-        <span style="font-size:9px;color:#D9D8D3;background:rgba(201,138,46,.07);border:1px solid rgba(201,138,46,.18);padding:3px 10px;border-radius:3px">&#9679; SCA H1 2026: $449M revenue &middot; 1,315 ships &mdash; vs ~$9B/year at 2023 peak &middot; Egypt foreign-currency shortfall widening</span>
-        <span style="font-size:9px;color:#D9D8D3;background:rgba(201,138,46,.07);border:1px solid rgba(201,138,46,.18);padding:3px 10px;border-radius:3px">&#9679; Canal physically OPEN &middot; SCA offering transit discounts to attract remaining traffic</span>
+
+    <!-- TAB STRIP -->
+    <div class="gli-tabstrip">
+      <span class="gli-tab active">Overview</span>
+      <span class="gli-tab">Transit Monitor</span>
+      <span class="gli-tab">Insurance &amp; Surcharges</span>
+      <span class="gli-tab">Carrier Posture</span>
+      <span class="gli-tab">Corridor Implications</span>
+      <span class="gli-tab">Evidence Log</span>
+    </div>
+
+    <!-- BAR CHART -->
+    <!-- MAP + KEY TAKEAWAYS ROW -->
+    <div class="gli-2row">
+      <div class="gli-map-panel">
+        <div class="gli-map-hdr">
+          <span class="gli-map-title">Suez Canal &ndash; Maritime Traffic</span>
+          <div class="gli-map-chips">
+            <span class="gli-filterchip">Vessel type <strong>All vessels</strong><svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg></span>
+            <span class="gli-filterchip">Time period <strong>Last 7 days</strong><svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg></span>
+          </div>
+        </div>
+        <div class="gli-map-legend">
+          <span class="gli-map-legend-item"><span class="gli-dot" style="background:var(--c-blue)"></span>Vessel density<span class="gli-density-bar"></span>Reduced</span>
+          <span class="gli-map-legend-item"><span class="gli-line-solid"></span>Mediterranean &harr; Black Sea (normal)</span>
+          <span class="gli-map-legend-item"><span class="gli-line-dashed"></span>Indian Ocean approach (severed)</span>
+        </div>
+        <div class="gli-map-surface">
+          <iframe id="suez-sat-map" src="https://www.marinetraffic.com/en/ais/embed/zoom:8/centery:30.7/centerx:32.4/maptype:4/shownames:false/mmsi:0/shipid:0/fleet:/fleet_id:/showmenu:false/remember:false" width="100%" height="100%" style="border:none;display:block" loading="lazy" allowfullscreen referrerpolicy="no-referrer-when-downgrade" title="MarineTraffic — Suez Canal live AIS"></iframe>
+        </div>
+        <div class="src" style="padding:10px 16px"><span>MarineTraffic live AIS &middot; auto-refresh &middot; AIS transits today: <span style="color:var(--c-blue)">~26</span> / 68 pre-crisis baseline</span><span class="src-badge">live</span></div>
+      </div>
+
+      <div class="gli-takeaways">
+        <div class="gli-card-hd2"><span class="gli-panel-heading">Key Takeaways</span><a href="#" onclick="return false" class="gli-link">View detailed analysis &rarr;</a></div>
+        <div class="gli-tk-item">
+          <span class="gli-tk-icon" style="background:rgba(63,142,247,.14);color:var(--c-blue)"><svg viewBox="0 0 24 24" width="17" height="17" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v9"/><path d="m8 11 4 4 4-4"/><circle cx="12" cy="12" r="9"/></svg></span>
+          <div class="gli-tk-body"><div class="gli-tk-title" style="color:var(--c-blue)">What changed?</div><div class="gli-tk-text">The canal is physically open, but the Jul 20 Bab al&#8209;Mandab blockade severed the Indian Ocean &rarr; Red Sea &rarr; Suez approach, eliminating Asia&ndash;Europe container flows. Traffic was already -60% below 2023 from prolonged Houthi diversion before the blockade.</div></div>
+        </div>
+        <div class="gli-tk-item">
+          <span class="gli-tk-icon" style="background:rgba(251,191,36,.14);color:var(--c-amber-hi)"><svg viewBox="0 0 24 24" width="17" height="17" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 16v-5M12 8h.01"/></svg></span>
+          <div class="gli-tk-body"><div class="gli-tk-title" style="color:var(--c-amber-hi)">Why it matters?</div><div class="gli-tk-text">SCA H1 2026 revenue is $449M vs ~$4.4B in H1 2023 (~-90%). Egypt relies on canal earnings as a top foreign-currency source &mdash; a sustained collapse pressures macro stability and the IMF programme.</div></div>
+        </div>
+        <div class="gli-tk-item">
+          <span class="gli-tk-icon" style="background:rgba(61,214,140,.14);color:var(--c-green-hi)"><svg viewBox="0 0 24 24" width="17" height="17" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v12"/><path d="m8 11 4 4 4-4"/><path d="M4 19h16"/></svg></span>
+          <div class="gli-tk-body"><div class="gli-tk-title" style="color:var(--c-green-hi)">Decision relevance</div><div class="gli-tk-text">Maersk (briefly returned, now re-suspended) and MSC have pulled back; CMA CGM's MEDEX/INDAMEX services are under re-evaluation. Mediterranean &harr; Black Sea traffic is unaffected &mdash; Suez remains viable for that corridor.</div></div>
+        </div>
+        <div class="gli-tk-item">
+          <span class="gli-tk-icon" style="background:rgba(167,139,250,.14);color:var(--c-purple)"><svg viewBox="0 0 24 24" width="17" height="17" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg></span>
+          <div class="gli-tk-body"><div class="gli-tk-title" style="color:var(--c-purple)">Next signals to watch</div>
+            <ul class="gli-tk-list"><li>Bab al&#8209;Mandab blockade resolution</li><li>SCA discount programme uptake</li><li>Carrier reinstatement (Maersk, MSC, CMA CGM)</li><li>Egypt FX reserve / IMF programme signals</li><li>Port Said / Suez City throughput</li></ul>
+          </div>
+        </div>
       </div>
     </div>
 
-    <!-- ③ MAIN 2-COL GRID -->
-    <div class="row col21" style="padding-top:18px">
-
-      <!-- LEFT COLUMN -->
-      <div style="display:flex;flex-direction:column;gap:14px">
-
-        <!-- HERO KPI ROW -->
-        <div style="display:grid;grid-template-columns:2fr 1fr 1fr 1fr;gap:10px">
-          <div style="background:#030C12;border:1px solid #082030;border-radius:6px;padding:22px 22px 16px;display:flex;flex-direction:column;justify-content:space-between;min-height:148px">
-            <div style="font-size:8px;font-weight:700;letter-spacing:.16em;color:#0EA5E9">VS 68 / DAY SCA 2023 BASELINE</div>
-            <div>
-              <div style="font-size:60px;font-weight:700;letter-spacing:-.03em;color:#0EA5E9;line-height:1;margin:6px 0">-56%</div>
-              <div style="font-size:10px;color:#1A5A78;line-height:1.5">Canal open &middot; traffic collapsed<br>Houthi crisis + Bab blockade</div>
-            </div>
-            <div style="font-size:8px;color:#082030;letter-spacing:.06em">SCA &middot; IMF PortWatch &middot; UNCTAD 2026</div>
-          </div>
-          <div style="background:#111110;border:1px solid #1a2535;border-radius:6px;padding:16px 14px;display:flex;flex-direction:column;justify-content:space-between;min-height:148px">
-            <div style="font-size:8px;font-weight:700;letter-spacing:.14em;color:#4A4A44">TRANSITS TODAY</div>
-            <div>
-              <div style="font-size:44px;font-weight:700;letter-spacing:-.02em;color:#0EA5E9;line-height:1;margin:6px 0 4px">~26<a href="https://en.macromicro.me/charts/94483/imf-suez-canal-number-number-of-ships-and-transit-volume" target="_blank" rel="noopener" class="src-lnk" title="Source: IMF PortWatch · SCA">&#8599;</a></div>
-              <div style="font-size:9px;color:#2A6A8A;line-height:1.4">Jul 26 est. &middot; AIS<br>vs 68/day pre-crisis</div>
-            </div>
-            <div style="font-size:8px;color:#2A2A26;letter-spacing:.04em">IMF PortWatch est.</div>
-          </div>
-          <div style="background:#111110;border:1px solid #1a2535;border-radius:6px;padding:16px 14px;display:flex;flex-direction:column;justify-content:space-between;min-height:148px">
-            <div style="font-size:8px;font-weight:700;letter-spacing:.14em;color:#4A4A44">CANAL STATUS</div>
-            <div>
-              <div style="font-size:20px;font-weight:700;letter-spacing:-.01em;color:#3dd68c;line-height:1;margin:6px 0 4px">OPEN<a href="https://www.suezcanal.gov.eg" target="_blank" rel="noopener" class="src-lnk" title="Source: SCA">&#8599;</a></div>
-              <div style="font-size:9px;color:#7A7A72;line-height:1.4">SCA fully operational<br>No physical obstruction</div>
-            </div>
-            <div style="font-size:8px;color:#2A2A26;letter-spacing:.04em">SCA confirmed</div>
-          </div>
-          <div style="background:#111110;border:1px solid #1a2535;border-radius:6px;padding:16px 14px;display:flex;flex-direction:column;justify-content:space-between;min-height:148px">
-            <div style="font-size:8px;font-weight:700;letter-spacing:.14em;color:#4A4A44">SCA REVENUE H1 2026</div>
-            <div>
-              <div style="font-size:32px;font-weight:700;letter-spacing:-.02em;color:#C98A2E;line-height:1;margin:6px 0 4px">$449M<a href="https://www.globaltrademag.com/suez-canal-container-ship-traffic-nears-2025-low/" target="_blank" rel="noopener" class="src-lnk" title="Source: Global Trade Magazine · SCA">&#8599;</a></div>
-              <div style="font-size:9px;color:#C98A2E;line-height:1.4">vs ~$4.4B H1 2023<br>~-90% revenue</div>
-            </div>
-            <div style="font-size:8px;color:#2A2A26;letter-spacing:.04em">SCA official data</div>
-          </div>
+    <!-- THREE ANALYTICS CARDS -->
+    <div class="gli-3row">
+      <div class="gli-chart-card" style="flex:1.15 1 380px">
+        <div class="gli-card-hd2"><span class="gli-panel-heading">Transit Volumes</span><a href="#" onclick="return false" class="gli-link">View more &rarr;</a></div>
+        <div class="gli-panel-sub">Daily vessel transits through Suez &middot; IMF PortWatch AIS synthesis</div>
+        <div class="gli-chart-headline">
+          <span class="gli-chart-figure">~26</span>
+          <span class="gli-chart-figure-lbl">vessels per day</span>
+          <span class="gli-chart-delta" style="color:var(--c-blue)">&#8600; -56%</span>
         </div>
-
-        <!-- BAR CHART -->
-        <div class="card">
-          <div class="card-label">Suez Canal &mdash; 14-Day Transit Monitor</div>
-          <div class="card-sub">Jul 13&ndash;26 2026 &middot; IMF PortWatch AIS synthesis &middot; SCA baseline ~68/day (2023 annual avg) &middot; Bab al-Mandeb blockade declared Jul 20</div>
-          <div style="position:relative;height:200px">
-            <canvas id="suezChart" role="img" aria-label="Daily Suez Canal crossings past 14 days"></canvas>
-          </div>
-          <div class="src"><span>SCA &middot; IMF PortWatch &middot; UNCTAD &middot; Aug 2026</span><span class="src-badge" style="background:rgba(14,165,233,.15);color:#0EA5E9;border-color:rgba(14,165,233,.4)">watch &middot; Bab impact Jul 20+</span></div>
-          <div style="margin-top:10px;padding:10px 12px;background:rgba(14,165,233,.06);border:1px solid rgba(14,165,233,.18);border-left:3px solid #0EA5E9;border-radius:3px;font-size:10.5px;line-height:1.6;color:#1a6a8a">
-            <span style="font-weight:700;color:#0EA5E9;letter-spacing:.03em">&#9432; CANAL OPEN &mdash; INDIRECT IMPACT FROM BAB AL-MANDEB BLOCKADE</span><br>
-            The Suez Canal is physically operational. However, the Bab al-Mandeb naval blockade (Jul 20 2026) severed the Indian Ocean &rarr; Red Sea &rarr; Suez approach, eliminating Asia&ndash;Europe container flows via the canal. Mediterranean &harr; Black Sea traffic continues normally. SCA is offering discounts to retain remaining transit business. Traffic was already -60% below 2023 before the Bab blockade due to prolonged Houthi diversion to Cape of Good Hope.
-          </div>
-        </div>
-
-        <!-- AFFECTED PORTS / TERMINALS -->
-        <div class="card">
-          <div class="card-label">Key Terminals &mdash; Suez Canal Corridor</div>
-          <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-top:6px">
-            <div style="background:#111110;border:1px solid #1a2535;border-radius:5px;padding:10px 12px">
-              <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:5px">
-                <div style="font-size:11px;font-weight:700;color:#D9D8D3;display:flex;align-items:center;gap:5px"><img src="https://flagcdn.com/16x12/eg.png" style="height:9px;border-radius:1px;vertical-align:middle">Port Said</div>
-                <span style="font-size:7px;font-weight:700;padding:2px 5px;border-radius:2px;color:#0EA5E9;border:1px solid #0EA5E9">REDUCED</span>
-              </div>
-              <div style="font-size:9px;color:#7A7A72;line-height:1.4">N. entrance &middot; Med flows intact &middot; Asian inbound traffic collapsed</div>
-            </div>
-            <div style="background:#111110;border:1px solid #1a2535;border-radius:5px;padding:10px 12px">
-              <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:5px">
-                <div style="font-size:11px;font-weight:700;color:#D9D8D3;display:flex;align-items:center;gap:5px"><img src="https://flagcdn.com/16x12/eg.png" style="height:9px;border-radius:1px;vertical-align:middle">Suez City</div>
-                <span style="font-size:7px;font-weight:700;padding:2px 5px;border-radius:2px;color:#C98A2E;border:1px solid #C98A2E">IMPACTED</span>
-              </div>
-              <div style="font-size:9px;color:#7A7A72;line-height:1.4">S. entrance &middot; Red Sea approach via Bab blocked &middot; southbound idle</div>
-            </div>
-            <div style="background:#111110;border:1px solid #1a2535;border-radius:5px;padding:10px 12px">
-              <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:5px">
-                <div style="font-size:11px;font-weight:700;color:#D9D8D3;display:flex;align-items:center;gap:5px"><img src="https://flagcdn.com/16x12/eg.png" style="height:9px;border-radius:1px;vertical-align:middle">Damietta</div>
-                <span style="font-size:7px;font-weight:700;padding:2px 5px;border-radius:2px;color:#5A9A5A;border:1px solid #5A9A5A">NORMAL</span>
-              </div>
-              <div style="font-size:9px;color:#7A7A72;line-height:1.4">Egypt container hub &middot; Med-only flows &middot; limited Saudi exposure</div>
-            </div>
-            <div style="background:#111110;border:1px solid #1a2535;border-radius:5px;padding:10px 12px">
-              <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:5px">
-                <div style="font-size:11px;font-weight:700;color:#D9D8D3;display:flex;align-items:center;gap:5px"><img src="https://flagcdn.com/16x12/eg.png" style="height:9px;border-radius:1px;vertical-align:middle">Alexandria</div>
-                <span style="font-size:7px;font-weight:700;padding:2px 5px;border-radius:2px;color:#5A9A5A;border:1px solid #5A9A5A">NORMAL</span>
-              </div>
-              <div style="font-size:9px;color:#7A7A72;line-height:1.4">Egypt main port &middot; Med &amp; Black Sea unchanged &middot; Asia flows lost</div>
-            </div>
-          </div>
-          <div class="src" style="margin-top:8px"><span>SCA &middot; Lloyd's List &middot; UNCTAD &middot; Aug 2026</span><span class="src-badge">real data</span></div>
-        </div>
-
-        <!-- LIVE MAP -->
-        <div>
-          <div class="mapbar">
-            <span class="mapbar-label">Live AIS &mdash; MarineTraffic &middot; Suez Canal</span>
-            <span style="display:flex;align-items:center;gap:5px;font-family:var(--f-mono);font-size:8px;color:#3dd68c"><span style="width:6px;height:6px;border-radius:50%;background:#3dd68c;flex-shrink:0;animation:pulse-dot 1.8s ease-in-out infinite"></span>Real-time vessel tracking</span>
-            <div style="margin-left:auto;display:flex;gap:6px">
-              <a href="https://www.marinetraffic.com/en/ais/home/centerx:32.4/centery:30.7/zoom:8" target="_blank" class="ext-btn">&#8599; Full screen</a>
-              <a href="https://www.marinetraffic.com/en/ais/home/centerx:32.4/centery:30.7/zoom:8" target="_blank" class="ext-btn">&#8599; Tankers live</a>
-            </div>
-          </div>
-          <iframe id="suez-sat-map" src="https://www.marinetraffic.com/en/ais/embed/zoom:8/centery:30.7/centerx:32.4/maptype:4/shownames:false/mmsi:0/shipid:0/fleet:/fleet_id:/showmenu:false/remember:false" width="100%" style="border:none;display:block" loading="lazy" allowfullscreen referrerpolicy="no-referrer-when-downgrade" title="MarineTraffic — Suez Canal live AIS"></iframe>
-          <div class="mapstats">
-            <div class="mapstat"><span>Source:</span> <span style="color:#3dd68c">MarineTraffic live AIS &bull; auto-refresh</span></div>
-            <div class="mapstat"><span>AIS transits today:</span> <span style="color:#0EA5E9">~26</span> <span>/ 68 pre-crisis baseline &nbsp;<span style="color:#7a8494;font-size:8px">(SCA 2023 annual avg &middot; IMF PortWatch Jul 26 est.)</span></span></div>
-            <div style="margin-left:auto;font-size:7px;color:#7a8494;font-family:'IBM Plex Mono',monospace">MarineTraffic &copy; &middot; AIS data &middot; Aug 2026</div>
-          </div>
-          <div style="font-size:7px;color:#4a5568;padding:5px 8px;line-height:1.5;border-top:1px solid rgba(255,255,255,0.04)">
-            <strong style="color:#5a6478">Methodology:</strong> 68/day baseline = SCA 2023 annual traffic (~25,000 vessels ÷ 365). Transit counts from IMF PortWatch AIS (Oxford/UN Global Pulse). Canal physically open &mdash; traffic decline driven by Houthi diversion (since Jan 2024) and Bab al-Mandeb blockade (Jul 20 2026) blocking Indian Ocean approach.
-          </div>
-        </div>
-
+        <div style="position:relative;height:170px;margin-top:10px"><canvas id="suezChart" role="img" aria-label="Daily Suez Canal crossings past 14 days"></canvas></div>
+        <div class="src"><span>SCA &middot; IMF PortWatch &middot; UNCTAD</span><span class="src-badge">watch</span></div>
       </div>
 
-      <!-- RIGHT SIDEBAR -->
-      <div style="display:flex;flex-direction:column;gap:14px">
-
-        <!-- INTELLIGENCE FEED -->
-        <div class="card">
-          <div class="card-label">Suez Canal Intelligence</div>
-          <div class="news-item"><div class="news-dot" style="background:#0EA5E9"></div><div><span class="news-tag" style="background:rgba(14,165,233,.2);color:#0EA5E9;border-color:rgba(14,165,233,.4)">IMPACT</span><div class="news-text"><strong style="color:#e8eaed">Bab al-Mandeb blockade (Jul 20) severs Indian Ocean &rarr; Suez approach.</strong> Asia&ndash;Europe container flows via Suez now physically blocked at the southern choke. Canal remains open but effectively inaccessible from Indian Ocean. <a href="https://www.ipsnews.net/2026/07/the-houthis-dont-need-to-close-the-bab-el-mandeb-strait-to-strangle-the-suez-canal/" target="_blank" rel="noopener" class="intel-src">IPS News &#8599;</a></div></div></div>
-          <div class="news-item"><div class="news-dot" style="background:#C98A2E"></div><div><span class="news-tag" style="background:rgba(201,138,46,.2);color:#C98A2E;border-color:rgba(201,138,46,.4)">REVENUE</span><div class="news-text">SCA H1 2026 revenues: <strong style="color:#e8eaed">$449M &mdash; 1,315 ships</strong>. Egypt experiencing acute foreign-currency pressure as canal earnings, a key FX source, remain severely depressed. SCA offering discount rates to attract remaining traffic. <a href="https://www.globaltrademag.com/suez-canal-container-ship-traffic-nears-2025-low/" target="_blank" rel="noopener" class="intel-src">Global Trade Mag &#8599;</a></div></div></div>
-          <div class="news-item"><div class="news-dot" style="background:#C98A2E"></div><div><span class="news-tag" style="background:rgba(201,138,46,.2);color:#C98A2E;border-color:rgba(201,138,46,.4)">CARRIERS</span><div class="news-text">Maersk and MSC <strong style="color:#e8eaed">re-suspending Suez services</strong> after tentative H1 2026 return. Maersk Sebarok was first Maersk vessel through since early 2024; now route suspended again. Carrier economics favour Cape reroute under Bab blockade. <a href="https://splash247.com/suez-traffic-still-60-down-100-days-after-last-houthi-attack/" target="_blank" rel="noopener" class="intel-src">Splash247 &#8599;</a></div></div></div>
-          <div class="news-item"><div class="news-dot" style="background:#7A7A6A"></div><div><span class="news-tag" style="background:rgba(90,90,80,.2);color:#8A8A7A;border-color:rgba(90,90,80,.4)">TRAFFIC</span><div class="news-text">Traffic -60% below 2023 at start of 2026 and recovery stalled. January 2026: weakest month of any January in a decade &mdash; <strong style="color:#e8eaed">150 container ship transits total</strong>, -16.7% year-on-year. Bab blockade now pushing totals lower again. <a href="https://gcaptain.com/suez-canal-traffic-stalls-at-60-below-normal-despite-100-days-without-houthi-attacks/" target="_blank" rel="noopener" class="intel-src">gCaptain &#8599;</a></div></div></div>
-          <div class="news-item"><div class="news-dot" style="background:#7A7A6A"></div><div><span class="news-tag" style="background:rgba(90,90,80,.2);color:#8A8A7A;border-color:rgba(90,90,80,.4)">RECOVERY</span><div class="news-text">Product tanker segment showed partial recovery: -19% vs 2023 in Q4 2025. Container shipping broadly absent. CMA CGM&rsquo;s MEDEX / INDAMEX services returned Jan 2026 &mdash; now under re-evaluation as Bab blockade reverses gains. <a href="https://www.maritimenews.com/suez-canal/suez-canal-transit-recovery-stalls" target="_blank" rel="noopener" class="intel-src">MaritimeNews &#8599;</a></div></div></div>
-          <div class="src"><span>SCA &middot; gCaptain &middot; Splash247 &middot; Lloyd's List &middot; Aug 2026</span><span class="src-badge">real data</span></div>
+      <div class="gli-chart-card" style="flex:1 1 320px">
+        <div class="gli-card-hd2"><span class="gli-panel-heading">Key Terminals</span><a href="#" onclick="return false" class="gli-link">View more &rarr;</a></div>
+        <div class="gli-panel-sub">Suez Canal corridor &middot; SCA &middot; Lloyd's List &middot; UNCTAD</div>
+        <div class="gli-portgrid">
+          <div class="gli-portitem"><div class="gli-portitem-hd"><span class="gli-portitem-name"><img src="https://flagcdn.com/16x12/eg.png">Port Said</span><span class="gli-portitem-badge" style="color:var(--c-blue);border-color:var(--c-blue)">REDUCED</span></div><div class="gli-portitem-body">N. entrance &middot; Med flows intact, Asian inbound collapsed.</div></div>
+          <div class="gli-portitem"><div class="gli-portitem-hd"><span class="gli-portitem-name"><img src="https://flagcdn.com/16x12/eg.png">Suez City</span><span class="gli-portitem-badge" style="color:var(--c-amber-hi);border-color:var(--c-amber-hi)">IMPACTED</span></div><div class="gli-portitem-body">S. entrance &middot; Red Sea approach blocked, southbound idle.</div></div>
+          <div class="gli-portitem"><div class="gli-portitem-hd"><span class="gli-portitem-name"><img src="https://flagcdn.com/16x12/eg.png">Damietta</span><span class="gli-portitem-badge" style="color:var(--c-green-hi);border-color:var(--c-green-hi)">NORMAL</span></div><div class="gli-portitem-body">Container hub &middot; Med-only flows, limited Saudi exposure.</div></div>
+          <div class="gli-portitem"><div class="gli-portitem-hd"><span class="gli-portitem-name"><img src="https://flagcdn.com/16x12/eg.png">Alexandria</span><span class="gli-portitem-badge" style="color:var(--c-green-hi);border-color:var(--c-green-hi)">NORMAL</span></div><div class="gli-portitem-body">Main port &middot; Med &amp; Black Sea unchanged, Asia flows lost.</div></div>
         </div>
+      </div>
 
-        <!-- ENERGY & RISK SIGNALS -->
-        <div class="card">
-          <div class="card-label">Energy &amp; Risk Signals &mdash; Suez / Egypt</div>
-          <div class="metrics" style="flex-wrap:wrap">
-            <div class="metric" style="min-width:120px">
-              <div class="val" style="color:#0EA5E9"><span>~26/day</span><a href="https://en.macromicro.me/charts/94483/imf-suez-canal-number-number-of-ships-and-transit-volume" target="_blank" rel="noopener" class="src-lnk" title="Source: IMF PortWatch · MacroMicro">&#8599;</a></div>
-              <div class="lbl">AIS Transits (Jul 26)</div>
-              <div class="chg red">-56% vs 68/day SCA 2023 baseline &bull; IMF PortWatch</div>
-            </div>
-            <div class="metric" style="min-width:120px">
-              <div class="val amb"><span>$449M</span><a href="https://www.globaltrademag.com/suez-canal-container-ship-traffic-nears-2025-low/" target="_blank" rel="noopener" class="src-lnk" title="Source: SCA via Global Trade Magazine">&#8599;</a></div>
-              <div class="lbl">SCA Revenue H1 2026</div>
-              <div class="chg red">vs ~$4.4B H1 2023 peak &bull; SCA official</div>
-            </div>
-          </div>
-          <div class="dv"></div>
-          <div style="font-size:9px;color:#7a8494;line-height:1.6">
-            <div style="margin-bottom:5px">Canal OPEN — SCA fully operational. Traffic collapse is demand-side: Houthi threats since Jan 2024 drove carriers to Cape of Good Hope rerouting. Bab al-Mandeb blockade (Jul 20) now physically prevents Indian Ocean → Suez transits.</div>
-            <div>Egypt depends on SCA revenues as a top foreign-currency earner. Sustained traffic collapse threatens macro stability. IMF programme under review.</div>
-          </div>
-          <div class="src"><span>SCA &middot; IMF &middot; UNCTAD &middot; Aug 2026</span><span class="src-badge">real data</span></div>
+      <div class="gli-chart-card" style="flex:1.1 1 360px">
+        <div class="gli-card-hd2"><span class="gli-panel-heading">SCA Revenue</span><a href="#" onclick="return false" class="gli-link">View more &rarr;</a></div>
+        <div class="gli-panel-sub">H1 2026 vs H1 2023 &middot; SCA official data</div>
+        <div class="gli-chart-headline">
+          <span class="gli-chart-figure">$449M</span>
+          <span class="gli-chart-delta" style="color:var(--c-red-hi)">&#8595; ~-90%</span>
+          <span class="gli-chart-figure-lbl">vs ~$4.4B H1 2023</span>
         </div>
-
-        <!-- CARRIER POSTURE -->
-        <div class="card">
-          <div class="card-label">Carrier Posture &mdash; Suez</div>
-          <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:10px">
-            <div style="background:#111110;border:1px solid #1a2535;border-radius:5px;padding:12px">
-              <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:6px;margin-bottom:7px"><div style="font-size:13px;font-weight:700;color:#F2F1ED">Maersk</div><div style="font-size:8px;font-weight:700;padding:2px 7px;border-radius:3px;color:#E05252;border:1px solid #E05252;white-space:nowrap">RE-SUSPENDED</div></div>
-              <div style="font-size:9px;color:#7A7A72;line-height:1.5">Briefly returned Dec 2025 (Maersk Sebarok). Re-suspending as Bab blockade closes southern approach.</div>
-            </div>
-            <div style="background:#111110;border:1px solid #1a2535;border-radius:5px;padding:12px">
-              <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:6px;margin-bottom:7px"><div style="font-size:13px;font-weight:700;color:#F2F1ED">MSC</div><div style="font-size:8px;font-weight:700;padding:2px 7px;border-radius:3px;color:#E05252;border:1px solid #E05252;white-space:nowrap">SUSPENDED</div></div>
-              <div style="font-size:9px;color:#7A7A72;line-height:1.5">Never fully returned post-Houthi. Cape Good Hope routing maintained. Bab blockade confirms indefinite suspension.</div>
-            </div>
-            <div style="background:#111110;border:1px solid #1a2535;border-radius:5px;padding:12px">
-              <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:6px;margin-bottom:7px"><div style="font-size:13px;font-weight:700;color:#F2F1ED">CMA CGM</div><div style="font-size:8px;font-weight:700;padding:2px 7px;border-radius:3px;color:#C98A2E;border:1px solid #C98A2E;white-space:nowrap">RE-EVALUATING</div></div>
-              <div style="font-size:9px;color:#7A7A72;line-height:1.5">MEDEX/INDAMEX returned Jan 2026. Now re-evaluating after Bab blockade reverses access.</div>
-            </div>
-            <div style="background:#111110;border:1px solid #1a2535;border-radius:5px;padding:12px">
-              <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:6px;margin-bottom:7px"><div style="font-size:13px;font-weight:700;color:#F2F1ED">Hapag-Lloyd</div><div style="font-size:8px;font-weight:700;padding:2px 7px;border-radius:3px;color:#E05252;border:1px solid #E05252;white-space:nowrap">SUSPENDED</div></div>
-              <div style="font-size:9px;color:#7A7A72;line-height:1.5">Cape routing maintained throughout. Monitoring Bab resolution before any Suez return.</div>
-            </div>
-          </div>
-          <div class="src"><span>Lloyd's List &middot; carrier ops &middot; Splash247 &middot; Aug 2026</span><span class="src-badge">real data</span></div>
-        </div>
-
+        <div class="bar-row" style="margin-top:16px"><span class="bar-label" style="width:60px">H1 2023</span><div class="bar-track"><div class="bar-fill" style="width:100%;background:var(--n-600)"></div></div><span class="bar-val">$4.4B</span></div>
+        <div class="bar-row"><span class="bar-label" style="width:60px">H1 2026</span><div class="bar-track"><div class="bar-fill" style="width:10%;background:var(--c-amber-hi)"></div></div><span class="bar-val">$449M</span></div>
+        <div class="gli-panel-sub" style="margin-top:10px">1,315 ships H1 2026. Egypt foreign-currency shortfall widening; SCA offering transit discounts to retain traffic.</div>
       </div>
     </div>
 

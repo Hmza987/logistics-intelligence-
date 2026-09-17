@@ -542,6 +542,55 @@ a { color: inherit; text-decoration: none; }
 .gli-tab { flex: 1 1 auto; text-align: center; font-family: var(--f-ui); font-size: 13.5px; font-weight: 400; padding: 12px 14px; white-space: nowrap; border-radius: 7px 7px 0 0; color: var(--n-700); cursor: default; }
 .gli-tab.active { font-weight: 600; color: var(--c-tx0); background: #1b2937; box-shadow: inset 0 -2px 0 var(--accent-500); }
 
+/* ── MAP + KEY TAKEAWAYS ROW ─────────────────────────────────────────────── */
+.gli-2row { display: flex; flex-wrap: wrap; gap: 14px; padding: 14px 24px 0; align-items: stretch; }
+.gli-map-panel { background: var(--c-s1); border: 1px solid var(--c-bd0); border-radius: 8px; flex: 2 1 560px; min-width: 0; overflow: hidden; display: flex; flex-direction: column; }
+.gli-map-hdr { display: flex; align-items: center; gap: 14px; flex-wrap: wrap; padding: 14px 16px 12px; }
+.gli-map-title { font-family: var(--f-ui); font-weight: 600; font-size: 16.5px; line-height: 1.25; color: var(--c-tx0); }
+.gli-map-chips { margin-left: auto; display: flex; gap: 10px; flex-wrap: wrap; }
+.gli-filterchip { display: flex; align-items: center; gap: 8px; background: var(--c-s2); border: 1px solid var(--c-bd0); border-radius: 6px; padding: 6px 10px; font-size: 12px; color: var(--n-800); white-space: nowrap; }
+.gli-filterchip strong { font-weight: 400; color: var(--n-800); }
+.gli-map-legend { display: flex; align-items: center; gap: 20px; flex-wrap: wrap; padding: 0 16px 12px; font-size: 11.5px; color: var(--c-tx1); }
+.gli-map-legend-item { display: flex; align-items: center; gap: 8px; white-space: nowrap; }
+.gli-dot { width: 9px; height: 9px; border-radius: 50%; flex-shrink: 0; display: inline-block; }
+.gli-density-bar { width: 58px; height: 5px; border-radius: 3px; background: linear-gradient(90deg,#3dd68c,#fbbf24,#f2705c); display: inline-block; }
+.gli-line-solid { width: 18px; height: 2px; background: #e0b23c; display: inline-block; }
+.gli-line-dashed { width: 18px; border-top: 2px dashed var(--n-600); display: inline-block; }
+.gli-map-surface { position: relative; height: 380px; border-top: 1px solid #1f2830; flex: 1; background: #0c1116; }
+.gli-map-surface iframe { position: absolute; inset: 0; }
+
+.gli-takeaways { background: var(--c-s1); border: 1px solid var(--c-bd0); border-radius: 8px; flex: 1 1 330px; min-width: 0; padding: 16px 18px 8px; }
+.gli-card-hd2 { display: flex; align-items: baseline; gap: 12px; flex-wrap: wrap; }
+.gli-panel-heading { font-family: var(--f-ui); font-weight: 600; font-size: 16.5px; line-height: 1.25; color: var(--c-tx0); }
+.gli-panel-sub { font-size: 12.5px; line-height: 18px; color: var(--accent-600); margin-top: 4px; }
+.gli-link { margin-left: auto; font-size: 11.5px; color: var(--accent-600); white-space: nowrap; }
+.gli-link:hover { color: var(--accent-700); }
+.gli-tk-item { display: flex; gap: 13px; padding: 14px 0; }
+.gli-tk-item + .gli-tk-item { border-top: 1px solid #1f2830; }
+.gli-tk-icon { flex: none; display: flex; align-items: center; justify-content: center; width: 34px; height: 34px; border-radius: 7px; }
+.gli-tk-body { flex: 1 1 auto; min-width: 0; }
+.gli-tk-title { font-size: 14px; font-weight: 600; }
+.gli-tk-text { font-size: 12.5px; line-height: 19px; color: var(--n-800); margin-top: 5px; }
+.gli-tk-list { margin: 6px 0 0; padding-left: 17px; font-size: 12.5px; line-height: 20px; color: var(--n-800); }
+
+/* ── THREE ANALYTICS CHARTS ───────────────────────────────────────────────── */
+.gli-3row { display: flex; flex-wrap: wrap; gap: 14px; padding: 14px 24px 26px; align-items: stretch; }
+.gli-chart-card { background: var(--c-s1); border: 1px solid var(--c-bd0); border-radius: 8px; min-width: 0; padding: 16px 18px; }
+.gli-chart-headline { display: flex; align-items: baseline; gap: 12px; flex-wrap: wrap; margin-top: 14px; }
+.gli-chart-figure { font-family: var(--f-heading); font-weight: 600; font-size: 30px; line-height: 1; color: var(--c-tx0); }
+.gli-chart-figure-lbl { font-size: 12px; color: var(--n-600); }
+.gli-chart-delta { font-size: 13px; font-weight: 600; white-space: nowrap; }
+
+.gli-donut-row { display: flex; align-items: center; gap: 20px; flex-wrap: wrap; margin-top: 14px; }
+.gli-donut-wrap { position: relative; flex: 0 0 140px; height: 140px; }
+.gli-donut-center { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; }
+.gli-donut-fig { font-family: var(--f-heading); font-weight: 600; font-size: 24px; line-height: 1; color: var(--c-tx0); }
+.gli-donut-lbl { font-size: 10px; color: var(--n-600); margin-top: 3px; }
+.gli-donut-legend { flex: 1 1 150px; min-width: 0; }
+.gli-dl-row { display: flex; align-items: center; gap: 10px; padding: 5px 0; }
+.gli-dl-name { flex: 1 1 auto; min-width: 0; font-size: 13px; color: var(--n-800); }
+.gli-dl-pct { flex: none; font-size: 13px; color: var(--n-900); }
+
 /* ── PAGE HEADER ────────────────────────────────────────────────────────── */
 .gli-pghdr {
   padding: 18px 28px 16px;
@@ -4403,155 +4452,109 @@ function gccSidebarNav(name) {
     <span class="gli-tab">Evidence Log</span>
   </div>
 
-  <!-- ③ MAIN 2-COL GRID -->
-  <div class="row col21" style="padding-top:18px">
-
-    <!-- LEFT COLUMN -->
-    <div style="display:flex;flex-direction:column;gap:14px">
-
-      <!-- Legacy KPI row — hidden; live data bindings (m-transits/m-tankers/m-containers)
-           preserved in DOM for JS compatibility, superseded visually by the six status cards above -->
-      <div class="kpi-strip" style="display:none">
-        <div class="kpi-card">
-          <div class="kpi-label">TRANSITS TODAY</div>
-          <div>
-            <div class="kpi-value"><span id="m-transits">10</span></div>
-            <div class="kpi-sub chg red" id="m-transits-chg">2 tanker &middot; 2 container<br>Jul 23 &middot; PortWatch</div>
-          </div>
-        </div>
-        <div class="kpi-card">
-          <div class="kpi-label">TANKERS 24H</div>
-          <div><div class="kpi-value"><span id="m-tankers">2</span></div></div>
-        </div>
-        <div class="kpi-card">
-          <div class="kpi-label">CONTAINER SHIPS</div>
-          <div><div class="kpi-value"><span id="m-containers">2</span></div></div>
+  <!-- MAP + KEY TAKEAWAYS ROW -->
+  <div class="gli-2row">
+    <div class="gli-map-panel">
+      <div class="gli-map-hdr">
+        <span class="gli-map-title">Hormuz &ndash; Maritime Traffic (Last 7 Days)</span>
+        <div class="gli-map-chips">
+          <span class="gli-filterchip">Vessel type <strong>All vessels</strong><svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg></span>
+          <span class="gli-filterchip">Time period <strong>Last 7 days</strong><svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg></span>
         </div>
       </div>
-
-      <!-- BAR CHART -->
-      <div class="card">
-        <div class="card-label">Strait of Hormuz &mdash; 14-Day Transit Monitor</div>
-        <div class="card-sub">Aug 10&ndash;Aug 23 2026 &middot; IMF PortWatch (Oxford/UN Global Pulse AIS) &middot; baseline ~88/day commercial vessels &middot; dark fleet partially excluded &middot; <span style="color:#5aa3f5;font-weight:600">auto-updated daily</span></div>
-        <div style="position:relative;height:200px">
-          <canvas id="hChart" role="img" aria-label="Daily Hormuz crossings past 14 days"></canvas>
-        </div>
-        <div class="src"><span>IMF PortWatch &middot; straits.live/api/v1/transits &middot; Oxford / UN Global Pulse</span><span id="h-badge" class="src-badge" style="background:rgba(217,119,6,.15);color:#f59e0b;border-color:rgba(217,119,6,.4)">data to aug 23 &middot; AIS est.</span></div>
-        <div style="margin-top:10px;padding:10px 12px;background:rgba(251,191,36,.06);border:1px solid rgba(251,191,36,.18);border-left:3px solid #fbbf24;border-radius:3px;font-size:10.5px;line-height:1.6;color:#c8a830">
-          <span style="font-weight:700;color:#fbbf24;letter-spacing:.03em">&#9888; DATA LIMITATION &mdash; AIS GAPS &amp; DARK FLEET</span><br>
-          IMF PortWatch counts AIS-broadcasting commercial vessels only (Oxford/UN Global Pulse methodology). Vessels operating without transponders (dark fleet) are not captured &mdash; independent satellite synthesis estimates true throughput may run <strong style="color:#e8d080">1.3&ndash;1.8&times;</strong> higher than AIS-visible counts during periods of elevated dark-fleet activity. The Jun 24 peak of <strong style="color:#e8d080">52 AIS-visible transits</strong> likely understates actual flow by this margin. <strong style="color:#e8d080">Kpler</strong> (satellite + AIS synthesis) remains the most credible independent cross-check &mdash; <a href="https://www.kpler.com" target="_blank" rel="noopener" style="color:#e8d080">kpler.com &#8599;</a>.
-        </div>
+      <div class="gli-map-legend">
+        <span class="gli-map-legend-item"><span class="gli-dot" style="background:var(--c-green-hi)"></span>Vessel density<span class="gli-density-bar"></span>High</span>
+        <span class="gli-map-legend-item"><span class="gli-line-solid"></span>Major shipping route</span>
+        <span class="gli-map-legend-item"><span class="gli-line-dashed"></span>Alternative route</span>
       </div>
-
-      <!-- VESSEL MIX -->
-      <div class="row col2" style="margin-bottom:14px">
-        <div class="card">
-          <div class="card-label">Vessel Type Breakdown &mdash; 24h</div>
-          <div class="card-sub">Current vs pre-crisis baseline</div>
-          <div style="display:flex;gap:14px;align-items:center">
-            <div style="width:110px;height:110px;flex-shrink:0"><canvas id="dChart" role="img" aria-label="Vessel type donut"></canvas></div>
-            <div style="flex:1">
-              <div class="vtype-row"><div class="vtype-left"><span>&#128738;</span><div><div class="vtype-name">Crude Tankers</div><div class="vtype-sub">VLCC/Suezmax</div></div></div><div><div class="vtype-count red" id="m-vt-crude">1</div><div class="vtype-pct red" id="m-vt-crude-pct">10% &bull; was 38%</div></div></div>
-              <div class="vtype-row"><div class="vtype-left"><span>&#9981;</span><div><div class="vtype-name">Product Tankers</div><div class="vtype-sub">MR/LR1/LR2</div></div></div><div><div class="vtype-count amb" id="m-vt-product">0</div><div class="vtype-pct amb" id="m-vt-product-pct">0% &bull; was 18%</div></div></div>
-              <div class="vtype-row"><div class="vtype-left"><span>&#10052;</span><div><div class="vtype-name">LNG / LPG</div><div class="vtype-sub">Gas carriers</div></div></div><div><div class="vtype-count pur" id="m-vt-lng">0</div><div class="vtype-pct pur" id="m-vt-lng-pct">0% &bull; was 12%</div></div></div>
-              <div class="vtype-row"><div class="vtype-left"><span>&#128230;</span><div><div class="vtype-name">Containers</div><div class="vtype-sub">Feeder to Panamax</div></div></div><div><div class="vtype-count blu" id="m-vt-containers">3</div><div class="vtype-pct blu" id="m-vt-containers-pct">30% &bull; was 15%</div></div></div>
-              <div class="vtype-row"><div class="vtype-left"><span>&#9875;</span><div><div class="vtype-name">Bulk / Other</div><div class="vtype-sub">Dry bulk, general cargo</div></div></div><div><div class="vtype-count muted" id="m-vt-bulk">6</div><div class="vtype-pct muted" id="m-vt-bulk-pct">60% &bull; was 17%</div></div></div>
-            </div>
-          </div>
-          <div class="src"><span>UNCTAD / AIS classification &middot; straits.live</span><span class="src-badge">real data</span></div>
-        </div>
-        <div class="card">
-          <div class="card-label">14-Day Transit Trend &mdash; Vessel Mix</div>
-          <div class="card-sub">IMF PortWatch baseline ~88/day &rarr; AIS-verified range: 5&ndash;43/day (re-escalation Jul &middot; dark fleet excluded)</div>
-          <div style="position:relative;height:165px"><canvas id="sChart" role="img" aria-label="Stacked vessel type trend 14 days"></canvas></div>
-          <div class="src"><span>AIS synthesis &middot; IMF PortWatch</span><span class="src-badge">synthesized</span></div>
-        </div>
+      <div class="gli-map-surface">
+        <iframe id="sat-map" src="https://www.marinetraffic.com/en/ais/embed/zoom:8/centery:26.2/centerx:56.4/maptype:4/shownames:false/mmsi:0/shipid:0/fleet:/fleet_id:/showmenu:false/remember:false" width="100%" height="100%" style="border:none;display:block" loading="lazy" allowfullscreen referrerpolicy="no-referrer-when-downgrade" title="MarineTraffic — Strait of Hormuz live AIS"></iframe>
       </div>
-
-      <!-- LIVE MAP -->
-      <div>
-        <div class="mapbar">
-          <span class="mapbar-label">Live AIS &mdash; MarineTraffic</span>
-          <span style="display:flex;align-items:center;gap:5px;font-family:var(--f-mono);font-size:8px;color:#3dd68c"><span style="width:6px;height:6px;border-radius:50%;background:#3dd68c;flex-shrink:0;animation:pulse-dot 1.8s ease-in-out infinite"></span>Real-time vessel tracking</span>
-          <div style="margin-left:auto;display:flex;gap:6px">
-            <a href="https://www.marinetraffic.com/en/ais/home/centerx:56.4/centery:26.2/zoom:8" target="_blank" class="ext-btn">&#8599; Full screen</a>
-            <a href="https://www.shiptraffic.net/tankers/HORMUZ%20STRAIT/ship-traffic-tracker" target="_blank" class="ext-btn">&#8599; Tankers live</a>
-            <a href="https://straits.live" target="_blank" class="ext-btn" style="color:#e74c3c;border-color:rgba(231,76,60,.3)">&#8599; straits.live</a>
-          </div>
-        </div>
-        <iframe id="sat-map" src="https://www.marinetraffic.com/en/ais/embed/zoom:8/centery:26.2/centerx:56.4/maptype:4/shownames:false/mmsi:0/shipid:0/fleet:/fleet_id:/showmenu:false/remember:false" width="100%" style="border:none;display:block" loading="lazy" allowfullscreen referrerpolicy="no-referrer-when-downgrade" title="MarineTraffic — Strait of Hormuz live AIS"></iframe>
-        <div class="mapstats">
-          <div class="mapstat"><span>Source:</span> <span style="color:#3dd68c">MarineTraffic live AIS &bull; auto-refresh</span></div>
-          <div class="mapstat"><span>AIS transits today:</span> <span id="snap-transits" class="red">~10</span> <span>/ 88 baseline &nbsp;<span style="color:#7a8494;font-size:8px">(dark fleet partially excluded &middot; IMF PortWatch Jul 23)</span></span></div>
-          <div style="margin-left:auto;font-size:7px;color:#7a8494;font-family:'IBM Plex Mono',monospace">MarineTraffic &copy; &middot; AIS data &middot; Aug 2026</div>
-        </div>
-        <div style="font-size:7px;color:#4a5568;padding:5px 8px;line-height:1.5;border-top:1px solid rgba(255,255,255,0.04)">
-          <strong style="color:#5a6478">Methodology:</strong> 88/day baseline = IMF PortWatch pre-crisis median (Oxford/UN Global Pulse AIS, Feb 2026, chokepoint6). Transit counts from IMF PortWatch AIS; dark fleet estimates from Windward/Kpler.
-        </div>
-      </div>
-
+      <div class="src" style="padding:10px 16px"><span>MarineTraffic live AIS &middot; auto-refresh &middot; AIS transits today: <span id="snap-transits" style="color:var(--c-red-hi)">~10</span> / 88 baseline</span><span class="src-badge">live</span></div>
     </div>
 
-    <!-- RIGHT SIDEBAR -->
-    <div style="display:flex;flex-direction:column;gap:14px">
-
-      <!-- INTELLIGENCE FEED -->
-      <div class="card">
-        <div class="card-label">Live Intelligence Feed <span style="font-size:9px;color:#3d4451;font-weight:400;margin-left:6px">&#8635; updates every 3 min</span></div>
-        <div class="news-item" id="intel-alert"><div class="news-dot" style="background:#e74c3c"></div><div><span class="news-tag tag-alert">ALERT</span><div class="news-text">IRGC enforces all-corridor control since Jun 25 southern-route crackdown. <strong style="color:#e8eaed">Second merchant vessel struck Jun 27</strong> &mdash; IMO crew-evacuation plans paused. MoU 60-day window under stress; nuclear talks postponed. Traffic peaked at 49 transits Jun 24 (Windward) before reverting. JWC war-risk listing extended through Jun 30+. <a href="https://www.lloydslist.com/hot-topics/strait-of-hormuz-crisis" target="_blank" rel="noopener" class="intel-src">Lloyd's List &#8599;</a></div></div></div>
-        <div id="intel-feed"></div>
-        <div class="src"><span id="intel-src-line">GDELT &middot; NewsAPI &middot; live sources</span><span class="src-badge">live</span></div>
+    <div class="gli-takeaways">
+      <div class="gli-card-hd2"><span class="gli-panel-heading">Key Takeaways</span><a href="#" onclick="return false" class="gli-link">View detailed analysis &rarr;</a></div>
+      <div class="gli-tk-item">
+        <span class="gli-tk-icon" style="background:rgba(242,112,92,.14);color:var(--c-red-hi)"><svg viewBox="0 0 24 24" width="17" height="17" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v9"/><path d="m8 11 4 4 4-4"/><circle cx="12" cy="12" r="9"/></svg></span>
+        <div class="gli-tk-body"><div class="gli-tk-title" style="color:var(--c-red-hi)">What changed?</div><div class="gli-tk-text">Transit volumes remain ~89% below the 88/day baseline (IMF PortWatch). Independent satellite synthesis suggests dark-fleet-adjusted flow may run 1.3&ndash;1.8&times; higher than the AIS-visible count &mdash; Kpler remains the most credible cross-check.</div></div>
       </div>
-
-      <!-- ENERGY & RISK SIGNALS -->
-      <div class="card">
-        <div class="card-label">Energy &amp; Risk Signals</div>
-        <div class="metrics" style="flex-wrap:wrap">
-          <div class="metric" style="min-width:120px">
-            <div class="val amb"><span id="m-brent">$88.10</span><a href="https://www.investing.com/commodities/brent-oil" target="_blank" rel="noopener" class="src-lnk" title="Source: investing.com">&#8599;</a></div>
-            <div class="lbl">Brent Crude / bbl</div>
-            <div class="chg red" id="m-brent-chg">+22.4% vs pre-crisis &bull; Jul 19 2026 &bull; investing.com</div>
-          </div>
-          <div class="metric" style="min-width:120px">
-            <div class="val amb">~3.2% hull<a href="https://www.lloydslist.com/hot-topics/strait-of-hormuz-crisis" target="_blank" rel="noopener" class="src-lnk" title="Source: Lloyd's List &middot; LMA">&#8599;</a></div>
-            <div class="lbl">War-Risk Insurance</div>
-            <div class="chg red">&#9650;&nbsp;+1.2pp post-Jun 27 strike &bull; re-escalating from 2% MoU floor</div>
-          </div>
-        </div>
-        <div class="dv"></div>
-        <div style="font-size:9px;color:#7a8494;line-height:1.6">
-          <div style="margin-bottom:5px">Brent at <span class="red">$88.10</span> (Jul 19 2026). +22% above $72 pre-crisis baseline — crisis premium sustained as Jun 27 second vessel strike reversed MoU-driven relief rally. Western carrier exclusion keeping Gulf supply uncertainty elevated.</div>
-          <div>War-risk premiums halved from ~5% to <span class="amb">~2%</span> hull value after Jun 17 MoU. Jun 27 second vessel strike drove re-escalation to <span class="red">~3.2% (+1.2pp)</span>. Lloyd's Chubb-led consortium (Jun 19) adds $200M hull + $200M cargo capacity &mdash; capacity now under pressure.</div>
-        </div>
-        <div class="src"><span>CNBC &middot; investing.com &middot; Lloyd's List &middot; Insurance Business &middot; Aug 2026</span><span class="src-badge">real data</span></div>
+      <div class="gli-tk-item">
+        <span class="gli-tk-icon" style="background:rgba(63,142,247,.14);color:var(--c-blue)"><svg viewBox="0 0 24 24" width="17" height="17" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 16v-5M12 8h.01"/></svg></span>
+        <div class="gli-tk-body"><div class="gli-tk-title" style="color:var(--c-blue)">Why it matters?</div><div class="gli-tk-text">Brent crude at <span id="m-brent">$88.10</span> (<span id="m-brent-chg-inline">+22.4% vs pre-crisis</span>) and war-risk premiums at ~3.2% hull value are structural cost increases for Gulf energy and petrochemical trade, not one-off spikes.</div></div>
       </div>
-
-      <!-- CARRIER POSTURE -->
-      <div class="card">
-        <div class="card-label">Carrier Posture</div>
-        <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:10px">
-          <div style="background:var(--c-s0);border:1px solid var(--c-bd1);border-radius:6px;padding:12px">
-            <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:6px;margin-bottom:7px"><div style="font-size:13px;font-weight:700;color:var(--c-tx0)">MSC</div><div style="font-size:8px;font-weight:700;padding:2px 7px;border-radius:3px;color:var(--c-red-hi);border:1px solid rgba(227,91,82,.4);white-space:nowrap">SUSPENDED</div></div>
-            <div style="font-size:9px;color:var(--c-tx2);line-height:1.5;margin-bottom:7px">Cape Good Hope restored post-Jun 27. Briefly resumed Jun 18&ndash;24.</div>
-            <div style="font-size:9px;color:var(--c-gold-hi);font-weight:700;border-top:1px solid var(--c-bd0);padding-top:6px">$1,200/TEU surcharge active</div>
-          </div>
-          <div style="background:var(--c-s0);border:1px solid var(--c-bd1);border-radius:6px;padding:12px">
-            <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:6px;margin-bottom:7px"><div style="font-size:13px;font-weight:700;color:var(--c-tx0)">Hapag-Lloyd</div><div style="font-size:8px;font-weight:700;padding:2px 7px;border-radius:3px;color:var(--c-red-hi);border:1px solid rgba(227,91,82,.4);white-space:nowrap">SUSPENDED</div></div>
-            <div style="font-size:9px;color:var(--c-tx2);line-height:1.5">Cape diversions active. No Hormuz calls since Jun 27.</div>
-          </div>
-          <div style="background:var(--c-s0);border:1px solid var(--c-bd1);border-radius:6px;padding:12px">
-            <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:6px;margin-bottom:7px"><div style="font-size:13px;font-weight:700;color:var(--c-tx0)">Maersk</div><div style="font-size:8px;font-weight:700;padding:2px 7px;border-radius:3px;color:var(--c-red-hi);border:1px solid rgba(227,91,82,.4);white-space:nowrap">SUSPENDED</div></div>
-            <div style="font-size:9px;color:var(--c-tx2);line-height:1.5">Second suspension confirmed Jun 27. Cape reroute restored. $1,000/TEU surcharge.</div>
-          </div>
-          <div style="background:var(--c-s0);border:1px solid var(--c-bd1);border-radius:6px;padding:12px">
-            <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:6px;margin-bottom:7px"><div style="font-size:13px;font-weight:700;color:var(--c-tx0)">CMA CGM</div><div style="font-size:8px;font-weight:700;padding:2px 7px;border-radius:3px;color:var(--c-amber-hi);border:1px solid rgba(232,162,61,.4);white-space:nowrap">MONITORING</div></div>
-            <div style="font-size:9px;color:var(--c-tx2);line-height:1.5">Limited GCC exposure. Pausing evaluation post-Jun 27.</div>
-          </div>
-        </div>
-        <div class="src"><span>straits.live &middot; Lloyd's List &middot; carrier ops updates &middot; Aug 2026</span><span class="src-badge">real data</span></div>
+      <div class="gli-tk-item">
+        <span class="gli-tk-icon" style="background:rgba(61,214,140,.14);color:var(--c-green-hi)"><svg viewBox="0 0 24 24" width="17" height="17" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v12"/><path d="m8 11 4 4 4-4"/><path d="M4 19h16"/></svg></span>
+        <div class="gli-tk-body"><div class="gli-tk-title" style="color:var(--c-green-hi)">Decision relevance</div><div class="gli-tk-text">MSC, Hapag&#8209;Lloyd and Maersk have suspended Hormuz calls (Cape of Good Hope reroute, $1,000&ndash;1,200/TEU surcharge); CMA CGM is monitoring. Track alternative gateways &mdash; Fujairah, Sohar, and the UAE's Al Wajajah land corridor.</div></div>
       </div>
-
+      <div class="gli-tk-item">
+        <span class="gli-tk-icon" style="background:rgba(167,139,250,.14);color:var(--c-purple)"><svg viewBox="0 0 24 24" width="17" height="17" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg></span>
+        <div class="gli-tk-body"><div class="gli-tk-title" style="color:var(--c-purple)">Next signals to watch</div>
+          <ul class="gli-tk-list"><li>JWC risk-area classification updates</li><li>War&#8209;risk premium trends</li><li>Carrier reinstatement timelines</li><li>Signs of AIS recovery / dark-fleet narrowing</li><li>Port congestion in UAE and Oman</li></ul>
+        </div>
+      </div>
     </div>
+  </div>
+
+  <!-- THREE ANALYTICS CHARTS -->
+  <div class="gli-3row">
+    <div class="gli-chart-card" style="flex:1.15 1 380px">
+      <div class="gli-card-hd2"><span class="gli-panel-heading">Transit Volumes</span><a href="#" onclick="return false" class="gli-link">View more &rarr;</a></div>
+      <div class="gli-panel-sub">Daily vessel transits through Hormuz &middot; IMF PortWatch AIS</div>
+      <div class="gli-chart-headline">
+        <span class="gli-chart-figure" id="m-decline-2">-89%</span>
+        <span class="gli-chart-figure-lbl">vs. 88/day baseline</span>
+        <span class="gli-chart-delta" style="color:var(--c-red-hi)">&#8600; ~10/day</span>
+      </div>
+      <div style="position:relative;height:170px;margin-top:10px"><canvas id="hChart" role="img" aria-label="Daily Hormuz crossings past 14 days"></canvas></div>
+      <div class="src"><span>IMF PortWatch &middot; straits.live/api/v1/transits</span><span id="h-badge" class="src-badge">AIS est.</span></div>
+    </div>
+
+    <div class="gli-chart-card" style="flex:1 1 320px">
+      <div class="gli-card-hd2"><span class="gli-panel-heading">Vessel Mix (Last 7 Days)</span><a href="#" onclick="return false" class="gli-link">View more &rarr;</a></div>
+      <div class="gli-panel-sub">Share of vessels transiting Hormuz</div>
+      <div class="gli-donut-row">
+        <div class="gli-donut-wrap">
+          <canvas id="dChart" role="img" aria-label="Vessel type donut" width="140" height="140"></canvas>
+          <div class="gli-donut-center"><span class="gli-donut-fig" id="m-decline-3">10</span><span class="gli-donut-lbl">vessels/day</span></div>
+        </div>
+        <div class="gli-donut-legend">
+          <div class="gli-dl-row"><span class="gli-dot" style="background:#3f8ef7"></span><span class="gli-dl-name">Crude tankers</span><span class="gli-dl-pct" id="m-vt-crude-pct2">10%</span></div>
+          <div class="gli-dl-row"><span class="gli-dot" style="background:#2fd4a7"></span><span class="gli-dl-name">Containers</span><span class="gli-dl-pct" id="m-vt-containers-pct2">30%</span></div>
+          <div class="gli-dl-row"><span class="gli-dot" style="background:#fbbf24"></span><span class="gli-dl-name">Product tankers</span><span class="gli-dl-pct" id="m-vt-product-pct2">0%</span></div>
+          <div class="gli-dl-row"><span class="gli-dot" style="background:#a78bfa"></span><span class="gli-dl-name">LNG/LPG</span><span class="gli-dl-pct" id="m-vt-lng-pct2">0%</span></div>
+          <div class="gli-dl-row"><span class="gli-dot" style="background:#8b98a2"></span><span class="gli-dl-name">Bulk / other</span><span class="gli-dl-pct" id="m-vt-bulk-pct2">60%</span></div>
+        </div>
+      </div>
+      <div class="src"><span>UNCTAD / AIS classification</span><span class="src-badge">real data</span></div>
+    </div>
+
+    <div class="gli-chart-card" style="flex:1.1 1 360px">
+      <div class="gli-card-hd2"><span class="gli-panel-heading">War&#8209;Risk Premium Trends</span><a href="#" onclick="return false" class="gli-link">View more &rarr;</a></div>
+      <div class="gli-panel-sub">Indicative war&#8209;risk premium (% of vessel value) &middot; Lloyd's List &middot; LMA</div>
+      <div class="gli-chart-headline">
+        <span class="gli-chart-figure">~3.2%</span>
+        <span class="gli-chart-delta" style="color:var(--c-red-hi)">&#8599; +1.2 pp</span>
+        <span class="gli-chart-figure-lbl">since Jun 27 strike</span>
+      </div>
+      <div style="position:relative;height:140px;margin-top:10px"><canvas id="warRiskChart" role="img" aria-label="War-risk premium trend"></canvas></div>
+    </div>
+  </div>
+
+  <!-- Legacy elements with live JS bindings but no home in the new spec layout —
+       hidden rather than deleted so real-time updates (Brent, vessel-mix %, sChart,
+       intel feed) don't silently break. Their real facts are folded into Key
+       Takeaways above and the Vessel Mix legend. -->
+  <div style="display:none" aria-hidden="true">
+    <span id="m-brent-chg">+22.4% vs pre-crisis &bull; Jul 19 2026 &bull; investing.com</span>
+    <span id="m-transits">10</span><span id="m-transits-chg"></span><span id="m-tankers">2</span><span id="m-containers">2</span>
+    <span id="m-vt-crude">1</span><span id="m-vt-crude-pct">10% &bull; was 38%</span>
+    <span id="m-vt-product">0</span><span id="m-vt-product-pct">0% &bull; was 18%</span>
+    <span id="m-vt-lng">0</span><span id="m-vt-lng-pct">0% &bull; was 12%</span>
+    <span id="m-vt-containers">3</span><span id="m-vt-containers-pct">30% &bull; was 15%</span>
+    <span id="m-vt-bulk">6</span><span id="m-vt-bulk-pct">60% &bull; was 17%</span>
+    <div id="intel-alert"></div><div id="intel-feed"></div><span id="intel-src-line"></span>
+    <canvas id="sChart"></canvas>
   </div>
   </div><!-- /cp-view-hormuz -->
 
@@ -6922,6 +6925,7 @@ function showTab(name, el) {
     if (name === 'hormuz') {
       if (!mapReady) initMap();
       else if (leafMap) leafMap.invalidateSize();
+      if (!CHARTS['warRiskChart']) initWarRiskChart();
     }
     if (name === 'rates') {
       if (!CHARTS['fChart']) initFreightChart();
@@ -7129,6 +7133,34 @@ function initHormuzCharts() {
     options: chartDefaults({
       x: xScale({ stacked:true }),
       y: yScale(TICK_COLOR, { stacked:true, beginAtZero:true })
+    })
+  });
+}
+
+// ── WAR-RISK PREMIUM TREND (Hormuz Chokepoints Overview) ────────────────────
+// Real reported levels only — no interpolated/fabricated points:
+// pre-crisis peak ~5% (unspecified date) → 2% after Jun 17 MoU → 3.2% after Jun 27 second strike
+function initWarRiskChart() {
+  var ctx = document.getElementById('warRiskChart');
+  if (!ctx || CHARTS['warRiskChart']) return;
+  CHARTS['warRiskChart'] = new Chart(ctx, {
+    type: 'line',
+    data: {
+      labels: ['Pre-crisis', 'Jun 17 (MoU)', 'Jun 27+ (2nd strike)'],
+      datasets: [{
+        label: 'War-risk premium (% hull value)',
+        data: [5.0, 2.0, 3.2],
+        stepped: 'before',
+        borderColor: '#f2705c',
+        backgroundColor: 'transparent',
+        borderWidth: 1.8,
+        pointRadius: 3,
+        pointBackgroundColor: '#f2705c'
+      }]
+    },
+    options: chartDefaults({
+      x: xScale({}),
+      y: yScale(TICK_COLOR, { beginAtZero: true, suggestedMax: 6 })
     })
   });
 }

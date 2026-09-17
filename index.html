@@ -141,61 +141,67 @@
    Confidential — prepared for ministerial & strategic decision-makers
 ═══════════════════════════════════════════════════════════════════════════ */
 
-@import url('https://fonts.googleapis.com/css2?family=Archivo:wght@500;600;700;800&family=IBM+Plex+Mono:wght@300;400;500;600&family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Barlow:wght@400;500;600&family=Barlow+Condensed:wght@500;600;700&family=IBM+Plex+Mono:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500;700&display=swap');
 
 /* ── RESET & TOKENS ─────────────────────────────────────────────────────── */
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
 :root {
-  /* Surface hierarchy — institutional navy/charcoal, glass-card depth */
-  --c-bg:        #0a0e17;   /* page background   */
-  --c-s0:        #0d1220;   /* deepest surface (sidebar) */
-  --c-s1:        #121928;   /* card background   */
-  --c-s2:        #161e30;   /* elevated surface  */
-  --c-s3:        #1c2538;   /* hover / active    */
+  /* Surface hierarchy — Kpler/Palantir situation-room palette (design handoff) */
+  --c-bg:        #171c21;   /* page background   */
+  --c-s0:        #0f141a;   /* rail / topbar background */
+  --c-s1:        #141b23;   /* panel/card background   */
+  --c-s2:        #182028;   /* control background (chips, buttons) */
+  --c-s3:        #1c2630;   /* control hover    */
 
-  /* Borders — thin, glass-like */
-  --c-bd0:       #1a2233;
-  --c-bd1:       #252e45;
-  --c-bd2:       #323d58;
+  /* Borders — hairline, no shadows */
+  --c-bd0:       #232e39;   /* panel border — 1px on every card */
+  --c-bd1:       #2a353f;   /* stronger border — inputs, hover */
+  --c-bd2:       #333f47;   /* strongest — active hover borders */
 
   /* Text hierarchy */
-  --c-tx0:       #edf1f7;   /* primary text      */
-  --c-tx1:       #9aa7be;   /* secondary text    */
-  --c-tx2:       #5c6b85;   /* tertiary / muted  */
-  --c-tx3:       #38455c;   /* disabled          */
+  --c-tx0:       #eceff1;   /* primary text      */
+  --c-tx1:       #9fabb2;   /* secondary text (descriptions) */
+  --c-tx2:       #87939a;   /* tertiary / muted (captions, labels) */
+  --c-tx3:       #5f6d75;   /* disabled / separators */
 
-  /* Signal colours — institutional blue as primary nav/intelligence accent;
+  /* Signal colours — steel accent for navigation/intelligence;
      red/amber/green reserved strictly for risk semantics */
-  --c-gold:      #4c8dd9;   /* primary accent — navigation, intelligence, links */
-  --c-gold-hi:   #6bacf0;   /* highlight */
-  --c-gold-dim:  #2a5788;   /* dim accent */
-  --c-red:       #c0392b;
-  --c-red-hi:    #e35b52;
-  --c-amber:     #c47a1a;
-  --c-amber-hi:  #e8a23d;
-  --c-green:     #1a7a4a;
-  --c-green-hi:  #2fb876;
-  --c-blue:      #1e5a94;
-  --c-blue-hi:   #4c8dd9;
-  --c-purple:    #4a2d7a;
-  --c-purple-hi: #6a42aa;
+  --c-gold:      #7fa8cc;   /* primary accent — active nav marker, links */
+  --c-gold-hi:   #92b6d5;   /* highlight / link hover */
+  --c-gold-dim:  #3a5060;   /* dim accent */
+  --c-red:       #f2705c;
+  --c-red-hi:    #f2705c;
+  --c-amber:     #fbbf24;
+  --c-amber-hi:  #fbbf24;
+  --c-green:     #3dd68c;
+  --c-green-hi:  #3dd68c;
+  --c-blue:      #3f8ef7;
+  --c-blue-hi:   #3f8ef7;
+  --c-purple:    #a78bfa;
+  --c-purple-hi: #a78bfa;
 
-  /* Typography */
-  --f-ui:    'Inter', system-ui, sans-serif;
-  --f-mono:  'IBM Plex Mono', 'Courier New', monospace;
+  /* Typography — Barlow Condensed (headings/numerals), Barlow (body) */
+  --f-ui:      'Barlow', system-ui, sans-serif;
+  --f-heading: 'Barlow Condensed', 'Barlow', system-ui, sans-serif;
+  --f-mono:    'IBM Plex Mono', 'Courier New', monospace;
 
   /* Spacing — pad scales with viewport so content fills large/projected screens */
-  --gap:     12px;
+  --gap:     14px;
   --pad:     clamp(18px, 2vw, 36px);
   --r:       8px;
 
   /* Transitions */
   --t:       150ms ease;
 
-  /* Glass-card shadow — soft, institutional depth */
-  --shadow-card: 0 1px 2px rgba(0,0,0,.4), 0 8px 24px -8px rgba(0,0,0,.45);
+  /* Full neutral/accent ramp (design handoff) — used where the 4-step
+     --c-tx0..3 ramp isn't granular enough for spec-exact fidelity */
+  --n-900: #e4e9ec; --n-800: #c3cbcf; --n-700: #9fabb2; --n-600: #87939a;
+  --n-500: #5f6d75; --n-400: #47555e; --n-200: #27333a;
+  --accent-400: #5c7f9c; --accent-500: #7fa8cc; --accent-600: #92b6d5;
 }
+/* No drop shadows anywhere — depth comes from surface value + hairline border */
+* { font-variant-numeric: tabular-nums; }
 
 /* ── BASE ───────────────────────────────────────────────────────────────── */
 html { height: 100%; }
@@ -373,27 +379,13 @@ a { color: inherit; text-decoration: none; }
 
 /* ── CARDS ──────────────────────────────────────────────────────────────── */
 .card {
-  background: linear-gradient(160deg, var(--c-s2) 0%, var(--c-s1) 55%);
+  background: var(--c-s1);
   border: 1px solid var(--c-bd0);
   border-radius: var(--r);
   padding: 16px 18px;
   position: relative;
   overflow: hidden;
-  box-shadow: var(--shadow-card);
 }
-
-/* Subtle left accent line — institutional signature */
-.card::after {
-  content: '';
-  position: absolute;
-  top: 0; left: 0;
-  width: 2px; height: 100%;
-  background: linear-gradient(180deg, var(--c-gold-dim), transparent 80%);
-  opacity: 0;
-  transition: opacity var(--t);
-}
-.card:hover::after { opacity: 1; }
-.card:hover { border-color: var(--c-bd1); }
 
 /* Section label — stark, military */
 .card-label {
@@ -416,7 +408,7 @@ a { color: inherit; text-decoration: none; }
 /* ── METRIC BOXES ───────────────────────────────────────────────────────── */
 .metrics { display: flex; gap: 8px; margin-bottom: 12px; flex-wrap: wrap; }
 .metric {
-  background: linear-gradient(160deg, var(--c-s1) 0%, var(--c-s0) 60%);
+  background: var(--c-s2);
   border: 1px solid var(--c-bd1);
   border-radius: var(--r);
   padding: 10px 14px;
@@ -508,6 +500,47 @@ a { color: inherit; text-decoration: none; }
 .gli-scn-card:hover { border-color: var(--c-gold-dim); }
 .gli-scn-icon { width: 26px; height: 26px; border-radius: 6px; display: flex; align-items: center; justify-content: center; font-size: 13px; flex-shrink: 0; }
 .gli-scn-label { font-family: var(--f-ui); font-size: 11px; font-weight: 600; color: var(--c-tx0); line-height: 1.3; }
+
+.gli-empty-panel { background: var(--c-s1); border: 1px solid var(--c-bd0); border-radius: 8px; margin: 22px 24px; padding: 36px 24px; text-align: center; }
+.gli-empty-title { font-family: var(--f-heading); font-weight: 600; font-size: 22px; line-height: 1.2; color: var(--c-tx0); }
+.gli-empty-body { font-size: 13.5px; line-height: 21px; color: var(--n-700); margin: 9px auto 0; max-width: 56ch; }
+.gli-empty-chip { display: inline-block; font-family: var(--f-ui); font-size: 10.5px; letter-spacing: .12em; text-transform: uppercase; color: var(--c-amber-hi); border: 1px solid var(--c-amber-hi); border-radius: 4px; padding: 3px 9px; margin-top: 16px; }
+
+/* ── HERO BAND (Chokepoints / Freight Markets) ───────────────────────────── */
+.gli-hero { position: relative; background: var(--c-s1); border: 1px solid var(--c-bd0); border-radius: 8px; overflow: hidden; padding: 16px 22px 20px; }
+.gli-hero-grad { position: absolute; right: 0; top: 0; bottom: 0; width: 44%; min-width: 260px; background: linear-gradient(100deg, var(--c-s1) 0%, rgba(20,27,35,.7) 24%, #1c2a36 58%, #253b4d 100%); }
+.gli-hero-inner { position: relative; display: flex; align-items: flex-start; gap: 24px; flex-wrap: wrap; }
+.gli-hero-l { flex: 1 1 420px; min-width: 0; }
+.gli-breadcrumb { display: flex; align-items: center; gap: 9px; font-size: 12.5px; color: var(--n-600); }
+.gli-breadcrumb .sep { color: var(--n-500); }
+.gli-breadcrumb .leaf { color: var(--n-800); }
+.gli-hero-title { font-family: var(--f-heading); font-weight: 700; font-size: 40px; line-height: 1.08; margin-top: 10px; color: var(--c-tx0); }
+.gli-hero-desc { font-size: 14.5px; line-height: 22px; color: var(--c-tx1); margin-top: 9px; max-width: 64ch; }
+.gli-hero-r { flex: 0 1 300px; min-width: 0; display: flex; flex-direction: column; align-items: flex-end; gap: 14px; text-align: right; }
+.gli-hero-ts { font-size: 12px; color: var(--c-tx1); }
+.gli-export-btn { display: flex; align-items: center; gap: 9px; background: #1d3a5c; border: 1px solid var(--c-blue); border-radius: 7px; color: var(--c-tx0); font-family: var(--f-ui); font-weight: 600; font-size: 13.5px; padding: 9px 15px; cursor: pointer; white-space: nowrap; transition: background var(--t); }
+.gli-export-btn:hover { background: #24486e; }
+.gli-hero-tagline { font-family: var(--f-heading); font-weight: 600; font-size: 19px; line-height: 1.2; color: var(--n-900); }
+
+/* ── SIX STATUS CARDS ─────────────────────────────────────────────────────── */
+.gli-status-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(216px, 1fr)); gap: 12px; padding: 14px 24px 0; }
+.gli-status-card { background: var(--c-s1); border: 1px solid var(--c-bd0); border-radius: 8px; padding: 14px 16px 12px; display: flex; flex-direction: column; }
+.gli-status-title { font-size: 13px; font-weight: 600; color: var(--n-800); }
+.gli-status-word-row { display: flex; align-items: center; gap: 8px; margin-top: 10px; }
+.gli-status-dot { width: 9px; height: 9px; border-radius: 50%; flex-shrink: 0; }
+.gli-status-word { font-family: var(--f-ui); font-weight: 600; font-size: 17px; }
+.gli-status-word-sm { font-size: 15px; line-height: 1.3; }
+.gli-status-body { font-size: 12.5px; line-height: 18px; color: var(--c-tx1); margin-top: 8px; }
+.gli-status-figure { font-family: var(--f-heading); font-weight: 600; font-size: 30px; line-height: 1; margin-top: 10px; color: var(--c-tx0); }
+.gli-status-sub { font-size: 11.5px; color: var(--n-600); margin-top: 5px; }
+.gli-status-delta { font-size: 13px; font-weight: 600; margin-top: 9px; }
+.gli-status-spark { width: 100%; height: 32px; display: block; margin-top: 10px; }
+.gli-status-src { margin-top: auto; padding-top: 12px; font-size: 11px; line-height: 16px; color: var(--n-600); }
+
+/* ── TAB STRIP ────────────────────────────────────────────────────────────── */
+.gli-tabstrip { display: flex; flex-wrap: wrap; gap: 4px; padding: 16px 24px 0; border-bottom: 1px solid #1f2830; }
+.gli-tab { flex: 1 1 auto; text-align: center; font-family: var(--f-ui); font-size: 13.5px; font-weight: 400; padding: 12px 14px; white-space: nowrap; border-radius: 7px 7px 0 0; color: var(--n-700); cursor: default; }
+.gli-tab.active { font-weight: 600; color: var(--c-tx0); background: #1b2937; box-shadow: inset 0 -2px 0 var(--accent-500); }
 
 /* ── PAGE HEADER ────────────────────────────────────────────────────────── */
 .gli-pghdr {
@@ -3332,126 +3365,110 @@ canvas { font-family: var(--f-mono); }
    All existing .page content is untouched — just offset right and down.
 ═══════════════════════════════════════════════════════════════════════════ */
 :root {
-  --gcc-sw:   220px;
-  --gcc-th:   56px;
+  --gcc-sw:   232px;
+  --gcc-th:   58px;
   --gcc-tkh:  28px;
   --gcc-off:  calc(var(--gcc-th) + var(--gcc-tkh));
 }
-/* ── Sidebar ─────────────────────────────────────────────────────── */
+/* ── Sidebar (rail) ──────────────────────────────────────────────── */
 #gcc-sidebar {
   position: fixed; left: 0; top: 0; bottom: 0;
   width: var(--gcc-sw); z-index: 90;
-  background: var(--c-s0); border-right: 1px solid var(--c-bd1);
+  background: var(--c-s0); border-right: 1px solid #1c242c;
   display: flex; flex-direction: column; overflow-y: auto; overflow-x: hidden;
 }
-.gcc-wm { padding: 18px 18px 15px; border-bottom: 1px solid var(--c-bd0); flex-shrink: 0; }
-.gcc-wm-row { display: flex; align-items: center; gap: 10px; margin-bottom: 9px; }
+.gcc-wm { padding: 16px 18px 15px; border-bottom: 1px solid #1c242c; flex-shrink: 0; }
+.gcc-wm-row { display: flex; align-items: center; gap: 12px; }
 .gcc-wm-mark {
-  flex-shrink: 0; width: 32px; height: 32px; border-radius: 7px;
-  display: flex; align-items: center; justify-content: center;
-  background: linear-gradient(150deg, var(--c-gold-hi), var(--c-gold-dim));
-  font-family: 'Archivo', var(--f-ui); font-size: 12px; font-weight: 800; letter-spacing: -.02em; color: #fff;
+  flex-shrink: 0; font-family: var(--f-heading); font-weight: 700; font-size: 26px;
+  letter-spacing: .02em; color: var(--c-tx0); line-height: 1;
 }
-.gcc-wm-eye { font-family: var(--f-mono); font-size: 8px; font-weight: 500; letter-spacing: .1em; color: var(--c-tx2); text-transform: uppercase; }
-.gcc-wm-name { font-family: 'Archivo', var(--f-ui); font-size: 13.5px; font-weight: 700; letter-spacing: -.005em; color: var(--c-tx0); line-height: 1.22; }
-.gcc-snav { flex: 1; padding: 8px 0; overflow-y: auto; }
-.gcc-sg-lbl { display: block; font-family: 'Archivo', var(--f-ui); font-size: 9px; font-weight: 600; letter-spacing: .14em; text-transform: uppercase; color: var(--c-tx2); padding: 11px 18px 4px; }
-.gcc-sg-sep { height: 1px; background: var(--c-bd0); margin: 7px 18px; }
-.gcc-snav-item { display: flex; align-items: center; gap: 10px; padding: 8px 18px; cursor: pointer; border-left: 2px solid transparent; transition: background var(--t), border-color var(--t); user-select: none; }
-.gcc-snav-item:hover { background: rgba(232,236,240,.022); }
-.gcc-snav-item:hover .gcc-sni-lbl, .gcc-snav-item:hover .gcc-sni-icon { color: var(--c-tx1); }
-.gcc-snav-item.active { border-left-color: var(--c-gold); background: rgba(184,149,42,.08); }
-.gcc-snav-item.active .gcc-sni-lbl, .gcc-snav-item.active .gcc-sni-icon { color: var(--c-gold-hi); }
-.gcc-snav-item.gcc-locked { opacity: .4; cursor: default; }
-.gcc-snav-item.gcc-locked:hover { background: none; }
-.gcc-snav-item.gcc-locked:hover .gcc-sni-lbl, .gcc-snav-item.gcc-locked:hover .gcc-sni-icon { color: var(--c-tx2); }
-.gcc-sni-icon { width: 15px; flex-shrink: 0; color: var(--c-tx2); transition: color var(--t); display: flex; align-items: center; }
-.gcc-sni-lbl { font-family: 'Archivo', var(--f-ui); font-size: 12px; font-weight: 600; letter-spacing: 0; color: var(--c-tx1); flex: 1; transition: color var(--t); line-height: 1; }
-.gcc-sni-badge { font-family: var(--f-mono); font-size: 7px; letter-spacing: .06em; padding: 2px 6px; border-radius: 2px; white-space: nowrap; }
-.gcc-sni-live { color: var(--c-green-hi); background: rgba(26,122,74,.08); border: 1px solid rgba(37,160,102,.28); }
-.gcc-sni-lock { color: var(--c-tx3); border: 1px solid var(--c-bd1); }
-.gcc-sf { border-top: 1px solid var(--c-bd0); padding: 11px 18px; flex-shrink: 0; }
-.gcc-sf-row { display: flex; align-items: center; gap: 7px; margin-bottom: 5px; }
-.gcc-sf-row:last-child { margin-bottom: 0; }
-.gcc-sf-dot { width: 5px; height: 5px; border-radius: 50%; flex-shrink: 0; }
-.gcc-sf-dot.ok   { background: var(--c-green-hi); }
-.gcc-sf-dot.warn { background: var(--c-amber-hi); }
-.gcc-sf-dot.err  { background: var(--c-red-hi); }
-.gcc-sf-txt { font-family: var(--f-mono); font-size: 8px; color: var(--c-tx3); letter-spacing: .05em; }
-.gcc-sutil { border-top: 1px solid var(--c-bd0); padding: 8px 10px; flex-shrink: 0; }
+.gcc-wm-divider { flex-shrink: 0; width: 1px; height: 26px; background: #2a353f; }
+.gcc-wm-eye { font-family: var(--f-ui); font-size: 8.5px; font-weight: 400; letter-spacing: .16em; color: var(--c-tx2); text-transform: uppercase; margin-top: 3px; white-space: nowrap; }
+.gcc-wm-name { font-family: var(--f-ui); font-size: 13px; font-weight: 600; line-height: 1.2; color: var(--c-tx0); white-space: nowrap; }
+.gcc-snav { padding-top: 12px; display: flex; flex-direction: column; gap: 2px; }
+.gcc-snav-item { display: flex; align-items: center; gap: 12px; padding: 9px 14px; margin: 0 10px; border-radius: 6px; cursor: pointer; font-family: var(--f-ui); font-size: 14px; font-weight: 400; color: var(--c-tx1); transition: background var(--t), color var(--t); user-select: none; }
+.gcc-snav-item:hover { background: var(--n-200); color: var(--c-tx0); }
+.gcc-snav-item:hover .gcc-sni-icon { color: var(--c-tx0); }
+.gcc-snav-item.active { background: #1b2937; font-weight: 600; color: var(--c-tx0); }
+.gcc-snav-item.active .gcc-sni-icon { color: var(--accent-600); }
+.gcc-snav-item.gcc-static { color: var(--c-tx1); cursor: default; }
+.gcc-snav-item.gcc-static:hover { background: none; color: var(--c-tx1); }
+.gcc-snav-item.gcc-static:hover .gcc-sni-icon { color: var(--c-tx2); }
+.gcc-sni-icon { flex-shrink: 0; color: var(--c-tx2); transition: color var(--t); display: flex; align-items: center; }
+.gcc-sni-lbl { flex: 1; }
+.gcc-sni-lock { display: flex; margin-left: auto; color: var(--c-tx2); flex-shrink: 0; }
+.gcc-subnav-wrap { display: flex; flex-direction: column; gap: 1px; margin: 2px 10px 6px; padding-left: 16px; border-left: 1px solid #22303c; }
+.gcc-subnav-item { padding: 7px 10px; border-radius: 5px; cursor: pointer; font-family: var(--f-ui); font-size: 13px; font-weight: 400; color: var(--c-tx1); transition: background var(--t), color var(--t); }
+.gcc-subnav-item:hover { color: var(--c-tx0); }
+.gcc-subnav-item.active { background: #1b2937; font-weight: 600; color: var(--c-tx0); box-shadow: inset 2px 0 0 var(--accent-500); }
+.gcc-sutil { margin-top: auto; padding-top: 26px; padding-bottom: 16px; display: flex; flex-direction: column; gap: 2px; }
 .gcc-sutil-item {
-  display: flex; align-items: center; gap: 9px;
-  font-family: var(--f-ui); font-size: 11.5px; font-weight: 500; color: var(--c-tx2);
-  padding: 7px 8px; border-radius: 6px; cursor: pointer; transition: background var(--t), color var(--t);
+  display: flex; align-items: center; gap: 12px;
+  font-family: var(--f-ui); font-size: 14px; font-weight: 400; color: var(--c-tx1);
+  padding: 9px 14px; margin: 0 10px; border-radius: 6px; cursor: pointer; transition: background var(--t), color var(--t);
 }
-.gcc-sutil-item:hover { background: var(--c-s1); color: var(--c-tx1); }
-.gcc-sutil-item.gcc-sutil-soon { opacity: .55; cursor: default; }
-.gcc-sutil-item.gcc-sutil-soon:hover { background: none; color: var(--c-tx2); }
-.gcc-sutil-icon { font-size: 12px; width: 14px; text-align: center; flex-shrink: 0; }
+.gcc-sutil-item:hover { background: var(--n-200); color: var(--c-tx0); }
+.gcc-sutil-item.gcc-sutil-soon { cursor: default; }
+.gcc-sutil-item.gcc-sutil-soon:hover { background: none; color: var(--c-tx1); }
 .gcc-wm-tagline {
-  flex-shrink: 0; padding: 13px 18px 16px; border-top: 1px solid var(--c-bd0);
-  font-family: var(--f-ui); font-size: 10.5px; font-style: italic; color: var(--c-tx2); line-height: 1.4;
+  font-family: var(--f-ui); font-size: 11.5px; line-height: 17px; color: var(--c-tx2);
+  padding: 18px 24px 0;
 }
 /* ── Topbar ──────────────────────────────────────────────────────── */
 #gcc-topbar {
   position: fixed; left: var(--gcc-sw); right: 0; top: 0;
   height: var(--gcc-th); z-index: 89;
-  background: var(--c-bg); border-bottom: 1px solid var(--c-bd0);
+  background: var(--c-s0); border-bottom: 1px solid #1c242c;
   display: flex; align-items: center; justify-content: space-between;
   gap: 20px;
-  padding: 0 20px;
+  padding: 0 24px;
 }
-.gcc-tb-title { font-family: 'Archivo', var(--f-ui); font-size: 11px; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; color: var(--c-tx0); }
-.gcc-tb-right { display: flex; align-items: center; gap: 16px; flex-shrink: 0; }
-.gcc-tb-pill { display: flex; align-items: center; gap: 5px; font-family: var(--f-mono); font-size: 8px; color: var(--c-tx2); letter-spacing: .05em; }
-.gcc-tb-dot { width: 5px; height: 5px; border-radius: 50%; flex-shrink: 0; }
-.gcc-tb-pill strong { color: var(--c-tx1); font-weight: 500; }
-.gcc-tb-btn { font-family: var(--f-mono); font-size: 8px; letter-spacing: .08em; color: var(--c-tx2); background: none; border: 1px solid var(--c-bd1); border-radius: var(--r); padding: 4px 10px; cursor: pointer; transition: border-color var(--t), color var(--t); text-decoration: none; }
-.gcc-tb-btn:hover { border-color: var(--c-bd2); color: var(--c-tx1); }
+.gcc-tb-title { display: none; }
+.gcc-tb-right { display: flex; align-items: center; gap: 18px; flex-shrink: 0; }
 /* ── Ask command bar ─────────────────────────────────────────────── */
 .gli-ask {
-  flex: 1; max-width: 560px;
-  display: flex; align-items: center; gap: 9px;
-  background: var(--c-s1); border: 1px solid var(--c-bd1); border-radius: 7px;
-  padding: 0 8px 0 13px; height: 34px;
+  flex: 1 1 340px; max-width: 760px;
+  display: flex; align-items: center; gap: 11px;
+  background: var(--c-s1); border: 1px solid var(--c-bd0); border-radius: 8px;
+  padding: 9px 14px;
   transition: border-color var(--t);
 }
-.gli-ask:focus-within { border-color: var(--c-gold-dim); }
+.gli-ask:focus-within { border-color: var(--accent-500); }
 .gli-ask-icon { color: var(--c-tx2); flex-shrink: 0; }
 .gli-ask-input {
   flex: 1; min-width: 0;
   background: none; border: none; outline: none;
-  font-family: var(--f-ui); font-size: 12.5px; color: var(--c-tx0);
+  font-family: var(--f-ui); font-size: 13.5px; color: var(--c-tx0);
 }
-.gli-ask-input::placeholder { color: var(--c-tx2); }
+.gli-ask-input::placeholder { color: var(--n-600); }
 .gli-ask-submit {
   flex-shrink: 0; width: 24px; height: 24px; border-radius: 5px;
   display: flex; align-items: center; justify-content: center;
-  background: var(--c-s2); border: 1px solid var(--c-bd1); color: var(--c-tx1);
-  cursor: pointer; transition: background var(--t), color var(--t), border-color var(--t);
+  background: none; border: none; color: var(--n-700);
+  cursor: pointer; transition: color var(--t);
 }
-.gli-ask-submit:hover { background: var(--c-gold-dim); border-color: var(--c-gold); color: #fff; }
+.gli-ask-submit:hover { color: var(--accent-600); }
 /* ── Notification bell ───────────────────────────────────────────── */
 .gli-bell {
-  position: relative; width: 32px; height: 32px; border-radius: 7px;
+  position: relative; width: 32px; height: 32px; border-radius: 6px;
   display: flex; align-items: center; justify-content: center;
-  background: none; border: 1px solid transparent; color: var(--c-tx1);
-  cursor: pointer; transition: background var(--t), border-color var(--t);
+  background: none; border: none; color: var(--n-700);
+  cursor: pointer; transition: color var(--t);
 }
-.gli-bell:hover { background: var(--c-s1); border-color: var(--c-bd1); }
-.gli-bell-dot { position: absolute; top: 6px; right: 7px; width: 6px; height: 6px; border-radius: 50%; background: var(--c-red-hi); border: 1.5px solid var(--c-bg); }
+.gli-bell:hover { color: var(--c-tx0); }
+.gli-bell-dot { position: absolute; top: 5px; right: 6px; width: 7px; height: 7px; border-radius: 50%; background: var(--c-red-hi); border: 1.5px solid var(--c-s0); }
 /* ── User profile ─────────────────────────────────────────────────── */
-.gli-user { display: flex; align-items: center; gap: 9px; cursor: pointer; padding: 4px 6px; border-radius: 7px; transition: background var(--t); }
-.gli-user:hover { background: var(--c-s1); }
+.gli-user { display: flex; align-items: center; gap: 10px; cursor: pointer; }
 .gli-user-avatar {
-  width: 28px; height: 28px; border-radius: 50%; flex-shrink: 0;
+  width: 32px; height: 32px; border-radius: 6px; flex-shrink: 0;
   display: flex; align-items: center; justify-content: center;
-  background: linear-gradient(150deg, var(--c-gold-hi), var(--c-gold-dim));
-  font-family: var(--f-ui); font-size: 10.5px; font-weight: 700; color: #fff;
+  background: var(--accent-400); color: var(--c-s0);
+  font-family: var(--f-ui); font-size: 12px; font-weight: 600; letter-spacing: .04em;
 }
-.gli-user-meta { line-height: 1.3; }
-.gli-user-name { font-family: var(--f-ui); font-size: 11.5px; font-weight: 600; color: var(--c-tx0); white-space: nowrap; }
-.gli-user-role { font-family: var(--f-mono); font-size: 8.5px; color: var(--c-tx2); letter-spacing: .04em; }
+.gli-user-meta { line-height: 1.25; }
+.gli-user-name { font-family: var(--f-ui); font-size: 13px; font-weight: 600; color: var(--c-tx0); white-space: nowrap; }
+.gli-user-chevron { display: flex; color: var(--c-tx2); flex-shrink: 0; }
 @media (max-width: 900px) { .gli-ask { display: none; } .gli-user-meta { display: none; } }
 /* ── Ticker ──────────────────────────────────────────────────────── */
 #gcc-ticker {
@@ -3840,65 +3857,67 @@ canvas { font-family: var(--f-mono); }
   <div class="gcc-wm">
     <div class="gcc-wm-row">
       <div class="gcc-wm-mark">GLI</div>
+      <div class="gcc-wm-divider"></div>
       <div>
-        <div class="gcc-wm-name">Gulf Logistics<br>Intelligence</div>
+        <div class="gcc-wm-name">Gulf Logistics Intelligence</div>
+        <div class="gcc-wm-eye">Data. Insights. Decisions.</div>
       </div>
     </div>
-    <div class="gcc-wm-eye">Data. Insights. Decisions.</div>
   </div>
   <nav class="gcc-snav">
     <div class="gcc-snav-item" data-tab="situation" onclick="gccSidebarNav('situation')">
-      <span class="gcc-sni-icon"><svg width="15" height="15" viewBox="0 0 15 15" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="1.5" y="2" width="12" height="9" rx="1.2"/><line x1="1.5" y1="5" x2="13.5" y2="5"/><circle cx="3.3" cy="3.5" r=".5" fill="currentColor" stroke="none"/></svg></span>
+      <span class="gcc-sni-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="13" rx="1.5"/><path d="M8 21h8M12 17v4"/><path d="M7 12l3-3 2.5 2.5L17 7.5"/></svg></span>
       <span class="gcc-sni-lbl">Situation Room</span>
     </div>
-    <span class="gcc-sg-lbl">Live Intelligence</span>
     <div class="gcc-snav-item active" data-tab="hormuz" onclick="gccSidebarNav('hormuz')">
-      <span class="gcc-sni-icon"><svg width="15" height="15" viewBox="0 0 15 15" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M1 5.5Q3.75 3 7.5 5.5Q11.25 8 14 5.5"/><path d="M1 9.5Q3.75 7 7.5 9.5Q11.25 12 14 9.5"/></svg></span>
-      <span class="gcc-sni-lbl">Chokepoint Traffic</span>
-      <span class="gcc-sni-badge gcc-sni-live">LIVE</span>
+      <span class="gcc-sni-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M2 6c.6.5 1.2 1 2.5 1C7 7 7 5 9.5 5c2.6 0 2.4 2 5 2 1.3 0 1.9-.5 2.5-1"/><path d="M2 12c.6.5 1.2 1 2.5 1C7 13 7 11 9.5 11c2.6 0 2.4 2 5 2 1.3 0 1.9-.5 2.5-1"/><path d="M2 18c.6.5 1.2 1 2.5 1C7 19 7 17 9.5 17c2.6 0 2.4 2 5 2 1.3 0 1.9-.5 2.5-1"/></svg></span>
+      <span class="gcc-sni-lbl">Chokepoints</span>
+    </div>
+    <div class="gcc-subnav-wrap" id="gcc-subnav-wrap">
+      <div class="gcc-subnav-item active" data-cp="hormuz" onclick="showCpView('hormuz')">Strait of Hormuz</div>
+      <div class="gcc-subnav-item" data-cp="bab" onclick="showCpView('bab')">Bab al&#8209;Mandab</div>
+      <div class="gcc-subnav-item" data-cp="suez" onclick="showCpView('suez')">Suez Canal</div>
+      <div class="gcc-subnav-item" data-cp="other" onclick="showCpView('other')">Other Chokepoints</div>
+    </div>
+    <div class="gcc-snav-item" data-tab="trucking" onclick="gccSidebarNav('trucking')">
+      <span class="gcc-sni-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 20 8 4l4 9 4-6 5 13"/></svg></span>
+      <span class="gcc-sni-lbl">Corridors</span>
+    </div>
+    <div class="gcc-snav-item gcc-static">
+      <span class="gcc-sni-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 21h18M6 21V10M18 21V10M4 10h16l-8-6-8 6Z"/><path d="M10 21v-6h4v6"/></svg></span>
+      <span class="gcc-sni-lbl">Ports &amp; Terminals</span>
     </div>
     <div class="gcc-snav-item" data-tab="rates" onclick="gccSidebarNav('rates')">
-      <span class="gcc-sni-icon"><svg width="15" height="15" viewBox="0 0 15 15" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="1.5,11.5 5,7.5 9,10 13.5,3.5"/><polyline points="10.5,3.5 13.5,3.5 13.5,6.5"/></svg></span>
-      <span class="gcc-sni-lbl">Freight Rate Tracker</span>
-      <span class="gcc-sni-badge gcc-sni-live">LIVE</span>
+      <span class="gcc-sni-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M22 7 13.5 15.5 8.5 10.5 2 17"/><path d="M16 7h6v6"/></svg></span>
+      <span class="gcc-sni-lbl">Freight Markets</span>
     </div>
-    <div class="gcc-sg-sep"></div>
-    <span class="gcc-sg-lbl">Advanced Analytics</span>
-    <div class="gcc-snav-item gcc-locked" data-tab="trucking" onclick="gccSidebarNav('trucking')">
-      <span class="gcc-sni-icon"><svg width="15" height="15" viewBox="0 0 15 15" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M1.5 11h5V7H1.5z"/><path d="M6.5 11h7V4h-7z"/></svg></span>
-      <span class="gcc-sni-lbl">Corridor Monitor</span>
-      <span class="gcc-sni-badge gcc-sni-lock">&#x1F512;</span>
+    <div class="gcc-snav-item" data-tab="stress" onclick="gccSidebarNav('stress')">
+      <span class="gcc-sni-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M4 7h11l-3-3M20 17H9l3 3"/><path d="M4 7v10M20 7v10"/></svg></span>
+      <span class="gcc-sni-lbl">Trade Flows</span>
     </div>
-    <div class="gcc-snav-item gcc-locked" data-tab="simulator" onclick="gccSidebarNav('simulator')">
-      <span class="gcc-sni-icon"><svg width="15" height="15" viewBox="0 0 15 15" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><circle cx="7.5" cy="7.5" r="2.8"/><path d="M7.5 1.5v1.8M7.5 11.7v1.8M1.5 7.5h1.8M11.7 7.5h1.8M3.3 3.3l1.3 1.3M10.4 10.4l1.3 1.3M3.3 11.7l1.3-1.3M10.4 4.6l1.3-1.3"/></svg></span>
-      <span class="gcc-sni-lbl">Scenario Simulator</span>
-      <span class="gcc-sni-badge gcc-sni-lock">&#x1F512;</span>
+    <div class="gcc-snav-item" data-tab="simulator" onclick="gccSidebarNav('simulator')">
+      <span class="gcc-sni-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M4 21v-7M4 10V3M12 21v-9M12 8V3M20 21v-5M20 12V3M1 14h6M9 8h6M17 16h6"/></svg></span>
+      <span class="gcc-sni-lbl">Scenario Studio</span>
+      <span class="gcc-sni-lock"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="10" width="16" height="11" rx="1.5"/><path d="M8 10V7a4 4 0 0 1 8 0v3"/></svg></span>
     </div>
-    <div class="gcc-snav-item gcc-locked" data-tab="watchlist" onclick="gccSidebarNav('watchlist')">
-      <span class="gcc-sni-icon"><svg width="15" height="15" viewBox="0 0 15 15" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><circle cx="7.5" cy="7.5" r="5.8"/><circle cx="7.5" cy="7.5" r="2"/></svg></span>
+    <div class="gcc-snav-item" data-tab="watchlist" onclick="gccSidebarNav('watchlist')">
+      <span class="gcc-sni-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="4"/><path d="M12 1v3M12 20v3M1 12h3M20 12h3"/></svg></span>
       <span class="gcc-sni-lbl">Strategic Watchlist</span>
-      <span class="gcc-sni-badge gcc-sni-lock">&#x1F512;</span>
-    </div>
-    <div class="gcc-snav-item gcc-locked" data-tab="stress" onclick="gccSidebarNav('stress')">
-      <span class="gcc-sni-icon"><svg width="15" height="15" viewBox="0 0 15 15" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M7.5 1.5Q5.2 4.5 5.2 7.5Q5.2 10.5 7.5 13.5Q9.8 10.5 9.8 7.5Q9.8 4.5 7.5 1.5Z"/><line x1="1.5" y1="7.5" x2="13.5" y2="7.5"/></svg></span>
-      <span class="gcc-sni-lbl">Trade Explorer Lab</span>
-      <span class="gcc-sni-badge gcc-sni-lock">&#x1F512;</span>
+      <span class="gcc-sni-lock"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="10" width="16" height="11" rx="1.5"/><path d="M8 10V7a4 4 0 0 1 8 0v3"/></svg></span>
     </div>
   </nav>
   <div class="gcc-sutil">
-    <div class="gcc-sutil-item" onclick="openInfoModal('data')"><span class="gcc-sutil-icon">&#128196;</span>Data &amp; Methodology</div>
-    <div class="gcc-sutil-item gcc-sutil-soon" title="Coming soon"><span class="gcc-sutil-icon">&#128203;</span>Reports</div>
-    <div class="gcc-sutil-item gcc-sutil-soon" title="Coming soon"><span class="gcc-sutil-icon">&#9881;</span>Settings</div>
-  </div>
-  <div class="gcc-sf">
-    <div class="gcc-sf-row"><span class="gcc-sf-dot ok"></span><span class="gcc-sf-txt">IMF PortWatch &middot; live</span></div>
-    <div class="gcc-sf-row"><span class="gcc-sf-dot ok"></span><span class="gcc-sf-txt">straits.live &middot; live</span></div>
-    <div class="gcc-sf-row"><span class="gcc-sf-dot ok"></span><span class="gcc-sf-txt">Yahoo Finance &middot; live</span></div>
-    <div class="gcc-sf-row" style="margin-top:7px;padding-top:7px;border-top:1px solid var(--c-bd0)">
-      <span class="gcc-sf-txt" id="gcc-sf-clock">&mdash;</span>
+    <div class="gcc-sutil-item" onclick="openInfoModal('data')">
+      <span class="gcc-sni-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M4 6h16M4 12h16M4 18h10"/></svg></span>Data &amp; Methodology
     </div>
+    <div class="gcc-sutil-item gcc-sutil-soon" title="Coming soon">
+      <span class="gcc-sni-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M6 3h8l4 4v14H6z"/><path d="M14 3v4h4"/><path d="M9 13h6M9 17h4"/></svg></span>Reports
+    </div>
+    <div class="gcc-sutil-item gcc-sutil-soon" title="Coming soon">
+      <span class="gcc-sni-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3M5 5l2 2M17 17l2 2M19 5l-2 2M7 17l-2 2"/></svg></span>Settings
+    </div>
+    <div class="gcc-wm-tagline">Gulf&#8209;focused.<br>Globally connected.</div>
   </div>
-  <div class="gcc-wm-tagline">Gulf-focused.<br>Globally connected.</div>
 </aside>
 
 <!-- ══════════════════════════════════════════════════════════════════════════
@@ -3908,7 +3927,7 @@ canvas { font-family: var(--f-mono); }
   <span class="gcc-tb-title" id="gcc-tb-title" style="display:none">Chokepoint Traffic</span>
   <div class="gli-ask">
     <svg class="gli-ask-icon" width="15" height="15" viewBox="0 0 15 15" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="6.3" cy="6.3" r="4.8"/><line x1="9.9" y1="9.9" x2="13.5" y2="13.5" stroke-linecap="round"/></svg>
-    <input class="gli-ask-input" type="text" placeholder='Ask a question (e.g. &quot;What&rsquo;s the current situation in Bab al-Mandeb?&quot;)' onkeydown="if(event.key==='Enter')event.preventDefault()">
+    <input class="gli-ask-input" type="text" placeholder='Ask a question (e.g. &quot;What&rsquo;s the current situation in Bab al-Mandab?&quot;)' onkeydown="if(event.key==='Enter')event.preventDefault()">
     <button class="gli-ask-submit" type="button" aria-label="Ask" title="Ask Gulf Intelligence — coming soon">
       <svg width="14" height="14" viewBox="0 0 15 15" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><line x1="2.5" y1="7.5" x2="12.5" y2="7.5"/><polyline points="8,3 12.5,7.5 8,12"/></svg>
     </button>
@@ -3922,9 +3941,8 @@ canvas { font-family: var(--f-mono); }
       <div class="gli-user-avatar">HM</div>
       <div class="gli-user-meta">
         <div class="gli-user-name">Hamza El Mounhi</div>
-        <div class="gli-user-role">NIDLP</div>
       </div>
-      <svg width="10" height="10" viewBox="0 0 10 10" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="color:var(--c-tx2)"><polyline points="2,3.5 5,6.5 8,3.5"/></svg>
+      <span class="gli-user-chevron"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg></span>
     </div>
   </div>
 </div>
@@ -3973,10 +3991,15 @@ canvas { font-family: var(--f-mono); }
   }
   tick(); setInterval(tick, 1000);
 })();
-/* ── Situation Room date ──────────────────────────────────────────────── */
+/* ── Situation Room date / Chokepoints hero timestamp ─────────────────── */
 document.addEventListener('DOMContentLoaded', function(){
   var el = document.getElementById('sr-date');
   if (el) el.textContent = new Date().toLocaleDateString('en-US', { weekday:'short', month:'short', day:'numeric', year:'numeric' });
+  var now = new Date();
+  var ts = now.toLocaleDateString('en-US', { weekday:'short', month:'short', day:'numeric', year:'numeric' }) + '   ' + now.toLocaleTimeString('en-US', { hour:'2-digit', minute:'2-digit' }) + ' GST';
+  var hts = document.getElementById('gli-hormuz-ts');
+  if (hts) hts.textContent = ts;
+  document.querySelectorAll('.gli-hormuz-ts-inline').forEach(function(e){ e.textContent = ts; });
 });
 /* ── Sidebar nav helper ────────────────────────────────────────────── */
 function gccSidebarNav(name) {
@@ -4305,35 +4328,79 @@ function gccSidebarNav(name) {
 <!-- ============================================================ TAB 1: HORMUZ -->
 <div class="page active" id="page-hormuz">
 
-  <!-- CHOKEPOINT SELECTOR -->
-  <div style="background:#0A0A09;border-bottom:1px solid #1a2535;padding:10px 28px;display:flex;align-items:center;gap:8px;flex-wrap:wrap">
-    <span style="font-size:8px;font-weight:700;letter-spacing:.16em;color:#3A3A34;margin-right:4px">CHOKEPOINT</span>
-    <button id="cpbtn-hormuz" onclick="showCpView('hormuz')" style="font-family:inherit;font-size:9px;font-weight:700;letter-spacing:.1em;padding:5px 14px;border-radius:3px;cursor:pointer;border:1px solid #E05252;background:rgba(224,82,82,.15);color:#E05252;transition:all .15s">&#9650; STRAIT OF HORMUZ</button>
-    <button id="cpbtn-bab" onclick="showCpView('bab')" style="font-family:inherit;font-size:9px;font-weight:700;letter-spacing:.1em;padding:5px 14px;border-radius:3px;cursor:pointer;border:1px solid #3A3A36;background:transparent;color:#6A6A5A;transition:all .15s">&#9875; BAB AL-MANDEB</button>
-    <span id="cpbtn-bab-badge" style="font-size:8px;font-weight:700;letter-spacing:.12em;color:#F59E0B;border:1px solid rgba(245,158,11,.4);background:rgba(245,158,11,.08);padding:2px 8px;border-radius:3px">BLOCKADE&nbsp;&middot;&nbsp;DAY 14</span>
-    <span style="width:1px;height:18px;background:#1a2535;margin:0 2px;flex-shrink:0"></span>
-    <button id="cpbtn-suez" onclick="showCpView('suez')" style="font-family:inherit;font-size:9px;font-weight:700;letter-spacing:.1em;padding:5px 14px;border-radius:3px;cursor:pointer;border:1px solid #3A3A36;background:transparent;color:#6A6A5A;transition:all .15s">&#9654; SUEZ CANAL</button>
-    <span id="cpbtn-suez-badge" style="font-size:8px;font-weight:700;letter-spacing:.12em;color:#0EA5E9;border:1px solid rgba(14,165,233,.4);background:rgba(14,165,233,.08);padding:2px 8px;border-radius:3px">REDUCED&nbsp;&middot;&nbsp;-56%</span>
-  </div>
-
   <div id="cp-view-hormuz">
 
-  <!-- ① PAGE HEADER -->
-  <div class="gli-pghdr">
-    <div class="gli-pghdr-l">
-      <div>
-        <div style="display:flex;align-items:center;gap:8px;margin-bottom:5px">
-          <span class="gli-sevdot" style="background:var(--c-red-hi)"></span>
-          <span class="gli-sevlbl r">Critical</span>
+  <!-- HERO BAND -->
+  <div style="padding:18px 24px 0">
+    <div class="gli-hero">
+      <div class="gli-hero-grad"></div>
+      <div class="gli-hero-inner">
+        <div class="gli-hero-l">
+          <div class="gli-breadcrumb"><span>Chokepoints</span><span class="sep">&rsaquo;</span><span class="leaf">Strait of Hormuz</span></div>
+          <div class="gli-hero-title">Chokepoint Intelligence: Strait of Hormuz</div>
+          <div class="gli-hero-desc">Live view of transit disruption, insurance risk, carrier posture, and Gulf corridor implications.</div>
         </div>
-        <div class="gli-pghdr-title">Strait of Hormuz</div>
-        <div class="gli-pghdr-sub">Day 147 &middot; re-escalation &middot; strait re-declared closed</div>
+        <div class="gli-hero-r">
+          <div class="gli-hero-ts" id="gli-hormuz-ts">&mdash;</div>
+          <button type="button" class="gli-export-btn" onclick="window.print()"><svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v11"/><path d="m8 11 4 4 4-4"/><path d="M4 19h16"/></svg>Export Brief</button>
+          <div class="gli-hero-tagline">A more resilient<br>Gulf tomorrow.</div>
+        </div>
       </div>
     </div>
-    <div class="gli-pghdr-r">
-      <div class="gli-pghdr-stat" style="color:var(--c-red-hi)">-89%</div>
-      <div class="gli-pghdr-statlbl">~10/day vs 88 baseline &middot; PortWatch Jul 23</div>
+  </div>
+
+  <!-- SIX STATUS CARDS -->
+  <div class="gli-status-grid">
+    <div class="gli-status-card">
+      <div class="gli-status-title">Transit Status</div>
+      <div class="gli-status-word-row"><span class="gli-status-dot" style="background:var(--c-red-hi)"></span><span class="gli-status-word" style="color:var(--c-red-hi)">Severe disruption</span></div>
+      <div class="gli-status-body">Significantly below normal transit levels.</div>
+      <div class="gli-status-src">Source: AIS<br>Updated <span class="gli-hormuz-ts-inline">&mdash;</span></div>
     </div>
+    <div class="gli-status-card">
+      <div class="gli-status-title">Transit Index</div>
+      <div class="gli-status-figure" id="m-decline" style="color:var(--c-red-hi)">-89%</div>
+      <div class="gli-status-sub">vs. 2023&ndash;24 average</div>
+      <svg class="gli-status-spark" viewBox="0 0 120 34" preserveAspectRatio="none"><line x1="0" y1="3" x2="120" y2="3" stroke="#3a4650" stroke-width="1" stroke-dasharray="3 3" vector-effect="non-scaling-stroke"/><polyline points="1,4 15,7 30,10 45,13 60,17 75,21 90,25 105,28 119,30" fill="none" stroke="var(--c-red-hi)" stroke-width="1.4" vector-effect="non-scaling-stroke"/></svg>
+      <div class="gli-status-src">Source: AIS<br>Updated <span class="gli-hormuz-ts-inline">&mdash;</span></div>
+    </div>
+    <div class="gli-status-card">
+      <div class="gli-status-title">War&#8209;Risk Premium</div>
+      <div class="gli-status-figure">~3.2%</div>
+      <div class="gli-status-sub">of vessel value</div>
+      <div class="gli-status-delta" style="color:var(--c-red-hi)">&#8599; +1.2 pp</div>
+      <div class="gli-status-sub" style="margin-top:2px">since Jun 27 strike</div>
+      <div class="gli-status-src">Source: Lloyd's List &middot; LMA<br>Updated <span class="gli-hormuz-ts-inline">&mdash;</span></div>
+    </div>
+    <div class="gli-status-card">
+      <div class="gli-status-title">Carrier Posture</div>
+      <div class="gli-status-word-row"><span class="gli-status-dot" style="background:var(--c-amber-hi)"></span><span class="gli-status-word gli-status-word-sm" style="color:var(--c-amber-hi)">Suspended / rerouting</span></div>
+      <div class="gli-status-body">8 of 9 major carriers rerouting via Cape of Good Hope.</div>
+      <div class="gli-status-src">Source: Carrier advisories<br>Updated <span class="gli-hormuz-ts-inline">&mdash;</span></div>
+    </div>
+    <div class="gli-status-card">
+      <div class="gli-status-title">Capacity Impact</div>
+      <div class="gli-status-figure" style="color:var(--c-red-hi)">-70%</div>
+      <div class="gli-status-sub">AIS-visible transits (vs. baseline)</div>
+      <svg class="gli-status-spark" viewBox="0 0 120 34" preserveAspectRatio="none"><line x1="0" y1="3" x2="120" y2="3" stroke="#3a4650" stroke-width="1" stroke-dasharray="3 3" vector-effect="non-scaling-stroke"/><polyline points="1,5 15,8 30,11 45,15 60,18 75,22 90,25 105,28 119,30" fill="none" stroke="var(--c-red-hi)" stroke-width="1.4" vector-effect="non-scaling-stroke"/></svg>
+      <div class="gli-status-src">Source: IMF PortWatch<br>Updated <span class="gli-hormuz-ts-inline">&mdash;</span></div>
+    </div>
+    <div class="gli-status-card">
+      <div class="gli-status-title">Confidence Level</div>
+      <div class="gli-status-word-row"><span class="gli-status-dot" style="background:var(--c-green-hi)"></span><span class="gli-status-word" style="color:var(--c-green-hi)">High</span></div>
+      <div class="gli-status-body">Based on AIS, carrier advisories and market data.</div>
+      <div class="gli-status-src">Source: GLI assessment<br>Updated <span class="gli-hormuz-ts-inline">&mdash;</span></div>
+    </div>
+  </div>
+
+  <!-- TAB STRIP -->
+  <div class="gli-tabstrip">
+    <span class="gli-tab active">Overview</span>
+    <span class="gli-tab">Transit Monitor</span>
+    <span class="gli-tab">Insurance &amp; Surcharges</span>
+    <span class="gli-tab">Carrier Posture</span>
+    <span class="gli-tab">Corridor Implications</span>
+    <span class="gli-tab">Evidence Log</span>
   </div>
 
   <!-- ③ MAIN 2-COL GRID -->
@@ -4342,39 +4409,23 @@ function gccSidebarNav(name) {
     <!-- LEFT COLUMN -->
     <div style="display:flex;flex-direction:column;gap:14px">
 
-      <!-- HERO KPI ROW -->
-      <div class="kpi-strip">
-        <div class="kpi-card r">
-          <div class="kpi-label" style="color:var(--c-red-hi)">VS 88 / DAY BASELINE &middot; PORTWATCH</div>
-          <div>
-            <div id="m-decline" class="kpi-value hero" style="color:var(--c-red-hi)">-89%</div>
-            <div class="kpi-sub">Re-escalation &middot; Day 147<br>since IRGC closure</div>
-          </div>
-          <div class="kpi-src">Kpler &middot; Windward AIS synthesis</div>
-        </div>
+      <!-- Legacy KPI row — hidden; live data bindings (m-transits/m-tankers/m-containers)
+           preserved in DOM for JS compatibility, superseded visually by the six status cards above -->
+      <div class="kpi-strip" style="display:none">
         <div class="kpi-card">
           <div class="kpi-label">TRANSITS TODAY</div>
           <div>
-            <div class="kpi-value"><span id="m-transits">10</span><a href="https://www.kpler.com" target="_blank" rel="noopener" class="src-lnk" title="Source: IMF PortWatch · Kpler satellite+AIS">&#8599;</a></div>
+            <div class="kpi-value"><span id="m-transits">10</span></div>
             <div class="kpi-sub chg red" id="m-transits-chg">2 tanker &middot; 2 container<br>Jul 23 &middot; PortWatch</div>
           </div>
-          <div class="kpi-src">AIS-verified</div>
         </div>
         <div class="kpi-card">
           <div class="kpi-label">TANKERS 24H</div>
-          <div>
-            <div class="kpi-value"><span id="m-tankers">2</span><a href="https://www.kpler.com" target="_blank" rel="noopener" class="src-lnk" title="Source: Kpler satellite+AIS">&#8599;</a></div>
-            <div class="kpi-sub">AIS-visible &middot; 38<br>tankers dark</div>
-          </div>
-          <div class="kpi-src">Kpler estimate</div>
+          <div><div class="kpi-value"><span id="m-tankers">2</span></div></div>
         </div>
-        <div class="kpi-card a">
+        <div class="kpi-card">
           <div class="kpi-label">CONTAINER SHIPS</div>
-          <div>
-            <div class="kpi-value" style="color:var(--c-amber-hi)"><span id="m-containers">2</span><a href="https://www.kpler.com" target="_blank" rel="noopener" class="src-lnk" title="Source: Kpler satellite+AIS">&#8599;</a></div>
-            <div class="kpi-sub" style="color:var(--c-amber-hi)">Jul 23 &middot; 8/9 carriers<br>rerouted via Cape</div>
-          </div>
-          <div class="kpi-src">AIS-verified</div>
+          <div><div class="kpi-value"><span id="m-containers">2</span></div></div>
         </div>
       </div>
 
@@ -4935,6 +4986,14 @@ function gccSidebarNav(name) {
     </div>
 
   </div><!-- /cp-view-suez -->
+
+  <div id="cp-view-other" style="display:none">
+    <div class="gli-empty-panel">
+      <div class="gli-empty-title">Other chokepoints</div>
+      <div class="gli-empty-body">No AIS or transit series is wired to this chokepoint yet. The Hormuz view is the layout template &mdash; connect a PortWatch chokepoint id and a carrier tracker source to populate it.</div>
+      <div class="gli-empty-chip">Awaiting data source</div>
+    </div>
+  </div>
 
 </div><!-- /page-hormuz -->
 
@@ -6844,6 +6903,8 @@ function showTab(name, el) {
     if (si) si.classList.add('active');
     var t = document.getElementById('gcc-tb-title');
     if (t) t.textContent = TITLES[name] || name;
+    var subnav = document.getElementById('gcc-subnav-wrap');
+    if (subnav) subnav.style.display = (name === 'hormuz') ? '' : 'none';
   })();
 
   // Update URL for deep-linking and browser back/forward
@@ -6909,7 +6970,7 @@ var _suezChartInited = false;
 var _CP_COL = { hormuz:'#E05252', bab:'#F59E0B', suez:'#0EA5E9' };
 var _CP_BKG = { hormuz:'rgba(224,82,82,.15)', bab:'rgba(245,158,11,.15)', suez:'rgba(14,165,233,.15)' };
 function showCpView(cp) {
-  ['hormuz','bab','suez'].forEach(function(v) {
+  ['hormuz','bab','suez','other'].forEach(function(v) {
     var el = document.getElementById('cp-view-' + v);
     if (el) el.style.display = (v === cp) ? '' : 'none';
     var btn = document.getElementById('cpbtn-' + v);
@@ -6926,6 +6987,9 @@ function showCpView(cp) {
   });
   if (cp === 'bab' && !_babChartInited) { initBabChart(); _babChartInited = true; }
   if (cp === 'suez' && !_suezChartInited) { initSuezChart(); _suezChartInited = true; }
+  document.querySelectorAll('.gcc-subnav-item').forEach(function(i){
+    i.classList.toggle('active', i.getAttribute('data-cp') === cp);
+  });
 }
 
 // ── CHART HELPERS ─────────────────────────────────────────────────────────────

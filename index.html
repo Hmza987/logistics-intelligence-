@@ -147,36 +147,37 @@
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
 :root {
-  /* Surface hierarchy — true black base, micro-contrast steps */
-  --c-bg:        #05070a;   /* page background   */
-  --c-s0:        #080b0f;   /* deepest surface   */
-  --c-s1:        #0c1018;   /* card background   */
-  --c-s2:        #111722;   /* elevated surface  */
-  --c-s3:        #172030;   /* hover / active    */
+  /* Surface hierarchy — institutional navy/charcoal, glass-card depth */
+  --c-bg:        #0a0e17;   /* page background   */
+  --c-s0:        #0d1220;   /* deepest surface (sidebar) */
+  --c-s1:        #121928;   /* card background   */
+  --c-s2:        #161e30;   /* elevated surface  */
+  --c-s3:        #1c2538;   /* hover / active    */
 
-  /* Borders — barely visible, military-grade restraint */
-  --c-bd0:       #131c28;
-  --c-bd1:       #1a2535;
-  --c-bd2:       #243040;
+  /* Borders — thin, glass-like */
+  --c-bd0:       #1a2233;
+  --c-bd1:       #252e45;
+  --c-bd2:       #323d58;
 
   /* Text hierarchy */
-  --c-tx0:       #e8ecf0;   /* primary text      */
-  --c-tx1:       #8fa0b5;   /* secondary text    */
-  --c-tx2:       #4d6070;   /* tertiary / muted  */
-  --c-tx3:       #2d3d50;   /* disabled          */
+  --c-tx0:       #edf1f7;   /* primary text      */
+  --c-tx1:       #9aa7be;   /* secondary text    */
+  --c-tx2:       #5c6b85;   /* tertiary / muted  */
+  --c-tx3:       #38455c;   /* disabled          */
 
-  /* Signal colours — highly controlled palette */
-  --c-gold:      #b8952a;   /* primary accent — authority, not flashy */
-  --c-gold-hi:   #d4aa3a;   /* highlight */
-  --c-gold-dim:  #6b561a;   /* dim accent */
+  /* Signal colours — institutional blue as primary nav/intelligence accent;
+     red/amber/green reserved strictly for risk semantics */
+  --c-gold:      #4c8dd9;   /* primary accent — navigation, intelligence, links */
+  --c-gold-hi:   #6bacf0;   /* highlight */
+  --c-gold-dim:  #2a5788;   /* dim accent */
   --c-red:       #c0392b;
-  --c-red-hi:    #d94e40;
+  --c-red-hi:    #e35b52;
   --c-amber:     #c47a1a;
-  --c-amber-hi:  #e0902a;
+  --c-amber-hi:  #e8a23d;
   --c-green:     #1a7a4a;
-  --c-green-hi:  #25a066;
-  --c-blue:      #1a4a7a;
-  --c-blue-hi:   #2d6aaa;
+  --c-green-hi:  #2fb876;
+  --c-blue:      #1e5a94;
+  --c-blue-hi:   #4c8dd9;
   --c-purple:    #4a2d7a;
   --c-purple-hi: #6a42aa;
 
@@ -187,10 +188,13 @@
   /* Spacing — pad scales with viewport so content fills large/projected screens */
   --gap:     12px;
   --pad:     clamp(18px, 2vw, 36px);
-  --r:       4px;
+  --r:       8px;
 
   /* Transitions */
   --t:       150ms ease;
+
+  /* Glass-card shadow — soft, institutional depth */
+  --shadow-card: 0 1px 2px rgba(0,0,0,.4), 0 8px 24px -8px rgba(0,0,0,.45);
 }
 
 /* ── BASE ───────────────────────────────────────────────────────────────── */
@@ -369,15 +373,16 @@ a { color: inherit; text-decoration: none; }
 
 /* ── CARDS ──────────────────────────────────────────────────────────────── */
 .card {
-  background: var(--c-s1);
+  background: linear-gradient(160deg, var(--c-s2) 0%, var(--c-s1) 55%);
   border: 1px solid var(--c-bd0);
   border-radius: var(--r);
-  padding: 14px 16px;
+  padding: 16px 18px;
   position: relative;
   overflow: hidden;
+  box-shadow: var(--shadow-card);
 }
 
-/* Subtle left accent line — Palantir signature */
+/* Subtle left accent line — institutional signature */
 .card::after {
   content: '';
   position: absolute;
@@ -388,6 +393,7 @@ a { color: inherit; text-decoration: none; }
   transition: opacity var(--t);
 }
 .card:hover::after { opacity: 1; }
+.card:hover { border-color: var(--c-bd1); }
 
 /* Section label — stark, military */
 .card-label {
@@ -410,7 +416,7 @@ a { color: inherit; text-decoration: none; }
 /* ── METRIC BOXES ───────────────────────────────────────────────────────── */
 .metrics { display: flex; gap: 8px; margin-bottom: 12px; flex-wrap: wrap; }
 .metric {
-  background: var(--c-s0);
+  background: linear-gradient(160deg, var(--c-s1) 0%, var(--c-s0) 60%);
   border: 1px solid var(--c-bd1);
   border-radius: var(--r);
   padding: 10px 14px;
@@ -454,6 +460,49 @@ a { color: inherit; text-decoration: none; }
 .pur    { color: var(--c-purple-hi); }
 .gld    { color: var(--c-gold-hi); }
 .muted  { color: var(--c-tx2); }
+
+/* ── PAGE HEADER ────────────────────────────────────────────────────────── */
+.gli-pghdr {
+  padding: 18px 28px 16px;
+  border-bottom: 1px solid var(--c-bd0);
+  background: linear-gradient(180deg, var(--c-s1) 0%, var(--c-bg) 100%);
+  display: flex; align-items: flex-start; justify-content: space-between; gap: 24px;
+}
+.gli-pghdr-l { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+.gli-pghdr-title { font-family: 'Archivo', var(--f-ui); font-size: 17px; font-weight: 700; letter-spacing: -.005em; color: var(--c-tx0); }
+.gli-pghdr-sub { font-family: var(--f-mono); font-size: 10px; color: var(--c-tx2); margin-top: 4px; letter-spacing: .02em; }
+.gli-pghdr-r { text-align: right; flex-shrink: 0; }
+.gli-pghdr-stat { font-family: var(--f-mono); font-size: 32px; font-weight: 700; line-height: 1; letter-spacing: -.02em; }
+.gli-pghdr-statlbl { font-family: var(--f-mono); font-size: 8.5px; color: var(--c-tx2); margin-top: 4px; letter-spacing: .02em; }
+.gli-sevdot { width: 6px; height: 6px; border-radius: 50%; flex-shrink: 0; display: inline-block; }
+.gli-sevlbl { font-family: var(--f-mono); font-size: 8px; font-weight: 700; letter-spacing: .14em; text-transform: uppercase; padding: 3px 8px; border-radius: 3px; }
+.gli-sevlbl.r { color: var(--c-red-hi); background: rgba(227,91,82,.1); border: 1px solid rgba(227,91,82,.3); }
+.gli-sevlbl.a { color: var(--c-amber-hi); background: rgba(232,162,61,.1); border: 1px solid rgba(232,162,61,.3); }
+.gli-sevlbl.g { color: var(--c-green-hi); background: rgba(47,184,118,.1); border: 1px solid rgba(47,184,118,.3); }
+.gli-sevlbl.b { color: var(--c-blue-hi); background: rgba(76,141,217,.1); border: 1px solid rgba(76,141,217,.3); }
+
+/* ── KPI STRIP ──────────────────────────────────────────────────────────── */
+.kpi-strip { display: grid; grid-template-columns: 1.6fr 1fr 1fr 1fr; gap: 10px; }
+.kpi-card {
+  background: linear-gradient(160deg, var(--c-s2) 0%, var(--c-s1) 60%);
+  border: 1px solid var(--c-bd0);
+  border-left: 2px solid var(--c-bd1);
+  border-radius: var(--r);
+  padding: 16px 15px;
+  display: flex; flex-direction: column; justify-content: space-between;
+  min-height: 140px;
+  box-shadow: var(--shadow-card);
+  transition: border-color var(--t);
+}
+.kpi-card.r { border-left-color: var(--c-red-hi); }
+.kpi-card.a { border-left-color: var(--c-amber-hi); }
+.kpi-card.g { border-left-color: var(--c-green-hi); }
+.kpi-card.b { border-left-color: var(--c-blue-hi); }
+.kpi-label { font-family: var(--f-mono); font-size: 8px; font-weight: 700; letter-spacing: .13em; color: var(--c-tx2); text-transform: uppercase; }
+.kpi-value { font-family: var(--f-mono); font-size: 40px; font-weight: 700; letter-spacing: -.02em; line-height: 1; margin: 7px 0 4px; color: var(--c-tx0); }
+.kpi-value.hero { font-size: 52px; }
+.kpi-sub { font-size: 9.5px; line-height: 1.45; color: var(--c-tx2); }
+.kpi-src { font-family: var(--f-mono); font-size: 7.5px; color: var(--c-tx3); letter-spacing: .04em; margin-top: 8px; }
 
 /* ── STATUS CHIPS ───────────────────────────────────────────────────────── */
 .chip {
@@ -3230,7 +3279,7 @@ canvas { font-family: var(--f-mono); }
 ═══════════════════════════════════════════════════════════════════════════ */
 :root {
   --gcc-sw:   220px;
-  --gcc-th:   46px;
+  --gcc-th:   56px;
   --gcc-tkh:  28px;
   --gcc-off:  calc(var(--gcc-th) + var(--gcc-tkh));
 }
@@ -3241,10 +3290,16 @@ canvas { font-family: var(--f-mono); }
   background: var(--c-s0); border-right: 1px solid var(--c-bd1);
   display: flex; flex-direction: column; overflow-y: auto; overflow-x: hidden;
 }
-.gcc-wm { padding: 18px 18px 14px; border-bottom: 1px solid var(--c-bd0); flex-shrink: 0; }
-.gcc-wm-eye { font-family: 'Archivo', var(--f-ui); font-size: 9px; font-weight: 600; letter-spacing: .16em; color: var(--c-tx2); text-transform: uppercase; margin-bottom: 4px; }
-.gcc-wm-name { font-family: 'Archivo', var(--f-ui); font-size: 13px; font-weight: 700; letter-spacing: -.005em; color: var(--c-tx0); line-height: 1.25; }
-.gcc-wm-beta { font-family: var(--f-mono); font-size: 8px; color: var(--c-gold); letter-spacing: .1em; margin-top: 5px; opacity: .75; }
+.gcc-wm { padding: 18px 18px 15px; border-bottom: 1px solid var(--c-bd0); flex-shrink: 0; }
+.gcc-wm-row { display: flex; align-items: center; gap: 10px; margin-bottom: 9px; }
+.gcc-wm-mark {
+  flex-shrink: 0; width: 32px; height: 32px; border-radius: 7px;
+  display: flex; align-items: center; justify-content: center;
+  background: linear-gradient(150deg, var(--c-gold-hi), var(--c-gold-dim));
+  font-family: 'Archivo', var(--f-ui); font-size: 12px; font-weight: 800; letter-spacing: -.02em; color: #fff;
+}
+.gcc-wm-eye { font-family: var(--f-mono); font-size: 8px; font-weight: 500; letter-spacing: .1em; color: var(--c-tx2); text-transform: uppercase; }
+.gcc-wm-name { font-family: 'Archivo', var(--f-ui); font-size: 13.5px; font-weight: 700; letter-spacing: -.005em; color: var(--c-tx0); line-height: 1.22; }
 .gcc-snav { flex: 1; padding: 8px 0; overflow-y: auto; }
 .gcc-sg-lbl { display: block; font-family: 'Archivo', var(--f-ui); font-size: 9px; font-weight: 600; letter-spacing: .14em; text-transform: uppercase; color: var(--c-tx2); padding: 11px 18px 4px; }
 .gcc-sg-sep { height: 1px; background: var(--c-bd0); margin: 7px 18px; }
@@ -3269,21 +3324,81 @@ canvas { font-family: var(--f-mono); }
 .gcc-sf-dot.warn { background: var(--c-amber-hi); }
 .gcc-sf-dot.err  { background: var(--c-red-hi); }
 .gcc-sf-txt { font-family: var(--f-mono); font-size: 8px; color: var(--c-tx3); letter-spacing: .05em; }
+.gcc-sutil { border-top: 1px solid var(--c-bd0); padding: 8px 10px; flex-shrink: 0; }
+.gcc-sutil-item {
+  display: flex; align-items: center; gap: 9px;
+  font-family: var(--f-ui); font-size: 11.5px; font-weight: 500; color: var(--c-tx2);
+  padding: 7px 8px; border-radius: 6px; cursor: pointer; transition: background var(--t), color var(--t);
+}
+.gcc-sutil-item:hover { background: var(--c-s1); color: var(--c-tx1); }
+.gcc-sutil-item.gcc-sutil-soon { opacity: .55; cursor: default; }
+.gcc-sutil-item.gcc-sutil-soon:hover { background: none; color: var(--c-tx2); }
+.gcc-sutil-icon { font-size: 12px; width: 14px; text-align: center; flex-shrink: 0; }
+.gcc-wm-tagline {
+  flex-shrink: 0; padding: 13px 18px 16px; border-top: 1px solid var(--c-bd0);
+  font-family: var(--f-ui); font-size: 10.5px; font-style: italic; color: var(--c-tx2); line-height: 1.4;
+}
 /* ── Topbar ──────────────────────────────────────────────────────── */
 #gcc-topbar {
   position: fixed; left: var(--gcc-sw); right: 0; top: 0;
   height: var(--gcc-th); z-index: 89;
   background: var(--c-bg); border-bottom: 1px solid var(--c-bd0);
   display: flex; align-items: center; justify-content: space-between;
-  padding: 0 24px;
+  gap: 20px;
+  padding: 0 20px;
 }
 .gcc-tb-title { font-family: 'Archivo', var(--f-ui); font-size: 11px; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; color: var(--c-tx0); }
-.gcc-tb-right { display: flex; align-items: center; gap: 14px; }
+.gcc-tb-right { display: flex; align-items: center; gap: 16px; flex-shrink: 0; }
 .gcc-tb-pill { display: flex; align-items: center; gap: 5px; font-family: var(--f-mono); font-size: 8px; color: var(--c-tx2); letter-spacing: .05em; }
 .gcc-tb-dot { width: 5px; height: 5px; border-radius: 50%; flex-shrink: 0; }
 .gcc-tb-pill strong { color: var(--c-tx1); font-weight: 500; }
 .gcc-tb-btn { font-family: var(--f-mono); font-size: 8px; letter-spacing: .08em; color: var(--c-tx2); background: none; border: 1px solid var(--c-bd1); border-radius: var(--r); padding: 4px 10px; cursor: pointer; transition: border-color var(--t), color var(--t); text-decoration: none; }
 .gcc-tb-btn:hover { border-color: var(--c-bd2); color: var(--c-tx1); }
+/* ── Ask command bar ─────────────────────────────────────────────── */
+.gli-ask {
+  flex: 1; max-width: 560px;
+  display: flex; align-items: center; gap: 9px;
+  background: var(--c-s1); border: 1px solid var(--c-bd1); border-radius: 7px;
+  padding: 0 8px 0 13px; height: 34px;
+  transition: border-color var(--t);
+}
+.gli-ask:focus-within { border-color: var(--c-gold-dim); }
+.gli-ask-icon { color: var(--c-tx2); flex-shrink: 0; }
+.gli-ask-input {
+  flex: 1; min-width: 0;
+  background: none; border: none; outline: none;
+  font-family: var(--f-ui); font-size: 12.5px; color: var(--c-tx0);
+}
+.gli-ask-input::placeholder { color: var(--c-tx2); }
+.gli-ask-submit {
+  flex-shrink: 0; width: 24px; height: 24px; border-radius: 5px;
+  display: flex; align-items: center; justify-content: center;
+  background: var(--c-s2); border: 1px solid var(--c-bd1); color: var(--c-tx1);
+  cursor: pointer; transition: background var(--t), color var(--t), border-color var(--t);
+}
+.gli-ask-submit:hover { background: var(--c-gold-dim); border-color: var(--c-gold); color: #fff; }
+/* ── Notification bell ───────────────────────────────────────────── */
+.gli-bell {
+  position: relative; width: 32px; height: 32px; border-radius: 7px;
+  display: flex; align-items: center; justify-content: center;
+  background: none; border: 1px solid transparent; color: var(--c-tx1);
+  cursor: pointer; transition: background var(--t), border-color var(--t);
+}
+.gli-bell:hover { background: var(--c-s1); border-color: var(--c-bd1); }
+.gli-bell-dot { position: absolute; top: 6px; right: 7px; width: 6px; height: 6px; border-radius: 50%; background: var(--c-red-hi); border: 1.5px solid var(--c-bg); }
+/* ── User profile ─────────────────────────────────────────────────── */
+.gli-user { display: flex; align-items: center; gap: 9px; cursor: pointer; padding: 4px 6px; border-radius: 7px; transition: background var(--t); }
+.gli-user:hover { background: var(--c-s1); }
+.gli-user-avatar {
+  width: 28px; height: 28px; border-radius: 50%; flex-shrink: 0;
+  display: flex; align-items: center; justify-content: center;
+  background: linear-gradient(150deg, var(--c-gold-hi), var(--c-gold-dim));
+  font-family: var(--f-ui); font-size: 10.5px; font-weight: 700; color: #fff;
+}
+.gli-user-meta { line-height: 1.3; }
+.gli-user-name { font-family: var(--f-ui); font-size: 11.5px; font-weight: 600; color: var(--c-tx0); white-space: nowrap; }
+.gli-user-role { font-family: var(--f-mono); font-size: 8.5px; color: var(--c-tx2); letter-spacing: .04em; }
+@media (max-width: 900px) { .gli-ask { display: none; } .gli-user-meta { display: none; } }
 /* ── Ticker ──────────────────────────────────────────────────────── */
 #gcc-ticker {
   position: fixed; left: var(--gcc-sw); right: 0; top: var(--gcc-th);
@@ -3669,9 +3784,13 @@ canvas { font-family: var(--f-mono); }
 ════════════════════════════════════════════════════════════════════════════ -->
 <aside id="gcc-sidebar">
   <div class="gcc-wm">
-    <div class="gcc-wm-eye">GCC Logistics Intelligence</div>
-    <div class="gcc-wm-name">GCC Logistics<br>Intelligence</div>
-    <div class="gcc-wm-beta">BETA &middot; SEP 2026</div>
+    <div class="gcc-wm-row">
+      <div class="gcc-wm-mark">GLI</div>
+      <div>
+        <div class="gcc-wm-name">Gulf Logistics<br>Intelligence</div>
+      </div>
+    </div>
+    <div class="gcc-wm-eye">Data. Insights. Decisions.</div>
   </div>
   <nav class="gcc-snav">
     <span class="gcc-sg-lbl">Live Intelligence</span>
@@ -3708,6 +3827,11 @@ canvas { font-family: var(--f-mono); }
       <span class="gcc-sni-badge gcc-sni-lock">&#x1F512;</span>
     </div>
   </nav>
+  <div class="gcc-sutil">
+    <div class="gcc-sutil-item" onclick="openInfoModal('data')"><span class="gcc-sutil-icon">&#128196;</span>Data &amp; Methodology</div>
+    <div class="gcc-sutil-item gcc-sutil-soon" title="Coming soon"><span class="gcc-sutil-icon">&#128203;</span>Reports</div>
+    <div class="gcc-sutil-item gcc-sutil-soon" title="Coming soon"><span class="gcc-sutil-icon">&#9881;</span>Settings</div>
+  </div>
   <div class="gcc-sf">
     <div class="gcc-sf-row"><span class="gcc-sf-dot ok"></span><span class="gcc-sf-txt">IMF PortWatch &middot; live</span></div>
     <div class="gcc-sf-row"><span class="gcc-sf-dot ok"></span><span class="gcc-sf-txt">straits.live &middot; live</span></div>
@@ -3716,19 +3840,34 @@ canvas { font-family: var(--f-mono); }
       <span class="gcc-sf-txt" id="gcc-sf-clock">&mdash;</span>
     </div>
   </div>
+  <div class="gcc-wm-tagline">Gulf-focused.<br>Globally connected.</div>
 </aside>
 
 <!-- ══════════════════════════════════════════════════════════════════════════
      TOPBAR — redesigned header strip
 ════════════════════════════════════════════════════════════════════════════ -->
 <div id="gcc-topbar">
-  <span class="gcc-tb-title" id="gcc-tb-title">Chokepoint Traffic</span>
+  <span class="gcc-tb-title" id="gcc-tb-title" style="display:none">Chokepoint Traffic</span>
+  <div class="gli-ask">
+    <svg class="gli-ask-icon" width="15" height="15" viewBox="0 0 15 15" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="6.3" cy="6.3" r="4.8"/><line x1="9.9" y1="9.9" x2="13.5" y2="13.5" stroke-linecap="round"/></svg>
+    <input class="gli-ask-input" type="text" placeholder='Ask a question (e.g. &quot;What&rsquo;s the current situation in Bab al-Mandeb?&quot;)' onkeydown="if(event.key==='Enter')event.preventDefault()">
+    <button class="gli-ask-submit" type="button" aria-label="Ask" title="Ask Gulf Intelligence — coming soon">
+      <svg width="14" height="14" viewBox="0 0 15 15" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><line x1="2.5" y1="7.5" x2="12.5" y2="7.5"/><polyline points="8,3 12.5,7.5 8,12"/></svg>
+    </button>
+  </div>
   <div class="gcc-tb-right">
-    <div class="gcc-tb-pill"><div class="gcc-tb-dot" style="background:var(--c-red-hi)"></div><strong>HORMUZ</strong>&nbsp;RESTRICTED</div>
-    <div class="gcc-tb-pill"><div class="gcc-tb-dot" style="background:var(--c-amber-hi)"></div><strong>BAB BLOCKADE</strong>&nbsp;DAY 43+</div>
-    <div class="gcc-tb-pill" style="opacity:.5"><span id="gcc-tb-ts"></span></div>
-    <button onclick="location.reload()" class="gcc-tb-btn">&#8635; Refresh</button>
-    <a href="mailto:hamza.el.mounhi@strategyand.pwc.com" class="gcc-tb-btn" style="display:inline-block">&#9993; Contact</a>
+    <button class="gli-bell" onclick="location.reload()" title="Refresh data">
+      <svg width="17" height="17" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M4 8a6 6 0 0 1 12 0c0 2.5 1 4 1.5 5H2.5C3 12 4 10.5 4 8Z"/><path d="M8 16a2 2 0 0 0 4 0"/></svg>
+      <span class="gli-bell-dot"></span>
+    </button>
+    <div class="gli-user">
+      <div class="gli-user-avatar">HM</div>
+      <div class="gli-user-meta">
+        <div class="gli-user-name">Hamza El Mounhi</div>
+        <div class="gli-user-role">NIDLP</div>
+      </div>
+      <svg width="10" height="10" viewBox="0 0 10 10" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="color:var(--c-tx2)"><polyline points="2,3.5 5,6.5 8,3.5"/></svg>
+    </div>
   </div>
 </div>
 
@@ -3978,47 +4117,38 @@ function gccSidebarNav(name) {
 
   <div id="cp-view-hormuz">
 
-  <!-- ① CHOKEPOINT SUMMARY STRIP -->
-  <div style="background:#0D0D0B;border-bottom:1px solid #1A1A18;display:flex">
-    <div style="flex:1;padding:14px 28px;display:flex;align-items:center;justify-content:space-between;gap:48px">
+  <!-- ① PAGE HEADER -->
+  <div class="gli-pghdr">
+    <div class="gli-pghdr-l">
       <div>
-        <div style="display:flex;align-items:center;gap:7px;margin-bottom:6px"><span style="width:7px;height:7px;border-radius:50%;background:#E05252;display:inline-block"></span><span style="font-size:8px;font-weight:700;letter-spacing:.16em;color:#E05252">CRITICAL</span></div>
-        <div style="font-size:11px;font-weight:700;letter-spacing:.08em;color:#D9D8D3">STRAIT OF HORMUZ</div>
-        <div style="font-size:9px;color:#4A4A44;margin-top:3px;line-height:1.4">Day 147 &middot; re-escalation &middot; Strait re-declared closed</div>
+        <div style="display:flex;align-items:center;gap:8px;margin-bottom:5px">
+          <span class="gli-sevdot" style="background:var(--c-red-hi)"></span>
+          <span class="gli-sevlbl r">Critical</span>
+        </div>
+        <div class="gli-pghdr-title">Strait of Hormuz</div>
+        <div class="gli-pghdr-sub">Day 147 &middot; re-escalation &middot; strait re-declared closed</div>
       </div>
-      <div style="text-align:right">
-        <div style="font-size:28px;font-weight:700;color:#E05252;line-height:1">-89%</div>
-        <div style="font-size:9px;color:#4A4A44;margin-top:3px">~10/day vs 88 baseline &middot; PortWatch Jul 23</div>
-      </div>
+    </div>
+    <div class="gli-pghdr-r">
+      <div class="gli-pghdr-stat" style="color:var(--c-red-hi)">-89%</div>
+      <div class="gli-pghdr-statlbl">~10/day vs 88 baseline &middot; PortWatch Jul 23</div>
     </div>
   </div>
 
-  <!-- ② TIERED ALERT BANNER -->
-  <div style="background:#130808;border-bottom:1px solid #2A1212;padding:9px 24px;display:flex;align-items:flex-start;gap:12px">
-    <span style="font-size:8px;font-weight:700;letter-spacing:.14em;color:#E05252;border:1px solid rgba(224,82,82,.5);padding:3px 8px;border-radius:3px;white-space:nowrap;flex-shrink:0;margin-top:1px">CRITICAL</span>
-    <div style="display:flex;flex-wrap:wrap;gap:6px">
-      <span style="font-size:9px;color:#F2F1ED;background:rgba(224,82,82,.1);border:1px solid rgba(224,82,82,.22);padding:3px 10px;border-radius:3px">&#9679; Iran re-declared Strait closed Jul 21 &mdash; US disputes, claims vessels transiting</span>
-      <span style="font-size:9px;color:#F2F1ED;background:rgba(224,82,82,.1);border:1px solid rgba(224,82,82,.22);padding:3px 10px;border-radius:3px">&#9679; IRGC claims strikes: Rukban (Jordan) &amp; Bahrain &mdash; unconfirmed</span>
-      <span style="font-size:9px;color:#F2F1ED;background:rgba(224,82,82,.1);border:1px solid rgba(224,82,82,.22);padding:3px 10px;border-radius:3px">&#9679; 8/9 major carriers rerouting via Cape &middot; war-risk insurance 8&times; pre-crisis</span>
-    </div>
-  </div>
-  <div style="background:#0E0B07;border-bottom:1px solid #242010;padding:7px 24px;display:flex;align-items:flex-start;gap:12px">
-    <span style="font-size:8px;font-weight:700;letter-spacing:.14em;color:#C98A2E;border:1px solid rgba(201,138,46,.5);padding:3px 8px;border-radius:3px;white-space:nowrap;flex-shrink:0;margin-top:1px">WATCH</span>
-    <div style="display:flex;flex-wrap:wrap;gap:6px">
-      <span style="font-size:9px;color:#D9D8D3;background:rgba(201,138,46,.07);border:1px solid rgba(201,138,46,.18);padding:3px 10px;border-radius:3px">&#9679; AIS-visible: 10/day (Jul 23) &middot; 30-day median 16/day &middot; 38 tankers AIS-dark</span>
-      <span style="font-size:9px;color:#D9D8D3;background:rgba(201,138,46,.07);border:1px solid rgba(201,138,46,.18);padding:3px 10px;border-radius:3px">&#9679; 339 vessels anchored/stopped in zone &middot; Cape of Good Hope reroute active</span>
-    </div>
-  </div>
-  <div style="background:#130A04;border-bottom:1px solid #3A1A06;padding:9px 24px;display:flex;align-items:flex-start;gap:12px">
-    <div style="display:flex;flex-direction:column;gap:3px;flex-shrink:0">
-      <span style="font-size:8px;font-weight:700;letter-spacing:.14em;color:#E05252;border:1px solid rgba(224,82,82,.5);padding:3px 8px;border-radius:3px;white-space:nowrap">CRITICAL</span>
-      <span style="font-size:7px;font-weight:700;letter-spacing:.1em;color:#F59E0B;text-align:center;padding-top:2px">RED SEA</span>
-    </div>
-    <div style="display:flex;flex-wrap:wrap;gap:6px">
-      <span style="font-size:9px;color:#F2F1ED;background:rgba(245,158,11,.08);border:1px solid rgba(245,158,11,.25);padding:3px 10px;border-radius:3px">&#9679; Houthis declare full naval blockade of Saudi Arabia &mdash; Jul 20 2026 &middot; all vessels serving Saudi ports targeted</span>
-      <span style="font-size:9px;color:#F2F1ED;background:rgba(245,158,11,.08);border:1px solid rgba(245,158,11,.25);padding:3px 10px;border-radius:3px">&#9679; 4 VLCCs (3.8M bbl crude, gasoil, naphtha) turned back before Bab al-Mandeb Jul 22 &middot; Windward / Kpler</span>
-      <span style="font-size:9px;color:#F2F1ED;background:rgba(245,158,11,.08);border:1px solid rgba(245,158,11,.25);padding:3px 10px;border-radius:3px">&#9679; Houthi strikes hit Jizan refinery &amp; Yanbu terminal Jul 25 &middot; Yanbu = ~92% of Saudi seaborne crude exports</span>
-      <span style="font-size:9px;color:#F2F1ED;background:rgba(245,158,11,.08);border:1px solid rgba(245,158,11,.25);padding:3px 10px;border-radius:3px">&#9679; Bab al-Mandeb transits &minus;30% on Jul 22 &middot; EU naval mission warns Saudi-, US- &amp; Israel-linked vessels to avoid Red Sea</span>
+  <!-- ② KEY ALERTS — consolidated, calm intelligence-led list -->
+  <div style="padding:14px 28px 0">
+    <div class="card" style="padding:12px 16px">
+      <div class="card-label" style="display:flex;align-items:center;justify-content:space-between">
+        <span>Key Alerts</span>
+        <span style="font-size:9px;color:var(--c-tx3);font-weight:400;letter-spacing:0;text-transform:none">7 active &middot; 2 critical</span>
+      </div>
+      <div class="news-item"><div class="news-dot" style="background:var(--c-red-hi)"></div><div><span class="news-tag tag-alert">CRITICAL</span><div class="news-text">Iran re-declared Strait closed Jul 21 &mdash; US disputes, claims vessels transiting</div></div></div>
+      <div class="news-item"><div class="news-dot" style="background:var(--c-red-hi)"></div><div><span class="news-tag tag-alert">CRITICAL</span><div class="news-text">IRGC claims strikes: Rukban (Jordan) &amp; Bahrain &mdash; unconfirmed</div></div></div>
+      <div class="news-item"><div class="news-dot" style="background:var(--c-amber-hi)"></div><div><span class="news-tag tag-watch">WATCH</span><div class="news-text">8/9 major carriers rerouting via Cape &middot; war-risk insurance 8&times; pre-crisis</div></div></div>
+      <div class="news-item"><div class="news-dot" style="background:var(--c-amber-hi)"></div><div><span class="news-tag tag-watch">WATCH</span><div class="news-text">AIS-visible: 10/day (Jul 23) &middot; 30-day median 16/day &middot; 38 tankers AIS-dark &middot; 339 vessels anchored/stopped in zone</div></div></div>
+      <div class="news-item"><div class="news-dot" style="background:var(--c-red-hi)"></div><div><span class="news-tag tag-alert">CRITICAL &middot; RED SEA</span><div class="news-text">Houthis declare full naval blockade of Saudi Arabia &mdash; Jul 20 2026 &middot; all vessels serving Saudi ports targeted</div></div></div>
+      <div class="news-item"><div class="news-dot" style="background:var(--c-amber-hi)"></div><div><span class="news-tag tag-watch">RED SEA</span><div class="news-text">4 VLCCs (3.8M bbl crude, gasoil, naphtha) turned back before Bab al-Mandeb Jul 22 &middot; Windward / Kpler</div></div></div>
+      <div class="news-item"><div class="news-dot" style="background:var(--c-amber-hi)"></div><div><span class="news-tag tag-watch">RED SEA</span><div class="news-text">Houthi strikes hit Jizan refinery &amp; Yanbu terminal Jul 25 &middot; Yanbu = ~92% of Saudi seaborne crude exports &middot; Bab al-Mandeb transits &minus;30% Jul 22</div></div></div>
     </div>
   </div>
 
@@ -4029,38 +4159,38 @@ function gccSidebarNav(name) {
     <div style="display:flex;flex-direction:column;gap:14px">
 
       <!-- HERO KPI ROW -->
-      <div style="display:grid;grid-template-columns:2fr 1fr 1fr 1fr;gap:10px">
-        <div style="background:#130808;border:1px solid #2A1414;border-radius:6px;padding:22px 22px 16px;display:flex;flex-direction:column;justify-content:space-between;min-height:148px">
-          <div style="font-size:8px;font-weight:700;letter-spacing:.16em;color:#E05252">VS 88 / DAY BASELINE &middot; PORTWATCH</div>
+      <div class="kpi-strip">
+        <div class="kpi-card r">
+          <div class="kpi-label" style="color:var(--c-red-hi)">VS 88 / DAY BASELINE &middot; PORTWATCH</div>
           <div>
-            <div id="m-decline" style="font-size:60px;font-weight:700;letter-spacing:-.03em;color:#E05252;line-height:1;margin:6px 0">-89%</div>
-            <div style="font-size:10px;color:#6A3232;line-height:1.5">Re-escalation &middot; Day 147<br>since IRGC closure</div>
+            <div id="m-decline" class="kpi-value hero" style="color:var(--c-red-hi)">-89%</div>
+            <div class="kpi-sub">Re-escalation &middot; Day 147<br>since IRGC closure</div>
           </div>
-          <div style="font-size:8px;color:#3A2020;letter-spacing:.06em">Kpler &middot; Windward AIS synthesis</div>
+          <div class="kpi-src">Kpler &middot; Windward AIS synthesis</div>
         </div>
-        <div style="background:#111110;border:1px solid #1a2535;border-radius:6px;padding:16px 14px;display:flex;flex-direction:column;justify-content:space-between;min-height:148px">
-          <div style="font-size:8px;font-weight:700;letter-spacing:.14em;color:#4A4A44">TRANSITS TODAY</div>
+        <div class="kpi-card">
+          <div class="kpi-label">TRANSITS TODAY</div>
           <div>
-            <div style="font-size:44px;font-weight:700;letter-spacing:-.02em;color:#F2F1ED;line-height:1;margin:6px 0 4px"><span id="m-transits">10</span><a href="https://www.kpler.com" target="_blank" rel="noopener" class="src-lnk" title="Source: IMF PortWatch · Kpler satellite+AIS">&#8599;</a></div>
-            <div class="chg red" id="m-transits-chg" style="font-size:9px;line-height:1.4">2 tanker &middot; 2 container<br>Jul 23 &middot; PortWatch</div>
+            <div class="kpi-value"><span id="m-transits">10</span><a href="https://www.kpler.com" target="_blank" rel="noopener" class="src-lnk" title="Source: IMF PortWatch · Kpler satellite+AIS">&#8599;</a></div>
+            <div class="kpi-sub chg red" id="m-transits-chg">2 tanker &middot; 2 container<br>Jul 23 &middot; PortWatch</div>
           </div>
-          <div style="font-size:8px;color:#2A2A26;letter-spacing:.04em">AIS-verified</div>
+          <div class="kpi-src">AIS-verified</div>
         </div>
-        <div style="background:#111110;border:1px solid #1a2535;border-radius:6px;padding:16px 14px;display:flex;flex-direction:column;justify-content:space-between;min-height:148px">
-          <div style="font-size:8px;font-weight:700;letter-spacing:.14em;color:#4A4A44">TANKERS 24H</div>
+        <div class="kpi-card">
+          <div class="kpi-label">TANKERS 24H</div>
           <div>
-            <div style="font-size:44px;font-weight:700;letter-spacing:-.02em;color:#F2F1ED;line-height:1;margin:6px 0 4px"><span id="m-tankers">2</span><a href="https://www.kpler.com" target="_blank" rel="noopener" class="src-lnk" title="Source: Kpler satellite+AIS">&#8599;</a></div>
-            <div style="font-size:9px;color:#9A9A90;line-height:1.4">AIS-visible &middot; 38<br>tankers dark</div>
+            <div class="kpi-value"><span id="m-tankers">2</span><a href="https://www.kpler.com" target="_blank" rel="noopener" class="src-lnk" title="Source: Kpler satellite+AIS">&#8599;</a></div>
+            <div class="kpi-sub">AIS-visible &middot; 38<br>tankers dark</div>
           </div>
-          <div style="font-size:8px;color:#2A2A26;letter-spacing:.04em">Kpler estimate</div>
+          <div class="kpi-src">Kpler estimate</div>
         </div>
-        <div style="background:#111110;border:1px solid #1a2535;border-radius:6px;padding:16px 14px;display:flex;flex-direction:column;justify-content:space-between;min-height:148px">
-          <div style="font-size:8px;font-weight:700;letter-spacing:.14em;color:#4A4A44">CONTAINER SHIPS</div>
+        <div class="kpi-card a">
+          <div class="kpi-label">CONTAINER SHIPS</div>
           <div>
-            <div style="font-size:44px;font-weight:700;letter-spacing:-.02em;color:#C98A2E;line-height:1;margin:6px 0 4px"><span id="m-containers">2</span><a href="https://www.kpler.com" target="_blank" rel="noopener" class="src-lnk" title="Source: Kpler satellite+AIS">&#8599;</a></div>
-            <div style="font-size:9px;color:#C98A2E;line-height:1.4">Jul 23 &middot; 8/9 carriers<br>rerouted via Cape</div>
+            <div class="kpi-value" style="color:var(--c-amber-hi)"><span id="m-containers">2</span><a href="https://www.kpler.com" target="_blank" rel="noopener" class="src-lnk" title="Source: Kpler satellite+AIS">&#8599;</a></div>
+            <div class="kpi-sub" style="color:var(--c-amber-hi)">Jul 23 &middot; 8/9 carriers<br>rerouted via Cape</div>
           </div>
-          <div style="font-size:8px;color:#2A2A26;letter-spacing:.04em">AIS-verified</div>
+          <div class="kpi-src">AIS-verified</div>
         </div>
       </div>
 
@@ -4165,22 +4295,22 @@ function gccSidebarNav(name) {
       <div class="card">
         <div class="card-label">Carrier Posture</div>
         <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:10px">
-          <div style="background:#111110;border:1px solid #1a2535;border-radius:5px;padding:12px">
-            <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:6px;margin-bottom:7px"><div style="font-size:13px;font-weight:700;color:#F2F1ED">MSC</div><div style="font-size:8px;font-weight:700;padding:2px 7px;border-radius:3px;color:#E05252;border:1px solid #E05252;white-space:nowrap">SUSPENDED</div></div>
-            <div style="font-size:9px;color:#7A7A72;line-height:1.5;margin-bottom:7px">Cape Good Hope restored post-Jun 27. Briefly resumed Jun 18&ndash;24.</div>
-            <div style="font-size:9px;color:#C9AE4E;font-weight:700;border-top:1px solid #1A1A18;padding-top:6px">$1,200/TEU surcharge active</div>
+          <div style="background:var(--c-s0);border:1px solid var(--c-bd1);border-radius:6px;padding:12px">
+            <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:6px;margin-bottom:7px"><div style="font-size:13px;font-weight:700;color:var(--c-tx0)">MSC</div><div style="font-size:8px;font-weight:700;padding:2px 7px;border-radius:3px;color:var(--c-red-hi);border:1px solid rgba(227,91,82,.4);white-space:nowrap">SUSPENDED</div></div>
+            <div style="font-size:9px;color:var(--c-tx2);line-height:1.5;margin-bottom:7px">Cape Good Hope restored post-Jun 27. Briefly resumed Jun 18&ndash;24.</div>
+            <div style="font-size:9px;color:var(--c-gold-hi);font-weight:700;border-top:1px solid var(--c-bd0);padding-top:6px">$1,200/TEU surcharge active</div>
           </div>
-          <div style="background:#111110;border:1px solid #1a2535;border-radius:5px;padding:12px">
-            <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:6px;margin-bottom:7px"><div style="font-size:13px;font-weight:700;color:#F2F1ED">Hapag-Lloyd</div><div style="font-size:8px;font-weight:700;padding:2px 7px;border-radius:3px;color:#E05252;border:1px solid #E05252;white-space:nowrap">SUSPENDED</div></div>
-            <div style="font-size:9px;color:#7A7A72;line-height:1.5">Cape diversions active. No Hormuz calls since Jun 27.</div>
+          <div style="background:var(--c-s0);border:1px solid var(--c-bd1);border-radius:6px;padding:12px">
+            <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:6px;margin-bottom:7px"><div style="font-size:13px;font-weight:700;color:var(--c-tx0)">Hapag-Lloyd</div><div style="font-size:8px;font-weight:700;padding:2px 7px;border-radius:3px;color:var(--c-red-hi);border:1px solid rgba(227,91,82,.4);white-space:nowrap">SUSPENDED</div></div>
+            <div style="font-size:9px;color:var(--c-tx2);line-height:1.5">Cape diversions active. No Hormuz calls since Jun 27.</div>
           </div>
-          <div style="background:#111110;border:1px solid #1a2535;border-radius:5px;padding:12px">
-            <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:6px;margin-bottom:7px"><div style="font-size:13px;font-weight:700;color:#F2F1ED">Maersk</div><div style="font-size:8px;font-weight:700;padding:2px 7px;border-radius:3px;color:#E05252;border:1px solid #E05252;white-space:nowrap">SUSPENDED</div></div>
-            <div style="font-size:9px;color:#7A7A72;line-height:1.5">Second suspension confirmed Jun 27. Cape reroute restored. $1,000/TEU surcharge.</div>
+          <div style="background:var(--c-s0);border:1px solid var(--c-bd1);border-radius:6px;padding:12px">
+            <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:6px;margin-bottom:7px"><div style="font-size:13px;font-weight:700;color:var(--c-tx0)">Maersk</div><div style="font-size:8px;font-weight:700;padding:2px 7px;border-radius:3px;color:var(--c-red-hi);border:1px solid rgba(227,91,82,.4);white-space:nowrap">SUSPENDED</div></div>
+            <div style="font-size:9px;color:var(--c-tx2);line-height:1.5">Second suspension confirmed Jun 27. Cape reroute restored. $1,000/TEU surcharge.</div>
           </div>
-          <div style="background:#111110;border:1px solid #1a2535;border-radius:5px;padding:12px">
-            <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:6px;margin-bottom:7px"><div style="font-size:13px;font-weight:700;color:#F2F1ED">CMA CGM</div><div style="font-size:8px;font-weight:700;padding:2px 7px;border-radius:3px;color:#C98A2E;border:1px solid #C98A2E;white-space:nowrap">MONITORING</div></div>
-            <div style="font-size:9px;color:#7A7A72;line-height:1.5">Limited GCC exposure. Pausing evaluation post-Jun 27.</div>
+          <div style="background:var(--c-s0);border:1px solid var(--c-bd1);border-radius:6px;padding:12px">
+            <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:6px;margin-bottom:7px"><div style="font-size:13px;font-weight:700;color:var(--c-tx0)">CMA CGM</div><div style="font-size:8px;font-weight:700;padding:2px 7px;border-radius:3px;color:var(--c-amber-hi);border:1px solid rgba(232,162,61,.4);white-space:nowrap">MONITORING</div></div>
+            <div style="font-size:9px;color:var(--c-tx2);line-height:1.5">Limited GCC exposure. Pausing evaluation post-Jun 27.</div>
           </div>
         </div>
         <div class="src"><span>straits.live &middot; Lloyd's List &middot; carrier ops updates &middot; Aug 2026</span><span class="src-badge">real data</span></div>

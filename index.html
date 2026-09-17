@@ -526,33 +526,39 @@ a { color: inherit; text-decoration: none; }
 
 /* ── INTELLIGENCE FEED ──────────────────────────────────────────────────── */
 .news-item {
-  padding: 8px 0;
+  padding: 10px 0;
   border-bottom: 1px solid var(--c-bd0);
   display: flex;
-  gap: 10px;
+  gap: 9px;
   align-items: flex-start;
 }
 .news-item:last-child { border-bottom: none; }
-.news-dot { width: 4px; height: 4px; border-radius: 50%; flex-shrink: 0; margin-top: 5px; }
+.news-dot { width: 5px; height: 5px; border-radius: 50%; flex-shrink: 0; margin-top: 6px; }
+.news-item > div:last-child { flex: 1; display: flex; flex-wrap: wrap; align-items: flex-start; min-width: 0; }
 .news-tag {
+  order: 1;
+  margin-left: auto;
+  flex-shrink: 0;
   font-family: var(--f-mono);
   font-size: 7px;
-  font-weight: 600;
-  letter-spacing: .1em;
+  font-weight: 700;
+  letter-spacing: .09em;
   text-transform: uppercase;
-  padding: 1px 5px;
-  border-radius: 2px;
-  margin-bottom: 3px;
-  display: inline-block;
+  padding: 2px 7px;
+  border-radius: 3px;
+  border: 1px solid transparent;
 }
-.tag-alert { background: rgba(192,57,43,.12); color: var(--c-red-hi); }
-.tag-watch { background: rgba(196,122,26,.12); color: var(--c-amber-hi); }
-.tag-info  { background: rgba(26,74,122,.12);  color: var(--c-blue-hi); }
+.tag-alert { background: rgba(227,91,82,.12); color: var(--c-red-hi); border-color: rgba(227,91,82,.3); }
+.tag-watch { background: rgba(232,162,61,.12); color: var(--c-amber-hi); border-color: rgba(232,162,61,.3); }
+.tag-info  { background: rgba(76,141,217,.12); color: var(--c-blue-hi); border-color: rgba(76,141,217,.3); }
 .news-text {
-  font-size: 11px;
+  order: 2;
+  flex: 1 0 100%;
+  margin-top: 5px;
+  font-size: 11.5px;
   color: var(--c-tx1);
   line-height: 1.55;
-  font-weight: 300;
+  font-weight: 400;
 }
 
 /* ── DIVIDER ────────────────────────────────────────────────────────────── */
@@ -4132,23 +4138,6 @@ function gccSidebarNav(name) {
     <div class="gli-pghdr-r">
       <div class="gli-pghdr-stat" style="color:var(--c-red-hi)">-89%</div>
       <div class="gli-pghdr-statlbl">~10/day vs 88 baseline &middot; PortWatch Jul 23</div>
-    </div>
-  </div>
-
-  <!-- ② KEY ALERTS — consolidated, calm intelligence-led list -->
-  <div style="padding:14px 28px 0">
-    <div class="card" style="padding:12px 16px">
-      <div class="card-label" style="display:flex;align-items:center;justify-content:space-between">
-        <span>Key Alerts</span>
-        <span style="font-size:9px;color:var(--c-tx3);font-weight:400;letter-spacing:0;text-transform:none">7 active &middot; 2 critical</span>
-      </div>
-      <div class="news-item"><div class="news-dot" style="background:var(--c-red-hi)"></div><div><span class="news-tag tag-alert">CRITICAL</span><div class="news-text">Iran re-declared Strait closed Jul 21 &mdash; US disputes, claims vessels transiting</div></div></div>
-      <div class="news-item"><div class="news-dot" style="background:var(--c-red-hi)"></div><div><span class="news-tag tag-alert">CRITICAL</span><div class="news-text">IRGC claims strikes: Rukban (Jordan) &amp; Bahrain &mdash; unconfirmed</div></div></div>
-      <div class="news-item"><div class="news-dot" style="background:var(--c-amber-hi)"></div><div><span class="news-tag tag-watch">WATCH</span><div class="news-text">8/9 major carriers rerouting via Cape &middot; war-risk insurance 8&times; pre-crisis</div></div></div>
-      <div class="news-item"><div class="news-dot" style="background:var(--c-amber-hi)"></div><div><span class="news-tag tag-watch">WATCH</span><div class="news-text">AIS-visible: 10/day (Jul 23) &middot; 30-day median 16/day &middot; 38 tankers AIS-dark &middot; 339 vessels anchored/stopped in zone</div></div></div>
-      <div class="news-item"><div class="news-dot" style="background:var(--c-red-hi)"></div><div><span class="news-tag tag-alert">CRITICAL &middot; RED SEA</span><div class="news-text">Houthis declare full naval blockade of Saudi Arabia &mdash; Jul 20 2026 &middot; all vessels serving Saudi ports targeted</div></div></div>
-      <div class="news-item"><div class="news-dot" style="background:var(--c-amber-hi)"></div><div><span class="news-tag tag-watch">RED SEA</span><div class="news-text">4 VLCCs (3.8M bbl crude, gasoil, naphtha) turned back before Bab al-Mandeb Jul 22 &middot; Windward / Kpler</div></div></div>
-      <div class="news-item"><div class="news-dot" style="background:var(--c-amber-hi)"></div><div><span class="news-tag tag-watch">RED SEA</span><div class="news-text">Houthi strikes hit Jizan refinery &amp; Yanbu terminal Jul 25 &middot; Yanbu = ~92% of Saudi seaborne crude exports &middot; Bab al-Mandeb transits &minus;30% Jul 22</div></div></div>
     </div>
   </div>
 

@@ -4899,30 +4899,59 @@ function gccSidebarNav(name) {
 </div><!-- /page-hormuz -->
 
 <!-- ============================================================ TAB 2: CONTAINER RATES -->
-<div class="page" id="page-rates" style="padding:0;background:#0A0A0A;font-family:'JetBrains Mono',monospace;padding-bottom:60px">
+<div class="page" id="page-rates" style="padding:0;padding-bottom:40px">
+
+  <!-- HERO BAND -->
+  <div style="padding:18px 24px 0">
+    <div class="gli-hero">
+      <div class="gli-hero-grad"></div>
+      <div class="gli-hero-inner">
+        <div class="gli-hero-l">
+          <div class="gli-breadcrumb"><span>Freight Markets</span><span class="sep">&rsaquo;</span><span class="leaf">Global Freight Rates</span></div>
+          <div class="gli-hero-title">Freight Markets</div>
+          <div class="gli-hero-desc">Live container freight benchmarks across Asia&ndash;GCC lanes, tracked against pre-Hormuz baselines.</div>
+        </div>
+        <div class="gli-hero-r">
+          <div class="gli-hero-ts" id="gli-rates-ts">&mdash;</div>
+          <button type="button" class="gli-export-btn" onclick="window.print()"><svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v11"/><path d="m8 11 4 4 4-4"/><path d="M4 19h16"/></svg>Export Brief</button>
+          <div class="gli-hero-tagline">Tracking today.<br>Anticipating tomorrow.</div>
+        </div>
+      </div>
+    </div>
+  </div>
 
   <!-- KPI STRIP -->
-  <div style="display:grid;grid-template-columns:repeat(4,1fr);border-bottom:1px solid #1A1A18">
-    <div style="padding:18px 28px;border-right:1px solid #1A1A18;background:#0D0D0B">
-      <div style="font-size:9px;font-weight:700;letter-spacing:.14em;color:#4A4A44;margin-bottom:8px">FBX GLOBAL CONTAINER</div>
-      <div style="font-size:30px;font-weight:700;letter-spacing:-.025em;color:#F2F1ED;line-height:1"><span id="m-fbx">$2,889</span><span style="font-size:14px;font-weight:400;color:#4A4A44;margin-left:3px">/FEU</span></div>
-      <div style="font-size:10px;color:#5A5A52;margin-top:7px;line-height:1.45" id="m-fbx-chg">+46% from May &middot; Freightos Baltic &middot; Jun 14</div>
+  <div class="gli-status-grid">
+    <div class="gli-status-card">
+      <div class="gli-status-title">FBX Global Container</div>
+      <div class="gli-status-figure"><span id="m-fbx">$2,889</span><span style="font-size:13px;font-weight:400;color:var(--c-tx2);margin-left:3px">/FEU</span></div>
+      <div class="gli-status-src" id="m-fbx-chg">+46% from May<br>Freightos Baltic &middot; Jun 14</div>
     </div>
-    <div style="padding:18px 28px;border-right:1px solid #1A1A18;background:#0D0D0B">
-      <div style="font-size:9px;font-weight:700;letter-spacing:.14em;color:#4A4A44;margin-bottom:8px">DREWRY WCI GLOBAL</div>
-      <div style="font-size:30px;font-weight:700;letter-spacing:-.025em;color:#F2F1ED;line-height:1"><span id="m-drewry">$3,549</span><span style="font-size:14px;font-weight:400;color:#4A4A44;margin-left:3px">/FEU</span></div>
-      <div style="font-size:10px;color:#5A5A52;margin-top:7px;line-height:1.45" id="m-drewry-chg">+3% wk &middot; Drewry &middot; Jun 11</div>
+    <div class="gli-status-card">
+      <div class="gli-status-title">Drewry WCI Global</div>
+      <div class="gli-status-figure"><span id="m-drewry">$3,549</span><span style="font-size:13px;font-weight:400;color:var(--c-tx2);margin-left:3px">/FEU</span></div>
+      <div class="gli-status-src" id="m-drewry-chg">+3% wk<br>Drewry &middot; Jun 11</div>
     </div>
-    <div style="padding:18px 28px;border-right:1px solid #1A1A18;background:#0D0D0B">
-      <div style="font-size:9px;font-weight:700;letter-spacing:.14em;color:#4A4A44;margin-bottom:8px">SHA &rarr; JEBEL ALI (SPOT)</div>
-      <div style="font-size:30px;font-weight:700;letter-spacing:-.025em;color:#C98A2E;line-height:1"><span id="m-sha-jae">~$5,900</span><span style="font-size:14px;font-weight:400;color:#4A4A44;margin-left:3px">/FEU</span></div>
-      <div style="font-size:10px;color:#5A5A52;margin-top:7px;line-height:1.45">~1.3x pre-crisis &middot; Jul 2026 &middot; Jun ref: $7,000&ndash;7,700</div>
+    <div class="gli-status-card">
+      <div class="gli-status-title">Shanghai &rarr; Jebel Ali (Spot)</div>
+      <div class="gli-status-figure" style="color:var(--c-amber-hi)"><span id="m-sha-jae">~$5,900</span><span style="font-size:13px;font-weight:400;color:var(--c-tx2);margin-left:3px">/FEU</span></div>
+      <div class="gli-status-src">~1.3&times; pre-crisis &middot; Jul 2026<br>Jun ref: $7,000&ndash;7,700</div>
     </div>
-    <div style="padding:18px 28px;background:#0D0D0B">
-      <div style="font-size:9px;font-weight:700;letter-spacing:.14em;color:#4A4A44;margin-bottom:8px">BALTIC DRY INDEX</div>
-      <div style="font-size:30px;font-weight:700;letter-spacing:-.025em;color:#F2F1ED;line-height:1"><span id="m-bdi">2,729</span><span style="font-size:14px;font-weight:400;color:#4A4A44;margin-left:3px">pts</span></div>
-      <div style="font-size:10px;color:#5A5A52;margin-top:7px;line-height:1.45" id="m-bdi-chg">&minus;1.5% day &middot; Baltic Exchange &middot; Jun 11</div>
+    <div class="gli-status-card">
+      <div class="gli-status-title">Baltic Dry Index</div>
+      <div class="gli-status-figure"><span id="m-bdi">2,729</span><span style="font-size:13px;font-weight:400;color:var(--c-tx2);margin-left:3px">pts</span></div>
+      <div class="gli-status-src" id="m-bdi-chg">&minus;1.5% day<br>Baltic Exchange &middot; Jun 11</div>
     </div>
+  </div>
+
+  <!-- TAB STRIP -->
+  <div class="gli-tabstrip">
+    <span class="gli-tab active">Market Overview</span>
+    <span class="gli-tab">Trade Lanes</span>
+    <span class="gli-tab">Carrier Analysis</span>
+    <span class="gli-tab">Vessel Supply</span>
+    <span class="gli-tab">Surcharges &amp; Fees</span>
+    <span class="gli-tab">Forward Outlook</span>
   </div>
 
   <!-- GLOBAL CHOKEPOINTS MAP — full width -->
@@ -4954,90 +4983,186 @@ function gccSidebarNav(name) {
     <div class="src" style="padding:5px 14px;display:flex;align-items:center;justify-content:space-between"><span>straits.live &bull; VesselFinder &bull; IMF PortWatch &bull; Lloyd's List Intelligence &bull; Inchcape ISS &bull; 7 Jun 2026</span><span style="display:flex;align-items:center;gap:8px;flex-shrink:0"><span id="pc-last-refresh" style="font-size:8px;color:#3a5060"></span><button class="pc-refresh-btn" onclick="refreshPortCalls()" title="Refresh live port call data">&#8635; Live Arrivals</button><span class="src-badge">real data</span></span></div>
   </div>
 
-  <!-- BOTTOM GRID -->
-  <div style="padding:20px 28px 0;display:grid;grid-template-columns:1fr 1fr;gap:16px">
-
-    <!-- TREND CHART -->
-    <div style="background:#111110;border:1px solid #1a2535;border-radius:6px;padding:18px 16px">
-      <div style="font-size:11px;font-weight:700;letter-spacing:.14em;color:#F2F1ED;margin-bottom:4px">FREIGHT INDEX TREND &ndash; 20 WEEKS</div>
-      <div style="font-size:9px;color:#4A4A44;margin-bottom:14px;line-height:1.4">FBX Shanghai &rarr; Middle East / India <span style="color:#C2A23E">&#9632;</span> vs Baltic Dry Index <span style="color:#5A8AB8">&#9632;</span> &middot; dual axis &middot; wks 13&ndash;19 interpolated &middot; wk 20 = Jul 19 2026</div>
-      <div style="position:relative;height:200px">
-        <canvas id="fChart" role="img" aria-label="FBX Shanghai to Middle East and BDI 12-week trend"></canvas>
-      </div>
-      <div style="display:flex;align-items:center;justify-content:space-between;margin-top:10px">
-        <div style="font-size:9px;color:#2A2A26;letter-spacing:.04em">Freightos Terminal SHA&rarr;ME route &middot; balticexchange.com &middot; Hormuz onset Mar 8 2026 &middot; Jul 19 anchor: Searates $8,683</div>
-        <div style="font-size:9px;color:#5FA86A;border:1px solid rgba(95,168,106,0.4);padding:2px 9px;border-radius:3px;letter-spacing:.08em;flex-shrink:0">REAL DATA</div>
+  <!-- MARKET INTELLIGENCE -->
+  <div style="padding:14px 24px 0">
+    <div class="gli-takeaways" style="flex:none">
+      <div class="gli-card-hd2"><span class="gli-panel-heading">Market Intelligence</span></div>
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:0 24px">
+        <div class="gli-tk-item" style="border-top:none">
+          <span class="gli-tk-icon" style="background:rgba(242,112,92,.14);color:var(--c-red-hi)"><svg viewBox="0 0 24 24" width="17" height="17" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 8v5M12 16h.01"/></svg></span>
+          <div class="gli-tk-body"><div class="gli-tk-title" style="color:var(--c-red-hi)">What changed?</div><div class="gli-tk-text">Shanghai&rarr;Jebel Ali spot has climbed to ~$5,900/FEU, and Jeddah rates are running x3.3&ndash;4.4 pre&#8209;crisis levels as carriers reroute via the Cape of Good Hope and shed Red Sea calls.</div></div>
+        </div>
+        <div class="gli-tk-item" style="border-top:none">
+          <span class="gli-tk-icon" style="background:rgba(63,142,247,.14);color:var(--c-blue)"><svg viewBox="0 0 24 24" width="17" height="17" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 16V9"/><path d="m8 12 4-4 4 4"/></svg></span>
+          <div class="gli-tk-body"><div class="gli-tk-title" style="color:var(--c-blue)">Why it matters?</div><div class="gli-tk-text">Cape routing adds 22&ndash;80 transit days depending on origin and destination, tying up vessel capacity and compounding the FBX/Drewry increases GCC importers are already absorbing.</div></div>
+        </div>
+        <div class="gli-tk-item">
+          <span class="gli-tk-icon" style="background:rgba(61,214,140,.14);color:var(--c-green-hi)"><svg viewBox="0 0 24 24" width="17" height="17" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v12"/><path d="m8 11 4 4 4-4"/><path d="M4 19h16"/></svg></span>
+          <div class="gli-tk-body"><div class="gli-tk-title" style="color:var(--c-green-hi)">Decision relevance</div><div class="gli-tk-text">Jeddah is now Red Sea-quoted and single-carrier (CMA CGM) on several lanes &mdash; review booking flexibility and consider Jebel Ali/Sohar direct calls where CoGH premiums are lower.</div></div>
+        </div>
+        <div class="gli-tk-item">
+          <span class="gli-tk-icon" style="background:rgba(167,139,250,.14);color:var(--c-purple)"><svg viewBox="0 0 24 24" width="17" height="17" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 8v4l3 2"/></svg></span>
+          <div class="gli-tk-body"><div class="gli-tk-title" style="color:var(--c-purple)">Next signals to watch</div>
+            <ul class="gli-tk-list"><li>FBX/Drewry weekly resets</li><li>Carrier reinstatement of Hormuz-routed strings</li><li>Jeddah bookable-rate coverage beyond CMA CGM</li><li>Baltic Dry Index vs. container-rate divergence</li></ul>
+          </div>
+        </div>
       </div>
     </div>
+  </div>
 
-    <!-- ROUTE TABLES -->
-    <div style="display:flex;flex-direction:column;gap:14px">
+  <!-- THREE ANALYTICS CARDS -->
+  <div class="gli-3row">
+    <div class="gli-chart-card" style="flex:1.15 1 380px">
+      <div class="gli-card-hd2"><span class="gli-panel-heading">Freight Rate Trends</span></div>
+      <div class="gli-panel-sub">FBX Shanghai&rarr;Middle East vs. Baltic Dry Index &middot; 20 weeks &middot; dual axis</div>
+      <div style="position:relative;height:190px;margin-top:10px"><canvas id="fChart" role="img" aria-label="FBX Shanghai to Middle East and BDI 20-week trend"></canvas></div>
+      <div class="src"><span>Freightos Terminal SHA&rarr;ME &middot; balticexchange.com &middot; Hormuz onset Mar 8 2026</span><span class="src-badge">real data</span></div>
+    </div>
+
+    <div class="gli-chart-card" style="flex:1 1 320px">
+      <div class="gli-card-hd2"><span class="gli-panel-heading">Rate Comparison by Lane</span></div>
+      <div class="gli-panel-sub">Current vs. pre&#8209;Hormuz baseline (USD/FEU, Shanghai origin)</div>
+      <div style="display:flex;align-items:baseline;gap:10px;padding:10px 0 6px">
+        <span style="flex:1 1 0;min-width:0;font-size:10px;letter-spacing:0.1em;text-transform:uppercase;color:var(--c-tx2)">Lane</span>
+        <span style="flex:0 0 66px;text-align:right;font-size:10px;letter-spacing:0.1em;text-transform:uppercase;color:var(--c-tx2)">Current</span>
+        <span style="flex:0 0 50px;text-align:right;font-size:10px;letter-spacing:0.1em;text-transform:uppercase;color:var(--c-tx2)">&Delta;</span>
+      </div>
+      <div style="display:flex;align-items:baseline;gap:10px;padding:8px 0;border-top:1px solid var(--c-bd0)">
+        <span style="flex:1 1 0;min-width:0;font-size:13px;color:var(--c-tx0)">Jebel Ali (CoGH)</span>
+        <span style="flex:0 0 66px;text-align:right;font-family:var(--f-mono);font-weight:600;font-size:14px;color:var(--c-amber-hi)">$5,900</span>
+        <span style="flex:0 0 50px;text-align:right;font-size:12px;font-weight:600;color:var(--c-amber-hi)">x1.3</span>
+      </div>
+      <div style="display:flex;align-items:baseline;gap:10px;padding:8px 0;border-top:1px solid var(--c-bd0)">
+        <span style="flex:1 1 0;min-width:0;font-size:13px;color:var(--c-tx0)">Dammam (CoGH)</span>
+        <span style="flex:0 0 66px;text-align:right;font-family:var(--f-mono);font-weight:600;font-size:14px;color:var(--c-red-hi)">$9,700</span>
+        <span style="flex:0 0 50px;text-align:right;font-size:12px;font-weight:600;color:var(--c-red-hi)">x1.9</span>
+      </div>
+      <div style="display:flex;align-items:baseline;gap:10px;padding:8px 0;border-top:1px solid var(--c-bd0)">
+        <span style="flex:1 1 0;min-width:0;font-size:13px;color:var(--c-tx0)">Sohar / KF Oman (Direct)</span>
+        <span style="flex:0 0 66px;text-align:right;font-family:var(--f-mono);font-weight:600;font-size:14px;color:var(--c-amber-hi)">$5,750</span>
+        <span style="flex:0 0 50px;text-align:right;font-size:12px;font-weight:600;color:var(--c-red-hi)">x2.1</span>
+      </div>
+      <div style="display:flex;align-items:baseline;gap:10px;padding:8px 0;border-top:1px solid var(--c-bd0)">
+        <span style="flex:1 1 0;min-width:0;font-size:13px;color:var(--c-tx0)">Hamad Qatar (CoGH)</span>
+        <span style="flex:0 0 66px;text-align:right;font-family:var(--f-mono);font-weight:600;font-size:14px;color:var(--c-red-hi)">$9,700</span>
+        <span style="flex:0 0 50px;text-align:right;font-size:12px;font-weight:600;color:var(--c-amber-hi)">x1.8</span>
+      </div>
+      <div style="display:flex;align-items:baseline;gap:10px;padding:8px 0;border-top:1px solid var(--c-bd0)">
+        <span style="flex:1 1 0;min-width:0;font-size:13px;color:var(--c-tx0)">Jeddah (Red Sea)</span>
+        <span style="flex:0 0 66px;text-align:right;font-family:var(--f-mono);font-weight:600;font-size:14px;color:var(--c-red-hi)">$10,000</span>
+        <span style="flex:0 0 50px;text-align:right;font-size:12px;font-weight:600;color:var(--c-red-hi)">x3.3</span>
+      </div>
+      <div class="src" style="margin-top:6px"><span>SeaRates &middot; Freightos Seabay &middot; Jul 2026</span><span class="src-badge">real data</span></div>
+    </div>
+
+    <div class="gli-chart-card" style="flex:1.1 1 360px">
+      <div class="gli-card-hd2"><span class="gli-panel-heading">Market Drivers</span></div>
+      <div class="gli-panel-sub">Current state, direction and rate impact</div>
+      <div style="display:flex;align-items:baseline;gap:10px;padding:10px 0 6px">
+        <span style="flex:1 1 0;min-width:0;font-size:10px;letter-spacing:0.1em;text-transform:uppercase;color:var(--c-tx2)">Driver</span>
+        <span style="flex:0 0 34px;text-align:center;font-size:10px;letter-spacing:0.1em;text-transform:uppercase;color:var(--c-tx2)">Trend</span>
+        <span style="flex:0 0 96px;text-align:right;font-size:10px;letter-spacing:0.1em;text-transform:uppercase;color:var(--c-tx2)">Impact</span>
+      </div>
+      <div style="display:flex;align-items:baseline;gap:10px;padding:8px 0;border-top:1px solid var(--c-bd0)">
+        <span style="flex:1 1 0;min-width:0;font-size:13px;color:var(--c-tx0)">Vessel capacity (Hormuz)</span>
+        <span style="flex:0 0 34px;text-align:center;font-size:15px;color:var(--c-red-hi)">&uarr;</span>
+        <span style="flex:0 0 96px;text-align:right;font-size:12px;color:var(--c-tx1)">Higher rates</span>
+      </div>
+      <div style="display:flex;align-items:baseline;gap:10px;padding:8px 0;border-top:1px solid var(--c-bd0)">
+        <span style="flex:1 1 0;min-width:0;font-size:13px;color:var(--c-tx0)">War-risk premium (~3.2%)</span>
+        <span style="flex:0 0 34px;text-align:center;font-size:15px;color:var(--c-red-hi)">&uarr;</span>
+        <span style="flex:0 0 96px;text-align:right;font-size:12px;color:var(--c-tx1)">Higher rates</span>
+      </div>
+      <div style="display:flex;align-items:baseline;gap:10px;padding:8px 0;border-top:1px solid var(--c-bd0)">
+        <span style="flex:1 1 0;min-width:0;font-size:13px;color:var(--c-tx0)">Cape of Good Hope diversion</span>
+        <span style="flex:0 0 34px;text-align:center;font-size:15px;color:var(--c-red-hi)">&uarr;</span>
+        <span style="flex:0 0 96px;text-align:right;font-size:12px;color:var(--c-tx1)">+22&ndash;80 days</span>
+      </div>
+      <div style="display:flex;align-items:baseline;gap:10px;padding:8px 0;border-top:1px solid var(--c-bd0)">
+        <span style="flex:1 1 0;min-width:0;font-size:13px;color:var(--c-tx0)">Carrier discipline (8/9 rerouting)</span>
+        <span style="flex:0 0 34px;text-align:center;font-size:15px;color:var(--c-amber-hi)">&rarr;</span>
+        <span style="flex:0 0 96px;text-align:right;font-size:12px;color:var(--c-tx1)">Rate stability</span>
+      </div>
+      <div style="display:flex;align-items:baseline;gap:10px;padding:8px 0;border-top:1px solid var(--c-bd0)">
+        <span style="flex:1 1 0;min-width:0;font-size:13px;color:var(--c-tx0)">Brent crude (<span id="m-brent-2">$88.10</span>)</span>
+        <span style="flex:0 0 34px;text-align:center;font-size:15px;color:var(--c-red-hi)">&uarr;</span>
+        <span style="flex:0 0 96px;text-align:right;font-size:12px;color:var(--c-tx1)">Higher fuel cost</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- LANE BENCHMARKS -->
+  <div style="padding:22px 24px 0">
+    <div class="gli-panel-heading" style="font-size:19px;margin-bottom:2px">Lane Benchmarks</div>
+    <div class="gli-panel-sub" style="margin-bottom:2px">Full route rate detail by origin, per FEU &middot; Jul 2026</div>
+  </div>
+  <div style="padding:12px 24px 26px;display:flex;flex-direction:column;gap:14px">
 
       <!-- SHA to GCC -->
-      <div style="background:#111110;border:1px solid #1a2535;border-radius:6px;overflow:hidden">
-        <div style="padding:13px 16px 10px;border-bottom:1px solid #1A1A18;display:flex;align-items:baseline;justify-content:space-between">
+      <div style="background:var(--c-s1);border:1px solid var(--c-bd0);border-radius:6px;overflow:hidden">
+        <div style="padding:13px 16px 10px;border-bottom:1px solid var(--c-bd0);display:flex;align-items:baseline;justify-content:space-between">
           <div>
-            <div style="font-size:11px;font-weight:700;letter-spacing:.12em;color:#F2F1ED">ROUTE RATES &ndash; SHANGHAI (SHA) &rarr; GCC</div>
-            <div style="font-size:9px;color:#4A4A44;margin-top:3px">Spot rates per FEU &middot; Jul 2026 &middot; Searates indicative &middot; Carrier TBN &middot; Jun 2026 ref in footnote</div>
+            <div style="font-size:11px;font-weight:700;letter-spacing:.12em;color:var(--c-tx0)">ROUTE RATES &ndash; SHANGHAI (SHA) &rarr; GCC</div>
+            <div style="font-size:9px;color:var(--c-tx2);margin-top:3px">Spot rates per FEU &middot; Jul 2026 &middot; Searates indicative &middot; Carrier TBN &middot; Jun 2026 ref in footnote</div>
           </div>
           <div style="font-size:9px;color:#5FA86A;border:1px solid rgba(95,168,106,0.4);padding:2px 9px;border-radius:3px;letter-spacing:.08em;flex-shrink:0">REAL DATA</div>
         </div>
         <div style="padding:0 16px">
-          <div style="display:grid;grid-template-columns:1fr 80px 120px 110px 55px 65px;border-bottom:1px solid #1A1A18;padding:8px 0">
-            <span style="font-size:8px;font-weight:700;letter-spacing:.12em;color:#4A4A44">PORT</span>
-            <span style="font-size:8px;font-weight:700;letter-spacing:.12em;color:#4A4A44">ROUTE</span>
-            <span style="font-size:8px;font-weight:700;letter-spacing:.12em;color:#4A4A44">RATE / FEU</span>
-            <span style="font-size:8px;font-weight:700;letter-spacing:.12em;color:#4A4A44">PRE-HORMUZ</span>
-            <span style="font-size:8px;font-weight:700;letter-spacing:.12em;color:#4A4A44">&Delta;</span>
-            <span style="font-size:8px;font-weight:700;letter-spacing:.12em;color:#4A4A44;text-align:right">DAYS</span>
+          <div style="display:grid;grid-template-columns:1fr 80px 120px 110px 55px 65px;border-bottom:1px solid var(--c-bd0);padding:8px 0">
+            <span style="font-size:8px;font-weight:700;letter-spacing:.12em;color:var(--c-tx2)">PORT</span>
+            <span style="font-size:8px;font-weight:700;letter-spacing:.12em;color:var(--c-tx2)">ROUTE</span>
+            <span style="font-size:8px;font-weight:700;letter-spacing:.12em;color:var(--c-tx2)">RATE / FEU</span>
+            <span style="font-size:8px;font-weight:700;letter-spacing:.12em;color:var(--c-tx2)">PRE-HORMUZ</span>
+            <span style="font-size:8px;font-weight:700;letter-spacing:.12em;color:var(--c-tx2)">&Delta;</span>
+            <span style="font-size:8px;font-weight:700;letter-spacing:.12em;color:var(--c-tx2);text-align:right">DAYS</span>
           </div>
-          <div style="display:grid;grid-template-columns:1fr 80px 120px 110px 55px 65px;padding:10px 0;border-bottom:1px solid #141412;align-items:center">
-            <div style="font-size:12px;font-weight:700;color:#D9D8D3;display:flex;align-items:center;gap:6px"><img src="https://flagcdn.com/16x12/ae.png" style="height:9px;border-radius:1px;vertical-align:middle"><span>Jebel Ali UAE</span></div>
+          <div style="display:grid;grid-template-columns:1fr 80px 120px 110px 55px 65px;padding:10px 0;border-bottom:1px solid var(--c-bd0);align-items:center">
+            <div style="font-size:12px;font-weight:700;color:var(--c-tx0);display:flex;align-items:center;gap:6px"><img src="https://flagcdn.com/16x12/ae.png" style="height:9px;border-radius:1px;vertical-align:middle"><span>Jebel Ali UAE</span></div>
             <div><span style="font-size:9px;font-weight:700;letter-spacing:.08em;padding:2px 7px;border-radius:3px;color:#8B72C8;border:1px solid #8B72C8;background:rgba(139,114,200,0.1)">CoGH</span></div>
-            <div><div style="font-size:13px;font-weight:700;color:#C98A2E">~$5,900</div><div style="font-size:8px;color:#3A3A36;margin-top:2px">Jun: $7,000&ndash;7,700</div></div>
-            <div style="font-size:11px;color:#5A5A52">~$4,500</div>
+            <div><div style="font-size:13px;font-weight:700;color:#C98A2E">~$5,900</div><div style="font-size:8px;color:var(--c-tx2);margin-top:2px">Jun: $7,000&ndash;7,700</div></div>
+            <div style="font-size:11px;color:var(--c-tx1)">~$4,500</div>
             <div style="font-size:12px;font-weight:700;color:#C98A2E">x1.3</div>
-            <div style="font-size:11px;color:#7A7A72;text-align:right">~22&ndash;35d</div>
+            <div style="font-size:11px;color:var(--c-tx1);text-align:right">~22&ndash;35d</div>
           </div>
-          <div style="display:grid;grid-template-columns:1fr 80px 120px 110px 55px 65px;padding:10px 0;border-bottom:1px solid #141412;align-items:center">
-            <div style="font-size:12px;font-weight:700;color:#D9D8D3;display:flex;align-items:center;gap:6px"><img src="https://flagcdn.com/16x12/sa.png" style="height:9px;border-radius:1px;vertical-align:middle"><span>Dammam SA</span></div>
+          <div style="display:grid;grid-template-columns:1fr 80px 120px 110px 55px 65px;padding:10px 0;border-bottom:1px solid var(--c-bd0);align-items:center">
+            <div style="font-size:12px;font-weight:700;color:var(--c-tx0);display:flex;align-items:center;gap:6px"><img src="https://flagcdn.com/16x12/sa.png" style="height:9px;border-radius:1px;vertical-align:middle"><span>Dammam SA</span></div>
             <div><span style="font-size:9px;font-weight:700;letter-spacing:.08em;padding:2px 7px;border-radius:3px;color:#8B72C8;border:1px solid #8B72C8;background:rgba(139,114,200,0.1)">CoGH</span></div>
-            <div><div style="font-size:13px;font-weight:700;color:#E05252">~$9,700</div><div style="font-size:8px;color:#3A3A36;margin-top:2px">Jun: $12,500&ndash;13,500</div></div>
-            <div style="font-size:11px;color:#5A5A52">~$5,000</div>
+            <div><div style="font-size:13px;font-weight:700;color:#E05252">~$9,700</div><div style="font-size:8px;color:var(--c-tx2);margin-top:2px">Jun: $12,500&ndash;13,500</div></div>
+            <div style="font-size:11px;color:var(--c-tx1)">~$5,000</div>
             <div style="font-size:12px;font-weight:700;color:#C98A2E">x1.9</div>
-            <div style="font-size:11px;color:#7A7A72;text-align:right">~25&ndash;49d</div>
+            <div style="font-size:11px;color:var(--c-tx1);text-align:right">~25&ndash;49d</div>
           </div>
-          <div style="display:grid;grid-template-columns:1fr 80px 120px 110px 55px 65px;padding:10px 0;border-bottom:1px solid #141412;align-items:center">
-            <div style="font-size:12px;font-weight:700;color:#D9D8D3;display:flex;align-items:center;gap:6px"><img src="https://flagcdn.com/16x12/om.png" style="height:9px;border-radius:1px;vertical-align:middle"><span>Sohar / KF Oman</span></div>
+          <div style="display:grid;grid-template-columns:1fr 80px 120px 110px 55px 65px;padding:10px 0;border-bottom:1px solid var(--c-bd0);align-items:center">
+            <div style="font-size:12px;font-weight:700;color:var(--c-tx0);display:flex;align-items:center;gap:6px"><img src="https://flagcdn.com/16x12/om.png" style="height:9px;border-radius:1px;vertical-align:middle"><span>Sohar / KF Oman</span></div>
             <div><span style="font-size:9px;font-weight:700;letter-spacing:.08em;padding:2px 7px;border-radius:3px;color:#5A8AB8;border:1px solid #5A8AB8;background:rgba(90,138,184,0.1)">Direct</span></div>
-            <div><div style="font-size:13px;font-weight:700;color:#C98A2E">~$5,750</div><div style="font-size:8px;color:#3A3A36;margin-top:2px">Jun: $6,300&ndash;8,000</div></div>
-            <div style="font-size:11px;color:#5A5A52">~$2,800</div>
+            <div><div style="font-size:13px;font-weight:700;color:#C98A2E">~$5,750</div><div style="font-size:8px;color:var(--c-tx2);margin-top:2px">Jun: $6,300&ndash;8,000</div></div>
+            <div style="font-size:11px;color:var(--c-tx1)">~$2,800</div>
             <div style="font-size:12px;font-weight:700;color:#E05252">x2.1</div>
-            <div style="font-size:11px;color:#7A7A72;text-align:right">~22&ndash;35d</div>
+            <div style="font-size:11px;color:var(--c-tx1);text-align:right">~22&ndash;35d</div>
           </div>
-          <div style="display:grid;grid-template-columns:1fr 80px 120px 110px 55px 65px;padding:10px 0;border-bottom:1px solid #141412;align-items:center">
-            <div style="font-size:12px;font-weight:700;color:#D9D8D3;display:flex;align-items:center;gap:6px"><img src="https://flagcdn.com/16x12/qa.png" style="height:9px;border-radius:1px;vertical-align:middle"><span>Hamad Qatar</span></div>
+          <div style="display:grid;grid-template-columns:1fr 80px 120px 110px 55px 65px;padding:10px 0;border-bottom:1px solid var(--c-bd0);align-items:center">
+            <div style="font-size:12px;font-weight:700;color:var(--c-tx0);display:flex;align-items:center;gap:6px"><img src="https://flagcdn.com/16x12/qa.png" style="height:9px;border-radius:1px;vertical-align:middle"><span>Hamad Qatar</span></div>
             <div><span style="font-size:9px;font-weight:700;letter-spacing:.08em;padding:2px 7px;border-radius:3px;color:#8B72C8;border:1px solid #8B72C8;background:rgba(139,114,200,0.1)">CoGH</span></div>
-            <div><div style="font-size:13px;font-weight:700;color:#E05252">~$9,700</div><div style="font-size:8px;color:#3A3A36;margin-top:2px">Jun: $14,000&ndash;15,200</div></div>
-            <div style="font-size:11px;color:#5A5A52">~$5,500</div>
+            <div><div style="font-size:13px;font-weight:700;color:#E05252">~$9,700</div><div style="font-size:8px;color:var(--c-tx2);margin-top:2px">Jun: $14,000&ndash;15,200</div></div>
+            <div style="font-size:11px;color:var(--c-tx1)">~$5,500</div>
             <div style="font-size:12px;font-weight:700;color:#C98A2E">x1.8</div>
-            <div style="font-size:11px;color:#7A7A72;text-align:right">~25&ndash;49d</div>
+            <div style="font-size:11px;color:var(--c-tx1);text-align:right">~25&ndash;49d</div>
           </div>
-          <div style="display:grid;grid-template-columns:1fr 80px 120px 110px 55px 65px;padding:10px 0;border-bottom:1px solid #141412;align-items:center">
-            <div style="font-size:12px;font-weight:700;color:#D9D8D3;display:flex;align-items:center;gap:6px"><img src="https://flagcdn.com/16x12/sa.png" style="height:9px;border-radius:1px;vertical-align:middle"><span>Jeddah SA &dagger;</span></div>
+          <div style="display:grid;grid-template-columns:1fr 80px 120px 110px 55px 65px;padding:10px 0;border-bottom:1px solid var(--c-bd0);align-items:center">
+            <div style="font-size:12px;font-weight:700;color:var(--c-tx0);display:flex;align-items:center;gap:6px"><img src="https://flagcdn.com/16x12/sa.png" style="height:9px;border-radius:1px;vertical-align:middle"><span>Jeddah SA &dagger;</span></div>
             <div><span style="font-size:9px;font-weight:700;letter-spacing:.08em;padding:2px 7px;border-radius:3px;color:#E09060;border:1px solid #E09060;background:rgba(224,144,96,0.1)">Red Sea</span></div>
-            <div><div style="font-size:12px;font-weight:700;color:#E05252">CMA CGM ~$10,000</div><div style="font-size:10px;font-weight:700;color:#C98A2E;margin-top:3px">Maersk $3,554 ‡</div><div style="font-size:8px;color:#3A3A36;margin-top:2px">Jun: ~$9,300</div></div>
-            <div style="font-size:11px;color:#5A5A52">~$3,000</div>
+            <div><div style="font-size:12px;font-weight:700;color:#E05252">CMA CGM ~$10,000</div><div style="font-size:10px;font-weight:700;color:#C98A2E;margin-top:3px">Maersk $3,554 ‡</div><div style="font-size:8px;color:var(--c-tx2);margin-top:2px">Jun: ~$9,300</div></div>
+            <div style="font-size:11px;color:var(--c-tx1)">~$3,000</div>
             <div><div style="font-size:11px;font-weight:700;color:#E05252">x3.3</div><div style="font-size:9px;color:#C98A2E;margin-top:2px">x1.2 ‡</div></div>
-            <div style="font-size:11px;color:#7A7A72;text-align:right">~27&ndash;44d</div>
+            <div style="font-size:11px;color:var(--c-tx1);text-align:right">~27&ndash;44d</div>
           </div>
           <div style="display:grid;grid-template-columns:1fr 80px 120px 110px 55px 65px;padding:8px 0;align-items:center;opacity:0.45">
-            <div style="font-size:11px;color:#5A5A52">Port of NEOM SA</div>
+            <div style="font-size:11px;color:var(--c-tx1)">Port of NEOM SA</div>
             <div><span style="font-size:9px;font-weight:700;letter-spacing:.08em;padding:2px 7px;border-radius:3px;color:#E09060;border:1px solid #E09060">Red Sea</span></div>
-            <div style="font-size:10px;color:#3A3A36;font-style:italic;grid-column:span 4">Data pending &mdash; no commercial liner services operating at scale &middot; Jun 2026</div>
+            <div style="font-size:10px;color:var(--c-tx2);font-style:italic;grid-column:span 4">Data pending &mdash; no commercial liner services operating at scale &middot; Jun 2026</div>
           </div>
         </div>
-        <div style="padding:8px 16px;border-top:1px solid #1A1A18;font-size:9px;color:#2A2A26;line-height:1.55">
+        <div style="padding:8px 16px;border-top:1px solid var(--c-bd0);font-size:9px;color:var(--c-tx2);line-height:1.55">
           &dagger; Jeddah: CMA CGM active bookable rates Jul 2026, avg ~$10,000 &middot; transit 27&ndash;44d via Cape+Suez north entry &middot; no Bab el-Mandeb exposure<br>
           ‡ Maersk last bookable SHA&rarr;Jeddah rate $3,554 (May 2026) &mdash; validity expired Jul 4 2026, no new bookable rates issued after that date<br>
           SeaRates &lsquo;alternative&rsquo; (bookable) rates only &middot; indicative rates excluded &middot; Jul 2026 &middot; Jun ref: SeaRates + Freightos all-in Seabay 25 Jun 2026 &middot; pre-Hormuz = Jan 2026 baseline
@@ -5045,124 +5170,123 @@ function gccSidebarNav(name) {
       </div>
 
       <!-- HAM to GCC -->
-      <div style="background:#111110;border:1px solid #1a2535;border-radius:6px;overflow:hidden">
-        <div style="padding:13px 16px 10px;border-bottom:1px solid #1A1A18">
-          <div style="font-size:11px;font-weight:700;letter-spacing:.12em;color:#F2F1ED">ROUTE RATES &ndash; HAMBURG (HAM) &rarr; GCC</div>
-          <div style="font-size:9px;color:#4A4A44;margin-top:3px">Spot rates per FEU &middot; Jul 2026 &middot; avg multi-carrier &middot; Jun 2026 ref in footnote</div>
+      <div style="background:var(--c-s1);border:1px solid var(--c-bd0);border-radius:6px;overflow:hidden">
+        <div style="padding:13px 16px 10px;border-bottom:1px solid var(--c-bd0)">
+          <div style="font-size:11px;font-weight:700;letter-spacing:.12em;color:var(--c-tx0)">ROUTE RATES &ndash; HAMBURG (HAM) &rarr; GCC</div>
+          <div style="font-size:9px;color:var(--c-tx2);margin-top:3px">Spot rates per FEU &middot; Jul 2026 &middot; avg multi-carrier &middot; Jun 2026 ref in footnote</div>
         </div>
         <div style="padding:0 16px">
-          <div style="display:grid;grid-template-columns:1fr 80px 120px 110px 55px 65px;border-bottom:1px solid #1A1A18;padding:8px 0">
-            <span style="font-size:8px;font-weight:700;letter-spacing:.12em;color:#4A4A44">PORT</span>
-            <span style="font-size:8px;font-weight:700;letter-spacing:.12em;color:#4A4A44">ROUTE</span>
-            <span style="font-size:8px;font-weight:700;letter-spacing:.12em;color:#4A4A44">RATE / FEU</span>
-            <span style="font-size:8px;font-weight:700;letter-spacing:.12em;color:#4A4A44">PRE-HORMUZ</span>
-            <span style="font-size:8px;font-weight:700;letter-spacing:.12em;color:#4A4A44">&Delta;</span>
-            <span style="font-size:8px;font-weight:700;letter-spacing:.12em;color:#4A4A44;text-align:right">DAYS</span>
+          <div style="display:grid;grid-template-columns:1fr 80px 120px 110px 55px 65px;border-bottom:1px solid var(--c-bd0);padding:8px 0">
+            <span style="font-size:8px;font-weight:700;letter-spacing:.12em;color:var(--c-tx2)">PORT</span>
+            <span style="font-size:8px;font-weight:700;letter-spacing:.12em;color:var(--c-tx2)">ROUTE</span>
+            <span style="font-size:8px;font-weight:700;letter-spacing:.12em;color:var(--c-tx2)">RATE / FEU</span>
+            <span style="font-size:8px;font-weight:700;letter-spacing:.12em;color:var(--c-tx2)">PRE-HORMUZ</span>
+            <span style="font-size:8px;font-weight:700;letter-spacing:.12em;color:var(--c-tx2)">&Delta;</span>
+            <span style="font-size:8px;font-weight:700;letter-spacing:.12em;color:var(--c-tx2);text-align:right">DAYS</span>
           </div>
-          <div style="display:grid;grid-template-columns:1fr 80px 120px 110px 55px 65px;padding:10px 0;border-bottom:1px solid #141412;align-items:center">
-            <div style="font-size:12px;font-weight:700;color:#D9D8D3;display:flex;align-items:center;gap:6px"><img src="https://flagcdn.com/16x12/ae.png" style="height:9px;border-radius:1px;vertical-align:middle"><span>Jebel Ali UAE</span></div>
+          <div style="display:grid;grid-template-columns:1fr 80px 120px 110px 55px 65px;padding:10px 0;border-bottom:1px solid var(--c-bd0);align-items:center">
+            <div style="font-size:12px;font-weight:700;color:var(--c-tx0);display:flex;align-items:center;gap:6px"><img src="https://flagcdn.com/16x12/ae.png" style="height:9px;border-radius:1px;vertical-align:middle"><span>Jebel Ali UAE</span></div>
             <div><span style="font-size:9px;font-weight:700;letter-spacing:.08em;padding:2px 7px;border-radius:3px;color:#8B72C8;border:1px solid #8B72C8;background:rgba(139,114,200,0.1)">CoGH</span></div>
-            <div><div style="font-size:13px;font-weight:700;color:#E05252">~$5,600</div><div style="font-size:8px;color:#3A3A36;margin-top:2px">Jun: $3,900&ndash;4,200</div></div>
-            <div style="font-size:11px;color:#5A5A52">~$2,500</div>
+            <div><div style="font-size:13px;font-weight:700;color:#E05252">~$5,600</div><div style="font-size:8px;color:var(--c-tx2);margin-top:2px">Jun: $3,900&ndash;4,200</div></div>
+            <div style="font-size:11px;color:var(--c-tx1)">~$2,500</div>
             <div style="font-size:12px;font-weight:700;color:#E05252">x2.2</div>
-            <div style="font-size:11px;color:#7A7A72;text-align:right">~46&ndash;73d</div>
+            <div style="font-size:11px;color:var(--c-tx1);text-align:right">~46&ndash;73d</div>
           </div>
-          <div style="display:grid;grid-template-columns:1fr 80px 120px 110px 55px 65px;padding:10px 0;border-bottom:1px solid #141412;align-items:center">
-            <div style="font-size:12px;font-weight:700;color:#D9D8D3;display:flex;align-items:center;gap:6px"><img src="https://flagcdn.com/16x12/sa.png" style="height:9px;border-radius:1px;vertical-align:middle"><span>Dammam SA</span></div>
+          <div style="display:grid;grid-template-columns:1fr 80px 120px 110px 55px 65px;padding:10px 0;border-bottom:1px solid var(--c-bd0);align-items:center">
+            <div style="font-size:12px;font-weight:700;color:var(--c-tx0);display:flex;align-items:center;gap:6px"><img src="https://flagcdn.com/16x12/sa.png" style="height:9px;border-radius:1px;vertical-align:middle"><span>Dammam SA</span></div>
             <div><span style="font-size:9px;font-weight:700;letter-spacing:.08em;padding:2px 7px;border-radius:3px;color:#8B72C8;border:1px solid #8B72C8;background:rgba(139,114,200,0.1)">CoGH</span></div>
-            <div><div style="font-size:13px;font-weight:700;color:#E05252">~$7,400</div><div style="font-size:8px;color:#3A3A36;margin-top:2px">Jun: $6,600&ndash;7,500</div></div>
-            <div style="font-size:11px;color:#5A5A52">~$2,800</div>
+            <div><div style="font-size:13px;font-weight:700;color:#E05252">~$7,400</div><div style="font-size:8px;color:var(--c-tx2);margin-top:2px">Jun: $6,600&ndash;7,500</div></div>
+            <div style="font-size:11px;color:var(--c-tx1)">~$2,800</div>
             <div style="font-size:12px;font-weight:700;color:#E05252">x2.6</div>
-            <div style="font-size:11px;color:#7A7A72;text-align:right">~33&ndash;80d</div>
+            <div style="font-size:11px;color:var(--c-tx1);text-align:right">~33&ndash;80d</div>
           </div>
-          <div style="display:grid;grid-template-columns:1fr 80px 120px 110px 55px 65px;padding:10px 0;border-bottom:1px solid #141412;align-items:center">
-            <div style="font-size:12px;font-weight:700;color:#D9D8D3;display:flex;align-items:center;gap:6px"><img src="https://flagcdn.com/16x12/om.png" style="height:9px;border-radius:1px;vertical-align:middle"><span>Sohar Oman</span></div>
+          <div style="display:grid;grid-template-columns:1fr 80px 120px 110px 55px 65px;padding:10px 0;border-bottom:1px solid var(--c-bd0);align-items:center">
+            <div style="font-size:12px;font-weight:700;color:var(--c-tx0);display:flex;align-items:center;gap:6px"><img src="https://flagcdn.com/16x12/om.png" style="height:9px;border-radius:1px;vertical-align:middle"><span>Sohar Oman</span></div>
             <div><span style="font-size:9px;font-weight:700;letter-spacing:.08em;padding:2px 7px;border-radius:3px;color:#5FA86A;border:1px solid #5FA86A;background:rgba(95,168,106,0.1)">Oman</span></div>
-            <div><div style="font-size:13px;font-weight:700;color:#E05252">~$6,250</div><div style="font-size:8px;color:#3A3A36;margin-top:2px">Jun: $4,800&ndash;5,200</div></div>
-            <div style="font-size:11px;color:#5A5A52">~$1,800</div>
+            <div><div style="font-size:13px;font-weight:700;color:#E05252">~$6,250</div><div style="font-size:8px;color:var(--c-tx2);margin-top:2px">Jun: $4,800&ndash;5,200</div></div>
+            <div style="font-size:11px;color:var(--c-tx1)">~$1,800</div>
             <div style="font-size:12px;font-weight:700;color:#E05252">x3.5</div>
-            <div style="font-size:11px;color:#7A7A72;text-align:right">~52&ndash;73d</div>
+            <div style="font-size:11px;color:var(--c-tx1);text-align:right">~52&ndash;73d</div>
           </div>
-          <div style="display:grid;grid-template-columns:1fr 80px 120px 110px 55px 65px;padding:10px 0;border-bottom:1px solid #141412;align-items:center">
-            <div style="font-size:12px;font-weight:700;color:#D9D8D3;display:flex;align-items:center;gap:6px"><img src="https://flagcdn.com/16x12/qa.png" style="height:9px;border-radius:1px;vertical-align:middle"><span>Hamad Qatar</span></div>
+          <div style="display:grid;grid-template-columns:1fr 80px 120px 110px 55px 65px;padding:10px 0;border-bottom:1px solid var(--c-bd0);align-items:center">
+            <div style="font-size:12px;font-weight:700;color:var(--c-tx0);display:flex;align-items:center;gap:6px"><img src="https://flagcdn.com/16x12/qa.png" style="height:9px;border-radius:1px;vertical-align:middle"><span>Hamad Qatar</span></div>
             <div><span style="font-size:9px;font-weight:700;letter-spacing:.08em;padding:2px 7px;border-radius:3px;color:#8B72C8;border:1px solid #8B72C8;background:rgba(139,114,200,0.1)">CoGH</span></div>
-            <div><div style="font-size:13px;font-weight:700;color:#E05252">~$7,540</div><div style="font-size:8px;color:#3A3A36;margin-top:2px">Jun: $6,600&ndash;7,400</div></div>
-            <div style="font-size:11px;color:#5A5A52">~$3,200</div>
+            <div><div style="font-size:13px;font-weight:700;color:#E05252">~$7,540</div><div style="font-size:8px;color:var(--c-tx2);margin-top:2px">Jun: $6,600&ndash;7,400</div></div>
+            <div style="font-size:11px;color:var(--c-tx1)">~$3,200</div>
             <div style="font-size:12px;font-weight:700;color:#E05252">x2.4</div>
-            <div style="font-size:11px;color:#7A7A72;text-align:right">~63&ndash;80d</div>
+            <div style="font-size:11px;color:var(--c-tx1);text-align:right">~63&ndash;80d</div>
           </div>
-          <div style="display:grid;grid-template-columns:1fr 80px 120px 110px 55px 65px;padding:10px 0;border-bottom:1px solid #141412;align-items:center">
-            <div style="font-size:12px;font-weight:700;color:#D9D8D3;display:flex;align-items:center;gap:6px"><img src="https://flagcdn.com/16x12/sa.png" style="height:9px;border-radius:1px;vertical-align:middle"><span>Jeddah SA</span></div>
+          <div style="display:grid;grid-template-columns:1fr 80px 120px 110px 55px 65px;padding:10px 0;border-bottom:1px solid var(--c-bd0);align-items:center">
+            <div style="font-size:12px;font-weight:700;color:var(--c-tx0);display:flex;align-items:center;gap:6px"><img src="https://flagcdn.com/16x12/sa.png" style="height:9px;border-radius:1px;vertical-align:middle"><span>Jeddah SA</span></div>
             <div><span style="font-size:9px;font-weight:700;letter-spacing:.08em;padding:2px 7px;border-radius:3px;color:#E09060;border:1px solid #E09060;background:rgba(224,144,96,0.1)">Red Sea</span></div>
-            <div><div style="font-size:13px;font-weight:700;color:#E05252">~$6,100</div><div style="font-size:8px;color:#3A3A36;margin-top:2px">Jun: $3,500&ndash;4,000</div></div>
-            <div style="font-size:11px;color:#5A5A52">~$1,500</div>
+            <div><div style="font-size:13px;font-weight:700;color:#E05252">~$6,100</div><div style="font-size:8px;color:var(--c-tx2);margin-top:2px">Jun: $3,500&ndash;4,000</div></div>
+            <div style="font-size:11px;color:var(--c-tx1)">~$1,500</div>
             <div style="font-size:12px;font-weight:700;color:#E05252">x4.1</div>
-            <div style="font-size:11px;color:#7A7A72;text-align:right">~27&ndash;43d</div>
+            <div style="font-size:11px;color:var(--c-tx1);text-align:right">~27&ndash;43d</div>
           </div>
         </div>
-        <div style="padding:8px 16px;border-top:1px solid #1A1A18;font-size:9px;color:#2A2A26;line-height:1.55">SeaRates &lsquo;alternative&rsquo; (bookable) rates only &middot; indicative rates excluded &middot; CMA CGM / Maersk / Evergreen / ANL / MSC &middot; Jul 2026<br>Jun ref: SeaRates + Freightos Seabay 25 Jun 2026 &middot; Maersk last bookable HAM&rarr;Jeddah rate expired Jun 2026</div>
+        <div style="padding:8px 16px;border-top:1px solid var(--c-bd0);font-size:9px;color:var(--c-tx2);line-height:1.55">SeaRates &lsquo;alternative&rsquo; (bookable) rates only &middot; indicative rates excluded &middot; CMA CGM / Maersk / Evergreen / ANL / MSC &middot; Jul 2026<br>Jun ref: SeaRates + Freightos Seabay 25 Jun 2026 &middot; Maersk last bookable HAM&rarr;Jeddah rate expired Jun 2026</div>
       </div>
 
       <!-- SIN to GCC -->
-      <div style="background:#111110;border:1px solid #1a2535;border-radius:6px;overflow:hidden">
-        <div style="padding:13px 16px 10px;border-bottom:1px solid #1A1A18">
-          <div style="font-size:11px;font-weight:700;letter-spacing:.12em;color:#F2F1ED">ROUTE RATES &ndash; SINGAPORE (SIN) &rarr; GCC</div>
-          <div style="font-size:9px;color:#4A4A44;margin-top:3px">SeaRates &lsquo;alternative&rsquo; (bookable) rates only &middot; indicative rates excluded &middot; Jul 2026</div>
+      <div style="background:var(--c-s1);border:1px solid var(--c-bd0);border-radius:6px;overflow:hidden">
+        <div style="padding:13px 16px 10px;border-bottom:1px solid var(--c-bd0)">
+          <div style="font-size:11px;font-weight:700;letter-spacing:.12em;color:var(--c-tx0)">ROUTE RATES &ndash; SINGAPORE (SIN) &rarr; GCC</div>
+          <div style="font-size:9px;color:var(--c-tx2);margin-top:3px">SeaRates &lsquo;alternative&rsquo; (bookable) rates only &middot; indicative rates excluded &middot; Jul 2026</div>
         </div>
         <div style="padding:0 16px">
-          <div style="display:grid;grid-template-columns:1fr 80px 120px 110px 55px 65px;border-bottom:1px solid #1A1A18;padding:8px 0">
-            <span style="font-size:8px;font-weight:700;letter-spacing:.12em;color:#4A4A44">PORT</span>
-            <span style="font-size:8px;font-weight:700;letter-spacing:.12em;color:#4A4A44">ROUTE</span>
-            <span style="font-size:8px;font-weight:700;letter-spacing:.12em;color:#4A4A44">RATE / FEU</span>
-            <span style="font-size:8px;font-weight:700;letter-spacing:.12em;color:#4A4A44">PRE-HORMUZ</span>
-            <span style="font-size:8px;font-weight:700;letter-spacing:.12em;color:#4A4A44">&Delta;</span>
-            <span style="font-size:8px;font-weight:700;letter-spacing:.12em;color:#4A4A44;text-align:right">DAYS</span>
+          <div style="display:grid;grid-template-columns:1fr 80px 120px 110px 55px 65px;border-bottom:1px solid var(--c-bd0);padding:8px 0">
+            <span style="font-size:8px;font-weight:700;letter-spacing:.12em;color:var(--c-tx2)">PORT</span>
+            <span style="font-size:8px;font-weight:700;letter-spacing:.12em;color:var(--c-tx2)">ROUTE</span>
+            <span style="font-size:8px;font-weight:700;letter-spacing:.12em;color:var(--c-tx2)">RATE / FEU</span>
+            <span style="font-size:8px;font-weight:700;letter-spacing:.12em;color:var(--c-tx2)">PRE-HORMUZ</span>
+            <span style="font-size:8px;font-weight:700;letter-spacing:.12em;color:var(--c-tx2)">&Delta;</span>
+            <span style="font-size:8px;font-weight:700;letter-spacing:.12em;color:var(--c-tx2);text-align:right">DAYS</span>
           </div>
-          <div style="display:grid;grid-template-columns:1fr 80px 120px 110px 55px 65px;padding:10px 0;border-bottom:1px solid #141412;align-items:center">
-            <div style="font-size:12px;font-weight:700;color:#D9D8D3;display:flex;align-items:center;gap:6px"><img src="https://flagcdn.com/16x12/ae.png" style="height:9px;border-radius:1px;vertical-align:middle"><span>Jebel Ali UAE</span></div>
+          <div style="display:grid;grid-template-columns:1fr 80px 120px 110px 55px 65px;padding:10px 0;border-bottom:1px solid var(--c-bd0);align-items:center">
+            <div style="font-size:12px;font-weight:700;color:var(--c-tx0);display:flex;align-items:center;gap:6px"><img src="https://flagcdn.com/16x12/ae.png" style="height:9px;border-radius:1px;vertical-align:middle"><span>Jebel Ali UAE</span></div>
             <div><span style="font-size:9px;font-weight:700;letter-spacing:.08em;padding:2px 7px;border-radius:3px;color:#5A8AB8;border:1px solid #5A8AB8;background:rgba(90,138,184,0.1)">Direct</span></div>
-            <div><div style="font-size:13px;font-weight:700;color:#C98A2E">~$6,700</div><div style="font-size:8px;color:#3A3A36;margin-top:2px">Jun: ~$5,811</div></div>
-            <div style="font-size:11px;color:#5A5A52">~$1,500</div>
+            <div><div style="font-size:13px;font-weight:700;color:#C98A2E">~$6,700</div><div style="font-size:8px;color:var(--c-tx2);margin-top:2px">Jun: ~$5,811</div></div>
+            <div style="font-size:11px;color:var(--c-tx1)">~$1,500</div>
             <div style="font-size:12px;font-weight:700;color:#E05252">x4.5</div>
-            <div style="font-size:11px;color:#7A7A72;text-align:right">~21&ndash;37d</div>
+            <div style="font-size:11px;color:var(--c-tx1);text-align:right">~21&ndash;37d</div>
           </div>
-          <div style="display:grid;grid-template-columns:1fr 80px 120px 110px 55px 65px;padding:10px 0;border-bottom:1px solid #141412;align-items:center">
-            <div style="font-size:12px;font-weight:700;color:#D9D8D3;display:flex;align-items:center;gap:6px"><img src="https://flagcdn.com/16x12/om.png" style="height:9px;border-radius:1px;vertical-align:middle"><span>Sohar Oman</span></div>
+          <div style="display:grid;grid-template-columns:1fr 80px 120px 110px 55px 65px;padding:10px 0;border-bottom:1px solid var(--c-bd0);align-items:center">
+            <div style="font-size:12px;font-weight:700;color:var(--c-tx0);display:flex;align-items:center;gap:6px"><img src="https://flagcdn.com/16x12/om.png" style="height:9px;border-radius:1px;vertical-align:middle"><span>Sohar Oman</span></div>
             <div><span style="font-size:9px;font-weight:700;letter-spacing:.08em;padding:2px 7px;border-radius:3px;color:#5A8AB8;border:1px solid #5A8AB8;background:rgba(90,138,184,0.1)">Direct</span></div>
-            <div><div style="font-size:13px;font-weight:700;color:#C98A2E">~$6,540</div><div style="font-size:8px;color:#3A3A36;margin-top:2px">Jun: ~$5,811</div></div>
-            <div style="font-size:11px;color:#5A5A52">~$1,200</div>
+            <div><div style="font-size:13px;font-weight:700;color:#C98A2E">~$6,540</div><div style="font-size:8px;color:var(--c-tx2);margin-top:2px">Jun: ~$5,811</div></div>
+            <div style="font-size:11px;color:var(--c-tx1)">~$1,200</div>
             <div style="font-size:12px;font-weight:700;color:#E05252">x5.5</div>
-            <div style="font-size:11px;color:#7A7A72;text-align:right">~21&ndash;37d</div>
+            <div style="font-size:11px;color:var(--c-tx1);text-align:right">~21&ndash;37d</div>
           </div>
-          <div style="display:grid;grid-template-columns:1fr 80px 120px 110px 55px 65px;padding:10px 0;border-bottom:1px solid #141412;align-items:center">
-            <div style="font-size:12px;font-weight:700;color:#D9D8D3;display:flex;align-items:center;gap:6px"><img src="https://flagcdn.com/16x12/qa.png" style="height:9px;border-radius:1px;vertical-align:middle"><span>Hamad Qatar</span></div>
+          <div style="display:grid;grid-template-columns:1fr 80px 120px 110px 55px 65px;padding:10px 0;border-bottom:1px solid var(--c-bd0);align-items:center">
+            <div style="font-size:12px;font-weight:700;color:var(--c-tx0);display:flex;align-items:center;gap:6px"><img src="https://flagcdn.com/16x12/qa.png" style="height:9px;border-radius:1px;vertical-align:middle"><span>Hamad Qatar</span></div>
             <div><span style="font-size:9px;font-weight:700;letter-spacing:.08em;padding:2px 7px;border-radius:3px;color:#8B72C8;border:1px solid #8B72C8;background:rgba(139,114,200,0.1)">CoGH</span></div>
-            <div><div style="font-size:13px;font-weight:700;color:#E05252">~$9,800</div><div style="font-size:8px;color:#3A3A36;margin-top:2px">Jun: ~$12,960</div></div>
-            <div style="font-size:11px;color:#5A5A52">~$2,000</div>
+            <div><div style="font-size:13px;font-weight:700;color:#E05252">~$9,800</div><div style="font-size:8px;color:var(--c-tx2);margin-top:2px">Jun: ~$12,960</div></div>
+            <div style="font-size:11px;color:var(--c-tx1)">~$2,000</div>
             <div style="font-size:12px;font-weight:700;color:#E05252">x4.9</div>
-            <div style="font-size:11px;color:#7A7A72;text-align:right">~21&ndash;41d</div>
+            <div style="font-size:11px;color:var(--c-tx1);text-align:right">~21&ndash;41d</div>
           </div>
-          <div style="display:grid;grid-template-columns:1fr 80px 120px 110px 55px 65px;padding:10px 0;border-bottom:1px solid #141412;align-items:center">
-            <div style="font-size:12px;font-weight:700;color:#D9D8D3;display:flex;align-items:center;gap:6px"><img src="https://flagcdn.com/16x12/sa.png" style="height:9px;border-radius:1px;vertical-align:middle"><span>Jeddah SA</span></div>
+          <div style="display:grid;grid-template-columns:1fr 80px 120px 110px 55px 65px;padding:10px 0;border-bottom:1px solid var(--c-bd0);align-items:center">
+            <div style="font-size:12px;font-weight:700;color:var(--c-tx0);display:flex;align-items:center;gap:6px"><img src="https://flagcdn.com/16x12/sa.png" style="height:9px;border-radius:1px;vertical-align:middle"><span>Jeddah SA</span></div>
             <div><span style="font-size:9px;font-weight:700;letter-spacing:.08em;padding:2px 7px;border-radius:3px;color:#E09060;border:1px solid #E09060;background:rgba(224,144,96,0.1)">Red Sea</span></div>
-            <div><div style="font-size:13px;font-weight:700;color:#E05252">$7,992</div><div style="font-size:8px;color:#3A3A36;margin-top:2px">Jun: ~$6,912 &middot; CMA CGM</div></div>
-            <div style="font-size:11px;color:#5A5A52">~$1,800</div>
+            <div><div style="font-size:13px;font-weight:700;color:#E05252">$7,992</div><div style="font-size:8px;color:var(--c-tx2);margin-top:2px">Jun: ~$6,912 &middot; CMA CGM</div></div>
+            <div style="font-size:11px;color:var(--c-tx1)">~$1,800</div>
             <div style="font-size:12px;font-weight:700;color:#E05252">x4.4</div>
-            <div style="font-size:11px;color:#7A7A72;text-align:right">~14d</div>
+            <div style="font-size:11px;color:var(--c-tx1);text-align:right">~14d</div>
           </div>
-          <div style="display:grid;grid-template-columns:1fr 80px 120px 110px 55px 65px;padding:10px 0;border-bottom:1px solid #141412;align-items:center">
-            <div style="font-size:12px;font-weight:700;color:#D9D8D3;display:flex;align-items:center;gap:6px"><img src="https://flagcdn.com/16x12/kw.png" style="height:9px;border-radius:1px;vertical-align:middle"><span>Shuwaikh Kuwait</span></div>
+          <div style="display:grid;grid-template-columns:1fr 80px 120px 110px 55px 65px;padding:10px 0;border-bottom:1px solid var(--c-bd0);align-items:center">
+            <div style="font-size:12px;font-weight:700;color:var(--c-tx0);display:flex;align-items:center;gap:6px"><img src="https://flagcdn.com/16x12/kw.png" style="height:9px;border-radius:1px;vertical-align:middle"><span>Shuwaikh Kuwait</span></div>
             <div><span style="font-size:9px;font-weight:700;letter-spacing:.08em;padding:2px 7px;border-radius:3px;color:#8B72C8;border:1px solid #8B72C8;background:rgba(139,114,200,0.1)">CoGH</span></div>
-            <div><div style="font-size:13px;font-weight:700;color:#E05252">~$10,700</div><div style="font-size:8px;color:#3A3A36;margin-top:2px">Jun: &mdash;</div></div>
-            <div style="font-size:11px;color:#5A5A52">~$2,200</div>
+            <div><div style="font-size:13px;font-weight:700;color:#E05252">~$10,700</div><div style="font-size:8px;color:var(--c-tx2);margin-top:2px">Jun: &mdash;</div></div>
+            <div style="font-size:11px;color:var(--c-tx1)">~$2,200</div>
             <div style="font-size:12px;font-weight:700;color:#E05252">x4.9</div>
-            <div style="font-size:11px;color:#7A7A72;text-align:right">~34&ndash;40d</div>
+            <div style="font-size:11px;color:var(--c-tx1);text-align:right">~34&ndash;40d</div>
           </div>
         </div>
-        <div style="padding:8px 16px;border-top:1px solid #1A1A18;font-size:9px;color:#2A2A26;line-height:1.55">SeaRates &lsquo;alternative&rsquo; (bookable) rates only &middot; indicative rates excluded &middot; CMA CGM / Maersk / MSC / ANL &middot; Jul 2026<br>Jeddah: CMA CGM only (sole bookable rate Jul 2026) &middot; Jun ref: CMA CGM SeaRates 18 Jun 2026 (Tanjung Pelepas hub proxy) &middot; pre-Hormuz = Jan 2026 baseline est.</div>
+        <div style="padding:8px 16px;border-top:1px solid var(--c-bd0);font-size:9px;color:var(--c-tx2);line-height:1.55">SeaRates &lsquo;alternative&rsquo; (bookable) rates only &middot; indicative rates excluded &middot; CMA CGM / Maersk / MSC / ANL &middot; Jul 2026<br>Jeddah: CMA CGM only (sole bookable rate Jul 2026) &middot; Jun ref: CMA CGM SeaRates 18 Jun 2026 (Tanjung Pelepas hub proxy) &middot; pre-Hormuz = Jan 2026 baseline est.</div>
       </div>
 
-    </div>
   </div>
 
 </div>

@@ -6460,6 +6460,63 @@ window.addEventListener('load', function() {
     <div id="tf-out-cost"><div id="tf-val-cost"></div></div>
   </div>
 
+  <!-- HERO BAND -->
+  <div style="padding:18px 24px 0">
+    <div class="gli-hero">
+      <div class="gli-hero-grad"></div>
+      <div class="gli-hero-inner">
+        <div class="gli-hero-l">
+          <div class="gli-breadcrumb"><span>Trade Flows</span><span class="sep">&rsaquo;</span><span class="leaf">Global Crude Trade &amp; Hormuz Exposure</span></div>
+          <div class="gli-hero-title">Global Trade Flows</div>
+          <div class="gli-hero-desc">Systemic exposure of global seaborne crude trade to Hormuz disruption &mdash; volumes, re-routing capacity and stress-test outputs.</div>
+        </div>
+        <div class="gli-hero-r">
+          <div class="gli-hero-ts">IEA / EIA / Clarkson Research &middot; 2024 baseline</div>
+          <button type="button" class="gli-export-btn" onclick="window.print()"><svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v11"/><path d="m8 11 4 4 4-4"/><path d="M4 19h16"/></svg>Export</button>
+          <div class="gli-hero-tagline">Flows today.<br>Modeled for tomorrow.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- KPI STRIP -->
+  <div class="gli-status-grid">
+    <div class="gli-status-card">
+      <div class="gli-status-title">Global Seaborne Crude</div>
+      <div class="gli-status-figure">100 M</div>
+      <div class="gli-status-sub">bbl/day &middot; IEA 2024 baseline</div>
+    </div>
+    <div class="gli-status-card">
+      <div class="gli-status-title">Through Hormuz</div>
+      <div class="gli-status-figure" style="color:var(--c-amber-hi)">~21 M</div>
+      <div class="gli-status-sub">bbl/day &middot; ~21% of global seaborne</div>
+    </div>
+    <div class="gli-status-card">
+      <div class="gli-status-title">Hormuz Disruption</div>
+      <div class="gli-status-figure" style="color:var(--c-red-hi)">-89%</div>
+      <div class="gli-status-sub">Current transit vs. 88/day baseline</div>
+    </div>
+    <div class="gli-status-card">
+      <div class="gli-status-title">Re-Routable Volume</div>
+      <div class="gli-status-figure" style="color:var(--c-amber-hi)">~6.3 M</div>
+      <div class="gli-status-sub">Mb/d pipeline bypass (Petroline 4.8 + ADCOP 1.5)</div>
+    </div>
+    <div class="gli-status-card">
+      <div class="gli-status-title">Additional Transit</div>
+      <div class="gli-status-figure" style="color:var(--c-amber-hi)">+12 days</div>
+      <div class="gli-status-sub">avg via Cape of Good Hope (VLCC)</div>
+    </div>
+  </div>
+
+  <!-- TAB STRIP -->
+  <div class="gli-tabstrip">
+    <span class="gli-tab active">Overview</span>
+    <span class="gli-tab">Trade Lanes</span>
+    <span class="gli-tab">Chokepoint Exposure</span>
+    <span class="gli-tab">Commodity Detail</span>
+    <span class="gli-tab">Stockpile &amp; Resilience</span>
+  </div>
+
   <!-- ── FILTER STRIP ──────────────────────────────────────────────────────── -->
   <div style="background:#0D0D0B;border-bottom:1px solid #1A1A18;padding:12px 28px;display:flex;flex-direction:column;gap:9px">
 
@@ -6494,88 +6551,132 @@ window.addEventListener('load', function() {
 
   <div style="padding:0 28px 28px">
 
-    <!-- ── KPI SUMMARY STRIP ─────────────────────────────────────────────── -->
-    <div style="display:flex;align-items:stretch;border:1px solid #1a2535;border-radius:6px;overflow:hidden;background:#111110;margin-top:20px">
-      <div style="flex:1;padding:18px 20px;border-right:1px solid #1A1A18;display:flex;flex-direction:column;gap:4px">
-        <div style="font-size:9px;font-weight:700;letter-spacing:0.14em;color:#4A4A44;font-family:var(--f-mono)">GLOBAL SEABORNE CRUDE</div>
-        <div style="font-size:26px;font-weight:700;letter-spacing:-0.02em;color:#F2F1ED;line-height:1;margin:4px 0">100 M</div>
-        <div style="font-size:9px;color:#5A5A52;line-height:1.4;font-family:var(--f-mono)">bbl/day &middot; IEA 2024 baseline</div>
+    <!-- ── TRADE ARCHITECTURE MAP + KEY TAKEAWAYS ─────────────────────────── -->
+    <div class="gli-2row" style="padding:20px 0 0">
+      <div class="gli-map-panel">
+        <div class="gli-map-hdr"><span class="gli-map-title">Global Crude Trade Architecture</span></div>
+        <div class="gli-map-surface" style="height:380px">
+          <div id="tf-world-map" style="height:100%;width:100%"></div>
+        </div>
       </div>
-      <div style="flex:1;padding:18px 20px;border-right:1px solid #1A1A18;display:flex;flex-direction:column;gap:4px">
-        <div style="font-size:9px;font-weight:700;letter-spacing:0.14em;color:#4A4A44;font-family:var(--f-mono)">THROUGH HORMUZ</div>
-        <div style="font-size:26px;font-weight:700;letter-spacing:-0.02em;color:#C9AE4E;line-height:1;margin:4px 0">~21 M</div>
-        <div style="font-size:9px;color:#5A5A52;line-height:1.4;font-family:var(--f-mono)">bbl/day &middot; ~21% of global seaborne</div>
-      </div>
-      <div style="flex:1;padding:18px 20px;border-right:1px solid #1A1A18;display:flex;flex-direction:column;gap:4px">
-        <div style="font-size:9px;font-weight:700;letter-spacing:0.14em;color:#4A4A44;font-family:var(--f-mono)">HORMUZ DISRUPTION</div>
-        <div style="font-size:26px;font-weight:700;letter-spacing:-0.02em;color:#E05252;line-height:1;margin:4px 0">-89%</div>
-        <div style="font-size:9px;color:#5A5A52;line-height:1.4;font-family:var(--f-mono)">Current transit vs 88/day baseline</div>
-      </div>
-      <div style="flex:1;padding:18px 20px;border-right:1px solid #1A1A18;display:flex;flex-direction:column;gap:4px">
-        <div style="font-size:9px;font-weight:700;letter-spacing:0.14em;color:#4A4A44;font-family:var(--f-mono)">RE-ROUTABLE VOLUME</div>
-        <div style="font-size:26px;font-weight:700;letter-spacing:-0.02em;color:#C98A2E;line-height:1;margin:4px 0">~6.3 M</div>
-        <div style="font-size:9px;color:#5A5A52;line-height:1.4;font-family:var(--f-mono)">Mb/d pipeline bypass capacity (Petroline 4.8 + ADCOP 1.5)</div>
-      </div>
-      <div style="flex:1;padding:18px 20px;display:flex;flex-direction:column;gap:4px">
-        <div style="font-size:9px;font-weight:700;letter-spacing:0.14em;color:#4A4A44;font-family:var(--f-mono)">ADDITIONAL TRANSIT</div>
-        <div style="font-size:26px;font-weight:700;letter-spacing:-0.02em;color:#C98A2E;line-height:1;margin:4px 0">+12 days</div>
-        <div style="font-size:9px;color:#5A5A52;line-height:1.4;font-family:var(--f-mono)">avg via Cape of Good Hope (VLCC)</div>
+      <div class="gli-takeaways">
+        <div class="gli-card-hd2"><span class="gli-panel-heading">Key Takeaways</span></div>
+        <div class="gli-tk-item">
+          <span class="gli-tk-icon" style="background:rgba(242,112,92,.14);color:var(--c-red-hi)"><svg viewBox="0 0 24 24" width="17" height="17" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v9"/><path d="m8 11 4 4 4-4"/><circle cx="12" cy="12" r="9"/></svg></span>
+          <div class="gli-tk-body"><div class="gli-tk-title" style="color:var(--c-red-hi)">What changed?</div><div class="gli-tk-text">Hormuz transit is down 89% against the 88/day baseline, putting ~21M bbl/day (21% of global seaborne crude) at risk of disruption.</div></div>
+        </div>
+        <div class="gli-tk-item">
+          <span class="gli-tk-icon" style="background:rgba(63,142,247,.14);color:var(--c-blue)"><svg viewBox="0 0 24 24" width="17" height="17" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 16v-5M12 8h.01"/></svg></span>
+          <div class="gli-tk-body"><div class="gli-tk-title" style="color:var(--c-blue)">Why it matters?</div><div class="gli-tk-text">Only ~6.3M bbl/day can bypass Hormuz via pipeline (Petroline 4.8M + ADCOP 1.5M) &mdash; the remainder must reroute via the Cape of Good Hope, adding ~12 days of transit for VLCCs.</div></div>
+        </div>
+        <div class="gli-tk-item">
+          <span class="gli-tk-icon" style="background:rgba(61,214,140,.14);color:var(--c-green-hi)"><svg viewBox="0 0 24 24" width="17" height="17" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v12"/><path d="m8 11 4 4 4-4"/><path d="M4 19h16"/></svg></span>
+          <div class="gli-tk-body"><div class="gli-tk-title" style="color:var(--c-green-hi)">Decision relevance</div><div class="gli-tk-text">Strategic petroleum reserves are being drawn to absorb the shortfall (SPR ~412Mb Dec 2025 to ~393Mb Jun 2026 via IEA emergency releases) &mdash; review the Stockpile Runway and Country Exposure detail below.</div></div>
+        </div>
+        <div class="gli-tk-item">
+          <span class="gli-tk-icon" style="background:rgba(167,139,250,.14);color:var(--c-purple)"><svg viewBox="0 0 24 24" width="17" height="17" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg></span>
+          <div class="gli-tk-body"><div class="gli-tk-title" style="color:var(--c-purple)">Next signals to watch</div>
+            <ul class="gli-tk-list"><li>IEA emergency release volumes and pace</li><li>Pipeline bypass utilisation (Petroline / ADCOP)</li><li>Brent spot vs. elasticity-implied price impact</li><li>GCC country-level exposure shifts</li></ul>
+          </div>
+        </div>
       </div>
     </div>
 
-    <!-- ── TRADE ARCHITECTURE MAP ─────────────────────────────────────────── -->
-    <div style="border:1px solid #1a2535;border-radius:6px;overflow:hidden;margin-top:20px">
-      <div id="tf-world-map"></div>
+    <!-- ── ANALYTICS ROW ───────────────────────────────────────────────────── -->
+    <div class="gli-3row" style="padding:14px 0 0">
+      <div class="gli-chart-card" style="flex:1 1 300px">
+        <div class="gli-card-hd2"><span class="gli-panel-heading">Fleet Reference</span></div>
+        <div class="gli-panel-sub">Typical vessel and routing baseline</div>
+        <div style="display:flex;flex-direction:column;gap:0;margin-top:6px">
+          <div style="display:flex;justify-content:space-between;padding:9px 0;border-top:1px solid var(--c-bd0)"><span style="font-size:13px;color:var(--c-tx1)">Typical vessel</span><span style="font-size:13px;font-weight:600;color:var(--c-tx0)">VLCC / Suezmax</span></div>
+          <div style="display:flex;justify-content:space-between;padding:9px 0;border-top:1px solid var(--c-bd0)"><span style="font-size:13px;color:var(--c-tx1)">Avg fleet speed</span><span style="font-size:13px;font-weight:600;color:var(--c-tx0)">13 knots</span></div>
+          <div style="display:flex;justify-content:space-between;padding:9px 0;border-top:1px solid var(--c-bd0)"><span style="font-size:13px;color:var(--c-tx1)">Price reference</span><span style="font-size:13px;font-weight:600;color:var(--c-tx0)">Brent spot</span></div>
+          <div style="display:flex;justify-content:space-between;padding:9px 0;border-top:1px solid var(--c-bd0)"><span style="font-size:13px;color:var(--c-tx1)">Demand elasticity</span><span style="font-size:13px;font-weight:600;color:var(--c-tx0)">&epsilon;<sub>d</sub> = &minus;0.05</span></div>
+        </div>
+        <div class="src" style="margin-top:8px"><span>IEA Oil Market Report 2024 &middot; Hamilton (2009)</span></div>
+      </div>
+
+      <div class="gli-chart-card" style="flex:1 1 300px">
+        <div class="gli-card-hd2"><span class="gli-panel-heading">Re-Routing Capacity</span></div>
+        <div class="gli-panel-sub">Pipeline bypass vs. Hormuz-dependent volume</div>
+        <div class="gli-chart-headline">
+          <span class="gli-chart-figure" style="color:var(--c-amber-hi)">6.3 M</span>
+          <span class="gli-chart-figure-lbl">of 21 M bbl/day bypassable</span>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:8px;margin-top:12px">
+          <div>
+            <div style="display:flex;justify-content:space-between;font-size:12px;color:var(--c-tx1);margin-bottom:4px"><span>Petroline (Saudi East-West)</span><span style="color:var(--c-tx0);font-weight:600">4.8 M bbl/d</span></div>
+            <div class="bar-track"><div class="bar-fill" style="width:76%;background:var(--c-amber-hi)"></div></div>
+          </div>
+          <div>
+            <div style="display:flex;justify-content:space-between;font-size:12px;color:var(--c-tx1);margin-bottom:4px"><span>ADCOP (Abu Dhabi&ndash;Fujairah)</span><span style="color:var(--c-tx0);font-weight:600">1.5 M bbl/d</span></div>
+            <div class="bar-track"><div class="bar-fill" style="width:24%;background:var(--c-amber-hi)"></div></div>
+          </div>
+        </div>
+        <div class="src" style="margin-top:10px"><span>EIA Chokepoints 2022 &middot; Clarkson Research</span></div>
+      </div>
+
+      <div class="gli-chart-card" style="flex:1 1 300px">
+        <div class="gli-card-hd2"><span class="gli-panel-heading">Strategic Reserve Drawdown</span></div>
+        <div class="gli-panel-sub">OECD commercial + SPR response since onset</div>
+        <div class="gli-chart-headline">
+          <span class="gli-chart-figure" style="color:var(--c-red-hi)">393 M</span>
+          <span class="gli-chart-figure-lbl">bbl SPR remaining, Jun 2026</span>
+          <span class="gli-chart-delta" style="color:var(--c-red-hi)">&#8600; from 412 M</span>
+        </div>
+        <div class="gli-panel-sub" style="margin-top:10px">Drawn via IEA 400 Mb coordinated emergency releases since Dec 2025. Full detail in Stockpile Runway below.</div>
+        <div class="src" style="margin-top:8px"><span>EIA WPGR &middot; Kpler (OECD commercial)</span></div>
+      </div>
     </div>
 
     <!-- ── BASELINE METRICS ───────────────────────────────────────────────── -->
     <div id="tf-baseline-card" style="margin-top:28px;margin-bottom:0">
       <div style="display:flex;align-items:baseline;justify-content:space-between;margin-bottom:14px">
-        <div style="font-size:11px;font-weight:700;letter-spacing:0.18em;color:#C9AE4E;font-family:var(--f-mono)">BASELINE METRICS &ndash; CRUDE OIL</div>
-        <div style="font-size:9px;color:#3A3A36;letter-spacing:0.06em;font-family:var(--f-mono)">Source: IEA Oil Market Report 2024 &middot; EIA &middot; Clarkson Research</div>
+        <div style="font-size:11px;font-weight:700;letter-spacing:0.18em;color:var(--c-amber-hi);font-family:var(--f-mono)">BASELINE METRICS &ndash; CRUDE OIL</div>
+        <div style="font-size:9px;color:var(--c-tx2);letter-spacing:0.06em;font-family:var(--f-mono)">Source: IEA Oil Market Report 2024 &middot; EIA &middot; Clarkson Research</div>
       </div>
       <div style="display:grid;grid-template-columns:repeat(5,1fr);gap:10px;margin-bottom:28px">
-        <div style="background:#111110;border:1px solid #1a2535;border-radius:6px;padding:16px 14px">
-          <div style="font-size:9px;font-weight:700;letter-spacing:0.12em;color:#4A4A44;margin-bottom:10px;font-family:var(--f-mono)">GLOBAL SEABORNE TRADE</div>
-          <div style="font-size:20px;font-weight:700;color:#F2F1ED;letter-spacing:-0.01em;line-height:1">100 M bbl/day</div>
-          <div style="font-size:9px;color:#5A5A52;margin-top:5px;line-height:1.4;font-family:var(--f-mono)">IEA Oil Market Report 2024</div>
+        <div style="background:var(--c-s1);border:1px solid var(--c-bd0);border-radius:6px;padding:16px 14px">
+          <div style="font-size:9px;font-weight:700;letter-spacing:0.12em;color:var(--c-tx2);margin-bottom:10px;font-family:var(--f-mono)">GLOBAL SEABORNE TRADE</div>
+          <div style="font-size:20px;font-weight:700;color:var(--c-tx0);letter-spacing:-0.01em;line-height:1">100 M bbl/day</div>
+          <div style="font-size:9px;color:var(--c-tx1);margin-top:5px;line-height:1.4;font-family:var(--f-mono)">IEA Oil Market Report 2024</div>
         </div>
-        <div style="background:#111110;border:1px solid #1a2535;border-radius:6px;padding:16px 14px">
-          <div style="font-size:9px;font-weight:700;letter-spacing:0.12em;color:#4A4A44;margin-bottom:10px;font-family:var(--f-mono)">PRICE REFERENCE</div>
-          <div style="font-size:20px;font-weight:700;color:#F2F1ED;letter-spacing:-0.01em;line-height:1">Brent spot</div>
-          <div style="font-size:9px;color:#5A5A52;margin-top:5px;line-height:1.4;font-family:var(--f-mono)">$/bbl &middot; benchmark for crude trade flows</div>
+        <div style="background:var(--c-s1);border:1px solid var(--c-bd0);border-radius:6px;padding:16px 14px">
+          <div style="font-size:9px;font-weight:700;letter-spacing:0.12em;color:var(--c-tx2);margin-bottom:10px;font-family:var(--f-mono)">PRICE REFERENCE</div>
+          <div style="font-size:20px;font-weight:700;color:var(--c-tx0);letter-spacing:-0.01em;line-height:1">Brent spot</div>
+          <div style="font-size:9px;color:var(--c-tx1);margin-top:5px;line-height:1.4;font-family:var(--f-mono)">$/bbl &middot; benchmark for crude trade flows</div>
         </div>
-        <div style="background:#111110;border:1px solid #1a2535;border-radius:6px;padding:16px 14px">
-          <div style="font-size:9px;font-weight:700;letter-spacing:0.12em;color:#4A4A44;margin-bottom:10px;font-family:var(--f-mono)">TYPICAL VESSEL</div>
-          <div style="font-size:20px;font-weight:700;color:#F2F1ED;letter-spacing:-0.01em;line-height:1">VLCC / Suezmax</div>
-          <div style="font-size:9px;color:#5A5A52;margin-top:5px;line-height:1.4;font-family:var(--f-mono)">200&ndash;320k DWT primary &middot; 120&ndash;200k secondary</div>
+        <div style="background:var(--c-s1);border:1px solid var(--c-bd0);border-radius:6px;padding:16px 14px">
+          <div style="font-size:9px;font-weight:700;letter-spacing:0.12em;color:var(--c-tx2);margin-bottom:10px;font-family:var(--f-mono)">TYPICAL VESSEL</div>
+          <div style="font-size:20px;font-weight:700;color:var(--c-tx0);letter-spacing:-0.01em;line-height:1">VLCC / Suezmax</div>
+          <div style="font-size:9px;color:var(--c-tx1);margin-top:5px;line-height:1.4;font-family:var(--f-mono)">200&ndash;320k DWT primary &middot; 120&ndash;200k secondary</div>
         </div>
-        <div style="background:#111110;border:1px solid #1a2535;border-radius:6px;padding:16px 14px">
-          <div style="font-size:9px;font-weight:700;letter-spacing:0.12em;color:#4A4A44;margin-bottom:10px;font-family:var(--f-mono)">AVG FLEET SPEED</div>
-          <div style="font-size:20px;font-weight:700;color:#F2F1ED;letter-spacing:-0.01em;line-height:1">13 knots</div>
-          <div style="font-size:9px;color:#5A5A52;margin-top:5px;line-height:1.4;font-family:var(--f-mono)">Avg laden/ballast average fleet speed</div>
+        <div style="background:var(--c-s1);border:1px solid var(--c-bd0);border-radius:6px;padding:16px 14px">
+          <div style="font-size:9px;font-weight:700;letter-spacing:0.12em;color:var(--c-tx2);margin-bottom:10px;font-family:var(--f-mono)">AVG FLEET SPEED</div>
+          <div style="font-size:20px;font-weight:700;color:var(--c-tx0);letter-spacing:-0.01em;line-height:1">13 knots</div>
+          <div style="font-size:9px;color:var(--c-tx1);margin-top:5px;line-height:1.4;font-family:var(--f-mono)">Avg laden/ballast average fleet speed</div>
         </div>
-        <div style="background:#111110;border:1px solid #1a2535;border-radius:6px;padding:16px 14px">
-          <div style="font-size:9px;font-weight:700;letter-spacing:0.12em;color:#4A4A44;margin-bottom:10px;font-family:var(--f-mono)">DEMAND ELASTICITY</div>
-          <div style="font-size:20px;font-weight:700;color:#F2F1ED;letter-spacing:-0.01em;line-height:1">-0.05</div>
-          <div style="font-size:9px;color:#5A5A52;margin-top:5px;line-height:1.4;font-family:var(--f-mono)">&epsilon;<sub>d</sub> &middot; Hamilton (2009) &middot; short-run oil price</div>
+        <div style="background:var(--c-s1);border:1px solid var(--c-bd0);border-radius:6px;padding:16px 14px">
+          <div style="font-size:9px;font-weight:700;letter-spacing:0.12em;color:var(--c-tx2);margin-bottom:10px;font-family:var(--f-mono)">DEMAND ELASTICITY</div>
+          <div style="font-size:20px;font-weight:700;color:var(--c-tx0);letter-spacing:-0.01em;line-height:1">-0.05</div>
+          <div style="font-size:9px;color:var(--c-tx1);margin-top:5px;line-height:1.4;font-family:var(--f-mono)">&epsilon;<sub>d</sub> &middot; Hamilton (2009) &middot; short-run oil price</div>
         </div>
       </div>
     </div>
 
     <!-- ── TRADE FLOW MATRIX ──────────────────────────────────────────────── -->
     <div style="margin-bottom:28px">
-      <div style="font-size:11px;font-weight:700;letter-spacing:0.16em;color:#C9AE4E;margin-bottom:6px;font-family:var(--f-mono)">TRADE FLOW MATRIX <span style="font-weight:400;color:#4A4A44">&mdash; M bbl/day</span></div>
-      <div style="font-size:9px;color:#3A3A36;letter-spacing:0.04em;margin-bottom:12px;font-family:var(--f-mono)">Major documented bilateral flows only &middot; rows may not sum to total export volumes &middot; Source IEA, EIA, Vortexa 2023</div>
-      <div id="tf-trade-matrix" style="background:#111110;border:1px solid #1a2535;border-radius:6px;overflow:hidden;overflow-x:auto">
+      <div style="font-size:11px;font-weight:700;letter-spacing:0.16em;color:var(--c-amber-hi);margin-bottom:6px;font-family:var(--f-mono)">TRADE FLOW MATRIX <span style="font-weight:400;color:var(--c-tx2)">&mdash; M bbl/day</span></div>
+      <div style="font-size:9px;color:var(--c-tx2);letter-spacing:0.04em;margin-bottom:12px;font-family:var(--f-mono)">Major documented bilateral flows only &middot; rows may not sum to total export volumes &middot; Source IEA, EIA, Vortexa 2023</div>
+      <div id="tf-trade-matrix" style="background:var(--c-s1);border:1px solid var(--c-bd0);border-radius:6px;overflow:hidden;overflow-x:auto">
         <!-- Matrix populated by JS on init -->
       </div>
     </div>
 
     <!-- ── FLEET DEPLOYMENT ───────────────────────────────────────────────── -->
     <div id="tf-fleet-card" style="margin-bottom:28px">
-      <div style="font-size:11px;font-weight:700;letter-spacing:0.18em;color:#C9AE4E;margin-bottom:6px;font-family:var(--f-mono)">FLEET DEPLOYMENT &ndash; CRUDE OIL TANKER MARKET</div>
-      <div style="font-size:9px;color:#3A3A36;letter-spacing:0.04em;margin-bottom:16px;font-family:var(--f-mono)">Clarkson Research 2024 &middot; Platts Dirty Tanker Assessments &middot; EIA Chokepoints 2022</div>
+      <div style="font-size:11px;font-weight:700;letter-spacing:0.18em;color:var(--c-amber-hi);margin-bottom:6px;font-family:var(--f-mono)">FLEET DEPLOYMENT &ndash; CRUDE OIL TANKER MARKET</div>
+      <div style="font-size:9px;color:var(--c-tx2);letter-spacing:0.04em;margin-bottom:16px;font-family:var(--f-mono)">Clarkson Research 2024 &middot; Platts Dirty Tanker Assessments &middot; EIA Chokepoints 2022</div>
       <div id="tf-fleet-body" style="display:block">
         <div id="tf-fleet-content">
           <div style="font-size:9px;color:var(--c-tx2);padding:8px 0">Loading fleet data&hellip;</div>
@@ -6585,18 +6686,18 @@ window.addEventListener('load', function() {
 
     <!-- ── STRATEGIC STOCKPILE RUNWAY ─────────────────────────────────────── -->
     <div id="tf-stockpile-card" style="margin-bottom:28px">
-      <div style="font-size:11px;font-weight:700;letter-spacing:0.18em;color:#C9AE4E;margin-bottom:16px;font-family:var(--f-mono)">STRATEGIC OIL STOCKPILE RUNWAY</div>
+      <div style="font-size:11px;font-weight:700;letter-spacing:0.18em;color:var(--c-amber-hi);margin-bottom:16px;font-family:var(--f-mono)">STRATEGIC OIL STOCKPILE RUNWAY</div>
       <div id="tf-stockpile-body" style="display:block">
         <div id="tf-stockpile-content">
           <div style="font-size:9px;color:var(--c-tx2);padding:8px 0">Loading stockpile data&hellip;</div>
         </div>
       </div>
-      <div style="font-size:9px;color:#2A2A26;margin-top:8px;letter-spacing:0.04em;line-height:1.6;font-family:var(--f-mono)">Sources: EIA Today in Energy Apr 2026 &middot; EIA WPGR (SPR 412 Mb Dec 2025 drawn to ~393 Mb Jun 2026 via IEA 400 Mb emergency releases) &middot; Kpler (OECD commercial) &middot; EIA crude Apr 2026</div>
+      <div style="font-size:9px;color:var(--c-tx2);margin-top:8px;letter-spacing:0.04em;line-height:1.6;font-family:var(--f-mono)">Sources: EIA Today in Energy Apr 2026 &middot; EIA WPGR (SPR 412 Mb Dec 2025 drawn to ~393 Mb Jun 2026 via IEA 400 Mb emergency releases) &middot; Kpler (OECD commercial) &middot; EIA crude Apr 2026</div>
     </div>
 
     <!-- ── GCC COUNTRY EXPOSURE ───────────────────────────────────────────── -->
     <div id="tf-gcc-card" style="margin-bottom:28px">
-      <div style="font-size:11px;font-weight:700;letter-spacing:0.18em;color:#C9AE4E;margin-bottom:16px;font-family:var(--f-mono)">KEY INSIGHTS &ndash; GCC COUNTRY EXPOSURE</div>
+      <div style="font-size:11px;font-weight:700;letter-spacing:0.18em;color:var(--c-amber-hi);margin-bottom:16px;font-family:var(--f-mono)">KEY INSIGHTS &ndash; GCC COUNTRY EXPOSURE</div>
       <div id="tf-gcc-body" style="display:block">
         <div class="gcc-grid" id="tf-gcc-grid"></div>
         <div id="gcc-footer" style="font-size:8px;color:var(--c-tx2);margin-top:10px;border-top:1px solid var(--c-bd1);padding-top:8px;font-family:var(--f-mono)">
@@ -6637,8 +6738,8 @@ window.addEventListener('load', function() {
         </div>
         <div>
           <div class="tf-method-section-title">&#9670; Price Impact Methodology</div>
-          <div class="tf-method-item"><strong style="color:#e8eaed">Method A &mdash; Historical Event References</strong><br>Documented outcomes from real disruption events. These are observed data, not predictions.</div>
-          <div class="tf-method-item"><strong style="color:#e8eaed">Method B &mdash; Elasticity-Based</strong></div>
+          <div class="tf-method-item"><strong style="color:var(--c-tx0)">Method A &mdash; Historical Event References</strong><br>Documented outcomes from real disruption events. These are observed data, not predictions.</div>
+          <div class="tf-method-item"><strong style="color:var(--c-tx0)">Method B &mdash; Elasticity-Based</strong></div>
           <div class="tf-method-formula">
             &Delta;P = (&Delta;Q &divide; Q) &times; (1 &divide; &epsilon;<sub>d</sub>) &times; P<br><br>
             <span style="color:var(--c-tx2)">&Delta;Q = disrupted % of market<br>
@@ -6650,14 +6751,14 @@ window.addEventListener('load', function() {
         <div>
           <div class="tf-method-section-title">&#9670; Volume Data Sources</div>
           <div class="tf-method-item">
-            <strong style="color:#e8eaed">Crude Oil / Petroleum:</strong> EIA Chokepoints 2022; IEA OMR 2023<br>
-            <strong style="color:#e8eaed">LNG:</strong> GIIGNL Annual Report 2024<br>
-            <strong style="color:#e8eaed">Wheat / Corn / Rice / Soybeans:</strong> USDA FAS MY2022/23<br>
-            <strong style="color:#e8eaed">Copper:</strong> ICSG Copper Bulletin 2023<br>
-            <strong style="color:#e8eaed">Iron Ore / Coal:</strong> Clarksons Shipping Review 2023<br>
-            <strong style="color:#e8eaed">Nickel:</strong> INSG / NiPERA 2023<br>
-            <strong style="color:#e8eaed">Rare Earths:</strong> USGS Mineral Commodity Summaries 2023<br>
-            <strong style="color:#e8eaed">Semiconductors / EV Batteries:</strong> WSTS / BloombergNEF 2023
+            <strong style="color:var(--c-tx0)">Crude Oil / Petroleum:</strong> EIA Chokepoints 2022; IEA OMR 2023<br>
+            <strong style="color:var(--c-tx0)">LNG:</strong> GIIGNL Annual Report 2024<br>
+            <strong style="color:var(--c-tx0)">Wheat / Corn / Rice / Soybeans:</strong> USDA FAS MY2022/23<br>
+            <strong style="color:var(--c-tx0)">Copper:</strong> ICSG Copper Bulletin 2023<br>
+            <strong style="color:var(--c-tx0)">Iron Ore / Coal:</strong> Clarksons Shipping Review 2023<br>
+            <strong style="color:var(--c-tx0)">Nickel:</strong> INSG / NiPERA 2023<br>
+            <strong style="color:var(--c-tx0)">Rare Earths:</strong> USGS Mineral Commodity Summaries 2023<br>
+            <strong style="color:var(--c-tx0)">Semiconductors / EV Batteries:</strong> WSTS / BloombergNEF 2023
           </div>
         </div>
         <div>

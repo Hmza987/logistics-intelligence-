@@ -5291,321 +5291,470 @@ function gccSidebarNav(name) {
 
 </div>
 <!-- ============================================================ TAB 3: TRUCKING -->
-<div class="page" id="page-trucking" style="padding:0;background:#0A0A0A;font-family:'JetBrains Mono',monospace">
+<div class="page" id="page-trucking" style="padding:0;padding-bottom:40px">
 
-<!-- SUMMARY STRIP -->
-<div style="background:#0D0D0B;border-bottom:1px solid #1A1A18;padding:12px 28px;display:flex;align-items:center;gap:32px;flex-wrap:wrap">
-  <div style="display:flex;flex-direction:column;gap:2px;padding-right:32px;border-right:1px solid #1E1E1A">
-    <span style="font-size:9px;letter-spacing:.14em;color:#4A4A44">PORTS AVG DWELL</span>
-    <span style="font-size:22px;font-weight:700;color:#E05252;letter-spacing:-.01em">~21 days</span>
-  </div>
-  <div style="display:flex;flex-direction:column;gap:2px;padding-right:32px;border-right:1px solid #1E1E1A">
-    <span style="font-size:9px;letter-spacing:.14em;color:#4A4A44">STATUS</span>
-    <div style="display:flex;align-items:baseline;gap:10px">
-      <span style="font-size:22px;font-weight:700;color:#E05252">4 CRITICAL PORTS</span>
-      <span style="font-size:22px;font-weight:700;color:#C98A2E">2 CRITICAL CROSSINGS</span>
+  <!-- HERO BAND -->
+  <div style="padding:18px 24px 0">
+    <div class="gli-hero">
+      <div class="gli-hero-grad"></div>
+      <div class="gli-hero-inner">
+        <div class="gli-hero-l">
+          <div class="gli-breadcrumb"><span>Corridors</span><span class="sep">&rsaquo;</span><span class="leaf">GCC Land &amp; Port Corridors</span></div>
+          <div class="gli-hero-title">GCC Land &amp; Port Corridors</div>
+          <div class="gli-hero-desc">Port dwell times, border-crossing wait times and land-freight pricing across the GCC's crisis-period trucking corridors.</div>
+        </div>
+        <div class="gli-hero-r">
+          <div class="gli-hero-ts">20 Jul 2026 &middot; Model v1.5.2</div>
+          <button type="button" class="gli-export-btn" onclick="window.print()"><svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v11"/><path d="m8 11 4 4 4-4"/><path d="M4 19h16"/></svg>Export</button>
+          <div class="gli-hero-tagline">Connecting the Gulf<br>to global opportunities.</div>
+        </div>
+      </div>
     </div>
   </div>
-  <div style="display:flex;flex-direction:column;gap:2px;padding-right:32px;border-right:1px solid #1E1E1A">
-    <span style="font-size:9px;letter-spacing:.14em;color:#4A4A44">TRUCKING PREMIUM</span>
-    <span style="font-size:22px;font-weight:700;color:#C98A2E;letter-spacing:-.01em">+65–113% vs pre-crisis</span>
+
+  <!-- KPI STRIP -->
+  <div class="gli-status-grid">
+    <div class="gli-status-card">
+      <div class="gli-status-title">Ports Avg. Dwell</div>
+      <div class="gli-status-figure" style="color:var(--c-red-hi)">~21 days</div>
+      <div class="gli-status-src">Red Sea &amp; Oman ports<br>Jul 2026 &middot; crisis-period</div>
+    </div>
+    <div class="gli-status-card">
+      <div class="gli-status-title">Critical Ports</div>
+      <div class="gli-status-figure" style="color:var(--c-red-hi)">4</div>
+      <div class="gli-status-sub">of 5 tracked &middot; Jeddah, Yanbu, Sohar, Khor Fakkan</div>
+    </div>
+    <div class="gli-status-card">
+      <div class="gli-status-title">Critical Crossings</div>
+      <div class="gli-status-figure" style="color:var(--c-amber-hi)">2</div>
+      <div class="gli-status-sub">of 6 tracked &middot; Al Bat'ha, Sohar Hwy 95</div>
+    </div>
+    <div class="gli-status-card">
+      <div class="gli-status-title">Trucking Premium</div>
+      <div class="gli-status-figure" style="color:var(--c-amber-hi)">+65&ndash;113%</div>
+      <div class="gli-status-sub">FTL rates vs. pre-crisis</div>
+    </div>
   </div>
-  <div style="display:flex;flex-direction:column;gap:2px;margin-left:auto">
-    <span style="font-size:9px;letter-spacing:.14em;color:#4A4A44">LAST UPDATED</span>
-    <span style="font-size:13px;color:#C9AE4E">20 JUL 2026 · MODEL v1.5.2</span>
+
+  <!-- TAB STRIP -->
+  <div class="gli-tabstrip">
+    <span class="gli-tab active">Corridor Map</span>
+    <span class="gli-tab">Port Dwell Times</span>
+    <span class="gli-tab">Border Crossings</span>
+    <span class="gli-tab">Trucking Rates</span>
+    <span class="gli-tab">Fleet Signals</span>
   </div>
+
+  <!-- MAP + KEY TAKEAWAYS ROW -->
+  <div class="gli-2row">
+    <div class="gli-map-panel">
+      <div class="gli-map-hdr">
+        <span class="gli-map-title">GCC Land Corridors &mdash; Active Highways 2026</span>
+      </div>
+      <div class="gli-map-surface" style="height:340px">
+        <div id="gcc-corridors-map" style="height:100%;width:100%"></div>
+      </div>
+      <div class="src" style="padding:10px 16px"><span>Wait: Google Maps live traffic &middot; trucks/day: assessed Jul 2026</span><span class="src-badge">real data</span></div>
+    </div>
+
+    <div class="gli-takeaways">
+      <div class="gli-card-hd2"><span class="gli-panel-heading">Key Takeaways</span></div>
+      <div class="gli-tk-item">
+        <span class="gli-tk-icon" style="background:rgba(242,112,92,.14);color:var(--c-red-hi)"><svg viewBox="0 0 24 24" width="17" height="17" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v9"/><path d="m8 11 4 4 4-4"/><circle cx="12" cy="12" r="9"/></svg></span>
+        <div class="gli-tk-body"><div class="gli-tk-title" style="color:var(--c-red-hi)">What changed?</div><div class="gli-tk-text">Sohar Port &ndash; Hwy 95 traffic is up +400% vs. pre-crisis (3,800+ trucks/day) as Hormuz-avoiding cargo reroutes overland into Saudi Arabia.</div></div>
+      </div>
+      <div class="gli-tk-item">
+        <span class="gli-tk-icon" style="background:rgba(63,142,247,.14);color:var(--c-blue)"><svg viewBox="0 0 24 24" width="17" height="17" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 16v-5M12 8h.01"/></svg></span>
+        <div class="gli-tk-body"><div class="gli-tk-title" style="color:var(--c-blue)">Why it matters?</div><div class="gli-tk-text">Jeddah and Yanbu dwell times have stretched to 16&ndash;28 days (vs. 3.3&ndash;3.7d pre-crisis), and FTL rates from Jeddah are running $2,435&ndash;3,855 all-in &mdash; a direct cost pass-through for GCC importers.</div></div>
+      </div>
+      <div class="gli-tk-item">
+        <span class="gli-tk-icon" style="background:rgba(61,214,140,.14);color:var(--c-green-hi)"><svg viewBox="0 0 24 24" width="17" height="17" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v12"/><path d="m8 11 4 4 4-4"/><path d="M4 19h16"/></svg></span>
+        <div class="gli-tk-body"><div class="gli-tk-title" style="color:var(--c-green-hi)">Decision relevance</div><div class="gli-tk-text">Fleet operators (TruKKer, Flow Progressive) are scaling capacity on Khorfakkan and Sohar-origin routes; Saudi TGA has eased GCC refrigerated-truck entry rules to absorb the surge.</div></div>
+      </div>
+      <div class="gli-tk-item">
+        <span class="gli-tk-icon" style="background:rgba(167,139,250,.14);color:var(--c-purple)"><svg viewBox="0 0 24 24" width="17" height="17" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg></span>
+        <div class="gli-tk-body"><div class="gli-tk-title" style="color:var(--c-purple)">Next signals to watch</div>
+          <ul class="gli-tk-list"><li>Saudi Landbridge rail progress (Jeddah&ndash;Dammam)</li><li>Sohar Hwy 95 congestion vs. Jeddah gate</li><li>Border-crossing ban-hour policy changes</li><li>Fleet capacity additions from regional operators</li></ul>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- THREE ANALYTICS CARDS -->
+  <div class="gli-3row">
+    <div class="gli-chart-card" style="flex:1 1 320px">
+      <div class="gli-card-hd2"><span class="gli-panel-heading">Border Crossing Wait Times</span></div>
+      <div class="gli-panel-sub">Est. wait vs. pre&#8209;crisis truck volume</div>
+      <div style="display:flex;align-items:baseline;gap:10px;padding:10px 0 6px">
+        <span style="flex:1 1 0;min-width:0;font-size:10px;letter-spacing:0.1em;text-transform:uppercase;color:var(--c-tx2)">Crossing</span>
+        <span style="flex:0 0 66px;text-align:right;font-size:10px;letter-spacing:0.1em;text-transform:uppercase;color:var(--c-tx2)">Wait</span>
+        <span style="flex:0 0 50px;text-align:right;font-size:10px;letter-spacing:0.1em;text-transform:uppercase;color:var(--c-tx2)">&Delta;</span>
+      </div>
+      <div style="display:flex;align-items:baseline;gap:10px;padding:8px 0;border-top:1px solid var(--c-bd0)">
+        <span style="flex:1 1 0;min-width:0;font-size:13px;color:var(--c-tx0)">Sohar Port &ndash; Hwy 95</span>
+        <span style="flex:0 0 66px;text-align:right;font-family:var(--f-mono);font-weight:600;font-size:13px;color:var(--c-red-hi)">6&ndash;12h+</span>
+        <span style="flex:0 0 50px;text-align:right;font-size:12px;font-weight:600;color:var(--c-red-hi)">+400%</span>
+      </div>
+      <div style="display:flex;align-items:baseline;gap:10px;padding:8px 0;border-top:1px solid var(--c-bd0)">
+        <span style="flex:1 1 0;min-width:0;font-size:13px;color:var(--c-tx0)">Al Bat'ha (SA&rarr;AE)</span>
+        <span style="flex:0 0 66px;text-align:right;font-family:var(--f-mono);font-weight:600;font-size:13px;color:var(--c-red-hi)">8h&ndash;2d+</span>
+        <span style="flex:0 0 50px;text-align:right;font-size:12px;font-weight:600;color:var(--c-amber-hi)">+58%</span>
+      </div>
+      <div style="display:flex;align-items:baseline;gap:10px;padding:8px 0;border-top:1px solid var(--c-bd0)">
+        <span style="flex:1 1 0;min-width:0;font-size:13px;color:var(--c-tx0)">Al Nuwaiseeb (SA&rarr;KW)</span>
+        <span style="flex:0 0 66px;text-align:right;font-family:var(--f-mono);font-weight:600;font-size:13px;color:var(--c-tx0)">1h&ndash;3h</span>
+        <span style="flex:0 0 50px;text-align:right;font-size:12px;font-weight:600;color:var(--c-amber-hi)">+65%</span>
+      </div>
+      <div style="display:flex;align-items:baseline;gap:10px;padding:8px 0;border-top:1px solid var(--c-bd0)">
+        <span style="flex:1 1 0;min-width:0;font-size:13px;color:var(--c-tx0)">Salwa Border (SA&rarr;QA)</span>
+        <span style="flex:0 0 66px;text-align:right;font-family:var(--f-mono);font-weight:600;font-size:13px;color:var(--c-tx0)">ban hrs*</span>
+        <span style="flex:0 0 50px;text-align:right;font-size:12px;font-weight:600;color:var(--c-amber-hi)">+52%</span>
+      </div>
+      <div style="display:flex;align-items:baseline;gap:10px;padding:8px 0;border-top:1px solid var(--c-bd0)">
+        <span style="flex:1 1 0;min-width:0;font-size:13px;color:var(--c-tx0)">King Fahd Causeway (SA&rarr;BH)</span>
+        <span style="flex:0 0 66px;text-align:right;font-family:var(--f-mono);font-weight:600;font-size:13px;color:var(--c-tx0)">2h&ndash;4h</span>
+        <span style="flex:0 0 50px;text-align:right;font-size:12px;font-weight:600;color:var(--c-amber-hi)">+28%</span>
+      </div>
+      <div class="src" style="margin-top:6px"><span>Google Maps live congestion &middot; field baseline Jul 2026</span><span class="src-badge">real data</span></div>
+    </div>
+
+    <div class="gli-chart-card" style="flex:1 1 320px">
+      <div class="gli-card-hd2"><span class="gli-panel-heading">Trucking Rate Benchmarks</span></div>
+      <div class="gli-panel-sub">40ft FTL, all&#8209;in USD &middot; Jun 2026</div>
+      <div style="display:flex;align-items:baseline;gap:10px;padding:10px 0 6px">
+        <span style="flex:1 1 0;min-width:0;font-size:10px;letter-spacing:0.1em;text-transform:uppercase;color:var(--c-tx2)">Route</span>
+        <span style="flex:0 0 110px;text-align:right;font-size:10px;letter-spacing:0.1em;text-transform:uppercase;color:var(--c-tx2)">Rate</span>
+      </div>
+      <div style="display:flex;align-items:baseline;gap:10px;padding:8px 0;border-top:1px solid var(--c-bd0)">
+        <span style="flex:1 1 0;min-width:0;font-size:13px;color:var(--c-tx0)">Jeddah &rarr; Kuwait City</span>
+        <span style="flex:0 0 110px;text-align:right;font-family:var(--f-mono);font-weight:600;font-size:13px;color:var(--c-red-hi)">$2,855&ndash;3,855</span>
+      </div>
+      <div style="display:flex;align-items:baseline;gap:10px;padding:8px 0;border-top:1px solid var(--c-bd0)">
+        <span style="flex:1 1 0;min-width:0;font-size:13px;color:var(--c-tx0)">Jeddah &rarr; Doha</span>
+        <span style="flex:0 0 110px;text-align:right;font-family:var(--f-mono);font-weight:600;font-size:13px;color:var(--c-red-hi)">$2,840&ndash;3,640</span>
+      </div>
+      <div style="display:flex;align-items:baseline;gap:10px;padding:8px 0;border-top:1px solid var(--c-bd0)">
+        <span style="flex:1 1 0;min-width:0;font-size:13px;color:var(--c-tx0)">Oman (Hwy 95) &rarr; Riyadh</span>
+        <span style="flex:0 0 110px;text-align:right;font-family:var(--f-mono);font-weight:600;font-size:13px;color:var(--c-amber-hi)">$2,320&ndash;3,120</span>
+      </div>
+      <div style="display:flex;align-items:baseline;gap:10px;padding:8px 0;border-top:1px solid var(--c-bd0)">
+        <span style="flex:1 1 0;min-width:0;font-size:13px;color:var(--c-tx0)">Sohar &rarr; Doha</span>
+        <span style="flex:0 0 110px;text-align:right;font-family:var(--f-mono);font-weight:600;font-size:13px;color:var(--c-red-hi)">$2,210&ndash;2,910</span>
+      </div>
+      <div style="display:flex;align-items:baseline;gap:10px;padding:8px 0;border-top:1px solid var(--c-bd0)">
+        <span style="flex:1 1 0;min-width:0;font-size:13px;color:var(--c-tx0)">Dubai / Jebel Ali &rarr; Riyadh</span>
+        <span style="flex:0 0 110px;text-align:right;font-family:var(--f-mono);font-weight:600;font-size:13px;color:var(--c-amber-hi)">$1,895&ndash;2,495</span>
+      </div>
+      <div class="src" style="margin-top:6px"><span>Field-sourced carrier quotes &middot; crisis-period</span><span class="src-badge">real data</span></div>
+    </div>
+
+    <div class="gli-chart-card" style="flex:1 1 320px">
+      <div class="gli-card-hd2"><span class="gli-panel-heading">Fleet &amp; Operator Signals</span></div>
+      <div class="gli-panel-sub">Capacity changes since Hormuz closure &middot; Jun 2026</div>
+      <div style="display:flex;flex-direction:column;gap:0;margin-top:6px">
+        <div class="gli-tk-item" style="border-top:none;padding:10px 0"><div class="gli-tk-body"><div class="gli-tk-title" style="color:var(--c-tx0);font-size:13px">TruKKer (UAE)</div><div class="gli-tk-text">Scaling 60 to 500 moves/day. Fixed transparent rates from Khorfakkan activated.</div></div></div>
+        <div class="gli-tk-item" style="padding:10px 0"><div class="gli-tk-body"><div class="gli-tk-title" style="color:var(--c-tx0);font-size:13px">Flow Progressive (SA)</div><div class="gli-tk-text">Fleet grown 340 to 500+ 40ft trailers since conflict began.</div></div></div>
+        <div class="gli-tk-item" style="padding:10px 0"><div class="gli-tk-body"><div class="gli-tk-title" style="color:var(--c-tx0);font-size:13px">Saudi TGA</div><div class="gli-tk-text">Eased GCC refrigerated-truck entry rules March 2026; Hwy 95 goods tripled to $830M.</div></div></div>
+        <div class="gli-tk-item" style="padding:10px 0"><div class="gli-tk-body"><div class="gli-tk-title" style="color:var(--c-tx0);font-size:13px">Saudi Landbridge</div><div class="gli-tk-text">Jeddah&ndash;Dammam rail ($7B, 1,300km) &mdash; projected $4.2B/yr transport cost savings.</div></div></div>
+      </div>
+    </div>
+  </div>
+
+<div style="padding:24px 24px 0">
+  <div class="gli-panel-heading" style="font-size:19px;margin-bottom:2px">Port Dwell Times &mdash; Red Sea &amp; Oman Ports</div>
+  <div class="gli-panel-sub" style="margin-bottom:2px">Jul 2026 &middot; crisis-period estimates</div>
 </div>
 
-<div style="padding:0 28px 40px">
+<div style="padding:12px 24px 40px">
 
 <!-- PORT DWELL TIMES -->
 <div style="padding:26px 0 16px;display:flex;align-items:baseline;justify-content:space-between">
-  <div style="font-size:11px;font-weight:700;letter-spacing:.18em;color:#C9AE4E">PORT DWELL TIMES – RED SEA &amp; OMAN PORTS</div>
-  <div style="font-size:9px;color:#3A3A36;letter-spacing:.06em">Jul 2026 · crisis-period estimates</div>
+  <div style="font-size:11px;font-weight:700;letter-spacing:.18em;color:var(--c-amber-hi)">PORT DWELL TIMES – RED SEA &amp; OMAN PORTS</div>
+  <div style="font-size:9px;color:var(--c-tx2);letter-spacing:.06em">Jul 2026 · crisis-period estimates</div>
 </div>
 <div style="display:grid;grid-template-columns:repeat(5,1fr);gap:12px;margin-bottom:32px">
 
   <!-- JEDDAH -->
-  <div id="pdt-jeddah" style="background:#111110;border:1px solid #1a2535;border-radius:6px;padding:18px 14px;display:flex;flex-direction:column;align-items:center;gap:10px">
+  <div id="pdt-jeddah" style="background:var(--c-s1);border:1px solid var(--c-bd0);border-radius:6px;padding:18px 14px;display:flex;flex-direction:column;align-items:center;gap:10px">
     <div style="display:flex;align-items:center;justify-content:space-between;width:100%">
-      <div style="font-size:11px;font-weight:700;letter-spacing:.08em;color:#D9D8D3;display:flex;align-items:center;gap:6px"><img src="https://flagcdn.com/16x12/sa.png" alt="sa" style="height:11px;width:auto;border-radius:1px;vertical-align:middle"> JEDDAH</div>
-      <div style="font-size:8px;font-weight:700;letter-spacing:.1em;padding:2px 8px;border-radius:3px;color:#E05252;border:1px solid #E05252">CRITICAL</div>
+      <div style="font-size:11px;font-weight:700;letter-spacing:.08em;color:var(--c-tx0);display:flex;align-items:center;gap:6px"><img src="https://flagcdn.com/16x12/sa.png" alt="sa" style="height:11px;width:auto;border-radius:1px;vertical-align:middle"> JEDDAH</div>
+      <div style="font-size:8px;font-weight:700;letter-spacing:.1em;padding:2px 8px;border-radius:3px;color:var(--c-red-hi);border:1px solid var(--c-red-hi)">CRITICAL</div>
     </div>
-    <div style="font-size:9px;color:#4A4A44;text-align:center;line-height:1.4">Red Sea · King Abdul Aziz</div>
+    <div style="font-size:9px;color:var(--c-tx2);text-align:center;line-height:1.4">Red Sea · King Abdul Aziz</div>
     <svg width="128" height="68" viewBox="0 0 128 68" style="display:block;margin:0 auto">
       <path d="M18,60 A46,46 0 0,1 110,60" fill="none" stroke="#222220" stroke-width="8" stroke-linecap="round"/>
       <path d="M18,60 A46,46 0 0,1 110,60" fill="none" stroke="#E05252" stroke-width="8" stroke-linecap="round" stroke-dasharray="90.3 144.5"/>
       <circle cx="19.7" cy="47.6" r="3.5" fill="#5FA86A"/>
     </svg>
     <div style="text-align:center">
-      <div style="font-size:30px;font-weight:700;letter-spacing:-.02em;color:#E05252;line-height:1">22–28</div>
-      <div style="font-size:10px;color:#4A4A44;margin-top:2px">days dwell</div>
+      <div style="font-size:30px;font-weight:700;letter-spacing:-.02em;color:var(--c-red-hi);line-height:1">22–28</div>
+      <div style="font-size:10px;color:var(--c-tx2);margin-top:2px">days dwell</div>
     </div>
-    <div style="font-size:9px;color:#5FA86A;letter-spacing:.04em">pre-crisis 3.7d</div>
-    <div style="font-size:8px;color:#8A7830;letter-spacing:.05em">vol. handled ↑+42% vs pre-crisis</div>
+    <div style="font-size:9px;color:var(--c-green-hi);letter-spacing:.04em">pre-crisis 3.7d</div>
+    <div style="font-size:8px;color:var(--c-amber-hi);letter-spacing:.05em">vol. handled ↑+42% vs pre-crisis</div>
   </div>
 
   <!-- YANBU -->
-  <div id="pdt-yanbu" style="background:#111110;border:1px solid #1a2535;border-radius:6px;padding:18px 14px;display:flex;flex-direction:column;align-items:center;gap:10px">
+  <div id="pdt-yanbu" style="background:var(--c-s1);border:1px solid var(--c-bd0);border-radius:6px;padding:18px 14px;display:flex;flex-direction:column;align-items:center;gap:10px">
     <div style="display:flex;align-items:center;justify-content:space-between;width:100%">
-      <div style="font-size:11px;font-weight:700;letter-spacing:.08em;color:#D9D8D3;display:flex;align-items:center;gap:6px"><img src="https://flagcdn.com/16x12/sa.png" alt="sa" style="height:11px;width:auto;border-radius:1px;vertical-align:middle"> YANBU</div>
-      <div style="font-size:8px;font-weight:700;letter-spacing:.1em;padding:2px 8px;border-radius:3px;color:#E05252;border:1px solid #E05252">CRITICAL</div>
+      <div style="font-size:11px;font-weight:700;letter-spacing:.08em;color:var(--c-tx0);display:flex;align-items:center;gap:6px"><img src="https://flagcdn.com/16x12/sa.png" alt="sa" style="height:11px;width:auto;border-radius:1px;vertical-align:middle"> YANBU</div>
+      <div style="font-size:8px;font-weight:700;letter-spacing:.1em;padding:2px 8px;border-radius:3px;color:var(--c-red-hi);border:1px solid var(--c-red-hi)">CRITICAL</div>
     </div>
-    <div style="font-size:9px;color:#4A4A44;text-align:center;line-height:1.4">Red Sea · Jeddah overflow</div>
+    <div style="font-size:9px;color:var(--c-tx2);text-align:center;line-height:1.4">Red Sea · Jeddah overflow</div>
     <svg width="128" height="68" viewBox="0 0 128 68" style="display:block;margin:0 auto">
       <path d="M18,60 A46,46 0 0,1 110,60" fill="none" stroke="#222220" stroke-width="8" stroke-linecap="round"/>
       <path d="M18,60 A46,46 0 0,1 110,60" fill="none" stroke="#E05252" stroke-width="8" stroke-linecap="round" stroke-dasharray="65.0 144.5"/>
       <circle cx="19.3" cy="49.3" r="3.5" fill="#5FA86A"/>
     </svg>
     <div style="text-align:center">
-      <div style="font-size:30px;font-weight:700;letter-spacing:-.02em;color:#E05252;line-height:1">16–20</div>
-      <div style="font-size:10px;color:#4A4A44;margin-top:2px">days dwell</div>
+      <div style="font-size:30px;font-weight:700;letter-spacing:-.02em;color:var(--c-red-hi);line-height:1">16–20</div>
+      <div style="font-size:10px;color:var(--c-tx2);margin-top:2px">days dwell</div>
     </div>
-    <div style="font-size:9px;color:#5FA86A;letter-spacing:.04em">pre-crisis 3.3d</div>
-    <div style="font-size:8px;color:#8A7830;letter-spacing:.05em">vol. handled ↑+31% vs pre-crisis</div>
+    <div style="font-size:9px;color:var(--c-green-hi);letter-spacing:.04em">pre-crisis 3.3d</div>
+    <div style="font-size:8px;color:var(--c-amber-hi);letter-spacing:.05em">vol. handled ↑+31% vs pre-crisis</div>
   </div>
 
   <!-- SOHAR -->
-  <div id="pdt-sohar" style="background:#111110;border:1px solid #1a2535;border-radius:6px;padding:18px 14px;display:flex;flex-direction:column;align-items:center;gap:10px">
+  <div id="pdt-sohar" style="background:var(--c-s1);border:1px solid var(--c-bd0);border-radius:6px;padding:18px 14px;display:flex;flex-direction:column;align-items:center;gap:10px">
     <div style="display:flex;align-items:center;justify-content:space-between;width:100%">
-      <div style="font-size:11px;font-weight:700;letter-spacing:.08em;color:#D9D8D3;display:flex;align-items:center;gap:6px"><img src="https://flagcdn.com/16x12/om.png" alt="om" style="height:11px;width:auto;border-radius:1px;vertical-align:middle"> SOHAR</div>
-      <div style="font-size:8px;font-weight:700;letter-spacing:.1em;padding:2px 8px;border-radius:3px;color:#E05252;border:1px solid #E05252">CRITICAL</div>
+      <div style="font-size:11px;font-weight:700;letter-spacing:.08em;color:var(--c-tx0);display:flex;align-items:center;gap:6px"><img src="https://flagcdn.com/16x12/om.png" alt="om" style="height:11px;width:auto;border-radius:1px;vertical-align:middle"> SOHAR</div>
+      <div style="font-size:8px;font-weight:700;letter-spacing:.1em;padding:2px 8px;border-radius:3px;color:var(--c-red-hi);border:1px solid var(--c-red-hi)">CRITICAL</div>
     </div>
-    <div style="font-size:9px;color:#4A4A44;text-align:center;line-height:1.4">Gulf of Oman · bypass hub</div>
+    <div style="font-size:9px;color:var(--c-tx2);text-align:center;line-height:1.4">Gulf of Oman · bypass hub</div>
     <svg width="128" height="68" viewBox="0 0 128 68" style="display:block;margin:0 auto">
       <path d="M18,60 A46,46 0 0,1 110,60" fill="none" stroke="#222220" stroke-width="8" stroke-linecap="round"/>
       <path d="M18,60 A46,46 0 0,1 110,60" fill="none" stroke="#E05252" stroke-width="8" stroke-linecap="round" stroke-dasharray="119.2 144.5"/>
       <circle cx="25.2" cy="35.3" r="3.5" fill="#5FA86A"/>
     </svg>
     <div style="text-align:center">
-      <div style="font-size:30px;font-weight:700;letter-spacing:-.02em;color:#E05252;line-height:1">30–36</div>
-      <div style="font-size:10px;color:#4A4A44;margin-top:2px">days dwell</div>
+      <div style="font-size:30px;font-weight:700;letter-spacing:-.02em;color:var(--c-red-hi);line-height:1">30–36</div>
+      <div style="font-size:10px;color:var(--c-tx2);margin-top:2px">days dwell</div>
     </div>
-    <div style="font-size:9px;color:#5FA86A;letter-spacing:.04em">pre-crisis 7.6d</div>
-    <div style="font-size:8px;color:#8A7830;letter-spacing:.05em">vol. handled ↑+68% vs pre-crisis</div>
+    <div style="font-size:9px;color:var(--c-green-hi);letter-spacing:.04em">pre-crisis 7.6d</div>
+    <div style="font-size:8px;color:var(--c-amber-hi);letter-spacing:.05em">vol. handled ↑+68% vs pre-crisis</div>
   </div>
 
   <!-- KHOR FAKKAN -->
-  <div id="pdt-khor_fakkan" style="background:#111110;border:1px solid #1a2535;border-radius:6px;padding:18px 14px;display:flex;flex-direction:column;align-items:center;gap:10px">
+  <div id="pdt-khor_fakkan" style="background:var(--c-s1);border:1px solid var(--c-bd0);border-radius:6px;padding:18px 14px;display:flex;flex-direction:column;align-items:center;gap:10px">
     <div style="display:flex;align-items:center;justify-content:space-between;width:100%">
-      <div style="font-size:11px;font-weight:700;letter-spacing:.08em;color:#D9D8D3;display:flex;align-items:center;gap:6px"><img src="https://flagcdn.com/16x12/ae.png" alt="ae" style="height:11px;width:auto;border-radius:1px;vertical-align:middle"> KHOR FAKKAN</div>
-      <div style="font-size:8px;font-weight:700;letter-spacing:.1em;padding:2px 8px;border-radius:3px;color:#E05252;border:1px solid #E05252">CRITICAL</div>
+      <div style="font-size:11px;font-weight:700;letter-spacing:.08em;color:var(--c-tx0);display:flex;align-items:center;gap:6px"><img src="https://flagcdn.com/16x12/ae.png" alt="ae" style="height:11px;width:auto;border-radius:1px;vertical-align:middle"> KHOR FAKKAN</div>
+      <div style="font-size:8px;font-weight:700;letter-spacing:.1em;padding:2px 8px;border-radius:3px;color:var(--c-red-hi);border:1px solid var(--c-red-hi)">CRITICAL</div>
     </div>
-    <div style="font-size:9px;color:#4A4A44;text-align:center;line-height:1.4">Gulf of Oman · 6 berths</div>
+    <div style="font-size:9px;color:var(--c-tx2);text-align:center;line-height:1.4">Gulf of Oman · 6 berths</div>
     <svg width="128" height="68" viewBox="0 0 128 68" style="display:block;margin:0 auto">
       <path d="M18,60 A46,46 0 0,1 110,60" fill="none" stroke="#222220" stroke-width="8" stroke-linecap="round"/>
       <path d="M18,60 A46,46 0 0,1 110,60" fill="none" stroke="#E05252" stroke-width="8" stroke-linecap="round" stroke-dasharray="63.2 144.5"/>
       <circle cx="18.6" cy="52.7" r="3.5" fill="#5FA86A"/>
     </svg>
     <div style="text-align:center">
-      <div style="font-size:30px;font-weight:700;letter-spacing:-.02em;color:#E05252;line-height:1">15–20</div>
-      <div style="font-size:10px;color:#4A4A44;margin-top:2px">days dwell</div>
+      <div style="font-size:30px;font-weight:700;letter-spacing:-.02em;color:var(--c-red-hi);line-height:1">15–20</div>
+      <div style="font-size:10px;color:var(--c-tx2);margin-top:2px">days dwell</div>
     </div>
-    <div style="font-size:9px;color:#5FA86A;letter-spacing:.04em">pre-crisis 2.2d</div>
-    <div style="font-size:8px;color:#8A7830;letter-spacing:.05em">vol. handled ↑+54% vs pre-crisis</div>
+    <div style="font-size:9px;color:var(--c-green-hi);letter-spacing:.04em">pre-crisis 2.2d</div>
+    <div style="font-size:8px;color:var(--c-amber-hi);letter-spacing:.05em">vol. handled ↑+54% vs pre-crisis</div>
   </div>
 
   <!-- SALALAH -->
-  <div id="pdt-salalah" style="background:#111110;border:1px solid #1a2535;border-radius:6px;padding:18px 14px;display:flex;flex-direction:column;align-items:center;gap:10px">
+  <div id="pdt-salalah" style="background:var(--c-s1);border:1px solid var(--c-bd0);border-radius:6px;padding:18px 14px;display:flex;flex-direction:column;align-items:center;gap:10px">
     <div style="display:flex;align-items:center;justify-content:space-between;width:100%">
-      <div style="font-size:11px;font-weight:700;letter-spacing:.08em;color:#D9D8D3;display:flex;align-items:center;gap:6px"><img src="https://flagcdn.com/16x12/om.png" alt="om" style="height:11px;width:auto;border-radius:1px;vertical-align:middle"> SALALAH</div>
-      <div style="font-size:8px;font-weight:700;letter-spacing:.1em;padding:2px 8px;border-radius:3px;color:#C98A2E;border:1px solid #C98A2E">HIGH</div>
+      <div style="font-size:11px;font-weight:700;letter-spacing:.08em;color:var(--c-tx0);display:flex;align-items:center;gap:6px"><img src="https://flagcdn.com/16x12/om.png" alt="om" style="height:11px;width:auto;border-radius:1px;vertical-align:middle"> SALALAH</div>
+      <div style="font-size:8px;font-weight:700;letter-spacing:.1em;padding:2px 8px;border-radius:3px;color:var(--c-amber-hi);border:1px solid var(--c-amber-hi)">HIGH</div>
     </div>
-    <div style="font-size:9px;color:#4A4A44;text-align:center;line-height:1.4">Arabian Sea · transshipment</div>
+    <div style="font-size:9px;color:var(--c-tx2);text-align:center;line-height:1.4">Arabian Sea · transshipment</div>
     <svg width="128" height="68" viewBox="0 0 128 68" style="display:block;margin:0 auto">
       <path d="M18,60 A46,46 0 0,1 110,60" fill="none" stroke="#222220" stroke-width="8" stroke-linecap="round"/>
       <path d="M18,60 A46,46 0 0,1 110,60" fill="none" stroke="#C98A2E" stroke-width="8" stroke-linecap="round" stroke-dasharray="39.7 144.5"/>
       <circle cx="19.2" cy="49.7" r="3.5" fill="#5FA86A"/>
     </svg>
     <div style="text-align:center">
-      <div style="font-size:30px;font-weight:700;letter-spacing:-.02em;color:#C98A2E;line-height:1">10–12</div>
-      <div style="font-size:10px;color:#4A4A44;margin-top:2px">days dwell</div>
+      <div style="font-size:30px;font-weight:700;letter-spacing:-.02em;color:var(--c-amber-hi);line-height:1">10–12</div>
+      <div style="font-size:10px;color:var(--c-tx2);margin-top:2px">days dwell</div>
     </div>
-    <div style="font-size:9px;color:#5FA86A;letter-spacing:.04em">pre-crisis 3.2d</div>
-    <div style="font-size:8px;color:#8A7830;letter-spacing:.05em">vol. handled ↑+46% vs pre-crisis</div>
+    <div style="font-size:9px;color:var(--c-green-hi);letter-spacing:.04em">pre-crisis 3.2d</div>
+    <div style="font-size:8px;color:var(--c-amber-hi);letter-spacing:.05em">vol. handled ↑+46% vs pre-crisis</div>
   </div>
 
 </div>
 
 <!-- DWELL MODEL METHODOLOGY NOTE -->
-<div style="border-top:1px solid #1A1A18;padding:10px 0 24px;display:flex;align-items:baseline;justify-content:space-between;gap:24px">
-  <div style="font-size:8px;color:#2A2A28;letter-spacing:.04em;line-height:1.7;flex:1">
-    <span style="color:#3A3A34;font-weight:700;letter-spacing:.1em">MODEL v1.5.2</span> &nbsp;·&nbsp;
+<div style="border-top:1px solid var(--c-bd0);padding:10px 0 24px;display:flex;align-items:baseline;justify-content:space-between;gap:24px">
+  <div style="font-size:8px;color:var(--c-tx2);letter-spacing:.04em;line-height:1.7;flex:1">
+    <span style="color:var(--c-tx2);font-weight:700;letter-spacing:.1em">MODEL v1.5.2</span> &nbsp;·&nbsp;
     Dwell&nbsp;=&nbsp;T<sub>vessel</sub>&nbsp;+&nbsp;T<sub>yard</sub> &nbsp;·&nbsp;
     T<sub>vessel</sub>&nbsp;=&nbsp;M/M/c queuing proxy: T<sub>s</sub>&nbsp;+&nbsp;min(W,&thinsp;B)&nbsp;&times;&nbsp;T<sub>s</sub>&thinsp;/&thinsp;B, capped at 2&times;T<sub>s</sub> &nbsp;·&nbsp;
     T<sub>yard</sub>&nbsp;=&nbsp;T<sub>cust</sub>&nbsp;&times;&nbsp;&Gamma;<sup>&alpha;</sup>, OLS power-law in log-space (&Gamma;&nbsp;=&nbsp;congestion ratio vs pre-crisis throughput; &alpha;,&thinsp;T<sub>cust</sub> calibrated per port) &nbsp;·&nbsp;
     CI&nbsp;=&nbsp;max(RMSE&nbsp;&times;&nbsp;1.5,&nbsp;8%) applied as &plusmn;% of midpoint
   </div>
-  <div style="font-size:8px;color:#2A2A28;letter-spacing:.04em;line-height:1.7;text-align:right;white-space:nowrap">
+  <div style="font-size:8px;color:var(--c-tx2);letter-spacing:.04em;line-height:1.7;text-align:right;white-space:nowrap">
     Sources: K+N advisory Jul&nbsp;15 &nbsp;·&nbsp; Xeneta congestion index &nbsp;·&nbsp; Vizion API dwell telemetry &nbsp;·&nbsp; Inchcape port reports &nbsp;·&nbsp; Portcast Jul&nbsp;18 &nbsp;·&nbsp; Mawani / OPAZ / APM Terminals
   </div>
 </div>
 
 <!-- CROSSING CORRIDOR TRAFFIC -->
 <div style="padding:0 0 16px;display:flex;align-items:baseline;justify-content:space-between">
-  <div style="font-size:11px;font-weight:700;letter-spacing:.18em;color:#5FA86A">CROSSING CORRIDOR TRAFFIC – LIVE TRAFFIC</div>
-  <div style="font-size:9px;color:#3A3A36;letter-spacing:.06em">wait now via Google Maps · trucks/day assessed Jul 2026</div>
+  <div style="font-size:11px;font-weight:700;letter-spacing:.18em;color:var(--c-green-hi)">CROSSING CORRIDOR TRAFFIC – LIVE TRAFFIC</div>
+  <div style="font-size:9px;color:var(--c-tx2);letter-spacing:.06em">wait now via Google Maps · trucks/day assessed Jul 2026</div>
 </div>
 <div class="map-section" style="display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-bottom:32px">
 
   <!-- AL BAT'HA -->
   <a href="https://www.google.com/maps/place/24.0970,51.5970/@24.0970,51.5970,14z" target="_blank" rel="noopener" style="text-decoration:none;color:inherit;display:flex">
-  <div style="background:#111110;border:1px solid #1a2535;border-radius:6px;padding:24px 20px;cursor:pointer;width:100%;display:flex;flex-direction:column;gap:0">
+  <div style="background:var(--c-s1);border:1px solid var(--c-bd0);border-radius:6px;padding:24px 20px;cursor:pointer;width:100%;display:flex;flex-direction:column;gap:0">
     <div style="display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:18px">
       <div>
-        <div style="font-size:14px;font-weight:700;letter-spacing:.07em;color:#F2F1ED;margin-bottom:6px">AL BAT'HA</div>
-        <div style="font-size:11px;color:#4A4A44;display:flex;align-items:center;gap:5px"><img src="https://flagcdn.com/16x12/sa.png" alt="sa" style="height:10px;width:auto;border-radius:1px;vertical-align:middle"> → <img src="https://flagcdn.com/16x12/ae.png" alt="ae" style="height:10px;width:auto;border-radius:1px;vertical-align:middle"> · Ghumaifat / Al Sila</div>
+        <div style="font-size:14px;font-weight:700;letter-spacing:.07em;color:var(--c-tx0);margin-bottom:6px">AL BAT'HA</div>
+        <div style="font-size:11px;color:var(--c-tx2);display:flex;align-items:center;gap:5px"><img src="https://flagcdn.com/16x12/sa.png" alt="sa" style="height:10px;width:auto;border-radius:1px;vertical-align:middle"> → <img src="https://flagcdn.com/16x12/ae.png" alt="ae" style="height:10px;width:auto;border-radius:1px;vertical-align:middle"> · Ghumaifat / Al Sila</div>
       </div>
-      <div id="cpt-albatha-status" style="font-size:9px;font-weight:700;letter-spacing:.1em;padding:4px 10px;border-radius:3px;color:#E05252;border:1px solid #E05252;white-space:nowrap">CRITICAL</div>
+      <div id="cpt-albatha-status" style="font-size:9px;font-weight:700;letter-spacing:.1em;padding:4px 10px;border-radius:3px;color:var(--c-red-hi);border:1px solid var(--c-red-hi);white-space:nowrap">CRITICAL</div>
     </div>
-    <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;border-top:1px solid #1A1A18;padding-top:18px">
-      <div><div style="font-size:9px;letter-spacing:.1em;color:#4A4A44;margin-bottom:8px">EST. WAIT</div><div id="cpt-albatha-wait" style="font-size:26px;font-weight:700;color:#F2F1ED;line-height:1">8h–2d+</div><div id="road-albatha" style="font-size:8px;letter-spacing:.07em;color:#3A3A34;margin-top:5px">·</div></div>
-      <div><div style="font-size:9px;letter-spacing:.1em;color:#4A4A44;margin-bottom:8px">TRUCKS/DAY</div><div style="font-size:26px;font-weight:700;color:#F2F1ED;line-height:1">1,950</div></div>
-      <div><div style="font-size:9px;letter-spacing:.1em;color:#4A4A44;margin-bottom:8px">VS PRE-CRISIS</div><div style="font-size:26px;font-weight:700;color:#C98A2E;line-height:1">↑+58%</div></div>
+    <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;border-top:1px solid var(--c-bd0);padding-top:18px">
+      <div><div style="font-size:9px;letter-spacing:.1em;color:var(--c-tx2);margin-bottom:8px">EST. WAIT</div><div id="cpt-albatha-wait" style="font-size:26px;font-weight:700;color:var(--c-tx0);line-height:1">8h–2d+</div><div id="road-albatha" style="font-size:8px;letter-spacing:.07em;color:var(--c-tx2);margin-top:5px">·</div></div>
+      <div><div style="font-size:9px;letter-spacing:.1em;color:var(--c-tx2);margin-bottom:8px">TRUCKS/DAY</div><div style="font-size:26px;font-weight:700;color:var(--c-tx0);line-height:1">1,950</div></div>
+      <div><div style="font-size:9px;letter-spacing:.1em;color:var(--c-tx2);margin-bottom:8px">VS PRE-CRISIS</div><div style="font-size:26px;font-weight:700;color:var(--c-amber-hi);line-height:1">↑+58%</div></div>
     </div>
   </div></a>
 
   <!-- KING FAHD -->
   <a href="https://www.google.com/maps/place/26.1840,50.3240/@26.1840,50.3240,14z" target="_blank" rel="noopener" style="text-decoration:none;color:inherit;display:flex">
-  <div style="background:#111110;border:1px solid #1a2535;border-radius:6px;padding:24px 20px;cursor:pointer;width:100%;display:flex;flex-direction:column;gap:0">
+  <div style="background:var(--c-s1);border:1px solid var(--c-bd0);border-radius:6px;padding:24px 20px;cursor:pointer;width:100%;display:flex;flex-direction:column;gap:0">
     <div style="display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:18px">
       <div>
-        <div style="font-size:14px;font-weight:700;letter-spacing:.07em;color:#F2F1ED;margin-bottom:6px">KING FAHD CAUSEWAY</div>
-        <div style="font-size:11px;color:#4A4A44;display:flex;align-items:center;gap:5px"><img src="https://flagcdn.com/16x12/sa.png" alt="sa" style="height:10px;width:auto;border-radius:1px;vertical-align:middle"> → <img src="https://flagcdn.com/16x12/bh.png" alt="bh" style="height:10px;width:auto;border-radius:1px;vertical-align:middle"> · 26 km bridge · Apr 2026</div>
+        <div style="font-size:14px;font-weight:700;letter-spacing:.07em;color:var(--c-tx0);margin-bottom:6px">KING FAHD CAUSEWAY</div>
+        <div style="font-size:11px;color:var(--c-tx2);display:flex;align-items:center;gap:5px"><img src="https://flagcdn.com/16x12/sa.png" alt="sa" style="height:10px;width:auto;border-radius:1px;vertical-align:middle"> → <img src="https://flagcdn.com/16x12/bh.png" alt="bh" style="height:10px;width:auto;border-radius:1px;vertical-align:middle"> · 26 km bridge · Apr 2026</div>
       </div>
-      <div id="cpt-kfahd-status" style="font-size:9px;font-weight:700;letter-spacing:.1em;padding:4px 10px;border-radius:3px;color:#C2A23E;border:1px solid #C2A23E;white-space:nowrap">MODERATE</div>
+      <div id="cpt-kfahd-status" style="font-size:9px;font-weight:700;letter-spacing:.1em;padding:4px 10px;border-radius:3px;color:var(--c-amber-hi);border:1px solid var(--c-amber-hi);white-space:nowrap">MODERATE</div>
     </div>
-    <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;border-top:1px solid #1A1A18;padding-top:18px">
-      <div><div style="font-size:9px;letter-spacing:.1em;color:#4A4A44;margin-bottom:8px">EST. WAIT</div><div id="cpt-kfahd-wait" style="font-size:26px;font-weight:700;color:#F2F1ED;line-height:1">2h–4h</div><div id="road-kfahd" style="font-size:8px;letter-spacing:.07em;color:#3A3A34;margin-top:5px">·</div></div>
-      <div><div style="font-size:9px;letter-spacing:.1em;color:#4A4A44;margin-bottom:8px">TRUCKS/DAY</div><div style="font-size:26px;font-weight:700;color:#F2F1ED;line-height:1">680</div></div>
-      <div><div style="font-size:9px;letter-spacing:.1em;color:#4A4A44;margin-bottom:8px">VS PRE-CRISIS</div><div style="font-size:26px;font-weight:700;color:#C98A2E;line-height:1">↑+28%</div></div>
+    <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;border-top:1px solid var(--c-bd0);padding-top:18px">
+      <div><div style="font-size:9px;letter-spacing:.1em;color:var(--c-tx2);margin-bottom:8px">EST. WAIT</div><div id="cpt-kfahd-wait" style="font-size:26px;font-weight:700;color:var(--c-tx0);line-height:1">2h–4h</div><div id="road-kfahd" style="font-size:8px;letter-spacing:.07em;color:var(--c-tx2);margin-top:5px">·</div></div>
+      <div><div style="font-size:9px;letter-spacing:.1em;color:var(--c-tx2);margin-bottom:8px">TRUCKS/DAY</div><div style="font-size:26px;font-weight:700;color:var(--c-tx0);line-height:1">680</div></div>
+      <div><div style="font-size:9px;letter-spacing:.1em;color:var(--c-tx2);margin-bottom:8px">VS PRE-CRISIS</div><div style="font-size:26px;font-weight:700;color:var(--c-amber-hi);line-height:1">↑+28%</div></div>
     </div>
   </div></a>
 
   <!-- SALWA -->
   <a href="https://www.google.com/maps/place/24.7350,50.8700/@24.7350,50.8700,14z" target="_blank" rel="noopener" style="text-decoration:none;color:inherit;display:flex">
-  <div style="background:#111110;border:1px solid #1a2535;border-radius:6px;padding:24px 20px;cursor:pointer;width:100%;display:flex;flex-direction:column;gap:0">
+  <div style="background:var(--c-s1);border:1px solid var(--c-bd0);border-radius:6px;padding:24px 20px;cursor:pointer;width:100%;display:flex;flex-direction:column;gap:0">
     <div style="display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:18px">
       <div>
-        <div style="font-size:14px;font-weight:700;letter-spacing:.07em;color:#F2F1ED;margin-bottom:6px">SALWA BORDER</div>
-        <div style="font-size:11px;color:#4A4A44;display:flex;align-items:center;gap:5px"><img src="https://flagcdn.com/16x12/sa.png" alt="sa" style="height:10px;width:auto;border-radius:1px;vertical-align:middle"> → <img src="https://flagcdn.com/16x12/qa.png" alt="qa" style="height:10px;width:auto;border-radius:1px;vertical-align:middle"> · Main land entry</div>
+        <div style="font-size:14px;font-weight:700;letter-spacing:.07em;color:var(--c-tx0);margin-bottom:6px">SALWA BORDER</div>
+        <div style="font-size:11px;color:var(--c-tx2);display:flex;align-items:center;gap:5px"><img src="https://flagcdn.com/16x12/sa.png" alt="sa" style="height:10px;width:auto;border-radius:1px;vertical-align:middle"> → <img src="https://flagcdn.com/16x12/qa.png" alt="qa" style="height:10px;width:auto;border-radius:1px;vertical-align:middle"> · Main land entry</div>
       </div>
-      <div id="cpt-salwa-status" style="font-size:9px;font-weight:700;letter-spacing:.1em;padding:4px 10px;border-radius:3px;color:#C98A2E;border:1px solid #C98A2E;white-space:nowrap">HEAVY</div>
+      <div id="cpt-salwa-status" style="font-size:9px;font-weight:700;letter-spacing:.1em;padding:4px 10px;border-radius:3px;color:var(--c-amber-hi);border:1px solid var(--c-amber-hi);white-space:nowrap">HEAVY</div>
     </div>
-    <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;border-top:1px solid #1A1A18;padding-top:18px">
-      <div><div style="font-size:9px;letter-spacing:.1em;color:#4A4A44;margin-bottom:8px">EST. WAIT</div><div id="cpt-salwa-wait" style="font-size:26px;font-weight:700;color:#F2F1ED;line-height:1">ban hrs*</div><div id="road-salwa" style="font-size:8px;letter-spacing:.07em;color:#3A3A34;margin-top:5px">·</div></div>
-      <div><div style="font-size:9px;letter-spacing:.1em;color:#4A4A44;margin-bottom:8px">TRUCKS/DAY</div><div style="font-size:26px;font-weight:700;color:#F2F1ED;line-height:1">620</div></div>
-      <div><div style="font-size:9px;letter-spacing:.1em;color:#4A4A44;margin-bottom:8px">VS PRE-CRISIS</div><div style="font-size:26px;font-weight:700;color:#C98A2E;line-height:1">↑+52%</div></div>
+    <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;border-top:1px solid var(--c-bd0);padding-top:18px">
+      <div><div style="font-size:9px;letter-spacing:.1em;color:var(--c-tx2);margin-bottom:8px">EST. WAIT</div><div id="cpt-salwa-wait" style="font-size:26px;font-weight:700;color:var(--c-tx0);line-height:1">ban hrs*</div><div id="road-salwa" style="font-size:8px;letter-spacing:.07em;color:var(--c-tx2);margin-top:5px">·</div></div>
+      <div><div style="font-size:9px;letter-spacing:.1em;color:var(--c-tx2);margin-bottom:8px">TRUCKS/DAY</div><div style="font-size:26px;font-weight:700;color:var(--c-tx0);line-height:1">620</div></div>
+      <div><div style="font-size:9px;letter-spacing:.1em;color:var(--c-tx2);margin-bottom:8px">VS PRE-CRISIS</div><div style="font-size:26px;font-weight:700;color:var(--c-amber-hi);line-height:1">↑+52%</div></div>
     </div>
   </div></a>
 
   <!-- AL NUWAISEEB -->
   <a href="https://www.google.com/maps/place/28.5550,48.3900/@28.5550,48.3900,13z" target="_blank" rel="noopener" style="text-decoration:none;color:inherit;display:flex">
-  <div style="background:#111110;border:1px solid #1a2535;border-radius:6px;padding:24px 20px;cursor:pointer;width:100%;display:flex;flex-direction:column;gap:0">
+  <div style="background:var(--c-s1);border:1px solid var(--c-bd0);border-radius:6px;padding:24px 20px;cursor:pointer;width:100%;display:flex;flex-direction:column;gap:0">
     <div style="display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:18px">
       <div>
-        <div style="font-size:14px;font-weight:700;letter-spacing:.07em;color:#F2F1ED;margin-bottom:6px">AL NUWAISEEB</div>
-        <div style="font-size:11px;color:#4A4A44;display:flex;align-items:center;gap:5px"><img src="https://flagcdn.com/16x12/sa.png" alt="sa" style="height:10px;width:auto;border-radius:1px;vertical-align:middle"> → <img src="https://flagcdn.com/16x12/kw.png" alt="kw" style="height:10px;width:auto;border-radius:1px;vertical-align:middle"> · Kuwait land lifeline</div>
+        <div style="font-size:14px;font-weight:700;letter-spacing:.07em;color:var(--c-tx0);margin-bottom:6px">AL NUWAISEEB</div>
+        <div style="font-size:11px;color:var(--c-tx2);display:flex;align-items:center;gap:5px"><img src="https://flagcdn.com/16x12/sa.png" alt="sa" style="height:10px;width:auto;border-radius:1px;vertical-align:middle"> → <img src="https://flagcdn.com/16x12/kw.png" alt="kw" style="height:10px;width:auto;border-radius:1px;vertical-align:middle"> · Kuwait land lifeline</div>
       </div>
-      <div id="cpt-nuwaiseeb-status" style="font-size:9px;font-weight:700;letter-spacing:.1em;padding:4px 10px;border-radius:3px;color:#C2A23E;border:1px solid #C2A23E;white-space:nowrap">MODERATE</div>
+      <div id="cpt-nuwaiseeb-status" style="font-size:9px;font-weight:700;letter-spacing:.1em;padding:4px 10px;border-radius:3px;color:var(--c-amber-hi);border:1px solid var(--c-amber-hi);white-space:nowrap">MODERATE</div>
     </div>
-    <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;border-top:1px solid #1A1A18;padding-top:18px">
-      <div><div style="font-size:9px;letter-spacing:.1em;color:#4A4A44;margin-bottom:8px">EST. WAIT</div><div id="cpt-nuwaiseeb-wait" style="font-size:26px;font-weight:700;color:#F2F1ED;line-height:1">1h–3h</div><div id="road-nuwaiseeb" style="font-size:8px;letter-spacing:.07em;color:#3A3A34;margin-top:5px">·</div></div>
-      <div><div style="font-size:9px;letter-spacing:.1em;color:#4A4A44;margin-bottom:8px">TRUCKS/DAY</div><div style="font-size:26px;font-weight:700;color:#F2F1ED;line-height:1">780</div></div>
-      <div><div style="font-size:9px;letter-spacing:.1em;color:#4A4A44;margin-bottom:8px">VS PRE-CRISIS</div><div style="font-size:26px;font-weight:700;color:#C98A2E;line-height:1">↑+65%</div></div>
+    <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;border-top:1px solid var(--c-bd0);padding-top:18px">
+      <div><div style="font-size:9px;letter-spacing:.1em;color:var(--c-tx2);margin-bottom:8px">EST. WAIT</div><div id="cpt-nuwaiseeb-wait" style="font-size:26px;font-weight:700;color:var(--c-tx0);line-height:1">1h–3h</div><div id="road-nuwaiseeb" style="font-size:8px;letter-spacing:.07em;color:var(--c-tx2);margin-top:5px">·</div></div>
+      <div><div style="font-size:9px;letter-spacing:.1em;color:var(--c-tx2);margin-bottom:8px">TRUCKS/DAY</div><div style="font-size:26px;font-weight:700;color:var(--c-tx0);line-height:1">780</div></div>
+      <div><div style="font-size:9px;letter-spacing:.1em;color:var(--c-tx2);margin-bottom:8px">VS PRE-CRISIS</div><div style="font-size:26px;font-weight:700;color:var(--c-amber-hi);line-height:1">↑+65%</div></div>
     </div>
   </div></a>
 
   <!-- SOHAR HWY 95 -->
   <a href="https://www.google.com/maps/place/24.5025,56.6062/@24.5025,56.6062,15z" target="_blank" rel="noopener" style="text-decoration:none;color:inherit;display:flex">
-  <div style="background:#111110;border:1px solid #1a2535;border-radius:6px;padding:24px 20px;cursor:pointer;width:100%;display:flex;flex-direction:column;gap:0">
+  <div style="background:var(--c-s1);border:1px solid var(--c-bd0);border-radius:6px;padding:24px 20px;cursor:pointer;width:100%;display:flex;flex-direction:column;gap:0">
     <div style="display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:18px">
       <div>
-        <div style="font-size:14px;font-weight:700;letter-spacing:.07em;color:#F2F1ED;margin-bottom:6px">SOHAR PORT – HWY 95</div>
-        <div style="font-size:11px;color:#4A4A44;display:flex;align-items:center;gap:5px"><img src="https://flagcdn.com/16x12/om.png" alt="om" style="height:10px;width:auto;border-radius:1px;vertical-align:middle"> → <img src="https://flagcdn.com/16x12/sa.png" alt="sa" style="height:10px;width:auto;border-radius:1px;vertical-align:middle"> · Oman bypass hub</div>
+        <div style="font-size:14px;font-weight:700;letter-spacing:.07em;color:var(--c-tx0);margin-bottom:6px">SOHAR PORT – HWY 95</div>
+        <div style="font-size:11px;color:var(--c-tx2);display:flex;align-items:center;gap:5px"><img src="https://flagcdn.com/16x12/om.png" alt="om" style="height:10px;width:auto;border-radius:1px;vertical-align:middle"> → <img src="https://flagcdn.com/16x12/sa.png" alt="sa" style="height:10px;width:auto;border-radius:1px;vertical-align:middle"> · Oman bypass hub</div>
       </div>
-      <div id="cpt-sohargate-status" style="font-size:9px;font-weight:700;letter-spacing:.1em;padding:4px 10px;border-radius:3px;color:#E05252;border:1px solid #E05252;white-space:nowrap">CRITICAL</div>
+      <div id="cpt-sohargate-status" style="font-size:9px;font-weight:700;letter-spacing:.1em;padding:4px 10px;border-radius:3px;color:var(--c-red-hi);border:1px solid var(--c-red-hi);white-space:nowrap">CRITICAL</div>
     </div>
-    <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;border-top:1px solid #1A1A18;padding-top:18px">
-      <div><div style="font-size:9px;letter-spacing:.1em;color:#4A4A44;margin-bottom:8px">EST. WAIT</div><div id="cpt-sohargate-wait" style="font-size:26px;font-weight:700;color:#F2F1ED;line-height:1">6h–12h+</div><div id="road-sohar" style="font-size:8px;letter-spacing:.07em;color:#3A3A34;margin-top:5px">·</div></div>
-      <div><div style="font-size:9px;letter-spacing:.1em;color:#4A4A44;margin-bottom:8px">TRUCKS/DAY</div><div style="font-size:26px;font-weight:700;color:#F2F1ED;line-height:1">3,800+</div></div>
-      <div><div style="font-size:9px;letter-spacing:.1em;color:#4A4A44;margin-bottom:8px">VS PRE-CRISIS</div><div style="font-size:26px;font-weight:700;color:#C98A2E;line-height:1">↑+400%</div></div>
+    <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;border-top:1px solid var(--c-bd0);padding-top:18px">
+      <div><div style="font-size:9px;letter-spacing:.1em;color:var(--c-tx2);margin-bottom:8px">EST. WAIT</div><div id="cpt-sohargate-wait" style="font-size:26px;font-weight:700;color:var(--c-tx0);line-height:1">6h–12h+</div><div id="road-sohar" style="font-size:8px;letter-spacing:.07em;color:var(--c-tx2);margin-top:5px">·</div></div>
+      <div><div style="font-size:9px;letter-spacing:.1em;color:var(--c-tx2);margin-bottom:8px">TRUCKS/DAY</div><div style="font-size:26px;font-weight:700;color:var(--c-tx0);line-height:1">3,800+</div></div>
+      <div><div style="font-size:9px;letter-spacing:.1em;color:var(--c-tx2);margin-bottom:8px">VS PRE-CRISIS</div><div style="font-size:26px;font-weight:700;color:var(--c-amber-hi);line-height:1">↑+400%</div></div>
     </div>
   </div></a>
 
   <!-- JEDDAH ISLAMIC PORT -->
   <a href="https://www.google.com/maps/place/21.4838,39.1734/@21.4838,39.1734,15z" target="_blank" rel="noopener" style="text-decoration:none;color:inherit;display:flex">
-  <div style="background:#111110;border:1px solid #1a2535;border-radius:6px;padding:24px 20px;cursor:pointer;width:100%;display:flex;flex-direction:column;gap:0">
+  <div style="background:var(--c-s1);border:1px solid var(--c-bd0);border-radius:6px;padding:24px 20px;cursor:pointer;width:100%;display:flex;flex-direction:column;gap:0">
     <div style="display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:18px">
       <div>
-        <div style="font-size:14px;font-weight:700;letter-spacing:.07em;color:#F2F1ED;margin-bottom:6px">JEDDAH ISLAMIC PORT</div>
-        <div style="font-size:11px;color:#4A4A44;display:flex;align-items:center;gap:5px"><img src="https://flagcdn.com/16x12/sa.png" alt="sa" style="height:10px;width:auto;border-radius:1px;vertical-align:middle"> · King Abdul Aziz Port</div>
+        <div style="font-size:14px;font-weight:700;letter-spacing:.07em;color:var(--c-tx0);margin-bottom:6px">JEDDAH ISLAMIC PORT</div>
+        <div style="font-size:11px;color:var(--c-tx2);display:flex;align-items:center;gap:5px"><img src="https://flagcdn.com/16x12/sa.png" alt="sa" style="height:10px;width:auto;border-radius:1px;vertical-align:middle"> · King Abdul Aziz Port</div>
       </div>
-      <div id="cpt-jeddahgate-status" style="font-size:9px;font-weight:700;letter-spacing:.1em;padding:4px 10px;border-radius:3px;color:#E05252;border:1px solid #E05252;white-space:nowrap">CRITICAL</div>
+      <div id="cpt-jeddahgate-status" style="font-size:9px;font-weight:700;letter-spacing:.1em;padding:4px 10px;border-radius:3px;color:var(--c-red-hi);border:1px solid var(--c-red-hi);white-space:nowrap">CRITICAL</div>
     </div>
-    <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;border-top:1px solid #1A1A18;padding-top:18px">
-      <div><div style="font-size:9px;letter-spacing:.1em;color:#4A4A44;margin-bottom:8px">EST. WAIT</div><div id="cpt-jeddahgate-wait" style="font-size:26px;font-weight:700;color:#F2F1ED;line-height:1">8h–3d</div><div id="road-jeddah" style="font-size:8px;letter-spacing:.07em;color:#3A3A34;margin-top:5px">·</div></div>
-      <div><div style="font-size:9px;letter-spacing:.1em;color:#4A4A44;margin-bottom:8px">TRUCKS/DAY</div><div style="font-size:26px;font-weight:700;color:#F2F1ED;line-height:1">~1,100</div></div>
-      <div><div style="font-size:9px;letter-spacing:.1em;color:#4A4A44;margin-bottom:8px">VS PRE-CRISIS</div><div style="font-size:26px;font-weight:700;color:#C98A2E;line-height:1">↑+62%</div></div>
+    <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;border-top:1px solid var(--c-bd0);padding-top:18px">
+      <div><div style="font-size:9px;letter-spacing:.1em;color:var(--c-tx2);margin-bottom:8px">EST. WAIT</div><div id="cpt-jeddahgate-wait" style="font-size:26px;font-weight:700;color:var(--c-tx0);line-height:1">8h–3d</div><div id="road-jeddah" style="font-size:8px;letter-spacing:.07em;color:var(--c-tx2);margin-top:5px">·</div></div>
+      <div><div style="font-size:9px;letter-spacing:.1em;color:var(--c-tx2);margin-bottom:8px">TRUCKS/DAY</div><div style="font-size:26px;font-weight:700;color:var(--c-tx0);line-height:1">~1,100</div></div>
+      <div><div style="font-size:9px;letter-spacing:.1em;color:var(--c-tx2);margin-bottom:8px">VS PRE-CRISIS</div><div style="font-size:26px;font-weight:700;color:var(--c-amber-hi);line-height:1">↑+62%</div></div>
     </div>
   </div></a>
 
 </div>
-<div style="font-size:9px;color:#3A3A36;margin-top:-20px;margin-bottom:32px;letter-spacing:.04em">EST. WAIT = empirically calibrated field baseline (Jul 2026) × Google Maps live congestion ratio · BAN HRS = GCC national truck movement restrictions (UAE RTA · Qatar MoI · Kuwait MoI · Saudi TGA) · Sohar/Jeddah baselines reflect Hormuz-rerouting surge · no unified public real-time crossing API exists</div>
+<div style="font-size:9px;color:var(--c-tx2);margin-top:-20px;margin-bottom:32px;letter-spacing:.04em">EST. WAIT = empirically calibrated field baseline (Jul 2026) × Google Maps live congestion ratio · BAN HRS = GCC national truck movement restrictions (UAE RTA · Qatar MoI · Kuwait MoI · Saudi TGA) · Sohar/Jeddah baselines reflect Hormuz-rerouting surge · no unified public real-time crossing API exists</div>
 
 <!-- FTL TRUCKING PRICES -->
 <div id="ftl-pricing-card" style="margin-bottom:32px">
   <div style="padding:0 0 16px;display:flex;align-items:baseline;justify-content:space-between">
-    <div style="font-size:11px;font-weight:700;letter-spacing:.18em;color:#C9AE4E">FTL TRUCKING PRICES – 40FT TRAILER</div>
-    <div style="font-size:9px;color:#3A3A36;letter-spacing:.06em">USD · ALL-IN · crisis-period rates · Jun 2026</div>
+    <div style="font-size:11px;font-weight:700;letter-spacing:.18em;color:var(--c-amber-hi)">FTL TRUCKING PRICES – 40FT TRAILER</div>
+    <div style="font-size:9px;color:var(--c-tx2);letter-spacing:.06em">USD · ALL-IN · crisis-period rates · Jun 2026</div>
   </div>
   <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:16px">
 
     <!-- FROM JEDDAH -->
     <div>
-      <div style="font-size:10px;font-weight:700;letter-spacing:.14em;color:#5FA86A;margin-bottom:10px;padding-bottom:8px;border-bottom:1px solid #1A1A18;display:flex;align-items:center;gap:6px"><img src="https://flagcdn.com/16x12/sa.png" alt="sa" style="height:10px;width:auto;border-radius:1px;vertical-align:middle"> FROM JEDDAH</div>
+      <div style="font-size:10px;font-weight:700;letter-spacing:.14em;color:var(--c-green-hi);margin-bottom:10px;padding-bottom:8px;border-bottom:1px solid var(--c-bd0);display:flex;align-items:center;gap:6px"><img src="https://flagcdn.com/16x12/sa.png" alt="sa" style="height:10px;width:auto;border-radius:1px;vertical-align:middle"> FROM JEDDAH</div>
       <div style="display:flex;flex-direction:column;gap:6px">
-        <div style="background:#111110;border:1px solid #1a2535;border-left:2px solid #5FA86A;border-radius:0 4px 4px 0;padding:14px 16px;display:flex;align-items:center;justify-content:space-between;gap:12px">
-          <div style="font-size:13px;font-weight:700;color:#F2F1ED;line-height:1.4"><span style="display:inline-flex;align-items:center;gap:5px"><img src="https://flagcdn.com/16x12/sa.png" alt="sa" style="height:9px;width:auto;border-radius:1px;vertical-align:middle"> Jeddah</span><br><span style="color:#8E8E84;font-weight:400;display:inline-flex;align-items:center;gap:5px">→ <img src="https://flagcdn.com/16x12/qa.png" alt="qa" style="height:9px;width:auto;border-radius:1px;vertical-align:middle"> Doha</span></div>
-          <div style="font-size:20px;font-weight:700;color:#E05252;white-space:nowrap;letter-spacing:-.01em">$2,840–3,640</div>
+        <div style="background:var(--c-s1);border:1px solid var(--c-bd0);border-left:2px solid var(--c-green-hi);border-radius:0 4px 4px 0;padding:14px 16px;display:flex;align-items:center;justify-content:space-between;gap:12px">
+          <div style="font-size:13px;font-weight:700;color:var(--c-tx0);line-height:1.4"><span style="display:inline-flex;align-items:center;gap:5px"><img src="https://flagcdn.com/16x12/sa.png" alt="sa" style="height:9px;width:auto;border-radius:1px;vertical-align:middle"> Jeddah</span><br><span style="color:var(--c-tx2);font-weight:400;display:inline-flex;align-items:center;gap:5px">→ <img src="https://flagcdn.com/16x12/qa.png" alt="qa" style="height:9px;width:auto;border-radius:1px;vertical-align:middle"> Doha</span></div>
+          <div style="font-size:20px;font-weight:700;color:var(--c-red-hi);white-space:nowrap;letter-spacing:-.01em">$2,840–3,640</div>
         </div>
-        <div style="background:#111110;border:1px solid #1a2535;border-left:2px solid #5FA86A;border-radius:0 4px 4px 0;padding:14px 16px;display:flex;align-items:center;justify-content:space-between;gap:12px">
-          <div style="font-size:13px;font-weight:700;color:#F2F1ED;line-height:1.4"><span style="display:inline-flex;align-items:center;gap:5px"><img src="https://flagcdn.com/16x12/sa.png" alt="sa" style="height:9px;width:auto;border-radius:1px;vertical-align:middle"> Jeddah</span><br><span style="color:#8E8E84;font-weight:400;display:inline-flex;align-items:center;gap:5px">→ <img src="https://flagcdn.com/16x12/bh.png" alt="bh" style="height:9px;width:auto;border-radius:1px;vertical-align:middle"> Manama</span></div>
-          <div style="font-size:20px;font-weight:700;color:#C98A2E;white-space:nowrap;letter-spacing:-.01em">$2,435–3,235</div>
+        <div style="background:var(--c-s1);border:1px solid var(--c-bd0);border-left:2px solid var(--c-green-hi);border-radius:0 4px 4px 0;padding:14px 16px;display:flex;align-items:center;justify-content:space-between;gap:12px">
+          <div style="font-size:13px;font-weight:700;color:var(--c-tx0);line-height:1.4"><span style="display:inline-flex;align-items:center;gap:5px"><img src="https://flagcdn.com/16x12/sa.png" alt="sa" style="height:9px;width:auto;border-radius:1px;vertical-align:middle"> Jeddah</span><br><span style="color:var(--c-tx2);font-weight:400;display:inline-flex;align-items:center;gap:5px">→ <img src="https://flagcdn.com/16x12/bh.png" alt="bh" style="height:9px;width:auto;border-radius:1px;vertical-align:middle"> Manama</span></div>
+          <div style="font-size:20px;font-weight:700;color:var(--c-amber-hi);white-space:nowrap;letter-spacing:-.01em">$2,435–3,235</div>
         </div>
-        <div style="background:#111110;border:1px solid #1a2535;border-left:2px solid #5FA86A;border-radius:0 4px 4px 0;padding:14px 16px;display:flex;align-items:center;justify-content:space-between;gap:12px">
-          <div style="font-size:13px;font-weight:700;color:#F2F1ED;line-height:1.4"><span style="display:inline-flex;align-items:center;gap:5px"><img src="https://flagcdn.com/16x12/sa.png" alt="sa" style="height:9px;width:auto;border-radius:1px;vertical-align:middle"> Jeddah</span><br><span style="color:#8E8E84;font-weight:400;display:inline-flex;align-items:center;gap:5px">→ <img src="https://flagcdn.com/16x12/kw.png" alt="kw" style="height:9px;width:auto;border-radius:1px;vertical-align:middle"> Kuwait City</span></div>
-          <div style="font-size:20px;font-weight:700;color:#E05252;white-space:nowrap;letter-spacing:-.01em">$2,855–3,855</div>
+        <div style="background:var(--c-s1);border:1px solid var(--c-bd0);border-left:2px solid var(--c-green-hi);border-radius:0 4px 4px 0;padding:14px 16px;display:flex;align-items:center;justify-content:space-between;gap:12px">
+          <div style="font-size:13px;font-weight:700;color:var(--c-tx0);line-height:1.4"><span style="display:inline-flex;align-items:center;gap:5px"><img src="https://flagcdn.com/16x12/sa.png" alt="sa" style="height:9px;width:auto;border-radius:1px;vertical-align:middle"> Jeddah</span><br><span style="color:var(--c-tx2);font-weight:400;display:inline-flex;align-items:center;gap:5px">→ <img src="https://flagcdn.com/16x12/kw.png" alt="kw" style="height:9px;width:auto;border-radius:1px;vertical-align:middle"> Kuwait City</span></div>
+          <div style="font-size:20px;font-weight:700;color:var(--c-red-hi);white-space:nowrap;letter-spacing:-.01em">$2,855–3,855</div>
         </div>
       </div>
     </div>
 
     <!-- FROM SOHAR -->
     <div>
-      <div style="font-size:10px;font-weight:700;letter-spacing:.14em;color:#8B72C8;margin-bottom:10px;padding-bottom:8px;border-bottom:1px solid #1A1A18;display:flex;align-items:center;gap:6px"><img src="https://flagcdn.com/16x12/om.png" alt="om" style="height:10px;width:auto;border-radius:1px;vertical-align:middle"> FROM SOHAR</div>
+      <div style="font-size:10px;font-weight:700;letter-spacing:.14em;color:var(--c-purple);margin-bottom:10px;padding-bottom:8px;border-bottom:1px solid var(--c-bd0);display:flex;align-items:center;gap:6px"><img src="https://flagcdn.com/16x12/om.png" alt="om" style="height:10px;width:auto;border-radius:1px;vertical-align:middle"> FROM SOHAR</div>
       <div style="display:flex;flex-direction:column;gap:6px">
-        <div style="background:#111110;border:1px solid #1a2535;border-left:2px solid #8B72C8;border-radius:0 4px 4px 0;padding:14px 16px;display:flex;align-items:center;justify-content:space-between;gap:12px">
-          <div style="font-size:13px;font-weight:700;color:#F2F1ED;line-height:1.4"><span style="display:inline-flex;align-items:center;gap:5px"><img src="https://flagcdn.com/16x12/om.png" alt="om" style="height:9px;width:auto;border-radius:1px;vertical-align:middle"> Sohar</span><br><span style="color:#8E8E84;font-weight:400;display:inline-flex;align-items:center;gap:5px">→ <img src="https://flagcdn.com/16x12/qa.png" alt="qa" style="height:9px;width:auto;border-radius:1px;vertical-align:middle"> Doha</span></div>
-          <div style="font-size:20px;font-weight:700;color:#E05252;white-space:nowrap;letter-spacing:-.01em">$2,210–2,910</div>
+        <div style="background:var(--c-s1);border:1px solid var(--c-bd0);border-left:2px solid var(--c-purple);border-radius:0 4px 4px 0;padding:14px 16px;display:flex;align-items:center;justify-content:space-between;gap:12px">
+          <div style="font-size:13px;font-weight:700;color:var(--c-tx0);line-height:1.4"><span style="display:inline-flex;align-items:center;gap:5px"><img src="https://flagcdn.com/16x12/om.png" alt="om" style="height:9px;width:auto;border-radius:1px;vertical-align:middle"> Sohar</span><br><span style="color:var(--c-tx2);font-weight:400;display:inline-flex;align-items:center;gap:5px">→ <img src="https://flagcdn.com/16x12/qa.png" alt="qa" style="height:9px;width:auto;border-radius:1px;vertical-align:middle"> Doha</span></div>
+          <div style="font-size:20px;font-weight:700;color:var(--c-red-hi);white-space:nowrap;letter-spacing:-.01em">$2,210–2,910</div>
         </div>
-        <div style="background:#111110;border:1px solid #1a2535;border-left:2px solid #8B72C8;border-radius:0 4px 4px 0;padding:14px 16px;display:flex;align-items:center;justify-content:space-between;gap:12px">
-          <div style="font-size:13px;font-weight:700;color:#F2F1ED;line-height:1.4"><span style="display:inline-flex;align-items:center;gap:5px"><img src="https://flagcdn.com/16x12/om.png" alt="om" style="height:9px;width:auto;border-radius:1px;vertical-align:middle"> Sohar</span><br><span style="color:#8E8E84;font-weight:400;display:inline-flex;align-items:center;gap:5px">→ <img src="https://flagcdn.com/16x12/bh.png" alt="bh" style="height:9px;width:auto;border-radius:1px;vertical-align:middle"> Manama</span></div>
-          <div style="font-size:20px;font-weight:700;color:#C98A2E;white-space:nowrap;letter-spacing:-.01em">$2,105–2,755</div>
+        <div style="background:var(--c-s1);border:1px solid var(--c-bd0);border-left:2px solid var(--c-purple);border-radius:0 4px 4px 0;padding:14px 16px;display:flex;align-items:center;justify-content:space-between;gap:12px">
+          <div style="font-size:13px;font-weight:700;color:var(--c-tx0);line-height:1.4"><span style="display:inline-flex;align-items:center;gap:5px"><img src="https://flagcdn.com/16x12/om.png" alt="om" style="height:9px;width:auto;border-radius:1px;vertical-align:middle"> Sohar</span><br><span style="color:var(--c-tx2);font-weight:400;display:inline-flex;align-items:center;gap:5px">→ <img src="https://flagcdn.com/16x12/bh.png" alt="bh" style="height:9px;width:auto;border-radius:1px;vertical-align:middle"> Manama</span></div>
+          <div style="font-size:20px;font-weight:700;color:var(--c-amber-hi);white-space:nowrap;letter-spacing:-.01em">$2,105–2,755</div>
         </div>
       </div>
     </div>
 
     <!-- OTHER KEY ROUTES -->
     <div>
-      <div style="font-size:10px;font-weight:700;letter-spacing:.14em;color:#C9AE4E;margin-bottom:10px;padding-bottom:8px;border-bottom:1px solid #1A1A18">OTHER KEY ROUTES</div>
+      <div style="font-size:10px;font-weight:700;letter-spacing:.14em;color:var(--c-amber-hi);margin-bottom:10px;padding-bottom:8px;border-bottom:1px solid var(--c-bd0)">OTHER KEY ROUTES</div>
       <div style="display:flex;flex-direction:column;gap:6px">
-        <div style="background:#111110;border:1px solid #1a2535;border-left:2px solid #C9AE4E;border-radius:0 4px 4px 0;padding:14px 16px;display:flex;align-items:center;justify-content:space-between;gap:12px">
-          <div style="font-size:13px;font-weight:700;color:#F2F1ED;line-height:1.4"><span style="display:inline-flex;align-items:center;gap:5px"><img src="https://flagcdn.com/16x12/ae.png" alt="ae" style="height:9px;width:auto;border-radius:1px;vertical-align:middle"> Dubai / Jebel Ali</span><br><span style="color:#8E8E84;font-weight:400;display:inline-flex;align-items:center;gap:5px">→ <img src="https://flagcdn.com/16x12/sa.png" alt="sa" style="height:9px;width:auto;border-radius:1px;vertical-align:middle"> Riyadh</span></div>
-          <div style="font-size:20px;font-weight:700;color:#C2A23E;white-space:nowrap;letter-spacing:-.01em">$1,895–2,495</div>
+        <div style="background:var(--c-s1);border:1px solid var(--c-bd0);border-left:2px solid var(--c-amber-hi);border-radius:0 4px 4px 0;padding:14px 16px;display:flex;align-items:center;justify-content:space-between;gap:12px">
+          <div style="font-size:13px;font-weight:700;color:var(--c-tx0);line-height:1.4"><span style="display:inline-flex;align-items:center;gap:5px"><img src="https://flagcdn.com/16x12/ae.png" alt="ae" style="height:9px;width:auto;border-radius:1px;vertical-align:middle"> Dubai / Jebel Ali</span><br><span style="color:var(--c-tx2);font-weight:400;display:inline-flex;align-items:center;gap:5px">→ <img src="https://flagcdn.com/16x12/sa.png" alt="sa" style="height:9px;width:auto;border-radius:1px;vertical-align:middle"> Riyadh</span></div>
+          <div style="font-size:20px;font-weight:700;color:var(--c-amber-hi);white-space:nowrap;letter-spacing:-.01em">$1,895–2,495</div>
         </div>
-        <div style="background:#111110;border:1px solid #1a2535;border-left:2px solid #C9AE4E;border-radius:0 4px 4px 0;padding:14px 16px;display:flex;align-items:center;justify-content:space-between;gap:12px">
-          <div style="font-size:13px;font-weight:700;color:#F2F1ED;line-height:1.4"><span style="display:inline-flex;align-items:center;gap:5px"><img src="https://flagcdn.com/16x12/om.png" alt="om" style="height:9px;width:auto;border-radius:1px;vertical-align:middle"> Oman (Hwy 95)</span><br><span style="color:#8E8E84;font-weight:400;display:inline-flex;align-items:center;gap:5px">→ <img src="https://flagcdn.com/16x12/sa.png" alt="sa" style="height:9px;width:auto;border-radius:1px;vertical-align:middle"> Riyadh</span></div>
-          <div style="font-size:20px;font-weight:700;color:#C98A2E;white-space:nowrap;letter-spacing:-.01em">$2,320–3,120</div>
+        <div style="background:var(--c-s1);border:1px solid var(--c-bd0);border-left:2px solid var(--c-amber-hi);border-radius:0 4px 4px 0;padding:14px 16px;display:flex;align-items:center;justify-content:space-between;gap:12px">
+          <div style="font-size:13px;font-weight:700;color:var(--c-tx0);line-height:1.4"><span style="display:inline-flex;align-items:center;gap:5px"><img src="https://flagcdn.com/16x12/om.png" alt="om" style="height:9px;width:auto;border-radius:1px;vertical-align:middle"> Oman (Hwy 95)</span><br><span style="color:var(--c-tx2);font-weight:400;display:inline-flex;align-items:center;gap:5px">→ <img src="https://flagcdn.com/16x12/sa.png" alt="sa" style="height:9px;width:auto;border-radius:1px;vertical-align:middle"> Riyadh</span></div>
+          <div style="font-size:20px;font-weight:700;color:var(--c-amber-hi);white-space:nowrap;letter-spacing:-.01em">$2,320–3,120</div>
         </div>
       </div>
     </div>
@@ -5613,28 +5762,7 @@ function gccSidebarNav(name) {
   </div>
 </div>
 
-<!-- FLEET & OPERATOR SIGNALS -->
-<div>
-  <div style="font-size:11px;font-weight:700;letter-spacing:.18em;color:#C9AE4E;margin-bottom:16px">FLEET &amp; OPERATOR SIGNALS <span style="font-size:9px;font-weight:400;color:#3A3A36;letter-spacing:.06em">· Capacity changes since Hormuz closure · Jun 2026</span></div>
-  <div style="display:grid;grid-template-columns:repeat(2,1fr);gap:10px">
-    <div style="background:#111110;border:1px solid #1a2535;border-left:2px solid #8B72C8;border-radius:0 6px 6px 0;padding:14px 18px;font-size:12px;line-height:1.6;color:#C8C7C2"><span style="font-weight:700;color:#F2F1ED;display:inline-flex;align-items:center;gap:6px"><img src="https://flagcdn.com/16x12/ae.png" alt="ae" style="height:11px;width:auto;border-radius:1px;vertical-align:middle"> TruKKer (UAE)</span> — scaling 60 to 500 moves/day. Fixed transparent rates from Khorfakkan activated.</div>
-    <div style="background:#111110;border:1px solid #1a2535;border-left:2px solid #C9AE4E;border-radius:0 6px 6px 0;padding:14px 18px;font-size:12px;line-height:1.6;color:#C8C7C2"><span style="font-weight:700;color:#F2F1ED;display:inline-flex;align-items:center;gap:6px"><img src="https://flagcdn.com/16x12/sa.png" alt="sa" style="height:11px;width:auto;border-radius:1px;vertical-align:middle"> Flow Progressive (SA)</span> — fleet 340 to 500+ 40ft trailers since conflict began.</div>
-    <div style="background:#111110;border:1px solid #1a2535;border-left:2px solid #5FA86A;border-radius:0 6px 6px 0;padding:14px 18px;font-size:12px;line-height:1.6;color:#C8C7C2"><span style="font-weight:700;color:#F2F1ED;display:inline-flex;align-items:center;gap:6px"><img src="https://flagcdn.com/16x12/sa.png" alt="sa" style="height:11px;width:auto;border-radius:1px;vertical-align:middle"> Saudi TGA</span> — eased GCC refrigerated truck entry rules March 2026. Hwy 95 goods tripled to $830M.</div>
-    <div style="background:#111110;border:1px solid #1a2535;border-left:2px solid #E05252;border-radius:0 6px 6px 0;padding:14px 18px;font-size:12px;line-height:1.6;color:#C8C7C2"><span style="font-weight:700;color:#F2F1ED;display:inline-flex;align-items:center;gap:6px"><img src="https://flagcdn.com/16x12/sa.png" alt="sa" style="height:11px;width:auto;border-radius:1px;vertical-align:middle"> Saudi Landbridge</span> — Jeddah–Dammam rail ($7B, 1,300 km). Projected $4.2B/yr transport cost savings.</div>
-  </div>
-</div>
-
-<!-- GCC Corridors Map (kept for interactivity) -->
-<div style="margin-top:32px;border:1px solid #1a2535;border-radius:6px;overflow:hidden">
-  <div style="padding:12px 16px;border-bottom:1px solid #1A1A18;display:flex;justify-content:space-between;align-items:center">
-    <div style="font-size:10px;font-weight:700;letter-spacing:.12em;color:#C9AE4E">GCC LAND CORRIDORS — ACTIVE HIGHWAYS 2026</div>
-    <div style="font-size:9px;color:#3A3A36">wait now: Google Maps traffic · trucks/day: assessed Jul 2026</div>
-  </div>
-  <div id="gcc-corridors-map" style="height:300px;width:100%;background:#060e18"></div>
-</div>
-
 </div><!-- /padding wrapper -->
-
 
 </div>
 

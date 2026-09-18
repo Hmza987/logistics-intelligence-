@@ -6110,6 +6110,24 @@ function gccSidebarNav(name) {
 <!-- ============================================================ TAB 5: STRATEGIC WATCHLIST -->
 <div class="page" id="page-watchlist">
 
+  <!-- HERO BAND -->
+  <div style="padding:18px 24px 0">
+    <div class="gli-hero">
+      <div class="gli-hero-grad"></div>
+      <div class="gli-hero-inner">
+        <div class="gli-hero-l">
+          <div class="gli-breadcrumb"><span>Strategic Watchlist</span><span class="sep">&rsaquo;</span><span class="leaf">Weak Signal Intelligence</span></div>
+          <div class="gli-hero-title">Strategic Watchlist</div>
+          <div class="gli-hero-desc">Multi-order transmission modelling from weak signals to GCC logistics exposure &mdash; <span id="wl-sig-count-2">&mdash;</span> active signals across <span id="wl-cat-count-2">&mdash;</span> categories.</div>
+        </div>
+        <div class="gli-hero-r">
+          <div class="gli-hero-ts">Signal Database v2.6 &middot; Updated <span id="wl-ts-2">&mdash;</span></div>
+          <div class="gli-hero-tagline">From weak signals<br>to what matters.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
   <!-- Page header -->
   <div class="wl-page-header">
     <div>
@@ -14954,11 +14972,18 @@ function initWatchlist() {
   if (wlInitialized) return;
   wlInitialized = true;
   var tsEl = document.getElementById('wl-ts');
-  if (tsEl) tsEl.textContent = new Date().toLocaleDateString('en-GB',{day:'2-digit',month:'short',year:'numeric'});
+  var tsStr = new Date().toLocaleDateString('en-GB',{day:'2-digit',month:'short',year:'numeric'});
+  if (tsEl) tsEl.textContent = tsStr;
+  var tsEl2 = document.getElementById('wl-ts-2');
+  if (tsEl2) tsEl2.textContent = tsStr;
   var sc = document.getElementById('wl-sig-count');
   if (sc) sc.textContent = WL_SIGNALS.length;
+  var sc2 = document.getElementById('wl-sig-count-2');
+  if (sc2) sc2.textContent = WL_SIGNALS.length;
   var cc = document.getElementById('wl-cat-count');
   if (cc) cc.textContent = WL_GROUPS.length;
+  var cc2 = document.getElementById('wl-cat-count-2');
+  if (cc2) cc2.textContent = WL_GROUPS.length;
   renderWLCategories();
 }
 

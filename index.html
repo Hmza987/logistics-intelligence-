@@ -4858,16 +4858,20 @@ function gccSidebarNav(name) {
   <!-- ══════════════════════════════ BAB AL-MANDEB VIEW ══════════════════════════════ -->
   <div id="cp-view-bab" style="display:none">
 
-  <!-- ════════════════════ EXACT HANDOFF DESIGN — non-Hormuz chokepoint empty state ════════════════════ -->
-  <div class="gli-empty-panel">
-    <div class="gli-empty-title">Bab al&#8209;Mandab</div>
-    <div class="gli-empty-body">No AIS or transit series is wired to this chokepoint yet. The Hormuz view is the layout template &mdash; connect a PortWatch chokepoint id and a carrier tracker source to populate it.</div>
-    <div class="gli-empty-chip">Awaiting data source</div>
+  <!-- Real Bab al-Mandab content (war-risk, port status, Red Sea impact) — restored per user feedback.
+       The handoff's spec markup has no chokepoint-specific content for Bab/Suez (only Hormuz is built
+       out; everything else is an "Awaiting data source" placeholder), but this platform has real,
+       accurate data for Bab al-Mandab, so that placeholder isn't a good trade — showing it below the
+       Hormuz-matching structure for reference, hidden. -->
+  <div id="bab-empty-state-reference" style="display:none">
+    <div class="gli-empty-panel">
+      <div class="gli-empty-title">Bab al&#8209;Mandab</div>
+      <div class="gli-empty-body">No AIS or transit series is wired to this chokepoint yet. The Hormuz view is the layout template &mdash; connect a PortWatch chokepoint id and a carrier tracker source to populate it.</div>
+      <div class="gli-empty-chip">Awaiting data source</div>
+    </div>
   </div>
-  <!-- ════════════════════ END EXACT HANDOFF DESIGN ════════════════════ -->
 
-  <!-- Old real-data-adapted Bab al-Mandab view, kept for later content wiring, hidden while the exact handoff design is authoritative -->
-  <div id="bab-legacy-ui" style="display:none">
+  <div id="bab-legacy-ui">
     <!-- HERO BAND -->
     <div style="padding:18px 24px 0">
       <div class="gli-hero">
@@ -5031,16 +5035,19 @@ function gccSidebarNav(name) {
   <!-- ════════════════════════════════ SUEZ CANAL VIEW ════════════════════════════════ -->
   <div id="cp-view-suez" style="display:none">
 
-  <!-- ════════════════════ EXACT HANDOFF DESIGN — non-Hormuz chokepoint empty state ════════════════════ -->
-  <div class="gli-empty-panel">
-    <div class="gli-empty-title">Suez Canal</div>
-    <div class="gli-empty-body">No AIS or transit series is wired to this chokepoint yet. The Hormuz view is the layout template &mdash; connect a PortWatch chokepoint id and a carrier tracker source to populate it.</div>
-    <div class="gli-empty-chip">Awaiting data source</div>
+  <!-- Real Suez Canal content (transit status, revenue impact, terminal status) — restored per user
+       feedback. The handoff's spec markup has no chokepoint-specific content for Bab/Suez (only Hormuz
+       is built out), but this platform has real, accurate Suez data, so the generic placeholder isn't
+       a good trade. Kept here for reference, hidden. -->
+  <div id="suez-empty-state-reference" style="display:none">
+    <div class="gli-empty-panel">
+      <div class="gli-empty-title">Suez Canal</div>
+      <div class="gli-empty-body">No AIS or transit series is wired to this chokepoint yet. The Hormuz view is the layout template &mdash; connect a PortWatch chokepoint id and a carrier tracker source to populate it.</div>
+      <div class="gli-empty-chip">Awaiting data source</div>
+    </div>
   </div>
-  <!-- ════════════════════ END EXACT HANDOFF DESIGN ════════════════════ -->
 
-  <!-- Old real-data-adapted Suez Canal view, kept for later content wiring, hidden while the exact handoff design is authoritative -->
-  <div id="suez-legacy-ui" style="display:none">
+  <div id="suez-legacy-ui">
     <!-- HERO BAND -->
     <div style="padding:18px 24px 0">
       <div class="gli-hero">

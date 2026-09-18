@@ -542,6 +542,13 @@ a { color: inherit; text-decoration: none; }
 .gli-tab { flex: 1 1 auto; text-align: center; font-family: var(--f-ui); font-size: 13.5px; font-weight: 400; padding: 12px 14px; white-space: nowrap; border-radius: 7px 7px 0 0; color: var(--n-700); cursor: default; }
 .gli-tab.active { font-weight: 600; color: var(--c-tx0); background: #1b2937; box-shadow: inset 0 -2px 0 var(--accent-500); }
 
+.gli-wizard-chip { flex: 1 1 200px; display: flex; align-items: center; gap: 13px; font-family: var(--f-ui); font-size: 15.5px; color: var(--c-tx1); background: var(--c-s1); border: 1.5px solid var(--c-bd0); border-radius: 8px; padding: 15px 18px; }
+.gli-wizard-chip.active { background: #1d3a5c; border-color: #3f8ef7; color: var(--c-tx0); font-weight: 600; }
+.gli-wizard-chip.done { color: var(--c-tx0); }
+.gli-wizard-badge { flex: none; display: flex; align-items: center; justify-content: center; width: 27px; height: 27px; border-radius: 50%; border: 1.5px solid #3a4650; font-family: var(--f-mono); font-size: 13.5px; font-weight: 600; font-variant-numeric: tabular-nums; color: var(--c-tx2); }
+.gli-wizard-chip.active .gli-wizard-badge { background: #fff; border-color: #fff; color: #1f6fd4; }
+.gli-wizard-chip.done .gli-wizard-badge { background: var(--c-green-hi); border-color: var(--c-green-hi); color: #0c1116; }
+
 /* ── MAP + KEY TAKEAWAYS ROW ─────────────────────────────────────────────── */
 .gli-2row { display: flex; flex-wrap: wrap; gap: 14px; padding: 14px 24px 0; align-items: stretch; }
 .gli-map-panel { background: var(--c-s1); border: 1px solid var(--c-bd0); border-radius: 8px; flex: 2 1 560px; min-width: 0; overflow: hidden; display: flex; flex-direction: column; }
@@ -5768,102 +5775,123 @@ function gccSidebarNav(name) {
 
 
 <!-- ============================================================ TAB 4: SIMULATOR -->
-<div class="page" id="page-simulator" style="padding:0;background:#0A0A0A;font-family:'JetBrains Mono',monospace;padding-bottom:60px">
-  <div style="padding:24px 24px 0">
+<div class="page" id="page-simulator" style="padding:0;padding-bottom:60px">
 
-    <!-- TITLE -->
-    <div style="margin-bottom:20px">
-      <div style="font-size:13px;font-weight:700;letter-spacing:.14em;color:#C9AE4E;margin-bottom:6px">&#9670; SUPPLY CHAIN SCENARIO SIMULATOR</div>
-      <div style="font-size:12px;color:#5A5A52;line-height:1.5;max-width:900px">Select a world state, enter your shipment parameters, and get end-to-end landed cost from port of origin to final GCC destination &mdash; including sea freight, port handling, and inland trucking.</div>
+  <!-- HERO BAND -->
+  <div style="padding:18px 24px 0">
+    <div class="gli-hero">
+      <div class="gli-hero-grad"></div>
+      <div class="gli-hero-inner">
+        <div class="gli-hero-l">
+          <div class="gli-breadcrumb"><span>Scenario Studio</span><span class="sep">&rsaquo;</span><span class="leaf">Supply Chain Scenario Simulator</span></div>
+          <div class="gli-hero-title">Scenario Studio</div>
+          <div class="gli-hero-desc">Select a world state, enter your shipment parameters, and get end&#8209;to&#8209;end landed cost from port of origin to final GCC destination &mdash; sea freight, port handling and inland trucking.</div>
+        </div>
+        <div class="gli-hero-r">
+          <div class="gli-hero-ts">Regression model v1.5.2</div>
+          <div class="gli-hero-tagline">Model the scenario.<br>Know the cost.</div>
+        </div>
+      </div>
     </div>
+  </div>
+
+  <!-- STEP CHIPS -->
+  <div style="display:flex;flex-wrap:wrap;gap:10px;padding:16px 24px 0">
+    <div class="gli-wizard-chip active"><span class="gli-wizard-badge">1</span>Select World State</div>
+    <div class="gli-wizard-chip"><span class="gli-wizard-badge">2</span>Shipment Parameters</div>
+    <div class="gli-wizard-chip"><span class="gli-wizard-badge">3</span>Run Simulation</div>
+    <div class="gli-wizard-chip"><span class="gli-wizard-badge">4</span>View Results</div>
+  </div>
+
+  <div style="padding:20px 24px 0">
 
     <!-- STEP 1 -->
-    <div style="font-size:9px;font-weight:700;letter-spacing:.18em;color:#4A4A44;margin-bottom:12px">STEP 1 &mdash; SELECT WORLD STATE</div>
+    <div style="font-size:9px;font-weight:700;letter-spacing:.18em;color:var(--c-tx2);margin-bottom:12px">STEP 1 &mdash; SELECT WORLD STATE</div>
     <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:24px">
 
-      <div class="scard" id="sc-1" onclick="selectScenario(1)" style="--sc-color:#E05252;background:rgba(224,82,82,0.06);border:2px solid rgba(224,82,82,0.6);border-radius:6px;padding:20px 18px;display:flex;flex-direction:column;gap:10px;min-height:148px;cursor:pointer;transition:border-color .15s">
+      <div class="scard" id="sc-1" onclick="selectScenario(1)" style="--sc-color:var(--c-red-hi);background:rgba(242,112,92,0.06);border:2px solid rgba(242,112,92,0.6);border-radius:6px;padding:20px 18px;display:flex;flex-direction:column;gap:10px;min-height:148px;cursor:pointer;transition:border-color .15s">
         <div style="font-size:20px;line-height:1">&#128683;</div>
         <div>
-          <div style="font-size:14px;font-weight:700;color:#E05252;letter-spacing:-.01em;margin-bottom:4px">Hormuz: Severely Restricted</div>
-          <div style="font-size:10px;color:#5A5A52;line-height:1.45">Current reality &bull; Day 146 &bull; ~10/day AIS-verified &bull; re-escalation</div>
+          <div style="font-size:14px;font-weight:700;color:var(--c-red-hi);letter-spacing:-.01em;margin-bottom:4px">Hormuz: Severely Restricted</div>
+          <div style="font-size:10px;color:var(--c-tx1);line-height:1.45">Current reality &bull; Day 146 &bull; ~10/day AIS-verified &bull; re-escalation</div>
         </div>
         <div style="display:flex;flex-wrap:wrap;gap:5px;margin-top:auto">
-          <span style="font-size:8px;font-weight:700;letter-spacing:.1em;padding:2px 8px;border-radius:3px;color:#E05252;background:rgba(224,82,82,0.1);border:1px solid #E05252;white-space:nowrap">~6-10/day AIS (IMF PortWatch Jul 21)</span>
-          <span style="font-size:8px;font-weight:700;letter-spacing:.1em;padding:2px 8px;border-radius:3px;color:#C98A2E;background:rgba(201,138,46,0.1);border:1px solid #C98A2E;white-space:nowrap">DARK FLEET ACTIVE</span>
-          <span style="font-size:8px;font-weight:700;letter-spacing:.1em;padding:2px 8px;border-radius:3px;color:#C98A2E;background:rgba(201,138,46,0.1);border:1px solid #C98A2E;white-space:nowrap">WESTERN CARRIERS OUT</span>
+          <span style="font-size:8px;font-weight:700;letter-spacing:.1em;padding:2px 8px;border-radius:3px;color:var(--c-red-hi);background:rgba(224,82,82,0.1);border:1px solid var(--c-red-hi);white-space:nowrap">~6-10/day AIS (IMF PortWatch Jul 21)</span>
+          <span style="font-size:8px;font-weight:700;letter-spacing:.1em;padding:2px 8px;border-radius:3px;color:var(--c-amber-hi);background:rgba(201,138,46,0.1);border:1px solid #C98A2E;white-space:nowrap">DARK FLEET ACTIVE</span>
+          <span style="font-size:8px;font-weight:700;letter-spacing:.1em;padding:2px 8px;border-radius:3px;color:var(--c-amber-hi);background:rgba(201,138,46,0.1);border:1px solid #C98A2E;white-space:nowrap">WESTERN CARRIERS OUT</span>
         </div>
       </div>
 
-      <div class="scard" id="sc-2" onclick="selectScenario(2)" style="--sc-color:#fbbf24;background:#111110;border:1px solid #1a2535;border-radius:6px;padding:20px 18px;display:flex;flex-direction:column;gap:10px;min-height:148px;cursor:pointer;transition:border-color .15s">
+      <div class="scard" id="sc-2" onclick="selectScenario(2)" style="--sc-color:var(--c-amber-hi);background:var(--c-s1);border:1px solid var(--c-bd0);border-radius:6px;padding:20px 18px;display:flex;flex-direction:column;gap:10px;min-height:148px;cursor:pointer;transition:border-color .15s">
         <div style="font-size:20px;line-height:1">&#9875;</div>
         <div>
-          <div style="font-size:14px;font-weight:700;color:#F2F1ED;letter-spacing:-.01em;margin-bottom:4px">Hormuz: IRGC Escort Only</div>
-          <div style="font-size:10px;color:#5A5A52;line-height:1.45">Friendly-flag passage &bull; ~25 transits/day</div>
+          <div style="font-size:14px;font-weight:700;color:var(--c-tx0);letter-spacing:-.01em;margin-bottom:4px">Hormuz: IRGC Escort Only</div>
+          <div style="font-size:10px;color:var(--c-tx1);line-height:1.45">Friendly-flag passage &bull; ~25 transits/day</div>
         </div>
         <div style="display:flex;flex-wrap:wrap;gap:5px;margin-top:auto">
-          <span style="font-size:8px;font-weight:700;letter-spacing:.1em;padding:2px 8px;border-radius:3px;color:#C9AE4E;background:rgba(194,162,62,0.1);border:1px solid #C9AE4E;white-space:nowrap">CHINA/INDIA/TURKEY</span>
-          <span style="font-size:8px;font-weight:700;letter-spacing:.1em;padding:2px 8px;border-radius:3px;color:#C9AE4E;background:rgba(194,162,62,0.1);border:1px solid #C9AE4E;white-space:nowrap">WAR-RISK 5x</span>
+          <span style="font-size:8px;font-weight:700;letter-spacing:.1em;padding:2px 8px;border-radius:3px;color:var(--c-amber-hi);background:rgba(194,162,62,0.1);border:1px solid #C9AE4E;white-space:nowrap">CHINA/INDIA/TURKEY</span>
+          <span style="font-size:8px;font-weight:700;letter-spacing:.1em;padding:2px 8px;border-radius:3px;color:var(--c-amber-hi);background:rgba(194,162,62,0.1);border:1px solid #C9AE4E;white-space:nowrap">WAR-RISK 5x</span>
         </div>
       </div>
 
-      <div class="scard" id="sc-3" onclick="selectScenario(3)" style="--sc-color:#f0c84b;background:#111110;border:1px solid #1a2535;border-radius:6px;padding:20px 18px;display:flex;flex-direction:column;gap:10px;min-height:148px;cursor:pointer;transition:border-color .15s">
+      <div class="scard" id="sc-3" onclick="selectScenario(3)" style="--sc-color:var(--c-amber-hi);background:var(--c-s1);border:1px solid var(--c-bd0);border-radius:6px;padding:20px 18px;display:flex;flex-direction:column;gap:10px;min-height:148px;cursor:pointer;transition:border-color .15s">
         <div style="font-size:20px;line-height:1">&#9868;</div>
         <div>
-          <div style="font-size:14px;font-weight:700;color:#F2F1ED;letter-spacing:-.01em;margin-bottom:4px">Hormuz: Negotiated Partial</div>
-          <div style="font-size:10px;color:#5A5A52;line-height:1.45">Ceasefire &bull; neutral corridor &bull; ~50 transits/day</div>
+          <div style="font-size:14px;font-weight:700;color:var(--c-tx0);letter-spacing:-.01em;margin-bottom:4px">Hormuz: Negotiated Partial</div>
+          <div style="font-size:10px;color:var(--c-tx1);line-height:1.45">Ceasefire &bull; neutral corridor &bull; ~50 transits/day</div>
         </div>
         <div style="display:flex;flex-wrap:wrap;gap:5px;margin-top:auto">
-          <span style="font-size:8px;font-weight:700;letter-spacing:.1em;padding:2px 8px;border-radius:3px;color:#5FA86A;background:rgba(95,168,106,0.1);border:1px solid #5FA86A;white-space:nowrap">ALL FLAGS ALLOWED</span>
-          <span style="font-size:8px;font-weight:700;letter-spacing:.1em;padding:2px 8px;border-radius:3px;color:#C9AE4E;background:rgba(194,162,62,0.1);border:1px solid #C9AE4E;white-space:nowrap">WAR-RISK 3x</span>
+          <span style="font-size:8px;font-weight:700;letter-spacing:.1em;padding:2px 8px;border-radius:3px;color:var(--c-green-hi);background:rgba(95,168,106,0.1);border:1px solid var(--c-green-hi);white-space:nowrap">ALL FLAGS ALLOWED</span>
+          <span style="font-size:8px;font-weight:700;letter-spacing:.1em;padding:2px 8px;border-radius:3px;color:var(--c-amber-hi);background:rgba(194,162,62,0.1);border:1px solid #C9AE4E;white-space:nowrap">WAR-RISK 3x</span>
         </div>
       </div>
 
-      <div class="scard" id="sc-4" onclick="selectScenario(4)" style="--sc-color:#3dd68c;background:#111110;border:1px solid #1a2535;border-radius:6px;padding:20px 18px;display:flex;flex-direction:column;gap:10px;min-height:148px;cursor:pointer;transition:border-color .15s">
+      <div class="scard" id="sc-4" onclick="selectScenario(4)" style="--sc-color:var(--c-green-hi);background:var(--c-s1);border:1px solid var(--c-bd0);border-radius:6px;padding:20px 18px;display:flex;flex-direction:column;gap:10px;min-height:148px;cursor:pointer;transition:border-color .15s">
         <div style="font-size:20px;line-height:1">&#128260;</div>
         <div>
-          <div style="font-size:14px;font-weight:700;color:#F2F1ED;letter-spacing:-.01em;margin-bottom:4px">Post-Crisis Recovery</div>
-          <div style="font-size:10px;color:#5A5A52;line-height:1.45">Hormuz reopened &bull; risk memory active &bull; ~85 transits/day</div>
+          <div style="font-size:14px;font-weight:700;color:var(--c-tx0);letter-spacing:-.01em;margin-bottom:4px">Post-Crisis Recovery</div>
+          <div style="font-size:10px;color:var(--c-tx1);line-height:1.45">Hormuz reopened &bull; risk memory active &bull; ~85 transits/day</div>
         </div>
         <div style="display:flex;flex-wrap:wrap;gap:5px;margin-top:auto">
-          <span style="font-size:8px;font-weight:700;letter-spacing:.1em;padding:2px 8px;border-radius:3px;color:#5FA86A;background:rgba(95,168,106,0.1);border:1px solid #5FA86A;white-space:nowrap">~70% CARRIERS RESUMED</span>
-          <span style="font-size:8px;font-weight:700;letter-spacing:.1em;padding:2px 8px;border-radius:3px;color:#C9AE4E;background:rgba(194,162,62,0.1);border:1px solid #C9AE4E;white-space:nowrap">WAR-RISK 1.8x</span>
+          <span style="font-size:8px;font-weight:700;letter-spacing:.1em;padding:2px 8px;border-radius:3px;color:var(--c-green-hi);background:rgba(95,168,106,0.1);border:1px solid var(--c-green-hi);white-space:nowrap">~70% CARRIERS RESUMED</span>
+          <span style="font-size:8px;font-weight:700;letter-spacing:.1em;padding:2px 8px;border-radius:3px;color:var(--c-amber-hi);background:rgba(194,162,62,0.1);border:1px solid #C9AE4E;white-space:nowrap">WAR-RISK 1.8x</span>
         </div>
       </div>
 
-      <div class="scard" id="sc-5" onclick="selectScenario(5)" style="--sc-color:#e74c3c;background:#111110;border:1px solid #1a2535;border-radius:6px;padding:20px 18px;display:flex;flex-direction:column;gap:10px;min-height:148px;cursor:pointer;transition:border-color .15s">
+      <div class="scard" id="sc-5" onclick="selectScenario(5)" style="--sc-color:var(--c-red-hi);background:var(--c-s1);border:1px solid var(--c-bd0);border-radius:6px;padding:20px 18px;display:flex;flex-direction:column;gap:10px;min-height:148px;cursor:pointer;transition:border-color .15s">
         <div style="font-size:20px;line-height:1">&#128683;</div>
         <div>
-          <div style="font-size:14px;font-weight:700;color:#F2F1ED;letter-spacing:-.01em;margin-bottom:4px">Bab el-Mandeb Closed</div>
-          <div style="font-size:10px;color:#5A5A52;line-height:1.45">Hormuz open &bull; Houthis escalate &bull; Red Sea blocked</div>
+          <div style="font-size:14px;font-weight:700;color:var(--c-tx0);letter-spacing:-.01em;margin-bottom:4px">Bab el-Mandeb Closed</div>
+          <div style="font-size:10px;color:var(--c-tx1);line-height:1.45">Hormuz open &bull; Houthis escalate &bull; Red Sea blocked</div>
         </div>
         <div style="display:flex;flex-wrap:wrap;gap:5px;margin-top:auto">
-          <span style="font-size:8px;font-weight:700;letter-spacing:.1em;padding:2px 8px;border-radius:3px;color:#C9AE4E;background:rgba(194,162,62,0.1);border:1px solid #C9AE4E;white-space:nowrap">ASIA&ndash;GCC: CAPE ONLY</span>
-          <span style="font-size:8px;font-weight:700;letter-spacing:.1em;padding:2px 8px;border-radius:3px;color:#C9AE4E;background:rgba(194,162,62,0.1);border:1px solid #C9AE4E;white-space:nowrap">EU&ndash;JEDDAH: SUEZ VIABLE</span>
+          <span style="font-size:8px;font-weight:700;letter-spacing:.1em;padding:2px 8px;border-radius:3px;color:var(--c-amber-hi);background:rgba(194,162,62,0.1);border:1px solid #C9AE4E;white-space:nowrap">ASIA&ndash;GCC: CAPE ONLY</span>
+          <span style="font-size:8px;font-weight:700;letter-spacing:.1em;padding:2px 8px;border-radius:3px;color:var(--c-amber-hi);background:rgba(194,162,62,0.1);border:1px solid #C9AE4E;white-space:nowrap">EU&ndash;JEDDAH: SUEZ VIABLE</span>
         </div>
       </div>
 
-      <div class="scard" id="sc-6" onclick="selectScenario(6)" style="--sc-color:#e74c3c;background:#111110;border:1px solid #1a2535;border-radius:6px;padding:20px 18px;display:flex;flex-direction:column;gap:10px;min-height:148px;cursor:pointer;transition:border-color .15s">
+      <div class="scard" id="sc-6" onclick="selectScenario(6)" style="--sc-color:var(--c-red-hi);background:var(--c-s1);border:1px solid var(--c-bd0);border-radius:6px;padding:20px 18px;display:flex;flex-direction:column;gap:10px;min-height:148px;cursor:pointer;transition:border-color .15s">
         <div style="font-size:20px;line-height:1">&#9888;</div>
         <div>
-          <div style="font-size:14px;font-weight:700;color:#F2F1ED;letter-spacing:-.01em;margin-bottom:4px">Dual Closure</div>
-          <div style="font-size:10px;color:#5A5A52;line-height:1.45">Hormuz + Bab el-Mandeb both closed &bull; worst case</div>
+          <div style="font-size:14px;font-weight:700;color:var(--c-tx0);letter-spacing:-.01em;margin-bottom:4px">Dual Closure</div>
+          <div style="font-size:10px;color:var(--c-tx1);line-height:1.45">Hormuz + Bab el-Mandeb both closed &bull; worst case</div>
         </div>
         <div style="display:flex;flex-wrap:wrap;gap:5px;margin-top:auto">
-          <span style="font-size:8px;font-weight:700;letter-spacing:.1em;padding:2px 8px;border-radius:3px;color:#E05252;background:rgba(224,82,82,0.1);border:1px solid #E05252;white-space:nowrap">ASIA VIA CAPE ONLY</span>
-          <span style="font-size:8px;font-weight:700;letter-spacing:.1em;padding:2px 8px;border-radius:3px;color:#C9AE4E;background:rgba(194,162,62,0.1);border:1px solid #C9AE4E;white-space:nowrap">EU&ndash;JEDDAH VIA SUEZ</span>
-          <span style="font-size:8px;font-weight:700;letter-spacing:.1em;padding:2px 8px;border-radius:3px;color:#E05252;background:rgba(224,82,82,0.1);border:1px solid #E05252;white-space:nowrap">EXTREME COST</span>
+          <span style="font-size:8px;font-weight:700;letter-spacing:.1em;padding:2px 8px;border-radius:3px;color:var(--c-red-hi);background:rgba(224,82,82,0.1);border:1px solid var(--c-red-hi);white-space:nowrap">ASIA VIA CAPE ONLY</span>
+          <span style="font-size:8px;font-weight:700;letter-spacing:.1em;padding:2px 8px;border-radius:3px;color:var(--c-amber-hi);background:rgba(194,162,62,0.1);border:1px solid #C9AE4E;white-space:nowrap">EU&ndash;JEDDAH VIA SUEZ</span>
+          <span style="font-size:8px;font-weight:700;letter-spacing:.1em;padding:2px 8px;border-radius:3px;color:var(--c-red-hi);background:rgba(224,82,82,0.1);border:1px solid var(--c-red-hi);white-space:nowrap">EXTREME COST</span>
         </div>
       </div>
 
     </div>
 
     <!-- STEP 2 -->
-    <div style="font-size:9px;font-weight:700;letter-spacing:.18em;color:#4A4A44;margin-bottom:12px">STEP 2 &mdash; SHIPMENT PARAMETERS</div>
-    <div style="background:#111110;border:1px solid #1a2535;border-radius:6px;padding:22px 20px;margin-bottom:14px">
+    <div style="font-size:9px;font-weight:700;letter-spacing:.18em;color:var(--c-tx2);margin-bottom:12px">STEP 2 &mdash; SHIPMENT PARAMETERS</div>
+    <div style="background:var(--c-s1);border:1px solid var(--c-bd0);border-radius:6px;padding:22px 20px;margin-bottom:14px">
       <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:16px">
         <div>
-          <div style="font-size:9px;font-weight:700;letter-spacing:.14em;color:#4A4A44;margin-bottom:8px">ORIGIN PORT</div>
-          <select id="inp-origin" onchange="simAutoRun()" style="background:#0A0A0A;border:1px solid #2A2A26;color:#F2F1ED;font-family:'JetBrains Mono',monospace;font-size:12px;border-radius:4px;padding:10px 12px;width:100%;outline:none">
+          <div style="font-size:9px;font-weight:700;letter-spacing:.14em;color:var(--c-tx2);margin-bottom:8px">ORIGIN PORT</div>
+          <select id="inp-origin" onchange="simAutoRun()" style="background:var(--c-s0);border:1px solid var(--c-bd0);color:var(--c-tx0);font-family:'JetBrains Mono',monospace;font-size:12px;border-radius:4px;padding:10px 12px;width:100%;outline:none">
             <option value="SHA">Shanghai (SHA)</option>
             <option value="HAM">Hamburg (HAM)</option>
             <option value="ROT">Rotterdam (ROT)</option>
@@ -5872,8 +5900,8 @@ function gccSidebarNav(name) {
           </select>
         </div>
         <div>
-          <div style="font-size:9px;font-weight:700;letter-spacing:.14em;color:#4A4A44;margin-bottom:8px">FINAL DESTINATION (GCC)</div>
-          <select id="inp-dest" onchange="simAutoRun()" style="background:#0A0A0A;border:1px solid #2A2A26;color:#F2F1ED;font-family:'JetBrains Mono',monospace;font-size:12px;border-radius:4px;padding:10px 12px;width:100%;outline:none">
+          <div style="font-size:9px;font-weight:700;letter-spacing:.14em;color:var(--c-tx2);margin-bottom:8px">FINAL DESTINATION (GCC)</div>
+          <select id="inp-dest" onchange="simAutoRun()" style="background:var(--c-s0);border:1px solid var(--c-bd0);color:var(--c-tx0);font-family:'JetBrains Mono',monospace;font-size:12px;border-radius:4px;padding:10px 12px;width:100%;outline:none">
             <option value="DXB">Dubai / Jebel Ali</option>
             <option value="RUH">Riyadh</option>
             <option value="DMM">Dammam / Khobar</option>
@@ -5884,12 +5912,12 @@ function gccSidebarNav(name) {
           </select>
         </div>
         <div>
-          <div style="font-size:9px;font-weight:700;letter-spacing:.14em;color:#4A4A44;margin-bottom:8px">VOLUME (FEU / MONTH)</div>
-          <input type="number" id="inp-teu" value="50" min="1" max="10000" onchange="simAutoRun()" style="background:#0A0A0A;border:1px solid #2A2A26;color:#F2F1ED;font-family:'JetBrains Mono',monospace;font-size:12px;border-radius:4px;padding:10px 12px;width:100%;outline:none"/>
+          <div style="font-size:9px;font-weight:700;letter-spacing:.14em;color:var(--c-tx2);margin-bottom:8px">VOLUME (FEU / MONTH)</div>
+          <input type="number" id="inp-teu" value="50" min="1" max="10000" onchange="simAutoRun()" style="background:var(--c-s0);border:1px solid var(--c-bd0);color:var(--c-tx0);font-family:'JetBrains Mono',monospace;font-size:12px;border-radius:4px;padding:10px 12px;width:100%;outline:none"/>
         </div>
         <div>
-          <div style="font-size:9px;font-weight:700;letter-spacing:.14em;color:#4A4A44;margin-bottom:8px">COMMODITY TYPE</div>
-          <select id="inp-commodity" onchange="simAutoRun()" style="background:#0A0A0A;border:1px solid #2A2A26;color:#F2F1ED;font-family:'JetBrains Mono',monospace;font-size:12px;border-radius:4px;padding:10px 12px;width:100%;outline:none">
+          <div style="font-size:9px;font-weight:700;letter-spacing:.14em;color:var(--c-tx2);margin-bottom:8px">COMMODITY TYPE</div>
+          <select id="inp-commodity" onchange="simAutoRun()" style="background:var(--c-s0);border:1px solid var(--c-bd0);color:var(--c-tx0);font-family:'JetBrains Mono',monospace;font-size:12px;border-radius:4px;padding:10px 12px;width:100%;outline:none">
             <option value="general">General / mixed cargo</option>
             <option value="consumer">Consumer goods / FMCG</option>
             <option value="auto">Automotive parts</option>
@@ -5902,21 +5930,21 @@ function gccSidebarNav(name) {
       </div>
       <div style="display:flex;align-items:center;gap:16px;flex-wrap:wrap">
         <div>
-          <div style="font-size:9px;font-weight:700;letter-spacing:.14em;color:#4A4A44;margin-bottom:8px">SHIPMENT DATE</div>
+          <div style="font-size:9px;font-weight:700;letter-spacing:.14em;color:var(--c-tx2);margin-bottom:8px">SHIPMENT DATE</div>
           <input type="date" id="inp-shipdate"
                  onchange="updateSeasonalBadge(); simAutoRun();"
                  oninput="updateSeasonalBadge(); simAutoRun();"
-                 style="background:#0A0A0A;border:1px solid #2A2A26;color:#F2F1ED;font-family:'JetBrains Mono',monospace;font-size:12px;border-radius:4px;padding:10px 12px;width:180px;outline:none"/>
+                 style="background:var(--c-s0);border:1px solid var(--c-bd0);color:var(--c-tx0);font-family:'JetBrains Mono',monospace;font-size:12px;border-radius:4px;padding:10px 12px;width:180px;outline:none"/>
         </div>
         <div id="seasonal-badge-wrap" style="display:flex;flex-direction:column;gap:3px;padding-top:22px">
-          <span id="seasonal-label" style="font-size:9px;font-weight:700;color:#C9AE4E"></span>
-          <span id="seasonal-desc" style="font-size:9px;color:#4A4A44;max-width:320px;line-height:1.5"></span>
+          <span id="seasonal-label" style="font-size:9px;font-weight:700;color:var(--c-amber-hi)"></span>
+          <span id="seasonal-desc" style="font-size:9px;color:var(--c-tx2);max-width:320px;line-height:1.5"></span>
         </div>
       </div>
     </div>
 
     <!-- RUN BUTTON -->
-    <div style="background:#C2A23E;border-radius:5px;padding:16px;text-align:center;font-size:14px;font-weight:700;letter-spacing:.16em;color:#0A0A0A;cursor:pointer;margin-bottom:28px;display:flex;align-items:center;justify-content:center;gap:10px" onclick="runSimulator()">
+    <div style="background:var(--c-amber-hi);border-radius:5px;padding:16px;text-align:center;font-size:14px;font-weight:700;letter-spacing:.16em;color:#0A0A0A;cursor:pointer;margin-bottom:28px;display:flex;align-items:center;justify-content:center;gap:10px" onclick="runSimulator()">
       <span>&#9654;</span> RUN SIMULATION
       <span id="sim-status" style="font-size:10px;font-weight:400;letter-spacing:.06em;opacity:.6;margin-left:8px"></span>
     </div>
@@ -5943,34 +5971,34 @@ function gccSidebarNav(name) {
       <!-- SCENARIO SUMMARY BAR -->
       <div id="sc-banner" style="border:1px solid #2A1414;border-radius:6px;padding:16px 22px;margin-bottom:20px;display:flex;align-items:center;gap:0;background:#130808">
         <div style="padding-right:28px;border-right:1px solid #2A1414;flex-shrink:0">
-          <div class="scenario-bar-name" id="scb-name" style="font-size:14px;font-weight:700;letter-spacing:-.01em;color:#E05252;margin-bottom:4px">&#x2014;</div>
+          <div class="scenario-bar-name" id="scb-name" style="font-size:14px;font-weight:700;letter-spacing:-.01em;color:var(--c-red-hi);margin-bottom:4px">&#x2014;</div>
           <div class="scenario-bar-state" id="scb-state" style="font-size:10px;color:#6A3232;line-height:1.4">&#x2014;</div>
         </div>
         <div class="scenario-bar-metrics" style="display:flex;align-items:center;gap:36px;padding:0 28px;flex:1;flex-wrap:wrap">
           <div class="sbm">
             <div style="font-size:9px;font-weight:700;letter-spacing:.14em;color:#4A2222;margin-bottom:4px">TRANSITS/DAY</div>
-            <div class="sbm-val" id="scb-transits" style="font-size:28px;font-weight:700;color:#F2F1ED;line-height:1;letter-spacing:-.02em">&#x2014;</div>
+            <div class="sbm-val" id="scb-transits" style="font-size:28px;font-weight:700;color:var(--c-tx0);line-height:1;letter-spacing:-.02em">&#x2014;</div>
           </div>
           <div class="sbm">
             <div style="font-size:9px;font-weight:700;letter-spacing:.14em;color:#4A2222;margin-bottom:4px">BRENT $/BBL</div>
-            <div class="sbm-val" id="scb-brent" style="font-size:28px;font-weight:700;color:#F2F1ED;line-height:1;letter-spacing:-.02em">&#x2014;</div>
+            <div class="sbm-val" id="scb-brent" style="font-size:28px;font-weight:700;color:var(--c-tx0);line-height:1;letter-spacing:-.02em">&#x2014;</div>
           </div>
           <div class="sbm">
             <div style="font-size:9px;font-weight:700;letter-spacing:.14em;color:#4A2222;margin-bottom:4px">WAR-RISK</div>
-            <div class="sbm-val" id="scb-warrisk" style="font-size:28px;font-weight:700;color:#E05252;line-height:1;letter-spacing:-.02em">&#x2014;</div>
+            <div class="sbm-val" id="scb-warrisk" style="font-size:28px;font-weight:700;color:var(--c-red-hi);line-height:1;letter-spacing:-.02em">&#x2014;</div>
           </div>
           <div class="sbm" style="flex:1">
             <div style="font-size:9px;font-weight:700;letter-spacing:.14em;color:#4A2222;margin-bottom:4px">PRIMARY ROUTE</div>
-            <div class="sbm-val" id="scb-reroute" style="font-size:15px;font-weight:700;color:#F2F1ED;line-height:1.2">&#x2014;</div>
+            <div class="sbm-val" id="scb-reroute" style="font-size:15px;font-weight:700;color:var(--c-tx0);line-height:1.2">&#x2014;</div>
           </div>
         </div>
       </div>
 
       <!-- MODEL VARIABLES -->
-      <div class="sim-panel" id="reg-panel" style="background:#111110;border:1px solid #1a2535;border-radius:6px;margin-bottom:20px;overflow:hidden;padding:0">
-        <div style="padding:14px 20px;border-bottom:1px solid #1A1A18">
-          <div class="sim-panel-title" style="font-size:11px;font-weight:700;letter-spacing:.14em;color:#8B72C8;margin-bottom:4px">&#402; SPOT INDEX REGRESSION &mdash; MODEL VARIABLES</div>
-          <div class="sim-panel-sub" style="font-size:10px;color:#4A4A44;line-height:1.5;margin-bottom:0">Rate = Base &times; [ 1 + &beta;&#8321;(B&minus;72) + &beta;&#8322;&middot;(U&minus;72%)^p + &beta;&#8323;(D&divide;100) + &beta;&#8324;(W&minus;1) + &beta;&#8325;&middot;C ] &times; CommoditySurcharge &nbsp;&bull;&nbsp; <span style="color:#5FA86A">auto-calibrated</span> &nbsp;&bull;&nbsp; Red Sea 2024 backtest MAE &lt;3%</div>
+      <div class="sim-panel" id="reg-panel" style="background:var(--c-s1);border:1px solid var(--c-bd0);border-radius:6px;margin-bottom:20px;overflow:hidden;padding:0">
+        <div style="padding:14px 20px;border-bottom:1px solid var(--c-bd0)">
+          <div class="sim-panel-title" style="font-size:11px;font-weight:700;letter-spacing:.14em;color:var(--c-purple);margin-bottom:4px">&#402; SPOT INDEX REGRESSION &mdash; MODEL VARIABLES</div>
+          <div class="sim-panel-sub" style="font-size:10px;color:var(--c-tx2);line-height:1.5;margin-bottom:0">Rate = Base &times; [ 1 + &beta;&#8321;(B&minus;72) + &beta;&#8322;&middot;(U&minus;72%)^p + &beta;&#8323;(D&divide;100) + &beta;&#8324;(W&minus;1) + &beta;&#8325;&middot;C ] &times; CommoditySurcharge &nbsp;&bull;&nbsp; <span style="color:var(--c-green-hi)">auto-calibrated</span> &nbsp;&bull;&nbsp; Red Sea 2024 backtest MAE &lt;3%</div>
         </div>
         <div id="reg-vars-table" style="padding:0 20px"></div>
       </div>
@@ -5979,52 +6007,52 @@ function gccSidebarNav(name) {
       <div class="sim-views" style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:20px">
 
         <!-- VIEW 1: Route Cost Matrix -->
-        <div class="sim-panel" style="background:#111110;border:1px solid #1a2535;border-radius:6px;overflow:hidden;padding:0">
-          <div style="padding:13px 16px 10px;border-bottom:1px solid #1A1A18">
-            <div class="sim-panel-title" style="font-size:11px;font-weight:700;letter-spacing:.12em;color:#C9AE4E;margin-bottom:3px">&#9671; VIEW 1 &mdash; ROUTE COST MATRIX</div>
-            <div class="sim-panel-sub" id="v1-sub" style="font-size:9px;color:#4A4A44;margin-bottom:0">Routing options ranked by total sea freight cost per FEU &bull; origin to GCC entry port</div>
+        <div class="sim-panel" style="background:var(--c-s1);border:1px solid var(--c-bd0);border-radius:6px;overflow:hidden;padding:0">
+          <div style="padding:13px 16px 10px;border-bottom:1px solid var(--c-bd0)">
+            <div class="sim-panel-title" style="font-size:11px;font-weight:700;letter-spacing:.12em;color:var(--c-amber-hi);margin-bottom:3px">&#9671; VIEW 1 &mdash; ROUTE COST MATRIX</div>
+            <div class="sim-panel-sub" id="v1-sub" style="font-size:9px;color:var(--c-tx2);margin-bottom:0">Routing options ranked by total sea freight cost per FEU &bull; origin to GCC entry port</div>
           </div>
           <div style="padding:0 16px">
-            <div style="display:grid;grid-template-columns:24px 1fr 90px 72px 72px 72px 64px;gap:0;border-bottom:1px solid #1A1A18;padding:8px 0">
+            <div style="display:grid;grid-template-columns:24px 1fr 90px 72px 72px 72px 64px;gap:0;border-bottom:1px solid var(--c-bd0);padding:8px 0">
               <span></span>
-              <span style="font-size:8px;font-weight:700;letter-spacing:.12em;color:#4A4A44">ROUTE</span>
-              <span style="font-size:8px;font-weight:700;letter-spacing:.12em;color:#4A4A44">VIA</span>
-              <span style="font-size:8px;font-weight:700;letter-spacing:.12em;color:#4A4A44">$/FEU</span>
-              <span style="font-size:8px;font-weight:700;letter-spacing:.12em;color:#4A4A44">DAYS</span>
-              <span style="font-size:8px;font-weight:700;letter-spacing:.12em;color:#4A4A44">VS PRE</span>
-              <span style="font-size:8px;font-weight:700;letter-spacing:.12em;color:#4A4A44;text-align:right">AVAIL</span>
+              <span style="font-size:8px;font-weight:700;letter-spacing:.12em;color:var(--c-tx2)">ROUTE</span>
+              <span style="font-size:8px;font-weight:700;letter-spacing:.12em;color:var(--c-tx2)">VIA</span>
+              <span style="font-size:8px;font-weight:700;letter-spacing:.12em;color:var(--c-tx2)">$/FEU</span>
+              <span style="font-size:8px;font-weight:700;letter-spacing:.12em;color:var(--c-tx2)">DAYS</span>
+              <span style="font-size:8px;font-weight:700;letter-spacing:.12em;color:var(--c-tx2)">VS PRE</span>
+              <span style="font-size:8px;font-weight:700;letter-spacing:.12em;color:var(--c-tx2);text-align:right">AVAIL</span>
             </div>
             <div id="route-matrix-body"></div>
           </div>
-          <div style="padding:8px 16px;border-top:1px solid #1A1A18;display:flex;align-items:center;justify-content:space-between;font-size:9px;color:#2A2A26;letter-spacing:.04em">
+          <div style="padding:8px 16px;border-top:1px solid var(--c-bd0);display:flex;align-items:center;justify-content:space-between;font-size:9px;color:var(--c-tx2);letter-spacing:.04em">
             <span>SeaRates spot + Freightos all-in Seabay &middot; Drewry WCI anchor &middot; recal. Jun 2026 &middot; scenario-adjusted</span>
-            <span style="border:1px solid #2A2A26;padding:2px 8px;border-radius:3px;color:#8B72C8;font-size:8px;letter-spacing:.08em;white-space:nowrap">POWER-LAW MODEL &middot; 2026-06-04</span>
+            <span style="border:1px solid #2A2A26;padding:2px 8px;border-radius:3px;color:var(--c-purple);font-size:8px;letter-spacing:.08em;white-space:nowrap">POWER-LAW MODEL &middot; 2026-06-04</span>
           </div>
         </div>
 
         <!-- VIEW 2: End-to-End Landed Cost -->
-        <div class="sim-panel" style="background:#111110;border:1px solid #1a2535;border-radius:6px;overflow:hidden;padding:0">
-          <div style="padding:13px 16px 10px;border-bottom:1px solid #1A1A18">
-            <div class="sim-panel-title" style="font-size:11px;font-weight:700;letter-spacing:.12em;color:#C9AE4E;margin-bottom:3px">&#9672; VIEW 2 &mdash; END-TO-END LANDED COST</div>
-            <div class="sim-panel-sub" id="v2-sub" style="font-size:9px;color:#4A4A44;margin-bottom:0">Port of origin &rarr; final GCC city including sea + port + inland trucking</div>
+        <div class="sim-panel" style="background:var(--c-s1);border:1px solid var(--c-bd0);border-radius:6px;overflow:hidden;padding:0">
+          <div style="padding:13px 16px 10px;border-bottom:1px solid var(--c-bd0)">
+            <div class="sim-panel-title" style="font-size:11px;font-weight:700;letter-spacing:.12em;color:var(--c-amber-hi);margin-bottom:3px">&#9672; VIEW 2 &mdash; END-TO-END LANDED COST</div>
+            <div class="sim-panel-sub" id="v2-sub" style="font-size:9px;color:var(--c-tx2);margin-bottom:0">Port of origin &rarr; final GCC city including sea + port + inland trucking</div>
           </div>
-          <div id="v2-route-tabs" style="display:grid;grid-template-columns:repeat(4,1fr);border-bottom:1px solid #1A1A18"></div>
+          <div id="v2-route-tabs" style="display:grid;grid-template-columns:repeat(4,1fr);border-bottom:1px solid var(--c-bd0)"></div>
           <div class="cost-breakdown" id="cost-breakdown" style="padding:0 18px"></div>
-          <div style="padding:8px 16px;border-top:1px solid #1A1A18;display:flex;justify-content:space-between;font-size:9px;color:#2A2A26;letter-spacing:.04em">
+          <div style="padding:8px 16px;border-top:1px solid var(--c-bd0);display:flex;justify-content:space-between;font-size:9px;color:var(--c-tx2);letter-spacing:.04em">
             <span>Sea: SeaRates spot + Freightos all-in Seabay &middot; Port: DP World/DPMC &middot; Trucking: ZATCA/TruKKer benchmarks</span>
-            <span style="border:1px solid #2A2A26;padding:2px 8px;border-radius:3px;color:#8B72C8;font-size:8px;letter-spacing:.08em;white-space:nowrap">POWER-LAW MODEL &middot; 2026-06-04</span>
+            <span style="border:1px solid #2A2A26;padding:2px 8px;border-radius:3px;color:var(--c-purple);font-size:8px;letter-spacing:.08em;white-space:nowrap">POWER-LAW MODEL &middot; 2026-06-04</span>
           </div>
         </div>
 
       </div>
 
       <!-- ANNUAL IMPACT STRIP -->
-      <div id="annual-grid" style="display:grid;grid-template-columns:1fr 1.2fr 1fr 1fr;border:1px solid #1a2535;border-radius:6px;overflow:hidden;margin-bottom:20px"></div>
+      <div id="annual-grid" style="display:grid;grid-template-columns:1fr 1.2fr 1fr 1fr;border:1px solid var(--c-bd0);border-radius:6px;overflow:hidden;margin-bottom:20px"></div>
 
       <!-- VIEW 3: STRATEGIC IMPLICATIONS -->
-      <div class="sim-panel" style="background:#111110;border:1px solid #1a2535;border-radius:6px;padding:16px 18px;margin-bottom:14px">
-        <div class="sim-panel-title" style="font-size:11px;font-weight:700;letter-spacing:.14em;color:#C9AE4E;margin-bottom:4px">&#9651; VIEW 3 &mdash; STRATEGIC IMPLICATIONS</div>
-        <div class="sim-panel-sub" id="v3-sub" style="font-size:10px;color:#4A4A44;margin-bottom:14px;line-height:1.5">What this scenario means for GCC logistics, ports, trucking demand and key operators</div>
+      <div class="sim-panel" style="background:var(--c-s1);border:1px solid var(--c-bd0);border-radius:6px;padding:16px 18px;margin-bottom:14px">
+        <div class="sim-panel-title" style="font-size:11px;font-weight:700;letter-spacing:.14em;color:var(--c-amber-hi);margin-bottom:4px">&#9651; VIEW 3 &mdash; STRATEGIC IMPLICATIONS</div>
+        <div class="sim-panel-sub" id="v3-sub" style="font-size:10px;color:var(--c-tx2);margin-bottom:14px;line-height:1.5">What this scenario means for GCC logistics, ports, trucking demand and key operators</div>
         <div class="impl-grid" id="impl-grid" style="display:grid;grid-template-columns:1fr 1fr;gap:14px"></div>
         <div class="src" style="margin-top:10px"><span>AGBI &middot; straits.live &middot; DP World &middot; ZATCA &middot; scenario-modelled</span><span class="src-badge">modelled</span></div>
       </div>
@@ -6037,15 +6065,15 @@ function gccSidebarNav(name) {
         <table style="width:100%;border-collapse:collapse;font-family:'JetBrains Mono',monospace;font-size:8.5px;margin-top:10px">
           <thead>
             <tr style="border-bottom:1px solid #2a3340">
-              <th style="text-align:left;padding:5px 8px;color:#5a6878;font-weight:400">Period</th>
-              <th style="text-align:center;padding:5px 8px;color:#5a6878;font-weight:400">Brent</th>
-              <th style="text-align:center;padding:5px 8px;color:#5a6878;font-weight:400">Util</th>
-              <th style="text-align:center;padding:5px 8px;color:#5a6878;font-weight:400">Extra NM</th>
-              <th style="text-align:center;padding:5px 8px;color:#5a6878;font-weight:400">War&times;</th>
-              <th style="text-align:center;padding:5px 8px;color:#5a6878;font-weight:400">Cong.</th>
-              <th style="text-align:right;padding:5px 8px;color:#5a6878;font-weight:400">Predicted</th>
-              <th style="text-align:right;padding:5px 8px;color:#5a6878;font-weight:400">Actual FBX01</th>
-              <th style="text-align:right;padding:5px 8px;color:#5a6878;font-weight:400">Error</th>
+              <th style="text-align:left;padding:5px 8px;color:var(--c-tx2);font-weight:400">Period</th>
+              <th style="text-align:center;padding:5px 8px;color:var(--c-tx2);font-weight:400">Brent</th>
+              <th style="text-align:center;padding:5px 8px;color:var(--c-tx2);font-weight:400">Util</th>
+              <th style="text-align:center;padding:5px 8px;color:var(--c-tx2);font-weight:400">Extra NM</th>
+              <th style="text-align:center;padding:5px 8px;color:var(--c-tx2);font-weight:400">War&times;</th>
+              <th style="text-align:center;padding:5px 8px;color:var(--c-tx2);font-weight:400">Cong.</th>
+              <th style="text-align:right;padding:5px 8px;color:var(--c-tx2);font-weight:400">Predicted</th>
+              <th style="text-align:right;padding:5px 8px;color:var(--c-tx2);font-weight:400">Actual FBX01</th>
+              <th style="text-align:right;padding:5px 8px;color:var(--c-tx2);font-weight:400">Error</th>
             </tr>
           </thead>
           <tbody id="backtest-body"></tbody>
@@ -6053,23 +6081,23 @@ function gccSidebarNav(name) {
 
         <div id="backtest-summary" style="margin-top:12px"></div>
 
-        <div style="margin-top:14px;padding:10px 12px;background:#0e1318;border-radius:4px;border:1px solid #2a3340">
+        <div style="margin-top:14px;padding:10px 12px;background:var(--c-s0);border-radius:4px;border:1px solid var(--c-bd0)">
           <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px">
             <div>
-              <div style="font-size:8px;font-weight:700;color:#a78bfa;letter-spacing:.08em;text-transform:uppercase">&#9670; Coefficient Optimizer</div>
-              <div style="font-size:8px;color:#5a6878;margin-top:2px">Grid search over ~23,500 combinations &bull; Pass 1: best linear fit &bull; Pass 2: non-linear &beta;&#8322; power law &bull; runs in &lt;10ms</div>
+              <div style="font-size:8px;font-weight:700;color:var(--c-purple);letter-spacing:.08em;text-transform:uppercase">&#9670; Coefficient Optimizer</div>
+              <div style="font-size:8px;color:var(--c-tx2);margin-top:2px">Grid search over ~23,500 combinations &bull; Pass 1: best linear fit &bull; Pass 2: non-linear &beta;&#8322; power law &bull; runs in &lt;10ms</div>
             </div>
             <button onclick="runOptimizer()" style="background:#a78bfa;color:#0d1117;font-family:'JetBrains Mono',monospace;font-size:8px;font-weight:700;border:none;padding:6px 14px;border-radius:3px;cursor:pointer;letter-spacing:.06em;text-transform:uppercase">&#9654; Run Optimizer</button>
           </div>
           <div id="optimizer-results" style="margin-top:10px"></div>
         </div>
 
-        <div style="margin-top:10px;padding:8px 10px;background:#0e1318;border-radius:3px;border-left:2px solid #e8673c">
-          <div style="font-size:8px;color:#e8673c;font-weight:700;letter-spacing:.08em;text-transform:uppercase;margin-bottom:4px">&#9888; Key Model Limitation Identified</div>
-          <div style="font-size:8px;color:#9aa8b8;line-height:1.6">The linear &beta;&#8322; (capacity utilisation) term systematically <strong style="color:#e8eaed">under-predicts peak-crisis rates by 15&ndash;25%</strong>. Real markets exhibit a <strong style="color:#e8eaed">convex / near-logistic</strong> rate curve as utilisation approaches 95&ndash;100% &mdash; the linear approximation diverges sharply at those extremes. Kalouptsidi (2014, <em>AER</em>) documents this non-linearity in bulk shipping; the same dynamic applies to container markets. A log-linear specification or a logistic utilisation term would reduce peak RMSE from ~14% to an estimated ~6&ndash;8%.</div>
+        <div style="margin-top:10px;padding:8px 10px;background:var(--c-s0);border-radius:3px;border-left:2px solid #e8673c">
+          <div style="font-size:8px;color:var(--c-red-hi);font-weight:700;letter-spacing:.08em;text-transform:uppercase;margin-bottom:4px">&#9888; Key Model Limitation Identified</div>
+          <div style="font-size:8px;color:var(--c-tx1);line-height:1.6">The linear &beta;&#8322; (capacity utilisation) term systematically <strong style="color:var(--c-tx0)">under-predicts peak-crisis rates by 15&ndash;25%</strong>. Real markets exhibit a <strong style="color:var(--c-tx0)">convex / near-logistic</strong> rate curve as utilisation approaches 95&ndash;100% &mdash; the linear approximation diverges sharply at those extremes. Kalouptsidi (2014, <em>AER</em>) documents this non-linearity in bulk shipping; the same dynamic applies to container markets. A log-linear specification or a logistic utilisation term would reduce peak RMSE from ~14% to an estimated ~6&ndash;8%.</div>
         </div>
 
-        <div style="margin-top:8px;font-size:7.5px;color:#5a6878;line-height:1.6">Literature: Notteboom &amp; Vernimmen (2009) <em>J.Transport Geography</em> (bunker &beta;) &bull; Kalouptsidi (2014) <em>AER</em> (capacity elasticity) &bull; IMF WP/24/058 &ldquo;Sailing into Headwinds: The Red Sea Disruption&rdquo; (detour &amp; war-risk) &bull; Drewry Port Performance Index 2021&ndash;22 (congestion pass-through) &bull; Hummels &amp; Schaur (2013) <em>AER</em> (time-value in trade)</div>
+        <div style="margin-top:8px;font-size:7.5px;color:var(--c-tx2);line-height:1.6">Literature: Notteboom &amp; Vernimmen (2009) <em>J.Transport Geography</em> (bunker &beta;) &bull; Kalouptsidi (2014) <em>AER</em> (capacity elasticity) &bull; IMF WP/24/058 &ldquo;Sailing into Headwinds: The Red Sea Disruption&rdquo; (detour &amp; war-risk) &bull; Drewry Port Performance Index 2021&ndash;22 (congestion pass-through) &bull; Hummels &amp; Schaur (2013) <em>AER</em> (time-value in trade)</div>
         <div class="src" style="margin-top:6px"><span>FBX01 actuals: Freightos Baltic Index &middot; Conditions: market consensus estimates</span><span class="src-badge">backtested</span></div>
       </div>
 

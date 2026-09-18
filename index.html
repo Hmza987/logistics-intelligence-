@@ -4264,137 +4264,227 @@ function gccSidebarNav(name) {
 <!-- ============================================================ TAB 0: SITUATION ROOM -->
 <div class="page" id="page-situation">
 
-  <!-- HEADER + HERO BANNER -->
-  <div class="gli-sr-header">
-    <div class="gli-sr-header-l">
-      <div class="gli-sr-date" id="sr-date">&mdash;</div>
-      <div class="gli-sr-title">GCC Logistics Situation Room</div>
-      <div class="gli-sr-sub">Real-time intelligence on trade flows, corridors and market developments across the Gulf.</div>
-    </div>
-    <div class="gli-sr-banner">
-      <video autoplay muted loop playsinline preload="auto"><source src="Assets/Videos/hero-hormuz-2.mp4" type="video/mp4"></video>
-      <div class="gli-sr-banner-ov"></div>
-      <div class="gli-sr-banner-tag">Read the Gulf<br>before it moves.</div>
-    </div>
-  </div>
-
-  <!-- KPI STRIP — real headline metrics from the live dataset -->
-  <div class="kpi-strip" style="padding:0 28px;margin-bottom:14px">
-    <div class="kpi-card r">
-      <div class="kpi-spark-row">
-        <div class="kpi-label">HORMUZ TRANSIT VOLUME</div>
+  <!-- ════════════════════ EXACT HANDOFF DESIGN — Situation Room (View 1) ════════════════════ -->
+  <div style="padding:22px 24px 0">
+    <div style="background:#141b23;border:1px solid #232e39;border-radius:8px;position:relative;overflow:hidden;padding:20px 24px 22px">
+      <div style="position:absolute;right:0;top:0;bottom:0;width:46%;min-width:280px;background:linear-gradient(100deg,#141b23 0%,rgba(20,27,35,.72) 26%,#1d2b38 60%,#243a4c 100%)"></div>
+      <div style="position:absolute;right:26px;top:50%;transform:translateY(-50%);max-width:240px;text-align:left">
+        <div style="font-family:var(--f-heading);font-weight:600;font-size:25px;line-height:1.16;color:var(--c-tx0)">Read the Gulf<br>before it moves.</div>
       </div>
-      <div class="kpi-spark-row">
-        <div><div class="kpi-value" style="font-size:34px;color:var(--c-red-hi)">-89%</div><div class="kpi-sub">vs 88/day baseline &middot; PortWatch</div></div>
-        <svg class="kpi-spark" width="64" height="30" viewBox="0 0 64 30"><path d="M2,8 L12,11 L22,10 L32,16 L42,21 L52,25 L62,27" fill="none" stroke="var(--c-red-hi)" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
-      </div>
-      <div class="kpi-src">IMF PortWatch &middot; Kpler</div>
-    </div>
-    <div class="kpi-card a">
-      <div class="kpi-label">BAB AL-MANDEB BLOCKADE</div>
-      <div class="kpi-spark-row">
-        <div><div class="kpi-value" style="font-size:34px;color:var(--c-amber-hi)">-56%</div><div class="kpi-sub">vs Jul 20 baseline</div></div>
-        <svg class="kpi-spark" width="64" height="30" viewBox="0 0 64 30"><path d="M2,9 L12,10 L22,15 L32,14 L42,19 L52,20 L62,22" fill="none" stroke="var(--c-amber-hi)" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
-      </div>
-      <div class="kpi-src">The National &middot; AIS</div>
-    </div>
-    <div class="kpi-card b">
-      <div class="kpi-label">FBX GLOBAL CONTAINER</div>
-      <div class="kpi-spark-row">
-        <div><div class="kpi-value" style="font-size:34px">$2,889</div><div class="kpi-sub">+46% from May &middot; per FEU</div></div>
-        <svg class="kpi-spark" width="64" height="30" viewBox="0 0 64 30"><path d="M2,24 L12,20 L22,17 L32,12 L42,9 L52,7 L62,5" fill="none" stroke="var(--c-blue-hi)" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
-      </div>
-      <div class="kpi-src">Freightos Baltic Index</div>
-    </div>
-    <div class="kpi-card a">
-      <div class="kpi-label">WAR-RISK INSURANCE</div>
-      <div class="kpi-spark-row">
-        <div><div class="kpi-value" style="font-size:34px;color:var(--c-amber-hi)">~3.2%</div><div class="kpi-sub">hull value &middot; +1.2pp post-strike</div></div>
-        <svg class="kpi-spark" width="64" height="30" viewBox="0 0 64 30"><path d="M2,22 L12,20 L22,18 L32,15 L42,10 L52,6 L62,4" fill="none" stroke="var(--c-amber-hi)" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
-      </div>
-      <div class="kpi-src">Lloyd's List &middot; LMA</div>
-    </div>
-  </div>
-
-  <!-- MAIN ROW — map | intelligence updates | ask panel -->
-  <div class="gli-sr-mainrow">
-    <div class="card" style="padding:14px 16px">
-      <div class="gli-maptabs">
-        <span class="gli-maptab active">Live Map</span>
-        <span class="gli-maptab" onclick="gccSidebarNav('trucking')">Key Corridors</span>
-        <span class="gli-maptab" onclick="gccSidebarNav('hormuz')">Chokepoints</span>
-        <span class="gli-maptab" onclick="gccSidebarNav('rates')">Port Congestion</span>
-      </div>
-      <iframe src="https://www.marinetraffic.com/en/ais/embed/zoom:6/centery:24.5/centerx:52.5/maptype:4/shownames:false/mmsi:0/shipid:0/fleet:/fleet_id:/showmenu:false/remember:false" width="100%" height="360" style="border:none;display:block;border-radius:4px" loading="lazy" allowfullscreen referrerpolicy="no-referrer-when-downgrade" title="MarineTraffic — Gulf region live AIS"></iframe>
-      <div class="src" style="margin-top:8px"><span>MarineTraffic live AIS &middot; auto-refresh</span><span class="src-badge">live</span></div>
-    </div>
-    <div class="card" style="padding:14px 16px">
-      <div class="gli-card-hd"><span class="gli-card-hd-title">Top Intelligence Updates</span><span class="gli-card-hd-link" onclick="gccSidebarNav('hormuz')">View all &rarr;</span></div>
-      <div class="news-item"><div class="news-dot" style="background:var(--c-red-hi)"></div><div><span class="news-tag tag-alert">ALERT</span><div class="news-text">IRGC enforces all-corridor control since Jun 25 southern-route crackdown &mdash; second merchant vessel struck Jun 27, MoU 60-day window under stress. <a href="https://www.lloydslist.com/hot-topics/strait-of-hormuz-crisis" target="_blank" rel="noopener" class="intel-src">Lloyd's List &#8599;</a></div></div></div>
-      <div class="news-item"><div class="news-dot" style="background:var(--c-blue-hi)"></div><div><span class="news-tag tag-info">INFO</span><div class="news-text">Vessel diversions to Oman +3,500% since closure (Windward) &mdash; Highway 95 goods via Ramlet Khaleh tripled to $830M in March. <a href="#" onclick="gccSidebarNav('hormuz');return false" class="intel-src">Windward &#8599;</a></div></div></div>
-      <div class="news-item"><div class="news-dot" style="background:var(--c-amber-hi)"></div><div><span class="news-tag tag-watch">WATCH</span><div class="news-text">UAE emergency trucking corridor via Oman: 2,400 trucks/day at Al Wajajah checkpoint, up from 850 pre-crisis. Border wait times 4&ndash;6 hrs. <a href="#" onclick="gccSidebarNav('trucking');return false" class="intel-src">UAE MoE &#8599;</a></div></div></div>
-      <div class="src"><span>GDELT &middot; NewsAPI &middot; live sources</span><span class="src-badge">live</span></div>
-    </div>
-    <div class="card" style="padding:14px 16px">
-      <div class="gli-card-hd"><span class="gli-card-hd-title">Ask Gulf Intelligence</span><span style="font-family:var(--f-mono);font-size:7px;font-weight:700;letter-spacing:.08em;color:var(--c-gold-hi);background:rgba(76,141,217,.12);border:1px solid rgba(76,141,217,.3);padding:2px 6px;border-radius:3px">BETA</span></div>
-      <div style="font-size:10.5px;color:var(--c-tx2);margin-bottom:10px;line-height:1.4">Get instant analysis from trusted data sources.</div>
-      <div class="gli-ask-chip">What is the current war-risk premium in the Red Sea?<svg width="12" height="12" viewBox="0 0 15 15" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><line x1="2.5" y1="7.5" x2="12.5" y2="7.5"/><polyline points="8,3 12.5,7.5 8,12"/></svg></div>
-      <div class="gli-ask-chip">Compare Jeddah vs. Sohar as alternative gateways<svg width="12" height="12" viewBox="0 0 15 15" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><line x1="2.5" y1="7.5" x2="12.5" y2="7.5"/><polyline points="8,3 12.5,7.5 8,12"/></svg></div>
-      <div class="gli-ask-chip">How would a Hormuz disruption impact Saudi trade flows?<svg width="12" height="12" viewBox="0 0 15 15" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><line x1="2.5" y1="7.5" x2="12.5" y2="7.5"/><polyline points="8,3 12.5,7.5 8,12"/></svg></div>
-      <div style="display:flex;align-items:center;gap:8px;margin-top:6px;background:var(--c-s0);border:1px solid var(--c-bd1);border-radius:6px;padding:8px 10px">
-        <input type="text" placeholder="Type your question..." style="flex:1;min-width:0;background:none;border:none;outline:none;font-family:var(--f-ui);font-size:11.5px;color:var(--c-tx0)" onkeydown="if(event.key==='Enter')event.preventDefault()">
-        <button style="width:22px;height:22px;border-radius:5px;background:var(--c-gold-dim);border:none;color:#fff;display:flex;align-items:center;justify-content:center;cursor:pointer;flex-shrink:0" title="Coming soon"><svg width="11" height="11" viewBox="0 0 15 15" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><line x1="2.5" y1="7.5" x2="12.5" y2="7.5"/><polyline points="8,3 12.5,7.5 8,12"/></svg></button>
+      <div style="position:relative;max-width:60%;min-width:280px">
+        <div style="font-size:12.5px;color:var(--c-tx1)" id="sr-date">&mdash;</div>
+        <div style="font-family:var(--f-heading);font-weight:700;font-size:44px;line-height:1.06;letter-spacing:0.005em;margin-top:8px;color:var(--c-tx0)">GCC Logistics Situation Room</div>
+        <div style="font-size:14.5px;line-height:22px;color:var(--c-tx1);margin-top:10px;max-width:56ch">Real&#8209;time intelligence on trade flows, corridors and market developments across the Gulf.</div>
       </div>
     </div>
   </div>
 
-  <!-- LOWER ROW — freight trend | vessel mix | scenario studio -->
-  <div class="gli-sr-lowrow">
-    <div class="card" style="padding:14px 16px">
-      <div class="gli-card-hd"><span class="gli-card-hd-title">Freight Rate Trends</span><span class="gli-card-hd-link" onclick="gccSidebarNav('rates')">View details &rarr;</span></div>
-      <div style="font-family:var(--f-mono);font-size:9.5px;color:var(--c-tx2);margin-bottom:14px">FBX Global Container &middot; Baltic Dry Index</div>
-      <div class="kpi-spark-row" style="margin-bottom:6px">
-        <div><div class="kpi-value" style="font-size:26px">$2,889<span style="font-size:11px;font-weight:400;color:var(--c-tx2)">/FEU</span></div><div class="kpi-sub" style="color:var(--c-green-hi)">+46% from May &middot; Freightos Baltic</div></div>
-        <svg class="kpi-spark" width="90" height="36" viewBox="0 0 90 36"><path d="M2,30 L15,26 L28,24 L41,18 L54,14 L67,10 L80,6" fill="none" stroke="var(--c-gold-hi)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+  <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(252px,1fr));gap:14px;padding:16px 24px 0">
+      <div style="background:#141b23;border:1px solid #232e39;border-radius:8px;padding:15px 17px 13px">
+        <div style="font-size:13.5px;line-height:19px;color:var(--c-tx0)">Hormuz Transit Volume</div>
+        <div style="display:flex;align-items:flex-end;gap:12px;margin-top:10px">
+          <div style="flex:1 1 auto;min-width:0">
+            <div style="font-family:var(--f-heading);font-weight:600;font-size:36px;line-height:1;font-variant-numeric:tabular-nums;white-space:nowrap;color:var(--c-red-hi)">&minus;89%</div>
+            <div style="font-size:12px;line-height:17px;color:var(--c-tx2);margin-top:8px">vs. 88/day baseline</div>
+          </div>
+          <div style="flex:0 0 104px;padding-bottom:6px"><svg viewBox="0 0 120 34" preserveAspectRatio="none" style="width:100%;height:36px;display:block"><polyline points="1.0,4.0 10.1,6.7 19.2,10.1 28.2,12.1 37.3,10.8 46.4,14.8 55.5,18.2 64.5,16.1 73.6,20.9 82.7,23.6 91.8,25.6 100.8,24.3 109.9,28.3 119.0,31.0" fill="none" stroke="var(--c-red-hi)" stroke-width="1.4" vector-effect="non-scaling-stroke"/></svg></div>
+        </div>
+        <div style="font-size:11px;color:var(--c-tx2);margin-top:8px">IMF PortWatch &middot; Kpler</div>
       </div>
-      <div class="dv"></div>
-      <div class="kpi-spark-row">
-        <div><div class="kpi-value" style="font-size:20px">2,729<span style="font-size:10px;font-weight:400;color:var(--c-tx2)"> pts</span></div><div class="kpi-sub">Baltic Dry Index &middot; &minus;1.5% day</div></div>
-        <svg class="kpi-spark" width="70" height="26" viewBox="0 0 70 26"><path d="M2,10 L14,13 L26,11 L38,15 L50,17 L62,16" fill="none" stroke="var(--c-tx2)" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      <div style="background:#141b23;border:1px solid #232e39;border-radius:8px;padding:15px 17px 13px">
+        <div style="font-size:13.5px;line-height:19px;color:var(--c-tx0)">Bab al&#8209;Mandab Blockade</div>
+        <div style="display:flex;align-items:flex-end;gap:12px;margin-top:10px">
+          <div style="flex:1 1 auto;min-width:0">
+            <div style="font-family:var(--f-heading);font-weight:600;font-size:36px;line-height:1;font-variant-numeric:tabular-nums;white-space:nowrap;color:var(--c-amber-hi)">&minus;56%</div>
+            <div style="font-size:12px;line-height:17px;color:var(--c-tx2);margin-top:8px">vs. Jul 20 baseline</div>
+          </div>
+          <div style="flex:0 0 104px;padding-bottom:6px"><svg viewBox="0 0 120 34" preserveAspectRatio="none" style="width:100%;height:36px;display:block"><polyline points="1.0,10.0 10.1,11.5 19.2,17.0 28.2,15.8 37.3,21.4 46.4,22.6 55.5,25.0 64.5,24.5 73.6,27.0 82.7,26.5 91.8,28.9 100.8,29.5 109.9,31.2 119.0,32.0" fill="none" stroke="var(--c-amber-hi)" stroke-width="1.4" vector-effect="non-scaling-stroke"/></svg></div>
+        </div>
+        <div style="font-size:11px;color:var(--c-tx2);margin-top:8px">The National &middot; AIS</div>
+      </div>
+      <div style="background:#141b23;border:1px solid #232e39;border-radius:8px;padding:15px 17px 13px">
+        <div style="font-size:13.5px;line-height:19px;color:var(--c-tx0)">FBX Global Container</div>
+        <div style="display:flex;align-items:flex-end;gap:12px;margin-top:10px">
+          <div style="flex:1 1 auto;min-width:0">
+            <div style="font-family:var(--f-heading);font-weight:600;font-size:36px;line-height:1;font-variant-numeric:tabular-nums;white-space:nowrap;color:var(--c-tx0)">$2,889</div>
+            <div style="font-size:12px;line-height:17px;color:var(--c-tx2);margin-top:8px">+46% from May &middot; per FEU</div>
+          </div>
+          <div style="flex:0 0 104px;padding-bottom:6px"><svg viewBox="0 0 120 34" preserveAspectRatio="none" style="width:100%;height:36px;display:block"><polyline points="1.0,31.0 10.1,27.5 19.2,24.2 28.2,20.6 37.3,17.0 46.4,13.6 55.5,10.9 64.5,8.6 73.6,7.0 82.7,5.8 91.8,4.9 100.8,4.4 109.9,4.1 119.0,4.0" fill="none" stroke="#3f8ef7" stroke-width="1.4" vector-effect="non-scaling-stroke"/></svg></div>
+        </div>
+        <div style="font-size:11px;color:var(--c-tx2);margin-top:8px">Freightos Baltic Index</div>
+      </div>
+      <div style="background:#141b23;border:1px solid #232e39;border-radius:8px;padding:15px 17px 13px">
+        <div style="font-size:13.5px;line-height:19px;color:var(--c-tx0)">War&#8209;Risk Insurance</div>
+        <div style="display:flex;align-items:flex-end;gap:12px;margin-top:10px">
+          <div style="flex:1 1 auto;min-width:0">
+            <div style="font-family:var(--f-heading);font-weight:600;font-size:36px;line-height:1;font-variant-numeric:tabular-nums;white-space:nowrap;color:var(--c-amber-hi)">~3.2%</div>
+            <div style="font-size:12px;line-height:17px;color:var(--c-tx2);margin-top:8px">hull value &middot; +1.2pp post&#8209;strike</div>
+          </div>
+          <div style="flex:0 0 104px;padding-bottom:6px"><svg viewBox="0 0 120 34" preserveAspectRatio="none" style="width:100%;height:36px;display:block"><polyline points="1.0,28.0 10.1,26.5 19.2,24.9 28.2,22.4 37.3,19.5 46.4,16.7 55.5,14.2 64.5,12.0 73.6,10.1 82.7,8.6 91.8,7.3 100.8,6.2 109.9,5.0 119.0,4.0" fill="none" stroke="var(--c-amber-hi)" stroke-width="1.4" vector-effect="non-scaling-stroke"/></svg></div>
+        </div>
+        <div style="font-size:11px;color:var(--c-tx2);margin-top:8px">Lloyd's List &middot; LMA</div>
+      </div>
+  </div>
+
+  <div style="display:flex;flex-wrap:wrap;gap:14px;padding:16px 24px 0;align-items:stretch">
+    <div style="background:#141b23;border:1px solid #232e39;border-radius:8px;flex:2 1 520px;min-width:0;overflow:hidden">
+      <div style="display:flex;align-items:center;flex-wrap:wrap;border-bottom:1px solid #1f2830;padding:0 6px">
+        <span style="font-size:13.5px;font-weight:600;padding:11px 16px;white-space:nowrap;color:var(--c-tx0);box-shadow:inset 0 -2px 0 var(--accent-500)">Live Map</span><span style="font-size:13.5px;font-weight:400;padding:11px 16px;white-space:nowrap;color:var(--c-tx2);cursor:pointer" onclick="gccSidebarNav('trucking')">Key Corridors</span><span style="font-size:13.5px;font-weight:400;padding:11px 16px;white-space:nowrap;color:var(--c-tx2);cursor:pointer" onclick="gccSidebarNav('hormuz')">Chokepoints</span><span style="font-size:13.5px;font-weight:400;padding:11px 16px;white-space:nowrap;color:var(--c-tx2);cursor:pointer" onclick="gccSidebarNav('rates')">Port Congestion</span>
+      </div>
+      <div style="position:relative;height:430px">
+        <iframe src="https://www.marinetraffic.com/en/ais/embed/zoom:6/centery:24.5/centerx:52.5/maptype:4/shownames:false/mmsi:0/shipid:0/fleet:/fleet_id:/showmenu:false/remember:false" width="100%" height="100%" style="border:none;display:block" loading="lazy" allowfullscreen referrerpolicy="no-referrer-when-downgrade" title="MarineTraffic — Gulf region live AIS"></iframe>
+        <span style="position:absolute;left:14px;bottom:12px;background:rgba(12,17,22,.85);border-radius:4px;padding:3px 9px;font-size:10.5px;color:var(--c-tx1);display:flex;align-items:center;gap:6px">MarineTraffic live AIS<span class="src-badge" style="font-size:9px">live</span></span>
       </div>
     </div>
-    <div class="card" style="padding:14px 16px">
-      <div class="gli-card-hd"><span class="gli-card-hd-title">Hormuz Vessel Mix &mdash; 24h</span><span class="gli-card-hd-link" onclick="gccSidebarNav('hormuz')">View details &rarr;</span></div>
-      <div style="font-family:var(--f-mono);font-size:9.5px;color:var(--c-tx2);margin-bottom:14px">Current share vs pre-crisis baseline</div>
-      <div class="bar-row"><span class="bar-label" style="width:74px">Bulk/Other</span><div class="bar-track"><div class="bar-fill" style="width:60%;background:var(--c-tx2)"></div></div><span class="bar-val">60% &middot; was 17%</span></div>
-      <div class="bar-row"><span class="bar-label" style="width:74px">Containers</span><div class="bar-track"><div class="bar-fill" style="width:30%;background:var(--c-blue-hi)"></div></div><span class="bar-val">30% &middot; was 15%</span></div>
-      <div class="bar-row"><span class="bar-label" style="width:74px">Crude Tankers</span><div class="bar-track"><div class="bar-fill" style="width:10%;background:var(--c-red-hi)"></div></div><span class="bar-val">10% &middot; was 38%</span></div>
-      <div class="bar-row"><span class="bar-label" style="width:74px">Product</span><div class="bar-track"><div class="bar-fill" style="width:1%;background:var(--c-amber-hi)"></div></div><span class="bar-val">0% &middot; was 18%</span></div>
-      <div class="bar-row" style="margin-bottom:0"><span class="bar-label" style="width:74px">LNG/LPG</span><div class="bar-track"><div class="bar-fill" style="width:1%;background:var(--c-purple-hi)"></div></div><span class="bar-val">0% &middot; was 12%</span></div>
+
+    <div style="background:#141b23;border:1px solid #232e39;border-radius:8px;flex:1 1 310px;min-width:0;padding:16px 18px 6px">
+      <div style="display:flex;align-items:baseline;gap:12px;flex-wrap:wrap">
+        <span style="font-family:var(--f-ui);font-weight:600;font-size:16.5px;line-height:1.25;color:var(--c-tx0)">Top Intelligence Updates</span><a href="#" onclick="gccSidebarNav('hormuz');return false" style="margin-left:auto;font-size:11.5px;color:var(--c-gold);white-space:nowrap">View all &rarr;</a>
+      </div>
+      <div style="margin-top:4px">
+        <div style="display:flex;gap:12px;padding:14px 0;">
+          <span style="flex:none;width:8px;height:8px;border-radius:50%;background:var(--c-red-hi);margin-top:6px"></span>
+          <div style="flex:1 1 auto;min-width:0">
+            <div style="display:flex;align-items:baseline;gap:9px;flex-wrap:wrap">
+              <span style="font-size:14px;font-weight:600;line-height:20px;color:var(--c-tx0)">IRGC enforces all&#8209;corridor control since Jun 25</span><span style="font-size:9.5px;font-weight:600;letter-spacing:0.08em;text-transform:uppercase;color:#10151a;background:var(--c-red-hi);border-radius:3px;padding:2px 6px;white-space:nowrap">Alert</span>
+            </div>
+            <div style="font-size:12.5px;line-height:19px;color:var(--c-tx1);margin-top:5px">Southern-route crackdown &mdash; second merchant vessel struck Jun 27, MoU 60-day window under stress.</div>
+            <div style="font-size:11.5px;color:var(--c-tx2);margin-top:7px">2 hours ago &nbsp;|&nbsp; Source: <a href="https://www.lloydslist.com/hot-topics/strait-of-hormuz-crisis" target="_blank" rel="noopener" style="color:var(--c-tx2)">Lloyd&rsquo;s List &#8599;</a></div>
+          </div>
+        </div>
+        <div style="display:flex;gap:12px;padding:14px 0;border-top:1px solid #1f2830">
+          <span style="flex:none;width:8px;height:8px;border-radius:50%;background:#3f8ef7;margin-top:6px"></span>
+          <div style="flex:1 1 auto;min-width:0">
+            <div style="display:flex;align-items:baseline;gap:9px;flex-wrap:wrap">
+              <span style="font-size:14px;font-weight:600;line-height:20px;color:var(--c-tx0)">Vessel diversions to Oman surge</span><span style="font-size:9.5px;font-weight:600;letter-spacing:0.08em;text-transform:uppercase;color:#10151a;background:#3f8ef7;border-radius:3px;padding:2px 6px;white-space:nowrap">Info</span>
+            </div>
+            <div style="font-size:12.5px;line-height:19px;color:var(--c-tx1);margin-top:5px">+3,500% since closure (Windward) &mdash; Hwy 95 goods via Ramlet Khaleh tripled to $830M in March.</div>
+            <div style="font-size:11.5px;color:var(--c-tx2);margin-top:7px">5 hours ago &nbsp;|&nbsp; Source: Windward</div>
+          </div>
+        </div>
+        <div style="display:flex;gap:12px;padding:14px 0;border-top:1px solid #1f2830">
+          <span style="flex:none;width:8px;height:8px;border-radius:50%;background:var(--c-amber-hi);margin-top:6px"></span>
+          <div style="flex:1 1 auto;min-width:0">
+            <div style="display:flex;align-items:baseline;gap:9px;flex-wrap:wrap">
+              <span style="font-size:14px;font-weight:600;line-height:20px;color:var(--c-tx0)">UAE opens emergency trucking corridor via Oman</span><span style="font-size:9.5px;font-weight:600;letter-spacing:0.08em;text-transform:uppercase;color:#10151a;background:var(--c-amber-hi);border-radius:3px;padding:2px 6px;white-space:nowrap">Watch</span>
+            </div>
+            <div style="font-size:12.5px;line-height:19px;color:var(--c-tx1);margin-top:5px">2,400 trucks/day at Al Wajajah checkpoint, up from 850 pre&#8209;crisis. Border wait times 4&ndash;6 hrs.</div>
+            <div style="font-size:11.5px;color:var(--c-tx2);margin-top:7px">8 hours ago &nbsp;|&nbsp; Source: UAE MoE</div>
+          </div>
+        </div>
+      </div>
     </div>
-    <div class="card" style="padding:14px 16px">
-      <div class="gli-card-hd"><span class="gli-card-hd-title">Scenario Studio</span><span class="gli-card-hd-link" onclick="gccSidebarNav('simulator')">Run a simulation &rarr;</span></div>
-      <div style="font-size:10.5px;color:var(--c-tx2);margin-bottom:12px;line-height:1.4">Model the impact of disruptions, policy changes or demand shifts on GCC trade flows.</div>
-      <div class="gli-scn-grid">
-        <div class="gli-scn-card" onclick="gccSidebarNav('simulator')">
-          <div class="gli-scn-icon" style="background:rgba(76,141,217,.12);color:var(--c-blue-hi)">&#128683;</div>
-          <div class="gli-scn-label">Chokepoint Disruption</div>
+
+    <div style="background:#141b23;border:1px solid #232e39;border-radius:8px;flex:1 1 290px;min-width:0;padding:16px 18px 18px">
+      <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap">
+        <span style="font-family:var(--f-ui);font-weight:600;font-size:16.5px;line-height:1.25;color:var(--c-tx0)">Ask Gulf Intelligence</span><span style="font-size:9.5px;font-weight:600;letter-spacing:0.08em;text-transform:uppercase;color:#10151a;background:var(--accent-500);border-radius:3px;padding:2px 6px;white-space:nowrap">Beta</span>
+      </div>
+      <div style="font-size:12.5px;line-height:18px;color:var(--c-tx2);margin-top:4px">Get instant analysis from trusted data sources.</div>
+      <div style="display:flex;flex-direction:column;gap:9px;margin-top:14px">
+        <button type="button" style="display:flex;align-items:center;gap:12px;width:100%;text-align:left;background:#182028;border:1px solid #232e39;border-radius:6px;color:var(--c-tx0);font-family:var(--f-ui);font-size:13px;line-height:19px;padding:12px 13px;cursor:pointer">
+          <span style="flex:1 1 auto;min-width:0">What is the current war&#8209;risk premium in the Red Sea?</span>
+          <span style="flex:none;color:var(--c-gold)"><svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="flex:none"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span>
+        </button>
+        <button type="button" style="display:flex;align-items:center;gap:12px;width:100%;text-align:left;background:#182028;border:1px solid #232e39;border-radius:6px;color:var(--c-tx0);font-family:var(--f-ui);font-size:13px;line-height:19px;padding:12px 13px;cursor:pointer">
+          <span style="flex:1 1 auto;min-width:0">Compare Jeddah vs. Sohar as alternative gateways for GCC imports</span>
+          <span style="flex:none;color:var(--c-gold)"><svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="flex:none"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span>
+        </button>
+        <button type="button" style="display:flex;align-items:center;gap:12px;width:100%;text-align:left;background:#182028;border:1px solid #232e39;border-radius:6px;color:var(--c-tx0);font-family:var(--f-ui);font-size:13px;line-height:19px;padding:12px 13px;cursor:pointer">
+          <span style="flex:1 1 auto;min-width:0">How would a Hormuz disruption impact Saudi trade flows?</span>
+          <span style="flex:none;color:var(--c-gold)"><svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="flex:none"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span>
+        </button>
+      </div>
+      <label style="display:flex;align-items:center;gap:10px;background:#182028;border:1px solid #232e39;border-radius:6px;padding:9px 11px;margin-top:12px">
+        <input type="text" placeholder="Type your question..." style="flex:1 1 auto;min-width:0;background:transparent;border:0;outline:none;color:var(--c-tx0);font-family:var(--f-ui);font-size:13px" onkeydown="if(event.key==='Enter')event.preventDefault()">
+        <span style="flex:none;display:flex;align-items:center;justify-content:center;width:28px;height:26px;border-radius:5px;background:#3f8ef7;color:#0c1116"><svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="flex:none"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span>
+      </label>
+    </div>
+  </div>
+
+  <div style="display:flex;flex-wrap:wrap;gap:14px;padding:16px 24px 26px;align-items:stretch">
+    <div style="background:#141b23;border:1px solid #232e39;border-radius:8px;flex:1.7 1 420px;min-width:0;padding:16px 18px 16px">
+      <div style="display:flex;align-items:baseline;gap:12px;flex-wrap:wrap">
+        <span style="font-family:var(--f-ui);font-weight:600;font-size:16.5px;line-height:1.25;color:var(--c-tx0)">Freight Rate Trends</span><a href="#" onclick="gccSidebarNav('rates');return false" style="margin-left:auto;font-size:11.5px;color:var(--c-gold);white-space:nowrap">View details &rarr;</a>
+      </div>
+      <div style="font-size:12.5px;line-height:18px;color:var(--c-tx2);margin-top:4px">FBX Global Container &middot; Baltic Dry Index</div>
+      <div style="display:flex;gap:10px;margin-top:14px">
+        <div style="position:relative;flex:0 0 36px;height:190px;font-size:10.5px;font-variant-numeric:tabular-nums;color:var(--c-tx2);text-align:right">
+          <span style="position:absolute;right:0;top:-6px">6,000</span>
+          <span style="position:absolute;right:0;top:calc(33.3% - 6px)">4,000</span>
+          <span style="position:absolute;right:0;top:calc(66.7% - 6px)">2,000</span>
+          <span style="position:absolute;right:0;bottom:-6px">0</span>
         </div>
-        <div class="gli-scn-card" onclick="gccSidebarNav('simulator')">
-          <div class="gli-scn-icon" style="background:rgba(47,184,118,.12);color:var(--c-green-hi)">&#128200;</div>
-          <div class="gli-scn-label">Tariff Policy</div>
+        <svg viewBox="0 0 640 190" preserveAspectRatio="none" style="flex:1 1 auto;min-width:0;height:190px;display:block">
+          <line x1="0" y1="190.0" x2="640" y2="190.0" stroke="#1f2830" stroke-width="1" vector-effect="non-scaling-stroke"/>
+          <line x1="0" y1="126.7" x2="640" y2="126.7" stroke="#1f2830" stroke-width="1" vector-effect="non-scaling-stroke"/>
+          <line x1="0" y1="63.3" x2="640" y2="63.3" stroke="#1f2830" stroke-width="1" vector-effect="non-scaling-stroke"/>
+          <line x1="0" y1="0.0" x2="640" y2="0.0" stroke="#1f2830" stroke-width="1" vector-effect="non-scaling-stroke"/>
+          <polyline points="4.0,150.6 39.1,143.2 74.2,133.0 109.3,120.4 144.4,105.8 179.6,90.7 214.7,76.2 249.8,63.2 284.9,52.4 320.0,44.4 355.1,38.5 390.2,34.6 425.3,32.0 460.4,30.5 495.6,29.6 530.7,29.0 565.8,28.6 600.9,28.3 636.0,28.0" fill="none" stroke="#3f8ef7" stroke-width="1.8" vector-effect="non-scaling-stroke"/>
+          <polyline points="4.0,85.5 39.1,86.2 74.2,85.0 109.3,83.7 144.4,84.9 179.6,86.5 214.7,85.8 249.8,84.2 284.9,85.9 320.0,87.1 355.1,86.0 390.2,84.6 425.3,86.3 460.4,87.8 495.6,86.4 530.7,85.1 565.8,86.7 600.9,88.0 636.0,87.2" fill="none" stroke="#8b98a2" stroke-width="1.8" vector-effect="non-scaling-stroke"/>
+        </svg>
+      </div>
+      <div style="display:flex;gap:20px;flex-wrap:wrap;margin-top:14px">
+        <span style="display:inline-flex;align-items:center;gap:7px;font-size:11.5px;color:var(--c-tx1);white-space:nowrap"><span style="width:16px;height:3px;border-radius:2px;background:#3f8ef7;display:inline-block"></span>FBX Global Container ($2,889/FEU)</span>
+        <span style="display:inline-flex;align-items:center;gap:7px;font-size:11.5px;color:var(--c-tx1);white-space:nowrap"><span style="width:16px;height:3px;border-radius:2px;background:#8b98a2;display:inline-block"></span>Baltic Dry Index (2,729 pts)</span>
+      </div>
+    </div>
+
+    <div style="background:#141b23;border:1px solid #232e39;border-radius:8px;flex:1 1 320px;min-width:0;padding:16px 18px 16px">
+      <div style="display:flex;align-items:baseline;gap:12px;flex-wrap:wrap">
+        <span style="font-family:var(--f-ui);font-weight:600;font-size:16.5px;line-height:1.25;color:var(--c-tx0)">Hormuz Vessel Mix &mdash; 24h</span><a href="#" onclick="gccSidebarNav('hormuz');return false" style="margin-left:auto;font-size:11.5px;color:var(--c-gold);white-space:nowrap">View details &rarr;</a>
+      </div>
+      <div style="font-size:12.5px;line-height:18px;color:var(--c-tx2);margin-top:4px;margin-bottom:12px">Current share vs. pre&#8209;crisis baseline</div>
+        <div style="display:flex;align-items:center;gap:12px;padding:5px 0">
+          <span style="flex:0 0 104px;font-size:13px;line-height:18px;color:var(--c-tx0)">Bulk / Other</span>
+          <span style="flex:1 1 auto;min-width:30px;height:15px;background:#1a222a;border-radius:2px"><span style="display:block;width:60%;height:15px;background:var(--c-tx2);border-radius:2px"></span></span>
+          <span style="flex:0 0 34px;text-align:right;font-size:13px;font-variant-numeric:tabular-nums;color:var(--c-tx0)">60%</span>
+          <span style="flex:0 0 58px;text-align:right;font-size:12px;font-variant-numeric:tabular-nums;color:var(--c-tx2)">was 17%</span>
         </div>
-        <div class="gli-scn-card" onclick="gccSidebarNav('simulator')">
-          <div class="gli-scn-icon" style="background:rgba(106,66,170,.15);color:var(--c-purple-hi)">&#127757;</div>
-          <div class="gli-scn-label">Climate Policy</div>
+        <div style="display:flex;align-items:center;gap:12px;padding:5px 0">
+          <span style="flex:0 0 104px;font-size:13px;line-height:18px;color:var(--c-tx0)">Containers</span>
+          <span style="flex:1 1 auto;min-width:30px;height:15px;background:#1a222a;border-radius:2px"><span style="display:block;width:30%;height:15px;background:#3f8ef7;border-radius:2px"></span></span>
+          <span style="flex:0 0 34px;text-align:right;font-size:13px;font-variant-numeric:tabular-nums;color:var(--c-tx0)">30%</span>
+          <span style="flex:0 0 58px;text-align:right;font-size:12px;font-variant-numeric:tabular-nums;color:var(--c-tx2)">was 15%</span>
         </div>
-        <div class="gli-scn-card" onclick="gccSidebarNav('simulator')">
-          <div class="gli-scn-icon" style="background:rgba(232,162,61,.12);color:var(--c-amber-hi)">&#128230;</div>
-          <div class="gli-scn-label">Import Quota / TRQ</div>
+        <div style="display:flex;align-items:center;gap:12px;padding:5px 0">
+          <span style="flex:0 0 104px;font-size:13px;line-height:18px;color:var(--c-tx0)">Crude Tankers</span>
+          <span style="flex:1 1 auto;min-width:30px;height:15px;background:#1a222a;border-radius:2px"><span style="display:block;width:10%;height:15px;background:var(--c-red-hi);border-radius:2px"></span></span>
+          <span style="flex:0 0 34px;text-align:right;font-size:13px;font-variant-numeric:tabular-nums;color:var(--c-tx0)">10%</span>
+          <span style="flex:0 0 58px;text-align:right;font-size:12px;font-variant-numeric:tabular-nums;color:var(--c-red-hi)">was 38%</span>
         </div>
+        <div style="display:flex;align-items:center;gap:12px;padding:5px 0">
+          <span style="flex:0 0 104px;font-size:13px;line-height:18px;color:var(--c-tx0)">Product</span>
+          <span style="flex:1 1 auto;min-width:30px;height:15px;background:#1a222a;border-radius:2px"><span style="display:block;width:1%;height:15px;background:var(--c-amber-hi);border-radius:2px"></span></span>
+          <span style="flex:0 0 34px;text-align:right;font-size:13px;font-variant-numeric:tabular-nums;color:var(--c-tx0)">0%</span>
+          <span style="flex:0 0 58px;text-align:right;font-size:12px;font-variant-numeric:tabular-nums;color:var(--c-red-hi)">was 18%</span>
+        </div>
+        <div style="display:flex;align-items:center;gap:12px;padding:5px 0">
+          <span style="flex:0 0 104px;font-size:13px;line-height:18px;color:var(--c-tx0)">LNG / LPG</span>
+          <span style="flex:1 1 auto;min-width:30px;height:15px;background:#1a222a;border-radius:2px"><span style="display:block;width:1%;height:15px;background:#a78bfa;border-radius:2px"></span></span>
+          <span style="flex:0 0 34px;text-align:right;font-size:13px;font-variant-numeric:tabular-nums;color:var(--c-tx0)">0%</span>
+          <span style="flex:0 0 58px;text-align:right;font-size:12px;font-variant-numeric:tabular-nums;color:var(--c-red-hi)">was 12%</span>
+        </div>
+    </div>
+
+    <div style="background:#141b23;border:1px solid #232e39;border-radius:8px;flex:1 1 270px;min-width:0;padding:16px 18px 18px">
+      <div style="display:flex;align-items:baseline;gap:12px;flex-wrap:wrap">
+        <span style="font-family:var(--f-ui);font-weight:600;font-size:16.5px;line-height:1.25;color:var(--c-tx0)">Scenario Studio</span><a href="#" onclick="gccSidebarNav('simulator');return false" style="margin-left:auto;font-size:11.5px;color:var(--c-gold);white-space:nowrap">Run a simulation &rarr;</a>
+      </div>
+      <div style="font-size:12.5px;line-height:18px;color:var(--c-tx2);margin-top:4px">Model the impact of disruptions, policy changes, or demand shifts on GCC trade flows.</div>
+      <div style="display:flex;flex-direction:column;gap:10px;margin-top:14px">
+        <button type="button" onclick="gccSidebarNav('simulator')" style="display:flex;align-items:center;gap:12px;background:#182028;border:1px solid #232e39;border-radius:6px;color:var(--c-tx0);font-family:var(--f-ui);font-weight:600;font-size:13.5px;padding:13px 14px;text-align:left;cursor:pointer">
+          <span style="flex:none;display:flex;align-items:center;justify-content:center;width:30px;height:30px;border-radius:6px;background:rgba(63,142,247,.14);color:#3f8ef7"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="flex:none"><path d="M2 12h6M16 12h6"/><path d="M11 4v16"/><path d="M8 8l6 8M14 8l-6 8"/></svg></span>Chokepoint Disruption
+        </button>
+        <button type="button" onclick="gccSidebarNav('simulator')" style="display:flex;align-items:center;gap:12px;background:#182028;border:1px solid #232e39;border-radius:6px;color:var(--c-tx0);font-family:var(--f-ui);font-weight:600;font-size:13.5px;padding:13px 14px;text-align:left;cursor:pointer">
+          <span style="flex:none;display:flex;align-items:center;justify-content:center;width:30px;height:30px;border-radius:6px;background:rgba(167,139,250,.14);color:#a78bfa"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="flex:none"><path d="M3 6h18l-2 13H5L3 6Z"/><path d="M8 6V4a4 4 0 0 1 8 0v2"/></svg></span>Tariff Policy Change
+        </button>
+        <button type="button" onclick="gccSidebarNav('simulator')" style="display:flex;align-items:center;gap:12px;background:#182028;border:1px solid #232e39;border-radius:6px;color:var(--c-tx0);font-family:var(--f-ui);font-weight:600;font-size:13.5px;padding:13px 14px;text-align:left;cursor:pointer">
+          <span style="flex:none;display:flex;align-items:center;justify-content:center;width:30px;height:30px;border-radius:6px;background:rgba(47,212,167,.14);color:#2fd4a7"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="flex:none"><path d="M3 17l5-6 4 3 4-6 5 5"/><path d="M3 21h18"/></svg></span>Demand Shock
+        </button>
       </div>
     </div>
   </div>
+  <!-- ════════════════════ END EXACT HANDOFF DESIGN ════════════════════ -->
 
 </div>
 

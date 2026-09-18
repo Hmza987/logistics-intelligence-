@@ -542,7 +542,7 @@ a { color: inherit; text-decoration: none; }
 .gli-tab { flex: 1 1 auto; text-align: center; font-family: var(--f-ui); font-size: 13.5px; font-weight: 400; padding: 12px 14px; white-space: nowrap; border-radius: 7px 7px 0 0; color: var(--n-700); cursor: default; }
 .gli-tab.active { font-weight: 600; color: var(--c-tx0); background: #1b2937; box-shadow: inset 0 -2px 0 var(--accent-500); }
 
-.gli-wizard-chip { flex: 1 1 200px; display: flex; align-items: center; gap: 13px; font-family: var(--f-ui); font-size: 15.5px; color: var(--c-tx1); background: var(--c-s1); border: 1.5px solid var(--c-bd0); border-radius: 8px; padding: 15px 18px; }
+.gli-wizard-chip { flex: 1 1 200px; display: flex; align-items: center; gap: 13px; font-family: var(--f-ui); font-size: 15.5px; color: var(--c-tx1); background: var(--c-s1); border: 1.5px solid var(--c-bd0); border-radius: 8px; padding: 15px 18px; text-align: left; cursor: pointer; }
 .gli-wizard-chip.active { background: #1d3a5c; border-color: #3f8ef7; color: var(--c-tx0); font-weight: 600; }
 .gli-wizard-chip.done { color: var(--c-tx0); }
 .gli-wizard-badge { flex: none; display: flex; align-items: center; justify-content: center; width: 27px; height: 27px; border-radius: 50%; border: 1.5px solid #3a4650; font-family: var(--f-mono); font-size: 13.5px; font-weight: 600; font-variant-numeric: tabular-nums; color: var(--c-tx2); }
@@ -5782,6 +5782,496 @@ function gccSidebarNav(name) {
 <!-- ============================================================ TAB 4: SIMULATOR -->
 <div class="page" id="page-simulator" style="padding:0;padding-bottom:60px">
 
+  <!-- ════════════════════ EXACT HANDOFF DESIGN — Scenario Studio (View 7) ════════════════════ -->
+  <div style="flex:1 1 auto;display:flex;flex-direction:column;min-height:0">
+  <div style="padding:18px 24px 0">
+    <div style="background:#141b23;border:1px solid #232e39;border-radius:8px;position:relative;overflow:hidden;padding:16px 22px 20px">
+      <div style="position:absolute;right:0;top:0;bottom:0;width:44%;min-width:260px;background:linear-gradient(100deg,#141b23 0%,rgba(20,27,35,.7) 24%,#1c2a36 58%,#253b4d 100%)"></div>
+      <div style="position:relative;display:flex;align-items:flex-start;gap:24px;flex-wrap:wrap">
+        <div style="flex:1 1 420px;min-width:0">
+          <div style="display:flex;align-items:center;gap:9px;font-size:14px;color:var(--c-tx2)">
+            <span>Scenario Studio</span><span style="color:var(--c-tx3)">&rsaquo;</span><span style="color:var(--c-gold)">New Scenario</span>
+          </div>
+          <div id="scen-hero-title" style="font-family:var(--f-heading);font-weight:700;font-size:46px;line-height:1.06;margin-top:10px;color:var(--c-tx0)">Scenario Studio</div>
+          <div id="scen-hero-lede" style="font-size:17px;line-height:22px;color:var(--c-tx1);margin-top:9px;max-width:66ch">Model the impact of chokepoint disruptions, tariff policy, import quotas and environmental quotas.</div>
+        </div>
+        <div style="flex:0 1 300px;min-width:0;display:flex;flex-direction:column;align-items:flex-end;gap:14px;text-align:right">
+          <div style="font-size:13.5px;color:var(--c-tx1);font-variant-numeric:tabular-nums">Mon, 15 Sep 2025 &nbsp; 10:24 GST</div>
+          <button id="scen-download-btn" type="button" onclick="window.print()" style="display:none;align-items:center;gap:9px;background:#1d3a5c;border:1px solid #3f8ef7;border-radius:7px;color:var(--c-tx0);font-family:var(--f-ui);font-weight:600;font-size:15.5px;padding:9px 15px;cursor:pointer;white-space:nowrap"><svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="flex:none"><path d="M12 3v11"/><path d="m8 11 4 4 4-4"/><path d="M4 19h16"/></svg>Download results</button>
+          <div style="font-family:var(--f-heading);font-weight:600;font-size:22px;line-height:1.2;color:var(--c-tx0)">Test the shock<br>before it lands.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div style="display:flex;flex-wrap:wrap;gap:10px;padding:16px 24px 0">
+      <button type="button" onclick="scenGoStep(1)" class="gli-wizard-chip scen-step-chip active" data-step="1">
+        <span class="gli-wizard-badge scen-step-badge">1</span>Define Scope
+      </button>
+      <button type="button" onclick="scenGoStep(2)" class="gli-wizard-chip scen-step-chip" data-step="2">
+        <span class="gli-wizard-badge scen-step-badge">2</span>Configure Parameters
+      </button>
+      <button type="button" onclick="scenGoStep(3)" class="gli-wizard-chip scen-step-chip" data-step="3">
+        <span class="gli-wizard-badge scen-step-badge">3</span>Run Simulation
+      </button>
+      <button type="button" onclick="scenGoStep(4)" class="gli-wizard-chip scen-step-chip" data-step="4">
+        <span class="gli-wizard-badge scen-step-badge">4</span>View Results
+      </button>
+  </div>
+
+  <!-- STEP 1 — Define Scope -->
+  <div class="scen-step-panel" data-step="1" style="flex:1 1 auto;display:flex;flex-wrap:wrap;gap:14px;padding:14px 24px 26px;align-items:stretch">
+    <div style="background:#141b23;border:1px solid #232e39;border-radius:8px;flex:1.25 1 400px;min-width:0;padding:22px 22px 22px;display:flex;flex-direction:column">
+      <div style="font-family:var(--f-ui);font-weight:600;font-size:19px;line-height:1.25;color:var(--c-tx0)">Define the scope of your scenario</div>
+      <div style="font-size:14px;line-height:18px;color:var(--c-tx2);margin-top:4px;margin-bottom:16px">Select the trade flow, product and time period to analyze.</div>
+      <div style="display:flex;gap:14px;flex-wrap:wrap">
+          <div style="flex:1 1 160px;min-width:0">
+            <div style="font-size:13px;color:var(--c-tx1);margin-bottom:6px">Country / Region</div>
+            <span style="display:flex;align-items:center;gap:9px;width:100%;background:#182028;border:1px solid #232e39;border-radius:6px;padding:12px 14px;font-size:15px;color:var(--c-tx0);box-sizing:border-box;justify-content:space-between"><span style="overflow:hidden;text-overflow:ellipsis;white-space:nowrap">Saudi Arabia</span><span style="color:var(--c-tx2)"><svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="flex:none"><path d="m6 9 6 6 6-6"/></svg></span></span>
+          </div>
+        <div style="flex:1 1 160px;min-width:0">
+          <div style="font-size:13px;color:var(--c-tx1);margin-bottom:6px">Flow type</div>
+          <div style="display:flex">
+            <span style="flex:1 1 0;text-align:center;font-size:14px;font-weight:600;padding:12px 8px;border:1px solid var(--accent-500);border-radius:6px 0 0 6px;background:rgba(127,168,204,.14);color:var(--c-tx0)">Total</span>
+            <span style="flex:1 1 0;text-align:center;font-size:14px;padding:12px 8px;border:1px solid #232e39;border-left:0;background:#182028;color:var(--c-tx1)">Imports</span>
+            <span style="flex:1 1 0;text-align:center;font-size:14px;padding:12px 8px;border:1px solid #232e39;border-left:0;border-radius:0 6px 6px 0;background:#182028;color:var(--c-tx1)">Exports</span>
+          </div>
+        </div>
+      </div>
+      <div style="margin-top:18px">
+        <div style="font-size:13px;color:var(--c-tx1);margin-bottom:6px">Product / HS code</div>
+        <span style="display:flex;align-items:center;gap:9px;width:100%;background:#182028;border:1px solid #232e39;border-radius:6px;padding:12px 14px;font-size:15px;color:var(--c-tx0);box-sizing:border-box"><span style="color:var(--c-tx2)"><svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="flex:none"><circle cx="11" cy="11" r="7"/><path d="M16.5 16.5 21 21"/></svg></span><span style="color:var(--c-tx2)">Search product or HS code&hellip;</span></span>
+      </div>
+      <div style="display:flex;gap:14px;flex-wrap:wrap;margin-top:18px">
+          <div style="flex:1 1 160px;min-width:0">
+            <div style="font-size:13px;color:var(--c-tx1);margin-bottom:6px">Origin</div>
+            <span style="display:flex;align-items:center;gap:9px;width:100%;background:#182028;border:1px solid #232e39;border-radius:6px;padding:12px 14px;font-size:15px;color:var(--c-tx0);box-sizing:border-box;justify-content:space-between"><span style="overflow:hidden;text-overflow:ellipsis;white-space:nowrap">All regions</span><span style="color:var(--c-tx2)"><svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="flex:none"><path d="m6 9 6 6 6-6"/></svg></span></span>
+          </div>
+          <div style="flex:1 1 160px;min-width:0">
+            <div style="font-size:13px;color:var(--c-tx1);margin-bottom:6px">Destination</div>
+            <span style="display:flex;align-items:center;gap:9px;width:100%;background:#182028;border:1px solid #232e39;border-radius:6px;padding:12px 14px;font-size:15px;color:var(--c-tx0);box-sizing:border-box;justify-content:space-between"><span style="overflow:hidden;text-overflow:ellipsis;white-space:nowrap">All regions</span><span style="color:var(--c-tx2)"><svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="flex:none"><path d="m6 9 6 6 6-6"/></svg></span></span>
+          </div>
+      </div>
+      <div style="display:flex;gap:14px;flex-wrap:wrap;margin-top:18px">
+          <div style="flex:0 1 232px;min-width:0">
+            <div style="font-size:13px;color:var(--c-tx1);margin-bottom:6px">Year</div>
+            <span style="display:flex;align-items:center;gap:9px;width:100%;background:#182028;border:1px solid #232e39;border-radius:6px;padding:12px 14px;font-size:15px;color:var(--c-tx0);box-sizing:border-box;justify-content:space-between"><span style="overflow:hidden;text-overflow:ellipsis;white-space:nowrap">2024</span><span style="color:var(--c-tx2)"><svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="flex:none"><path d="m6 9 6 6 6-6"/></svg></span></span>
+          </div>
+      </div>
+      <button type="button" onclick="scenGoStep(2)" style="display:flex;align-items:center;gap:11px;justify-content:center;margin-top:auto;background:#1f6fd4;border:0;border-radius:7px;color:#fff;font-family:var(--f-ui);font-weight:600;font-size:16px;padding:15px 22px;cursor:pointer;white-space:nowrap"><span>Next</span><span style="font-weight:400">Configure Parameters</span><svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="flex:none"><path d="M5 12h14M13 6l6 6-6 6"/></svg></button>
+    </div>
+
+    <div style="background:#141b23;border:1px solid #232e39;border-radius:8px;flex:1 1 340px;min-width:0;overflow:hidden;display:flex;flex-direction:column">
+      <div style="padding:22px 22px 17px">
+        <div style="font-family:var(--f-ui);font-weight:600;font-size:19px;line-height:1.25;color:var(--c-tx0)">Scope preview</div>
+        <div style="font-size:14px;line-height:18px;color:var(--c-tx2);margin-top:4px">This is the baseline for your scenario analysis.</div>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:9px;padding:0 18px 14px">
+        <div style="display:flex;align-items:center;gap:13px;background:rgba(45,88,74,.28);border:1px solid #2f6b55;border-radius:7px;padding:16px 16px">
+          <span style="flex:none;display:flex;align-items:center;justify-content:center;width:42px;height:42px;border-radius:7px;background:rgba(61,214,140,.16);color:var(--c-green-hi)"><svg viewBox="0 0 24 24" width="17" height="17" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="flex:none"><path d="M3 21h18M6 21V8l6-4 6 4v13"/><path d="M10 21v-6h4v6"/></svg></span>
+          <div style="flex:1 1 auto;min-width:0">
+            <div style="font-size:15.5px;font-weight:600;color:var(--c-tx0)">Saudi Arabia</div>
+            <div style="font-size:13px;color:var(--c-tx1);margin-top:2px">Total trade</div>
+          </div>
+        </div>
+        <div style="display:flex;align-items:center;gap:13px;background:#182028;border:1px solid #232e39;border-radius:7px;padding:16px 16px">
+          <span style="flex:none;display:flex;align-items:center;justify-content:center;width:42px;height:42px;border-radius:7px;background:rgba(127,168,204,.13);color:var(--c-gold)"><svg viewBox="0 0 24 24" width="17" height="17" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="flex:none"><rect x="3" y="7" width="18" height="13" rx="1.5"/><path d="M8 7V5a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/><path d="M3 12h18"/></svg></span>
+          <div style="flex:1 1 auto;min-width:0">
+            <div style="font-size:15.5px;font-weight:600;color:var(--c-tx0)">All products</div>
+            <div style="font-size:13px;color:var(--c-tx1);margin-top:2px">All origins &rarr; All destinations</div>
+          </div>
+        </div>
+        <div style="display:flex;align-items:center;gap:13px;background:#182028;border:1px solid #232e39;border-radius:7px;padding:16px 16px">
+          <span style="flex:none;display:flex;align-items:center;justify-content:center;width:42px;height:42px;border-radius:7px;background:rgba(127,168,204,.13);color:var(--c-gold)"><svg viewBox="0 0 24 24" width="17" height="17" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="flex:none"><rect x="3" y="4" width="18" height="17" rx="1.5"/><path d="M8 2v4M16 2v4M3 10h18"/></svg></span>
+          <div style="flex:1 1 auto;min-width:0">
+            <div style="font-size:15.5px;font-weight:600;color:var(--c-tx0)">Year 2024</div>
+          </div>
+        </div>
+      </div>
+      <div style="position:relative;flex:1 1 auto;min-height:300px;background:radial-gradient(120% 110% at 48% 42%,#16242e 0%,#111d26 52%,#0d161d 100%);border-top:1px solid #1f2830">
+        <div style="position:absolute;inset:0;background:repeating-linear-gradient(0deg,rgba(127,168,204,.035) 0 1px,transparent 1px 52px),repeating-linear-gradient(90deg,rgba(127,168,204,.035) 0 1px,transparent 1px 52px)"></div>
+        <svg viewBox="0 0 400 200" preserveAspectRatio="none" style="position:absolute;inset:0;width:100%;height:100%;display:block">
+          <path d="M196,72 C210,64 226,66 236,78 C246,90 248,106 242,120 C236,134 222,142 208,138 C194,134 186,120 188,104 C190,90 190,80 196,72 Z" fill="rgba(61,214,140,.14)" stroke="#3dd68c" stroke-width="1.6" vector-effect="non-scaling-stroke"/>
+        </svg>
+        <span style="position:absolute;left:14px;bottom:10px;background:#0c1116;border-radius:4px;padding:3px 9px;font-size:10.5px;color:var(--c-tx1);white-space:nowrap">Basemap mounts here</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- STEP 2 — Configure Parameters -->
+  <div class="scen-step-panel" data-step="2" style="display:none">
+  <div style="flex:1 1 auto;display:flex;flex-wrap:wrap;gap:14px;padding:14px 24px 0;align-items:stretch">
+    <div style="background:#141b23;border:1px solid #232e39;border-radius:8px;flex:1 1 280px;min-width:0;border-top:2px solid var(--c-red-hi);padding:19px 20px 20px;display:flex;flex-direction:column">
+      <div style="display:flex;align-items:flex-start;gap:11px">
+        <span style="flex:none;display:flex;align-items:center;justify-content:center;width:40px;height:40px;border-radius:7px;background:rgba(242,112,92,.15);color:var(--c-red-hi)"><svg viewBox="0 0 24 24" width="17" height="17" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="flex:none"><ellipse cx="12" cy="6" rx="8" ry="3"/><path d="M4 6v12c0 1.7 3.6 3 8 3s8-1.3 8-3V6"/><path d="M4 12c0 1.7 3.6 3 8 3s8-1.3 8-3"/></svg></span>
+        <div style="flex:1 1 auto;min-width:0">
+          <div style="font-size:16px;font-weight:600;color:var(--c-tx0)">Tariff policy</div>
+          <div style="font-size:13px;line-height:16px;color:var(--c-tx1);margin-top:3px">Changes in import/export tariffs</div>
+        </div>
+        <span style="flex:none;display:flex;align-items:center;width:42px;height:23px;border-radius:10px;background:#1f6fd4;padding:2px;box-sizing:border-box"><span style="width:19px;height:19px;border-radius:50%;background:#fff;margin-left:auto"></span></span>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:12px;margin-top:15px">
+        <div>
+          <div style="font-size:13px;color:var(--c-tx1);margin-bottom:6px">Tariff change</div>
+          <span style="display:flex;align-items:center;gap:9px;width:100%;background:#182028;border:1px solid #232e39;border-radius:6px;padding:12px 14px;font-size:15px;color:var(--c-tx0);box-sizing:border-box;justify-content:space-between"><span style="overflow:hidden;text-overflow:ellipsis;white-space:nowrap">Increase</span><span style="color:var(--c-tx2)"><svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="flex:none"><path d="m6 9 6 6 6-6"/></svg></span></span>
+        </div>
+        <div>
+          <div style="font-size:13px;color:var(--c-tx1);margin-bottom:6px">Tariff rate</div>
+          <div style="display:flex;gap:6px"><span style="display:flex;align-items:center;gap:9px;width:100%;background:#182028;border:1px solid #232e39;border-radius:6px;padding:12px 14px;font-size:15px;color:var(--c-tx0);box-sizing:border-box;flex:1 1 auto;font-variant-numeric:tabular-nums">+25</span><span style="display:flex;align-items:center;gap:9px;width:100%;background:#182028;border:1px solid #232e39;border-radius:6px;padding:12px 14px;font-size:15px;box-sizing:border-box;flex:0 0 46px;justify-content:space-between;color:var(--c-tx1);font-size:13px">%</span></div>
+        </div>
+        <div>
+          <div style="font-size:13px;color:var(--c-tx1);margin-bottom:6px">Affected trade</div>
+          <span style="display:flex;align-items:center;gap:9px;width:100%;background:#182028;border:1px solid #232e39;border-radius:6px;padding:12px 14px;font-size:15px;color:var(--c-tx0);box-sizing:border-box;justify-content:space-between"><span style="overflow:hidden;text-overflow:ellipsis;white-space:nowrap">Imports to Saudi Arabia</span><span style="color:var(--c-tx2)"><svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="flex:none"><path d="m6 9 6 6 6-6"/></svg></span></span>
+        </div>
+        <div>
+          <div style="font-size:13px;color:var(--c-tx1);margin-bottom:6px">Effective date</div>
+          <span style="display:flex;align-items:center;gap:9px;width:100%;background:#182028;border:1px solid #232e39;border-radius:6px;padding:12px 14px;font-size:15px;color:var(--c-tx0);box-sizing:border-box"><span style="color:var(--c-tx2)"><svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="flex:none"><rect x="3" y="4" width="18" height="17" rx="1.5"/><path d="M8 2v4M16 2v4M3 10h18"/></svg></span>1 Oct 2025</span>
+        </div>
+      </div>
+    </div>
+    <div style="background:#141b23;border:1px solid #232e39;border-radius:8px;flex:1 1 280px;min-width:0;border-top:2px solid #3f8ef7;padding:19px 20px 20px;display:flex;flex-direction:column">
+      <div style="display:flex;align-items:flex-start;gap:11px">
+        <span style="flex:none;display:flex;align-items:center;justify-content:center;width:40px;height:40px;border-radius:7px;background:rgba(63,142,247,.15);color:#3f8ef7"><svg viewBox="0 0 24 24" width="17" height="17" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="flex:none"><path d="M2 8c.6.5 1.2 1 2.5 1C7 9 7 7 9.5 7c2.6 0 2.4 2 5 2 1.3 0 1.9-.5 2.5-1"/><path d="M2 14c.6.5 1.2 1 2.5 1C7 15 7 13 9.5 13c2.6 0 2.4 2 5 2 1.3 0 1.9-.5 2.5-1"/><path d="M2 20c.6.5 1.2 1 2.5 1C7 21 7 19 9.5 19c2.6 0 2.4 2 5 2 1.3 0 1.9-.5 2.5-1"/></svg></span>
+        <div style="flex:1 1 auto;min-width:0">
+          <div style="font-size:16px;font-weight:600;color:var(--c-tx0)">Chokepoint disruption</div>
+          <div style="font-size:13px;line-height:16px;color:var(--c-tx1);margin-top:3px">Disruption to key maritime chokepoints</div>
+        </div>
+        <span style="flex:none;display:flex;align-items:center;width:42px;height:23px;border-radius:10px;background:#1f6fd4;padding:2px;box-sizing:border-box"><span style="width:19px;height:19px;border-radius:50%;background:#fff;margin-left:auto"></span></span>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:12px;margin-top:15px">
+        <div>
+          <div style="font-size:13px;color:var(--c-tx1);margin-bottom:6px">Chokepoint</div>
+          <span style="display:flex;align-items:center;gap:9px;width:100%;background:#182028;border:1px solid #232e39;border-radius:6px;padding:12px 14px;font-size:15px;color:var(--c-tx0);box-sizing:border-box;justify-content:space-between"><span style="overflow:hidden;text-overflow:ellipsis;white-space:nowrap">Strait of Hormuz</span><span style="color:var(--c-tx2)"><svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="flex:none"><path d="m6 9 6 6 6-6"/></svg></span></span>
+        </div>
+        <div>
+          <div style="font-size:13px;color:var(--c-tx1);margin-bottom:6px">Capacity reduction</div>
+          <div style="display:flex;gap:6px"><span style="display:flex;align-items:center;gap:9px;width:100%;background:#182028;border:1px solid #232e39;border-radius:6px;padding:12px 14px;font-size:15px;color:var(--c-tx0);box-sizing:border-box;flex:1 1 auto;font-variant-numeric:tabular-nums">&minus;70</span><span style="display:flex;align-items:center;gap:9px;width:100%;background:#182028;border:1px solid #232e39;border-radius:6px;padding:12px 14px;font-size:15px;box-sizing:border-box;flex:0 0 46px;justify-content:space-between;color:var(--c-tx1);font-size:13px">%</span></div>
+        </div>
+        <div>
+          <div style="font-size:13px;color:var(--c-tx1);margin-bottom:6px">Duration</div>
+          <span style="display:flex;align-items:center;gap:9px;width:100%;background:#182028;border:1px solid #232e39;border-radius:6px;padding:12px 14px;font-size:15px;color:var(--c-tx0);box-sizing:border-box;justify-content:space-between"><span style="overflow:hidden;text-overflow:ellipsis;white-space:nowrap">30 days</span><span style="color:var(--c-tx2)"><svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="flex:none"><path d="m6 9 6 6 6-6"/></svg></span></span>
+        </div>
+        <div>
+          <div style="font-size:13px;color:var(--c-tx1);margin-bottom:6px">Rerouting option</div>
+          <span style="display:flex;align-items:center;gap:9px;width:100%;background:#182028;border:1px solid #232e39;border-radius:6px;padding:12px 14px;font-size:15px;color:var(--c-tx0);box-sizing:border-box;justify-content:space-between"><span style="overflow:hidden;text-overflow:ellipsis;white-space:nowrap">Automatic (least cost)</span><span style="color:var(--c-tx2)"><svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="flex:none"><path d="m6 9 6 6 6-6"/></svg></span></span>
+        </div>
+      </div>
+    </div>
+    <div style="background:#141b23;border:1px solid #232e39;border-radius:8px;flex:1 1 280px;min-width:0;border-top:2px solid var(--c-amber-hi);padding:19px 20px 20px;display:flex;flex-direction:column">
+      <div style="display:flex;align-items:flex-start;gap:11px">
+        <span style="flex:none;display:flex;align-items:center;justify-content:center;width:40px;height:40px;border-radius:7px;background:rgba(251,191,36,.15);color:var(--c-amber-hi)"><svg viewBox="0 0 24 24" width="17" height="17" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="flex:none"><path d="M6 3h8l4 4v14H6z"/><path d="M14 3v4h4"/><path d="M9 13h6M9 17h4"/></svg></span>
+        <div style="flex:1 1 auto;min-width:0">
+          <div style="font-size:16px;font-weight:600;color:var(--c-tx0)">Import quotas / TRQ</div>
+          <div style="font-size:13px;line-height:16px;color:var(--c-tx1);margin-top:3px">Volume restrictions on specific products</div>
+        </div>
+        <span style="flex:none;display:flex;align-items:center;width:42px;height:23px;border-radius:10px;background:#1f6fd4;padding:2px;box-sizing:border-box"><span style="width:19px;height:19px;border-radius:50%;background:#fff;margin-left:auto"></span></span>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:12px;margin-top:15px">
+        <div>
+          <div style="font-size:13px;color:var(--c-tx1);margin-bottom:6px">Quota type</div>
+          <span style="display:flex;align-items:center;gap:9px;width:100%;background:#182028;border:1px solid #232e39;border-radius:6px;padding:12px 14px;font-size:15px;color:var(--c-tx0);box-sizing:border-box;justify-content:space-between"><span style="overflow:hidden;text-overflow:ellipsis;white-space:nowrap">Import quota (TRQ)</span><span style="color:var(--c-tx2)"><svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="flex:none"><path d="m6 9 6 6 6-6"/></svg></span></span>
+        </div>
+        <div>
+          <div style="font-size:13px;color:var(--c-tx1);margin-bottom:6px">Quota volume</div>
+          <div style="display:flex;gap:6px"><span style="display:flex;align-items:center;gap:9px;width:100%;background:#182028;border:1px solid #232e39;border-radius:6px;padding:12px 14px;font-size:15px;color:var(--c-tx0);box-sizing:border-box;flex:1 1 auto;font-variant-numeric:tabular-nums">&minus;30</span><span style="display:flex;align-items:center;gap:9px;width:100%;background:#182028;border:1px solid #232e39;border-radius:6px;padding:12px 14px;font-size:15px;box-sizing:border-box;flex:0 0 116px;justify-content:space-between;color:var(--c-tx1);font-size:13px">% vs. baseline<span style="color:var(--c-tx2)"><svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="flex:none"><path d="m6 9 6 6 6-6"/></svg></span></span></div>
+        </div>
+        <div>
+          <div style="font-size:13px;color:var(--c-tx1);margin-bottom:6px">Affected products</div>
+          <span style="display:flex;align-items:center;gap:9px;width:100%;background:#182028;border:1px solid #232e39;border-radius:6px;padding:12px 14px;font-size:15px;color:var(--c-tx0);box-sizing:border-box;justify-content:space-between"><span style="overflow:hidden;text-overflow:ellipsis;white-space:nowrap">Selected products (5)</span><span style="color:var(--c-tx2)"><svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="flex:none"><path d="m6 9 6 6 6-6"/></svg></span></span>
+        </div>
+        <div>
+          <div style="font-size:13px;color:var(--c-tx1);margin-bottom:6px">Effective period</div>
+          <span style="display:flex;align-items:center;gap:9px;width:100%;background:#182028;border:1px solid #232e39;border-radius:6px;padding:12px 14px;font-size:15px;color:var(--c-tx0);box-sizing:border-box;justify-content:space-between"><span style="overflow:hidden;text-overflow:ellipsis;white-space:nowrap">6 months</span><span style="color:var(--c-tx2)"><svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="flex:none"><path d="m6 9 6 6 6-6"/></svg></span></span>
+        </div>
+      </div>
+    </div>
+    <div style="background:#141b23;border:1px solid #232e39;border-radius:8px;flex:1 1 280px;min-width:0;border-top:2px solid var(--c-green-hi);padding:19px 20px 20px;display:flex;flex-direction:column">
+      <div style="display:flex;align-items:flex-start;gap:11px">
+        <span style="flex:none;display:flex;align-items:center;justify-content:center;width:40px;height:40px;border-radius:7px;background:rgba(61,214,140,.15);color:var(--c-green-hi)"><svg viewBox="0 0 24 24" width="17" height="17" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="flex:none"><path d="M11 20c-4 0-7-3-7-7 0-5 5-9 16-10 0 10-4 17-9 17Z"/><path d="M8 20c0-5 3-9 8-11"/></svg></span>
+        <div style="flex:1 1 auto;min-width:0">
+          <div style="font-size:16px;font-weight:600;color:var(--c-tx0)">Environmental quotas</div>
+          <div style="font-size:13px;line-height:16px;color:var(--c-tx1);margin-top:3px">Emissions / environmental compliance</div>
+        </div>
+        <span style="flex:none;display:flex;align-items:center;width:42px;height:23px;border-radius:10px;background:#1f6fd4;padding:2px;box-sizing:border-box"><span style="width:19px;height:19px;border-radius:50%;background:#fff;margin-left:auto"></span></span>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:12px;margin-top:15px">
+        <div>
+          <div style="font-size:13px;color:var(--c-tx1);margin-bottom:6px">Policy type</div>
+          <span style="display:flex;align-items:center;gap:9px;width:100%;background:#182028;border:1px solid #232e39;border-radius:6px;padding:12px 14px;font-size:15px;color:var(--c-tx0);box-sizing:border-box;justify-content:space-between"><span style="overflow:hidden;text-overflow:ellipsis;white-space:nowrap">Carbon quota (e.g. CBAM)</span><span style="color:var(--c-tx2)"><svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="flex:none"><path d="m6 9 6 6 6-6"/></svg></span></span>
+        </div>
+        <div>
+          <div style="font-size:13px;color:var(--c-tx1);margin-bottom:6px">Emissions threshold</div>
+          <div style="display:flex;gap:6px"><span style="display:flex;align-items:center;gap:9px;width:100%;background:#182028;border:1px solid #232e39;border-radius:6px;padding:12px 14px;font-size:15px;color:var(--c-tx0);box-sizing:border-box;flex:1 1 auto;font-variant-numeric:tabular-nums">&minus;20</span><span style="display:flex;align-items:center;gap:9px;width:100%;background:#182028;border:1px solid #232e39;border-radius:6px;padding:12px 14px;font-size:15px;box-sizing:border-box;flex:0 0 116px;justify-content:space-between;color:var(--c-tx1);font-size:13px">% vs. baseline<span style="color:var(--c-tx2)"><svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="flex:none"><path d="m6 9 6 6 6-6"/></svg></span></span></div>
+        </div>
+        <div>
+          <div style="font-size:13px;color:var(--c-tx1);margin-bottom:6px">Affected markets</div>
+          <span style="display:flex;align-items:center;gap:9px;width:100%;background:#182028;border:1px solid #232e39;border-radius:6px;padding:12px 14px;font-size:15px;color:var(--c-tx0);box-sizing:border-box;justify-content:space-between"><span style="overflow:hidden;text-overflow:ellipsis;white-space:nowrap">EU</span><span style="color:var(--c-tx2)"><svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="flex:none"><path d="m6 9 6 6 6-6"/></svg></span></span>
+        </div>
+        <div>
+          <div style="font-size:13px;color:var(--c-tx1);margin-bottom:6px">Effective date</div>
+          <span style="display:flex;align-items:center;gap:9px;width:100%;background:#182028;border:1px solid #232e39;border-radius:6px;padding:12px 14px;font-size:15px;color:var(--c-tx0);box-sizing:border-box"><span style="color:var(--c-tx2)"><svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="flex:none"><rect x="3" y="4" width="18" height="17" rx="1.5"/><path d="M8 2v4M16 2v4M3 10h18"/></svg></span>1 Jan 2026</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div style="padding:14px 24px 26px">
+    <div style="background:#141b23;border:1px solid #232e39;border-radius:8px;padding:20px 22px;display:flex;align-items:center;gap:22px;flex-wrap:wrap">
+      <div style="flex:1 1 300px;min-width:0">
+        <div style="font-family:var(--f-ui);font-weight:600;font-size:19px;line-height:1.25;color:var(--c-tx0);margin-bottom:12px">Scenario summary</div>
+        <div style="display:flex;gap:20px;flex-wrap:wrap">
+          <span style="display:flex;align-items:center;gap:10px;white-space:nowrap"><span style="display:flex;align-items:center;justify-content:center;width:36px;height:36px;border-radius:7px;background:rgba(127,168,204,.13);color:var(--c-gold)"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="flex:none"><path d="M3 21h18M6 21V8l6-4 6 4v13"/><path d="M10 21v-6h4v6"/></svg></span><span style="display:flex;flex-direction:column"><span style="font-size:15px;font-weight:600;color:var(--c-tx0)">Saudi Arabia</span><span style="font-size:13px;color:var(--c-tx1)">Total trade</span></span></span>
+          <span style="display:flex;align-items:center;gap:10px;white-space:nowrap"><span style="display:flex;align-items:center;justify-content:center;width:36px;height:36px;border-radius:7px;background:rgba(127,168,204,.13);color:var(--c-gold)"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="flex:none"><rect x="3" y="7" width="18" height="13" rx="1.5"/><path d="M3 12h18"/></svg></span><span style="display:flex;flex-direction:column"><span style="font-size:15px;font-weight:600;color:var(--c-tx0)">All products</span><span style="font-size:13px;color:var(--c-tx1)">All origins &rarr; All destinations</span></span></span>
+          <span style="display:flex;align-items:center;gap:10px;white-space:nowrap"><span style="display:flex;align-items:center;justify-content:center;width:36px;height:36px;border-radius:7px;background:rgba(127,168,204,.13);color:var(--c-gold)"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="flex:none"><rect x="3" y="4" width="18" height="17" rx="1.5"/><path d="M8 2v4M16 2v4M3 10h18"/></svg></span><span style="display:flex;flex-direction:column"><span style="font-size:15px;font-weight:600;color:var(--c-tx0)">2024</span><span style="font-size:13px;color:var(--c-tx1)">Baseline year</span></span></span>
+        </div>
+      </div>
+      <div style="flex:0 1 200px;min-width:0">
+        <div style="font-size:14px;color:var(--c-tx1)">4 parameters activated</div>
+        <div style="display:flex;gap:9px;margin-top:9px">
+          <span style="display:flex;align-items:center;justify-content:center;width:34px;height:34px;border-radius:6px;background:rgba(242,112,92,.15);color:var(--c-red-hi)"><svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="flex:none"><ellipse cx="12" cy="6" rx="8" ry="3"/><path d="M4 6v12c0 1.7 3.6 3 8 3s8-1.3 8-3V6"/></svg></span>
+          <span style="display:flex;align-items:center;justify-content:center;width:34px;height:34px;border-radius:6px;background:rgba(63,142,247,.15);color:#3f8ef7"><svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="flex:none"><path d="M2 8c.6.5 1.2 1 2.5 1C7 9 7 7 9.5 7c2.6 0 2.4 2 5 2 1.3 0 1.9-.5 2.5-1"/><path d="M2 15c.6.5 1.2 1 2.5 1C7 16 7 14 9.5 14c2.6 0 2.4 2 5 2 1.3 0 1.9-.5 2.5-1"/></svg></span>
+          <span style="display:flex;align-items:center;justify-content:center;width:34px;height:34px;border-radius:6px;background:rgba(251,191,36,.15);color:var(--c-amber-hi)"><svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="flex:none"><path d="M6 3h8l4 4v14H6z"/><path d="M14 3v4h4"/></svg></span>
+          <span style="display:flex;align-items:center;justify-content:center;width:34px;height:34px;border-radius:6px;background:rgba(61,214,140,.15);color:var(--c-green-hi)"><svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="flex:none"><path d="M11 20c-4 0-7-3-7-7 0-5 5-9 16-10 0 10-4 17-9 17Z"/></svg></span>
+        </div>
+      </div>
+      <button type="button" onclick="scenGoStep(3)" style="flex:0 0 auto;display:flex;align-items:center;gap:11px;justify-content:center;background:#1f6fd4;border:0;border-radius:7px;color:#fff;font-family:var(--f-ui);font-weight:600;font-size:17px;padding:16px 30px;cursor:pointer;white-space:nowrap"><svg viewBox="0 0 24 24" width="16" height="16" style="flex:none"><path d="M7 4v16l13-8z" fill="currentColor"/></svg>Run Simulation</button>
+    </div>
+  </div>
+  </div>
+
+  <!-- STEP 3 — Run Simulation -->
+  <div class="scen-step-panel" data-step="3" style="display:none;flex:1 1 auto;flex-direction:column;padding:14px 24px 26px">
+    <div style="background:#141b23;border:1px solid #232e39;border-radius:8px;padding:0;overflow:hidden;flex:1 1 auto;display:flex;flex-direction:column">
+      <div style="flex:1 1 auto;display:flex;flex-wrap:wrap;align-items:stretch">
+        <div style="flex:1 1 340px;min-width:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:22px;padding:78px 30px;border-right:1px solid #1f2830">
+          <span style="display:block;width:84px;height:84px;border-radius:50%;border:5px solid #1f2830;border-top-color:#1f6fd4;border-right-color:#1f6fd4;animation:gli-spin 900ms linear infinite"></span>
+          <div style="text-align:center">
+            <div style="font-family:var(--f-ui);font-weight:600;font-size:22px;color:var(--c-tx0)">Running simulation&hellip;</div>
+            <div style="font-size:15.5px;line-height:21px;color:var(--c-tx1);margin-top:8px;max-width:38ch">Analyzing trade flows, routes, costs and supply chain impacts.</div>
+          </div>
+        </div>
+        <div style="flex:1 1 340px;min-width:0;padding:44px 30px">
+          <div style="font-family:var(--f-ui);font-weight:600;font-size:18px;color:var(--c-tx0)">Step 2 of 4</div>
+          <div style="font-size:15.5px;color:var(--c-tx1);margin-top:4px">Estimating trade flow changes&hellip;</div>
+          <div style="display:flex;align-items:center;gap:13px;margin-top:16px">
+            <span style="flex:1 1 auto;min-width:40px;height:10px;border-radius:5px;background:#1a222a"><span style="display:block;width:45%;height:10px;border-radius:5px;background:#1f6fd4"></span></span>
+            <span style="flex:none;font-size:14px;font-variant-numeric:tabular-nums;color:var(--c-tx0)">45%</span>
+          </div>
+          <div style="display:flex;flex-direction:column;gap:17px;margin-top:28px">
+          <div style="display:flex;align-items:center;gap:11px">
+            <span style="flex:none;display:flex;align-items:center;justify-content:center;width:25px;height:25px;border-radius:50%;background:var(--c-green-hi);color:#0c1116"><svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="flex:none"><path d="m5 12 5 5L20 7"/></svg></span>
+            <span style="font-size:15.5px;color:var(--c-green-hi)">Processing baseline data</span>
+          </div>
+          <div style="display:flex;align-items:center;gap:11px">
+            <span style="flex:none;display:flex;align-items:center;justify-content:center;width:25px;height:25px;border-radius:50%;background:#1f6fd4;color:#fff"><svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="flex:none"><circle cx="12" cy="12" r="9"/><path d="M12 8v4l3 2"/></svg></span>
+            <span style="font-size:15.5px;color:var(--accent-600)">Applying scenario parameters</span>
+          </div>
+          <div style="display:flex;align-items:center;gap:11px">
+            <span style="flex:none;display:flex;align-items:center;justify-content:center;width:25px;height:25px;border-radius:50%;border:1.5px solid #3a4650;color:var(--c-tx2)"><svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="flex:none"><circle cx="12" cy="12" r="9"/><path d="M12 8v4l3 2"/></svg></span>
+            <span style="font-size:15.5px;color:var(--c-tx1)">Calculating trade flow impacts</span>
+          </div>
+          <div style="display:flex;align-items:center;gap:11px">
+            <span style="flex:none;display:flex;align-items:center;justify-content:center;width:25px;height:25px;border-radius:50%;border:1.5px solid #3a4650;color:var(--c-tx2)"><svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="flex:none"><circle cx="12" cy="12" r="9"/><path d="M12 8v4l3 2"/></svg></span>
+            <span style="font-size:15.5px;color:var(--c-tx1)">Modeling route and network changes</span>
+          </div>
+          <div style="display:flex;align-items:center;gap:11px">
+            <span style="flex:none;display:flex;align-items:center;justify-content:center;width:25px;height:25px;border-radius:50%;border:1.5px solid #3a4650;color:var(--c-tx2)"><svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="flex:none"><circle cx="12" cy="12" r="9"/><path d="M12 8v4l3 2"/></svg></span>
+            <span style="font-size:15.5px;color:var(--c-tx1)">Estimating cost and transit times</span>
+          </div>
+          <div style="display:flex;align-items:center;gap:11px">
+            <span style="flex:none;display:flex;align-items:center;justify-content:center;width:25px;height:25px;border-radius:50%;border:1.5px solid #3a4650;color:var(--c-tx2)"><svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="flex:none"><circle cx="12" cy="12" r="9"/><path d="M12 8v4l3 2"/></svg></span>
+            <span style="font-size:15.5px;color:var(--c-tx1)">Assessing sector and product exposure</span>
+          </div>
+          </div>
+        </div>
+      </div>
+      <div style="display:flex;align-items:center;gap:13px;margin:0 18px 18px;padding:20px 22px;background:rgba(31,111,212,.1);border:1px solid #27425f;border-radius:7px;flex-wrap:wrap">
+        <span style="flex:none;display:flex;color:#5aa3f5"><svg viewBox="0 0 24 24" width="17" height="17" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="flex:none"><circle cx="12" cy="12" r="9"/><path d="M12 16v-5M12 8h.01"/></svg></span>
+        <span style="flex:1 1 220px;min-width:0;font-size:14px;line-height:19px;color:var(--c-tx1)">This may take 1&ndash;2 minutes. You can leave this page, and we will notify you when the results are ready.</span>
+        <button type="button" onclick="scenGoStep(4)" style="flex:none;background:transparent;border:1px solid #3f8ef7;border-radius:6px;color:var(--accent-600);font-family:var(--f-ui);font-size:14px;padding:9px 16px;cursor:pointer;white-space:nowrap">Skip to results</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- STEP 4 — View Results -->
+  <div class="scen-step-panel" data-step="4" style="display:none">
+  <div style="display:flex;flex-wrap:wrap;gap:4px;padding:14px 24px 0;border-bottom:1px solid #1f2830">
+      <span style="flex:1 1 auto;text-align:center;font-size:14px;font-weight:600;padding:14px 15px;white-space:nowrap;border-radius:7px 7px 0 0;color:var(--c-tx0);background:#1b2937;box-shadow:inset 0 -2px 0 var(--accent-500)">Executive Summary</span>
+      <span style="flex:1 1 auto;text-align:center;font-size:14px;font-weight:400;padding:14px 15px;white-space:nowrap;border-radius:7px 7px 0 0;color:var(--c-tx1);">Trade Impact</span>
+      <span style="flex:1 1 auto;text-align:center;font-size:14px;font-weight:400;padding:14px 15px;white-space:nowrap;border-radius:7px 7px 0 0;color:var(--c-tx1);">Route &amp; Network Impact</span>
+      <span style="flex:1 1 auto;text-align:center;font-size:14px;font-weight:400;padding:14px 15px;white-space:nowrap;border-radius:7px 7px 0 0;color:var(--c-tx1);">Cost Impact</span>
+      <span style="flex:1 1 auto;text-align:center;font-size:14px;font-weight:400;padding:14px 15px;white-space:nowrap;border-radius:7px 7px 0 0;color:var(--c-tx1);">Sector &amp; Product Impact</span>
+      <span style="flex:1 1 auto;text-align:center;font-size:14px;font-weight:400;padding:14px 15px;white-space:nowrap;border-radius:7px 7px 0 0;color:var(--c-tx1);">Supply Chain Resilience</span>
+      <span style="flex:1 1 auto;text-align:center;font-size:14px;font-weight:400;padding:14px 15px;white-space:nowrap;border-radius:7px 7px 0 0;color:var(--c-tx1);">Detailed Data</span>
+  </div>
+
+  <div style="flex:1 1 auto;display:flex;flex-wrap:wrap;gap:14px;padding:14px 24px 26px;align-items:stretch">
+    <div style="flex:2 1 560px;min-width:0;display:flex;flex-direction:column;gap:14px">
+      <div style="background:#141b23;border:1px solid #232e39;border-radius:8px;padding:20px 22px 22px">
+        <div style="font-family:var(--f-ui);font-weight:600;font-size:19px;line-height:1.25;color:var(--c-tx0);margin-bottom:12px">Key results <span style="font-weight:400;font-size:14px;color:var(--c-tx2)">(vs. baseline)</span></div>
+        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(178px,1fr));gap:12px">
+          <div style="background:#141b23;border:1px solid #232e39;border-radius:8px;padding:18px 19px 15px;display:flex;flex-direction:column">
+            <div style="font-size:14px;color:var(--c-tx1)">Trade value</div>
+            <div style="font-family:var(--f-heading);font-weight:600;font-size:36px;line-height:1;font-variant-numeric:tabular-nums;color:var(--c-red-hi);margin-top:9px;white-space:nowrap">&minus;24%</div>
+            <div style="font-size:13px;color:var(--c-tx1);margin-top:5px;white-space:nowrap">(&minus;32 B USD)</div>
+            <div style="margin-top:10px"><svg viewBox="0 0 120 34" preserveAspectRatio="none" style="width:100%;height:30px;display:block"><polyline points="1.0,4.0 8.9,4.3 16.7,5.0 24.6,5.8 32.5,6.9 40.3,8.1 48.2,9.5 56.1,11.1 63.9,12.8 71.8,14.6 79.7,16.5 87.5,18.6 95.4,20.8 103.3,23.1 111.1,25.5 119.0,28.0" fill="none" stroke="var(--c-red-hi)" stroke-width="1.4" vector-effect="non-scaling-stroke"/></svg></div>
+            <div style="margin-top:auto;padding-top:10px;font-size:12.5px;color:var(--c-tx2);white-space:nowrap">vs. baseline (30 days)</div>
+          </div>
+          <div style="background:#141b23;border:1px solid #232e39;border-radius:8px;padding:18px 19px 15px;display:flex;flex-direction:column">
+            <div style="font-size:14px;color:var(--c-tx1)">Trade volume</div>
+            <div style="font-family:var(--f-heading);font-weight:600;font-size:36px;line-height:1;font-variant-numeric:tabular-nums;color:var(--c-red-hi);margin-top:9px;white-space:nowrap">&minus;28%</div>
+            <div style="font-size:13px;color:var(--c-tx1);margin-top:5px;white-space:nowrap">(&minus;38 M tonnes)</div>
+            <div style="margin-top:10px"><svg viewBox="0 0 120 34" preserveAspectRatio="none" style="width:100%;height:30px;display:block"><polyline points="1.0,4.0 8.9,4.3 16.7,5.0 24.6,5.8 32.5,6.9 40.3,8.1 48.2,9.5 56.1,11.1 63.9,12.8 71.8,14.6 79.7,16.5 87.5,18.6 95.4,20.8 103.3,23.1 111.1,25.5 119.0,28.0" fill="none" stroke="var(--c-red-hi)" stroke-width="1.4" vector-effect="non-scaling-stroke"/></svg></div>
+            <div style="margin-top:auto;padding-top:10px;font-size:12.5px;color:var(--c-tx2);white-space:nowrap">vs. baseline (30 days)</div>
+          </div>
+          <div style="background:#141b23;border:1px solid #232e39;border-radius:8px;padding:18px 19px 15px;display:flex;flex-direction:column">
+            <div style="font-size:14px;color:var(--c-tx1)">Freight costs</div>
+            <div style="font-family:var(--f-heading);font-weight:600;font-size:36px;line-height:1;font-variant-numeric:tabular-nums;color:var(--c-red-hi);margin-top:9px;white-space:nowrap">+65%</div>
+            <div style="font-size:13px;color:var(--c-tx1);margin-top:5px;white-space:nowrap">(+420 USD/tonne)</div>
+            <div style="margin-top:10px"><svg viewBox="0 0 120 34" preserveAspectRatio="none" style="width:100%;height:30px;display:block"><polyline points="1.0,28.0 8.9,27.7 16.7,27.0 24.6,26.2 32.5,25.1 40.3,23.9 48.2,22.5 56.1,20.9 63.9,19.2 71.8,17.4 79.7,15.5 87.5,13.4 95.4,11.2 103.3,8.9 111.1,6.5 119.0,4.0" fill="none" stroke="var(--c-red-hi)" stroke-width="1.4" vector-effect="non-scaling-stroke"/></svg></div>
+            <div style="margin-top:auto;padding-top:10px;font-size:12.5px;color:var(--c-tx2);white-space:nowrap">vs. baseline (30 days)</div>
+          </div>
+          <div style="background:#141b23;border:1px solid #232e39;border-radius:8px;padding:18px 19px 15px;display:flex;flex-direction:column">
+            <div style="font-size:14px;color:var(--c-tx1)">Average transit time</div>
+            <div style="font-family:var(--f-heading);font-weight:600;font-size:36px;line-height:1;font-variant-numeric:tabular-nums;color:var(--c-red-hi);margin-top:9px;white-space:nowrap">+12 days</div>
+            <div style="margin-top:10px"><svg viewBox="0 0 120 34" preserveAspectRatio="none" style="width:100%;height:30px;display:block"><polyline points="1.0,28.0 8.9,27.7 16.7,27.0 24.6,26.2 32.5,25.1 40.3,23.9 48.2,22.5 56.1,20.9 63.9,19.2 71.8,17.4 79.7,15.5 87.5,13.4 95.4,11.2 103.3,8.9 111.1,6.5 119.0,4.0" fill="none" stroke="var(--c-red-hi)" stroke-width="1.4" vector-effect="non-scaling-stroke"/></svg></div>
+            <div style="margin-top:auto;padding-top:10px;font-size:12.5px;color:var(--c-tx2);white-space:nowrap">vs. baseline (30 days)</div>
+          </div>
+          <div style="background:#141b23;border:1px solid #232e39;border-radius:8px;padding:18px 19px 15px;display:flex;flex-direction:column">
+            <div style="font-size:14px;color:var(--c-tx1)">Vessel demand</div>
+            <div style="font-family:var(--f-heading);font-weight:600;font-size:36px;line-height:1;font-variant-numeric:tabular-nums;color:var(--c-red-hi);margin-top:9px;white-space:nowrap">+18%</div>
+            <div style="margin-top:10px"><svg viewBox="0 0 120 34" preserveAspectRatio="none" style="width:100%;height:30px;display:block"><polyline points="1.0,28.0 8.9,27.7 16.7,27.0 24.6,26.2 32.5,25.1 40.3,23.9 48.2,22.5 56.1,20.9 63.9,19.2 71.8,17.4 79.7,15.5 87.5,13.4 95.4,11.2 103.3,8.9 111.1,6.5 119.0,4.0" fill="none" stroke="var(--c-red-hi)" stroke-width="1.4" vector-effect="non-scaling-stroke"/></svg></div>
+            <div style="margin-top:auto;padding-top:10px;font-size:12.5px;color:var(--c-tx2);white-space:nowrap">vs. baseline (30 days)</div>
+          </div>
+        </div>
+      </div>
+      <div style="display:flex;flex-wrap:wrap;gap:14px;align-items:stretch">
+        <div style="background:#141b23;border:1px solid #232e39;border-radius:8px;flex:1.15 1 320px;min-width:0;overflow:hidden;display:flex;flex-direction:column">
+          <div style="padding:20px 22px 15px">
+            <div style="font-family:var(--f-ui);font-weight:600;font-size:19px;line-height:1.25;color:var(--c-tx0)">Global trade flow changes</div>
+            <div style="font-size:14px;line-height:18px;color:var(--c-tx2);margin-top:4px">Changes in trade flows and routes (scenario vs. baseline)</div>
+          </div>
+          <div style="position:relative;flex:1 1 auto;min-height:330px;background:radial-gradient(125% 110% at 52% 44%,#16242e 0%,#111d26 50%,#0d161d 100%);border-top:1px solid #1f2830">
+            <div style="position:absolute;inset:0;background:repeating-linear-gradient(0deg,rgba(127,168,204,.035) 0 1px,transparent 1px 54px),repeating-linear-gradient(90deg,rgba(127,168,204,.035) 0 1px,transparent 1px 54px)"></div>
+            <svg viewBox="0 0 520 280" preserveAspectRatio="none" style="position:absolute;inset:0;width:100%;height:100%;display:block">
+              <path d="M262,150 C222,120 176,104 132,112" fill="none" stroke="#f2705c" stroke-width="2.2" stroke-linecap="round" vector-effect="non-scaling-stroke"/>
+              <path d="M262,150 C310,128 364,118 414,126" fill="none" stroke="#f2705c" stroke-width="2.2" stroke-linecap="round" vector-effect="non-scaling-stroke"/>
+              <path d="M262,150 C224,182 186,204 140,212" fill="none" stroke="#2fd4a7" stroke-width="2.2" stroke-linecap="round" stroke-dasharray="7 6" vector-effect="non-scaling-stroke"/>
+              <path d="M262,150 C300,188 346,210 398,214" fill="none" stroke="#2fd4a7" stroke-width="2.2" stroke-linecap="round" stroke-dasharray="7 6" vector-effect="non-scaling-stroke"/>
+              <circle cx="262" cy="150" r="6.5" fill="#0c1116" stroke="#5ad1f5" stroke-width="3"/>
+              <g stroke="#f2705c" stroke-width="3.4" stroke-linecap="round"><path d="M304,168 L322,186"/><path d="M322,168 L304,186"/></g>
+            </svg>
+            <span style="position:absolute;left:24%;top:32%;transform:translate(-50%,-50%);background:rgba(10,15,20,.93);border:1px solid #2a3642;border-radius:6px;padding:7px 12px;text-align:center;white-space:nowrap">
+              <span style="display:block;font-size:13px;color:var(--c-tx1)">Europe</span>
+              <span style="display:block;font-family:var(--f-heading);font-weight:600;font-size:18px;line-height:1.15;font-variant-numeric:tabular-nums;color:var(--c-red-hi)">&minus;18%</span>
+            </span>
+            <span style="position:absolute;left:82%;top:36%;transform:translate(-50%,-50%);background:rgba(10,15,20,.93);border:1px solid #2a3642;border-radius:6px;padding:7px 12px;text-align:center;white-space:nowrap">
+              <span style="display:block;font-size:13px;color:var(--c-tx1)">Asia</span>
+              <span style="display:block;font-family:var(--f-heading);font-weight:600;font-size:18px;line-height:1.15;font-variant-numeric:tabular-nums;color:var(--c-red-hi)">&minus;25%</span>
+            </span>
+            <span style="position:absolute;left:21%;top:74%;transform:translate(-50%,-50%);background:rgba(10,15,20,.93);border:1px solid #2a3642;border-radius:6px;padding:7px 12px;text-align:center;white-space:nowrap">
+              <span style="display:block;font-size:13px;color:var(--c-tx1)">Africa</span>
+              <span style="display:block;font-family:var(--f-heading);font-weight:600;font-size:18px;line-height:1.15;font-variant-numeric:tabular-nums;color:var(--c-green-hi)">+12%</span>
+            </span>
+            <span style="position:absolute;left:67%;top:70%;transform:translate(-50%,-50%);background:rgba(10,15,20,.93);border:1px solid #2a3642;border-radius:6px;padding:7px 12px;text-align:center;white-space:nowrap">
+              <span style="display:block;font-size:13px;color:var(--c-tx1)">Hormuz</span>
+              <span style="display:block;font-family:var(--f-heading);font-weight:600;font-size:18px;line-height:1.15;font-variant-numeric:tabular-nums;color:var(--c-red-hi)">&minus;70%</span>
+            </span>
+            <span style="position:absolute;left:50%;top:48%;transform:translate(-50%,-50%);font-size:14px;font-weight:600;color:var(--c-tx0);white-space:nowrap">Saudi Arabia</span>
+            <div style="position:absolute;right:12px;top:12px;display:flex;flex-direction:column;gap:6px">
+              <span style="display:flex;align-items:center;justify-content:center;width:34px;height:34px;border-radius:6px;border:1px solid #232e39;background:#0c1116;font-size:17px;color:var(--c-tx1)">+</span>
+              <span style="display:flex;align-items:center;justify-content:center;width:34px;height:34px;border-radius:6px;border:1px solid #232e39;background:#0c1116;font-size:17px;color:var(--c-tx1)">&minus;</span>
+            </div>
+            <div style="position:absolute;left:12px;bottom:12px;display:flex;flex-direction:column;align-items:center;gap:3px;background:rgba(12,17,22,.92);border-radius:4px;padding:4px 8px">
+              <span style="font-size:10.5px;font-variant-numeric:tabular-nums;color:var(--c-tx0)">2,000 km</span>
+              <span style="width:66px;height:5px;border:1px solid var(--c-tx1);border-top:0"></span>
+            </div>
+          </div>
+        </div>
+
+        <div style="background:#141b23;border:1px solid #232e39;border-radius:8px;flex:1 1 320px;min-width:0;padding:20px 22px 18px">
+          <div style="font-family:var(--f-ui);font-weight:600;font-size:19px;line-height:1.25;color:var(--c-tx0)">Top affected products</div>
+          <div style="display:flex;align-items:baseline;gap:10px;padding:18px 0 8px">
+            <span style="flex:0 0 46px;font-size:11px;letter-spacing:0.1em;text-transform:uppercase;color:var(--c-tx2)">HS code</span>
+            <span style="flex:1 1 0;min-width:0;font-size:11px;letter-spacing:0.1em;text-transform:uppercase;color:var(--c-tx2)">Product</span>
+            <span style="flex:0 0 62px;text-align:right;font-size:11px;letter-spacing:0.1em;text-transform:uppercase;color:var(--c-tx2)">Volume</span>
+            <span style="flex:0 0 62px;text-align:right;font-size:11px;letter-spacing:0.1em;text-transform:uppercase;color:var(--c-tx2)">Value</span>
+          </div>
+          <div style="display:flex;align-items:baseline;gap:10px;padding:12px 0;border-top:1px solid #1f2830">
+            <span style="flex:0 0 46px;font-size:14px;font-variant-numeric:tabular-nums;color:var(--c-tx1)">2709</span>
+            <span style="flex:1 1 0;min-width:0;font-size:15px;color:var(--c-tx0);overflow:hidden;text-overflow:ellipsis;white-space:nowrap">Crude oil</span>
+            <span style="flex:0 0 62px;text-align:right;font-size:14px;font-weight:600;font-variant-numeric:tabular-nums;color:var(--c-red-hi)">&minus;32%</span>
+            <span style="flex:0 0 62px;text-align:right;font-size:14px;font-weight:600;font-variant-numeric:tabular-nums;color:var(--c-red-hi)">&minus;34%</span>
+          </div>
+          <div style="display:flex;align-items:baseline;gap:10px;padding:12px 0;border-top:1px solid #1f2830">
+            <span style="flex:0 0 46px;font-size:14px;font-variant-numeric:tabular-nums;color:var(--c-tx1)">2710</span>
+            <span style="flex:1 1 0;min-width:0;font-size:15px;color:var(--c-tx0);overflow:hidden;text-overflow:ellipsis;white-space:nowrap">Refined products</span>
+            <span style="flex:0 0 62px;text-align:right;font-size:14px;font-weight:600;font-variant-numeric:tabular-nums;color:var(--c-red-hi)">&minus;28%</span>
+            <span style="flex:0 0 62px;text-align:right;font-size:14px;font-weight:600;font-variant-numeric:tabular-nums;color:var(--c-red-hi)">&minus;26%</span>
+          </div>
+          <div style="display:flex;align-items:baseline;gap:10px;padding:12px 0;border-top:1px solid #1f2830">
+            <span style="flex:0 0 46px;font-size:14px;font-variant-numeric:tabular-nums;color:var(--c-tx1)">2902</span>
+            <span style="flex:1 1 0;min-width:0;font-size:15px;color:var(--c-tx0);overflow:hidden;text-overflow:ellipsis;white-space:nowrap">Petrochemicals</span>
+            <span style="flex:0 0 62px;text-align:right;font-size:14px;font-weight:600;font-variant-numeric:tabular-nums;color:var(--c-red-hi)">&minus;25%</span>
+            <span style="flex:0 0 62px;text-align:right;font-size:14px;font-weight:600;font-variant-numeric:tabular-nums;color:var(--c-red-hi)">&minus;22%</span>
+          </div>
+          <div style="display:flex;align-items:baseline;gap:10px;padding:12px 0;border-top:1px solid #1f2830">
+            <span style="flex:0 0 46px;font-size:14px;font-variant-numeric:tabular-nums;color:var(--c-tx1)">7208</span>
+            <span style="flex:1 1 0;min-width:0;font-size:15px;color:var(--c-tx0);overflow:hidden;text-overflow:ellipsis;white-space:nowrap">Iron &amp; steel</span>
+            <span style="flex:0 0 62px;text-align:right;font-size:14px;font-weight:600;font-variant-numeric:tabular-nums;color:var(--c-red-hi)">&minus;18%</span>
+            <span style="flex:0 0 62px;text-align:right;font-size:14px;font-weight:600;font-variant-numeric:tabular-nums;color:var(--c-red-hi)">&minus;20%</span>
+          </div>
+          <div style="display:flex;align-items:baseline;gap:10px;padding:12px 0;border-top:1px solid #1f2830">
+            <span style="flex:0 0 46px;font-size:14px;font-variant-numeric:tabular-nums;color:var(--c-tx1)">3105</span>
+            <span style="flex:1 1 0;min-width:0;font-size:15px;color:var(--c-tx0);overflow:hidden;text-overflow:ellipsis;white-space:nowrap">Fertilizers</span>
+            <span style="flex:0 0 62px;text-align:right;font-size:14px;font-weight:600;font-variant-numeric:tabular-nums;color:var(--c-red-hi)">&minus;12%</span>
+            <span style="flex:0 0 62px;text-align:right;font-size:14px;font-weight:600;font-variant-numeric:tabular-nums;color:var(--c-red-hi)">&minus;15%</span>
+          </div>
+          <a href="#" onclick="return false" style="display:block;text-align:right;font-size:13px;color:var(--c-gold);margin-top:12px">View all products &rarr;</a>
+        </div>
+      </div>
+    </div>
+
+    <div style="background:#141b23;border:1px solid #232e39;border-radius:8px;flex:1 1 320px;min-width:0;padding:20px 22px 11px">
+      <div style="font-family:var(--f-ui);font-weight:600;font-size:19px;line-height:1.25;color:var(--c-tx0)">Key takeaways</div>
+      <div style="margin-top:4px">
+        <div style="display:flex;gap:13px;padding:18px 0;">
+          <span style="flex:none;display:flex;align-items:center;justify-content:center;width:42px;height:42px;border-radius:7px;background:rgba(242,112,92,.14);color:var(--c-red-hi)"><svg viewBox="0 0 24 24" width="17" height="17" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="flex:none"><circle cx="12" cy="12" r="9"/><path d="M12 8v5M12 16h.01"/></svg></span>
+          <div style="flex:1 1 auto;min-width:0">
+            <div style="font-size:16px;font-weight:600;color:var(--c-red-hi)">Significant trade decline</div>
+            <div style="font-size:14px;line-height:19px;color:var(--c-tx0);margin-top:5px">Combined scenario reduces Saudi trade value by 24% over 30 days, driven by higher transport costs, tariff increases and import quotas.</div>
+          </div>
+        </div>
+        <div style="display:flex;gap:13px;padding:18px 0;border-top:1px solid #1f2830">
+          <span style="flex:none;display:flex;align-items:center;justify-content:center;width:42px;height:42px;border-radius:7px;background:rgba(63,142,247,.14);color:#3f8ef7"><svg viewBox="0 0 24 24" width="17" height="17" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="flex:none"><circle cx="12" cy="12" r="9"/><path d="M12 16v-5M12 8h.01"/></svg></span>
+          <div style="flex:1 1 auto;min-width:0">
+            <div style="font-size:16px;font-weight:600;color:#3f8ef7">Longer and costlier routes</div>
+            <div style="font-size:14px;line-height:19px;color:var(--c-tx0);margin-top:5px">Rerouting via Red Sea and East Africa increases transit time by 12 days and freight costs by 65%.</div>
+          </div>
+        </div>
+        <div style="display:flex;gap:13px;padding:18px 0;border-top:1px solid #1f2830">
+          <span style="flex:none;display:flex;align-items:center;justify-content:center;width:42px;height:42px;border-radius:7px;background:rgba(61,214,140,.14);color:var(--c-green-hi)"><svg viewBox="0 0 24 24" width="17" height="17" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="flex:none"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="m8 12 3 3 5-6"/></svg></span>
+          <div style="flex:1 1 auto;min-width:0">
+            <div style="font-size:16px;font-weight:600;color:var(--c-green-hi)">Sector&#8209;specific impacts</div>
+            <div style="font-size:14px;line-height:19px;color:var(--c-tx0);margin-top:5px">Petrochemicals, metals and refined products are most affected due to high exposure to Hormuz and tariff measures.</div>
+          </div>
+        </div>
+        <div style="display:flex;gap:13px;padding:18px 0;border-top:1px solid #1f2830">
+          <span style="flex:none;display:flex;align-items:center;justify-content:center;width:42px;height:42px;border-radius:7px;background:rgba(167,139,250,.14);color:#a78bfa"><svg viewBox="0 0 24 24" width="17" height="17" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="flex:none"><path d="M4 20V10M10 20V4M16 20v-8M22 20V8"/></svg></span>
+          <div style="flex:1 1 auto;min-width:0">
+            <div style="font-size:16px;font-weight:600;color:#a78bfa">Increased supply chain risk</div>
+            <div style="font-size:14px;line-height:19px;color:var(--c-tx0);margin-top:5px">Higher concentration risk and limited alternative suppliers in the short term.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  </div>
+  </div>
+  <!-- ════════════════════ END EXACT HANDOFF DESIGN ════════════════════ -->
+
+  <!-- Old real simulator, kept for later content wiring, hidden while the exact handoff design is authoritative -->
+  <div id="scen-legacy-ui" style="display:none">
   <!-- HERO BAND -->
   <div style="padding:18px 24px 0">
     <div class="gli-hero">
@@ -6109,6 +6599,7 @@ function gccSidebarNav(name) {
     </div>
 
   </div>
+  </div><!-- /scen-legacy-ui -->
 </div>
 
 
@@ -9148,6 +9639,32 @@ function regMult(brent, util, extraNm, warRisk, cong) {
   );
 }
 // ─────────────────────────────────────────────────────────────────────────────
+
+// ── Scenario Studio wizard step chips (exact handoff design) ─────────────────
+function scenGoStep(n) {
+  document.querySelectorAll('.scen-step-chip').forEach(function(c){
+    var s = parseInt(c.getAttribute('data-step'), 10);
+    c.classList.remove('active', 'done');
+    if (s === n) c.classList.add('active');
+    else if (s < n) c.classList.add('done');
+    var badge = c.querySelector('.scen-step-badge');
+    if (badge) badge.innerHTML = (s < n) ? '&#10003;' : String(s);
+  });
+  document.querySelectorAll('.scen-step-panel').forEach(function(p){
+    p.style.display = (parseInt(p.getAttribute('data-step'), 10) === n) ? '' : 'none';
+  });
+  var titleEl = document.getElementById('scen-hero-title');
+  var ledeEl = document.getElementById('scen-hero-lede');
+  var dlBtn = document.getElementById('scen-download-btn');
+  if (titleEl) titleEl.textContent = (n === 4) ? 'Scenario Results' : 'Scenario Studio';
+  if (ledeEl) ledeEl.textContent = [
+    'Model the impact of chokepoint disruptions, tariff policy, import quotas and environmental quotas.',
+    'Configure the scenario parameters. You can activate one or multiple scenario types.',
+    'Running your simulation. This may take a few moments.',
+    'Your scenario results are ready. Review the impact across trade, cost, routes and sectors.'
+  ][n - 1];
+  if (dlBtn) dlBtn.style.display = (n === 4) ? 'flex' : 'none';
+}
 
 function selectScenario(id) {
   activeScenario = id;

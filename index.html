@@ -3946,7 +3946,7 @@ canvas { font-family: var(--f-mono); }
       <span class="gcc-sni-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 20 8 4l4 9 4-6 5 13"/></svg></span>
       <span class="gcc-sni-lbl">Corridors</span>
     </div>
-    <div class="gcc-snav-item gcc-static">
+    <div class="gcc-snav-item" data-tab="ports" onclick="gccSidebarNav('ports')">
       <span class="gcc-sni-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 21h18M6 21V10M18 21V10M4 10h16l-8-6-8 6Z"/><path d="M10 21v-6h4v6"/></svg></span>
       <span class="gcc-sni-lbl">Ports &amp; Terminals</span>
     </div>
@@ -4060,7 +4060,7 @@ document.addEventListener('DOMContentLoaded', function(){
   if (el) el.textContent = new Date().toLocaleDateString('en-US', { weekday:'short', month:'short', day:'numeric', year:'numeric' });
   var now = new Date();
   var ts = now.toLocaleDateString('en-US', { weekday:'short', month:'short', day:'numeric', year:'numeric' }) + '   ' + now.toLocaleTimeString('en-US', { hour:'2-digit', minute:'2-digit' }) + ' GST';
-  ['hormuz','bab','suez'].forEach(function(cp){
+  ['hormuz','bab','suez','rates','ports'].forEach(function(cp){
     var el2 = document.getElementById('gli-' + cp + '-ts');
     if (el2) el2.textContent = ts;
     document.querySelectorAll('.gli-' + cp + '-ts-inline').forEach(function(e){ e.textContent = ts; });
@@ -4068,7 +4068,7 @@ document.addEventListener('DOMContentLoaded', function(){
 });
 /* ── Sidebar nav helper ────────────────────────────────────────────── */
 function gccSidebarNav(name) {
-  var tabIdx = {situation:0, hormuz:1, rates:2, trucking:3, simulator:4, watchlist:5, stress:6};
+  var tabIdx = {situation:0, hormuz:1, rates:2, trucking:3, simulator:4, watchlist:5, stress:6, ports:7};
   var tab = document.querySelectorAll('#tabs .tab')[tabIdx[name]];
   if (tab) showTab(name, tab);
 }
@@ -4101,6 +4101,7 @@ function gccSidebarNav(name) {
   <div class="tab" onclick="showTab('simulator',this)">&#9670; Scenario Simulator</div>
   <div class="tab" onclick="showTab('watchlist',this)">&#8881; Strategic Watchlist</div>
   <div class="tab" onclick="showTab('stress',this)">&#9670; Trade Explorer Lab</div>
+  <div class="tab" onclick="showTab('ports',this)">&#9672; Ports &amp; Terminals</div>
 </div>
 
 <!-- MOBILE CURRENT-TAB INDICATOR -->
@@ -4146,6 +4147,10 @@ function gccSidebarNav(name) {
       <button class="mob-nav-item" id="mob-tab-stress" onclick="mobShowTab('stress')">
         <span class="mob-nav-icon">&#9670;</span>
         <span class="mob-nav-label">Trade Explorer Lab</span>
+      </button>
+      <button class="mob-nav-item" id="mob-tab-ports" onclick="mobShowTab('ports')">
+        <span class="mob-nav-icon">&#9672;</span>
+        <span class="mob-nav-label">Ports &amp; Terminals</span>
       </button>
     </div>
     <div id="mob-nav-footer">
@@ -6889,6 +6894,176 @@ window.addEventListener('load', function() {
 
 </div><!-- end page-stress -->
 
+<!-- ============================================================ TAB 7: PORTS & TERMINALS -->
+<div class="page" id="page-ports" style="padding:0;padding-bottom:40px">
+
+  <!-- HERO BAND -->
+  <div style="padding:18px 24px 0">
+    <div class="gli-hero">
+      <div class="gli-hero-grad"></div>
+      <div class="gli-hero-inner">
+        <div class="gli-hero-l">
+          <div class="gli-breadcrumb"><span>Ports &amp; Terminals</span><span class="sep">&rsaquo;</span><span class="leaf">Jeddah Islamic Port</span></div>
+          <div class="gli-hero-title">Jeddah Islamic Port</div>
+          <div class="gli-hero-desc">Port intelligence &mdash; King Abdul Aziz Port, Red Sea. The GCC's principal Red Sea container gateway, now under sustained Hormuz-rerouting and Red Sea security pressure.</div>
+        </div>
+        <div class="gli-hero-r">
+          <div class="gli-hero-ts" id="gli-ports-ts">&mdash;</div>
+          <button type="button" class="gli-export-btn" onclick="window.print()"><svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v11"/><path d="m8 11 4 4 4-4"/><path d="M4 19h16"/></svg>Export Brief</button>
+          <div class="gli-hero-tagline">One port,<br>the whole story.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- KPI STRIP -->
+  <div class="gli-status-grid">
+    <div class="gli-status-card">
+      <div class="gli-status-title">Port Status</div>
+      <div class="gli-status-word-row"><span class="gli-status-dot" style="background:var(--c-red-hi)"></span><span class="gli-status-word" style="color:var(--c-red-hi)">Critical</span></div>
+      <div class="gli-status-body">Red Sea &middot; King Abdul Aziz Port</div>
+      <div class="gli-status-src">Source: field reports<br>Jul 2026</div>
+    </div>
+    <div class="gli-status-card">
+      <div class="gli-status-title">Vessel Dwell Time</div>
+      <div class="gli-status-figure" style="color:var(--c-red-hi)">22&ndash;28</div>
+      <div class="gli-status-sub">days &middot; pre-crisis 3.7d</div>
+      <svg class="gli-status-spark" viewBox="0 0 120 34" preserveAspectRatio="none"><line x1="0" y1="3" x2="120" y2="3" stroke="#3a4650" stroke-width="1" stroke-dasharray="3 3" vector-effect="non-scaling-stroke"/><polyline points="1,30 15,27 30,23 45,19 60,15 75,12 90,9 105,6 119,4" fill="none" stroke="var(--c-red-hi)" stroke-width="1.4" vector-effect="non-scaling-stroke"/></svg>
+      <div class="gli-status-src">Source: K+N advisory &middot; Vizion API<br>Jul 2026</div>
+    </div>
+    <div class="gli-status-card">
+      <div class="gli-status-title">Volume Handled</div>
+      <div class="gli-status-figure" style="color:var(--c-amber-hi)">+42%</div>
+      <div class="gli-status-sub">vs. pre-crisis baseline</div>
+      <div class="gli-status-src">Source: Portcast &middot; Mawani<br>Jul 2026</div>
+    </div>
+    <div class="gli-status-card">
+      <div class="gli-status-title">Gate &amp; Truck Traffic</div>
+      <div class="gli-status-figure">8h&ndash;3d</div>
+      <div class="gli-status-sub">est. gate wait &middot; ~1,100 trucks/day (+62%)</div>
+      <div class="gli-status-src">Source: Google Maps live traffic<br>Jul 2026</div>
+    </div>
+    <div class="gli-status-card">
+      <div class="gli-status-title">Freight Rate Impact</div>
+      <div class="gli-status-figure" style="color:var(--c-red-hi)">x3.3</div>
+      <div class="gli-status-sub">CMA CGM SHA&rarr;Jeddah ~$10,000/FEU</div>
+      <div class="gli-status-src">Source: SeaRates &middot; Freightos<br>Jul 2026</div>
+    </div>
+  </div>
+
+  <!-- TAB STRIP -->
+  <div class="gli-tabstrip">
+    <span class="gli-tab active">Overview</span>
+    <span class="gli-tab">Vessel Trends</span>
+    <span class="gli-tab">Dwell Time Breakdown</span>
+    <span class="gli-tab">Trucking &amp; Gate Access</span>
+    <span class="gli-tab">Port Benchmarking</span>
+  </div>
+
+  <!-- MAP + KEY TAKEAWAYS ROW -->
+  <div class="gli-2row">
+    <div class="gli-map-panel">
+      <div class="gli-map-hdr"><span class="gli-map-title">Jeddah &ndash; Live Port View</span></div>
+      <div class="gli-map-surface">
+        <iframe src="https://www.marinetraffic.com/en/ais/embed/zoom:12/centery:21.4838/centerx:39.1734/maptype:4/shownames:false/mmsi:0/shipid:0/fleet:/fleet_id:/showmenu:false/remember:false" width="100%" height="100%" style="border:none;display:block" loading="lazy" allowfullscreen referrerpolicy="no-referrer-when-downgrade" title="MarineTraffic — Jeddah Islamic Port live AIS"></iframe>
+      </div>
+      <div class="src" style="padding:10px 16px"><span>MarineTraffic live AIS &middot; King Abdul Aziz Port, Jeddah</span><span class="src-badge">live</span></div>
+    </div>
+
+    <div class="gli-takeaways">
+      <div class="gli-card-hd2"><span class="gli-panel-heading">Key Takeaways</span></div>
+      <div class="gli-tk-item">
+        <span class="gli-tk-icon" style="background:rgba(242,112,92,.14);color:var(--c-red-hi)"><svg viewBox="0 0 24 24" width="17" height="17" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v9"/><path d="m8 11 4 4 4-4"/><circle cx="12" cy="12" r="9"/></svg></span>
+        <div class="gli-tk-body"><div class="gli-tk-title" style="color:var(--c-red-hi)">What changed?</div><div class="gli-tk-text">Dwell time has stretched to 22&ndash;28 days from a 3.7-day pre-crisis baseline as volume handled climbs +42% &mdash; Jeddah is absorbing cargo diverted from Bab al-Mandab-exposed routings.</div></div>
+      </div>
+      <div class="gli-tk-item">
+        <span class="gli-tk-icon" style="background:rgba(63,142,247,.14);color:var(--c-blue)"><svg viewBox="0 0 24 24" width="17" height="17" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 16v-5M12 8h.01"/></svg></span>
+        <div class="gli-tk-body"><div class="gli-tk-title" style="color:var(--c-blue)">Why it matters?</div><div class="gli-tk-text">CMA CGM is now the sole carrier issuing bookable Shanghai&rarr;Jeddah rates (~$10,000/FEU, x3.3 pre-crisis) after Maersk's last bookable rate expired in Jul 2026 &mdash; a single point of freight-capacity failure.</div></div>
+      </div>
+      <div class="gli-tk-item">
+        <span class="gli-tk-icon" style="background:rgba(61,214,140,.14);color:var(--c-green-hi)"><svg viewBox="0 0 24 24" width="17" height="17" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v12"/><path d="m8 11 4 4 4-4"/><path d="M4 19h16"/></svg></span>
+        <div class="gli-tk-body"><div class="gli-tk-title" style="color:var(--c-green-hi)">Decision relevance</div><div class="gli-tk-text">Gate wait of 8h&ndash;3d and ~1,100 trucks/day (+62% vs. pre-crisis) are pushing inland freight costs up too &mdash; Jeddah&rarr;Doha/Manama/Kuwait FTL rates are running $2,435&ndash;3,855 all-in.</div></div>
+      </div>
+      <div class="gli-tk-item">
+        <span class="gli-tk-icon" style="background:rgba(167,139,250,.14);color:var(--c-purple)"><svg viewBox="0 0 24 24" width="17" height="17" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg></span>
+        <div class="gli-tk-body"><div class="gli-tk-title" style="color:var(--c-purple)">Next signals to watch</div>
+          <ul class="gli-tk-list"><li>Additional carriers resuming bookable Jeddah rates</li><li>Gate wait trend vs. Sohar/Yanbu overflow</li><li>Saudi Landbridge rail progress (Jeddah&ndash;Dammam)</li><li>Red Sea security developments</li></ul>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- THREE ANALYTICS CARDS -->
+  <div class="gli-3row">
+    <div class="gli-chart-card" style="flex:1 1 320px">
+      <div class="gli-card-hd2"><span class="gli-panel-heading">Freight Rate by Origin</span></div>
+      <div class="gli-panel-sub">Spot rate to Jeddah, per FEU &middot; Jul 2026</div>
+      <div style="display:flex;align-items:baseline;gap:10px;padding:10px 0 6px">
+        <span style="flex:1 1 0;min-width:0;font-size:10px;letter-spacing:0.1em;text-transform:uppercase;color:var(--c-tx2)">Origin</span>
+        <span style="flex:0 0 90px;text-align:right;font-size:10px;letter-spacing:0.1em;text-transform:uppercase;color:var(--c-tx2)">Rate</span>
+        <span style="flex:0 0 44px;text-align:right;font-size:10px;letter-spacing:0.1em;text-transform:uppercase;color:var(--c-tx2)">&Delta;</span>
+      </div>
+      <div style="display:flex;align-items:baseline;gap:10px;padding:8px 0;border-top:1px solid var(--c-bd0)">
+        <span style="flex:1 1 0;min-width:0;font-size:13px;color:var(--c-tx0)">Shanghai (CMA CGM)</span>
+        <span style="flex:0 0 90px;text-align:right;font-family:var(--f-mono);font-weight:600;font-size:13px;color:var(--c-red-hi)">$10,000</span>
+        <span style="flex:0 0 44px;text-align:right;font-size:12px;font-weight:600;color:var(--c-red-hi)">x3.3</span>
+      </div>
+      <div style="display:flex;align-items:baseline;gap:10px;padding:8px 0;border-top:1px solid var(--c-bd0)">
+        <span style="flex:1 1 0;min-width:0;font-size:13px;color:var(--c-tx0)">Singapore</span>
+        <span style="flex:0 0 90px;text-align:right;font-family:var(--f-mono);font-weight:600;font-size:13px;color:var(--c-red-hi)">$7,992</span>
+        <span style="flex:0 0 44px;text-align:right;font-size:12px;font-weight:600;color:var(--c-red-hi)">x4.4</span>
+      </div>
+      <div style="display:flex;align-items:baseline;gap:10px;padding:8px 0;border-top:1px solid var(--c-bd0)">
+        <span style="flex:1 1 0;min-width:0;font-size:13px;color:var(--c-tx0)">Hamburg</span>
+        <span style="flex:0 0 90px;text-align:right;font-family:var(--f-mono);font-weight:600;font-size:13px;color:var(--c-red-hi)">$6,100</span>
+        <span style="flex:0 0 44px;text-align:right;font-size:12px;font-weight:600;color:var(--c-red-hi)">x4.1</span>
+      </div>
+      <div class="src" style="margin-top:6px"><span>SeaRates &middot; Freightos Seabay &middot; Jul 2026</span><span class="src-badge">real data</span></div>
+    </div>
+
+    <div class="gli-chart-card" style="flex:1 1 320px">
+      <div class="gli-card-hd2"><span class="gli-panel-heading">Trucking Rates from Jeddah</span></div>
+      <div class="gli-panel-sub">40ft FTL, all&#8209;in USD &middot; Jun 2026</div>
+      <div style="display:flex;align-items:baseline;gap:10px;padding:10px 0 6px">
+        <span style="flex:1 1 0;min-width:0;font-size:10px;letter-spacing:0.1em;text-transform:uppercase;color:var(--c-tx2)">Destination</span>
+        <span style="flex:0 0 110px;text-align:right;font-size:10px;letter-spacing:0.1em;text-transform:uppercase;color:var(--c-tx2)">Rate</span>
+      </div>
+      <div style="display:flex;align-items:baseline;gap:10px;padding:8px 0;border-top:1px solid var(--c-bd0)">
+        <span style="flex:1 1 0;min-width:0;font-size:13px;color:var(--c-tx0)">Kuwait City</span>
+        <span style="flex:0 0 110px;text-align:right;font-family:var(--f-mono);font-weight:600;font-size:13px;color:var(--c-red-hi)">$2,855&ndash;3,855</span>
+      </div>
+      <div style="display:flex;align-items:baseline;gap:10px;padding:8px 0;border-top:1px solid var(--c-bd0)">
+        <span style="flex:1 1 0;min-width:0;font-size:13px;color:var(--c-tx0)">Doha</span>
+        <span style="flex:0 0 110px;text-align:right;font-family:var(--f-mono);font-weight:600;font-size:13px;color:var(--c-red-hi)">$2,840&ndash;3,640</span>
+      </div>
+      <div style="display:flex;align-items:baseline;gap:10px;padding:8px 0;border-top:1px solid var(--c-bd0)">
+        <span style="flex:1 1 0;min-width:0;font-size:13px;color:var(--c-tx0)">Manama</span>
+        <span style="flex:0 0 110px;text-align:right;font-family:var(--f-mono);font-weight:600;font-size:13px;color:var(--c-amber-hi)">$2,435&ndash;3,235</span>
+      </div>
+      <div class="src" style="margin-top:6px"><span>Field-sourced carrier quotes &middot; crisis-period</span><span class="src-badge">real data</span></div>
+    </div>
+
+    <div class="gli-chart-card" style="flex:1 1 320px">
+      <div class="gli-card-hd2"><span class="gli-panel-heading">Dwell Time vs. Baseline</span></div>
+      <div class="gli-panel-sub">Days at berth + yard, mid-point estimate</div>
+      <div style="display:flex;justify-content:center;padding-top:6px">
+        <svg width="180" height="96" viewBox="0 0 180 96">
+          <path d="M25,84 A65,65 0 0,1 155,84" fill="none" stroke="#222220" stroke-width="11" stroke-linecap="round"/>
+          <path d="M25,84 A65,65 0 0,1 155,84" fill="none" stroke="var(--c-red-hi)" stroke-width="11" stroke-linecap="round" stroke-dasharray="127 204"/>
+          <circle cx="27.8" cy="67.2" r="5" fill="var(--c-green-hi)"/>
+        </svg>
+      </div>
+      <div style="text-align:center;margin-top:-14px">
+        <div style="font-family:var(--f-heading);font-size:30px;font-weight:600;color:var(--c-red-hi);line-height:1">25</div>
+        <div style="font-size:11px;color:var(--c-tx2);margin-top:2px">days, mid-point &middot; baseline 3.7d</div>
+      </div>
+      <div class="src" style="margin-top:10px"><span>Model v1.5.2 &middot; M/M/c queuing proxy</span></div>
+    </div>
+  </div>
+
+</div>
+<!-- ============================================================ END TAB 7: PORTS & TERMINALS -->
+
 <style>
 .psr-dir-btn{background:none;border:none;color:#6A6A60;font-family:monospace;font-size:10px;padding:6px 12px;cursor:pointer;letter-spacing:.06em;transition:background .15s,color .15s}
 .psr-dir-btn:hover{background:#1a2535;color:#C8C7C2}
@@ -7011,8 +7186,8 @@ var activeScenario = 1;
 var lastSimState   = null;  // persists View 2 state for route-tab switching
 
 // ── TABS ──────────────────────────────────────────────────────────────────────
-var TAB_LABELS = { hormuz:'Chokepoint Traffic', rates:'Freight Rate Tracker', trucking:'Corridor Performance Monitor', simulator:'Scenario Simulator', watchlist:'Strategic Watchlist', stress:'Trade Flow Stress Test', psr:'Supply Chain Resilience' };
-var TAB_ICONS  = { hormuz:'&#9651;', rates:'&#9671;', trucking:'&#9672;', simulator:'&#9670;', watchlist:'&#8881;', stress:'&#9670;', psr:'&#9670;' };
+var TAB_LABELS = { hormuz:'Chokepoint Traffic', rates:'Freight Rate Tracker', trucking:'Corridor Performance Monitor', simulator:'Scenario Simulator', watchlist:'Strategic Watchlist', stress:'Trade Flow Stress Test', psr:'Supply Chain Resilience', ports:'Ports & Terminals' };
+var TAB_ICONS  = { hormuz:'&#9651;', rates:'&#9671;', trucking:'&#9672;', simulator:'&#9670;', watchlist:'&#8881;', stress:'&#9670;', psr:'&#9670;', ports:'&#9672;' };
 
 // ── Port Dwell Model — fetch model output and update the 5 dwell cards ──────
 var pdtLoaded = false;
@@ -7197,7 +7372,7 @@ function showTab(name, el) {
 
   // Sync sidebar active state + topbar title
   (function() {
-    var TITLES = { situation:'Situation Room', hormuz:'Chokepoint Traffic', rates:'Freight Rate Tracker', trucking:'Corridor Performance Monitor', simulator:'Scenario Simulator', watchlist:'Strategic Watchlist', stress:'Trade Explorer Lab' };
+    var TITLES = { situation:'Situation Room', hormuz:'Chokepoint Traffic', rates:'Freight Rate Tracker', trucking:'Corridor Performance Monitor', simulator:'Scenario Simulator', watchlist:'Strategic Watchlist', stress:'Trade Explorer Lab', ports:'Ports & Terminals' };
     document.querySelectorAll('#gcc-sidebar .gcc-snav-item').forEach(function(i){ i.classList.remove('active'); });
     var si = document.querySelector('#gcc-sidebar .gcc-snav-item[data-tab="' + name + '"]');
     if (si) si.classList.add('active');
@@ -11456,7 +11631,7 @@ function closeMobNav() {
 function mobShowTab(name) {
   // Delegate to the main showTab function using the matching desktop tab element
   var desktopTabs = document.querySelectorAll('#tabs .tab');
-  var tabNames = ['hormuz', 'rates', 'trucking', 'simulator', 'watchlist', 'stress', 'psr'];
+  var tabNames = ['hormuz', 'rates', 'trucking', 'simulator', 'watchlist', 'stress', 'psr', 'ports'];
   var idx = tabNames.indexOf(name);
   if (idx !== -1) showTab(name, desktopTabs[idx]);
 
